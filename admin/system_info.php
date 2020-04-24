@@ -71,7 +71,7 @@ function format_space($space)
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 
@@ -82,7 +82,7 @@ function format_space($space)
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
   <div class="page_title"><?php echo $string['systeminformation'] ?></div>
 </div>
-  
+
 <br />
 <div align="center">
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:100%; text-align:left">
@@ -133,11 +133,11 @@ for ($i = 0; $i <= 7; $i++) {
             $hours = ($hours / 24);
             $units = 'days';
         }
-        echo '<tr><td>' . $string[strtolower($parts[0])] . '</td><td style="text-align:right">' . number_format($hours) . '</td><td colspan="2">' . $string[$units] . "</td></tr>\n";
+        echo '<tr><td>' . $string[mb_strtolower($parts[0])] . '</td><td style="text-align:right">' . number_format($hours) . '</td><td colspan="2">' . $string[$units] . "</td></tr>\n";
     } elseif ($i < 7) {
-        echo '<tr><td>' . $string[strtolower($parts[0])] . '</td><td style="text-align:right">' . number_format($parts[1]) . "</td><td colspan=\"2\"></td></tr>\n";
+        echo '<tr><td>' . $string[mb_strtolower($parts[0])] . '</td><td style="text-align:right">' . number_format($parts[1]) . "</td><td colspan=\"2\"></td></tr>\n";
     } else {
-        echo '<tr><td>' . $string[strtolower($parts[0])] . '</td><td style="text-align:right">' . $parts[1] . "</td><td colspan=\"2\"></td></tr>\n";
+        echo '<tr><td>' . $string[mb_strtolower($parts[0])] . '</td><td style="text-align:right">' . $parts[1] . "</td><td colspan=\"2\"></td></tr>\n";
     }
 }
   echo "</table>\n<br />\n";
@@ -258,12 +258,12 @@ if (php_uname('s') != 'Windows NT') {
         $virtual = 0;
         $processor = '';
         foreach ($lines as $individual_line) {
-            if (strpos($individual_line, 'The physical processor') !== false) {
+            if (mb_strpos($individual_line, 'The physical processor') !== false) {
                 $tmp_line = str_replace('The physical processor has ', '', trim($individual_line));
                 $physical++;
-                $virtual += substr($tmp_line, 0, 1);
+                $virtual += mb_substr($tmp_line, 0, 1);
             }
-            if (strpos($individual_line, 'clock') !== false) {
+            if (mb_strpos($individual_line, 'clock') !== false) {
                 $processor = trim($individual_line);
                 $processor_parts = explode('\(', $processor);
                 $speed_parts = explode('clock ', $processor_parts[1]);
@@ -338,8 +338,8 @@ for ($i = 1; $i < ($row_no - 1); $i++) {
 
         if ($master_array[$i][1] > 0) {
             $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
-        
-        
+
+
             $free_percent = ($master_array[$i][3] / $master_array[$i][1]) * 100;
             $used_percent = 100 - $free_percent;
             $bar_width = 1.48 * $used_percent;

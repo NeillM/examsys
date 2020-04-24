@@ -119,7 +119,7 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
 foreach ($types_used as $type => $no_papers) {
     if (!($userObject->has_role('Standards Setter') && $type >= 3)) {
         $url = '../paper/type.php?module=' . $module . '&type=' . $type;
-        echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . Paper_utils::type_to_name($type, $string) . '</a><br /><span class="grey">' . number_format($no_papers) . ' ' . strtolower($string['papers']) . "</span></div></div>\n";
+        echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . Paper_utils::type_to_name($type, $string) . '</a><br /><span class="grey">' . number_format($no_papers) . ' ' . mb_strtolower($string['papers']) . "</span></div></div>\n";
     }
 }
 
@@ -143,10 +143,10 @@ if (!$userObject->has_role('Standards Setter')) {
         $question_no += $stat_no;
     }
 
-    echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\">" . $string['allquestions'] . '</a><br /><span class="grey">' . number_format($question_no) . ' ' . strtolower($string['questions']) . "</span></div></div>\n";
+    echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../question/list.php?type=all&module=$module\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../question/list.php?type=all&module=$module\">" . $string['allquestions'] . '</a><br /><span class="grey">' . number_format($question_no) . ' ' . mb_strtolower($string['questions']) . "</span></div></div>\n";
 
     $bank_types = array($string['bykeyword'] => '../question/bank.php?type=keyword&module=' . $module, $string['byquestiontype'] => '../question/bank.php?type=type&module=' . $module, $string['bystatus'] => '../question/bank.php?type=status&module=' . $module, $string['bybloom'] => '../question/bank.php?type=bloom&module=' . $module, $string['byperformance'] => '../question/bank.php?type=performance&module=' . $module);
-    if (strpos($module_details['checklist'], 'mapping') !== false) {
+    if (mb_strpos($module_details['checklist'], 'mapping') !== false) {
         $bank_types[$string['byobjective']] = '../question/bank.php?type=objective&module=' . $module;
     }
     foreach ($bank_types as $type_name => $url) {

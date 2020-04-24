@@ -68,21 +68,21 @@ if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
         $std_query->close();
     }
 
-  
+
         $std_query = $mysqli->prepare('DELETE FROM std_set_questions WHERE std_setID = ?');
         $std_query->bind_param('i', $_POST['std_setID']);
         $std_query->execute();
         $std_query->close();
-  
+
         $std_query = $mysqli->prepare('DELETE FROM ebel WHERE std_setID = ?');
         $std_query->bind_param('i', $_POST['std_setID']);
         $std_query->execute();
         $std_query->close();
-  
+
         $std_setID = $_POST['std_setID'];
 } else {
     $setterID = $userObject->get_user_ID();
-    
+
     if (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '3') {
         $std_query = $mysqli->prepare('INSERT INTO std_set VALUES(NULL, ?, ?, NOW(), ?, ?, NULL, NULL)');
         $std_query->bind_param('iiss', $setterID, $paperID, $tmp_method, $group_review);
@@ -95,7 +95,7 @@ if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
     }
     $std_query->execute();
     $std_query->close();
-  
+
     $std_setID = $mysqli->insert_id;
 }
 
@@ -414,7 +414,7 @@ while ($result->fetch()) {
                 $tmp_first_split = explode(';', $correct);
                 $tmp_second_split = explode('$', $tmp_first_split[11]);
                 for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-                    if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 200) {
+                    if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 200) {
                           $qid = 'std' . $question_no . '_' . $question_part;
                         try {
                             // Need to ignore if not present.
@@ -502,7 +502,7 @@ if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
 
 if ($tmp_method == 'Ebel') {
     $id_array = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
-  
+
     $std_query = $mysqli->prepare('INSERT INTO ebel VALUES (?, ?, ?)');
     foreach ($id_array as $individualID) {
         if (isset($_POST['distinction_type']) and $_POST['distinction_type'] == '3') {
@@ -525,7 +525,7 @@ if ($tmp_method == 'Ebel') {
             $category = $individualID;
             $percentage = $_POST[$individualID];
         }
-    
+
         $percentage = floatval($percentage);
         $std_query->bind_param('isd', $std_setID, $category, $percentage);
         $std_query->execute();

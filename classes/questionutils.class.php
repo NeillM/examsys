@@ -350,7 +350,7 @@ SQL;
         $lock->execute();
         $lock->close();
     }
-  
+
     /**
      * Check if a question has been answered in a summative exam by a student
      * @param integer $q_id question id
@@ -373,7 +373,7 @@ SQL;
         $result->close();
         return false;
     }
-  
+
     /**
      * Get the number of questions assigned to a given status
      * @param  integer $status_id Status ID
@@ -476,7 +476,7 @@ SQL;
         $random->close();
         return $possible;
     }
-  
+
     /**
      * Is the question in a random block
      * @param int $q_id question
@@ -586,7 +586,7 @@ SQL;
             $split1 = explode('[blank', $option_text);
             for ($i = 1; $i < count($split1); $i++) {
                 // The first entry in the comma separated list is the correct answer.
-                $split2 = explode(',', substr($split1[$i], 1, strpos($split1[$i], '[/blank]') - 1));
+                $split2 = explode(',', mb_substr($split1[$i], 1, mb_strpos($split1[$i], '[/blank]') - 1));
                 $old_correct .= ',' . $split2[0];
             }
         } elseif ($q_type == 'mcq' or $q_type == 'enhancedcalc') {
@@ -596,8 +596,8 @@ SQL;
         } else {
             $old_correct = ',' . str_replace('|', ',', $correct);
             // If there is a comma at the end remove it.
-            if (substr($old_correct, -1, 1) == ',') {
-                $old_correct = substr($old_correct, 0, strlen($old_correct) - 1);
+            if (mb_substr($old_correct, -1, 1) == ',') {
+                $old_correct = mb_substr($old_correct, 0, mb_strlen($old_correct) - 1);
             }
         }
 

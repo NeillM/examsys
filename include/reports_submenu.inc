@@ -54,18 +54,18 @@ $start_month = date('m', $target_start_date);
 $start_day = date('d', $target_start_date);
 $start_hour = date('H', $target_start_date);
 $start_minute = date('i', $target_start_date);
-  
+
   $end_year = date('Y', $target_end_date);
 $end_month = date('m', $target_end_date);
 $end_day = date('d', $target_end_date);
 $end_hour = date('H', $target_end_date);
 $end_minute = date('i', $target_end_date);
-  
+
 if ($end_year > date('Y') or ($end_year == date('Y') and $end_month > date('m'))) {
     $end_day = date('d');
     $end_month = date('m');
 }
-  
+
 if ($start_year > $date_array['year']) {
     $start_year = $date_array['year'];
     $start_month = $date_array['mon'];
@@ -82,7 +82,7 @@ if ($start_year > $date_array['year']) {
     $start_hour = $date_array['hours'];
     $start_min = $date_array['minutes'];
 }
-  
+
   echo '<tr><td>' . $string['dates'] . '</td><td>';
 $default_start = $start_year . $start_month . $start_day . $start_hour . $start_minute . '00';
 $start_year = 2001;
@@ -107,7 +107,7 @@ if ($end_month < 10) {
 if ($end_day < 10) {
     $end_day   = '0' . $end_day;
 }
-  
+
   $default_end = $end_year . $end_month . $end_day . $end_hour . $end_minute . '00';
 $start_year = 2001;
 $end_year = ($date_array['year'] + 1);
@@ -143,7 +143,7 @@ if (count($moduleIDs) > 0) {
     $checklist = implode(',', $check);
     $stmt->close();
 }
-  
+
   // Module drop down
 if ($properties->get_paper_type() != '3') {
     echo '<tr><td>' . $string['module'] . "</td><td><select name=\"repmodule\" id=\"repmodule\" style=\"width:150px\">\n";
@@ -170,7 +170,7 @@ if ($properties->get_paper_type() != '3') {
     echo "</select>\n";
     echo "</td></tr>\n";
 }
-  
+
   echo '<tr><td colspan="2"><label for="absent">' . $string['incabsentcandidates'] . '</label>&nbsp;<input type="checkbox" name="absent" id="absent" value="1" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="studentsonly">' . $string['studentsonly'] . '</label>&nbsp;<input type="checkbox" name="studentsonly" id="studentsonly" value="1" checked="checked" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_studentattempts'] . "\" /></td></tr>\n";
 if ($properties->get_paper_type() == '3') {
     echo '<tr><td>' . $string['year'] . "</td><td><select name=\"repyear\" id=\"repyear\">\n";
@@ -181,7 +181,7 @@ if ($properties->get_paper_type() == '3') {
     echo "</select>\n</td></tr>\n";
     echo '<tr><td>&nbsp;</td><td><input type="checkbox" id="completerpt" name="completerpt" value"1" />&nbsp;' . $string['completedatasets'] . "</td></tr>\n";
 }
-  
+
   // Get any metadata fields
   $metadata = array();
 if (count($moduleIDs) > 0) {
@@ -193,7 +193,7 @@ if (count($moduleIDs) > 0) {
     }
     $result->close();
 }
-  
+
   $meta_no = 1;
 if (count($metadata) > 0) {
     echo "<tr><td colspan=\"2\"><hr style=\"height:1px; color:#C0C0C0; background-color:#C0C0C0; border:0px\" /></td></tr>\n";
@@ -209,7 +209,7 @@ foreach ($metadata as $meta_type => $value_array) {
         $meta_no++;
     }
 }
-  
+
   echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" id=\"paperID\" value=\"" . $_GET['paperID'] . '" />';
 echo "<table style=\"width:100%; padding: 0px 10px 10px 10px\"><tr><td style=\"vertical-align:top; width:45%; padding-right:6px\">\n";
 if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
@@ -268,7 +268,7 @@ if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1'
         echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_marks.php?'>" . $string['exportmarkscsv'] . "</a></div>\n";
     }
 }
-  
+
 switch ($properties->get_paper_type()) {
     case '3':
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  echo '<div class="reports_header">' . $string['quantitativereports'] . "</div>\n";
@@ -306,8 +306,8 @@ switch ($properties->get_paper_type()) {
 
         break;
 }
-    
-if (($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') && (strpos($checklist, 'stdset') !== false)) {
+
+if (($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') && (mb_strpos($checklist, 'stdset') !== false)) {
     echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/standards_setting_csv.php?'>" . $string['standardssettingcsv'] . "</a></div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/standards_setting_full_csv.php?'>" . $string['standardssettingfullcsv'] . "</a></div>\n";
 }

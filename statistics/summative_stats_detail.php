@@ -66,7 +66,7 @@ $month_end[8] = ($current_year + 1) . '0901000000';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title('Rog&#333;: ' . $string['summativeexamstats']); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
@@ -80,14 +80,14 @@ $month_end[8] = ($current_year + 1) . '0901000000';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
-  <div class="page_title"><?php echo $string['summativeexamstats'] ?>: <span style="font-weight:normal"><?php echo $string[$month_names[$current_month - 1]] . ' (' . $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'], 2, 2) + 1) ?>)</span></div>
+  <div class="page_title"><?php echo $string['summativeexamstats'] ?>: <span style="font-weight:normal"><?php echo $string[$month_names[$current_month - 1]] . ' (' . $_GET['calyear']; ?>/<?php echo (mb_substr($_GET['calyear'], 2, 2) + 1) ?>)</span></div>
 </div>
 
 <table class="header" style="font-size:90%">
@@ -110,7 +110,7 @@ $result->store_result();
 $result->bind_result($property_id, $paper_title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
     $paper_count = 0;
-  
+
     $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID = users.ID AND roles IN ('Student', 'graduate') AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
     $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
     $paper_data->execute();
@@ -121,13 +121,13 @@ while ($result->fetch()) {
         $distinct_users[$tmp_userID] = 1;
     }
     $paper_data->close();
-  
+
     if ($user_no == 0) {
         $class = ' grey';
     } else {
         $class = '';
     }
-  
+
     echo '<tr><td>' . $display_start_date . "</td><td><a href=\"../paper/details.php?paperID=$property_id\">" . $paper_title . "</a></td><td class=\"n$class\">$user_no</td></tr>\n";
     $total_student_no += $user_no;
 }
@@ -144,6 +144,6 @@ $mysqli->close();
 ?>
 </blockquote>
 </div>
-  
+
 </body>
 </html>

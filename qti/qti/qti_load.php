@@ -43,7 +43,7 @@ class IE_qti_Load extends IE_Main
 
         $filename = $params->sourcefile;
 
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
         if ($ext == 'xml') {
             $xml_files[basename($filename)] = $filename;
@@ -56,7 +56,7 @@ class IE_qti_Load extends IE_Main
                 for ($i = 0; $i < $zip->numFiles; $i++) {
                     $stat = $zip->statIndex($i);
                     $filename = $stat['name'];
-                    $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                    $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                     if ($ext == 'xml') {
                         $xml_files[$filename] = $params->base_dir . $params->dir . '/' . $filename;
                     }
@@ -176,7 +176,7 @@ class IE_qti_Load extends IE_Main
             return '';
         }
 
-        $basenode = strtolower($xml->getName());
+        $basenode = mb_strtolower($xml->getName());
         if ($basenode == 'questestinterop') {
             return 'qti12';
         }

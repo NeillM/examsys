@@ -262,17 +262,17 @@ if ($no_screens > 1) {
     echo '</tr></table>';
 }
   echo '</td></tr></table>';
-    
+
     $marks_array = array();
 
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
-  
+
   $q_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
   $reminders = array();
-  
+
   $question_data = $mysqli->prepare('SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback, settings FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num');
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
@@ -281,7 +281,7 @@ if ($no_screens > 1) {
   $num_rows = $question_data->num_rows;
 while ($question_data->fetch()) {
     $marks_array[$q_id] = $marks_correct;
-        
+
     if ($old_screen != $screen) {
         echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
         echo '<tr><td colspan="2"><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div></td></tr>';
@@ -297,7 +297,7 @@ while ($question_data->fetch()) {
         } else {
             $tmp_color = 'white';
         }
-    
+
         $li_set = 0;
         echo "<tr><td colspan=\"2\"><a name=\"q_id$q_id\"></a>&nbsp;</td></tr>\n";
 
@@ -305,7 +305,7 @@ while ($question_data->fetch()) {
             echo '<tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>';
         }
         if (trim($notes) != '') {
-            echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . strtoupper($string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
+            echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . mb_strtoupper($string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
         }
 
         if ($scenario != '') {
@@ -317,7 +317,7 @@ while ($question_data->fetch()) {
             echo "</td><td>$scenario<br />\n<br />";
             $li_set = 1;
         }
-      
+
         if ($q_type == 'info') {
             echo "<tr style=\"background-color:$tmp_color\"><td>";
             $li_set = 0;
@@ -379,11 +379,11 @@ while ($result->fetch()) {
         $answer_no++;
 
         $style = '';
-      
+
         if (is_numeric($student_mark)) {  // Marked previously so grey out.
             $style .= ' marked';
         }
-      
+
         if ($answer_shown) {
             $style .= ' hide';
         } else {
@@ -391,7 +391,7 @@ while ($result->fetch()) {
         }
 
         echo '<div class="student-answer-block' . $style . '">';
-            
+
         $out_of = $result->num_rows;
         echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
         echo '<div id="ans_' . $answer_no . '"><div class="student_ans">' . nl2br(render_user_answer($user_answer, $questionsettings[$textbox_q_id], $string)) . '</div><div class="student_marks">' . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";

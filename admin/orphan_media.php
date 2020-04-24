@@ -66,7 +66,7 @@ require '../include/sidebar_menu.inc';
   $saved_space = 0;
 if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     $deletefiles = unserialize(base64_decode(($_POST['deletefiles'])));
-    
+
     foreach ($deletefiles as $filename) {
         $fullpath = $mediadirectory->fullpath($filename);
         $saved_space += filesize($fullpath);
@@ -95,7 +95,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         $regexp = str_replace('?', '\?', $regexp);
 
         $image_array = array();
-      
+
         $parts = explode('<img', $html);
         if (count($parts) > 0) {
             // Got some images
@@ -112,10 +112,10 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
                 $image_array[] = $image_src;
             }
         }
-      
+
         return $image_array;
     }
-    
+
     $file_array = array();
     $missing_array = array();
 
@@ -126,9 +126,9 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     }
     while ($file = readdir($dp)) {
         // Ignore hidden files
-        if (substr($file, 0, 1) != '.') {
+        if (mb_substr($file, 0, 1) != '.') {
             $file_array[$file] = 0;
-            if (strpos($file, '.flv') !== false) {
+            if (mb_strpos($file, '.flv') !== false) {
                 // Set FLV files to used to protect them as they are indirectly referenced by SWF files.
                 $file_array[$file] = 1;
             }
@@ -142,7 +142,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     $result->store_result();
     $result->bind_result($q_media);
     while ($result->fetch()) {
-        if (strlen($q_media) != substr_count($q_media, '|')) {     // Extended matching with no graphics.
+        if (mb_strlen($q_media) != mb_substr_count($q_media, '|')) {     // Extended matching with no graphics.
             $tmp_files = explode('|', $q_media);
             foreach ($tmp_files as $single_file) {
                 if (isset($file_array[$single_file])) {
@@ -154,7 +154,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         }
     }
     $result->close();
-  
+
     //- Get all the files from the 'options' table. ------------------------------------
     $result = $mysqli->prepare("SELECT o_media FROM options WHERE o_media != '' ORDER BY id_num");
     $result->execute();
@@ -185,7 +185,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         }
     }
     $result->close();
-  
+
     //- Check scenario field for any images (Latex, etc) ---------------------------------
     $result = $mysqli->prepare("SELECT scenario FROM questions WHERE scenario LIKE '%<img%'");
     $result->execute();
@@ -204,7 +204,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         }
     }
     $result->close();
-  
+
     //- Check correct field for any images (images used as labels in Labelling question) -----------
     $result = $mysqli->prepare("SELECT correct FROM options, questions WHERE questions.q_id=options.o_id AND q_type='labelling'");
     $result->execute();
@@ -215,7 +215,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         if (isset($parts[11])) {
             $sub_parts = explode('|', $parts[11]);
             foreach ($sub_parts as $sub_part) {
-                if (strpos($sub_part, '.gif') !== false or strpos($sub_part, '.png') !== false or strpos($sub_part, '.jpg') !== false or strpos($sub_part, '.jpeg') !== false) {
+                if (mb_strpos($sub_part, '.gif') !== false or mb_strpos($sub_part, '.png') !== false or mb_strpos($sub_part, '.jpg') !== false or mb_strpos($sub_part, '.jpeg') !== false) {
                     $image_parts = explode('$', $sub_part);
                     $image_text = $image_parts[4];
                     $image_filename = explode('~', $image_text);
@@ -231,7 +231,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     }
     $result->close();
     $mysqli->close();
-    
+
     $tmp_date = mktime(0, 0, 0, date('m'), date('d') - 2, date('Y'));
     $deletefiles = array();
     // Run through the array and remove any files not used.
@@ -253,7 +253,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
             $fileusedcount++;
         }
     }
-  
+
     // Ask for confirmation before deleting files.
     if (count($deletefiles) > 0) {
         $serlializedeletefiles = base64_encode(serialize(($deletefiles)));
@@ -271,7 +271,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     }
 
     echo "</ul>\n";
-  
+
     if (count($missing_array) > 0) {
         sort($missing_array);
         echo '<h1>' . $string['missingfiles'] . "</h1>\n<ul>";

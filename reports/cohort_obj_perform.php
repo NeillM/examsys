@@ -55,7 +55,7 @@ $enddate = check_var('enddate', 'GET', true, false, true);
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(30);
 ?>
 <div style="font-size:90%">
@@ -68,13 +68,13 @@ $enddate = check_var('enddate', 'GET', true, false, true);
   $session = $propertyObj->get_calendar_year();
 
   $moduleID = Paper_utils::get_modules($paperID, $mysqli);
-  
+
 if ($_GET['percent'] != 100 and $_GET['percent'] != '') {
     $percent = $_GET['percent'];
 } else {
     $percent = 100;
 }
-  
+
   $student_no = 0;
   $user_total = 0;
   $question_data = getCohortData($mysqli, $moduleID, $startdate, $enddate, $_GET['repcourse'], $_GET['repmodule'], '%', $paperID, $paper_type, $_GET['ordering'], $student_no, $user_total, $percent);
@@ -88,7 +88,7 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 }
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
-  
+
   echo '<div class="page_title">' . $string['learningobjectiveanalysis'];
 if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     echo ' (' . module_utils::get_moduleid_from_id($_GET['repmodule'], $mysqli) . ' ' . $string['studentsonly'] . ')';
@@ -100,8 +100,8 @@ if ($student_no == 0) {
     exit;
 }
   echo '</div>';
-  
-  $qid_list = substr($qid_list, 0, -1);
+
+  $qid_list = mb_substr($qid_list, 0, -1);
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
   unset($objByModule['none_of_the_above']);
 

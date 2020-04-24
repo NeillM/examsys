@@ -24,24 +24,24 @@
 
 class restAPI
 {
-   
+
     public $request_vars;
     public $data;
     public $http_accept;
     public $method;
-   
+
     function __construct()
     {
         $this->request_vars      = array();
         $this->data              = '';
-        if (strpos($_SERVER['HTTP_ACCEPT'], 'json') !== false) {
+        if (mb_strpos($_SERVER['HTTP_ACCEPT'], 'json') !== false) {
             $this->http_accept = 'json';
         } else {
             $this->http_accept = 'xml';
         }
         $this->method            = 'get';
     }
-   
+
     public function processRequest()
     {
         //override this for each apication !!! in a drived class
@@ -54,7 +54,7 @@ class restAPI
         header($status_header);
         // set the content type
         header('Content-type: ' . $content_type);
-  
+
         // pages with body are easy
         if ($body != '') {
             // send the body
@@ -64,7 +64,7 @@ class restAPI
             // we need to create the body if none is passed
             // create some body messages
             $message = '';
-  
+
             // this is purely optional, but makes the pages a little nicer to read
             // for your users.  Since you won't likely send a lot of different status codes,
             // this also shouldn't be too ponderous to maintain
@@ -82,7 +82,7 @@ class restAPI
                     $message = 'The requested method is not implemented.';
                     break;
             }
-  
+
             // servers don't always have a signature turned on (this is an apache directive "ServerSignature On")
             //$signature = ($_SERVER['SERVER_SIGNATURE'] == '') ? $_SERVER['SERVER_SOFTWARE'] . ' Server at ' . $_SERVER['SERVER_NAME'] . ' Port ' . $_SERVER['SERVER_PORT'] : $_SERVER['SERVER_SIGNATURE'];
             $signature = '';
@@ -100,42 +100,42 @@ class restAPI
                             <address>' . $signature . '</address>  
                         </body>  
                     </html>';
-  
+
             echo $body;
             exit;
         }
     }
-   
+
     public function setData($data)
     {
         $this->data = $data;
     }
-  
+
     public function setMethod($method)
     {
         $this->method = $method;
     }
-  
+
     public function setRequestVars($request_vars)
     {
         $this->request_vars = $request_vars;
     }
-  
+
     public function getData()
     {
         return $this->data;
     }
-  
+
     public function getMethod()
     {
         return $this->method;
     }
-  
+
     public function getHttpAccept()
     {
         return $this->http_accept;
     }
-  
+
     public function getRequestVars()
     {
         return $this->request_vars;

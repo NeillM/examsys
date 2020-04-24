@@ -57,7 +57,7 @@ function quick_links($string)
 <html>
 <head>
   <?php
-    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    if (mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
         echo "<meta name=\"viewport\" content=\"user-scalable=no\">\n";
     } else {
         echo "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
@@ -71,7 +71,7 @@ function quick_links($string)
   <link rel="stylesheet" type="text/css" href="../css/osce_list.css" />
   <style type="text/css">
   <?php
-    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    if (mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
         echo "body {font-size:110%}\n";
     } else {
         echo "body {font-size:90%}\n";
@@ -112,7 +112,7 @@ function quick_links($string)
             echo "<table id='user_list' cellpadding=\"6\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
 
             while ($result->fetch()) {
-                $current_letter = strtoupper($surname{0});
+                $current_letter = mb_strtoupper($surname{0});
                 if ($old_letter != $current_letter) {
                     echo "<tr><td colspan=\"3\" class=\"letter\"><a name=\"$current_letter\"></a>$current_letter</td></tr>";
                 }

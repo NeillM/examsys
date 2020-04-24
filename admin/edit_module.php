@@ -72,7 +72,7 @@ if (count($vle_apis) > 0) {
   <?php
     require '../include/admin_module_options.inc';
         require '../include/toprightmenu.inc';
-        
+
         echo draw_toprightmenu();
     ?>
   <div id="content">
@@ -115,22 +115,22 @@ if (count($vle_apis) > 0) {
     $result->close();
     echo "</optgroup>\n</select></td></tr>\n";
 
-    if (strpos($module['checklist'], 'peer') !== false) {
+    if (mb_strpos($module['checklist'], 'peer') !== false) {
         $peer = 1;
     } else {
         $peer = 0;
     }
-    if (strpos($module['checklist'], 'external') !== false) {
+    if (mb_strpos($module['checklist'], 'external') !== false) {
         $external = 1;
     } else {
         $external = 0;
     }
-    if (strpos($module['checklist'], 'stdset') !== false) {
+    if (mb_strpos($module['checklist'], 'stdset') !== false) {
         $stdset = 1;
     } else {
         $stdset = 0;
     }
-    if (strpos($module['checklist'], 'mapping') !== false) {
+    if (mb_strpos($module['checklist'], 'mapping') !== false) {
         $mapping = 1;
     } else {
         $mapping = 0;

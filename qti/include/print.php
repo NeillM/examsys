@@ -110,7 +110,7 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
             if (is_callable(array($elem, '__toString'))) {
                 //if (get_class($elem) == "ST_QTI12_Material")
                 //{
-                $title .= ' (' . trim(substr($elem->__toString(), 0, 125)) . ')';
+                $title .= ' (' . trim(mb_substr($elem->__toString(), 0, 125)) . ')';
                 //}
             }
         }
@@ -169,10 +169,10 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
     } else {
         $out = '';
         $elem = htmlentities($elem);
-        if (strlen($elem) > $trim) {
+        if (mb_strlen($elem) > $trim) {
             while ($elem != '') {
-                $out .= substr($elem, 0, $trim) . '<strong><font color=blue>*</font></strong><br />';
-                $elem = substr($elem, $trim);
+                $out .= mb_substr($elem, 0, $trim) . '<strong><font color=blue>*</font></strong><br />';
+                $elem = mb_substr($elem, $trim);
             }
             $elem = $out;
         }

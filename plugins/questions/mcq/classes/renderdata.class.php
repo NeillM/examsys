@@ -116,7 +116,7 @@ class renderdata extends \questiondata
             $option['displayoptionmedia'] = true;
         }
         if ($this->displaymethod === 'vertical' or $this->displaymethod === 'vertical_other') {
-            if (substr($userdismissed, $option['position'] - 1, 1) == '1') {
+            if (mb_substr($userdismissed, $option['position'] - 1, 1) == '1') {
                 $option['inact'] = true;
             } else {
                 $option['inact'] = false;
@@ -149,9 +149,9 @@ class renderdata extends \questiondata
         // other textbox not currently supported by non survey papers.
         if ($this->displaymethod === 'vertical_other') {
             if ($this->papertype == 3) {
-                if (substr($useranswer, 0, 5) === 'other') {
+                if (mb_substr($useranswer, 0, 5) === 'other') {
                     $this->otherselected = true;
-                    $this->other = substr($useranswer, 6);
+                    $this->other = mb_substr($useranswer, 6);
                 }
             }
         }

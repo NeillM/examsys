@@ -102,7 +102,7 @@ class renderdata extends \questiondata
     public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
     {
         $likert_display = explode('|', $this->displaymethod);
-        $this->scale_size = substr_count($this->displaymethod, '|');
+        $this->scale_size = mb_substr_count($this->displaymethod, '|');
         if ($likert_display[$this->scale_size] == 'true') {
             $this->displayna = true;
         }

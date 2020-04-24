@@ -53,8 +53,8 @@ while ($result->fetch()) {
     }
 }
 $result->close();
-$fix_data = substr($fix_data, 1);
-  
+$fix_data = mb_substr($fix_data, 1);
+
 $media = $question->get_media();
 $plugin_height = max($media['height'] + 25, 380);
 $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
@@ -63,7 +63,7 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
         <div class="form">
           <h3><?php echo $string['correctionmode']; ?></h3>
         </div>
-        
+
         <table class="form" summary="Hotspot flash movie">
           <thead>
             <tr>

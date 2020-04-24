@@ -48,7 +48,7 @@ class academic_year extends generator
             $date = new \DateTime($parameters['year']);
             $year = $date->format('Y');
             $parameters['calendar_year'] = $year;
-            $nextyear = substr($year, -2) + 1;
+            $nextyear = mb_substr($year, -2) + 1;
             $parameters['academic_year'] = "$year/$nextyear";
         }
 

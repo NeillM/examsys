@@ -75,7 +75,7 @@ while ($result->fetch()) {
     // Decode user answers into an array of lowercase strings.
     $tmp_answer = json_decode($user_answer);
     foreach ($tmp_answer as &$answer) {
-        $answer = strtolower(StringUtils::clean_and_trim($answer));
+        $answer = mb_strtolower(StringUtils::clean_and_trim($answer));
     }
     $log_answers[$type][$id] = $tmp_answer;
 }
@@ -97,11 +97,11 @@ $option_list = implode(',', $option_list_array);
 
 $blank_details = explode('[blank', $option_text);
 for ($i = 1; $i < count($blank_details); $i++) {
-    $end_start_tag = strpos($blank_details[$i], ']');
-    $start_end_tag = strpos($blank_details[$i], '[/blank]');
-    $blank_options = substr($blank_details[$i], ($end_start_tag + 1), ($start_end_tag - 1));
+    $end_start_tag = mb_strpos($blank_details[$i], ']');
+    $start_end_tag = mb_strpos($blank_details[$i], '[/blank]');
+    $blank_options = mb_substr($blank_details[$i], ($end_start_tag + 1), ($start_end_tag - 1));
 
-    $new_option_text = substr($blank_details[$i], 0, ($end_start_tag + 1));
+    $new_option_text = mb_substr($blank_details[$i], 0, ($end_start_tag + 1));
 }
 
 for ($i = 1; $i < count($blank_details); $i++) {
@@ -154,16 +154,16 @@ foreach ($log_answers as $log_type => $log_data) {
             // Strip out answers from $blank_details
             // n.b. First item in $blank_details not required
             // Step 1. get all contents after ]
-            $blank_details_redo[$j] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
+            $blank_details_redo[$j] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
             // Step 2. get all contents before [/blank]
-            $blank_details_redo[$j] = substr($blank_details_redo[$j], 0, (strpos($blank_details[$i], '[/blank]') - 1));
+            $blank_details_redo[$j] = mb_substr($blank_details_redo[$j], 0, (mb_strpos($blank_details[$i], '[/blank]') - 1));
             // $blank_details_redo is now what was between ] and [/blank]
             $answer_list = explode(',', $blank_details_redo[$j]);
             if ($user_parts[$j] != 'u' and $user_parts[$j] != '') {
                 $have_answer = true;
                 $is_correct = false;
                 foreach ($answer_list as $individual_answer) {
-                    if ($user_parts[$j] == strtolower(StringUtils::clean_and_trim($individual_answer))) {
+                    if ($user_parts[$j] == mb_strtolower(StringUtils::clean_and_trim($individual_answer))) {
                         $is_correct = true;
                         break;
                     }

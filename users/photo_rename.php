@@ -22,7 +22,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-  
+
 require '../include/sysadmin_auth.inc';
 ?>
 <!DOCTYPE html>
@@ -54,9 +54,9 @@ while (false !== ($filename = $d->read())) {
             $result = $mysqli->prepare("SELECT username FROM users, sid WHERE sid.userID=users.id AND student_id='$filename'");
         } elseif ($mode == 'fullname') {
             $name_parts = explode(' ', $filename);
-            $surname = strtolower($name_parts[0]);
-            $firstname = strtolower($name_parts[1]);
-            $len = strlen($firstname);
+            $surname = mb_strtolower($name_parts[0]);
+            $firstname = mb_strtolower($name_parts[1]);
+            $len = mb_strlen($firstname);
             $result = $mysqli->prepare("SELECT username FROM users WHERE LOWER(surname)=? AND LEFT(LOWER(first_names), $len)=?");
             $result->bind_param('ss', $surname, $firstname);
         }

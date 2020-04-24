@@ -59,7 +59,7 @@ class DBUtils
         return $mysqli;
     }
 
-  
+
     /**
      * Check binded parameters and type
      *
@@ -70,7 +70,7 @@ class DBUtils
      */
     public static function check_sqlparams($bindtype, $bindvalue, $sql)
     {
-        if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (substr_count($sql, '?') === count($bindvalue)) && (count($bindvalue) === count($bindtype))) {
+        if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (mb_substr_count($sql, '?') === count($bindvalue)) && (count($bindvalue) === count($bindtype))) {
             $error = false;
             while (!empty($bindtype)) {
                 if ($error === true) {
@@ -143,7 +143,7 @@ class DBUtils
         }
         return self::$fulltext_search[$table];
     }
-  
+
     /**
      * Execute database update command
      * @param string $table The table being updated
@@ -195,7 +195,7 @@ class DBUtils
         }
         return true;
     }
-  
+
     /**
      * Execute database insert command
      * @param string $table The table being updated
@@ -246,7 +246,7 @@ class DBUtils
         }
         return $db->insert_id;
     }
-  
+
     /**
      * Run sql file
      * @param string $file file location

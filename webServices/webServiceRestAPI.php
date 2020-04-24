@@ -34,7 +34,7 @@ if (!isset($_GET['url'])) {
     $action = '';
     $parms = '';
 } else {
-    if (substr_count($_GET['url'], '/') > 0) {
+    if (mb_substr_count($_GET['url'], '/') > 0) {
         list($action, $parms) = explode('/', $_GET['url'], 2);
     } else {
         $action = $_GET['url'];
@@ -42,7 +42,7 @@ if (!isset($_GET['url'])) {
 }
 if ($action == 'getModulePaperList') {
     // Force a staff DB connection for getModulePaperList
-  
+
     $mysqli = DBUtils::get_mysqli_link(
         $configObject->get('cfg_db_host'),
         $configObject->get('cfg_db_staff_user'),
@@ -52,7 +52,7 @@ if ($action == 'getModulePaperList') {
         UserNotices::get_instance(),
         $configObject->get('dbclass')
     );
-   
+
     $result =  $mysqli->select_db($configObject->get('cfg_db_database'));
 } else {
     require '../include/staff_student_auth.inc';
@@ -105,7 +105,7 @@ class webServiceRestAPI extends restAPI
             $xml->writeElement($key, $value);
         }
     }
-      
+
     public function formatData($data, $root_tag, $tmp_tag)
     {
         if ($this->http_accept == 'json') {
@@ -121,10 +121,10 @@ class webServiceRestAPI extends restAPI
             $xml->endElement();
             $data = $xml->outputMemory(true);
         }
-    
+
         return $data;
     }
-  
+
     public function getUserID($username, $staff = false)
     {
         if ($staff == true) {
@@ -137,7 +137,7 @@ class webServiceRestAPI extends restAPI
         $res->bind_result($tmp_userID);
         $res->fetch();
         $res->close();
-    
+
         return $tmp_userID;
     }
 
@@ -147,13 +147,13 @@ class webServiceRestAPI extends restAPI
             $action = '';
             $parms = '';
         } else {
-            if (substr_count($_GET['url'], '/') > 0) {
+            if (mb_substr_count($_GET['url'], '/') > 0) {
                 list($action, $parms) = explode('/', $_GET['url'], 2);
             } else {
                 $action = $_GET['url'];
             }
         }
-    
+
         switch ($action) {
             case 'getAvailableFeedback':
                 // Process URL
@@ -188,7 +188,7 @@ class webServiceRestAPI extends restAPI
                 if (isset($tmp[1])) {
                     $types = $tmp[1];
                 }
-        
+
                 if ($username == '') {
                     $this->sendResponse(400, '', '');
                 } else {
@@ -247,7 +247,7 @@ class webServiceRestAPI extends restAPI
                 if (isset($tmp[0])) {
                     $paperID = explode(',', $tmp[0]);
                 }
-                
+
                 if ($paperID == null) {
                     $this->sendResponse(400, '', '');
                 } else {
@@ -266,7 +266,7 @@ class webServiceRestAPI extends restAPI
                 break;
         }
     }
-    
+
     public function getQStatsLastWeek()
     {
         $userObject = UserObject::get_instance();
@@ -274,7 +274,7 @@ class webServiceRestAPI extends restAPI
             return '';
         }
         $papers = array();
-    
+
         $sql = "SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > SUBDATE(NOW(), INTERVAL 4 WEEK) AND end_date < NOW() AND deleted IS NULL ORDER BY start_date";
         $res = $this->db->prepare($sql);
         $res->execute();
@@ -284,9 +284,9 @@ class webServiceRestAPI extends restAPI
               $papers[] = $paperID;
         }
         $res->close();
-        
+
         $stats = $this->getQStatsbyPaper($papers);
-        
+
         return $stats;
     }
 
@@ -296,12 +296,12 @@ class webServiceRestAPI extends restAPI
         if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
             return '';
         }
-    
+
         $stats = array();
-        
+
         $stat_no = 0;
         $old_guid = 0;
-            
+
         $sql = array();
         $bind_types = array();
         $bind_values = array();
@@ -338,23 +338,23 @@ class webServiceRestAPI extends restAPI
                     $stats[$stat_no]['cohort_size'] = $cohort_size;
                     $stats[$stat_no]['taken'] = $taken;
                 }
-                
+
                 $stats[$stat_no]['parts']['part' . $part_no] = array('p' => $p / 100, 'd' => $d / 100);
-                                
+
                 $old_guid = $guid;
             }
         }
         $res->close();
-        
+
         return $stats;
     }
 
     public function getModulePaperList($moduleID)
     {
         global $protocol, $configObject;
-    
+
         $idMod = module_utils::get_idMod($moduleID, $this->db);
-    
+
         $papers = array();
         $paper_no = 0;
         $sql = "SELECT 
@@ -407,7 +407,7 @@ class webServiceRestAPI extends restAPI
         $allowaccess = false;
         $tmp_userID = $this->getUserID($username, false);
         $userObject = UserObject::get_instance();
-    
+
         if ($userObject->has_role('SysAdmin')) {
             $allowaccess = true;
         } elseif ($userObject->has_role('Staff')) {
@@ -416,18 +416,18 @@ class webServiceRestAPI extends restAPI
             // Students can only list their own feedabck
             $allowaccess = true;
         }
-    
+
         if ($allowaccess == false) {
             return '';
         }
-    
+
         if ($moduleID != '') {
             $idMod = module_utils::get_idMod($moduleID, $this->db);
             if ($idMod == false) {
                 return 'Unknown Module';
             }
         }
-    
+
         $paper_no = 0;
         $old_yearID = -1;
         $papers = array();
@@ -478,7 +478,7 @@ class webServiceRestAPI extends restAPI
         $res->execute();
         $res->store_result();
         $res->bind_result($paperID, $date, $is_live, $paper_type, $paper_title, $start_date, $end_date, $calendar_year, $crypt_name, $moduleID);
-    
+
         while ($res->fetch()) {
             if ($is_live < time()) {
                 // Have they sat the paper?
@@ -502,7 +502,7 @@ class webServiceRestAPI extends restAPI
             } else {
                 $papers[$paper_no]['feedback_url'] = '';
             }
-      
+
             $papers[$paper_no]['title'] = $paper_title;
             $papers[$paper_no]['type'] = $this->qtypes[$paper_type];
             $papers[$paper_no]['start_date'] = $start_date;
@@ -513,14 +513,14 @@ class webServiceRestAPI extends restAPI
             $paper_no++;
         }
         $res->close();
-    
+
         return $papers;
     }
 
     public function getOwnerPaperList($username, $types)
     {
         global $configObject;
-    
+
         $allowaccess = false;
         $userObject = UserObject::get_instance();
         $tmp_userID = $this->getUserID($username, true);
@@ -533,22 +533,22 @@ class webServiceRestAPI extends restAPI
             // Students can not access this function
             $allowaccess = false;
         }
-    
+
         if ($allowaccess == false) {
             return '';
         }
-    
+
         if ($tmp_userID == '') {
             return '';
         }
-    
+
         $staff_modules = UserUtils::list_staff_modules_by_userID($tmp_userID, $this->db);
         if (count($staff_modules) == 0) {
             // User is not on any teams. stop!!
             return array();
         }
         $staff_modules_ids_str = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ') ';
-    
+
         switch ($types) {
             case 'formative':
                 $typeSQL = " AND paper_type='0'";
@@ -575,7 +575,7 @@ class webServiceRestAPI extends restAPI
                 $typeSQL = '';
                 break;
         }
-    
+
         $papers = array();
         $paper_no = 0;
         $res = $this->db->prepare("SELECT 
@@ -610,7 +610,7 @@ class webServiceRestAPI extends restAPI
             }
         }
         $res->close();
-    
+
         return $papers;
     }
 
@@ -620,14 +620,14 @@ class webServiceRestAPI extends restAPI
         if (!$userObject->has_role('SysAdmin')) {
             return 'AccessDenied';
         }
-    
+
         if (!isset($_POST['data'])) {
             return 'No data';
         }
 
         $xml = new SimpleXMLElement($_POST['data']);
         $fields = array('username', 'password', 'firstnames', 'title', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles');
-    
+
         foreach ($fields as $field) {
             if (isset($xml->$field) and $xml->$field != '') {
                 $$field = $xml->$field;
@@ -635,7 +635,7 @@ class webServiceRestAPI extends restAPI
                 return 'Missing data: ' . $field;
             }
         }
-    
+
         if (isset($xml->studentid)) {
             $studentid = $xml->studentid;
         } else {
@@ -644,16 +644,16 @@ class webServiceRestAPI extends restAPI
         if ($roles != 'Student' and $roles != 'Staff' and $roles != 'Staff,Admin' and $roles != 'Staff,SysAdmin') {
             return 'Incorrect value for roles: ' . $roles;
         }
-    
+
         $success = UserUtils::create_user($username, $password, $title, $firstnames, $surname, $email, $course, $gender, $yearofstudy, $roles, $studentid, $this->db);
-    
+
         if ($success === false) {
             return false;
         } else {
             return $success;
         }
     }
-  
+
     function __destruct()
     {
         parent::__destruct();

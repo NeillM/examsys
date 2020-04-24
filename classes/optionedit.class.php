@@ -547,8 +547,8 @@ QUERY;
         $root .= '/classes/';
 
         $question_type = $question->get_type();
-        $classname = 'Option' . strtoupper($question_type);
-        $classfile = 'options/option_' . strtolower($question_type) . '.class.php';
+        $classname = 'Option' . mb_strtoupper($question_type);
+        $classfile = 'options/option_' . mb_strtolower($question_type) . '.class.php';
         if (file_exists($root . $classfile)) {
             include_once $classfile;
         } else {
@@ -710,7 +710,7 @@ QUERY;
         }
         return $converted;
     }
-  
+
     /*
     * Default method for return post params
     * @return array unparsed post data

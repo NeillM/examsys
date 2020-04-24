@@ -126,7 +126,7 @@ if (isset($_GET['submit'])) {
         echo $notice->info_strip($error, 100) . "\n</body>\n</html>\n";
         exit;
     }
-  
+
     $params = '';
     $variables = array();
     $keywordsSQL = '';
@@ -187,7 +187,7 @@ if (isset($_GET['submit'])) {
         $variables[] = $searchterm;
         $params .= 's';
         $search_string = $themeSQL . $scenarioSQL . $leadinSQL . $stemsSQL . $feedbackSQL . $qIDSQL;
-        $search_string = 'AND (' . substr($search_string, 4) . ')';
+        $search_string = 'AND (' . mb_substr($search_string, 4) . ')';
     }
 
     if ($_GET['module'] != '') {
@@ -360,7 +360,7 @@ if (isset($_GET['submit'])) {
         if (trim($tmp_leadin) == '') {
             $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
         }
-    
+
         if ($q_type == 'sct') {
             $sct_parts = explode('~', $tmp_leadin);
             $tmp_leadin = $sct_parts[0];
@@ -370,7 +370,7 @@ if (isset($_GET['submit'])) {
         } else {
             echo '<td class="u';
         }
-        if (strlen($fullText) > $leadinlength) {
+        if (mb_strlen($fullText) > $leadinlength) {
             echo ' extended-leadin" data-extended-leadin="' . htmlspecialchars($fullText);
         }
         echo '">';

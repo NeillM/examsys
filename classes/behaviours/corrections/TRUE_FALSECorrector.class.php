@@ -89,7 +89,7 @@ class TRUE_FALSECorrector extends Corrector
                     $result->store_result();
                     $result->bind_result($user_answer, $id);
                     while ($result->fetch()) {
-                        $user_answers = str_split($user_answer);
+                        $user_answers = mb_str_split($user_answer);
                         $mark = 0;
 
                         for ($i = 0; $i < count($new_correct_val); $i++) {

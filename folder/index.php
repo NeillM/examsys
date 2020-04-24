@@ -72,7 +72,7 @@ $module = '';
 
 if (isset($_POST['submit'])) {
     $folder_parent = folder_utils::get_folder_name($folder, $mysqli);
-  
+
     $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
 
     $duplicate_folder = folder_utils::folder_exists($new_folder_name, $userObject, $mysqli);
@@ -174,7 +174,7 @@ $folder_details->execute();
 $folder_details->bind_result($id, $name, $color);
 while ($folder_details->fetch()) {
     $display_name = str_replace("$orig_folder_name;", '', $name);
-    if (substr_count($display_name, ';') == 0) {
+    if (mb_substr_count($display_name, ';') == 0) {
         echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"../folder/index.php?folder=$id\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../folder/index.php?folder=$id\" class=\"blacklink\">$display_name</a></div></div>\n";
     }
 }

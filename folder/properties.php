@@ -95,9 +95,9 @@ $result->close();
     <?php
 
       $folder_array = explode(';', $full_path);
-      $sections = substr_count($full_path, ';');
+      $sections = mb_substr_count($full_path, ';');
       $current_folder = $folder_array[$sections];
-      $prefix = substr($full_path, 0, strrpos($full_path, ';'));
+      $prefix = mb_substr($full_path, 0, strrpos($full_path, ';'));
       echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" style=\"width:100%\" >\n";
       echo '<tr><td style="text-align:right"><nobr>' . $string['foldername'] . '&nbsp;</nobr></td><td colspan="3"><input';
       echo " type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" id=\"folder\" name=\"folder\" required />";
@@ -133,13 +133,13 @@ $result->close();
       echo "</td></tr>\n";
       echo '<tr><td align="right" valign="top">' . $string['owner'] . "&nbsp;</td><td>$owner</td></tr>\n";
       echo '<tr><td align="right" valign="top">' . $string['created'] . "&nbsp;</td><td>$created</td></tr>\n";
-       
+
       echo '<tr><td align="right">' . $string['teams'] . '&nbsp;</td><td><div style="background-color:white; display:block; height:320px; width:100%; overflow-y:scroll; border:1px solid #7F9DB9; font-size:90%">';
 
       $module_no = 0;
       $old_school = '';
       $old_schoolcode = '';
-      
+
     foreach ($userObject->get_staff_accessable_modules() as $IdMod => $module) {
         if (is_null($module['schoolcode'])) {
             if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
@@ -152,12 +152,12 @@ $result->close();
         }
         if (isset($folder_staff_modules[$IdMod])) {
             if ($userObject->is_staff_user_on_module($IdMod) or $userObject->has_role('SysAdmin')) {
-                echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+                echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
             } else {
-                echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+                echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
             }
         } else {
-            echo "<div class=\"r1\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+            echo "<div class=\"r1\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
         }
         $module_no++;
         $old_school = $module['school'];

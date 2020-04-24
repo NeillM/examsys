@@ -76,8 +76,8 @@ function list_modules($mod, $id, $student_mod, $string, $session)
         $moduleid = $mod_info['moduleid'];
         $fullname = $mod_info['fullname'];
 
-        if ($old_letter != strtoupper(substr($moduleid, 0, 1))) {
-            echo '<table border="0" style="padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>&nbsp;' . strtoupper(substr($moduleid, 0, 1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+        if ($old_letter != mb_strtoupper(mb_substr($moduleid, 0, 1))) {
+            echo '<table border="0" style="padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>&nbsp;' . mb_strtoupper(mb_substr($moduleid, 0, 1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
         }
 
         if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
@@ -86,7 +86,7 @@ function list_modules($mod, $id, $student_mod, $string, $session)
             echo '<div class="r1" id="divmod' . $id . '_' . $loop . '"><input type="checkbox" name="mod' . $id . '_' . $loop . '" id="mod' . $id . '_' . $loop . '" value="' . $idMod . '" />&nbsp;<label for="mod' . $id . '_' . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
         }
         $loop++;
-        $old_letter = strtoupper(substr($moduleid, 0, 1));
+        $old_letter = mb_strtoupper(mb_substr($moduleid, 0, 1));
     }
     echo "</div>\n</div>\n";
 }

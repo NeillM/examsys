@@ -39,7 +39,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['confirmdelete'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -66,7 +66,7 @@ if ($properties->get_summative_lock()) {
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 
     <?php
-    if (substr_count($_GET['pID'], ',')  > 1) {
+    if (mb_substr_count($_GET['pID'], ',')  > 1) {
         echo '<input class="delete" type="submit" name="submit" value="' . $string['deletes'] . '" />';
     } else {
         echo '<input class="delete" type="submit" name="submit" value="' . $string['delete'] . '" />';

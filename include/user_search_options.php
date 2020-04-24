@@ -186,7 +186,7 @@ if (isset($state['chkbox9']) and $state['chkbox9'] == 'true') {
         <option selected>1000</option>
         <option>10000</option>
     </select>
-    <?= strtolower($string['results']) ?>
+    <?= mb_strtolower($string['results']) ?>
 </div>
 
 <br />

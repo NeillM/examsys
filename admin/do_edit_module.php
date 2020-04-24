@@ -65,7 +65,7 @@ if ($moduleid_in_use == false) {
         $module['checklist'] .= ',mapping';
     }
     if ($module['checklist'] != '') {
-        $module['checklist'] = substr($module['checklist'], 1);
+        $module['checklist'] = mb_substr($module['checklist'], 1);
     }
 
 

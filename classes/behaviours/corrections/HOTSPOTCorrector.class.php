@@ -37,7 +37,7 @@ class HOTSPOTCorrector extends Corrector
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();
-        
+
         $old_points = $this->_question->get_points1();
         $option = reset($this->_question->options);
         $marks_correct = $option->get_marks_correct();
@@ -52,9 +52,9 @@ class HOTSPOTCorrector extends Corrector
                 // Marking MUST not be client side.
                 $student_records = explode(';', $new_correct['option_correct1']);
                 foreach ($student_records as $student_record) {
-                    if (strlen($student_record) > 0) {
-                        $database_id = substr($student_record, 0, strpos($student_record, ','));
-                        $answers = ltrim(strstr($student_record, ','), ',');
+                    if (mb_strlen($student_record) > 0) {
+                        $database_id = mb_substr($student_record, 0, mb_strpos($student_record, ','));
+                        $answers = ltrim(mb_strstr($student_record, ','), ',');
                         $answers = rtrim($answers, ',');
                         $mark = 0;
                         $all_correct = true;
@@ -78,7 +78,7 @@ class HOTSPOTCorrector extends Corrector
                             }
                             $totalpos = $marks_correct;
                         } else {
-                            $totalpos = (substr_count($new_correct['points1'], '|') + 1) * $marks_correct;
+                            $totalpos = (mb_substr_count($new_correct['points1'], '|') + 1) * $marks_correct;
                         }
 
                         $result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ?, user_answer = ? WHERE id = ?");

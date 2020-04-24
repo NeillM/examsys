@@ -146,7 +146,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup
             $datapart->role = 'Student';
         }
 
-        if (isset($datapart->attendstatus) and strpos($datapart->attendstatus, 'Suspended') !== false) {
+        if (isset($datapart->attendstatus) and mb_strpos($datapart->attendstatus, 'Suspended') !== false) {
             $this->savetodebug('status is suspended diasbling');
             $datapart->disabled = true;
         }
@@ -160,18 +160,18 @@ class UoNSaturnTranslation_lookup extends outline_lookup
 
 
         if (isset($datapart->title) and !isset($datapart->gender)) {
-            if (stripos($datapart->title, 'Mr') !== false) {
+            if (mb_stripos($datapart->title, 'Mr') !== false) {
                     $datapart->gender = 'Male';
             }
-            if (stripos($datapart->title, 'Ms') !== false or stripos($datapart->title, 'Miss') !== false or stripos($datapart->title, 'Mrs') !== false) {
+            if (mb_stripos($datapart->title, 'Ms') !== false or mb_stripos($datapart->title, 'Miss') !== false or mb_stripos($datapart->title, 'Mrs') !== false) {
                 $datapart->gender = 'Female';
             }
         }
 
         if (isset($datapart->studentstatus)) {
-            if (strtoupper(substr($datapart->reasonforleaving, 0, 3)) == 'W/D') {
+            if (mb_strtoupper(mb_substr($datapart->reasonforleaving, 0, 3)) == 'W/D') {
                     $datapart->role = 'left';
-            } elseif (stripos($datapart->reasonforleaving, 'not permitted to progress') !== false) {
+            } elseif (mb_stripos($datapart->reasonforleaving, 'not permitted to progress') !== false) {
                   $datapart->role = 'left';
             } elseif ($datapart->reasonforleaving == 'Successfully completed course') {
                 $datapart->role = 'graduate';

@@ -79,9 +79,9 @@ if (isset($_POST['startday'])) {
 
   echo "<tr><td colspan=\"3\" style=\"margin-bottom:5px\">\n<form action=\"\" method=\"post\" autocomplete=\"off\">" . $string['dates'] . ' ';
     // Split the end date
-    $split_year = substr($start_date, 0, 4);
-    $split_month = substr($start_date, 4, 2);
-    $split_day = substr($start_date, 6, 2);
+    $split_year = mb_substr($start_date, 0, 4);
+    $split_month = mb_substr($start_date, 4, 2);
+    $split_day = mb_substr($start_date, 6, 2);
     // start Day
     echo "<select name=\"startday\">\n";
 for ($i = 1; $i < 32; $i++) {
@@ -135,9 +135,9 @@ for ($i = 2005; $i < (date('Y') + 2); $i++) {
     echo "</select>\n";
     echo ' - ';
     // Split the end date
-    $split_year = substr($end_date, 0, 4);
-    $split_month = substr($end_date, 4, 2);
-    $split_day = substr($end_date, 6, 2);
+    $split_year = mb_substr($end_date, 0, 4);
+    $split_month = mb_substr($end_date, 4, 2);
+    $split_day = mb_substr($end_date, 6, 2);
     // end Day
     echo "<select name=\"endday\">\n";
 for ($i = 1; $i < 32; $i++) {

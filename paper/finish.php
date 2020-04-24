@@ -242,7 +242,7 @@ if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' an
     $css .= ".staffview {\nbackground: -moz-linear-gradient(top, #FF8282, $bgcolor);\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);\nbackground-image: -ms-linear-gradient(top, #FF8282 0%, $bgcolor 100%);\nfilter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='$bgcolor');\n}\n";
 }
 if ($font != 'Arial') {
-    if (strpos($font, ' ') === false) {
+    if (mb_strpos($font, ' ') === false) {
         $css .= "body {font-family:$font,sans-serif}\n";
         $css .= "pre {font-family:$font,sans-serif}\n";
     } else {
@@ -318,7 +318,7 @@ if (is_null($q_id)) {
   // Get any marking override for the paper
   $paper_utils = Paper_utils::get_instance();
   $overrides = $paper_utils->get_marking_overrides($log_type, $temp_userID, $paperID);
-  
+
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 if ($show_feedback) {
     display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);

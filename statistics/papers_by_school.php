@@ -50,14 +50,14 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
-  <div class="page_title"><?php echo $string['papersbyschool']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'], 2, 2) + 1); ?></span></div>
+  <div class="page_title"><?php echo $string['papersbyschool']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (mb_substr($_GET['calyear'], 2, 2) + 1); ?></span></div>
 </div>
 
 <table class="header" style="font-size:90%">
@@ -103,7 +103,7 @@ foreach ($master_array as $school => $data) {
         $moduleIDs[] = $id;
     }
     $result->close();
-    
+
     $master_array[$school]['module_no'] = count($moduleIDs);
 
     if (count($moduleIDs) > 0) {
@@ -111,16 +111,16 @@ foreach ($master_array as $school => $data) {
         $date_range = '';
         if ($_GET['calyear']) {
             $year = $_GET['calyear'];
-        
+
             $date_range .= " AND ((start_date > {$year}0901000000 AND end_date <= " . ($year + 1) . '0831235959)';  // Start and end within year
-            
+
             $date_range .= " OR (start_date <= {$year}0901000000 AND end_date >= " . ($year + 1) . '0831235959)';   // Paper continuing this year
-            
+
             $date_range .= " OR (start_date <= {$year}0901000000 AND end_date >= {$year}0901000000 AND end_date <= " . ($year + 1) . '0831235959)';   // End date within year
-            
+
             $date_range .= " OR (start_date > {$year}0901000000 AND start_date <= " . ($year + 1) . '0831235959 AND end_date >= ' . ($year + 1) . '0831235959))';   // Start date within year
         }
-        
+
         $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND idMod IN (" . implode(',', $moduleIDs) . ') AND deleted IS NULL GROUP BY property_id');
         $result->execute();
         $result->bind_result($paperID, $paper_title, $paper_type);
@@ -143,7 +143,7 @@ foreach ($master_array as $school => $data) {
         $faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
     }
     echo '<tr><td>' . $school . '</td>';
-    
+
     for ($i = 0; $i <= 6; $i++) {
         if ($data['paper_types'][$i] == 0) {
             echo '<td class="n grey">' . $data['paper_types'][$i] . '</td>';
@@ -153,7 +153,7 @@ foreach ($master_array as $school => $data) {
         $faculty_stats[$i] += $data['paper_types'][$i];
     }
     echo "</tr>\n";
-    
+
     $old_faculty = $data['faculty'];
 }
 ?>
@@ -166,13 +166,13 @@ foreach ($master_array as $school => $data) {
 function output_faculty_stats($stats)
 {
     $html = '<tr><td>&nbsp;</td>';
-    
+
     for ($i = 0; $i <= 6; $i++) {
         $html .= '<td class="n subtotal">' . number_format($stats[$i]) . '</td>';
     }
-    
+
     $html .= '</tr>';
-    
+
     return $html;
 }
 ?>

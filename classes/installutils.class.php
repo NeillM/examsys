@@ -468,7 +468,7 @@ class InstallUtils
         $salt = '';
         $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         for ($i = 0; $i < 16; $i++) {
-            $salt .= substr($characters, rand(0, 61), 1);
+            $salt .= mb_substr($characters, rand(0, 61), 1);
         }
         $cfg_encrypt_salt = $salt;
 
@@ -1643,7 +1643,7 @@ class InstallUtils
         }
         return false;
     }
-  
+
     /**
      * Check that  config file is writeable
      *
@@ -1893,7 +1893,7 @@ class InstallUtils
         require_once dirname(__DIR__) . '/include/path_functions.inc.php';
         $cfg_web_root = get_root_path();
         // Ensure there is a trailing slash.
-        if (substr($cfg_web_root, -1) !== '/') {
+        if (mb_substr($cfg_web_root, -1) !== '/') {
             $cfg_web_root .= '/';
         }
         self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
@@ -2035,7 +2035,7 @@ CONFIG;
 
         $cfg_web_root = get_root_path();
         // Ensure there is a trailing slash.
-        if (substr($cfg_web_root, -1) !== '/') {
+        if (mb_substr($cfg_web_root, -1) !== '/') {
             $cfg_web_root .= '/';
         }
         $config = str_replace('{cfg_web_root}', $cfg_web_root, $config);

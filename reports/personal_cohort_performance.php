@@ -81,7 +81,7 @@ while ($result->fetch()) {
         $old_correct      = array();
         $old_option_text  = array();
     }
-  
+
     $old_q_id           = $q_id;
     $old_display_pos    = $display_pos;
     $old_q_type         = $q_type;
@@ -139,14 +139,14 @@ $result->execute();
 $result->bind_result($q_id, $theme, $leadin, $q_type);
 while ($result->fetch()) {
     echo "<li>$leadin";
-  
-    if (substr(strtolower($leadin), -4) == '</p>') {
-    } elseif (substr(strtolower($leadin), -6) == '</div>') {
+
+    if (mb_substr(mb_strtolower($leadin), -4) == '</p>') {
+    } elseif (mb_substr(mb_strtolower($leadin), -6) == '</div>') {
         echo '<br />';
     } else {
         echo '<br /><br />';
     }
-  
+
     echo '<img src="draw_barchart.php?tpm=' . $question_marks[$q_id] . '&mark=' . $student_marks[$q_id] . '&median=' . $medians[$q_id] . '" width="300" height="65" alt="" />';
     echo "</li>\n";
 }

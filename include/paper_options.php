@@ -117,7 +117,7 @@ if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1'
     } else {
         echo "<div class=\"menuitem cascade stats\"><a href=\"#\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"" . $string['reports'] . '" />' . $string['reports'] . "</a></div>\n";
     }
-    if (strpos($checklist, 'mapping') !== false and $properties->get_paper_type() != '6') {
+    if (mb_strpos($checklist, 'mapping') !== false and $properties->get_paper_type() != '6') {
         if ($properties->get_calendar_year() == '') {
               echo "<div class=\"greymenuitem\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/curriculum_map_small_grey.png\" alt=\"" . $string['mappedobjectives'] . '" />' . $string['mappedobjectives'] . "</div>\n";
         } else {
@@ -127,7 +127,7 @@ if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1'
     if ($properties->get_paper_type() == '5') {
         echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/import/offline_marks.php?paperID=$paperID&module=" . $module . '&folder=' . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/import_16.gif\" alt=\"" . $string['importmarks'] . '" />' . $string['importmarks'] . "</a></div>\n";
     } elseif ($properties->get_paper_type() != '6') {
-        if (strpos($checklist, 'stdset') !== false) {
+        if (mb_strpos($checklist, 'stdset') !== false) {
             echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/std_setting/index.php?paperID=$paperID&module=" . $module . '&folder=' . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/std_set_icon_16.gif\" alt=\"" . $string['standardssetting'] . '" />' . $string['standardssetting'] . "</a></div>\n";
         }
     }
@@ -140,7 +140,7 @@ if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1'
     if (!$graded) {
         echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/import/osce_marks.php?paperID=$paperID&module=" . $module . '&folder=' . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/import_16.gif\" alt=\"" . $string['importoscemarks'] . '" />' . $string['importoscemarks'] . "</a></div>\n";
     }
-    if (strpos($checklist, 'mapping') !== false) {
+    if (mb_strpos($checklist, 'mapping') !== false) {
         echo "<div class=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/mapping/paper_by_session.php?paperID=$paperID&paper_title=" . $properties->get_paper_title() . '&sd=' . $properties->get_start_date() . '&ed=' . $properties->get_end_date() . '&module=' . $module . '&folder=' . $folder . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/curriculum_map_small.png\" alt=\"" . $string['mappedobjectives'] . '" />' . $string['mappedobjectives'] . "</a></div>\n";
     }
 }
@@ -298,7 +298,7 @@ if ($properties->get_paper_type() == '2') {
     <?php
     // Session
     $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
-    
+
     if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['session'] . '</a></td><td>' . $string['mismatch'] . "</td></tr>\n";
     }
@@ -318,7 +318,7 @@ if ($properties->get_paper_type() == '2') {
     }
 
     // Internal Peer review
-    if (strpos($checklist, 'peer') !== false) {
+    if (mb_strpos($checklist, 'peer') !== false) {
         if (count($properties->get_internal_reviewers()) == 0) {
             echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['peerreviewes'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
         } else {
@@ -357,7 +357,7 @@ if ($properties->get_paper_type() == '2') {
     }
 
     // External examiners
-    if (strpos($checklist, 'external') !== false) {
+    if (mb_strpos($checklist, 'external') !== false) {
         if (count($properties->get_externals()) == 0) {
             echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['externalreviews'] . '</td><td>' . $string['unset'] . "</td></tr>\n";
         } else {
@@ -390,7 +390,7 @@ if ($properties->get_paper_type() == '2') {
     // Standards Set
     $standard_set = 0;
     $standards_set = 0;
-    if (strpos($checklist, 'stdset') !== false) {
+    if (mb_strpos($checklist, 'stdset') !== false) {
         $stmt = $mysqli->prepare('SELECT COUNT(std_set.id), setterID FROM std_set_questions, std_set WHERE std_set_questions.std_setID = std_set.id AND paperID = ? GROUP BY setterID');
         $stmt->bind_param('i', $paperID);
         $stmt->execute();
@@ -420,7 +420,7 @@ if ($properties->get_paper_type() == '2') {
     }
 
     // Mapped
-    if (strpos($checklist, 'mapping') !== false) {
+    if (mb_strpos($checklist, 'mapping') !== false) {
         $mappings_complete = 0;
         $tmp_session = $properties->get_calendar_year();
 
@@ -528,11 +528,11 @@ if ($properties->get_question_no() > 0) {
     $external_menu[$string['initialinvitation']] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=0";
     $external_menu[$string['reminder']] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=1";
     $external_menu[$string['viewcomments']] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=2";
-  
+
   makeMenu($external_menu);
 
     makeMenu($importexport_menu);
-    
+
   makeMenu(array(
     $string['Continuous'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name(),
     $string['Continuous - hide notes'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&hidenotes=1',

@@ -50,7 +50,7 @@ class class_totals
         $data_line = explode('<tr', $main_data[2]);
 
         foreach ($data_line as $row) {
-            $found = strpos($row, 'Your mark');
+            $found = mb_strpos($row, 'Your mark');
             if ($found !== false) {
                 $cols = explode('>', $row);
 
@@ -102,7 +102,7 @@ class class_totals
         $result->execute();
 
         $result = $mysqli->prepare('SELECT surname, first_names, username FROM users WHERE id = ? LIMIT 1');
-    
+
         $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
         $paper_utils = Paper_utils::get_instance();
         // Turn on all feedback if staff and a student exam script is being reviewed.
@@ -135,7 +135,7 @@ class class_totals
                 $marks_set = array();
                 $errors = "<ul><li>Couldn't access class totals</li>\n";
             }
-      
+
             foreach ($marks_set as $mark) {
                 $overrides = $paper_utils->get_marking_overrides('2', $mark['userID'], $paper['paperID']);
                 $log_metadata = new LogMetadata($mark['userID'], $paper['paperID'], $mysqli);

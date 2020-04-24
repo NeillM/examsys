@@ -43,7 +43,7 @@ function add_users_from_file($fileName)
 
     $lines = file($fileName);
     foreach ($lines as $separate_line) {
-        if (strpos($separate_line, '","') !== false) {
+        if (mb_strpos($separate_line, '","') !== false) {
             $separate_line = '","' . $separate_line . ',"';
             $split_on = '","';
         } else {
@@ -55,7 +55,7 @@ function add_users_from_file($fileName)
         if (count($header) == 0) {
             //build the header array
             $tmp_orig_header = explode($split_on, $separate_line);
-            $separate_line = strtolower($separate_line);
+            $separate_line = mb_strtolower($separate_line);
             $error = array();
             $tmp_header = explode($split_on, $separate_line);
             foreach ($tmp_header as $tmp_string) {
@@ -74,7 +74,7 @@ function add_users_from_file($fileName)
             $users['html'] .= '<tr>';
             $users['html'] .= '<th></th>';
             foreach ($tmp_orig_header as $field) {
-                $tmp_field = strtolower(str_replace('"', '', $field));
+                $tmp_field = mb_strtolower(str_replace('"', '', $field));
                 if (in_array($tmp_field, $needed_cols1) or in_array($tmp_field, $needed_cols2) or in_array($tmp_field, $optional_cols)) {
                     $users['html'] .= "<th>$field</th>";
                 } else {
@@ -111,9 +111,9 @@ function add_users_from_file($fileName)
         $initial = explode(' ', $forname);
         $initials = '';
         foreach ($initial as $name) {
-            $initials .= substr($name, 0, 1);
+            $initials .= mb_substr($name, 0, 1);
         }
-        $initials = strtoupper($initials);
+        $initials = mb_strtoupper($initials);
         if (isset($header['surname'])) {
             $surname = UserUtils::my_ucwords(trim($fields[$header['surname']]));
         } else {
@@ -163,15 +163,15 @@ function add_users_from_file($fileName)
         }
 
         // Override some fields if user type is Staff.
-        if (strtolower($role) == 'staff') {
+        if (mb_strtolower($role) == 'staff') {
             $role = 'Staff';
             $course = 'University Lecturer';
             $year = 1;
-        } elseif (strtolower($role) == 'external examiner') {
+        } elseif (mb_strtolower($role) == 'external examiner') {
             $role = 'External Examiner';
             $course = 'Staff External Examiner';
             $year = 1;
-        } elseif (strtolower($role) == 'internal reviewer') {
+        } elseif (mb_strtolower($role) == 'internal reviewer') {
             $role = 'Internal Reviewer';
             $course = 'Staff Internal Reviewer';
             $year = 1;

@@ -33,15 +33,15 @@ function makeMenu($options)
     // Work out the width of the menu
     $longest_string = 0;
     foreach ($options as $title => $url) {
-        if (strlen($title) > $longest_string) {
-            $longest_string = strlen($title);
+        if (mb_strlen($title) > $longest_string) {
+            $longest_string = mb_strlen($title);
         }
     }
     $width = ($longest_string * 7) + 35;
     if ($width < 60) {
         $width = 60;
     }  // Set a reasonable minumum width
-  
+
 
     $line = 0;
     $myoptions = array();
@@ -71,12 +71,12 @@ function makeMenu($options)
     }
     foreach ($options as $title => $url) {
         $itemID = $menuNo . '_' . $line;
-        if (substr($url, 0, 1) == '-') {
+        if (mb_substr($url, 0, 1) == '-') {
             echo "<div class=\"popupitemline\" id=\"$itemID\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0\" /></div>\n";
-        } elseif (substr($url, 0, 1) == '#') {
-            echo "<div class=\"popupitembold\" id=\"$itemID\">" . substr($url, 1) . "</div>\n";
+        } elseif (mb_substr($url, 0, 1) == '#') {
+            echo "<div class=\"popupitembold\" id=\"$itemID\">" . mb_substr($url, 1) . "</div>\n";
         } else {
-            if (stripos($url, 'JavaScript:') === false) {
+            if (mb_stripos($url, 'JavaScript:') === false) {
                 echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"window.location='$url'\">/$title</div>\n";
             } else {
                 echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"$url\">/$title</div>\n";
@@ -90,7 +90,7 @@ function makeMenu($options)
     if (count($options) > 20) {
         echo '<div data-menuno="' . $menuNo . '" id="' . $menuNo . "_down\" class=\"popupitem scrolldown\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_down_on.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
     }
-  
+
     echo "</div>\n";
     $menuNo++;
 }

@@ -36,7 +36,7 @@ class OptionAREA extends OptionEdit
     {
         return ($this->correct == '');
     }
-  
+
     /**
      * Check that the minimum set of fields exist in the given data to create a new option
      * @param array $data
@@ -54,7 +54,7 @@ class OptionAREA extends OptionEdit
      */
     public function set_correct($value)
     {
-        if (strpos($value, ';') !== false) {
+        if (mb_strpos($value, ';') !== false) {
             $tmp = explode(';', $value);
             $value = $tmp[1];
         }

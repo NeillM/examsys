@@ -41,7 +41,7 @@ if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
 } elseif ($userObject->has_role('Student')) {
     $userID = $userObject->get_user_ID();
     $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
-    
+
     if (!$propertyObj->is_question_fb_released()) {
         $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
@@ -81,9 +81,9 @@ $marking      = $propertyObj->get_marking();
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['osceform']; ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
@@ -91,7 +91,7 @@ $marking      = $propertyObj->get_marking();
     .t {color: <?php echo $themecolor; ?>}
   </style>
 </head>
-  
+
 <body>
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
@@ -137,7 +137,7 @@ while ($result->fetch()) {
   $max_cols_result->execute();
   $max_cols_result->bind_result($display_method);
 while ($max_cols_result->fetch()) {
-    $max_cols = substr_count($display_method, '|');
+    $max_cols = mb_substr_count($display_method, '|');
 }
 
   // Get the questions.
@@ -150,7 +150,7 @@ while ($max_cols_result->fetch()) {
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
 while ($result->fetch()) {
-    $cols = substr_count($display_method, '|');
+    $cols = mb_substr_count($display_method, '|');
     if (trim($theme) != '') {
         echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
     }
@@ -168,7 +168,7 @@ while ($result->fetch()) {
     if (trim($notes) != '') {
         echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
- 
+
       echo parse_leadin($leadin, $stored_q_parts[$q_id]) . '</td>';
       $sub_totals[$stored_results[$q_id]]++;
     for ($i = 0; $i < $max_cols; $i++) {
@@ -226,7 +226,7 @@ for ($i = 0; $i < count($labels); $i++) {
     }
 }
 ?>
-  </tr></table>  
+  </tr></table>
 
   <br />
   <blockquote>

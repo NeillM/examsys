@@ -26,11 +26,11 @@
 ?>
 <div id="left-sidebar" style="overflow:visible" class="sidebar">
 <?php
-  
+
 if (!$userObject->has_role('Standards Setter')) {
     $add_member = false;
     if ($_GET['module'] != '0') {
-        if (strpos($module_details['checklist'], 'mapping') !== false) {
+        if (mb_strpos($module_details['checklist'], 'mapping') !== false) {
             // Curriculum mapping switched on for the module
             echo '<div class="menuitem"><a href="../mapping/sessions_list.php?module=' . $module . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/module_icon_16.png\" alt=\"modules\" />" . $string['manageobjectives'] . "</a></div>\n";
         }

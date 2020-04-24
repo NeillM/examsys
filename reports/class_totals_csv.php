@@ -164,7 +164,7 @@ if ($cohort_size > 0) {
     $csv .= $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
     if ($marking == '1') {
         $csv .= $string['randommark'] . ',' . number_format($report->get_total_random_mark(), 2, '.', ',') . ",,,,,,,,,,\n";
-    } elseif (substr($marking, 0, 1) == '2') {
+    } elseif (mb_substr($marking, 0, 1) == '2') {
         $csv .= $string['ss'] . ',' . round($report->get_ss_pass(), 2) . ",,,,,,,,,,\n";
         $csv .= $string['ssdistinction'] . ',' . MathsUtils::formatNumber($report->get_ss_hon(), 2) . ",,,,,,,,,,\n";
     }

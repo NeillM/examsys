@@ -169,7 +169,7 @@ function format_user($text, $user_list)
 function format_lab($lab_id, $lab_list)
 {
     $formatted_string = '';
-    
+
     $parts = explode(',', $lab_id);
     foreach ($parts as $part) {
         if (isset($lab_list[$part])) {
@@ -540,7 +540,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     $folder_details->execute();
     $folder_details->bind_result($folder_id, $folder_name);
     while ($folder_details->fetch()) {
-        $path_parts = substr_count($folder_name, ';');
+        $path_parts = mb_substr_count($folder_name, ';');
         $folder_array = explode(';', $folder_name);
         $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
         if ($properties->get_folder() == $folder_id) {
@@ -550,7 +550,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
     }
     $folder_details->close();
-    
+
     // External system details.
     $external = new \external_systems();
     $extsys = $external->get_all_externalsystems();
@@ -634,7 +634,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     if ($properties->get_paper_type() != '3') {
         echo '<tr><td colspan="4" class="headbar">&nbsp;' . $string['marking'] . "</td></tr>\n";
     }
-    
+
     $gradebook = new gradebook($mysqli);
     $graded = $gradebook->paper_graded($paperID);
     $published = '';
@@ -799,7 +799,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
         if (count($std_set_array) > 0) {
             echo '<input type="radio" id="marking3" name="marking" value="' . MARK_STD_SET . '"';
-            if (substr($properties->get_marking(), 0, 1) == MARK_STD_SET) {
+            if (mb_substr($properties->get_marking(), 0, 1) == MARK_STD_SET) {
                 echo ' checked';
             }
             echo " $published/>";
@@ -893,7 +893,7 @@ foreach ($timezone_array as $individual_zone => $display_zone) {
     }
 }
     echo '</select></td>';
-    
+
         $exam_duration = $properties->get_exam_duration();
 if ($exam_duration == null) {
     $duration_hours = 'NULL';
@@ -1020,7 +1020,7 @@ for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
     }
 }
     echo '</select>';
-        
+
     echo "</select><select id=\"fminute\" name=\"fminute\" $sum_disabled>\n";
     // Available from Minute
 if ($start_date == '') {
@@ -1131,7 +1131,7 @@ for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
     }
 }
     echo '</select>';
-        
+
     echo "</select><select id=\"tminute\" name=\"tminute\" $sum_disabled>\n";
     // Available from Minute
 if ($start_date == '') {
@@ -1161,7 +1161,7 @@ for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
         $modules_array = $properties->get_modules();
 
         $total_modules = array_merge($staff_modules, $modules_array);
-    
+
     $module_sql = implode("','", $total_modules);
 if ($module_sql != '') {
     $module_sql = "'$module_sql'";
@@ -1190,12 +1190,12 @@ if ($module_sql != '') {
         }
         if ($match == true) {
             if (in_array($module['id'], $staff_modules) or $userObject->has_role('SysAdmin')) {
-                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
             } else {
-                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
             }
         } else {
-            echo "<div class=\"r1 mod\" id=\"divmod$module_no\"><input type=\"checkbox\"  class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+            echo "<div class=\"r1 mod\" id=\"divmod$module_no\"><input type=\"checkbox\"  class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
         }
         $module_no++;
         $old_school = $module['school'];
@@ -1211,7 +1211,7 @@ if ($module_sql != '') {
   <tr><td class="headbar" style="padding:2px" colspan="2">&nbsp;<?php echo $string['restricttometadata']; ?></td></tr>
   <tr><td style="vertical-align:top; height:110px" colspan="2"><div style="height:111px; overflow-y:scroll;border:1px solid #828790; font-size:90%" id="metadata_security"></div></td></tr>
   </table>
-    
+
   </td></tr>
 </table>
 
@@ -1266,7 +1266,7 @@ if ($module_sql != '') {
         }
         echo '<a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/question_feedback.php?id=' . $properties->get_crypt_name() . '" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/question_feedback.php?id=' . $properties->get_crypt_name() . "</a></td></tr>\n";
     }
-     
+
     if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
         echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
         echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
@@ -1319,7 +1319,7 @@ if ($module_sql != '') {
         <?php
     }
     echo "</table>\n";
-     
+
     echo "</td></tr>\n";
         echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
 
@@ -1564,9 +1564,9 @@ SQL;
             }
         }
         if ($match) {
-            echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+            echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
         } else {
-            echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+            echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
         }
         $internal_no++;
     }
@@ -1587,9 +1587,9 @@ SQL;
             }
         }
         if ($match) {
-            echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+            echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
         } else {
-            echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+            echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
         }
         $examiner_no++;
     }

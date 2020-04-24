@@ -54,12 +54,12 @@ class OnlineHelp
         $this->db           = $db;
         $this->highlight    = null;
     }
-  
+
     public function set_highlight($highlight)
     {
         $this->highlight = $highlight;
     }
-  
+
     /**
      * Display the toolbar at the top of the window.
      * @param int $id - The ID of the current help page.
@@ -104,7 +104,7 @@ class OnlineHelp
         $old_parent = '';
         $help_toc = array();
         $help_toc_titles = array();
-    
+
         $help_section = 0;
         $result = $this->db->prepare($sql);
         $result->bind_param('s', $this->language);
@@ -117,34 +117,34 @@ class OnlineHelp
             $help_section++;
         }
         $result->close();
-    
+
         $expand_id = 0;
         if ($id !== null) {
             if (isset($help_toc_titles[$pageid])) {
-                $slash_pos = strpos($help_toc_titles[$pageid], '/');
+                $slash_pos = mb_strpos($help_toc_titles[$pageid], '/');
 
                 if ($slash_pos !== false) {
-                    $target_parent = substr($help_toc_titles[$pageid], 0, $slash_pos);
+                    $target_parent = mb_substr($help_toc_titles[$pageid], 0, $slash_pos);
 
 
                     for ($i = 0; $i < $help_section; $i++) {
-                        if (strpos($help_toc[$i]['title'], $target_parent) === 0 and $expand_id == 0) {
+                        if (mb_strpos($help_toc[$i]['title'], $target_parent) === 0 and $expand_id == 0) {
                               $expand_id = $help_toc[$i]['id'];
                         }
                     }
                 }
             }
         }
-    
+
         for ($i = 0; $i < $help_section; $i++) {
             $id = $help_toc[$i]['id'];
-            $slash_pos = strpos($help_toc[$i]['title'], '/');
+            $slash_pos = mb_strpos($help_toc[$i]['title'], '/');
             if ($slash_pos !== false) {
-                $parent = substr($help_toc[$i]['title'], 0, $slash_pos);
+                $parent = mb_substr($help_toc[$i]['title'], 0, $slash_pos);
                 if ($old_parent != '' and $parent != $old_parent) {
                     echo "</div>\n";
                 }
-                $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
+                $tmp_title = mb_substr($help_toc[$i]['title'], ($slash_pos + 1));
 
                 if ($parent != $old_parent) {
                     if ($expand_id == $id) {
@@ -202,19 +202,19 @@ class OnlineHelp
         $results->bind_param('is', $articleid, $this->language);
         $results->execute();
         $results->store_result();
-    
+
         $results->bind_result($id, $title, $body, $page_type, $checkout_time, $checkout_authorID, $roles);
         $results->fetch();
         $row_no = $results->num_rows;
         $results->close();
-    
+
         if ($row_no == 0) {
             return false;
         }
-    
+
         return array('id' => $id, 'title' => $title, 'body' => $body, 'page_type' => $page_type, 'checkout_time' => $checkout_time, 'checkout_authorID' => $checkout_authorID, 'roles' => $roles);
     }
-  
+
     /**
      * Saves a staff help page back to the database.
      * @param string $title     - The title of the help page.
@@ -226,7 +226,7 @@ class OnlineHelp
     private function save_staff_page($title, $body, $roles, $articleid, $pointerid)
     {
         $body_plain = strip_tags($body);
-    
+
         if ($articleid == $pointerid) {
             // Editing normal page.
             $result = $this->db->prepare('UPDATE staff_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE articleid = ? AND language = ?');
@@ -246,7 +246,7 @@ class OnlineHelp
             $result->close();
         }
     }
-  
+
     /**
      * Saves a student help page back to the database.
      * @param string $title     - The title of the help page.
@@ -276,7 +276,7 @@ class OnlineHelp
             $result->close();
         }
     }
-  
+
     /**
      * Saves a help page back to the database.
      * @param string $title     - The title of the help page.
@@ -289,14 +289,14 @@ class OnlineHelp
     {
         $articleid = (int)$articleid;
         $pointerid = (int)$pointerid;
-    
+
         if ($this->type == 'student') {
             $this->save_student_page($title, $body, $articleid, $pointerid);
         } else {
             $this->save_staff_page($title, $body, $roles, $articleid, $pointerid);
         }
     }
-  
+
     /**
      * Displays the contents of a help folder.
      * @param string $folder - The name of the folder to display.
@@ -304,9 +304,9 @@ class OnlineHelp
     public function display_folder($folder)
     {
         $t = $folder . '/%';
-    
+
         $sql = 'SELECT articleid, title FROM ' . $this->type . '_help WHERE title LIKE ? AND language = ? ORDER BY title';
-    
+
         $result = $this->db->prepare($sql);
         $result->bind_param('ss', $t, $this->language);
         $result->execute();
@@ -340,7 +340,7 @@ class OnlineHelp
         $page_details = $this->get_page_details($id);
         $original_title = $page_details['title'];
         $contactemail = support::get_email();
-    
+
         if ($page_details['page_type'] == 'pointer') {    // If pointer look up source page.
             $page_details = $this->get_page_details($page_details['body']);
             $page_details['title'] = $original_title;   // Set the title back to the pointer title.
@@ -362,13 +362,13 @@ class OnlineHelp
             do {
                 $found = stripos($page_details['body'], $this->highlight, $offset);
                 if ($found !== false) {
-                    $first_part = substr($page_details['body'], 0, $found);
-                    $open_bracket = strrpos($first_part, '<');
-                    $close_bracket = strrpos($first_part, '>');
+                    $first_part = mb_substr($page_details['body'], 0, $found);
+                    $open_bracket = mb_strrpos($first_part, '<');
+                    $close_bracket = mb_strrpos($first_part, '>');
                     if (($open_bracket < $found and $found < $close_bracket) or ($close_bracket < $open_bracket)) {
-                        $offset = $found + strlen($this->highlight);
+                        $offset = $found + mb_strlen($this->highlight);
                     } else {
-                        $page_details['body'] = substr($page_details['body'], 0, $found) . '<span style="background-color:#FFFF00">' . substr($page_details['body'], $found, strlen($this->highlight)) . '</span>' . substr($page_details['body'], $found + strlen($this->highlight));
+                        $page_details['body'] = mb_substr($page_details['body'], 0, $found) . '<span style="background-color:#FFFF00">' . mb_substr($page_details['body'], $found, mb_strlen($this->highlight)) . '</span>' . mb_substr($page_details['body'], $found + mb_strlen($this->highlight));
                         $offset = $found + 48;
                     }
                 }
@@ -376,7 +376,7 @@ class OnlineHelp
         }
         echo $page_details['body'];
         $this->display_footer($id);
-    
+
         $this->record_in_log($id);
     }
 
@@ -395,7 +395,7 @@ class OnlineHelp
             echo "<div style=\"margin-left:20px; margin-right:20px\">\n";
         }
     }
-  
+
     /**
      * Displays a footer for a help page.
      * @param int $id - The ID of the help page to display.
@@ -410,7 +410,7 @@ class OnlineHelp
             }
         }
     }
-  
+
     /**
      * Record a page hit in the log table.
      * @param int $id - The ID of the help page to log.
@@ -426,7 +426,7 @@ class OnlineHelp
             $result->close();
         }
     }
-  
+
     /**
      * Record a search in the search log.
      * @param string $searchstring - The search string used.
@@ -435,13 +435,13 @@ class OnlineHelp
     private function record_in_search_log($searchstring, $total_hits)
     {
         $sql = "INSERT INTO help_searches VALUES (NULL, '" . $this->type . "', ?, NOW(), ?, ?)";
-    
+
         $result = $this->db->prepare($sql);
         $result->bind_param('isi', $this->userObject->get_user_ID(), $searchstring, $total_hits);
         $result->execute();
         $result->close();
     }
-  
+
     /**
      * Creates a new help page in the database.
      * @param string $title - The title of the new help page.
@@ -465,18 +465,18 @@ class OnlineHelp
         }
         $result->execute();
         $result->close();
-    
+
         $articleid = $this->db->insert_id;
-    
+
         // Update the articleid to match the new id field.
         $result = $this->db->prepare('UPDATE ' . $this->type . '_help SET articleid = ? WHERE id = ?');
         $result->bind_param('ii', $articleid, $articleid);
         $result->execute();
         $result->close();
-    
+
         return $articleid;
     }
-  
+
     /**
      * Creates a new help pointer in the database.
      * @param string $title   - The title of the new pointer page.
@@ -496,18 +496,18 @@ class OnlineHelp
         }
         $result->execute();
         $result->close();
-    
+
         $articleid = $this->db->insert_id;
-    
+
         // Update the articleid to match the new id field.
         $result = $this->db->prepare('UPDATE ' . $this->type . '_help SET articleid = ? WHERE id = ?');
         $result->bind_param('ii', $articleid, $articleid);
         $result->execute();
         $result->close();
-    
+
         return $articleid;
     }
-  
+
     /**
      * Sets an edit lock on a page.
      * @param int $articleid - The ID of the help page to lock.
@@ -521,7 +521,7 @@ class OnlineHelp
         $result->execute();
         $result->close();
     }
-  
+
     /**
      * Releases an edit lock on a page.
      * @param int $articleid - The ID of the help page to lock.
@@ -535,7 +535,7 @@ class OnlineHelp
         $result->execute();
         $result->close();
     }
-  
+
     /**
      * Sets a specified help page ID to be deleted.
      * @param int $pageID - The ID of the help page to delete.
@@ -543,13 +543,13 @@ class OnlineHelp
     private function delete_id($pageID)
     {
         $sql = 'UPDATE ' . $this->type . '_help SET deleted = NOW() WHERE articleid = ? AND language = ?';
-    
+
         $deleteQuery = $this->db->prepare($sql);
         $deleteQuery->bind_param('is', $pageID, $this->language);
         $deleteQuery->execute();
         $deleteQuery->close();
     }
-  
+
     /**
      * Deletes a specific help page.
      * @param int $originalID - The ID of the help page or pointer to delete.
@@ -561,7 +561,7 @@ class OnlineHelp
         if ($page_details['page_type'] == 'page') {
             // Search for any pointers to the current page.
             $sql = 'SELECT articleid, body FROM ' . $this->type . "_help WHERE type = 'pointer' AND articleid != ? AND body = ? AND language = ?";
-      
+
             $result = $this->db->prepare($sql);
             $result->bind_param('iis', $originalID, $originalID, $this->language);
             $result->execute();
@@ -575,7 +575,7 @@ class OnlineHelp
 
         $this->delete_id($originalID);      // Delete the original page.
     }
-  
+
     /**
      * Restores a deleted help page.
      * @param int $pageID - The ID of the help page to restore.
@@ -583,13 +583,13 @@ class OnlineHelp
     public function restore_page($pageID)
     {
         $sql = 'UPDATE ' . $this->type . '_help SET deleted = NULL WHERE articleid = ? AND language = ?';
-    
+
         $restore = $this->db->prepare($sql);
         $restore->bind_param('is', $pageID, $this->language);
         $restore->execute();
         $restore->close();
     }
-  
+
     /**
      * Performs a full-text search on the help database.
      * @param string $searchstring - The search term to use for the search.
@@ -635,16 +635,16 @@ class OnlineHelp
             $search_results[] = array('id' => $id, 'title' => $title, 'score' => $score);
         }
         $result->close();
-    
+
         // Log the search in the database.
         if (!$this->userObject->has_role('SysAdmin')) {   // Don't record SysAdmin searches.
             $total_hits = count($search_results);
             $this->record_in_search_log($searchstring, $total_hits);
         }
-    
+
         return $search_results;
     }
-  
+
     /**
      * Load staff help into database
      * @throws exception
@@ -711,7 +711,7 @@ class OnlineHelp
         $configObject = Config::get_instance();
         $webroot = $configObject->get('cfg_root_path');
         // Ensure there is a trailing slash.
-        if (substr($webroot, -1) !== '/') {
+        if (mb_substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
         // Strip out double forward slash.
@@ -746,7 +746,7 @@ class OnlineHelp
         $configObject = Config::get_instance();
         $webroot = $configObject->get('cfg_root_path');
         // Ensure there is a trailing slash.
-        if (substr($webroot, -1) !== '/') {
+        if (mb_substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
         // Strip out double forward slash.

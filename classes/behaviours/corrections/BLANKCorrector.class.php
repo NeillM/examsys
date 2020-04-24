@@ -73,15 +73,15 @@ class BLANKCorrector extends Corrector
                         }
 
                         // Get correct answer.
-                        $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-                        $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+                        $blank_details[$i] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
+                        $blank_details[$i] = mb_substr($blank_details[$i], 0, mb_strpos($blank_details[$i], '[/blank]'));
                         $answer_list = explode(',', $blank_details[$i]);
 
                         $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
                         if ($display_method != 'textboxes') {
                               $answer_list = array($answer_list[0]);
                         }
-                        $answer_list = array_map('strtolower', $answer_list);
+                        $answer_list = array_map('mb_strtolower', $answer_list);
                         $answer_list = array_map('trim', $answer_list);
 
                         $answer_lists[] = $answer_list;
@@ -101,7 +101,7 @@ class BLANKCorrector extends Corrector
                         $all_correct = true;
 
                         for ($i = 0; $i < count($answer_lists); $i++) {
-                            $correct = (isset($user_answers[$i]) and in_array(trim(strtolower($user_answers[$i])), $answer_lists[$i]));
+                            $correct = (isset($user_answers[$i]) and in_array(trim(mb_strtolower($user_answers[$i])), $answer_lists[$i]));
                             if ($score_method == 'Mark per Option') {
                                 $mark += ($correct) ? $mark_correct : $mark_incorrect;
                             } elseif (!$correct) {

@@ -561,7 +561,7 @@ class ims_enterprise
                 break;
         }
 
-        $group->startdate = substr((string) $node->timeframe->begin, -5, 5);
+        $group->startdate = mb_substr((string) $node->timeframe->begin, -5, 5);
 
         $this->log_line('School source: ' . $this->schoolsource);
 
@@ -582,7 +582,7 @@ class ims_enterprise
         } else {
             // First, truncate the module code if desired.
             if (intval($this->truncatemodulecodes) > 0) {
-                $group->modulecode = ($this->truncatemodulecodes > 0) ? substr($group->modulecode, 0, intval($this->truncatemodulecodes)) : $group->modulecode;
+                $group->modulecode = ($this->truncatemodulecodes > 0) ? mb_substr($group->modulecode, 0, intval($this->truncatemodulecodes)) : $group->modulecode;
             }
 
             $this->create_module($group, $recstatus);
@@ -659,7 +659,7 @@ class ims_enterprise
             $schoolid = $group->school;
         }
         $fullname = $group->full;
-        $academic_year_start = substr($group->startdate, 0, 2) . '/' . substr($group->startdate, -2, 2);
+        $academic_year_start = mb_substr($group->startdate, 0, 2) . '/' . mb_substr($group->startdate, -2, 2);
         $ebel_grid_template = 0;
         $modulecode = $group->modulecode;
 
@@ -911,7 +911,7 @@ class ims_enterprise
         $person->full = (string) $node->description->full;
         $person->school = (string) $node->org->orgunit;
         $person->faculty = (string) $node->org->orgname;
-        $person->role = strtolower((string) $node->institutionrole['institutionroletype']);
+        $person->role = mb_strtolower((string) $node->institutionrole['institutionroletype']);
         $validrole = ims_enterprise_roles::validate_role($person->role);
         if (empty($validrole)) {
             $this->log_line('User not created. Invalid role (' . $person->role . ') for user ' . $person->username . ' with email ' . $person->email);
@@ -919,20 +919,20 @@ class ims_enterprise
         }
 
         $person->role = ucfirst($person->role);
-        $person->startdate = substr((string) $node->timeframe->begin, -5, 5);
+        $person->startdate = mb_substr((string) $node->timeframe->begin, -5, 5);
         $person->grade = (string) $node->extension->course; //TODO We should not use extension nodes unless PeopleSoft can make them available
         $person->yearofstudy = (string) $node->extension->year; //TODO We should not use extension nodes unless PeopleSoft can make them available
 
         // Fix case of some of the fields if required.
         if ($this->fixcaseusernames && isset($person->username)) {
-            $person->username = strtolower($person->username);
+            $person->username = mb_strtolower($person->username);
         }
         if ($this->fixcasenames) {
             if (isset($person->firstname)) {
-                $person->firstname = ucwords(strtolower($person->firstname));
+                $person->firstname = ucwords(mb_strtolower($person->firstname));
             }
             if (isset($person->surname)) {
-                $person->surname = ucwords(strtolower($person->surname));
+                $person->surname = ucwords(mb_strtolower($person->surname));
             }
         }
 
@@ -950,7 +950,7 @@ class ims_enterprise
             $userid = \UserUtils::username_exists($person->username, $this->db);
             if (!$userid && $this->createusers) {
                 // If they don't exist and haven't a defined username, we log this as a potential problem.
-                if ((!isset($person->username)) || (strlen($person->username) == 0)) {
+                if ((!isset($person->username)) || (mb_strlen($person->username) == 0)) {
                     $this->log_line("Cannot create new user for ID # $person->idnumber - no username listed in IMS data for this person.");
                 } else {
                     // If they don't exist and they have a defined username, and $createusers == true, we create them.
@@ -1056,7 +1056,7 @@ class ims_enterprise
                 if (!is_object($node)) {
                     continue;
                 }
-        
+
                 switch ($this->mapmoduleid) {
                     case 'long':
                         $modulecode = (string) $node->description->long;
@@ -1075,7 +1075,7 @@ class ims_enterprise
                         $modulecode = (string) $node->sourcedid->id;
                         break;
                 }
-        
+
                 foreach ($node->member as $member) {
                     $this->process_member($member, $modulecode);
                 }
@@ -1106,7 +1106,7 @@ class ims_enterprise
         $status = (string) $member->role->status;
         $this->log_line('Processing member: ' . $username);
         $userid = \UserUtils::studentid_exists($studentid, $this->db);
-        $session = substr((string) $member->role->timeframe->begin, -10, 4);
+        $session = mb_substr((string) $member->role->timeframe->begin, -10, 4);
         $attempt = (string) $member->extension->attempt;
         $action = 'added to';
         if ($status == self::ROLE_STATUS_ACTIVE && $role === 'Student') {
@@ -1118,7 +1118,7 @@ class ims_enterprise
             $success = \UserUtils::remove_staff_from_module($userid, $modulecode, $this->db);
             $action = 'removed from';
         } elseif ($status == self::ROLE_STATUS_INACTIVE && $role === 'Student') {
-            $session = substr((string) $member->role->timeframe->begin, 0, 4);
+            $session = mb_substr((string) $member->role->timeframe->begin, 0, 4);
             $success = \UserUtils::remove_student_from_module_by_modulecode($userid, $modulecode, $session, $this->db);
             $action = 'removed from';
         }

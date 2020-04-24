@@ -22,7 +22,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-  
+
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 $paperID = check_var('paperID', 'GET', true, false, true);
@@ -36,8 +36,8 @@ $paper = str_replace('&', '&amp;', $propertyObj->get_paper_title());
 echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 echo '<?mso-application progid="Word.Document"?><w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
 echo StringUtils::wordToUtf8($paper);
-$tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
-$tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
+$tmp_start = mb_substr($_GET['startdate'], 6, 2) . '/' . mb_substr($_GET['startdate'], 4, 2) . '/' . mb_substr($_GET['startdate'], 0, 4) . ' ' . mb_substr($_GET['startdate'], 8, 2) . ':' . mb_substr($_GET['startdate'], 10, 2);
+$tmp_end = mb_substr($_GET['enddate'], 6, 2) . '/' . mb_substr($_GET['enddate'], 4, 2) . '/' . mb_substr($_GET['enddate'], 0, 4) . ' ' . mb_substr($_GET['enddate'], 8, 2) . ':' . mb_substr($_GET['enddate'], 10, 2);
 echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author><o:Description>Quanlitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end . '.</o:Description><o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
@@ -92,7 +92,7 @@ while ($result->fetch()) {
     }
     $user_answer = str_replace('<', '&lt;', $user_answer);
     $user_answer = str_replace('>', '&gt;', $user_answer);
-    $response = trim(strtolower($user_answer));
+    $response = trim(mb_strtolower($user_answer));
     if ($response != null and $response != 'n/a' and strlen($response) > 1) {
         $buffer = '';
         for (

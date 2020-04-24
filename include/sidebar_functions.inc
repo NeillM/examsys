@@ -45,7 +45,7 @@ function get_folders($staff_modules, $userID, $db)
     $result->execute();
     $result->bind_result($folder_id, $folder_name);
     while ($result->fetch()) {
-        $path_parts = substr_count($folder_name, ';');
+        $path_parts = mb_substr_count($folder_name, ';');
         $folder_array = explode(';', $folder_name);
         $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
         $display_name = str_replace("'", "\'", $display_name);
@@ -53,7 +53,7 @@ function get_folders($staff_modules, $userID, $db)
         $my_folders_array[$display_name] = $url;
     }
     $result->close();
-  
+
     return $my_folders_array;
 }
 
@@ -71,7 +71,7 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db)
 
     if (count($teams) > 0) {
         $team_sql = implode(',', array_keys($teams));
-    
+
         $result = $db->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE id IN ($team_sql) AND mod_deleted IS NULL ORDER BY moduleID");
         $result->execute();
         $result->bind_result($modID, $tmp_moduleid, $tmp_fullname);
@@ -108,12 +108,12 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db)
 function get_staff_module_links($staff_modules, $db)
 {
     $configObject = Config::get_instance();
-  
+
     $modules_array = array();
 
     if (count($staff_modules) > 0) {
         $staff_modules_sql = implode(',', array_keys($staff_modules));
-    
+
         $result = $db->prepare("SELECT DISTINCT id, moduleid, fullname FROM modules WHERE id IN ($staff_modules_sql) ORDER BY moduleID");
         $result->execute();
         $result->bind_result($modID, $tmp_moduleid, $tmp_fullname);
@@ -143,7 +143,7 @@ function get_keywords($teams, $userID, $db)
     }
 
     $keywords_array = array();
-  
+
     $keyword_no = 0;
     $old_moduleID = '';
     $result = $db->prepare('SELECT moduleid, keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND modules.id IN (' . implode(',', array_keys($teams)) . ') ORDER BY moduleid, keyword');
@@ -171,6 +171,6 @@ function get_keywords($teams, $userID, $db)
         $keywords_array[htmlspecialchars($tmp_keyword)] = $configObject->get('cfg_root_path') . '/question/list.php?type=%&keyword=' . $keywordID . ';' . urlencode($tmp_keyword);
     }
     $result->close();
-  
+
     return $keywords_array;
 }

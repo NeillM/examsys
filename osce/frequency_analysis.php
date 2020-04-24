@@ -63,9 +63,9 @@ $themecolor = $propertyObj->get_themecolor();
   <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
-    
+
 if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = $string['frequencyanalysis'] . ' (' . $_GET['repmodule'] . ' ' . $string['studentsonly'] . ')';
 } else {
@@ -113,7 +113,7 @@ if ($user_no == 0) {
       echo $notice->info_strip('This paper has not been attempted by anyone.', 100);
 } else {
       echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
-    
+
       // Get the questions.
     $question_no = 1;
     $sub_totals = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
@@ -125,7 +125,7 @@ if ($user_no == 0) {
     while ($result->fetch()) {
         if ($question_no == 1) {
             // Header row
-            $cols = substr_count($display_method, '|');
+            $cols = mb_substr_count($display_method, '|');
             $headings = explode('|', $display_method);
             echo '<tr><td></td>';
             for ($i = 0; $i < $cols; $i++) {

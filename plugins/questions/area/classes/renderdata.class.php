@@ -102,7 +102,7 @@ class renderdata extends \questiondata
 
         $answer_parts = explode(';', $tmp_user_answer);
         if (isset($answer_parts[1])) {
-            $tmp_user_answer = substr($answer_parts[1], 0, -2);
+            $tmp_user_answer = mb_substr($answer_parts[1], 0, -2);
             $full_user_ans = $useranswer;
         } else {
             $tmp_user_answer = '';

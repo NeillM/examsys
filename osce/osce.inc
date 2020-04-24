@@ -31,15 +31,15 @@
  */
 function save_osce_form($propertyObj, $userID, $postdata, $db)
 {
-    
+
     $userObject = UserObject::get_instance();
-  
+
     $paperID      = $propertyObj->get_property_id();
     $marking      = $propertyObj->get_marking();
     $number_of_qs = $propertyObj->get_question_no();
     $pass_mark    = $propertyObj->get_pass_mark();
     $total_mark   = $propertyObj->get_total_mark();
-  
+
     if ($postdata['userID'] != '') {
         $result = $db->prepare('SELECT id FROM log4_overall WHERE q_paper = ? AND userID = ? LIMIT 1');
         $result->bind_param('ii', $paperID, $userID);
@@ -113,7 +113,7 @@ function save_osce_form($propertyObj, $userID, $postdata, $db)
 function parse_leadin_word_2003($text, $parts)
 {
     global $q_id;
-    
+
     $count = 0;
     $calss = 'part';
 
@@ -149,7 +149,7 @@ function parse_leadin_word_2003($text, $parts)
                 $tmptext .= ltrim($starts[$i]);
 
                 if ($i < ($count - 1)) {
-                    if (substr($starts[$i], -1) != ']' or substr($starts[$i], -1) != 'li>') {
+                    if (mb_substr($starts[$i], -1) != ']' or mb_substr($starts[$i], -1) != 'li>') {
                         $end_tags = '</w:t></w:r>';
                         $rep_tags = '</w:t></w:r><w:r><w:t>';
                     } else {
@@ -186,7 +186,7 @@ function parse_leadin_word_2003($text, $parts)
 function parse_leadin($text, $parts)
 {
     global $q_id;
-    
+
     $count = 0;
     $calss = 'part';
 
@@ -248,19 +248,19 @@ function isBorderline($result, $propertyObj)
 function getBlinePassmk($user_results, $user_no, $propertyObj)
 {
     $passmark = 0;
-  
+
     $borderlines = array();
-  
+
     for ($i = 0; $i < $user_no; $i++) {
         if (isBorderline($user_results[$i]['rating'], $propertyObj)) {
             $borderlines[] = $user_results[$i]['percent'];
         }
     }
-  
+
     if (count($borderlines) > 0) {
         $passmark = MathsUtils::median($borderlines);
     }
-  
+
     return $passmark;
 }
 
@@ -278,9 +278,9 @@ function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db)
     $modIDs = implode(',', array_keys(Paper_utils::get_modules($_GET['paperID'], $db)));
     $user_no = 0;
     $calendar_year = $propertyObj->get_calendar_year();
-  
+
     $total_mark = $propertyObj->get_total_mark();
-  
+
     if (!isset($_GET['absent']) or $_GET['absent'] == 0) {
         $result = $db->prepare("SELECT DISTINCT log4_overall.id, students.id, students.gender, log4_overall.student_grade, log4_overall.year, students.surname, students.initials, students.first_names, students.title, student_id, started, DATE_FORMAT(started,'{$configObj->get('cfg_long_date_time')}') AS display_started, overall_rating, numeric_score, feedback, examiners.title, examiners.surname, examiners.initials FROM (users AS students, users AS examiners, sid, log4_overall) WHERE students.id = log4_overall.userID AND examiners.id = log4_overall.examinerID AND started >= ? AND started <= ? AND q_paper = ? AND students.id=sid.userID ORDER BY students.surname, students.initials");
         $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
@@ -326,12 +326,12 @@ function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db)
         $user_no++;
     }
     $result->close();
-  
+
     $killer_questions = new Killer_question($_GET['paperID'], $db);
     $killer_questions->load();
-  
+
     check_killer_answers($user_results, $killer_questions, $db);
-    
+
     return $user_results;
 }
 
@@ -339,14 +339,14 @@ function find_user_result($user_results, $target_userID)
 {
     $user_no = false;
     $user_count = count($user_results);
-    
+
     for ($i = 0; $i < $user_count; $i++) {
         if ($user_results[$i]['userID'] == $target_userID) {
             $user_no = $i;
             break;
         }
     }
-    
+
     return $user_no;
 }
 
@@ -375,7 +375,7 @@ function check_killer_answers(&$user_results, $killer_questions, $db)
 function load_osce_medians($db)
 {
     $q_medians = array();
-  
+
     $result = $db->prepare('SELECT q_id, rating, userID FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND started >= ? AND started <= ? AND q_paper = ?');
     $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
     $result->execute();
@@ -385,7 +385,7 @@ function load_osce_medians($db)
         $q_medians[$q_id][] = (int)$rating;
     }
     $result->close();
-    
+
     return $q_medians;
 }
 
@@ -412,7 +412,7 @@ function set_classification($marking, &$user_results, $passmark, $user_no, $stri
             $labels = $string['marking7'];
             break;
     }
-  
+
     for ($i = 0; $i < (int)$user_no; $i++) {
         if ($user_results[$i]['killer_fail']) {
             $user_results[$i]['classification'] = $string['fail'];

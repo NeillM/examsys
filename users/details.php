@@ -67,9 +67,9 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color, 
 
     foreach ($tab_array as $individual_tab) {
         if ($individual_tab == $current_tab) {
-            $html .= '<td class="tabon" data-tabid="' . $individual_tab . '_tab' . '">' . $string[strtolower($individual_tab)] . '</td>';
+            $html .= '<td class="tabon" data-tabid="' . $individual_tab . '_tab' . '">' . $string[mb_strtolower($individual_tab)] . '</td>';
         } else {
-            $html .= '<td class="taboff" data-tabid="' . $individual_tab . '_tab' . '">' . $string[strtolower($individual_tab)] . '</td>';
+            $html .= '<td class="taboff" data-tabid="' . $individual_tab . '_tab' . '">' . $string[mb_strtolower($individual_tab)] . '</td>';
         }
     }
     $html .= "</tr></table></td><td align=\"right\" style=\"background-color:$bg_color\">$right_text</td></tr>\n";
@@ -82,17 +82,17 @@ function formatsec($seconds)
         $timestring = '';
     } else {
         $diff_hour = ($seconds / 60) / 60;
-        $tmp_position = strpos($diff_hour, '.');
+        $tmp_position = mb_strpos($diff_hour, '.');
         if ($tmp_position > 0) {
-            $diff_hour = substr($diff_hour, 0, $tmp_position);
+            $diff_hour = mb_substr($diff_hour, 0, $tmp_position);
         }
         if ($diff_hour > 0) {
             $seconds -= ($diff_hour * 60) * 60;
         }
         $diff_min = $seconds / 60;
-        $tmp_position = strpos($diff_min, '.');
+        $tmp_position = mb_strpos($diff_min, '.');
         if ($tmp_position > 0) {
-            $diff_min = substr($diff_min, 0, $tmp_position);
+            $diff_min = mb_substr($diff_min, 0, $tmp_position);
         }
         if ($diff_min > 0) {
             $seconds -= $diff_min * 60;
@@ -242,7 +242,7 @@ if ($user_details === false) {
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-  
+
   require '../tools/colour_picker/colour_picker.inc';
   require '../include/user_search_options.php';
   require '../include/toprightmenu.inc';
@@ -349,7 +349,7 @@ if ($userObject->has_role('SysAdmin')) {
 }
   echo "</tr>\n";
 
-  
+
 ?>
 </form>
 </table>
@@ -368,7 +368,7 @@ if ($tab == 'log') {
   $old_paper_title = '';
   $results_no = 0;
   $paper = array();
-  
+
   echo '<tr><td>';
   $table_order = array('', $string['papername'], $string['type'], $string['started'], $string['ipaddress']);
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"1\" border=\"0\" style=\"width:100%\">\n";
@@ -435,7 +435,7 @@ if ($log_viewable) {
     } else {
         // Only allow Admin/SysAdmin or current user to view this information
         $queries = array();
-            
+
         $queries[] = "SELECT DISTINCT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log0 WHERE properties.property_id = log_metadata.paperID AND log_metadata.id = log0.metadataID AND log_metadata.userID = ? AND paper_type IN ('0','1') ORDER BY started";
         $queries[] = "SELECT DISTINCT crypt_name, paper_title, 1 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log1 WHERE properties.property_id = log_metadata.paperID AND log_metadata.id = log1.metadataID AND log_metadata.userID = ? AND paper_type IN ('0','1') ORDER BY started";
         $queries[] = "SELECT DISTINCT crypt_name, paper_title, 2 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata WHERE properties.property_id = log_metadata.paperID AND log_metadata.userID = ? AND paper_type = '2' ORDER BY started";
@@ -503,7 +503,7 @@ if ($log_viewable) {
     }
 
     for ($i = 0; $i < $results_no; $i++) {
-        if (strpos($paper[$i]['q_paper'], '[deleted') !== false) {
+        if (mb_strpos($paper[$i]['q_paper'], '[deleted') !== false) {
             $paper[$i]['q_paper'] = '<span style="color:#808080; text-decoration:line-through">' . $paper[$i]['q_paper'] . '</span>';
         }
         switch ($paper[$i]['type']) {
@@ -694,7 +694,7 @@ if ($userObject->has_role('SysAdmin')) {
     }
     echo drawTabs('Notes', 4, '', $user_details['roles'], $bg_color, $string);
     echo '<tr><td class="coltitle">&nbsp;&nbsp;&nbsp;' . $string['date'] . '</td><td class="coltitle">' . $string['paper'] . '</td><td class="coltitle">' . $string['note'] . '</td><td class="coltitle">' . $string['author'] . "</td></tr>\n";
-  
+
     echo '<tr><td colspan="4"><input id="createname" type="button" name="createname" value="' .  $string['newnote'] . "\" /></td></tr>\n";
 
     $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \" {$configObject->get('cfg_short_date')}\"), paper_id, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID = users.id AND student_notes.userID = ?");

@@ -159,9 +159,9 @@ while ($result->fetch()) {
         $occurrence_comments = 0;
         $list_on = 1;
     }
-    $response = trim(strtolower($user_answer));
+    $response = trim(mb_strtolower($user_answer));
     // $match = false;
-    if ($response != null and $response != 'n/a' and strlen($response) > 1) {
+    if ($response != null and $response != 'n/a' and mb_strlen($response) > 1) {
         $occurrence_comments++;
         echo "<li class=\"response\">$user_answer</li>\n";
         $comment_flag = 1;

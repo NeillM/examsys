@@ -109,7 +109,7 @@ if (!is_null($submit)) {
         // lookup titles
         $tmp_titles = explode(',', $string['title_types']);
         foreach ($tmp_titles as $tmp_title) {
-            if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) {
+            if (mb_substr_count(mb_strtolower($tmp_surname), mb_strtolower($tmp_title . ' ')) > 0) {
                 $conditions[] = 'title = ?';
                 $parameters[] = $tmp_title;
                 $types[] = 'ss';
@@ -120,7 +120,7 @@ if (!is_null($submit)) {
         // find initials
         $sections = preg_split('[,.]', $tmp_surname);
         if (count($sections) > 1) {    // Search for initials.
-            if (strlen($sections[0]) < strlen($sections[1])) {
+            if (mb_strlen($sections[0]) < mb_strlen($sections[1])) {
                 $tmp_initials = $mysqli->real_escape_string(trim($sections[0]));
                 $tmp_surname = trim($sections[1]);
             } else {
@@ -479,9 +479,9 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                                         <td><?= $tmp_first_names == '' ? \demo::demo_replace($tmp_first_names, $demo, true, ' ') : \demo::demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) ?></td>
                                         <td><?= \demo::demo_replace($tmp_username, $demo, false) ?></td>
                                         <td class="fn">
-                                            <?php if (false !== strpos($tmp_roles, 'Student')) : ?>
+                                            <?php if (false !== mb_strpos($tmp_roles, 'Student')) : ?>
                                                 <?= is_null($tmp_student_id) ? $string['unknown'] : \demo::demo_replace_number($tmp_student_id, $demo) ?>
-                                            <?php elseif (false !== strpos($tmp_roles, 'Staff')) : ?>
+                                            <?php elseif (false !== mb_strpos($tmp_roles, 'Staff')) : ?>
                                                 Staff
                                             <?php else : ?>
                                                 <?= $string['na'] ?>

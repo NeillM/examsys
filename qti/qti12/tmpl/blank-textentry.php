@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require('header.php');
-?>  
+?>
 
             <?php echo $headertext ?>
 
@@ -24,7 +24,7 @@ require('header.php');
 <?php $respid = 1; ?>
 <?php foreach ($question->question as & $q) : ?>
     <?php // do we have a blank to output? ?>
-    <?php if (substr($q, 0, 1) == '%') : ?>
+    <?php if (mb_substr($q, 0, 1) == '%') : ?>
                     <response_label ident="rl<?php echo $respid ?>"/>
         <?php $respid++; ?>
         <?php // otherwise output the material ?>
@@ -37,12 +37,12 @@ require('header.php');
                 </render_fib>
             </response_str>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
             </outcomes>
-            
+
             <!-- force general feedback to output -->
             <respcondition title="General Feedback"  continue="Yes">
                 <conditionvar>
@@ -57,7 +57,7 @@ require('header.php');
                 <displayfeedback linkrefid="general"/>
             </respcondition>
 
-   
+
 <?php $respid = 1; ?>
 <?php foreach ($question->options as & $optset) : ?>
             <respcondition title="right - <?php echo $respid ?>" continue="Yes">
@@ -91,7 +91,7 @@ require('header.php');
 <?php endforeach; ?>
 
         </resprocessing>
-        
+
         <!-- only 1 feedback for dropdown questions -->
         <itemfeedback ident="General" view="Candidate">
             <material>
@@ -99,4 +99,3 @@ require('header.php');
             </material>
         </itemfeedback>
     </item>
-    

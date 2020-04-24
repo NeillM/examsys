@@ -54,8 +54,8 @@ if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['s
     if (isset($_POST['peerreview']) and $_POST['peerreview'] == '1') {
         $type .= " OR paper_type='6'";
     }
-    if (strlen($type) > 0) {
-        $type = 'AND (' . substr($type, 4) . ')';
+    if (mb_strlen($type) > 0) {
+        $type = 'AND (' . mb_substr($type, 4) . ')';
         $type_problem = false;
     } else {
         $type_problem = true;
@@ -131,7 +131,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
 
   require '../include/toprightmenu.inc';
     echo draw_toprightmenu();
-    
+
     echo "<div id=\"content\" class=\"content\">\n";
     echo "<div class=\"head_title\">\n";
 
@@ -224,7 +224,7 @@ if (isset($_POST['submit'])) {
     }
     $results->close();
 }
-  
+
   $mysqli->close();
 ?>
 </div>

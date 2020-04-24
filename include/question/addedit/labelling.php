@@ -44,7 +44,7 @@ require_once 'detail_parts/details_leadin.php';
 ?>
                     </tbody>
                 </table>
-        
+
         <table class="form hotspot" summary="Hotspot flash movie">
           <thead>
             <tr>
@@ -58,7 +58,7 @@ require_once 'detail_parts/details_leadin.php';
 
 if ($media['filename'] != '') :
     $img_str = '';
-    if (strtolower($mode) != strtolower($string['edit'])) {
+    if (mb_strtolower($mode) != mb_strtolower($string['edit'])) {
         foreach ($label_images as $lab_img) {
             if (isset($lab_img['filename']) and $lab_img['filename'] != '') {
                 $img_str .= implode(',', $lab_img) . ';';
@@ -75,7 +75,7 @@ if ($media['filename'] != '') :
     width='" . ($media['width'] + 222) . "' height='" . $plugin_height . "'></canvas>\n";
     echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 endif;
-?>                
+?>
                 <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
                 <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
                 <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />

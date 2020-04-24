@@ -89,7 +89,7 @@ $displayconfigs = array();
 $configs = $configObject->get_setting('core');
 foreach (Config::$config_area as $area) {
     foreach ($configs as $setting => $value) {
-        if (strpos($setting, $area) !== false) {
+        if (mb_strpos($setting, $area) !== false) {
             $displayconfigs[$area][$setting] = $value;
         }
     }
@@ -119,7 +119,7 @@ foreach ($displayconfigs as $area => $conf) {
             } else {
                 $data['checked'] = '';
             }
-            
+
             $render->render($data, $string, 'admin/config/config_chk.html');
         } elseif ($type === Config::PASSWORD) {
             $data['value'] = htmlspecialchars($value);
@@ -127,7 +127,7 @@ foreach ($displayconfigs as $area => $conf) {
         } elseif ($type === Config::TIMEZONES) {
             // Compare config setting against list of possible timezones.
             $i = 0;
-            
+
             foreach ($timezone_array as $individual_zone => $display_zone) {
                 $selected = '';
                 if (isset($value[$individual_zone])) {

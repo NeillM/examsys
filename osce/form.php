@@ -102,7 +102,7 @@ if (isset($_POST) and count($_POST) > 0) {
 <html>
   <head>
     <?php
-    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    if (mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
         echo "  <meta name=\"viewport\" content=\"user-scalable=no\">\n";
     } else {
         echo "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
@@ -116,7 +116,7 @@ if (isset($_POST) and count($_POST) > 0) {
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
     <?php
-    if (strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    if (mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
         echo 'body {background-color:' . $propertyObj->get_bgcolor() . '; margin-bottom:15px; color:' . $propertyObj->get_fgcolor() . "; font-size:100%}\n";
     } else {
         echo 'body {background-color:' . $propertyObj->get_bgcolor() . '; margin-bottom:15px; color:' . $propertyObj->get_fgcolor() . "; font-size:90%}\n";
@@ -203,14 +203,14 @@ if (isset($_POST) and count($_POST) > 0) {
     $max_cols_result->execute();
     $max_cols_result->bind_result($display_method);
     while ($max_cols_result->fetch()) {
-        $max_cols = substr_count($display_method, '|');
+        $max_cols = mb_substr_count($display_method, '|');
     }
     $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
     while ($result->fetch()) {
-        $cols = substr_count($display_method, '|');
+        $cols = mb_substr_count($display_method, '|');
 
         if (trim($theme) != '') {
             echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";

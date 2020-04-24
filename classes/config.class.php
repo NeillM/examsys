@@ -45,19 +45,19 @@ class Config extends RogoStaticSingleton
     protected static $class_name = 'Config';
     /** @var mysqli The mysqli database object */
     public $db;
-  
+
     /** @var bool Stores if the config object has been setup for behat. */
     protected $behatsetup = false;
-  
+
     /** @var bool Stores if the config object has been setup for phpunit. */
     protected $phpunitsetup = false;
 
     /** The path to the behat config file relative to the root Rogo directory. */
     const BEHAT_CONFIG_FILE = '/config/behat.xml';
-  
+
     /** The path to the phpunit config file relative to the root Rogo directory. */
     const PHP_UNIT_CONFIG_FILE = '/config/phpunit.xml';
-  
+
     /**
      * Config setting password type identifier
      * @var string
@@ -185,7 +185,7 @@ class Config extends RogoStaticSingleton
             $this->data['cfg_behat_' . $setting->getName()] = (string)$setting;
         }
     }
-  
+
     /**
      * Loads the phpunit configuration for Rogo.
      *
@@ -228,7 +228,7 @@ class Config extends RogoStaticSingleton
         // We got this far everything is good.
         return true;
     }
-  
+
     /**
      * Checks if all the required phpunit configuration settings are present.
      *
@@ -260,9 +260,9 @@ class Config extends RogoStaticSingleton
         $parsedurl['port'] = isset($parsedurl['port']) ? $parsedurl['port'] : 80;
         $parsedurl['path'] = rtrim($parsedurl['path'], '/');
 
-        $pos = strpos($_SERVER['HTTP_HOST'], ':');
+        $pos = mb_strpos($_SERVER['HTTP_HOST'], ':');
         if ($pos !== false) {
-            $requestedhost = substr($_SERVER['HTTP_HOST'], 0, $pos);
+            $requestedhost = mb_substr($_SERVER['HTTP_HOST'], 0, $pos);
         } else {
             $requestedhost = $_SERVER['HTTP_HOST'];
         }
@@ -270,7 +270,7 @@ class Config extends RogoStaticSingleton
         // The path should also match.
         if (empty($parsedurl['path'])) {
             $matchespath = true;
-        } elseif (strpos($_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
+        } elseif (mb_strpos($_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
             $matchespath = true;
         }
 
@@ -281,7 +281,7 @@ class Config extends RogoStaticSingleton
 
         return false;
     }
-  
+
     /**
      * Test if Rogo is being accessed as a behat website.
      *
@@ -304,7 +304,7 @@ class Config extends RogoStaticSingleton
         // Check if unittest constant has been defined.
         return defined('PHPUNIT_ROGO_TESTSUITE');
     }
-  
+
     /**
      * Setup Rogo site to use the the behat database.
      *
@@ -345,7 +345,7 @@ class Config extends RogoStaticSingleton
         // Set cfg_root_path to behat site.
         $this->set('cfg_root_path', $this->get('cfg_behat_website'));
     }
-  
+
     /**
      * Setup Rogo site to use the the phpunit database.
      *
@@ -429,7 +429,7 @@ class Config extends RogoStaticSingleton
     {
         $this->settingstype[$component][$setting] = $value;
     }
-  
+
     /**
      * Set a particular config setting's value for a particular component
      * @param string $setting The name of the config setting
@@ -588,7 +588,7 @@ class Config extends RogoStaticSingleton
         $cachedsetting = $this->get_setting_type_from_cache($component, $setting);
         return $cachedsetting;
     }
-  
+
     /**
      * Get setting from cache
      * @param string $component
@@ -622,7 +622,7 @@ class Config extends RogoStaticSingleton
         }
         return null;
     }
-  
+
     /**
      * Load all settings for a particular component into the 'settings' property of the config object
      * @param string $component The component to which this config setting belongs
@@ -740,7 +740,7 @@ class Config extends RogoStaticSingleton
         $fake = null;
         return $fake;
     }
-  
+
     /**
      * Check if value is of the expected type
      * @param string $value value to check

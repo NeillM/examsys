@@ -168,8 +168,8 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
             $bkt_mismatch = false;
             $formula = $settings['answers'];
             foreach ($formula as $form) {
-                $opening_bkt = substr_count($form['formula'], '(');
-                $closing_bkt = substr_count($form['formula'], ')');
+                $opening_bkt = mb_substr_count($form['formula'], '(');
+                $closing_bkt = mb_substr_count($form['formula'], ')');
                 if ($opening_bkt !== $closing_bkt) {
                     $bkt_mismatch = true;
                 }
@@ -182,8 +182,8 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
         } elseif ($q_type == 'textbox' and $question_marks == 0) {
             $temp_array[$row_no]['warnings'][] = $string['zeromarks'];
         } elseif ($q_type == 'blank') {
-            $open_blank = substr_count($option_text[0], '[blank');
-            $close_blank = substr_count($option_text[0], '[/blank');
+            $open_blank = mb_substr_count($option_text[0], '[blank');
+            $close_blank = mb_substr_count($option_text[0], '[/blank');
             if ($open_blank != $close_blank) {
                 $temp_array[$row_no]['warnings'][] = $string['mismatchblanktags'];
             }
@@ -273,9 +273,9 @@ function have_valid_labels($correct)
 
     $tmp_first_split = explode(';', $correct);
     $tmp_second_split = explode('$', $tmp_first_split[11]);
-    
+
     for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-        if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
+        if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
             $ok = true;
             break;
         }
@@ -675,7 +675,7 @@ if ($row_no > 0) {
 
             checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
     }
-        
+
 
     if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
         $update_params = array(
@@ -724,7 +724,7 @@ if ($folder) {
 
     // link of current folder
     $href = '/folder/index.php?folder=' . $folder;
-    $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+    $links[$href] = false === mb_strpos($folderName, ';') ? $folderName : mb_substr($folderName, mb_strrpos($folderName, ';') + 1);
 } else {
     if (is_null($module)) {
         // Get the modules from paper properties
@@ -734,7 +734,7 @@ if ($folder) {
     // link to module
     $href = '/module/index.php?module=' . $module ;
     $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
- 
+
     // link to module
     $href = '/paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
     $links[$href] = Paper_utils::type_to_name($properties->get_paper_type(), $string);
@@ -753,7 +753,7 @@ if ($properties->get_retired() != '') {
 }
   echo '<div class="head_title"><div class="' . $title_class . '">' . $properties->get_paper_title() . '</div>';
   echo "</div>\n";
-  
+
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
   // Blank row to preserve table layout when using table-layout: fixed - needed to increase IE8 latex rendering speed.
   echo '<tr><td class="icon"></td><td class="q_no"></td><td></td><td class="t"></td><td class="m"></td><td class="d"></td></tr>';
@@ -821,7 +821,7 @@ if ($properties->get_retired() == '') {
     }
     if ($properties->get_calendar_year() !== null) {
         $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
-        
+
         if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
             echo "<tr><td colspan=\"6\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
             echo '<tr><td class="redwarn" style="width:40px; line-height:0"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="Warning" /></td><td colspan="7" class="redwarn"><strong>' . $string['warning'] . '</strong>&nbsp;&nbsp;';
@@ -875,7 +875,7 @@ if ($properties->get_retired() == '') {
         } else {
             $killer_class = '';
         }
-        
+
         $theme_class = '';
         $theme_str = '';
         if (trim($temp_array[$x]['theme']) != '') {
@@ -935,7 +935,7 @@ if ($properties->get_retired() == '') {
         }
 
         echo '<td class="l';
-        if (strlen($temp_array[$x]['fulltext']) > $leadinlength) {
+        if (mb_strlen($temp_array[$x]['fulltext']) > $leadinlength) {
             $fullText = QuestionUtils::clean_leadin($temp_array[$x]['fulltext'], 0);
             echo ' extended-leadin" data-extended-leadin="' . htmlspecialchars($fullText);
         }
@@ -957,9 +957,9 @@ if ($properties->get_retired() == '') {
             foreach ($temp_array[$x]['warnings'] as $warning) {
                 echo '<div class="q_warning">' . $warning . '</div>';
             }
-        } elseif (strpos($temp_array[$x]['q_media'], '.swf') !== false) {
+        } elseif (mb_strpos($temp_array[$x]['q_media'], '.swf') !== false) {
             echo '<img src="../artwork/flash_icon.png" width="48" height="48" alt="Embedded Flash object" border="0" />';
-        } elseif (strpos($temp_array[$x]['q_media'], '.flv') !== false) {
+        } elseif (mb_strpos($temp_array[$x]['q_media'], '.flv') !== false) {
             echo '<img src="../artwork/flash_icon.png" width="48" height="48" alt="Embedded Flash object" border="0" />';
         } else {
             echo '<img src="' . $mediadirectory->url($temp_array[$x]['q_media']) . '" width="' . ($temp_array[$x]['q_media_width'] / 3) . '" height="' . ($temp_array[$x]['q_media_height'] / 3) . '" alt="Media file" border="1" />';

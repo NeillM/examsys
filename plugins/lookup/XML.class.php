@@ -82,7 +82,7 @@ class XML_lookup extends outline_lookup
                     $this->savetodebug("Restriction stopped debug key: $key not found");
                     $restrictstop = true;
                 } else {
-                    if (strpos($value, '|') === false) {
+                    if (mb_strpos($value, '|') === false) {
                         //condition
                         if (!isset($lookupobj->lookupdata->$key) or (isset($lookupobj->lookupdata->$key) and $lookupobj->lookupdata->$key !== $value)) {
                             $this->savetodebug("Restriction stopped debug key: $key !== $value");

@@ -114,7 +114,7 @@ class renderdata extends \questiondata
         $allowed_responses = $this->get_allowed_responses();
         if (!is_null($useranswer)) {
             $answer_parts = explode(':', $useranswer);
-            $len_answer = strlen($answer_parts[0]);
+            $len_answer = mb_strlen($answer_parts[0]);
         } else {
             $len_answer = 0;
         }
@@ -136,12 +136,12 @@ class renderdata extends \questiondata
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
-        if (substr($useranswer, $option['position'] - 1, 1) === 'y') {
+        if (mb_substr($useranswer, $option['position'] - 1, 1) === 'y') {
             $option['selected'] = true;
         } else {
             $option['selected'] = false;
         }
-        if (substr($userdismissed, $option['position'] - 1, 1) === '1') {
+        if (mb_substr($userdismissed, $option['position'] - 1, 1) === '1') {
             $option['inact'] = true;
         } else {
             $option['inact'] = false;
@@ -183,10 +183,10 @@ class renderdata extends \questiondata
         if ($this->displaymethod === 'other') {
             $part_id = $this->partid + 1;
             $this->partid = $part_id ;
-            if (!is_null($useranswer) and substr($useranswer, ($part_id - 1), 1) == 'y') {
+            if (!is_null($useranswer) and mb_substr($useranswer, ($part_id - 1), 1) == 'y') {
                 $this->otherselected = true;
             }
-            $this->other = substr($useranswer, $part_id);
+            $this->other = mb_substr($useranswer, $part_id);
         }
         if ($option['marksincorrect'] < 0) {
             $this->negativemarking = true;

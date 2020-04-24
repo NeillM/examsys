@@ -34,9 +34,9 @@
  */
 function time_to_seconds($seconds)
 {
-    $hr = intval(substr($seconds, 8, 2));
-    $min = intval(substr($seconds, 10, 2));
-    $sec = intval(substr($seconds, 12, 2));
+    $hr = intval(mb_substr($seconds, 8, 2));
+    $min = intval(mb_substr($seconds, 10, 2));
+    $sec = intval(mb_substr($seconds, 12, 2));
 
     return ($hr * 3600) + ($min * 60) + $sec;
 }
@@ -108,7 +108,7 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
             break;
         }
     }
-  
+
     // Check for any save fails.
     if ($paper_type == 2) {   // Only log fails on summative exams.
         $ipaddress = NetworkUtils::get_client_address();
@@ -360,7 +360,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         $mark = $marks_correct;
                     } elseif ($parts[1] >= $tolerances['correct_partial'] and $parts[2] <= $tolerances['error_partial']) {
                         $mark = $marks_partial;
-                    } elseif (isset($subparts[1]) and strlen($subparts[1]) > 0) {
+                    } elseif (isset($subparts[1]) and mb_strlen($subparts[1]) > 0) {
                         $mark = $marks_incorrect;
                     }
                 }
@@ -375,7 +375,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 if (!is_array($settings)) {
                     $settings = json_decode($settings, true);
                 }
-        
+
                 if (isset($settings['marks_correct'])) {
                     $totalpos = $settings['marks_correct'];
                 } else {
@@ -739,8 +739,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     }
 
                     // Get correct answer.
-                    $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-                    $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+                    $blank_details[$i] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
+                    $blank_details[$i] = mb_substr($blank_details[$i], 0, mb_strpos($blank_details[$i], '[/blank]'));
                     $answer_list = explode(',', $blank_details[$i]);
 
                     $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
@@ -752,7 +752,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                             $have_answer = true;
                             $is_correct = false;
                             foreach ($answer_list as $individual_answer) {
-                                if (str_replace('&nbsp;', ' ', trim(strtolower($blank_answer))) == str_replace('&nbsp;', ' ', trim(strtolower($individual_answer)))) {
+                                if (str_replace('&nbsp;', ' ', trim(mb_strtolower($blank_answer))) == str_replace('&nbsp;', ' ', trim(mb_strtolower($individual_answer)))) {
                                     $is_correct = true;
                                     break;
                                 }
@@ -823,7 +823,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     }
                     $totalpos = $marks_correct;
                 } else {
-                    $totalpos = (substr_count($correct, '|') + 1) * $marks_correct;
+                    $totalpos = (mb_substr_count($correct, '|') + 1) * $marks_correct;
                 }
                 break;
             case 'labelling':
@@ -916,7 +916,7 @@ function check_formula($formula, $variables)
     preg_match_all('/\$[A-J]{1}/', $formula, $matches);
     if (is_array($matches[0])) {
         foreach ($matches[0] as $var) {
-            $index = ord(substr($var, 1, 1)) - 65;
+            $index = ord(mb_substr($var, 1, 1)) - 65;
             if ($variables[$index] == 'ERROR') {
                 $ok = false;
             }
@@ -980,7 +980,7 @@ function finalise_dichotomous($old_score_method, $old_marks_correct, $old_marks_
         $totalpos = $old_marks_correct;
         if ($no_correct == 0 and $no_incorrect == 0) { // Abstained to all options
             $mark = 0;
-        } elseif ($no_correct == strlen($saved_response)) {
+        } elseif ($no_correct == mb_strlen($saved_response)) {
             $mark = $old_marks_correct;
         } else {
             $mark = $old_marks_incorrect;

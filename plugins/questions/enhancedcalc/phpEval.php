@@ -35,7 +35,7 @@ class EnhancedCalc_phpEval
     protected $config;
     protected $toStrDefined;
     protected $powDefined;
-  
+
     public $error = false;
     public $error_msg = '';
 
@@ -55,7 +55,7 @@ class EnhancedCalc_phpEval
     {
         return true;
     }
-  
+
     function setup_R()
     {
     }
@@ -88,13 +88,13 @@ class EnhancedCalc_phpEval
 
     function calculate_correct_ans($vars, $formula)
     {
-    
+
         $formula_vars_subed = EnhancedCalc::substitute_vars($vars, $formula);
         $correctanswer = eval('return (' . $formula_vars_subed . ');');
-   
+
         return (string)$correctanswer;
     }
-  
+
     function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision)
     {
         $status = false;
@@ -132,7 +132,7 @@ class EnhancedCalc_phpEval
         $res = abs(round(abs($useranswer - $correctanswer) / $correctanswer * 100, 3));
         return $res;
     }
-  
+
     function calculate_tolerance_percent($correctanswer, $percentage)
     {
         $cmd[] = "$correctanswer * (" . $percentage . '/100)';
@@ -144,7 +144,7 @@ class EnhancedCalc_phpEval
         $result[2] = $correctanswer * (1 - ($percentage / 100));
 
         $res['tolerance'] = $result[0];
-    
+
         //
         // Make sure the min and max are correct tolerances on negative numbers causes problems
         //
@@ -157,17 +157,17 @@ class EnhancedCalc_phpEval
         }
         return $res;
     }
-  
+
     function calculate_tolerance_absolute($correctanswer, $value)
     {
-    
+
         $result[0] = $correctanswer + $value;
         $result[1] = $correctanswer - $value;
 
         $res['tolerance'] = $value;
         $res['tolerance_ans'] = $result[0];
         $res['tolerance_ansneg'] = $result[1];
-  
+
         return $res;
     }
 
@@ -189,7 +189,7 @@ class EnhancedCalc_phpEval
             return false;
         }
     }
-  
+
     function is_useranswer_within_significant_figures($useranswer, $sf)
     {
 
@@ -203,10 +203,10 @@ class EnhancedCalc_phpEval
             return false;
         }
     }
-  
+
     function is_useranswer_correct_decimal_places($useranswer, $dp)
     {
-    
+
         if ($useranswer == '') {
             return false;
         }
@@ -220,17 +220,17 @@ class EnhancedCalc_phpEval
 
     function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp)
     {
-    
+
         if ($useranswer == '') {
             return false;
         }
-    
+
         $status = $this->is_useranswer_correct_decimal_places($useranswer, $dp);
-    
+
         if (!$status) {
             return false;
         }
-    
+
         $dps = $this->calc_dp($useranswer);
 
         if ($dps == $dp) {
@@ -239,66 +239,66 @@ class EnhancedCalc_phpEval
             return false;
         }
     }
-  
+
     function calc_dp($num)
     {
-        $dotpos = strpos($num, '.');
+        $dotpos = mb_strpos($num, '.');
         if ($dotpos === false) {
             return 0;
         }
-    
-        $epos = strpos($num, 'e');
+
+        $epos = mb_strpos($num, 'e');
         if ($epos !== false) {
             $end = $epos;
         } else {
-            $end = strlen($num);
+            $end = mb_strlen($num);
         }
-   
+
         return $end - ($dotpos + 1);
     }
-  
+
     function calc_sf($num)
     {
-        
-        $epos = strpos($num, 'e');
+
+        $epos = mb_strpos($num, 'e');
         if ($epos === false) {
-            $epos = strlen($num);
+            $epos = mb_strlen($num);
         }
-    
-        if (strpos($num, '0.') === 0) {
+
+        if (mb_strpos($num, '0.') === 0) {
             $epos = $epos - 2;
-        } elseif (strpos($num, '.') !== false) {
+        } elseif (mb_strpos($num, '.') !== false) {
             $epos = $epos - 1;
         }
-   
+
         return $epos;
     }
-  
+
     function is_engineering_format($num)
     {
-        $epos = stripos($num, 'e');
+        $epos = mb_stripos($num, 'e');
         if ($epos !== false) {
             return true;
         }
         return false;
     }
-  
+
     function format_number_dp($num, $dp)
     {
         return round($num, $dp);
     }
-  
+
     function format_number_dp_strict_zeros($num, $dp)
     {
         $str = '%.' . $dp . 'f';
         return sprintf($str, $num);
     }
-  
+
     function format_number_sf($num, $sf)
     {
         return $this->RoundSigDigs($num, $sf);
     }
-  
+
     function format_number_to_precision_of_other_number($roundme, $likethisone)
     {
         if ($this->is_engineering_format($likethisone)) {
@@ -309,19 +309,19 @@ class EnhancedCalc_phpEval
             return $this->format_number_dp($roundme, $precision);
         }
     }
-  
+
     private function set_error($msg)
     {
         $this->error = true;
         $this->error_msg = $msg;
     }
-  
+
     private function reset_error()
     {
         $this->error = false;
         $this->error_msg = '';
     }
-    
+
     public function get_error()
     {
         return $this->error_msg;

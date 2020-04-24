@@ -140,8 +140,8 @@ SQL;
                 }
                 break;
             case 'dichotomous':
-                for ($i = 0; $i < strlen($tmp_answer); $i++) {
-                    $tmp_individual_answer = substr($tmp_answer, $i, 1);
+                for ($i = 0; $i < mb_strlen($tmp_answer); $i++) {
+                    $tmp_individual_answer = mb_substr($tmp_answer, $i, 1);
                     if (isset($log_array[$screen][$question_ID][$i + 1][$tmp_individual_answer])) {
                         $log_array[$screen][$question_ID][$i + 1][$tmp_individual_answer]++;
                     } else {
@@ -173,13 +173,13 @@ SQL;
                 }
                 break;
             case 'hotspot':
-                if (substr($tmp_answer, 0, 1) == '1') {
+                if (mb_substr($tmp_answer, 0, 1) == '1') {
                     if (isset($log_array[$screen][$question_ID][1]['1'])) {
                         $log_array[$screen][$question_ID][1]['1']++;
                     } else {
                         $log_array[$screen][$question_ID][1]['1'] = 1;
                     }
-                } elseif (substr($tmp_answer, 0, 1) == '0') {
+                } elseif (mb_substr($tmp_answer, 0, 1) == '0') {
                     if (isset($log_array[$screen][$question_ID][1]['0'])) {
                         $log_array[$screen][$question_ID][1]['0']++;
                     } else {
@@ -193,14 +193,14 @@ SQL;
                     }
                 }
                 if ($log_array[$screen][$question_ID][1]['coords'] == '') {
-                    $log_array[$screen][$question_ID][1]['coords'] = substr($tmp_answer, 2);
+                    $log_array[$screen][$question_ID][1]['coords'] = mb_substr($tmp_answer, 2);
                 } else {
-                    $log_array[$screen][$question_ID][1]['coords'] .= ';' . substr($tmp_answer, 2);
+                    $log_array[$screen][$question_ID][1]['coords'] .= ';' . mb_substr($tmp_answer, 2);
                 }
                 break;
             case 'mcq':
-                if (substr($tmp_answer, 0, 5) == 'other') {
-                    $log_array[$screen][$question_ID][1]['other'][] = substr($tmp_answer, 6);
+                if (mb_substr($tmp_answer, 0, 5) == 'other') {
+                    $log_array[$screen][$question_ID][1]['other'][] = mb_substr($tmp_answer, 6);
                 } elseif ($tmp_answer == 0) {
                     if (isset($log_array[$screen][$question_ID][1]['u'])) {
                         $log_array[$screen][$question_ID][1]['u']++;
@@ -225,7 +225,7 @@ SQL;
                 $result2->close();
 
                 for ($i = 0; $i < $tmp_option_no; $i++) {
-                    $tmp_individual_answer = substr($tmp_answer, $i, 1);
+                    $tmp_individual_answer = mb_substr($tmp_answer, $i, 1);
                     if (isset($log_array[$screen][$question_ID][$i + 1][$tmp_individual_answer])) {
                         $log_array[$screen][$question_ID][$i + 1][$tmp_individual_answer]++;
                     } else {
@@ -233,8 +233,8 @@ SQL;
                     }
                 }
 
-                if (strlen($tmp_answer) > $tmp_option_no) {
-                    $other = substr($tmp_answer, $tmp_option_no + 1);
+                if (mb_strlen($tmp_answer) > $tmp_option_no) {
+                    $other = mb_substr($tmp_answer, $tmp_option_no + 1);
 
                     if (isset($log_array[$screen][$question_ID][$i + 1][$other])) {
                         $log_array[$screen][$question_ID][$i + 1][$other]++;

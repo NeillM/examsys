@@ -295,7 +295,7 @@ class ClassTotals
      */
     public function nicedate($original)
     {
-        return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
+        return mb_substr($original, 6, 2) . '/' . mb_substr($original, 4, 2) . '/' . mb_substr($original, 0, 4) . ' ' . mb_substr($original, 8, 2) . ':' . mb_substr($original, 10, 2);
     }
 
     /**
@@ -316,7 +316,7 @@ class ClassTotals
                 $this->user_results[$i]['percent'] = $this->crankMark($this->user_results[$i]['percent']);
             }
         }
-        
+
         for ($i = 0; $i < $user_no; $i++) {
             if (round($this->user_results[$i]['percent'], $this->percent_decimals) < $this->pass_mark) {
                 $this->user_results[$i]['classification'] = 'Fail';
@@ -480,8 +480,8 @@ class ClassTotals
         $subpart = '';
         $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
 
-        if ($q_type != 'mrq' and $q_type != 'rank' and strlen($exclude) > 1) {
-            for ($i = 0; $i < strlen($exclude); $i++) {
+        if ($q_type != 'mrq' and $q_type != 'rank' and mb_strlen($exclude) > 1) {
+            for ($i = 0; $i < mb_strlen($exclude); $i++) {
                 if ($exclude{$i} == '1') {
                     if ($subpart == '') {
                         if ($q_type == 'extmatch') {
@@ -496,7 +496,7 @@ class ClassTotals
             }
         }
 
-        if (strpos($exclude, '1') !== false) {
+        if (mb_strpos($exclude, '1') !== false) {
             if ($this->display_excluded == '') {
                 $this->display_excluded = $q_no . $subpart;
             } else {
@@ -664,8 +664,8 @@ class ClassTotals
         for ($i = 1; $i <= $no_answers; $i++) {
             $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', $blank_details[$i]);
             $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', $blank_details[$i]);
-            $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-            $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+            $blank_details[$i] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
+            $blank_details[$i] = mb_substr($blank_details[$i], 0, mb_strpos($blank_details[$i], '[/blank]'));
 
             $answer_list = explode(',', $blank_details[$i]);
             $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
@@ -800,7 +800,7 @@ class ClassTotals
                             $match = false;
                             if (isset($question['correct'][$a])) {
                                 foreach ($question['correct'][$a] as $correct_alternative) {
-                                    if (strtolower($student_answer) == strtolower($correct_alternative)) {
+                                    if (mb_strtolower($student_answer) == mb_strtolower($correct_alternative)) {
                                         $match = true;
                                     }
                                 }
@@ -863,10 +863,10 @@ class ClassTotals
                 $count_question_parts = count($question_parts);
                 for ($i = 0; $i < $count_question_parts; $i++) {
                     if ($tmp_exclude{$i} == '0') {
-                        if (isset($user_answers[$i]) and substr($user_answers[$i], 0, 1) == '1') {
+                        if (isset($user_answers[$i]) and mb_substr($user_answers[$i], 0, 1) == '1') {
                             $tmp_mark += $question['marks_correct'];
                             $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
-                        } elseif (isset($user_answers[$i]) and substr($user_answers[$i], 0, 1) == '0') {
+                        } elseif (isset($user_answers[$i]) and mb_substr($user_answers[$i], 0, 1) == '0') {
                             $tmp_mark += $question['marks_incorrect'];
                             $tmp_user_mark_array[$q_id][] = $question['marks_incorrect'];
                         } else {
@@ -886,13 +886,13 @@ class ClassTotals
                 $excluded_no = 0;
                 $count_tmp_second_split = count($tmp_second_split);
                 for ($label_no = 4; $label_no <= $count_tmp_second_split; $label_no += 4) {
-                    if (substr($tmp_second_split[$label_no], 0, 1) != '|') {
+                    if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
                         $label_count++;
                     }
-                    if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
+                    if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
                         $x = round($tmp_second_split[$label_no - 2]);
                         $y = round($tmp_second_split[$label_no - 1]) - 25;
-                        $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'));
+                        $correct_labels[$x . 'x' . $y] = mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'));
                         if ($tmp_exclude{$i} == '0') {
                             $placeholders++;
                         } else {
@@ -990,17 +990,17 @@ class ClassTotals
     public function formatsec($seconds)
     {
         $diff_hour = ($seconds / 60) / 60;
-        $tmp_position = strpos($diff_hour, '.');
+        $tmp_position = mb_strpos($diff_hour, '.');
         if ($tmp_position > 0) {
-            $diff_hour = substr($diff_hour, 0, $tmp_position);
+            $diff_hour = mb_substr($diff_hour, 0, $tmp_position);
         }
         if ($diff_hour > 0) {
             $seconds -= ($diff_hour * 60) * 60;
         }
         $diff_min = $seconds / 60;
-        $tmp_position = strpos($diff_min, '.');
+        $tmp_position = mb_strpos($diff_min, '.');
         if ($tmp_position > 0) {
-            $diff_min = substr($diff_min, 0, $tmp_position);
+            $diff_min = mb_substr($diff_min, 0, $tmp_position);
         }
         if ($diff_min > 0) {
             $seconds -= $diff_min * 60;
@@ -1897,7 +1897,7 @@ class ClassTotals
             $result->close();
         }
     }
-  
+
     /**
      * @brief Store exam grades
      * @return bool true on success
@@ -1910,7 +1910,7 @@ class ClassTotals
         }
         return false;
     }
-  
+
     /**
      * @brief Store exam grades
      * @return void
@@ -1928,7 +1928,7 @@ class ClassTotals
             }
         }
     }
-  
+
     /**
      * @brief Check if paper already graded
      * @return bool true if graded
@@ -2011,7 +2011,7 @@ class ClassTotals
         $temp_user_no = 0;
         $user_no = count($this->user_results);
         for ($i = 0; $i < $user_no; $i++) {
-            if (strpos($this->user_results[$i]['username'], 'user') === 0) {
+            if (mb_strpos($this->user_results[$i]['username'], 'user') === 0) {
                 $temp_user_no++;
             }
         }

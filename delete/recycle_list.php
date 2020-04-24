@@ -29,7 +29,7 @@ require '../include/staff_auth.inc';
 
 function dateDisplay($tmp_date)
 {
-    return substr($tmp_date, 6, 2) . '/' . substr($tmp_date, 4, 2) . '/' . substr($tmp_date, 0, 4) . ' ' . substr($tmp_date, 8, 2) . ':' . substr($tmp_date, 10, 2);
+    return mb_substr($tmp_date, 6, 2) . '/' . mb_substr($tmp_date, 4, 2) . '/' . mb_substr($tmp_date, 0, 4) . ' ' . mb_substr($tmp_date, 8, 2) . ':' . mb_substr($tmp_date, 10, 2);
 }
 
 if (isset($_GET['module'])) {
@@ -123,7 +123,7 @@ for ($item = 0; $item < $list_size; $item++) {
     $split_name = explode('[deleted', $recycle_bin[$item]['name']);
     if ($recycle_bin[$item]['type'] == 'paper') {
         $temp_type = $recycle_bin[$item]['subtype'];
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"p" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/' . $paper_icons[$temp_type] . '" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"p" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/' . $paper_icons[$temp_type] . '" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'folder') {
         echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"f" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/yellow_folder.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['folder'] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'academic_year') {
@@ -137,7 +137,7 @@ for ($item = 0; $item < $list_size; $item++) {
     } elseif ($recycle_bin[$item]['type'] == 'faculty') {
         echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"u" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/faculty_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['faculty'] . "</nobr></td></tr>\n";
     } else {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"q" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/question_item_icon.gif" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"q" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/question_item_icon.gif" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
     }
 }
 ?>

@@ -69,7 +69,7 @@ if (!$errors) {
         $explode = explode('.', $filename);
         $count = count($explode) - 1;
         // Ensure the file extenstion is lower case or it will not load on some Operating systems.
-        $file_ext = strtolower($explode[$count]);
+        $file_ext = mb_strtolower($explode[$count]);
 
         if (!move_uploaded_file($_FILES['photofile']['tmp_name'], $photodirectory->fullpath($username . '.' . $file_ext))) {
             log_error($userObject->get_user_ID(), 'Edit User', 'Application Error', 'Error uploading user photo - error: ' . $_FILES['photofile']['error'], $_SERVER['PHP_SELF'], 49, '', null, null, null);
@@ -80,7 +80,7 @@ if (!$errors) {
     $first_names = param::optional('first_names', null, param::TEXT, param::FETCH_POST);
     $first_names_array = explode(' ', $first_names);
     foreach ($first_names_array as $individual_name) {
-        $initials .= trim(substr($individual_name, 0, 1));
+        $initials .= trim(mb_substr($individual_name, 0, 1));
     }
     // Update 'users' table.
     $tmp_roles = param::optional('roles', null, param::TEXT, param::FETCH_POST);
@@ -101,7 +101,7 @@ if (!$errors) {
         $errors = $string['unabletosaveuserdetails'];
     } else {
         // Remove from teams if 'left'.
-        if (strtolower($tmp_roles) == 'left') {
+        if (mb_strtolower($tmp_roles) == 'left') {
             UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
         }
 

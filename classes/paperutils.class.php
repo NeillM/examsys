@@ -25,7 +25,7 @@
  */
 class PaperUtils
 {
-  
+
     /**
      * Records an access to a paper in recent_papers table.
      *
@@ -51,17 +51,17 @@ class PaperUtils
     public function academic_year_from_title($paper_title)
     {
         if (preg_match('/\d{4}[^\d\w]\d{4}/', $paper_title, $matches) == 1) {
-            $tmp_match = substr($matches[0], 0, 4) . '/' . substr($matches[0], -2);
+            $tmp_match = mb_substr($matches[0], 0, 4) . '/' . mb_substr($matches[0], -2);
         } elseif (preg_match('/\d{4}\s[^\d\w]\s\d{4}/', $paper_title, $matches) == 1) {
-            $tmp_match = substr($matches[0], 0, 4) . '/' . substr($matches[0], -2);
+            $tmp_match = mb_substr($matches[0], 0, 4) . '/' . mb_substr($matches[0], -2);
         } elseif (preg_match('/\d{4}[^\d\w]\d{2}/', $paper_title, $matches) == 1) {
-            $tmp_match = substr($matches[0], 0, 4) . '/' . substr($matches[0], -2);
+            $tmp_match = mb_substr($matches[0], 0, 4) . '/' . mb_substr($matches[0], -2);
         } elseif (preg_match('/\d{2}[^\d\w]\d{2}/', $paper_title, $matches) == 1) {
-            $tmp_match = '20' . substr($matches[0], 0, 2) . '/' . (substr($matches[0], 0, 2) + 1);
+            $tmp_match = '20' . mb_substr($matches[0], 0, 2) . '/' . (mb_substr($matches[0], 0, 2) + 1);
         } else {
             $tmp_match = false;
         }
-        
+
         return $tmp_match;
     }
 
@@ -237,7 +237,7 @@ class PaperUtils
 
         return $count;
     }
-  
+
     public function q_feedback_enabled($moduleIDs, $db)
     {
         if (count($moduleIDs) == 0) {
@@ -372,7 +372,7 @@ class PaperUtils
      */
     public function remove_modules($paper_modules, $paperID, $db, $userObject, $modulefilter = '')
     {
-      
+
         // Non sysadmin users can only remove modules if they are on the team. Sysadmins have no restrictions.
         if (!$userObject->has_role('SysAdmin')) {
             $staff_modules = $userObject->get_staff_modules();
@@ -382,16 +382,16 @@ class PaperUtils
         } else {
             $permission = '';
         }
-    
+
         // Are we removing all of the associated modules or a specifc one.
         if ($modulefilter == 'all') {
             $modules = '';
         } else {
             $modules = 'AND idMod = ?';
         }
-    
+
         $remove = $db->prepare("DELETE FROM properties_modules WHERE property_id = ? $modules $permission");
-    
+
         if ($modulefilter == 'all') {
             $remove->bind_param('i', $paperID);
         } else {
@@ -475,7 +475,7 @@ class PaperUtils
                 $name = $string['peer review'];
                 break;
         }
-      
+
         return $name;
     }
 
@@ -572,7 +572,7 @@ class PaperUtils
             } else {
                 $machineOK = true;
             }
-            if (strpos($userObj->get_username(), 'user') !== 0) {
+            if (mb_strpos($userObj->get_username(), 'user') !== 0) {
                 $moduleIDs = Paper_utils::get_modules($property_id, $db);
                 if (count($moduleIDs) > 0) {
                     $moduleOK = false;
@@ -614,7 +614,7 @@ class PaperUtils
 
         return $paper_no;
     }
-  
+
     /**
      * Determins if there is an interactive question (e.g. image hotspot, labelling,
      * area) on a particular screen of a paper. Speeds system up if not loading
@@ -686,7 +686,7 @@ class PaperUtils
             $recent[$paperID] = $paper_title;
         }
         $result->close();
-    
+
         return $recent;
     }
 
@@ -709,7 +709,7 @@ class PaperUtils
 
         return $maxscreen;
     }
-  
+
     /**
      * Check if the paper has been taken
      * @param integer $id - paper id
@@ -730,7 +730,7 @@ class PaperUtils
         $result->close();
         return false;
     }
-  
+
     /**
      * Checks is a paper is available in the specidiced lab
      * Only Summative and progressive papers checked.
@@ -778,7 +778,7 @@ class PaperUtils
         $result->close();
         return $paper_type;
     }
-  
+
     /**
      * Delete a paper from the database
      * @param integer $id paper id
@@ -804,7 +804,7 @@ class PaperUtils
         $result->close();
         return true;
     }
-  
+
     /**
      * Get paper properties
      * @param integer $id paper id
@@ -960,7 +960,7 @@ class PaperUtils
         $result->close();
         return $paperid;
     }
-  
+
     /**
      * Get papers running in academic session
      * @param integer $session academic session
@@ -982,7 +982,7 @@ class PaperUtils
         $result->close();
         return $paperids;
     }
-  
+
     /**
      * Get papers finalised in specific year
      * @param integer $year year
@@ -1006,7 +1006,7 @@ class PaperUtils
         $result->close();
         return $papers;
     }
-  
+
     /**
      * Get a list of papers available to the logged in user
      *
@@ -1040,11 +1040,11 @@ class PaperUtils
         if ($order == 'created') {
             $order = 'CAST(created AS DATE)';
         }
-        $sql .= " ORDER BY {$order} " . strtoupper($direction);
-        if (strpos($order, 'surname') === false) {
+        $sql .= " ORDER BY {$order} " . mb_strtoupper($direction);
+        if (mb_strpos($order, 'surname') === false) {
             $sql .= ', users.surname ASC';
         }
-        if (strpos($order, 'moduleid') === false) {
+        if (mb_strpos($order, 'moduleid') === false) {
             $sql .= ', modules.moduleid ASC';
         }
         $result = $mysqli->prepare($sql);
@@ -1059,7 +1059,7 @@ class PaperUtils
         $result->close();
         return $paper_details;
     }
-  
+
     /**
      * This function compares the old and the new courses session objectives to see which can be copied.
      *
@@ -1109,9 +1109,9 @@ class PaperUtils
                                         foreach ($newsession['objectives'] as $new_obj) {
                                             if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
                                                 // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
-                                                $new_content_check = strtolower($new_obj['content']);
+                                                $new_content_check = mb_strtolower($new_obj['content']);
                                                 $new_content_check = preg_replace('/[^a-z0-9]/', '', $new_content_check);
-                                                $old_content_check = strtolower($obj['content']);
+                                                $old_content_check = mb_strtolower($obj['content']);
                                                 $old_content_check = preg_replace('/[^a-z0-9]/', '', $old_content_check);
                                                 if ($new_content_check == $old_content_check) {
                                                     // Build a list of objectives that are still in both sessions

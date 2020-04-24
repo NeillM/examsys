@@ -41,13 +41,13 @@ if (isset($_POST['submit'])) {
             $obj_id = mappingutils::get_objectives_start();
 
             $identifier = mappingutils::get_sessions_start();
-      
+
             $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
             foreach ($lines as $separate_line) {
-                if (substr($separate_line, 0, 1) == '#') {   // Sub-heading
-                    $title = substr($separate_line, 1);
+                if (mb_substr($separate_line, 0, 1) == '#') {   // Sub-heading
+                    $title = mb_substr($separate_line, 1);
                     $identifier++;
-     
+
                     $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, '', ?, NOW())");
                     $stmt->bind_param('sisi', $identifier, $modID, $title, $session);
                     $stmt->execute();
@@ -61,7 +61,7 @@ if (isset($_POST['submit'])) {
                         $stmt->close();
                         $session_flag = true;
                     }
-        
+
                     $stmt = $mysqli->prepare('INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)');
                     $stmt->bind_param('isisii', $obj_id, $separate_line, $modID, $identifier, $session, $obj_id);
                     $stmt->execute();
@@ -71,7 +71,7 @@ if (isset($_POST['submit'])) {
             }
         }
     }
-  
+
     unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
     header('location: ' . $configObject->get('cfg_root_path') . '/mapping/sessions_list.php?module=' . $modID);
     exit();
@@ -105,7 +105,7 @@ if (isset($_POST['submit'])) {
     <?php
     require '../include/sessions_options.inc';
     require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
     ?>
 <div id="content">
@@ -145,7 +145,7 @@ if (isset($_POST['submit'])) {
     echo '<td style="text-align:right">' . $string['session'] . "</td><td><select name=\"session\">\n";
     $startyear = ( date('Y') - 1 );
     for ($i = 0; $i < 2; $i++) {
-        $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1), 2);
+        $tmp_session = ($startyear + $i) . '/' . mb_substr(($startyear + $i + 1), 2);
         $sel = ($tmp_session == $yearutils->get_current_session()) ? ' selected="selected"' : '';
         echo "<option value=\"$tmp_session\"$sel>$tmp_session</option>\n";
     }

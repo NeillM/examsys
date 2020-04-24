@@ -198,10 +198,10 @@ foreach ($log_array as $individual) {
             case 'dichotomous':
             case 'mrq':
                 $sub_part = 1;
-                $chars = strlen($log_array[$tmp_user_ID][$tmp_question_ID]);
+                $chars = mb_strlen($log_array[$tmp_user_ID][$tmp_question_ID]);
                 for ($char_pos = 0; $char_pos < $chars; $char_pos++) {
                     echo "<question no=\"$Qno.$sub_part\">";
-                    echo substr($log_array[$tmp_user_ID][$tmp_question_ID], $char_pos, 1);
+                    echo mb_substr($log_array[$tmp_user_ID][$tmp_question_ID], $char_pos, 1);
                     echo "</question>\n";
                     $sub_part++;
                 }

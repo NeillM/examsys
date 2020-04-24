@@ -40,7 +40,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     if ($q_type != 'textbox') {
         if ($theme != '') {
-            $cols = substr_count($old_likert_scale, '|');
+            $cols = mb_substr_count($old_likert_scale, '|');
             if ($cols > 0) {
                 $cols += 5;
             } else {
@@ -86,13 +86,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 $array_size = count($blank_details);
                 $blank_count = 0;
                 while ($blank_count < $array_size) {
-                    if (strpos($blank_details[$blank_count], '[/blank]') === false) {
+                    if (mb_strpos($blank_details[$blank_count], '[/blank]') === false) {
                         echo $blank_details[$blank_count];
                     } else {
-                        $end_start_tag = strpos($blank_details[$blank_count], ']');
-                        $start_end_tag = strpos($blank_details[$blank_count], '[/blank]');
-                        $blank_options = substr($blank_details[$blank_count], ($end_start_tag + 1), ($start_end_tag - 1));
-                        $remainder = substr($blank_details[$blank_count], ($start_end_tag + 8));
+                        $end_start_tag = mb_strpos($blank_details[$blank_count], ']');
+                        $start_end_tag = mb_strpos($blank_details[$blank_count], '[/blank]');
+                        $blank_options = mb_substr($blank_details[$blank_count], ($end_start_tag + 1), ($start_end_tag - 1));
+                        $remainder = mb_substr($blank_details[$blank_count], ($start_end_tag + 8));
                         echo '<span style="color:#800000; font-weight:bold">[blank]</span>';
                         $options_array = array();
                         $options_array = explode(',', $blank_options);
@@ -172,9 +172,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 }
                 break;
             case 'likert':
-                $old_size = substr_count($old_likert_scale, '|');
+                $old_size = mb_substr_count($old_likert_scale, '|');
                 $current_properties = explode('|', $old_display_method);
-                $new_size = substr_count($old_display_method, '|');
+                $new_size = mb_substr_count($old_display_method, '|');
                 if ($current_properties[$new_size] == 'true') {
                     $na = true;
                 } else {
@@ -350,7 +350,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "<td>$individual_option</td>";
         }
         echo '<td style="color:#808080">' . $string['unanswered'] . "</td></tr>\n";
-        for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
+        for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
             echo "<tr>\n";
             echo '<td>' . $tmp_ext_scenarios[$i - 1] . '</td>';
             $option_no = 1;
@@ -383,7 +383,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
         }
-        for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
+        for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
             echo "<li>\n";
             if ($tmp_media_array[$i] != '') {
                 echo '<p>';
@@ -461,7 +461,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(33);
 
   $result = $mysqli->prepare("SELECT COUNT(question) AS question_no, paper_title FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND papers.question=questions.q_id AND q_type != 'info' AND paper = ? GROUP BY property_id");
@@ -497,10 +497,10 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
     $result->fetch();
     $result->close();
 }
-  
-  
-  
-  
+
+
+
+
   echo "<div class=\"head_title\">\n";
   echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
 
@@ -548,7 +548,7 @@ while ($result->fetch()) {
         if ($old_q_type == 'likert') {
             $options_buffer['n/a'] = 'n/a';
             $likert_properties = explode('|', $old_display_method);
-            for ($i = 1; $i <= substr_count($old_display_method, '|'); $i++) {
+            for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
                 $options_buffer[$i] = $i;
             }
         }
@@ -610,8 +610,8 @@ while ($result->fetch()) {
         $tmp_first_split = explode(';', $correct);
         $tmp_second_split = explode('|', $tmp_first_split[8]);
         for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-            if (substr($tmp_second_split[$label_no], 0, 1) != '|') {
-                $options_buffer[] = trim(substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|')));
+            if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
+                $options_buffer[] = trim(mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|')));
                 $correct_buffer[] = $tmp_second_split[$label_no - 2] . 'x' . ($tmp_second_split[$label_no - 1] - 25);
             }
         }
@@ -639,7 +639,7 @@ while ($result->fetch()) {
 if ($old_q_type == 'likert') {
     $options_buffer['n/a'] = 'n/a';
     $likert_properties = explode('|', $old_display_method);
-    for ($i = 1; $i <= substr_count($old_display_method, '|'); $i++) {
+    for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
         $options_buffer[$i] = $i;
     }
 }

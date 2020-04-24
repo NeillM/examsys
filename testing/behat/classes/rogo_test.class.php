@@ -56,7 +56,7 @@ class rogo_test extends MinkContext
     {
         // Get the base url for the site, ensure it has a trailing slash.
         $baseurl = rtrim($this->getMinkParameter('base_url'), '/') . '/';
-        if (strpos($path, 'http') !== 0) {
+        if (mb_strpos($path, 'http') !== 0) {
             // The path is not a fully qualified url.
             $path = $baseurl . ltrim($path, '/');
         }

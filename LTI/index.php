@@ -38,7 +38,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
 
     $moduleidorig = $moduleid;
     $moduleid = module_utils::get_idMod($moduleid, $mysqli);
-  
+
     $sql = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, idMod FROM properties, properties_modules WHERE idMod = ? and properties.property_id = properties_modules.property_id AND deleted IS NULL AND paper_type IN ('0','1','3','4') ORDER BY paper_type, paper_title";
     $results2 = $mysqli->prepare($sql);
     $results2->bind_param('i', $moduleid);
@@ -49,14 +49,14 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
         $rt = $results2->num_rows();
         echo '<div>';
         while ($results2->fetch()) {
-            if (strtolower($_SESSION['_lti_context']['resource_link_title']) == strtolower($paper_title)) {
+            if (mb_strtolower($_SESSION['_lti_context']['resource_link_title']) == mb_strtolower($paper_title)) {
                 $checked = ' checked';
             } else {
                 $checked = '';
             }
             $extra = "<input type=\"radio\" name=\"paperlinkID\" id=\"paperlinkID-$plk\" value=\"$plk\"$checked><label for=\"paperlinkID-$plk\">";
             $extra1 = '</label>';
-      
+
             echo "<div style=\"padding-left:20px\">$extra<img src=\"../artwork/" . $icons[$paper_type] . '_16.gif" width="16" height="16" alt="' . $paper_type . '" />&nbsp;' .  $paper_title . "$extra1</div>\n";
 
             $_SESSION['postlookup'][$plk] = array($crypt_name, $moduleid);
@@ -169,7 +169,7 @@ if (!$lti->isInstructor()) {
             echo "\n</body>\n</html>\n";
             exit();
         }
-    
+
         if (!$lti_i->allow_staff_edit_link()) {
             $_SESSION['lti']['paperlink'] = $returned[0];
             $href = '../paper/user_index.php?id=' . $returned[0];
@@ -306,7 +306,7 @@ END;
 
         @ob_flush();
         @ob_start();
-    
+
         // If there is a context and therefore a course already selected display that.
         $modules = '';
         $exit = 0;
@@ -317,12 +317,12 @@ END;
                 $exit = 1;
             }
         }
-        $modules = substr($modules, 2);
-    
+        $modules = mb_substr($modules, 2);
+
         echo '<h1>' . sprintf($string['module'], $modules) . '</h1>';
         $msg = 'First time configuration. Please select the paper you wish to use in this external tool link.';
         echo $notice->info_strip($msg, 100);
-    
+
         echo '<form method="post" autocomplete="off">';
         foreach ($data as $moduleinfo) {
             $moduleid = $moduleinfo[1];
@@ -335,7 +335,7 @@ END;
             $plk = 0;
             $modules = 'Undefined Module. Please contact Support.';
         }
-    
+
         if ($plk == 0) {
             @ob_clean();
             unset($_SESSION['_lti_context']);

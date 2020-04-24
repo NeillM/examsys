@@ -40,7 +40,7 @@ if (isset($_POST['submit'])) {
     $result = $mysqli->prepare('UPDATE reference_material SET title = ?, content = ?, width = ? WHERE id = ?');
     $result->bind_param('sssi', $_POST['title'], $content, $_POST['width'], $_GET['refID']);
     $result->execute();
-  
+
     // Add it to the modules
     $result = $mysqli->prepare('DELETE FROM reference_modules WHERE refID = ?');
     $result->bind_param('i', $_GET['refID']);
@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
             $result->execute();
         }
     }
-  
+
     header('location: list_ref_material.php?module=' . $_POST['module']);
     exit();
 }
@@ -157,12 +157,12 @@ foreach ($module_array as $modID => $module) {
     }
     if ($match == true) {
         if ($userObject->is_staff_user_on_module($modID) or $userObject->has_role('SysAdmin')) {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
         } else {
-            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"$modID\" checked>" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</div>\n";
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"$modID\" checked>" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</div>\n";
         }
     } else {
-        echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
     }
     $module_no++;
     $old_school = $module['school'];

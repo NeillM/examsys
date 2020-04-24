@@ -97,8 +97,8 @@ class EnhancedCalc extends Question implements questionInterface
         }
 
         if (is_array($matches) and isset($matches[0])) {
-            $sz = strlen($matches[0]);
-            $units = trim(substr($input, $sz));
+            $sz = mb_strlen($matches[0]);
+            $units = trim(mb_substr($input, $sz));
             $numb = $matches[0];
 
             return array($numb, $units);
@@ -959,7 +959,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_linked_ans($varval)
     {
-        if (substr($varval, 0, 3) == 'ans') {
+        if (mb_substr($varval, 0, 3) == 'ans') {
             return true;
         }
         return false;
@@ -972,7 +972,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function parse_linked_ans($varval)
     {
-        return intval(substr($varval, 3)); //qid
+        return intval(mb_substr($varval, 3)); //qid
     }
 
     /**
@@ -982,7 +982,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_linked_question_var($varval)
     {
-        if (substr($varval, 0, 3) == 'var') {
+        if (mb_substr($varval, 0, 3) == 'var') {
             return true;
         }
         return false;
@@ -1024,8 +1024,8 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function parse_linked_question_var($varval)
     {
-        $varname = substr($varval, 3, 2);
-        $qid = intval(substr($varval, 5));
+        $varname = mb_substr($varval, 3, 2);
+        $qid = intval(mb_substr($varval, 5));
 
         return array($varname, $qid);
     }
@@ -1178,14 +1178,14 @@ class EnhancedCalc extends Question implements questionInterface
                 echo '<tr><td>' . $string['formula'] . " $formula_no</td><td colspan=\"2\">" . $answer['formula'] . '</td><td>units: ' . $answer['units'] . "</td></tr>\n";
                 $formula_no++;
             }
-            if (strlen($this->settings['tolerance_full']) > 0) {
+            if (mb_strlen($this->settings['tolerance_full']) > 0) {
                 echo "<tr><td colspan=\"3\">{$string['tolerancefull']}</td><td>" . $this->settings['tolerance_full'];
                 if ($this->settings['fulltoltyp'] == '%') {
                     echo '%';
                 }
                 echo "</td></tr>\n";
             }
-            if (strlen($this->settings['tolerance_partial']) > 0) {
+            if (mb_strlen($this->settings['tolerance_partial']) > 0) {
                 echo "<tr><td colspan=\"3\">{$string['tolerancepartial']}</td><td>" . $this->settings['tolerance_partial'];
                 if ($this->settings['parttoltyp'] == '%') {
                     echo '%';
@@ -1235,7 +1235,7 @@ class EnhancedCalc extends Question implements questionInterface
             $failed_answers = array();
             foreach ($this->useranswer['vars'] as $key => $value) {
                 if ($value == 'ERROR' and isset($this->settings['vars'][$key]['min'])) {
-                    $failed_answer_id = substr($this->settings['vars'][$key]['min'], 3);
+                    $failed_answer_id = mb_substr($this->settings['vars'][$key]['min'], 3);
                     foreach ($extra['current_question']['paper_questions'] as $question_on_paper) {
                         if (isset($question_on_paper['q_id']) and $failed_answer_id == $question_on_paper['q_id'] and isset($question_on_paper['assigned_number'])) {
                             $failed_answers[] = $question_on_paper['assigned_number'];

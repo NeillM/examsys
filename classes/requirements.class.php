@@ -145,7 +145,7 @@ class requirements
         $phpext = self::check_php_extensions();
         foreach ($phpext as $idx => $val) {
             if (!$val) {
-                throw new Exception('PHP extension ' . strtoupper($idx) . ' missing.');
+                throw new Exception('PHP extension ' . mb_strtoupper($idx) . ' missing.');
             }
         }
     }

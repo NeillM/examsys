@@ -164,7 +164,7 @@ HTML;
  */
 function save_objective_mappings($db, $modules, $paper_id, $question_id)
 {
-    if ($paper_id != '' and substr($paper_id, 0, 5) != 'find:') {
+    if ($paper_id != '' and mb_substr($paper_id, 0, 5) != 'find:') {
         $modules = explode(',', $modules);
         $old_mappings = '';
         $new_mappings = '';

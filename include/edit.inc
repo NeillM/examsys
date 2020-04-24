@@ -256,7 +256,7 @@ HTML;
     } else {
         $html .= '<input type="submit" id="addbank" name="addbank" value="' . $string['addtobank'] . '" class="ok">';
 
-        if ($paper_id != -1 and substr($paper_id, 0, 5) != 'list:') {
+        if ($paper_id != -1 and mb_substr($paper_id, 0, 5) != 'list:') {
             $html .= '<input type="submit" id="addpaper" name="addpaper" value="' . $string['addtobankandpaper'] . '" class="ok">';
         }
     }
@@ -277,7 +277,7 @@ HTML;
 function insert_into_papers($p_id, $q_id, $db)
 {
     $configObject = Config::get_instance();
-  
+
     $result = $db->prepare('SELECT MAX(screen) AS screen, MAX(display_pos) AS display_pos FROM papers WHERE paper = ?');
     $result->bind_param('i', $p_id);
     $result->execute();
@@ -306,7 +306,7 @@ function insert_into_papers($p_id, $q_id, $db)
     } else {
         display_error('Papers Add Error', $db->error);
     }
-  
+
     return $db->insert_id;
 }
 
