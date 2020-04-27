@@ -45,51 +45,58 @@ class environment
         $basedir = self::get_basedir();
 
         $config = array(
-        'default' => array(
-        'autoload' => array(
-          $basedir . DIRECTORY_SEPARATOR . 'contexts',
-        ),
-        'suites' => array(
-          'frontend' => array(
-            'contexts' => array(
-              'RogoBehatFrontend',
+            'default' => array(
+                'autoload' => array(
+                    $basedir . DIRECTORY_SEPARATOR . 'contexts',
+                ),
+            'suites' => array(
+                'frontend' => array(
+                    'contexts' => array(
+                        'RogoBehatFrontend',
+                    ),
+                    'paths' => array(
+                        $basedir . DIRECTORY_SEPARATOR . 'features',
+                    ),
+                    'settings' => array(
+                        'filters' => array(
+                            'tags' => '~@backend'
+                        ),
+                    ),
+                ),
+                    'backend' => array(
+                        'contexts' => array(
+                            'RogoBehatBackend',
+                        ),
+                        'paths' => array(
+                            $basedir . DIRECTORY_SEPARATOR . 'features',
+                        ),
+                        'settings' => array(
+                            'filters' => array(
+                                'tags' => '@backend'
+                            ),
+                        ),
+                    ),
+                ),
+                'formatters' => array(
+                    'progress' => null,
+                ),
+                'extensions' => array(
+                    'Behat\MinkExtension' => array(
+                        'base_url' => self::get_behat_website(),
+                        'goutte' => null,
+                        'selenium2' => array(
+                            'browser' => 'chrome',
+                            'capabilities' => array(
+                                'extra_capabilities' => array(
+                                    'chromeOptions' => array(
+                                        'w3c' => false,
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
             ),
-            'paths' => array(
-              $basedir . DIRECTORY_SEPARATOR . 'features',
-            ),
-            'settings' => array(
-              'filters' => array(
-                'tags' => '~@backend'
-              ),
-            ),
-          ),
-          'backend' => array(
-            'contexts' => array(
-              'RogoBehatBackend',
-            ),
-            'paths' => array(
-              $basedir . DIRECTORY_SEPARATOR . 'features',
-            ),
-            'settings' => array(
-              'filters' => array(
-                'tags' => '@backend'
-              ),
-            ),
-          ),
-        ),
-        'formatters' => array(
-          'progress' => null,
-        ),
-        'extensions' => array(
-          'Behat\MinkExtension' => array(
-            'base_url' => self::get_behat_website(),
-            'goutte' => null,
-            'selenium2' => array(
-              'browser' => 'chrome',
-            ),
-          ),
-        ),
-        ),
         );
 
         if (!file_put_contents(self::get_yml_location(), Yaml::dump($config, 10, 2))) {
@@ -117,7 +124,7 @@ class environment
     {
         return self::get_rogo_basedir() . DIRECTORY_SEPARATOR . 'testing' . DIRECTORY_SEPARATOR . 'behat';
     }
-  
+
     /**
      * Get the full path to the behat.yml file.
      *
