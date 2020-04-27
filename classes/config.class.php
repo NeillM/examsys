@@ -343,7 +343,8 @@ class Config extends RogoStaticSingleton
         $this->set('file_config_override', false);
         $this->behatsetup = true;
         // Set cfg_root_path to behat site.
-        $this->set('cfg_root_path', $this->get('cfg_behat_website'));
+        $url = parse_url($this->get('cfg_behat_website'));
+        $this->set('cfg_root_path', $url['path']);
     }
 
     /**
