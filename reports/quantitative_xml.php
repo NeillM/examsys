@@ -317,9 +317,11 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 echo '<?mso-application progid="Word.Document"?>
 <w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
 echo $paper;
-$tmp_start = mb_substr($startdate, 6, 2) . '/' . mb_substr($startdate, 4, 2) . '/' . mb_substr($startdate, 0, 4) . ' ' . mb_substr($startdate, 8, 2) . ':' . mb_substr($startdate, 10, 2);
-$tmp_end = mb_substr($enddate, 6, 2) . '/' . mb_substr($enddate, 4, 2) . '/' . mb_substr($enddate, 0, 4) . ' ' . mb_substr($enddate, 8, 2) . ':' . mb_substr($enddate, 10, 2);
-echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end . '.</o:Description><o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
+$tmp_start = date_utils::rogoToDisplay($startdate);
+$tmp_end = date_utils::rogoToDisplay($enddate);
+echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author>';
+echo '<o:Description>' . sprintf($string['period'], $tmp_start, $tmp_end) . '</o:Description>';
+echo '<o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';

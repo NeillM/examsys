@@ -120,3 +120,5 @@ $string['progress'] = 'Progress paper';
 // Ajax errors.
 $string['ajaxerror'] = 'Error: ';
 $string['ajaxfail'] = 'Fail: ';
+
+$string['period'] = 'Class totals for assessment taken between %s and %s.';

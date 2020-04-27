@@ -27,9 +27,18 @@
 
 require '../include/staff_auth.inc';
 
+/**
+ * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
+ *
+ * Please use date_utils::rogoToDisplay instead. This function will be removed in the future.
+ *
+ * @param string $tmp_date - The date that needs to be convered.
+ * @return string
+ * @deprecated since 7.2.0
+ */
 function dateDisplay($tmp_date)
 {
-    return mb_substr($tmp_date, 6, 2) . '/' . mb_substr($tmp_date, 4, 2) . '/' . mb_substr($tmp_date, 0, 4) . ' ' . mb_substr($tmp_date, 8, 2) . ':' . mb_substr($tmp_date, 10, 2);
+    return date_utils::rogoToDisplay($tmp_date);
 }
 
 if (isset($_GET['module'])) {
@@ -123,21 +132,21 @@ for ($item = 0; $item < $list_size; $item++) {
     $split_name = explode('[deleted', $recycle_bin[$item]['name']);
     if ($recycle_bin[$item]['type'] == 'paper') {
         $temp_type = $recycle_bin[$item]['subtype'];
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"p" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/' . $paper_icons[$temp_type] . '" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"p" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/' . $paper_icons[$temp_type] . '" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'folder') {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"f" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/yellow_folder.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['folder'] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"f" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/yellow_folder.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['folder'] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'academic_year') {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"a" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/add_sessions_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['academicsession'] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"a" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/add_sessions_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['academicsession'] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'modules') {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"m" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/module_icon_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['module'] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"m" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/module_icon_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['module'] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'courses') {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"c" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/degree_icon_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['course'] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"c" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/degree_icon_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['course'] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'schools') {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"s" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/school_icon_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['school'] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"s" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/school_icon_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['school'] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'faculty') {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"u" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/faculty_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['faculty'] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"u" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/faculty_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['faculty'] . "</nobr></td></tr>\n";
     } else {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"q" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/question_item_icon.gif" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . dateDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"q" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/question_item_icon.gif" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
     }
 }
 ?>

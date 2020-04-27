@@ -53,12 +53,16 @@ class textbox_marking_utils
 
     /**
      * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
+     *
+     * Please use date_utils::rogoToDisplay instead. This function will be removed in the future.
+     *
      * @param string $original - The date that needs to be convered.
      * @return string
+     * @deprecated since 7.2.0
      */
     static function nicedate($original)
     {
-        return mb_substr($original, 6, 2) . '/' . mb_substr($original, 4, 2) . '/' . mb_substr($original, 0, 4) . ' ' . mb_substr($original, 8, 2) . ':' . mb_substr($original, 10, 2);
+        return date_utils::rogoToDisplay($original);
     }
 
     /**

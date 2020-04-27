@@ -105,12 +105,12 @@ echo ' xmlns:html="http://www.w3.org/TR/REC-html40">';
 echo ' <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">';
 echo '  <Title>' . $paper . '</Title>';
 echo '  <Author>Rogo</Author>';
-$tmp_start = mb_substr($_GET['startdate'], 6, 2) . '/' . mb_substr($_GET['startdate'], 4, 2) . '/' . mb_substr($_GET['startdate'], 0, 4) . ' ' . mb_substr($_GET['startdate'], 8, 2) . ':' . mb_substr($_GET['startdate'], 10, 2);
-$tmp_end = mb_substr($_GET['enddate'], 6, 2) . '/' . mb_substr($_GET['enddate'], 4, 2) . '/' . mb_substr($_GET['enddate'], 0, 4) . ' ' . mb_substr($_GET['enddate'], 8, 2) . ':' . mb_substr($_GET['enddate'], 10, 2);
-echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end . '.</Description>';
+$tmp_start = date_utils::rogoToDisplay($_GET['startdate']);
+$tmp_end = date_utils::rogoToDisplay($_GET['enddate']);
+echo '  <Description>' . sprintf($string['period'], $tmp_start, $tmp_end) . '</Description>';
 echo '  <LastAuthor>Rogo</LastAuthor>';
 echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
-echo '  <Company>The University of Nottingham</Company>';
+echo '  <Company>' . $configObject->get_setting('core', 'misc_company') . '</Company>';
 echo '  <Version>11.6408</Version>';
 echo ' </DocumentProperties>';
 echo ' <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">';
@@ -223,7 +223,7 @@ for ($i = 0; $i < $user_no; $i++) {
     if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{
         echo '<Cell/>';
         echo '<Cell/>';
-        echo '<Cell><Data ss:Type="String">No Attendance</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . $string['noattendance'] .'</Data></Cell>';
         echo '<Cell/>';
         echo '</Row>';
         $absent_no++;
