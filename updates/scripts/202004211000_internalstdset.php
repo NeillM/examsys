@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.1.0')) {
+if ($updater_utils->check_version('7.2.0')) {
     if (!$updater_utils->has_updated('rogo2775')) {
         $sql = 'GRANT SELECT ON ' . $configObject->get('cfg_db_database') . ".std_set TO '"
             . $configObject->get('cfg_db_internal_user') . "'@'" . $configObject->get('cfg_web_host') . "'";

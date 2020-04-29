@@ -19,7 +19,7 @@
  * Allow global setting to hide the same scenario for consequent questions in a paper
  */
 
-if ($updater_utils->check_version('7.1.1') and !$updater_utils->has_updated('lancaster/feature/GJLU-109')) {
+if ($updater_utils->check_version('7.2.0') and !$updater_utils->has_updated('lancaster/feature/GJLU-109')) {
     $configObject->set_setting('paper_hide_repeat_scenario', 0, Config::BOOLEAN);
 
     $updater_utils->record_update('lancaster/feature/GJLU-109');
