@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace PHP_CodeSniffer\Standards\Rogo\Sniffs\Operators;
+namespace PHP_CodeSniffer\Standards\Rogo\Sniffs\Formatting;
 
 use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
@@ -75,7 +75,7 @@ class MultiLineStringConcatSniff implements Sniff
         }
 
         // Make sure it is the first thing on the line, otherwise we ignore it.
-        $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 1), false, true);
+        $prev = $phpcsFile->findPrevious(T_WHITESPACE, ($stackPtr - 1), null, true);
         if ($prev === false) {
             // Bad concat.
             return;
@@ -86,7 +86,7 @@ class MultiLineStringConcatSniff implements Sniff
         }
 
         // Find the required indent based on the ident of the first line of the string declaration.
-        $first = $phpcsFile->findPrevious(T_EQUAL, ($stackPtr - 1), $phpcsFile->findPrevious(T_SEMICOLON, ($stackPtr - 1), false));
+        $first = $phpcsFile->findPrevious(T_EQUAL, ($stackPtr - 1), $phpcsFile->findPrevious(T_SEMICOLON, ($stackPtr - 1)));
         // We have not found a declaration before hitting the previous statement so bail.
         if ($first == false) {
             return;

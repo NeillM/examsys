@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
     echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #7F9DB9 solid; background-color:#EEF4FF">';
     echo '<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="../artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px">' . $string['allocatedaccount'] . '</td></tr>';
     echo '<tr><td colspan="2" style="padding:8px">' . $string['msg'] . '</td></tr>';
-    echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' .$username . '</tt></td></tr>';
+    echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' . $username . '</tt></td></tr>';
     echo '<tr><td style="padding:6px">' . $string['password'] . '</td><td><tt>' . $password . '</tt></td></tr>';
     echo '<tr><td colspan="2"><td>&nbsp;</td></tr>';
     echo '<tr><td style="text-align:center"><td><input type="submit" name="rogo-login-form-std" value="' . $string['login'] . '" class="ok" /></td></tr>';

@@ -25,7 +25,7 @@
  * @package
  */
 
-mb_internal_encoding("UTF-8");
+mb_internal_encoding('UTF-8');
 $root                  = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once 'defines.inc.php';
 require_once __DIR__ . '/autoload.inc.php';

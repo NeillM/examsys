@@ -205,7 +205,6 @@ trait frontend_hooks
             }
             // Set focus to the main window.
             $session->switchToWindow($this->mainwindow);
-
         } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
             // The current driver does not support window switching.
         }

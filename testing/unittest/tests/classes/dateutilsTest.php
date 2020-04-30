@@ -24,7 +24,8 @@
  * @group core
  * @group wip
  */
-class DateutilsTest extends testing\unittest\UnitTest {
+class DateutilsTest extends testing\unittest\UnitTest
+{
     /**
      * Tests that dates are converted to the correct localised format.
      *

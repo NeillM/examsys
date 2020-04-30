@@ -25,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class guest_account_reservation extends generator {
+class guest_account_reservation extends generator
+{
     /**
      * Creates a reservation for a guest account.
      *

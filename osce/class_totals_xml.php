@@ -223,7 +223,7 @@ for ($i = 0; $i < $user_no; $i++) {
     if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{
         echo '<Cell/>';
         echo '<Cell/>';
-        echo '<Cell><Data ss:Type="String">' . $string['noattendance'] .'</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . $string['noattendance'] . '</Data></Cell>';
         echo '<Cell/>';
         echo '</Row>';
         $absent_no++;
