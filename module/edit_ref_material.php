@@ -86,14 +86,14 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
-<?php
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::CONFIG);
-?>
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/refmaterialforminit.min.js"></script>
+<?php
+$texteditorplugin->display_header();
+$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::CONFIG);
+?>
 </head>
 
 <body>
