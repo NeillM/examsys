@@ -95,6 +95,11 @@ class PaperProperties
     private $_date_timezone = null;
 
     /**
+     * @var PaperSettings paper settings
+     */
+    private $papersettings;
+
+    /**
      * Called when the object is unserialised.
      */
     public function __wakeup()
@@ -174,43 +179,68 @@ class PaperProperties
         }
     }
 
-
-    /*
-    * Load the paper properties by lab ID
-    * used in the invigilator screens. previously called (get_invigilator_properties)
-    * @param object $lab_object - Lab object.
-    * @param object $db                 - Link to MySQL db.
-    * @return array of PaperProperties
-    */
-    static function get_paper_properties_by_lab($lab_object, $db)
+    /**
+     * Get summative paper propeties helper function
+     * @param mysqli $db database object
+     * @param boolean $remote flag to indicate if remote summatives being queried
+     * @param mixed $lab_object - Lab object or null
+     * @return mixed array of PaperProperties or false on error
+     */
+    private static function getSummativeProperties($db, bool $remote = false, $lab_object = null)
     {
-        $sql = "SELECT
-    			properties.property_id,
-    			paper_title,
-    			UNIX_TIMESTAMP(start_date) AS start_date,
-          UNIX_TIMESTAMP(end_date) AS end_date,
-    			exam_duration,
-    			calendar_year,
-    			password,
-    			timezone,
-          rubric
-    		FROM
-    			properties
-    		WHERE
-    			paper_type = '2' AND
-    			labs REGEXP ? AND
-    			start_date < DATE_ADD( NOW(), interval 30 minute ) AND
-    			end_date > NOW() AND
-    			deleted IS NULL";
+        // SELECT statement.
+        $select = 'properties.property_id,
+                paper_title,
+                UNIX_TIMESTAMP(start_date) AS start_date,
+                UNIX_TIMESTAMP(end_date) AS end_date,
+                exam_duration,
+                calendar_year,
+                password,
+                timezone,
+                rubric';
+        // FROM statement.
+        $from = 'properties';
+        if ($remote) {
+            $from .= ', paper_settings';
+        }
+        // WHERE statement.
+        if ($remote) {
+            $where = "properties.property_id = paper_settings.paperid AND
+                properties.paper_type = '2' AND
+                paper_settings.setting = 'remote_summative' AND
+                paper_settings.value = 1 AND
+                properties.start_date IS NOT NULL AND
+                properties.end_date > NOW() AND
+                properties.deleted IS NULL
+                ORDER BY properties.property_id";
+        } else {
+            $where = "paper_type = '2' AND
+                labs REGEXP ? AND
+                start_date < DATE_ADD( NOW(), interval 30 minute ) AND
+                end_date > NOW() AND
+                deleted IS NULL";
+        }
+        $sql = 'SELECT ' . $select . ' FROM ' . $from . ' WHERE ' . $where;
 
         $paper_results = $db->prepare($sql);
-        // TODO get_lab_based_on_client only fetches the first lab that populates $lab_object
-        // If an ip address is on many labs we only use with the first we come across
-        $lab_regexp = '(^|,)(' . $lab_object->get_id() . ')(,|$)';
-        $paper_results->bind_param('s', $lab_regexp);
+        if (!$remote) {
+            // If an ip address is on many labs we only use with the first we come across
+            $lab_regexp = '(^|,)(' . $lab_object->get_id() . ')(,|$)';
+            $paper_results->bind_param('s', $lab_regexp);
+        }
         $paper_results->execute();
         $paper_results->store_result();
-        $paper_results->bind_result($property_id, $paper_title, $start_date, $end_date, $exam_duration, $calendar_year, $password, $timezone, $rubric);
+        $paper_results->bind_result(
+            $property_id,
+            $paper_title,
+            $start_date,
+            $end_date,
+            $exam_duration,
+            $calendar_year,
+            $password,
+            $timezone,
+            $rubric
+        );
 
         if ($paper_results->num_rows <= 0) {
             $paper_results->close();
@@ -226,7 +256,6 @@ class PaperProperties
             $property_object->set_end_date($end_date);
             $property_object->set_exam_duration($exam_duration);
             $property_object->set_calendar_year($calendar_year);
-            $property_object->set_calendar_year($calendar_year);
             $property_object->password = $password;
             $property_object->set_timezone($timezone);
             $property_object->set_display_start_date();
@@ -239,6 +268,29 @@ class PaperProperties
 
         $paper_results->close();
         return $properties;
+    }
+
+    /*
+     * Load the paper properties for active remote summative exams
+     * used in the invigilator screens
+     * @param object $db - Link to MySQL db.
+     * @return mixed array of PaperProperties or false on error
+     */
+    public static function getRemoteSummativePaperProperties($db)
+    {
+        return self::getSummativeProperties($db, true);
+    }
+
+    /*
+    * Load the paper properties by lab ID
+    * used in the invigilator screens. previously called (get_invigilator_properties)
+    * @param object $lab_object - Lab object.
+    * @param object $db                 - Link to MySQL db.
+    * @return array of PaperProperties
+    */
+    public static function get_paper_properties_by_lab($lab_object, $db)
+    {
+        return self::getSummativeProperties($db, false, $lab_object);
     }
 
     /*
@@ -374,6 +426,8 @@ class PaperProperties
         $this->changes = array();
 
         $this->load_summative_lock();
+
+        $this->papersettings = new PaperSettings($this->get_property_id(), $this->get_paper_type());
     }
 
     /*
@@ -2688,12 +2742,11 @@ class PaperProperties
      */
     public function display_timer()
     {
-        $configObject = \Config::get_instance();
         // Foramtive, Progressive or REMOTE summative papers that have a duration set should use the timer.
         if (
             $this->paper_type == '0' or
             $this->paper_type == '1' or
-            ($this->paper_type ==  '2' and $configObject->get_setting('core', 'summative_remote'))
+            ($this->paper_type ==  '2' and $this->getSetting('remote_summative'))
         ) {
             if ($this->get_exam_duration() != null) {
                 return true;
@@ -2938,5 +2991,80 @@ class PaperProperties
         '3' => '3', // Survey.
         );
         return isset($stores_user_answers[$this->get_paper_type()]);
+    }
+
+    /**
+     * Check if paper type is enabled.
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        $type = array(
+            assessment::TYPE_FORMATIVE => 'formative',
+            assessment::TYPE_PROGRESS => 'progress',
+            assessment::TYPE_SUMMATIVE => 'summative',
+            assessment::TYPE_SURVEY => 'survey',
+            assessment::TYPE_OSCE => 'osce',
+            assessment::TYPE_OFFLINE => 'offline',
+            assessment::TYPE_PEERREVIEW => 'peer_review'
+        );
+
+        if (!array_key_exists($this->get_paper_type(), $type)) {
+            return false;
+        }
+        $checktype = $type[$this->get_paper_type()];
+        $config = Config::get_instance();
+        $settings = $config->get_setting('core', 'paper_types');
+        if (isset($settings[$checktype])) {
+            return $settings[$checktype];
+        }
+        return false;
+    }
+
+    /**
+     * Get a setting for a paper
+     * This is a wrapper funrion to PaperSettings->getSetting
+     * @param string $setting the setting
+     * @throws coding_exception
+     * @return mixed
+     */
+    public function getSetting(string $setting)
+    {
+        return $this->papersettings->getSetting($setting);
+    }
+
+    /**
+     * Update a setting
+     * This is a wrapper funrion to PaperSettings->updateSetting
+     * @param string $setting The name of the setting
+     * @param string|array $value
+     * @param integer $paper The paper to which this setting belongs
+     * @throws coding_exception
+     */
+    public function updateSetting(string $setting, string $value, int $paper): void
+    {
+        $this->papersettings->updateSetting($setting, $value, $paper);
+    }
+
+    /**
+     * Render paper settings by category
+     * This is a wrapper funrion to PaperSettings->renderSettings
+     * @param string $category the setting category
+     */
+    public function renderSettings(string $category = ''): void
+    {
+        $this->papersettings->renderSettings($category);
+    }
+
+    /**
+     * Render paper settings by category
+     * This is a wrapper funrion to PaperSettings->renderNewSettings
+     * @param array $strings language strings
+     * @param string $papertype the paper type
+     * @param string $category the setting category
+     */
+    public static function renderNewSettings(array $strings, string $papertype, string $category = ''): void
+    {
+        PaperSettings::renderNewSettings($strings, $papertype, $category);
     }
 }

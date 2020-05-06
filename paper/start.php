@@ -57,8 +57,16 @@ $q_number = param::optional('qNo', null, param::INT, param::FETCH_GET);
 $do_not_record = param::optional('dont_record', false, param::BOOLEAN, param::FETCH_GET);
 $refpane = param::optional('refpane', 0, param::INT, param::FETCH_POST);
 
+// Are we in a staff test and preview mode?
+$is_preview_mode = ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and $mode === 'preview');
+
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
+if (!$propertyObj->isEnabled() and !$is_preview_mode) {
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['papertypenotenabled'], '/artwork/exclamation_48.png', '#C00000', true, true);
+}
 $papertype = $propertyObj->get_paper_type();
 $deleted = $propertyObj->get_deleted();
 
@@ -77,9 +85,6 @@ $paperID = $propertyObj->get_property_id();
  * Setup some feature related flags
  *
  */
-
-// Are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and $mode === 'preview');
 
 // Are we on the first screen?
 $is_first_launch = is_null($post_screen);
@@ -115,7 +120,7 @@ $current_address = NetworkUtils::get_client_address();
 //get the module Ids for this paper
 $modIDs = array_keys(Paper_utils::get_modules($paperID, $mysqli));
 $moduleID = $propertyObj->get_modules();
-$remote = $configObject->get_setting('core', 'summative_remote');
+$remote = $propertyObj->getSetting('remote_summative');
 
 if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
     // No further security checks.
@@ -154,7 +159,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
     if ($papertype == '2') {
         // Check current IP address with that of attempt in log.
         // Warn user they are logged into mulitple devices in this exam and log them out.
-        check_ipmismatch($paperID, $current_address, $string, $userObject, $mysqli);
+        check_ipmismatch($paperID, $current_address, $string, $userObject, $mysqli, $papertype);
     }
 }
 
@@ -544,14 +549,19 @@ if ($is_question_preview_mode) {
     }
 }
 
+$footer_data['breaks'] = 0;
+$footer_data['fire'] = 0;
 if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
     $footer_data['adminview'] = true;
 } else {
     $footer_data['adminview'] = false;
     if ($papertype == '2') {
-        $footer_data['fire'] = true;
-    } else {
-        $footer_data['fire'] = false;
+        if (!$remote) {
+            $footer_data['fire'] = 1;
+        }
+        if ($remote and $userObject->getRequiresBreaks()) {
+            $footer_data['breaks'] = 1;
+        }
     }
 
     $footer_data['timerlabel'] = $timer_label;
@@ -592,6 +602,7 @@ $render->render(array(), $string, 'paper/overlays.html');
 // Paper dataset.
 $dataset['name'] = 'paper';
 $dataset['attributes']['pid'] = $id;
+$dataset['attributes']['paperid'] = $paperID;
 $dataset['attributes']['urlmod'] = html_entity_decode($url_mod);
 $dataset['attributes']['submittype'] = $submitype;
 $dataset['attributes']['refcount'] = count($reference_materials);
@@ -639,6 +650,8 @@ $render->render($jsdataset, array(), 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
+$miscdataset['attributes']['remotesummative'] = $remote;
+$miscdataset['attributes']['breaks'] = $footer_data['breaks'];
 $render->render($miscdataset, array(), 'dataset.html');
 
 if (count($reference_materials) > 0) {

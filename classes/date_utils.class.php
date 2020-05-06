@@ -163,4 +163,19 @@ class date_utils
         $date->setTime($hours, $minutes, 0);
         return $date->format(Config::get_instance()->get('cfg_short_datetime_php'));
     }
+
+    /**
+     * Get the timestamp
+     *
+     * @param integer $hours hours
+     * @param integer $minutes minutes
+     * @param DateTimeZone $timezone timezone object
+     * @throws Exception
+     * @return int
+     */
+    public static function getTimestampFromTime(int $hours, int $minutes, DateTimeZone $timezone): int
+    {
+        $tmp_datetime = new DateTime(date('Y-m-d') . $hours . ':' . $minutes . ':00', $timezone);
+        return $tmp_datetime->getTimestamp();
+    }
 }

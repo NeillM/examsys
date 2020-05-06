@@ -23,18 +23,18 @@ requirejs(['datecopy', 'form', 'newpaperform', 'jquery'], function (DATECOPY, FO
     var date = new DATECOPY();
     var form = new FORM();
     var type = $('#paper_type').val();
-    var datecheck = false;
-    if ($('#dataset').attr('data-remotesummative')) {
-        if (type == 'offline') {
-            datecheck = true;
-        }
-    } else {
-        if (type == 'summative' || type == 'offline') {
-            datecheck = true;
-        }
-    }
     $(function () {
         $('.datecopy').change(function() {
+            var datecheck = false;
+            if ($('#remote_summative').is(':checked')) {
+                if (type == 'offline') {
+                    datecheck = true;
+                }
+            } else {
+                if (type == 'summative' || type == 'offline') {
+                    datecheck = true;
+                }
+            }
             if (datecheck) {
                 date.dateCopy(this);
             }
@@ -57,4 +57,15 @@ requirejs(['datecopy', 'form', 'newpaperform', 'jquery'], function (DATECOPY, FO
     $("input[id^=mod]").click(function() {
         form.toggle($(this).attr('data-mod'));
     });
+
+    // Central controlled summatives: If remote summative no campus required.
+    if ($('#dataset').attr('data-central') == 1) {
+        $('#remote_summative').click(function () {
+            if ($(this).is(':checked')) {
+                $('#campus').prop("disabled", true);
+            } else {
+                $('#campus').prop("disabled", false);
+            }
+        });
+    }
 });

@@ -955,4 +955,41 @@ class module
         $result->close();
         return $modules;
     }
+
+    /**
+     * Get students accessibility info who are enrolled on an acadmic year on modules provided
+     * @param string $modules modules students are enrolled on
+     * @param integer $session academic session
+     * @return array
+     */
+    public static function getStudentAccessiblityInfo($modules, $session): array
+    {
+        $configObject = Config::get_instance();
+        $sql = 'SELECT
+        DISTINCT extra_time, medical, breaks, modules_student.userID, surname, first_names, title
+        FROM modules_student, users
+        LEFT JOIN special_needs ON users.id = special_needs.userID
+        WHERE idMod IN ( ' . $modules . ')
+        AND calendar_year = ?
+        AND modules_student.userID = users.id';
+        $results = $configObject->db->prepare($sql);
+        $session = $session;
+        $results->bind_param('s', $session);
+        $results->execute();
+        $results->store_result();
+        $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title);
+        $student_object = array();
+
+        while ($results->fetch()) {
+            $student_object[$userID]['user_ID'] = $userID;
+            $student_object[$userID]['surname'] = $surname;
+            $student_object[$userID]['first_names'] = $first_names;
+            $student_object[$userID]['title'] = $title;
+            $student_object[$userID]['extra_time_percentage'] = $extra_time_percentage;
+            $student_object[$userID]['medical'] = $medical;
+            $student_object[$userID]['breaks'] = $breaks;
+        }
+        $results->close();
+        return $student_object;
+    }
 }

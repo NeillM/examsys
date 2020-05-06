@@ -114,6 +114,11 @@ $total_marks = 0;
 // Create paper object.
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
+if (!$propertyObj->isEnabled()) {
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['papertypenotenabled'], '/artwork/exclamation_48.png', '#C00000', true, true);
+}
 // Get lab information.
 $current_address = NetworkUtils::get_client_address();
 $lab_factory = new LabFactory($mysqli);
@@ -144,8 +149,7 @@ $sound_demo         = $propertyObj->get_sound_demo();
 $password           = $propertyObj->get_password();
 $modIDs             = array_keys($propertyObj->get_modules());
 $deleted            = $propertyObj->get_deleted();
-
-$remote = $configObject->get_setting('core', 'summative_remote');
+$remote = $propertyObj->getSetting('remote_summative');
 
 // If OSCE paper or if the paper has been deleted we should exit as this is an invalid page.
 if ($test_type == '4' or $deleted != null) {
@@ -473,7 +477,7 @@ if ($start_available === false) {
 } elseif ($metadata_security === false) {
     echo "<div style=\"color:#C00000;font-size:90%\">$metadata_msg</div>\n";
 } elseif ($test_type == '2' and !$userObject->has_role('External Examiner')) {
-    if ($configObject->get_setting('core', 'summative_remote')) {
+    if ($remote) {
         echo '<div style="color:#C00000;font-size:90%">' . $string['waitforpassword'] . "</div>\n";
     } else {
         echo '<div style="color:#C00000;font-size:90%">' . $string['donotstart'] . "</div>\n";
@@ -528,7 +532,6 @@ if ($test_type != '2') {
     </div>
 </div>
 <?php
-$mysqli->close();
 // JS utils dataset.
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
@@ -539,8 +542,9 @@ $dataset['attributes']['ipmismatch'] = $ipmismatch;
 $dataset['attributes']['id'] = $id;
 $dataset['attributes']['mode'] = $mode;
 $dataset['attributes']['fullscreen'] = $fullscreen;
-$dataset['attributes']['remotesummative'] = $configObject->get_setting('core', 'summative_remote');
+$dataset['attributes']['remotesummative'] = $remote;
 $render->render($dataset, array(), 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

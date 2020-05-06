@@ -100,7 +100,19 @@ class papers extends generator
             $paperowner = UserUtils::username_exists($parameters['paperowner'], $this->db);
             $modulename = $parameters['modulename'];
         }
-        $default = array('startdate' => null, 'enddate' => null, 'labs' => null, 'duration' => null, 'session' => null, 'timezone' => 'Europe/London', 'externalid' => null, 'externalsys' => null, 'calendaryear' => null);
+        $default = array(
+            'startdate' => null,
+            'enddate' => null,
+            'labs' => null,
+            'duration' => null,
+            'session' => null,
+            'timezone' => 'Europe/London',
+            'externalid' => null,
+            'externalsys' => null,
+            'calendaryear' => null,
+            'remote' => 0,
+            'password' => null,
+        );
         $settings = $this->set_defaults_and_clean($default, $parameters);
 
         if (!empty($settings['startdate'])) {
@@ -158,7 +170,21 @@ class papers extends generator
         $settings['end_date'] = $enddate->format('Y-m-d H:i:s');
 
         try {
-            $pid = $paper->create($settings['papertitle'], $settings['papertype'], $settings['paperowner'], $settings['start_date'], $settings['end_date'], $settings['labs'], $settings['duration'], $settings['session'], $settings['moduleids'], $settings['timezone'], $settings['externalid'], $settings['externalsys']);
+            $pid = $paper->create(
+                $settings['papertitle'],
+                $settings['papertype'],
+                $settings['paperowner'],
+                $settings['start_date'],
+                $settings['end_date'],
+                $settings['labs'],
+                $settings['duration'],
+                $settings['session'],
+                $settings['moduleids'],
+                $settings['timezone'],
+                $settings['externalid'],
+                $settings['externalsys'],
+                $settings['remote'],
+            );
         } catch (Exception $e) {
             $message = $e->getMessage();
             echo $message;
@@ -192,8 +218,9 @@ class papers extends generator
      * @param integer $pid property id
      * @param array $parameters
      * @throws data_error If passed parameter is invalid
+     * @return array
      */
-    public function set_post_creation_settings(int $pid, array $parameters)
+    public function set_post_creation_settings(int $pid, array $parameters): array
     {
         $default = array('paper_prologue' => null, 'paper_postscript' => null, 'bgcolor' => 'white',
             'fgcolor' => 'black', 'themecolor' => '#316AC5', 'labelcolor' => '#C00000',
@@ -214,6 +241,7 @@ class papers extends generator
                 $sql->close();
             }
         }
+        return $settings;
     }
 
     /**

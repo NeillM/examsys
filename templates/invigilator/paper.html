@@ -1,0 +1,186 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the invigilator paper section.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2020 onwards The University of Nottingham
+
+Required variables:
+
+data - array of property object data which contains info:
+info.rubric - the paper rubric
+info.timing - flag to indicate timing allowed
+info.action - the form action
+info.started - flag to indicate if the paper has starte
+info.end_time_h - the paper end time hours
+info.end_time_m - the paper ent time minutes
+info.start_date - the paper start time
+info.end_date - the paper end time
+info.duration - the paper duration
+info.password - the paper password
+info.remote - flag to indicate if remote invigilation
+info.clarification - paper clarifications
+info.students - student data from Invigilation->getStudents
+
+Required localised language strings -
+
+lang.examrubric
+lang.currenttime
+lang.endat_but
+lang.time
+lang.start_but
+lang.start
+lang.end
+lang.duration
+lang.papernote
+lang.viewrubric
+lang.midexamclarifications
+lang.examquestionclarifications
+lang.preexam
+lang.preexamlist
+lang.midexam
+lang.midexamlist
+lang.postexam
+lang.postexamlist
+#}
+{% for id, info in data %}
+<div class="rubric" id="rubric_{{id}}">
+    <div class="rubrictitle">
+        {{lang.examrubric}}<img data-id="rubric_{{id}}" src="{{path}}/artwork/lrg_close.png" class="rubricclose" />
+    </div>
+    <div class="rubric_txt">
+        {{info.rubric|raw}}
+    </div>
+</div>
+<div id="paper{{id}}" class="tab-area off">
+    <div class="exam_details">
+        <table id="main" cellpadding="2" cellspacing="0" border="0">
+            <tr>
+                <td class="paperheader" rowspan="5">
+                    <img id="paper" src="{{path}}/artwork/summative.png" />
+                </td>
+                <td class="currenttime">{{lang.currenttime}}</td>
+                <td class="theTime"></td>
+                <td class=timing" rowspan="5">
+                    {% if info.timing %}
+                    <form id="start_exam_form" method="post" action="{{info.action}}" autocomplete="off">
+                        <input name="paper_id" type="hidden" value="{{id}}" />
+                        {% if info.started %}
+                        <fieldset id="set_end">
+                            <input id="end_exam_button" name="end_exam_form" type="submit" value="{{lang.endat_but}}" class="exam-button" /><br />
+                            {{lang.time}}: <select id="hour" name="hour">
+                            {% for hr in 0..24 %}
+                                {% set selected = '' %}
+                                {% if hr == info.end_time_h %}
+                                        {% set selected = ' selected' %}
+                                {% endif %}
+                                <option value="{{hr}}"{{selected}}>{{ "%02d"|format(hr) }}</option>';
+                            {% endfor %}
+                            </select>:<select id="minute" name="minute">
+                            {% for min in 0..60 %}
+                                {% set selected = '' %}
+                                {% if min == info.end_time_m %}
+                                    {% set selected = ' selected' %}
+                                {% endif %}
+                                <option value="{{hr}}"{{selected}}>{{ "%02d"|format(min) }}</option>';
+                            {% endfor %}
+                        </select>
+                        </fieldset>
+                        {% else %}
+                        <fieldset id="start_exam">
+                            <input id="start_exam_button" name="start_exam_form" type="submit" value="{{lang.start_but}}" class="exam-button" />
+                        </fieldset>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+                </td>
+                <td rowspan="5">
+                    {% include 'invigilator/emergency.html' with {'data': info} %}
+                </td>
+            </tr>
+
+            <tr>
+                <td>{{lang.start}}</td>
+                <td>{{info.start_date}}</td>
+            </tr>
+
+            <tr>
+                <td>{{lang.end}}</td>
+                <td>{{info.end_date}}</td>
+            </tr>
+            <tr>
+                <td>{{lang.duration}}</td>
+                <td>{{info.duration}}</td>
+            </tr>
+            <tr>
+                {% if info.password == '' %}
+                <td></td>
+                <td></td>
+                {% else %}
+                <td class="password">{{lang.password}} <img id="key" src="{{path}}/artwork/key.png" />
+                </td><td class="showpassword">{{info.password}}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <input type="button" data-id="{{id}}" data-remote="{{info.remote}}" value="{{lang.papernote}}" class="ok papernote" />
+                    <input type="button" data-id="{{id}}" value="{{lang.viewrubric}}" class="ok viewrubric" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    {% if info.clarification %}
+    <div id="clarifymsgtbl" class="cohortlist">
+        <table cellpadding="2" cellspacing="0">
+            <tr>
+                <th>{{lang.midexamclarifications}}</th>
+            </tr>
+        </table>
+        <div id="msg{{id}}" class="clarifymsg">
+            <span class="blankclarification">{{lang.examquestionclarifications}}</span>
+        </div>
+    </div>
+    <div class="store" id="store_{{id}}"></div>
+    {% endif %}
+    <div class="cohortlist" id="cohortlist_{{id}}">
+        {% include 'invigilator/studentlist.html' with {'data': info.students} %}
+    </div>
+{% endfor %}
+</div>
+<div id="checklist" class="tab-area">
+    <div class="preexam">
+        <h1>{{lang.preexam}}</h1>
+        {{lang.preexamlist|raw}}
+    </div>
+    <br />
+    <div class="midexam">
+        <h1>{{lang.midexam}}</h1>
+        {{lang.midexamlist|raw}}
+    </div>
+    <br />
+    <div class="postexam">
+        <h1>{{lang.postexam}}</h1>
+        {{lang.postexamlist|raw}}
+    </div>
+    <br/>
+</div>
+<input type="hidden" id="userID" value="" />
+<input type="hidden" id="old_highlightID" value="" />
+<input type="hidden" id="paperID" value="" />
+<input type="hidden" id="remote" value="" />
+<div id="opaque"></div>

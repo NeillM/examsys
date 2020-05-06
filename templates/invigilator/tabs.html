@@ -1,0 +1,46 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the invigilator tab section.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2020 onwards The University of Nottingham
+
+Required variables:
+
+data - array of property object data which contains info:
+info.title - paper tile
+
+Required localised language strings -
+
+lang.examchecklist
+#}
+<div class="tab-bar">
+    <div class="tab-holder">
+        <ol class="tabs">
+            <li class="on"><a href="#" rel="checklist">{{lang.examchecklist}}</a></li>
+            {% for id, info in data %}
+            <li class='tab' data-id={{id}}><a href="#" rel="paper{{id}}">{{info.title}}</a></li>
+            {% endfor %}
+        </ol>
+        <div class="logout">
+            <a href="{{path}}/logout.php">
+                <img id="logout" src="{{path}}/artwork/student_logout.png" alt="{{lang.logout}}"/>
+            </a>
+        </div>
+    </div>
+</div>

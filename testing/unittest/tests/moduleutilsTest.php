@@ -220,4 +220,29 @@ class moduleutilstest extends unittestdatabase
         $expected = 1;
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * Test get accessibility info
+     * @group modules
+     */
+    public function testStudentAccessiblityInfo()
+    {
+        $modules = array($this->module, $this->module2);
+        $actual = module_utils::getStudentAccessiblityInfo(implode(',', $modules), 2016);
+        $expected[$this->student['id']]['user_ID'] = $this->student['id'];
+        $expected[$this->student['id']]['surname'] = $this->student['surname'];
+        $expected[$this->student['id']]['first_names'] = $this->student['first_names'];
+        $expected[$this->student['id']]['title'] = $this->student['title'];
+        $expected[$this->student['id']]['extra_time_percentage'] = null;
+        $expected[$this->student['id']]['medical'] = null;
+        $expected[$this->student['id']]['breaks'] = 'yes';
+        $expected[$this->user]['user_ID'] = $this->user;
+        $expected[$this->user]['surname'] = 'User2';
+        $expected[$this->user]['first_names'] = 'A';
+        $expected[$this->user]['title'] = 'Dr';
+        $expected[$this->user]['extra_time_percentage'] = null;
+        $expected[$this->user]['medical'] = null;
+        $expected[$this->user]['breaks'] = null;
+        $this->assertEquals($expected, $actual);
+    }
 }

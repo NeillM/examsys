@@ -119,9 +119,14 @@ $paper_display = array();
 $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli);     // Get active Progress Tests and Summative Exams.
 
 // Go straight to paper if only one exam and no password set (or remote summatives in operation).
+$remote = false;
+if ($paper_no == 1) {
+    $properties = PaperProperties::get_paper_properties_by_id($paper_display[0]['id'], $mysqli, $string);
+    $remote = $properties->getSetting('remote_summative');
+}
 if (
     $paper_no == 1 and
-    ($paper_display[0]['password'] == '' or $configObject->get_setting('core', 'summative_remote'))
+    ($paper_display[0]['password'] == '' or $remote)
 ) {
     header('location: user_index.php?id=' . $paper_display[0]['crypt_name']);
     exit();
@@ -231,6 +236,13 @@ if (
         }
     }
     echo "</li>\n</ul>\n<p style=\"margin-left:90px\">" . $string['try'] . ":</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['f5'] . "</li>\n<li>" . $string['RaiseYourHand '] . "</li>\n</ul>\n";
+
+    echo "<div class=\"hr_line\"></div>\n<p style=\"margin-left:90px\">" . $string['notinalab'];
+    $link = $configObject->get_setting('core', 'summative_issuelink');
+    if (!empty($link)) {
+        echo ' ' . $string['via'] . ' <a href="' . $link . '" target="_blank">' . $string['logissue'] . '</a>';
+    }
+    echo "</p>\n";
 
     // Show staff a list of summative papers in the next 6 weeks with a link to test & preview
     if ($userObject->has_role('Staff')) {

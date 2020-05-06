@@ -61,9 +61,6 @@ class assessment
     // Cenrtalised summative management?
     private $summative_mgmt;
 
-    // Are remote summatives enabled?
-    private $summative_remote;
-
     // Server time zone.
     private $server_timezone;
 
@@ -107,13 +104,7 @@ class assessment
     {
         $this->db = $db;
         $this->server_timezone = $configObject->get('cfg_timezone');
-        $this->type = array('formative' => self::TYPE_FORMATIVE,
-            'progress' => self::TYPE_PROGRESS,
-            'summative' => self::TYPE_SUMMATIVE,
-            'survey' => self::TYPE_SURVEY,
-            'osce' => self::TYPE_OSCE,
-            'offline' => self::TYPE_OFFLINE,
-            'peer_review' => self::TYPE_PEERREVIEW);
+        $this->type = PaperUtils::getTypeList();
         $configObject->set_db_object($db);
         $configObject->load_settings('core');
         $settings = (object) $configObject->get_setting('core');
@@ -122,7 +113,6 @@ class assessment
         $this->max_duration = $settings->paper_max_duration;
         $this->max_sittings = $settings->summative_max_sittings;
         $this->summative_mgmt = $settings->cfg_summative_mgmt;
-        $this->summative_remote = $settings->summative_remote ;
     }
 
     /**
@@ -153,9 +143,10 @@ class assessment
      * @param string $timezone - timezone paper is being taken in
      * @param string $externalid - External system id
      * @param string $externalsys - External system name
+     * @param integer $remote - flag to indicate remote summative
      * @return integer|bool - id of new assessment or false on error
      */
-    public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $externalid = null, $externalsys = null)
+    public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $externalid = null, $externalsys = null, $remote = 0)
     {
             
         // Check externalid is unique.
@@ -215,7 +206,7 @@ class assessment
         // Set the summative rubric
         if ($papertype == self::TYPE_SUMMATIVE) {
             $langpack = new langpack();
-            if ($this->summative_remote) {
+            if ($remote) {
                 $default_rubric = $langpack->get_string($this->langcomponent, 'remote_summative_rubric');
             } else {
                 $default_rubric = $langpack->get_string($this->langcomponent, 'summative_rubric');
@@ -259,6 +250,16 @@ class assessment
         );
         $property_id = $this->db_insert_assessment($params);
         if ($property_id) {
+            // Settings.
+            if ($papertype == self::TYPE_SUMMATIVE) {
+                $langpack = new langpack();
+                $properties = PaperProperties::get_paper_properties_by_id(
+                    $property_id,
+                    $this->db,
+                    $langpack->get_all_strings($this->langcomponent)
+                );
+                $properties->updateSetting('remote_summative', $remote, $property_id);
+            }
             // Add to Modules.
             foreach ($modules as $module) {
                 $result = $this->db->prepare('INSERT INTO properties_modules (property_id, idMod) VALUES (?, ?)');

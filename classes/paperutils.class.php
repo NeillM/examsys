@@ -785,8 +785,17 @@ class PaperUtils
      * @param mysqli $db
      * @return bool true on success, false otherwise
      */
-    static function complete_delete_paper($id, $db)
+    public static function complete_delete_paper($id, $db)
     {
+        // Delete from paper settings first.
+        $result = $db->prepare('DELETE FROM paper_settings WHERE paperid = ?');
+        $result->bind_param('i', $id);
+        $result->execute();
+        if ($db->errno != 0) {
+            return false;
+        }
+
+        $result->close();
         $result = $db->prepare('DELETE FROM properties WHERE property_id = ?');
         $result->bind_param('i', $id);
         $result->execute();
@@ -1336,5 +1345,20 @@ class PaperUtils
             }
         }
         return array_unique($linked);
+    }
+
+    /**
+     * Get paper type list
+     * @return array
+     */
+    public static function getTypeList(): array
+    {
+        return array('formative' => assessment::TYPE_FORMATIVE,
+            'progress' => assessment::TYPE_PROGRESS,
+            'summative' => assessment::TYPE_SUMMATIVE,
+            'survey' => assessment::TYPE_SURVEY,
+            'osce' => assessment::TYPE_OSCE,
+            'offline' => assessment::TYPE_OFFLINE,
+            'peer_review' => assessment::TYPE_PEERREVIEW);
     }
 }

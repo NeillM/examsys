@@ -218,7 +218,8 @@ echo draw_toprightmenu(30);
   </div>
   <?php
     // Only allow reset of timer for Progress tests and Remote Summative exams.
-    if ($paper_type == '1' or ($paper_type == '2' and $configObject->get_setting('core', 'summative_remote'))) {
+    $remote = $propertyObj->getSetting('remote_summative');
+    if ($paper_type == '1' or ($paper_type == '2' and $remote)) {
         $class = 'popup_row';
     } else {
         $class = 'popup_row_disabled';
@@ -856,7 +857,6 @@ if ($user_no > 0) {
     echo "</body>\n</html>";
     exit;
 }
-  $mysqli->close();
 ?>
   <input type="hidden" id="datetime" value="<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>" />
   <input type="hidden" id="markall" value="0" />
@@ -868,8 +868,9 @@ if ($user_no > 0) {
   $jsdataset['attributes']['xls'] = json_encode($string);
   $render->render($jsdataset, array(), 'dataset.html');
   $dataset['name'] = 'dataset';
-  $dataset['attributes']['remotesummative'] = $configObject->get_setting('core', 'summative_remote');
+  $dataset['attributes']['remotesummative'] = $propertyObj->getSetting('remote_summative');
   $render->render($dataset, array(), 'dataset.html');
+  $mysqli->close();
 ?>
 </body>
 </html>

@@ -1,0 +1,42 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the invigilator emergency numbers.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2020 onwards The University of Nottingham
+
+Required variables:
+
+data.emergency - array of emergency name and number
+
+Required localised language strings -
+
+lang.emergencynumbers
+#}
+<table class="emergency" cellpadding="4" cellspacing="0" border="0">
+    <tr>
+        <td colspan="2" class="en">{{lang.emergencynumbers}}</td>
+    </tr>
+    {% for name, number in data.emergency %}
+    <tr>
+        <td>
+            <img id="phone" src="{{path}}/artwork/phone.png" />
+        </td>
+        <td><strong>{{number}}</strong><br />{{name}}</td></tr>
+    {% endfor %}
+</table>

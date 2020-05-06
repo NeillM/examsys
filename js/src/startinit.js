@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['media', 'reference', 'start', 'jquery'], function (Media, REF, START, $) {
+requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, Media, REF, START, $) {
     var media = new Media();
     media.init();
     var start = new START();
@@ -100,14 +100,30 @@ requirejs(['media', 'reference', 'start', 'jquery'], function (Media, REF, START
         start.startAutoSave();
 
         $('#fire_exit').click(function() {
-            $('#button_pressed').val('fire_exit');
-            $('#qForm').attr('action',"fire_evacuation.php?id=" + el.dataset.pid + "&dont_record=true");
-            start.ajaxSave(1, 'userSubmit');
+            if ($('#dataset').attr('data-remotesummative') == 0) {
+                $('#button_pressed').val('fire_exit');
+                $('#qForm').attr('action', "fire_evacuation.php?id=" + el.dataset.pid + "&dont_record=true");
+                start.ajaxSave(1, 'userSubmit');
+            }
         });
 
         if (el.dataset.unanswered) {
             $('#unansweredkey').show();
         }
+
+        $('#breaks, #breakstext').click(function() {
+            if ($('#dataset').attr('data-remotesummative') == 1 && $('#dataset').attr('data-breaks') == 1) {
+                if ($('#breaks').hasClass('pause')) {
+                    // Pause exam.
+                    start.pause(el.dataset.paperid);
+                } else {
+                    // Re-start exam.
+                    $('#breaks').removeClass('play');
+                    $('#breaks').addClass('pause');
+                    $('#breakstext').html(Jsxls.lang_string['pause']);
+                }
+            }
+        });
 
         start.html5init();
     });

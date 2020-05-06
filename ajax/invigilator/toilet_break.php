@@ -23,11 +23,22 @@
  * @package
  */
 
-require '../../include/invigilator_auth.inc';
+require '../../include/staff_student_auth.inc';
 require_once '../../include/errors.php';
 
-$userID  = check_var('userID', 'POST', true, false, true);
 $paperID = check_var('paperID', 'POST', true, false, true);
+
+if ($userObject->has_role('Invigilator')) {
+    $userID  = check_var('userID', 'POST', true, false, true);
+} else {
+    // Students can only add rest breaks for themselves if they require them and on remote summative papers.
+    $userID = $userObject->get_user_ID();
+    $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+    if (!$properties->getSetting('remote_summative') or !$userObject->getRequiresBreaks()) {
+        exit();
+    }
+}
+
 
 // Does the paper exist?
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {

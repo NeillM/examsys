@@ -265,7 +265,6 @@ class users extends generator
         $defaults['password'] = \encryp::encpw(UserUtils::get_salt(), $username, $plainpassword);
 
         $values = $this->set_defaults_and_clean($defaults, $parameters);
-
         $values['roles'] = $this->validate_roles($values['roles']);
 
         // Students require an id.
@@ -279,6 +278,15 @@ class users extends generator
         }
 
         $values['id'] = $this->insert_user($values);
+
+        // Add special needs.
+        if (is_array($values['special_needs'])) {
+            $special = $this->insertSpecial($values['id'], $values['special_needs']);
+            $values['special_needs'] = '1';
+            foreach ($special as $name => $value) {
+                $values[$name] = $value;
+            }
+        }
         return $values;
     }
 
@@ -374,5 +382,50 @@ class users extends generator
             $validroles = self::$roles[0];
         }
         return $validroles;
+    }
+
+    /**
+     * Creates users spcial needs
+     * @param integer $userID the user
+     * @param array $special special needs data
+     * @return array
+     */
+    protected function insertSpecial($userID, $special): array
+    {
+        $default_needs = array(
+            'background' => null,
+            'foreground' => null,
+            'textsize' => 0,
+            'extra_time' => null,
+            'marks_color' => null,
+            'themecolor' => null,
+            'labelcolor' => null,
+            'font' => null,
+            'unansweredcolor' => null,
+            'dismisscolor' => null,
+            'medical' => null,
+            'breaks' => null
+        );
+        $special = $this->set_defaults_and_clean($default_needs, $special);
+        $result = $this->db->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $result->bind_param(
+            'issiissssssss',
+            $userID,
+            $special['background'],
+            $special['foreground'],
+            $special['textsize'],
+            $special['extra_time'],
+            $special['marks_color'],
+            $special['themecolor'],
+            $special['labelcolor'],
+            $special['font'],
+            $special['unansweredcolor'],
+            $special['dismisscolor'],
+            $special['medical'],
+            $special['breaks']
+        );
+        $result->execute();
+        $result->close();
+        return $special;
     }
 }

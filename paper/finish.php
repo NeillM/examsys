@@ -320,7 +320,7 @@ $paper_utils = Paper_utils::get_instance();
 $overrides = $paper_utils->get_marking_overrides($log_type, $temp_userID, $paperID);
 
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-$remote = $configObject->get_setting('core', 'summative_remote');
+$remote = $propertyObj->getSetting('remote_summative');
 if ($show_feedback) {
     display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 

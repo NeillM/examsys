@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['paperproperties', 'colourpicker', 'datecopy', 'form', 'alert', 'helplauncher', 'jquery', 'jqueryui'], function (PROP, PICKER, DATECOPY, FORM, ALERT, HELPLAUNCHER, $) {
+requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 'alert', 'helplauncher', 'jquery', 'jqueryui'], function (Config, PROP, PICKER, DATECOPY, FORM, ALERT, HELPLAUNCHER, $) {
     var properties = new PROP();
 
     var picker = new PICKER();
@@ -31,18 +31,19 @@ requirejs(['paperproperties', 'colourpicker', 'datecopy', 'form', 'alert', 'help
     properties.paperid = $('#dataset').attr('data-id');
     var type = $('#dataset').attr('data-type');
     var noadd = $('#noadd').val();
-    var datecheck = false;
-    if ($('#dataset').attr('data-remotesummative')) {
-        if (type == 5) {
-            datecheck = true;
-        }
-    } else {
-        if (type == 2 || type == 5) {
-            datecheck = true;
-        }
-    }
+
     var date = new DATECOPY();
     $('.datecopy').change(function () {
+        var datecheck = false;
+        if ($('#remote_summative').is(':checked')) {
+            if (type == 5) {
+                datecheck = true;
+            }
+        } else {
+            if (type == 2 || type == 5) {
+                datecheck = true;
+            }
+        }
         if (datecheck) {
             date.dateCopy(this);
         }
@@ -94,8 +95,7 @@ requirejs(['paperproperties', 'colourpicker', 'datecopy', 'form', 'alert', 'help
                 dataType: "json",
                 success: function (data) {
                     if (data == 'SUCCESS') {
-                        window.opener.location.reload();
-                        window.close()
+                        window.location.href = Config.cfgrootpath  + '/paper/details.php?paperID=' + $('#dataset').attr('data-id');
                     } else if (data == 'DUPLICATE_TITLE') {
                         $('#papertitle').addClass('errfield');
                         properties.buttonclick('general','tab1');
@@ -104,6 +104,24 @@ requirejs(['paperproperties', 'colourpicker', 'datecopy', 'form', 'alert', 'help
                 error: function (xhr, textStatus) {
                     alert.plain(textStatus);
                 },
+            });
+        }
+    });
+
+    // Disable labs if remote summative.
+    if ($('#remote_summative').is(':checked')) {
+        $("input[id^=lab]").each(function() {
+            $(this).prop("disabled", true);
+        });
+    }
+    $('#remote_summative').click(function () {
+        if ($(this).is(':checked')) {
+            $("input[id^=lab]").each(function() {
+                $(this).prop("disabled", true);
+            });
+        } else {
+            $("input[id^=lab]").each(function() {
+                $(this).prop("disabled", false);
             });
         }
     });

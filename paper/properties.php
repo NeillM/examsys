@@ -37,7 +37,7 @@ define('MARK_RANDOM', '1');
 define('MARK_STD_SET', '2');
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
-
+$render = new render($configObject);
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 /**
  * Define callbacks to be used when retrieving tracked changes
@@ -424,6 +424,50 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
 ?>
 </head>
 <body>
+<div id="content">
+<?php
+require '../include/toprightmenu.inc';
+
+echo draw_toprightmenu();
+// initial link of breadcrumb
+$links = array('/' => $string['home']);
+
+if ($folder) {
+    // links of parent folders
+    $folderName = folder_utils::get_folder_name($folder, $mysqli);
+    foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
+        $href = '/folder/index.php?folder=' . $parentId;
+        $links[$href] = $parentName;
+    }
+
+    // link of current folder
+    $href = '/folder/index.php?folder=' . $folder;
+    $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+} else {
+    if (is_null($module)) {
+        // Get the modules from paper properties
+        $modules = Paper_utils::get_modules($paperID, $mysqli);
+        $module = key($modules);
+    }
+    // link to module
+    $href = '/module/index.php?module=' . $module ;
+    $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
+
+    // link to module
+    $href = '/paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
+    $links[$href] = Paper_utils::type_to_name($properties->get_paper_type(), $string);
+}
+
+// link of current paper
+$href = '/paper/details.php?paperID=' . $paperID;
+$links[$href] = $properties->get_paper_title();
+$href = '/paper/properties.php?paperID=' . $paperID . '&caller=details&module=' . $module . '&folder=' . $folder;
+$links[$href] = $string['propertiestitle'];
+
+// breadcrumb
+echo $render->render_admin_navigation($links);
+?>
+</div>
 <form id="theform" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 <?php
   require '../tools/colour_picker/colour_picker.inc';
@@ -557,7 +601,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "</select>\n</td></tr>\n";
     if ($userObject->has_role('SysAdmin')) {
         // Sys admins can edit.
-        echo '<tr><td>' . $string['externalsys'] . '</td><td><select name="externalsys">';
+        echo '<tr><td align="right" valign="top">' . $string['externalsys'] . '</td><td><select name="externalsys">';
         echo "<option value=\"\"></option>\n";
         foreach ($extsys as $i => $s) {
             if ($s == $properties->get_externalsys()) {
@@ -568,7 +612,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
             echo "<option value=\"$s\" $selected>$s</option>\n";
         }
         echo '</select></td></tr>';
-        echo '<tr><td>' . $string['externalid'] . '</td><td><input type="text" size="30" maxlength="255" name="externalid" value="' . $properties->get_externalid() . '"></td></tr>';
+        echo '<tr><td align="right" valign="top">' . $string['externalid'] . '</td><td><input type="text" size="30" maxlength="255" name="externalid" value="' . $properties->get_externalid() . '"></td></tr>';
     } else {
         // Non sys admins can only view.
         echo '<tr><td>' . $string['externalid'] . '</td><td>' . $properties->get_externalid() . '</td></tr>';
@@ -842,16 +886,25 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
    </table>
 </td>
 </tr>
+<?php
+$properties->renderSettings('general');
+?>
 </table>
 
 <table id="prologue" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/prologue_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['prologueheading']; ?></td></tr>
 <tr><td><?php $texteditorplugin->get_textarea('paper_prologue', 'paper_prologue', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_prologue()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
+<?php
+$properties->renderSettings('prologue');
+?>
 </table>
 
 <table id="postscript" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/postscript_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['postscriptheading']; ?></td></tr>
 <tr><td><?php $texteditorplugin->get_textarea('paper_postscript', 'paper_postscript', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_postscript()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
+<?php
+$properties->renderSettings('postscript');
+?>
 </table>
 
 <table id="security" class="tabsection" style="display: none">
@@ -1151,7 +1204,7 @@ for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
 }
     echo "</select>\n</td></tr>\n";
     echo "</table>\n";
-
+    $properties->renderSettings('security');
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
     echo '<tr><td class="headbar" style="padding:2px; width:400px">&nbsp;' . $string['modules'] . '</td><td class="headbar" style="padding:2px">&nbsp;' . $string['restricttolabs'] . '</td></tr>';
     echo '<tr><td rowspan="3" style="vertical-align:top">';
@@ -1218,6 +1271,9 @@ if ($module_sql != '') {
 <table id="rubric" class="tabsection" style="display: none">
   <tr><td class="tabtitle"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
   <tr><td><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_rubric()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
+<?php
+$properties->renderSettings('rubric');
+?>
 </table>
 
 <table id="feedback" class="tabsection" style="display: none">
@@ -1342,6 +1398,7 @@ if ($module_sql != '') {
             echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"1\" style=\"width:620px; height:18px;\">$msg</textarea></td></tr>\n";
         }
     }
+    $properties->renderSettings('feedback');
     ?>
 </table>
 
@@ -1599,11 +1656,17 @@ SQL;
 </table>
 </td>
 </tr>
+<?php
+$properties->renderSettings('reviwers');
+?>
 </table>
 
 <table id="reference" class="tabsection" style="display: none">
 <tr><td class="tabtitle" colspan="2"><img src="../artwork/toggle_log.png" alt="Icon" align="middle" /><?php echo $string['referenceheading'] ?></td></tr>
 <tr><td style="vertical-align:top"><div id="reference_list" style="padding: 5px"></div></td></tr>
+<?php
+$properties->renderSettings('reference');
+?>
 </table>
 
 <table id="changes" class="tabsection" style="display: none">
@@ -1718,7 +1781,6 @@ for ($i = 0; $i < $rows; $i++) {
     }
     echo '<tr><td>' . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_very_short_datetime_php'), $changes[$i]['date']) . '</td><td>' . $changes[$i]['title'] . ' ' . $changes[$i]['surname'] . "</td><tr>\n";
 }
-$mysqli->close();
 ?>
 </table>
 </div></td></tr>
@@ -1737,16 +1799,15 @@ $mysqli->close();
                                           } ?>" />
 </form>
 <?php
-$render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['type'] = $properties->get_paper_type();
 $dataset['attributes']['id'] = $paperID;
-$dataset['attributes']['remotesummative'] = $configObject->get_setting('core', 'summative_remote');
 $render->render($dataset, array(), 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

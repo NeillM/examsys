@@ -46,6 +46,16 @@ fieldset {
 .cohortlist {
   border: 1px solid #909090;
 }
+.cohortlist table {
+  width: 100%;
+  line-height: 150%
+}
+
+#clarifymsgtbl {
+  float: left;
+  width: 50%
+}
+
 #menudiv ul {
   list-style: none;
   padding: 0;
@@ -64,10 +74,10 @@ fieldset {
   background: url('../artwork/notes_icon.gif') no-repeat 6px 4px;
 }
 .menu-toilet {
-  background: url('../artwork/wc.png') no-repeat 6px 4px;  
+  background: url('../artwork/wc.png') no-repeat 6px 4px;
 }
 .menu-unfinish {
-  background: url('../artwork/unfinish_exam.png') no-repeat 6px 4px;    
+  background: url('../artwork/unfinish_exam.png') no-repeat 6px 4px;
 }
 .tight {
   margin: 4px 0 2px 0;
@@ -202,6 +212,34 @@ fieldset {
   line-height: 150%;
 }
 
+.exam_details #main {
+  width: 100%;
+}
+
+.paperheader {
+  width: 50px;
+  vertical-align: top;
+}
+
+.currenttime {
+  font-weight: bold;
+  width: 150px
+}
+
+.theTime {
+  font-weight: bold;
+}
+
+.timing {
+  vertical-align: top;
+}
+
+#paper {
+  align: left;
+  width: 48px;
+  height: 48px;
+}
+
 .callout {
   display: none;
   position: absolute;
@@ -296,4 +334,76 @@ fieldset {
 }
 * html #opaque {
     position: absolute;
+}
+
+.popupmenu {
+  padding-right: 6px !important;
+}
+
+.off {
+  display: none;
+}
+
+.invigilator_cohort {
+  font-size: 100%;
+  line-height: 150%;
+  text-align: center;
+}
+
+.accessdenied {
+  background-color: white;
+}
+
+.accessdenied #denied {
+  float: left;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 40px;
+  width: 48px;
+  height: 48px;
+}
+
+#logout {
+  width: 24px;
+  height: 24px;
+}
+
+.logout {
+  float: right;
+  padding-right: 5px
+}
+
+.accessdenied span {
+  font-weight: bold;
+  color: #C00000;
+  font-size: 150%;
+}
+
+.emergency {
+  font-size: 100%;
+  float: right;
+  line-height: 100%;
+  margin-right: 20px;
+}
+
+#phone {
+  width: 28px;
+  height: 28px;
+}
+
+#key {
+  width: 16px;
+  height: 16px;
+}
+
+.showpassword {
+  font-family: "Lucida Console", Monospace;
+}
+
+.store {
+  display: none;
+}
+
+#checklist {
+  padding: 30px 100px 0px 100px;
 }

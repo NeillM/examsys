@@ -1,0 +1,130 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the invigilator student list section.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2020 onwards The University of Nottingham
+
+Required variables:
+
+data - student data from Invigilation->getStudents
+row.class - display class
+row.id -row id
+row.userid - student id
+row.timing - flag to indicate timing supported
+row.remote - flag to indicate remote invigilation
+row.completed - flag to indicate student has completed the exam
+row.notes - notes taked
+row.restbreak - rest breaks taken
+row.title- title
+row.surname - surname
+row.forname - first name
+row.endtime - time student finished the exam
+row.special - flag to indicate student requires extra time
+row.specialextra - the extra time required by the student
+row.specialextratime - the total extra time the student has for this paper
+row.accessibility - flag to indiace student has accessibility needs
+row.medical - student medical needs
+row.breaks - student break needs
+
+Required localised language strings -
+
+lang.prefix
+lang.surname
+lang.forenames
+lang.endtime
+lang.extension_mins
+#}
+<table class="invigilator_cohort" cellpadding="2" cellspacing="0" border="0" width="100%">
+    <thead>
+    <tr>
+        <th>
+        </th>
+
+        <th>
+            {{lang.prefix}}
+        </th>
+
+        <th>
+            {{lang.surname}}
+        </th>
+
+        <th>
+            {{lang.forenames}}
+        </th>
+
+        <th>
+            {{lang.endtime}}
+        </th>
+        
+        <th>
+            {{lang.extension_mins}}
+        </th>
+
+        <th>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for i, row in data %}
+    <tr class="student{% if row.warn %} redwarn{% endif %}" id="{{row.id}}" data-userid="{{row.userid}}" data-paperid="{{row.paperid}}" data-timing="{{row.timing}}" data-remote="{{info.remote}}">
+        <td>
+            {% if row.completed %}
+            <img src="{{path}}/artwork/finished.png" class="16icon" />
+            {% endif %}
+            {% if row.notes == 1 %}
+            <img src="{{path}}/artwork/notes_icon.gif" class="16icon" />
+            {% endif %}
+            {% if row.restbreak > 0 %}
+            {% for i in 1..row.restbreak %}
+            <img src="{{path}}/artwork/wc.png" class="16icon" />
+            {% endfor %}
+            {% endif %}
+        </td>
+        <td>{{row.title}}</td>
+        <td>{{row.surname}}</td>
+        <td>{{row.forname}}</td>
+        <td>{{row.endtime|raw}}</td>
+        <td>
+            {% if row.special != '' %}
+            <span>{{row.special}}</span>
+            {% endif %}
+            {% if row.specialextra != '' %}
+            {{row.specialextra}}
+            {% endif %}
+            {% if row.specialextratime != '' %}
+            <img src="{{path}}/artwork/clock_16.png" class="small_icon"  />
+            <span>{{row.specialextratime}}</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if row.accessibility == 1 %}
+            <div id="p{{row.id}}">
+                {% if row.medical != '' %}
+                <img src="{{path}}/artwork/medical_16.gif" class="16icon" id="medical" data-id="{{row.id}}" data-msg="{{row.medical}}"/>
+                {% endif %}
+                {% if row.breaks != '' %}
+                <img src="{{path}}/artwork/moon_16.gif" class="16icon" id="break" data-id="{{row.id}}" data-msg="{{row.breaks}}"/>
+                {% endif %}
+            </div>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
