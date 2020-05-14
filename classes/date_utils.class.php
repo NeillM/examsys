@@ -175,7 +175,8 @@ class date_utils
      */
     public static function getTimestampFromTime(int $hours, int $minutes, DateTimeZone $timezone): int
     {
-        $tmp_datetime = new DateTime(date('Y-m-d') . $hours . ':' . $minutes . ':00', $timezone);
-        return $tmp_datetime->getTimestamp();
+        $date = new DateTime('now', $timezone);
+        $date->setTime($hours, $minutes);
+        return $date->getTimestamp();
     }
 }
