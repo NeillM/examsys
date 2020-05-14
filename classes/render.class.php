@@ -26,7 +26,7 @@
  */
 class render
 {
-    
+
     /**
      * Twig object
      * @var twig
@@ -87,7 +87,7 @@ class render
         $data = array('name' => $reponsename, 'response' => $response);
         return $this->twig->render($template, $data);
     }
-    
+
     /**
      * Render admin list page.
      * @param array $data - data to list
@@ -99,7 +99,7 @@ class render
         $data = array('data' => $data, 'header' => $header, 'path' => $this->config->get('cfg_root_path'));
         echo $this->twig->render('admin/list.html', $data);
     }
-    
+
     /**
      * Render admin page header.
      * @param array $lang translations used in header
@@ -114,7 +114,7 @@ class render
         'charset' => $this->config->get('cfg_page_charset'), 'path' => $this->config->get('cfg_root_path'));
         echo $this->twig->render('admin/header.html', $data);
     }
-    
+
     /**
      * Render admin page content.
      * @param array $breadcrumb breadcrumb navigation
@@ -126,7 +126,7 @@ class render
         $data = array('breadcrumb' => $breadcrumb, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'));
         echo $this->twig->render('admin/content.html', $data);
     }
-    
+
     /**
      * Render admin page footer.
      * @param array $javascript additional javascript required
@@ -137,7 +137,7 @@ class render
         $data = ['scripts' => $javascript];
         echo $this->twig->render('admin/footer.html', $data);
     }
-    
+
     /**
      * Render admin options pane.
      * @param string $script - action script to add to page
@@ -152,7 +152,7 @@ class render
         $data = array('script' => $script, 'image' => $image, 'lang' => $lang, 'toprightmenu' => $toprightmenu);
         echo $this->twig->render($template, $data);
     }
-    
+
     /**
      * Render admin update rogo pane.
      * @param array $plugins - array of plugins available
@@ -179,13 +179,13 @@ class render
     {
         $path = $this->config->get('cfg_root_path');
         $current = count($links) > 0 ? array_pop($links) : '';
-        
+
         $data = array (
             'path' => $path,
             'links' => $links,
             'current' => $current,
         );
-        
+
         return $this->twig->render('admin/navigation.html', $data);
     }
 }
