@@ -134,7 +134,7 @@ class render
      */
     public function render_admin_footer($javascript = [])
     {
-        $data = ['scripts' => $javascript];
+        $data = ['scripts' => $javascript, 'path' => $this->config->get('cfg_root_path')];
         echo $this->twig->render('admin/footer.html', $data);
     }
 
