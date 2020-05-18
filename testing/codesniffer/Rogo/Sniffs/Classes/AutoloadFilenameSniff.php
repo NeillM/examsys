@@ -70,6 +70,10 @@ class AutoloadFilenameSniff implements Sniff
             return;
         }
         $directory = dirname($phpcsFile->getFilename());
+        if (mb_strpos($directory, '/unittest/tests/') !== false) {
+            // Do not run in unit test directory.
+            return;
+        }
         $file_dir_name = mb_substr($directory, mb_strlen(dirname($directory)) + 1);
         if ($file_dir_name !== 'classes') {
             // Files will only autoload if they are in the classes directory.
