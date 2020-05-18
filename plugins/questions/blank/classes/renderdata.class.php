@@ -111,7 +111,7 @@ class renderdata extends \questiondata
             $count++;
             $blankoption[$count]['itemtype'] = 'blurb';
             $blankoption[$count]['itemvalue'] = $blurb;
-            if (!empty($blanks[$j])) {
+            if (isset($blanks[$j])) {
                 $count++;
                 $blankoption[$count]['itemtype'] = 'blank';
                 $blankoption[$count]['itemcount'] = $itemcount;

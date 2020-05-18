@@ -79,6 +79,27 @@ class blanktest extends unittest
     }
 
     /**
+     * Test question option setter - textbox responses - answer 0 rendering
+     * @group question
+     */
+    public function testSetOptionAnswerTextboxZero()
+    {
+        $data = questiondata::get_datastore('blank');
+        $option['optiontext'] = '<div>The answer is [blank]0[/blank]</div>';
+        $option['markscorrect'] = 1;
+        $data->set_opt(0, $option);
+        $data->displaymethod = 'textboxes';
+        $data->scoremethod = 'Mark per Option';
+        $data->marks = 0;
+        $useranswer = '["0"]';
+        $data->set_option_answer(0, $useranswer, '', 1);
+        $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>The answer is ');
+        $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => '0');
+        $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+        $this->assertEquals($blankoptions, $data->blankoptions);
+    }
+
+    /**
      * Test question option setter - with size element
      * @group question
      */
