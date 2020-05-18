@@ -25,125 +25,58 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.php';
-require '../include/year_tabs.inc';
+require '../include/toprightmenu.inc';
 
 $current_year = check_var('calyear', 'GET', true, false, true);
-$current_month = (int)check_var('month', 'GET', true, false, true);
+$current_month = check_var('month', 'GET', true, false, true);
 
-$month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-
-
-$month_start[9] = $current_year . '0901000000';
-$month_start[10] = $current_year . '1001000000';
-$month_start[11] = $current_year . '1101000000';
-$month_start[12] = $current_year . '1201000000';
-$month_start[1] = ($current_year + 1) . '0101000000';
-$month_start[2] = ($current_year + 1) . '0201000000';
-$month_start[3] = ($current_year + 1) . '0301000000';
-$month_start[4] = ($current_year + 1) . '0401000000';
-$month_start[5] = ($current_year + 1) . '0501000000';
-$month_start[6] = ($current_year + 1) . '0601000000';
-$month_start[7] = ($current_year + 1) . '0701000000';
-$month_start[8] = ($current_year + 1) . '0801000000';
-
-$month_end[9] = $current_year . '1001000000';
-$month_end[10] = $current_year . '1101000000';
-$month_end[11] = $current_year . '1201000000';
-$month_end[12] = ($current_year + 1) . '0101000000';
-$month_end[1] = ($current_year + 1) . '0201000000';
-$month_end[2] = ($current_year + 1) . '0301000000';
-$month_end[3] = ($current_year + 1) . '0401000000';
-$month_end[4] = ($current_year + 1) . '0501000000';
-$month_end[5] = ($current_year + 1) . '0601000000';
-$month_end[6] = ($current_year + 1) . '0701000000';
-$month_end[7] = ($current_year + 1) . '0801000000';
-$month_end[8] = ($current_year + 1) . '0901000000';
-
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['summativeexamstats']); ?></title>
-
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
-    <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
-  <script src='../js/require.js'></script>
-  <script src='../js/main.min.js'></script>
-</head>
-
-<body>
-<?php
-  require '../include/toprightmenu.inc';
-
-    echo draw_toprightmenu();
-?>
-<div id="content">
-<div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
-  <div class="page_title"><?php echo $string['summativeexamstats'] ?>: <span style="font-weight:normal"><?php echo $string[$month_names[$current_month - 1]] . ' (' . $_GET['calyear']; ?>/<?php echo (mb_substr($_GET['calyear'], 2, 2) + 1) ?>)</span></div>
-</div>
-
-<table class="header" style="font-size:90%">
-<tr>
-<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic', '&month=' . $current_month); ?></div></th>
-</tr>
-<tr><td colspan="2" style="border:0; background-color:#1E3C7B; height:5px"></td></tr>
-</table>
-
-<blockquote>
-<table class="stats">
-  <tr><th><?php echo $string['date'] ?></th><th><?php echo $string['papers'] ?></th><th><?php echo $string['students'] ?></th></tr>
-<?php
+$render = new render($configObject);
+$toprightmenu = draw_toprightmenu(744);
+$lang['title'] = $string['summativeexamstats'];
+$additionaljs = '<script type="text/javascript" src="../js/statisticsinit.min.js"></script>';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/statistics.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/tabs.css"/>';
+$breadcrumb = array(
+    $string['home'] => '../index.php',
+    $string['administrativetools'] => '../admin/index.php',
+    $string['statistics'] => 'index.php',
+    $string['summativeexamstats'] => 'summative_stats.php?calyear=' . $current_year,
+);
+$stats = new Statistics();
+$lang['title'] .= ': ' . $stats->getDisplayMonth($current_month) . ' ' . $current_year . '/' . (mb_substr($current_year, 2, 2) + 1);
+$render->render_admin_header($lang, $additionaljs, $addtionalcss);
+$render->render_admin_options('', '', $string, $toprightmenu, 'admin/no_sidebar.html');
+$render->render_admin_content($breadcrumb, $lang);
 $total_student_no = 0;
 $distinct_users = array();
-
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date, '" . $configObject->get('cfg_long_date_time') . "') AS display_start_date, start_date, end_date FROM properties WHERE paper_type = '2' AND start_date >= " . $month_start[$current_month] . ' AND end_date < ' . $month_end[$current_month] . " AND labs != '' AND deleted IS NULL ORDER BY start_date");
-$result->execute();
-$result->store_result();
-$result->bind_result($property_id, $paper_title, $display_start_date, $start_date, $end_date);
-while ($result->fetch()) {
-    $paper_count = 0;
-
-    $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID = users.ID AND roles IN ('Student', 'graduate') AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
-    $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
-    $paper_data->execute();
-    $paper_data->store_result();
-    $paper_data->bind_result($tmp_userID);
-    $user_no = $paper_data->num_rows;
-    while ($paper_data->fetch()) {
-        $distinct_users[$tmp_userID] = 1;
-    }
-    $paper_data->close();
+// Get paper details.
+$renderdata = array();
+$renderdata['papers'] = array();
+$details = $stats->getSummativePapersDetails($current_month, $current_year);
+foreach ($details as $pid => $data) {
+    // Get distinct user count for a paper.
+    $stats = new Statistics();
+    $users = $stats->getStudentCount($pid, $data['start'], $data['end']);
+    $user_no = count($users);
+    $distinct_users += $users;
 
     if ($user_no == 0) {
         $class = ' grey';
     } else {
         $class = '';
     }
-
-    echo '<tr><td>' . $display_start_date . "</td><td><a href=\"../paper/details.php?paperID=$property_id\">" . $paper_title . "</a></td><td class=\"n$class\">$user_no</td></tr>\n";
+    $renderdata['papers'][] = array(
+            'start' => $data['display_start'],
+            'link' => '../paper/details.php?paperID=' . $pid,
+            'linklabel' => $data['title'],
+            'class' => $class,
+            'userno' => $user_no,
+    );
     $total_student_no += $user_no;
 }
 
-echo '<tr><td colspan="3" class="n subtotal">' . number_format($total_student_no) . "</td></tr>\n";
-
-$result->close();
-$mysqli->close();
-?>
-</table>
-<br />
-<?php
-  printf($string['uniquestudents'], number_format(count($distinct_users)));
-?>
-</blockquote>
-</div>
-
-</body>
-</html>
+$renderdata['totalstudentno'] = number_format($total_student_no);
+$renderdata['uniquestudents'] = sprintf($string['uniquestudents'], number_format(count($distinct_users)));
+$stats->renderStatsHeader($current_year, $current_month);
+$stats->renderSummativeDetail($renderdata);
+$render->render_admin_footer();

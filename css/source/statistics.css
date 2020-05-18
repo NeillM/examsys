@@ -44,3 +44,34 @@ table.stats {
 .grey {
   color: #C0C0C0;
 }
+
+.statsheader {
+    font-size: 90%
+}
+
+.statsheader th {
+    text-align: right;
+}
+
+#yeartabs {
+    text-align: right;
+    vertical-align: bottom;
+}
+
+#statsfooter {
+    border: 0;
+    background-color: #1E3C7B;
+    height: 5px;
+}
+
+body {
+    padding-left: 0;
+}
+
+.labs {
+    width: 350px !important;
+}
+
+.summary {
+    width: 500px !important;
+}

@@ -347,4 +347,38 @@ class yearutils
         $result->close();
         return false;
     }
+
+    /**
+     * Generate tabs of available years to render.
+     *
+     * @param string $current_tab - the tab currently in view
+     * @param string $type type of year - academic or calendar
+     * @param string $extra - extra html to add to table cell
+     * @return array
+     */
+    public function generateTabs(string $current_tab, string $type, string $extra = ''): array
+    {
+        if ($type == 'calendar') {
+            $supported_years = $this->get_supported_years('CAL');
+        } else {
+            $supported_years = $this->get_supported_years('STAT');
+        }
+
+        $data = array();
+        foreach ($supported_years as $calendar => $academic) {
+            if ($type == 'academic') {
+                $tab_year = $academic;
+            } else {
+                $tab_year = $calendar;
+            }
+
+            if ($calendar == $current_tab) {
+                $data[] = array('selected' => true, 'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra, 'tabyear' => $tab_year);
+            } else {
+                $data[] = array('selected' => false, 'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra, 'tabyear' => $tab_year);
+            }
+        }
+
+        return $data;
+    }
 }

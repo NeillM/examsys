@@ -18,8 +18,10 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['calendar', 'jquery'], function (CAL, $) {
+requirejs(['calendar', 'tabs', 'jquery'], function (CAL, Tabs, $) {
     var calendar = new CAL();
+    var tabs = new Tabs();
+    tabs.init();
     $('#lab').change(function() {
         $('#theform').submit();
     });

@@ -150,6 +150,7 @@ requirejs.config({
         invigilator: "js/modules/invigilator.min",
         announcement: "js/modules/announcement.min",
         lti: "js/modules/lti.min",
+        tabs: "js/modules/tabs.min",
         answer_hotspot: "js/modules/html_questions/html5.answer.hotspot.min",
         html5helper: "js/modules/html_questions/html5.helper.min",
         html5images: "js/modules/html_questions/html5.image.min",

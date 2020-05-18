@@ -1,0 +1,55 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the summative summary statistics page.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2020 onwards The University of Nottingham
+
+Required variables:
+data.papers - month data from Statistics->getSummativePapersDetails
+data.totalstudentno - total number of students in month
+data.uniquestudents - total unique students in month
+
+Required localised language strings -
+lang.date
+lang.papers
+lang.students
+#}
+<blockquote>
+    <table class="stats">
+        <tr>
+            <th>{{lang.date}}</th>
+            <th>{{lang.papers}}</th>
+            <th>{{lang.students}}</th>
+        </tr>
+        {% for paper in data.papers %}
+        <tr>
+            <td>{{paper.start}}</td>
+            <td>
+                <a href="{{paper.link}}">{{paper.linklabel}}</a>
+            </td>
+            <td class="n{{paper.class}}">{{paper.userno}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td colspan="3" class="n subtotal">{{data.totalstudentno}}</td>
+        </tr>
+    </table>
+    <br />
+    {{data.uniquestudents}}
+</blockquote>

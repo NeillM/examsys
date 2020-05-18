@@ -15,7 +15,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['summativeexamstats'] = 'Summative Exams';
-$string['statistics'] = 'Statistics';
-$string['uniquestudents'] = 'Unique students = %s';
+$string['month'] = 'Month';
+$string['papers'] = 'Papers';
+$string['studentpapers'] = 'Student/Papers';
 $string['students'] = 'Students';
+$string['taken'] = 'Taken';
+$string['unused'] = 'Unused';
+$string['mean'] = 'Mean';
+$string['min'] = 'Min';
+$string['max'] = 'Max';
+$string['computerlab'] = 'Computer Lab';
+$string['examno'] = 'Exam No';
+$string['date'] = 'Date';
+$string['january'] = 'January';
+$string['february'] = 'February';
+$string['march'] = 'March';
+$string['april'] = 'April';
+$string['may'] = 'May';
+$string['june'] = 'June';
+$string['july'] = 'July';
+$string['august'] = 'August';
+$string['september'] = 'September';
+$string['october'] = 'October';
+$string['november'] = 'November';
+$string['december'] = 'December';

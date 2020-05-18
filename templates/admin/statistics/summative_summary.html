@@ -1,0 +1,110 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the summative summary statistics page.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2020 onwards The University of Nottingham
+
+Required variables:
+data.months - month data from Statistics->generateMonth
+data.labs - lab data from Statisitics->generateLabStats
+data.totalpaperno - total papers in academic year
+data.totalpaperunused - total unused papers in academic year
+data.totalstudentno - total number of students in academic year
+data.uniquestudents - total unique students in academic year
+
+Required localised language strings -
+lang.month
+lang.papers
+lang.students
+lang.studentpapers
+lang.taken
+lang.unused
+lang.mean
+lang.min
+lang.max
+lang.computerlab
+lang.examno
+#}
+<blockquote>
+    <table class="stats summary">
+        <tr>
+            <th rowspan="2">{{lang.month}}</th>
+            <th colspan="2">{{lang.papers}}</th>
+            <th colspan="3">{{lang.students}}</th>
+            <th rowspan="2">{{lang.studentpapers}}</th>
+        </tr>
+        <tr>
+            <th>{{lang.taken}}</th>
+            <th>{{lang.unused}}</th>
+            <th>{{lang.mean}}</th>
+            <th>{{lang.min}}</th>
+            <th>{{lang.max}}</th>
+        </tr>
+        {% for month in data.months %}
+        {% if month.paperno > 0 %}
+        <tr>
+            <td>
+                <a href="{{month.link}}">{{month.linklabel}}</a>
+            </td>
+            <td class="n">
+                {{month.paperno}}
+            </td>
+            <td class="n {% if month.paperunusedno == 0 %}grey{% endif %}">
+                {{month.paperunusedno}}
+            </td>
+            <td class="n">
+                {{month.studentsperpaper}}
+            </td>
+            <td class="n">
+                {{month.monthmin}}
+            </td>
+            <td class="n">
+                {{month.monthmax}}
+            </td>
+            <td class="n">
+                {{month.numberstudents}}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        <tr>
+            <td>&nbsp;</td>
+            <td class="n subtotal">{{data.totalpaperno}}</td>
+            <td class="n subtotal">{{data.totalpaperunused}}</td>
+            <td class="subtotal" colspan="3">&nbsp;</td>
+            <td class="n subtotal">{{data.totalstudentno}}</td>
+        </tr>
+    </table>
+    <br />
+    {{data.uniquestudents}}
+    <br />
+    <br />
+    <table class="stats labs">
+        <tr>
+            <th>{{lang.computerlab}}</th>
+            <th>{{lang.examno}}</th>
+        </tr>
+        {% for name, value in data.labs %}
+        <tr>
+            <td>{{name}}</td>
+            <td class="n">{{value}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</blockquote>

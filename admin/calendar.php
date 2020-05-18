@@ -27,8 +27,9 @@
 
 require '../include/staff_auth.inc';
 require '../include/sidebar_menu.inc';
-require '../include/year_tabs.inc';
 require_once '../include/timezones.php';
+
+$render = new render($configObject);
 
 if (isset($_GET['calyear'])) {
     $current_year = $_GET['calyear'];
@@ -257,8 +258,14 @@ $stmt->close();
         } else {
             $extra = '';
         }
+        $yearutils = new yearutils($mysqli);
         ?>
-        <div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'calendar', $extra); ?></div>
+        <div style="text-align:right; vertical-align:bottom">
+        <?php
+            $data = $yearutils->generateTabs($current_year, 'calendar', $extra);
+            $render->render($data, array(), 'admin/yeartabs.html');
+        ?>
+        </div>
       </th>
     </tr>
     <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
@@ -557,7 +564,6 @@ $stmt->close();
     ?>
 </form>
 <?php
-$render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['lab_names'] = json_encode($lab_names);
 $miscdataset['attributes']['timezone'] = $default_timezone;

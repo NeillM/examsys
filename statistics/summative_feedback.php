@@ -26,7 +26,6 @@
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
 require '../include/errors.php';
-require '../include/year_tabs.inc';
 
 $current_year = check_var('calyear', 'GET', true, false, true);
 ?>
@@ -45,13 +44,14 @@ $current_year = check_var('calyear', 'GET', true, false, true);
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
+  <script src='../js/statisticsinit.min.js'></script>
 </head>
 
 <body>
 <?php
   require '../include/toprightmenu.inc';
-
-    echo draw_toprightmenu();
+  echo draw_toprightmenu();
+  $yearutils = new yearutils($mysqli);
 ?>
   <div id="content">
 
@@ -63,7 +63,15 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 
 <table class="header">
 <tr>
-<th style="text-align:right" colspan="2"><div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'academic') ?></div></th>
+    <th style="text-align:right" colspan="2">
+        <div style="text-align:right; vertical-align:bottom">
+            <?php
+            $data = $yearutils->generateTabs($current_year, 'academic');
+            $render = new render($configObject);
+            $render->render($data, array(), 'admin/yeartabs.html');
+            ?>
+        </div>
+    </th>
 </tr>
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
