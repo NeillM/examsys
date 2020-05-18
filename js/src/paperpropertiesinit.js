@@ -110,17 +110,17 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
 
     // Disable labs if remote summative.
     if ($('#remote_summative').is(':checked')) {
-        $("input[id^=lab]").each(function() {
+        $("input[id^=lab]", $("#labs_list")).each(function() {
             $(this).prop("disabled", true);
         });
     }
     $('#remote_summative').click(function () {
         if ($(this).is(':checked')) {
-            $("input[id^=lab]").each(function() {
+            $("input[id^=lab]", $("#labs_list")).each(function() {
                 $(this).prop("disabled", true);
             });
         } else {
-            $("input[id^=lab]").each(function() {
+            $("input[id^=lab]", $("#labs_list")).each(function() {
                 $(this).prop("disabled", false);
             });
         }

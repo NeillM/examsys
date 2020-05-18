@@ -204,6 +204,7 @@ class PaperSettings
         $langpack = new langpack();
         $strings = $langpack->get_all_strings($this->langcomponent);
         $render = new render($this->config);
+        $data = array();
         if ($category != '') {
             // Category specifc settings.
             foreach ($this->settings as $setting => $info) {
@@ -260,12 +261,15 @@ class PaperSettings
     public static function renderNewSettings(array $strings, string $papertype, string $category = ''): void
     {
         $declarations = self::getSettingDeclartions($papertype);
-        if ($category != '') {
-            // Category specifc settings.
-            $data[$category] = $declarations[$category];
-        } else {
-            // All settings.
-            $data = $declarations;
+        $data = array();
+        if (count($declarations) > 0) {
+            if ($category != '') {
+                // Category specifc settings.
+                $data[$category] = $declarations[$category];
+            } else {
+                // All settings.
+                $data = $declarations;
+            }
         }
         $render = new render(Config::get_instance());
         $render->render($data, $strings, 'admin/paper/settings.html');

@@ -37,6 +37,8 @@ define('MARK_RANDOM', '1');
 define('MARK_STD_SET', '2');
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
+$module = param::optional('module', null, param::INT, param::FETCH_GET);
+$folder = param::optional('folder', null, param::INT, param::FETCH_GET);
 $render = new render($configObject);
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 /**
