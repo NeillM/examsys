@@ -151,6 +151,14 @@ class StatisticsTest extends unittestdatabase
                 'started' => '2020-06-01 12:32:00'
             )
         );
+        $meta3 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->admin,
+                'paperID' => $this->paper2['id'],
+                'year' => 1,
+                'started' => '2020-06-02 12:32:00'
+            )
+        );
         $logdatagenerator->create_summative(
             array(
                 'q_id' => $question['id'],
@@ -167,6 +175,15 @@ class StatisticsTest extends unittestdatabase
                 'user_answer' => 1
             )
         );
+        // Add a admin preview attempt so we know they are not counted.
+        $logdatagenerator->create_summative(
+            array(
+                'q_id' => $question['id'],
+                'metadataID' => $meta3['id'],
+                'screen' => 1,
+                'user_answer' => 1
+            )
+        );
     }
 
     /**
@@ -175,6 +192,13 @@ class StatisticsTest extends unittestdatabase
     public function testGetSummativePapers(): void
     {
         $stats = new Statistics();
+        $expected2020[$this->paper['id']] = array(
+            'title' => $this->paper['papertitle'],
+            'month' => date('m', strtotime($this->paper['startdate'])),
+            'start' => $this->paper['startdate'],
+            'end' => $this->paper['enddate'],
+            'labs' => $this->paper['labs']
+        );
         $expected2019[$this->paper2['id']] = array(
             'title' => $this->paper2['papertitle'],
             'month' => date('m', strtotime($this->paper2['startdate'])),
@@ -183,7 +207,7 @@ class StatisticsTest extends unittestdatabase
             'labs' => $this->paper2['labs']
         );
         // Check 2020 academic year.
-        $this->assertEquals(array(), $stats->getSummativePapers(2020));
+        $this->assertEquals($expected2020, $stats->getSummativePapers(2020));
         // Check 2019 academic year.
         $this->assertEquals($expected2019, $stats->getSummativePapers(2019));
     }
@@ -194,15 +218,23 @@ class StatisticsTest extends unittestdatabase
     public function testGetSummativePapersDetails(): void
     {
         $stats = new Statistics();
-        $longdate = str_replace('%', '', $this->config->get('cfg_long_date_time'));
-        $expected[$this->paper2['id']] = array(
+        $expected2020[$this->paper2['id']] = array(
             'title' => $this->paper2['papertitle'],
-            'display_start' => date($longdate, strtotime($this->paper2['startdate'])),
-            'start' => $this->paper2['startdate'],
-            'end' => $this->paper2['enddate']
+            'start' =>  $stats->getMonthStart('2019', '06'),
+            'end' =>  $stats->getMonthEnd('2019', '06')
         );
+        $expected2019[$this->paper['id']] = array(
+            'title' => $this->paper['papertitle'],
+            'start' =>  $stats->getMonthStart('2020', '10'),
+            'end' =>  $stats->getMonthEnd('2020', '10')
+        );
+        // Check October.
+        $this->assertEquals($expected2019, $stats->getSummativePapersDetails('10', '2020'));
+        // Check November.
+        $this->assertEquals(array(), $stats->getSummativePapersDetails('11', '2020'));
+
         // Check June.
-        $this->assertEquals($expected, $stats->getSummativePapersDetails('06', '2019'));
+        $this->assertEquals($expected2020, $stats->getSummativePapersDetails('06', '2019'));
         // Check July.
         $this->assertEquals(array(), $stats->getSummativePapersDetails('07', '2019'));
     }
