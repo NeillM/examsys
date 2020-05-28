@@ -77,6 +77,9 @@ abstract class unittestdatabase extends TestCase
      */
     public $student;
 
+    /** @var array The student with accessibility needs used in tests. */
+    public $studentneeds;
+
     /**
      * @var integer Storage for module user id in tests
      */
@@ -194,6 +197,18 @@ abstract class unittestdatabase extends TestCase
     public function get_base_student(): array
     {
         $id = $this->get_user_id('test1');
+        $data = \userutils::get_user_details($id, $this->db);
+        $data['id'] = $id;
+        return $data;
+    }
+
+    /**
+     * Get the student with accessibility needs.
+     * @return array
+     */
+    public function get_needs_student(): array
+    {
+        $id = $this->get_user_id('test2');
         $data = \userutils::get_user_details($id, $this->db);
         $data['id'] = $id;
         return $data;
@@ -331,6 +346,7 @@ abstract class unittestdatabase extends TestCase
         // Load base ids into memory.
         $this->admin = $this->get_base_admin();
         $this->student = $this->get_base_student();
+        $this->studentneeds = $this->get_needs_student();
         $this->module = $this->get_base_module();
         $this->school = $this->get_base_school();
         $this->faculty = $this->get_base_faculty();
