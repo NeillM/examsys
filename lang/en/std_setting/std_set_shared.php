@@ -35,4 +35,4 @@ $string['mn_full'] = 'Medium - Nice to know';
 $string['he_full'] = 'Hard - Essential';
 $string['hi_full'] = 'Hard - Important';
 $string['hn_full'] = 'Hard - Nice to know';
-$string['multiselect_instructions'] = '(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)';
+$string['multiselect_instructions'] = '(Hold down <CTRL> key (or <CMD> if you are using a mac), then click to toggle options on/off)';
