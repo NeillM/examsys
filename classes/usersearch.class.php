@@ -468,11 +468,16 @@ class UserSearch extends Search
     {
         $tmp_titles = $this->getTitles();
         foreach ($tmp_titles as $tmp_title) {
-            if (mb_substr_count(mb_strtolower($name), mb_strtolower($tmp_title . ' ')) > 0) {
+            $pattern = '/(^|\s)(' . $tmp_title . ')($|\s)/i';
+            if (preg_match($pattern, $name)) {
                 $this->title = $tmp_title;
+
+                // Remove the title.
+                $name = preg_replace($pattern, ' ', $name);
+
+                // We found a title, so no need to search for more.
+                break;
             }
-            // Remove the title.
-            $name = preg_replace('/(' . $tmp_title . ' )/i', '', $name);
         }
         return $name;
     }
