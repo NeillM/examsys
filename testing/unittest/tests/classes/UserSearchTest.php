@@ -279,6 +279,40 @@ class UserSearchTest extends testing\unittest\unittestdatabase
     }
 
     /**
+     * Tests that a year search returns students enrolled on that year.
+     */
+    public function testYearSearch()
+    {
+        $search = new UserSearch();
+        $search->setSearchStudents();
+        $search->setYear(2012);
+
+        $result = $search->execute();
+        self::assertInstanceOf(SearchResult::class, $result);
+        self::assertEquals(1, $result->total);
+
+        $result->query->bind_result(
+                $id,
+                $roles,
+                $sid,
+                $surname,
+                $initials,
+                $first_names,
+                $title,
+                $username,
+                $grade,
+                $yearofstudy,
+                $email,
+                $special_id
+        );
+        $result->query->fetch();
+
+        self::assertEquals('student1', $username);
+        self::assertEquals('Amanda', $first_names);
+        self::assertEquals('Cox', $surname);
+    }
+
+    /**
      * Tests that year and module interact correctly.
      */
     public function testModuleYearSearch()
