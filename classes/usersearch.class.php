@@ -100,7 +100,7 @@ class UserSearch extends Search
 
         // Generate the conditional SQL.
         list($studentmods, $staffmods) = $this->generateModuleSQL();
-        $year = $this->generateYearSQL();
+        list($year, $staffyear) = $this->generateYearSQL();
         $name = $this->generateNameSQL();
         $username = $this->generateUsernameSQL();
         $idnumber = $this->generateIDNumberSQL();
@@ -115,7 +115,7 @@ class UserSearch extends Search
         // Query for finding staff.
         $staff_tables = $this->generateStaffTableSQL();
         // Need to get only staff,student roles to avoid duplication.
-        $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffmods, $name, $username, $idnumber, $roles);
+        $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffyear, $staffmods, $name, $username, $idnumber, $roles);
         $where = str_replace('Student', 'Staff,Student', $staff_where->sql);
         $staff_query = "SELECT $fields FROM $staff_tables WHERE $where";
 
@@ -188,16 +188,18 @@ class UserSearch extends Search
     /**
      * Returns the SQL to filter students by a year.
      *
-     * @return \SQLFragment
+     * @return \SQLFragment[]
      */
-    protected function generateYearSQL(): SQLFragment
+    protected function generateYearSQL(): array
     {
-        $year = new SQLFragment();
+        $studentyear = new SQLFragment();
+        $staffyear = new SQLFragment();
         if (isset($this->year)) {
-            $year->sql = 'calendar_year = ?';
-            $year->addParameter($this->year, SQLFragment::TYPE_INTEGER);
+            $studentyear->sql = 'calendar_year = ?';
+            $studentyear->addParameter($this->year, SQLFragment::TYPE_INTEGER);
+            $staffyear->sql = '1 <> 1';
         }
-        return $year;
+        return [$studentyear, $staffyear];
     }
 
     /**
@@ -466,11 +468,16 @@ class UserSearch extends Search
     {
         $tmp_titles = $this->getTitles();
         foreach ($tmp_titles as $tmp_title) {
-            if (mb_substr_count(mb_strtolower($name), mb_strtolower($tmp_title . ' ')) > 0) {
+            $pattern = '/(^|\s)(' . $tmp_title . ')($|\s)/i';
+            if (preg_match($pattern, $name)) {
                 $this->title = $tmp_title;
+
+                // Remove the title.
+                $name = preg_replace($pattern, ' ', $name);
+
+                // We found a title, so no need to search for more.
+                break;
             }
-            // Remove the title.
-            $name = preg_replace('/(' . $tmp_title . ' )/i', '', $name);
         }
         return $name;
     }
@@ -728,7 +735,7 @@ class UserSearch extends Search
     {
         // Generate the conditional SQL.
         list($studentmods, $staffmods) = $this->generateModuleSQL();
-        $year = $this->generateYearSQL();
+        list($year, $staffyear) = $this->generateYearSQL();
         $name = $this->generateNameSQL();
         $username = $this->generateUsernameSQL();
         $idnumber = $this->generateIDNumberSQL();
@@ -743,7 +750,7 @@ class UserSearch extends Search
         // Query for finding staff.
         $staff_tables = $this->generateStaffTableSQL();
         // Need to get only staff,student roles to aviud duplication.
-        $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffmods, $name, $username, $idnumber, $roles);
+        $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffyear, $staffmods, $name, $username, $idnumber, $roles);
         $where = str_replace('Student', 'Staff,Student', $staff_where->sql);
         $staff_query = "SELECT COUNT(DISTINCT users.id) AS counter FROM $staff_tables WHERE $where";
 

@@ -279,6 +279,40 @@ class UserSearchTest extends testing\unittest\unittestdatabase
     }
 
     /**
+     * Tests that a year search returns students enrolled on that year.
+     */
+    public function testYearSearch()
+    {
+        $search = new UserSearch();
+        $search->setSearchStudents();
+        $search->setYear(2012);
+
+        $result = $search->execute();
+        self::assertInstanceOf(SearchResult::class, $result);
+        self::assertEquals(1, $result->total);
+
+        $result->query->bind_result(
+                $id,
+                $roles,
+                $sid,
+                $surname,
+                $initials,
+                $first_names,
+                $title,
+                $username,
+                $grade,
+                $yearofstudy,
+                $email,
+                $special_id
+        );
+        $result->query->fetch();
+
+        self::assertEquals('student1', $username);
+        self::assertEquals('Amanda', $first_names);
+        self::assertEquals('Cox', $surname);
+    }
+
+    /**
      * Tests that year and module interact correctly.
      */
     public function testModuleYearSearch()
@@ -380,6 +414,70 @@ class UserSearchTest extends testing\unittest\unittestdatabase
             'Suspended' => [['setSearchSuspended'], ['suspended']],
             'SysAdmin' => [['setSearchSysadmin'], ['admin']],
             'SysAdmin, Invigilators' => [['setSearchSysadmin', 'setSearchInvigilators'], ['admin', 'invigilator']],
+        ];
+    }
+
+    /**
+     * Tests that title search works correctly.
+     *
+     * @param string $name
+     *
+     * @dataProvider dataTitle
+     */
+    public function testTitle(string $name)
+    {
+        $usergen = $this->get_datagenerator('users', 'core');
+        $student = [
+            'first_names' => 'Profiterole',
+            'surname' => 'TakeMiss',
+            'initials' => 'P',
+            'title' => 'Miss',
+            'roles' => 'Student',
+            'sid' => '567945614',
+        ];
+        $student = $usergen->create_user($student);
+
+        $search = new UserSearch();
+        $search->setSearchStudents();
+        $search->setName($name);
+
+        $result = $search->execute();
+        self::assertInstanceOf(SearchResult::class, $result);
+        self::assertEquals(1, $result->total);
+
+        $result->query->bind_result(
+                $id,
+                $roles,
+                $sid,
+                $surname,
+                $initials,
+                $first_names,
+                $title,
+                $username,
+                $grade,
+                $yearofstudy,
+                $email,
+                $special_id
+        );
+        $result->query->fetch();
+
+        self::assertEquals($student['username'], $username);
+        self::assertEquals($student['first_names'], $first_names);
+        self::assertEquals($student['surname'], $surname);
+    }
+
+    /**
+     * Data for the Title test.
+     *
+     * @return array
+     */
+    public function dataTitle(): array
+    {
+        return [
+            'Start' => ['Miss TakeMiss Profiterole'],
+            'End' => ['TakeMiss Profiterole Miss'],
+            'Middle' => ['TakeMiss Miss Profiterole'],
+            'With initial' => ['P, Miss TakeMiss Profiterole'],
         ];
     }
 }

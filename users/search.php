@@ -36,9 +36,9 @@ $ordering = param::optional('ordering', 'asc', param::ALPHA, param::FETCH_GET);
 $moduleID = param::optional('module', null, param::INT, param::FETCH_GET);
 $calendar_year = param::optional('calendar_year', '%', param::INT, param::FETCH_GET);
 
-$get_staff = param::optional('staff', true, param::BOOLEAN, param::FETCH_GET);
-$get_inactive = param::optional('inactive', true, param::BOOLEAN, param::FETCH_GET);
-$get_sysadmin = param::optional('sysadminstaff', true, param::BOOLEAN, param::FETCH_GET);
+$get_staff = param::optional('staff', false, param::BOOLEAN, param::FETCH_GET);
+$get_inactive = param::optional('inactive', false, param::BOOLEAN, param::FETCH_GET);
+$get_sysadmin = param::optional('sysadminstaff', false, param::BOOLEAN, param::FETCH_GET);
 $get_admin = param::optional('adminstaff', false, param::BOOLEAN, param::FETCH_GET);
 $get_invigilators = param::optional('invigilators', false, param::BOOLEAN, param::FETCH_GET);
 $get_standardstaff = param::optional('standardsstaff', false, param::BOOLEAN, param::FETCH_GET);
