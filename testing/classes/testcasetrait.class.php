@@ -235,7 +235,10 @@ trait testcasetrait
         foreach ($data as $tableName => $rows) {
             if (!is_null($rows)) {
                 foreach ($rows as $idx => $val) {
-                    $keys = implode(',', array_keys($val));
+                    $keys = implode('`,`', array_keys($val));
+                    if (!empty($keys)) {
+                        $keys = "`$keys`";
+                    }
                     $values = '';
                     foreach (array_values($val) as $v) {
                         if (is_string($v)) {
