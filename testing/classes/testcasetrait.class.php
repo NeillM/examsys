@@ -69,6 +69,15 @@ trait testcasetrait
      */
     protected function base_datageneration(): void
     {
+        $fixtures = glob("$this->fixture_base*.yml");
+        if (count($fixtures) < 1) {
+            // We should find some yml files!
+            throw new \Exception('Could not find base fixture files');
+        }
+        foreach ($fixtures as $yamlfile) {
+            $data = Yaml::parseFile($yamlfile);
+            $this->insert_into_db($data);
+        }
         // Always need this academic year.
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $calendaryear = date('Y');
@@ -82,15 +91,6 @@ trait testcasetrait
             'initials' => 'A', 'title' => 'Dr', 'first_names' => 'A', 'sid' => '1234567890', 'gender' => null, 'special_needs' => array('breaks' => 'yes')));
         $datagenerator->create_user(array('surname' => 'User2', 'username' => 'test2', 'roles' => 'Student', 'grade' => 'TEST2',
             'initials' => 'A', 'title' => 'Dr', 'first_names' => 'A', 'sid' => '00000001', 'gender' => null));
-        $fixtures = glob("$this->fixture_base*.yml");
-        if (count($fixtures) < 1) {
-            // We should find some yml files!
-            throw new \Exception('Could not find base fixture files');
-        }
-        foreach ($fixtures as $yamlfile) {
-            $data = Yaml::parseFile($yamlfile);
-            $this->insert_into_db($data);
-        }
     }
 
     /**
