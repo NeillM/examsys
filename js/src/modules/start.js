@@ -84,6 +84,26 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             $('#theTime').html("" + hours + minutes + seconds);
         };
 
+        /**
+         * Regular heartbeat that confirms remaining time if missed.
+         */
+        this.heartbeat = function() {
+            var now = new Date();
+            var nowtime = now.getTime();
+            var diff = nowtime - scope.lastheartbeat;
+            // Expeted to be one second since last heartbeat.
+            var offBy = diff - 1000;
+            scope.lastheartbeat = now;
+            // Give some wiggle room.
+            if (offBy > 100) {
+                // If an exam is pause leave it paused. Otherwise update the timer.
+                if (!scope.paused) {
+                    // Remaining time is the current time subtracted from the end time with the total pause duration added.
+                    var remaingtime = Math.floor((scope.endtime.getTime() - nowtime + scope.pausedduration) / 1000);
+                    scope.UpdateTimerWithRemainingTime(remaingtime, true);
+                }
+            }
+        }
 
         /**
          * Performs countdown.
@@ -635,6 +655,9 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
          * @param int paperid paper identigier
          */
         this.pause = function(paperid) {
+            scope.paused = true;
+            var start = new Date();
+            scope.pausedtimestart = start.getTime();
             // Record break.
             $.post($('#dataset').attr('data-rootpath') + "/ajax/invigilator/toilet_break.php",
                 {
@@ -645,11 +668,14 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             $('#breakstext').html(Jsxls.lang_string['resume']);
             scope.info_dialog(Jsxls.lang_string['paperpaused']);
 
-            $("#info_dialog_ok").click(function() {
+            $("#info_dialog_ok").one('click', function() {
                 $('#breaks').removeClass('play');
                 $('#breaks').addClass('pause');
                 $('#breakstext').html(Jsxls.lang_string['pause']);
                 $("#info_overlay").hide();
+                scope.paused = false;
+                var stop = new Date();
+                scope.pausedduration += stop.getTime() - scope.pausedtimestart;
             });
         }
     }

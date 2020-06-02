@@ -48,7 +48,6 @@ if ($userObject->has_role('Internal Reviewer')) {
 }
 
 // Get parameters.
-$id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
 $mode = param::optional('mode', '', param::ALPHA);
 $getmode = param::optional('mode', '', param::ALPHA, param::FETCH_GET);
 $post_screen = param::optional('current_screen', null, param::INT, param::FETCH_POST);

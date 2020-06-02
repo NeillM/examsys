@@ -31,7 +31,16 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
         var el2 = document.getElementById('user');
 
         if (el.dataset.timed) {
+            start.paused = false;
+            start.pausedduration = 0;
             start.StartTimer(el2.dataset.remaining_time, true);
+            // Set endtime of exam.
+            var end = new Date(Date.now() + (el2.dataset.remaining_time * 1000));
+            start.endtime = end;
+            // Initialise heartbeat to confirm browser is active.
+            var now = new Date();
+            start.lastheartbeat = now.getTime();
+            setInterval(start.heartbeat, 1000);
         } else {
             start.StartClock();
         }
