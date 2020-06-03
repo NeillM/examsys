@@ -754,7 +754,7 @@ class UserSearch extends Search
         $where = str_replace('Student', 'Staff,Student', $staff_where->sql);
         $staff_query = "SELECT COUNT(DISTINCT users.id) AS counter FROM $staff_tables WHERE $where";
 
-        $sql = "$student_query UNION $staff_query";
+        $sql = "$student_query UNION ALL $staff_query";
 
         $query = Config::get_instance()->db->prepare($sql);
 
