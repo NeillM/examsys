@@ -365,7 +365,7 @@ class UserSearch extends Search
     protected function generateStaffTableSQL(): string
     {
         $tables = 'users
-          LEFT JOIN modules_staff ON users.id = modules_staff.memberID 
+          JOIN modules_staff ON users.id = modules_staff.memberID 
           LEFT JOIN sid ON users.id = sid.userID
           LEFT JOIN special_needs ON users.id = special_needs.userID 
           LEFT JOIN modules ON modules_staff.idMod = modules.id';
