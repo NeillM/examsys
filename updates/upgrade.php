@@ -23,7 +23,13 @@
  * @copyright Copyright (c) 2017 The University of Nottingham
  */
 
-require_once '../include/sysadmin_auth.inc';
+// We cannot actually use any of the core Rogo authentication or users during an upgrade.
+// Or we cannot change their structure!
+// This is probably ok as it is still locked behind the username and password for the database itself.
+require_once dirname(__DIR__) . '/include/load_config.php';
+$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+$configObject->set_db_object($mysqli);
+
 $language = LangUtils::getLang($cfg_web_root);
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/install.php';
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
