@@ -35,9 +35,14 @@ class UserUtils
             return false;
         }
 
-        if (!in_array($role, array('Staff', 'Student', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner', 'Standards Setter', 'Internal Reviewer'))) {
-            // not a valid role
-            return false;
+        $roles = explode(',', $role);
+        foreach ($roles as $rolename) {
+            try {
+                Role::validateRole($rolename);
+            } catch(InvalidRole $e) {
+                // Not a valid role.
+                return false;
+            }
         }
 
         $userid = self::create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials);
@@ -62,7 +67,7 @@ class UserUtils
      * @param mysqli $db the database connection
      * @param string $initials the users initials
      * @param bool $guest flag to enable guest account creation
-     * @return bool
+     * @return int|bool The user id or false if the user did not create.
      */
     static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null, $guest = false)
     {
@@ -109,14 +114,19 @@ class UserUtils
             }
 
             // Add new record into users table.
-            $result = $db->prepare('INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, 0, ?, NULL, NULL)');
-            $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
+            $sql = 'INSERT INTO users (password, grade, surname, initials, title, username, email, first_names, gender, yearofstudy) 
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            $result = $db->prepare($sql);
+            $result->bind_param('sssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $forname, $gender, $year);
             $result->execute();
             $result->close();
             $tmp_userID = $db->insert_id;
             if (isset($sid) and $sid != '') {
                 self::insert_student_id($db, $sid, $tmp_userID);
             }
+
+            // Add roles to the user.
+            Role::updateRoles($tmp_userID, explode(',', $role));
 
             return $tmp_userID;
         }
@@ -225,13 +235,14 @@ class UserUtils
 
         // Update record into users table.
         $result = $db->prepare('UPDATE users SET password = ?, grade = ?, surname = ?, initials = ?, title = ?, username = ?,
-    email = ?, roles = ?, first_names = ?, gender = ?, yearofstudy = ? WHERE id = ?');
-        $result->bind_param('ssssssssssii', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year, $id);
+    email = ?, first_names = ?, gender = ?, yearofstudy = ? WHERE id = ?');
+        $result->bind_param('sssssssssii', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $forname, $gender, $year, $id);
         $result->execute();
         $result->close();
         if ($db->errno != 0) {
             return false;
         }
+
         if (isset($sid) and $sid != '') {
             if (is_null($current['studentid'])) {
                 $result = $db->prepare('INSERT INTO sid (student_id, userID) VALUES (?, ?)');
@@ -242,6 +253,10 @@ class UserUtils
             $result->execute();
             $result->close();
         }
+
+        // Update the user's roles.
+        Role::updateRoles($id, explode(',', $role));
+
         if ($db->errno != 0) {
             return false;
         }
@@ -434,7 +449,14 @@ class UserUtils
      */
     static function has_user_role($tmp_userID, $test_role, $db)
     {
-        $stmt = $db->prepare('SELECT roles FROM users WHERE id = ? AND user_deleted IS NULL LIMIT 1');
+        $sql = "SELECT GROUP_CONCAT(r.name  SEPARATOR ',') 
+                FROM users u
+                JOIN user_roles ur ON u.id = ur.userid
+                JOIN roles r ON ur.roleid = r.id
+                WHERE u.id = ? AND u.user_deleted IS NULL
+                GROUP BY u.id
+                LIMIT 1";
+        $stmt = $db->prepare($sql);
         $stmt->bind_param('i', $tmp_userID);
         $stmt->execute();
         $stmt->bind_result($roles);
@@ -462,7 +484,15 @@ class UserUtils
      */
     static function get_user_details($userID, $db)
     {
-        $stmt = $db->prepare('SELECT username, title, surname, initials, first_names, email, roles, gender, grade, yearofstudy, user_deleted FROM users WHERE id = ? LIMIT 1');
+        $sql = "SELECT u.username, u.title, u.surname, u.initials, u.first_names, u.email, GROUP_CONCAT(r.name  SEPARATOR ','), 
+                       u.gender, u.grade, u.yearofstudy, u.user_deleted 
+                FROM users u
+                JOIN user_roles ur ON u.id = ur.userid
+                JOIN roles r ON ur.roleid = r.id
+                WHERE u.id = ?
+                GROUP BY u.id
+                LIMIT 1";
+        $stmt = $db->prepare($sql);
         $stmt->bind_param('i', $userID);
         $stmt->execute();
         $stmt->store_result();
@@ -984,8 +1014,15 @@ class UserUtils
      */
     static function get_full_details_by_ID($id, $db)
     {
-        $sql = $db->prepare('SELECT username, password, title, first_names, surname, email, grade, gender,
-        yearofstudy, roles, initials, student_id FROM users LEFT JOIN sid ON id = userID WHERE id = ?');
+        $sql = "SELECT u.username, u.password, u.title, u.first_names, u.surname, u.email, u.grade, u.gender,
+                       u.yearofstudy, GROUP_CONCAT(r.name  SEPARATOR ','), u.initials, s.student_id 
+                FROM users u
+                JOIN user_roles ur ON u.id = ur.userid
+                JOIN roles r ON ur.roleid = r.id
+                LEFT JOIN sid s ON u.id = s.userID 
+                WHERE u.id = ?
+                GROUP BY u.id, s.student_id";
+        $sql = $db->prepare($sql);
         $sql->bind_param('i', $id);
         $sql->execute();
         $sql->bind_result(

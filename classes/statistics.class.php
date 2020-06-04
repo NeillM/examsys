@@ -198,16 +198,17 @@ class Statistics
         $users = array();
         $paper_data = $this->db->prepare('
             SELECT
-                DISTINCT userid
-            FROM
-                log_metadata,
-                users
+                DISTINCT lm.userid
+            FROM 
+                log_metadata lm
+                JOIN users u ON lm.userID = u.ID
+                JOIN user_roles ur ON u.id = ur.userid
+                JOIN roles r ON ur.roleid = r.id
             WHERE
-                log_metadata.userID = users.ID AND
-                roles IN ("Student", "graduate") AND
-                paperID = ? AND
-                DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND
-                started <= ?
+                r.name IN ("Student", "graduate") AND
+                lm.paperID = ? AND
+                DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND
+                lm.started <= ?
         ');
         $paper_data->bind_param('iss', $pid, $start, $end);
         $paper_data->execute();

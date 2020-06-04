@@ -35,7 +35,7 @@ $paper_type = $propertyObj->get_paper_type();
 function load_marks($paperID, $q_id, $phase, $db)
 {
     $marks = array();
-  
+
     $result = $db->prepare('SELECT answer_id, mark, comments FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = ?');
     $result->bind_param('iii', $paperID, $q_id, $phase);
     $result->execute();
@@ -56,7 +56,7 @@ function load_question_mark($q_id, $db)
     $result->bind_result($marks_correct);
     $result->fetch();
     $result->close();
-  
+
     return $marks_correct;
 }
 
@@ -78,7 +78,7 @@ function displayMarks($id, $marks, $override, $user_mark)
         }
     }
     $html .= '</select>';
-  
+
     return $html;
 }
 
@@ -167,7 +167,12 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log0 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
+  AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+  )
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -177,7 +182,12 @@ SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, l.mark
   FROM (log1 l, log_metadata lm, users u)
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
+  AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+  )
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -192,7 +202,12 @@ SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, l.mark
 FROM (log{$paper_type} l, log_metadata lm, users u)
 WHERE lm.paperID = ?
 AND l.metadataID = lm.id
-AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
+AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+)
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -274,7 +289,7 @@ SQL;
 <input type="hidden" name="startdate" value="<?php echo $startdate ?>" />
 <input type="hidden" name="enddate" value="<?php echo $enddate ?>" />
 
-<input type="submit" name="submit" class="ok" value="<?php echo $string['finalisemarks'] ?>" />  
+<input type="submit" name="submit" class="ok" value="<?php echo $string['finalisemarks'] ?>" />
 
 </div>
 </form>

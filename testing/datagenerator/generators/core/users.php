@@ -268,12 +268,12 @@ class users extends generator
         $values['roles'] = $this->validate_roles($values['roles']);
 
         // Students require an id.
-        if ($values['roles'] == 'Student' and empty($values['sid'])) {
+        if (in_array('Student', $values['roles']) and empty($values['sid'])) {
             throw new data_error('Must pass student id if user is a student');
         }
 
         // If not a student ensure student id is null.
-        if ($values['roles'] != 'Student') {
+        if (!in_array('Student', $values['roles'])) {
             $values['sid'] = null;
         }
 
@@ -319,12 +319,12 @@ class users extends generator
     protected function insert_user($data)
     {
         $sql = 'INSERT INTO users '
-            . '(password, grade, surname, initials, username, title, email, roles, first_names,'
+            . '(password, grade, surname, initials, username, title, email, first_names,'
             . ' gender, special_needs, yearofstudy, user_deleted, password_expire)'
-            . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $query = $this->db->prepare($sql);
         $query->bind_param(
-            'ssssssssssiisi',
+            'sssssssssiisi',
             $data['password'],
             $data['grade'],
             $data['surname'],
@@ -332,7 +332,6 @@ class users extends generator
             $data['username'],
             $data['title'],
             $data['email'],
-            $data['roles'],
             $data['first_names'],
             $data['gender'],
             $data['special_needs'],
@@ -348,12 +347,14 @@ class users extends generator
         $userid = $query->insert_id;
 
         // Add student id.
-        if ($data['roles'] == 'Student') {
+        if (in_array('Student', $data['roles'])) {
             $result = $this->db->prepare('INSERT INTO sid VALUES(?, ?)');
             $result->bind_param('si', $data['sid'], $userid);
             $result->execute();
             $result->close();
         }
+
+        \Role::updateRoles($userid, $data['roles']);
 
         return $userid;
     }
@@ -375,11 +376,18 @@ class users extends generator
             $roles[$rolekey] = trim($role);
         }
         // Get only the valid roles.
-        $validroles = array_intersect($roles, self::$roles);
-        $validroles = implode(',', $validroles);
+        $validroles = [];
+        foreach ($roles as $role) {
+            try {
+                \Role::validateRole($role);
+                $validroles[] = $role;
+            } catch (\InvalidRole $e) {
+                // Ignore the role.
+            }
+        }
         if (empty($validroles)) {
-            // Take the first valid role if none of the passed roles are valid.
-            $validroles = self::$roles[0];
+            // Default to a student.
+            $validroles = ['Student'];
         }
         return $validroles;
     }

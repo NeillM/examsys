@@ -150,10 +150,66 @@ if ($student_no > 0) {
     $rowID = 0;
     // Capture the log data.
     if ($paper_type == '0') {
-        $result = $mysqli->prepare("(SELECT DISTINCT username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log0.q_id, user_answer, q_type, screen, settings FROM (log0, log_metadata, questions, users) WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started >= ? AND started <= ?) UNION ALL (SELECT DISTINCT username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log1.q_id, user_answer, q_type, screen, settings FROM (log1, log_metadata, questions, users) WHERE log1.metadataID = log_metadata.id AND log1.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started >= ? AND started <= ?) ORDER BY surname, first_names, started, userID");
+        $sql = "
+            (
+                SELECT DISTINCT 
+                    username, lm.userID, title, surname, first_names, grade, gender, year, started, 
+                    l.q_id, user_answer, q_type, screen, settings 
+                FROM 
+                    (log0 l, log_metadata lm, questions q, users ) 
+                WHERE 
+                    l.metadataID = lm.id AND l.q_id = q.q_id AND lm.userID IN ($student_list) 
+                    AND paperID = ? AND u.id = lm.userID 
+                    AND EXISTS (
+                        SELECT 1 
+                        FROM user_roles ur
+                        JOIN roles r ON ur.roleid = r.id
+                        WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+                    )
+                    AND grade LIKE ? AND started >= ? AND started <= ?
+            ) UNION ALL (
+                 SELECT DISTINCT 
+                    username, lm.userID, title, surname, first_names, grade, gender, year, started, 
+                    l.q_id, user_answer, q_type, screen, settings 
+                FROM 
+                    (log1 l, log_metadata lm, questions q, users u) 
+                WHERE 
+                    l.metadataID = lm.id AND log1.q_id = q.q_id AND lm.userID IN ($student_list) 
+                    AND paperID = ? AND u.id = lm.userID 
+                    AND EXISTS (
+                        SELECT 1 
+                        FROM user_roles ur
+                        JOIN roles r ON ur.roleid = r.id
+                        WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+                    ) 
+                    AND grade LIKE ? AND started >= ? AND started <= ?
+            ) ORDER BY 
+                surname, first_names, started, userID
+        ";
+        $result = $mysqli->prepare($sql);
         $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
     } else {
-        $result = $mysqli->prepare("SELECT DISTINCT username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen, settings FROM (log$paper_type, log_metadata, questions, users) WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
+        $sql = "
+            SELECT DISTINCT 
+                username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, l.q_id, 
+                user_answer, q_type, screen, settings 
+            FROM 
+                (log$paper_type l, log_metadata lm, questions q, users u) 
+            WHERE 
+                l.metadataID = lm.id AND l.q_id = q.q_id 
+                AND lm.userID IN ($student_list) AND paperID = ? AND u.id = lm.userID 
+                AND EXISTS (
+                    SELECT 1 
+                    FROM user_roles ur
+                    JOIN roles r ON ur.roleid = r.id
+                    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+                )
+                AND grade LIKE ? 
+                AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? 
+            ORDER BY
+                surname, first_names, started, userID
+        ";
+        $result = $mysqli->prepare($sql);
         $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);
     }
 

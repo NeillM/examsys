@@ -149,10 +149,18 @@ $log1_deleted_overall = 0;
 $lti_user_deleted_overall = 0;
 
 // Archive all left and graduate accounts.
+$sql = "SELECT id FROM $cfg_db_database.users WHERE ";
 if ($target == 0) {
-    $stmt = $mysqli->prepare('SELECT id FROM ' . $cfg_db_database . ".users WHERE roles='left' OR roles='graduate'");
+    $condition = "
+    EXISTS (
+        SELECT 1 
+        FROM user_roles ur JOIN roles r ON ur.roleid = r.id 
+        WHERE r.name IN ('graduate', 'left') AND users.id = ur.userid
+    )
+    ";
+    $stmt = $mysqli->prepare("$sql $condition");
 } else {
-    $stmt = $mysqli->prepare('SELECT id FROM ' . $cfg_db_database . ".users WHERE username = '" . $targetted_user . "'");
+    $stmt = $mysqli->prepare("$sql username = '$targetted_user'");
 }
 
 $stmt->execute();
@@ -286,11 +294,25 @@ $lm_check1->close();
 // Reset passwords
 if ($ldap) {
     cli_utils::prompt('LDAP enabled - Resetting passwords');
-    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
+    $condition = "
+    EXISTS (
+        SELECT 1 
+        FROM user_roles ur JOIN roles r ON ur.roleid = r.id 
+        WHERE r.name IN ('Student', 'graduate', 'left') AND users.id = ur.userid
+    )
+    ";
+    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE $condition");
     $roles_string = 'Student, graduate and left';
 } else {
     cli_utils::prompt('LDAP disabled - Resetting passwords');
-    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE roles IN('graduate', 'left')");
+    $condition = "
+    EXISTS (
+        SELECT 1 
+        FROM user_roles ur JOIN roles r ON ur.roleid = r.id 
+        WHERE r.name IN ('graduate', 'left') AND users.id = ur.userid
+    )
+    ";
+    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE $condition");
     $roles_string = 'graduate and left';
 }
 $updatequery->execute();

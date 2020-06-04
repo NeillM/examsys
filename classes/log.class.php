@@ -364,7 +364,10 @@ abstract class log
      */
     public static function get_student_only()
     {
-        return " AND (users.roles LIKE '%Student%' OR users.roles = 'graduate')";
+        return " AND EXISTS (SELECT 1 
+                    FROM user_roles ur
+                    JOIN roles r ON ur.roleid = r.id
+                    WHERE users.ID = ur.userid AND r.name IN ('Student', 'graduate'))";
     }
 
     /**

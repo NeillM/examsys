@@ -24,3 +24,38 @@
     padding-left: 4px;
     width: 95px
 }
+.role-grouping {
+    color: #1E3287;
+    font-size: 100%;
+    font-weight: normal;
+}
+.role-grouping:after {
+    content:"";
+    display: inline-block;
+    height: 0.5em;
+    vertical-align: bottom;
+    width: 100%;
+    margin-right: -100%;
+    margin-left: 10px;
+    border-top: 1px solid #E5E5E5;
+}
+.role-list {
+    padding-inline-start: 20px;
+}
+.role-list .role {
+    list-style: none;
+}
+.formcontrols {
+    text-align: center;
+}
+.notification {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 0.5em;
+    padding: 1em 3em;
+}
+.problem {
+    color: white;
+    background-color: darkred;
+    border-color: orangered;
+}

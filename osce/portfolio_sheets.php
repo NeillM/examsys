@@ -95,7 +95,13 @@ WHERE log4.log4_overallID = log4_overall.id
  AND log4_overall.userID = students.id AND log4_overall.examinerID = examiners.id
  AND papers.question = questions.q_id AND papers.paper = ? AND log4_overall.q_paper = ?
  AND log4.q_id = questions.q_id AND log4_overall.started >= ?
- AND log4_overall.started <= ? AND (students.roles = 'Student' OR students.roles = 'graduate')
+ AND log4_overall.started <= ? 
+ AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE students.id = ur.userid AND r.name IN ('Student', 'graduate')
+)
  AND log4_overall.student_grade LIKE ?
 ORDER BY students.surname, students.initials, log4_overall.userID, display_pos
 SQL;
@@ -141,7 +147,7 @@ while ($result->fetch()) {
     }
 
     $leadin = StringUtils::wordToUtf8(StringUtils::clean_and_trim(strip_tags($leadin)));
-       
+
     $leadin = parse_leadin_word_2003($leadin, $q_parts);
     // Lead-in
     echo '<w:tr wsp:rsidR="00A11D0F" wsp:rsidRPr="00A11D0F" wsp:rsidTr="00A11D0F">';

@@ -110,16 +110,16 @@ class UserSearch extends Search
         // Query for finding students.
         $student_tables = $this->generateStudentTableSQL();
         $student_where = SQLFragment::combine(' AND ', $not_deleted, $year, $studentmods, $name, $username, $idnumber, $roles);
-        $student_query = "SELECT $fields FROM $student_tables WHERE $student_where->sql";
+        $student_query = "SELECT $fields FROM $student_tables WHERE $student_where->sql GROUP BY users.id, sid.student_id";
 
         // Query for finding staff.
         $staff_tables = $this->generateStaffTableSQL();
         // Need to get only staff,student roles to avoid duplication.
         $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffyear, $staffmods, $name, $username, $idnumber, $roles);
         $where = str_replace('Student', 'Staff,Student', $staff_where->sql);
-        $staff_query = "SELECT $fields FROM $staff_tables WHERE $where";
+        $staff_query = "SELECT $fields FROM $staff_tables WHERE $where GROUP BY users.id, sid.student_id";
 
-        $sql = "$student_query UNION $staff_query ORDER BY $this->orderby LIMIT $this->limit OFFSET $this->offset";
+        $sql = "($student_query) UNION ($staff_query) ORDER BY $this->orderby LIMIT $this->limit OFFSET $this->offset";
 
         $query = Config::get_instance()->db->prepare($sql);
 
@@ -265,7 +265,7 @@ class UserSearch extends Search
         $rolesfragment = new SQLFragment();
         $leftfragment = new SQLFragment();
         $roles = [];
-        $fragment = 'roles = ?';
+        $fragment = 'roles.name = ?';
 
         if ($this->students or isset($this->idnumber)) {
             $roles[] = $fragment;
@@ -279,17 +279,17 @@ class UserSearch extends Search
 
         if ($this->admin) {
             $roles[] = $fragment;
-            $rolesfragment->addParameter('Staff,Admin', SQLFragment::TYPE_STRING);
+            $rolesfragment->addParameter('Admin', SQLFragment::TYPE_STRING);
         }
 
         if ($this->sysadmin) {
             $roles[] = $fragment;
-            $rolesfragment->addParameter('Staff,SysAdmin', SQLFragment::TYPE_STRING);
+            $rolesfragment->addParameter('SysAdmin', SQLFragment::TYPE_STRING);
         }
 
         if ($this->standard) {
             $roles[] = $fragment;
-            $rolesfragment->addParameter('Staff,Standards Setter', SQLFragment::TYPE_STRING);
+            $rolesfragment->addParameter('Standards Setter', SQLFragment::TYPE_STRING);
         }
 
         if ($this->inactive) {
@@ -365,6 +365,8 @@ class UserSearch extends Search
     protected function generateStaffTableSQL(): string
     {
         $tables = 'users
+          JOIN user_roles ON users.id = user_roles.userid
+          JOIN roles ON user_roles.roleid = roles.id
           JOIN modules_staff ON users.id = modules_staff.memberID 
           LEFT JOIN sid ON users.id = sid.userID
           LEFT JOIN special_needs ON users.id = special_needs.userID 
@@ -380,6 +382,8 @@ class UserSearch extends Search
     protected function generateStudentTableSQL(): string
     {
         $tables = 'users
+          JOIN user_roles ON users.id = user_roles.userid
+          JOIN roles ON user_roles.roleid = roles.id
           LEFT JOIN modules_student ON users.id = modules_student.userID
           LEFT JOIN sid ON users.id = sid.userID
           LEFT JOIN special_needs ON users.id = special_needs.userID 
@@ -396,7 +400,7 @@ class UserSearch extends Search
     {
         return [
                 'users.id',
-                'roles',
+                "GROUP_CONCAT(roles.name  SEPARATOR ',')",
                 'student_id',
                 'surname',
                 'initials',

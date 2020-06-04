@@ -136,7 +136,12 @@ if (isset($_POST['submit'])) {
 				AND log0.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND (roles LIKE '%Student%' OR roles = 'Graduate')
+				AND EXISTS (
+                    SELECT 1 
+                    FROM user_roles ur
+                    JOIN roles r ON ur.roleid = r.id
+                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
+                )
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 			GROUP BY log_metadata.userID, users.username
@@ -148,7 +153,12 @@ if (isset($_POST['submit'])) {
 				AND log1.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND (roles LIKE '%Student%' OR roles = 'Graduate')
+				AND EXISTS (
+                    SELECT 1 
+                    FROM user_roles ur
+                    JOIN roles r ON ur.roleid = r.id
+                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
+                )
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 			GROUP BY log_metadata.userID, users.username
@@ -164,7 +174,12 @@ SQL;
 				AND log$paper_type.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND (roles LIKE '%Student%' OR roles = 'Graduate')
+				AND EXISTS (
+                    SELECT 1 
+                    FROM user_roles ur
+                    JOIN roles r ON ur.roleid = r.id
+                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
+                )
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 				GROUP BY log_metadata.userID, users.username

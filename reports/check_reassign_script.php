@@ -88,7 +88,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title($string['Reassign Script to User']); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; margin:4px}
@@ -138,7 +138,19 @@ if ($target_userID == '') {
     $first_names = trim($temp_first_names) . '%';
     $temp_surname = trim($temp_surname);
     $temp_title = trim($temp_title);
-    $result = $mysqli->prepare("SELECT id, surname, first_names, title, gender, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE surname=? AND first_names LIKE ? AND (roles LIKE '%staff%' OR roles = 'student')");
+    $sql = "
+    SELECT DISTINCT
+        u.id, u.surname, u.first_names, u.title, u.gender, sid.student_id 
+    FROM
+        users u
+        JOIN user_roles ur ON ur.userid = u.id
+        JOIN roles r ON r.id = ur.roleid
+        LEFT JOIN sid ON u.id = sid.userID 
+    WHERE 
+        surname = ? AND first_names LIKE ?
+        AND r.name IN ('Staff', 'Student')
+    ";
+    $result = $mysqli->prepare($sql);
     $result->bind_param('ss', $temp_surname, $first_names);
     $result->execute();
     $result->store_result();

@@ -131,7 +131,13 @@ FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
 INNER JOIN users u ON lm.userID = u.id
 LEFT JOIN sid ON u.id = sid.userID
 WHERE lm.paperID = ? $repyear_sql
-AND (u.roles = 'Student' OR u.roles = 'graduate')$exclude $repcourse_sql
+AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+)
+$exclude $repcourse_sql
 AND lm.started >= ? AND lm.started <= ?
 SQL;
 

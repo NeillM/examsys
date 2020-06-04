@@ -1598,8 +1598,20 @@ SQL;
     if (count($properties->get_internal_reviewers()) > 0) {
         $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', array_keys($current_internals)) . ') AND user_deleted IS NULL';
     }
-    // Add internal reviwers to list.
-    $internal_reviwers = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = "Internal Reviewer" AND user_deleted IS NULL';
+    // Add internal reviewers to list.
+    $internal_reviwers = "
+    UNION SELECT DISTINCT 
+        id, title, initials, surname, first_names 
+    FROM 
+        users 
+    WHERE
+        EXISTS (
+            SELECT 1
+            FROM user_roles ur JOIN roles r ON ur.roleid = r.id
+            WHERE r.name = 'Internal Reviewer' AND users.id = ur.userid
+        )
+        AND user_deleted IS NULL
+    ";
 
     // Dynamically choose tables and join based on role.
     if ($userObject->has_role('SysAdmin')) {
@@ -1610,7 +1622,21 @@ SQL;
         $join = 'users.id = modules_staff.memberID AND modules.id = modules_staff.idMod';
     }
 
-    $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM $tables WHERE roles != 'Left' AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers ORDER BY surname, initials";
+    $query = "
+    SELECT DISTINCT 
+        users.id, title, initials, surname, first_names 
+    FROM 
+        $tables 
+    WHERE
+        NOT EXISTS (
+            SELECT 1
+            FROM user_roles ur JOIN roles r ON ur.roleid = r.id
+            WHERE r.name = 'left' AND users.id = ur.userid
+        )
+        AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers 
+    ORDER BY 
+        surname, initials
+    ";
     $internal_details = $mysqli->prepare($query);
     $internal_details->execute();
     $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
@@ -1634,7 +1660,22 @@ SQL;
 
     echo '<td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
     $current_externals = $properties->get_externals();
-    $external_details = $mysqli->prepare("SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = 'External Examiner' AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
+    $sql = "
+    SELECT DISTINCT 
+        id, title, initials, surname, first_names 
+    FROM 
+        users 
+    WHERE
+        EXISTS (
+            SELECT 1
+            FROM user_roles ur JOIN roles r ON ur.roleid = r.id
+            WHERE r.name = 'External Examiner' AND users.id = ur.userid
+        )
+        AND grade != 'left' AND user_deleted IS NULL 
+    ORDER BY 
+        surname, initials
+    ";
+    $external_details = $mysqli->prepare($sql);
     $external_details->execute();
     $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
     $examiner_no = 0;

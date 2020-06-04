@@ -42,6 +42,7 @@ define(['jquery'], function($) {
             $('#Accessibility_tab').hide();
             $('#Teams_tab').hide();
             $('#Metadata_tab').hide();
+            $('#roles_tab').hide();
             $('#' + tabID).show();
         };
 

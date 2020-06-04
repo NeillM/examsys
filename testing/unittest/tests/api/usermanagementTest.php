@@ -589,10 +589,10 @@ class usermanagementtest extends unittestdatabase
             'id' => $this->user2,
             'role' => '');
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
         $expectedtable = array(
             0 => array (
-                'roles' => 'Student'
+                'roleid' => 4,
             )
         );
         $this->assertEquals($expectedtable, $querytable);
@@ -616,11 +616,10 @@ class usermanagementtest extends unittestdatabase
             'id' => $this->user2,
             'studentid' => '');
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles', 'yearofstudy', 'gender', 'grade', 'email',
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy', 'gender', 'grade', 'email',
             'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
         $expectedtable = array(
             0 => array (
-                'roles' => 'Student',
                 'yearofstudy' => null,
                 'gender' => null,
                 'grade' => 'TEST2',
@@ -632,6 +631,13 @@ class usermanagementtest extends unittestdatabase
                 'username' => 'unit3',
                 'initials' => null
             )
+        );
+        $this->assertEquals($expectedtable, $querytable);
+        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
+        $expectedtable = array(
+                0 => array (
+                        'roleid' => 4,
+                )
         );
         $this->assertEquals($expectedtable, $querytable);
     }
@@ -681,11 +687,10 @@ class usermanagementtest extends unittestdatabase
             'id' => $this->user2,
             'modules' => array());
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles', 'yearofstudy', 'gender', 'grade', 'email',
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy', 'gender', 'grade', 'email',
             'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
         $expectedtable = array(
             0 => array (
-                'roles' => 'Student',
                 'yearofstudy' => null,
                 'gender' => null,
                 'grade' => 'TEST2',
@@ -697,6 +702,13 @@ class usermanagementtest extends unittestdatabase
                 'username' => 'unit3',
                 'initials' => null
             )
+        );
+        $this->assertEquals($expectedtable, $querytable);
+        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
+        $expectedtable = array(
+                0 => array (
+                        'roleid' => 4,
+                )
         );
         $this->assertEquals($expectedtable, $querytable);
     }
@@ -723,11 +735,10 @@ class usermanagementtest extends unittestdatabase
             'roles' => 'Student',
             'course' => 'TEST2');
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles', 'yearofstudy', 'gender', 'grade', 'email',
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy', 'gender', 'grade', 'email',
             'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
         $expectedtable = array(
             0 => array (
-                'roles' => 'Student',
                 'yearofstudy' => null,
                 'gender' => null,
                 'grade' => 'TEST2',
@@ -739,6 +750,13 @@ class usermanagementtest extends unittestdatabase
                 'username' => 'unit3',
                 'initials' => null
             )
+        );
+        $this->assertEquals($expectedtable, $querytable);
+        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
+        $expectedtable = array(
+                0 => array (
+                        'roleid' => 4,
+                )
         );
         $this->assertEquals($expectedtable, $querytable);
     }

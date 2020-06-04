@@ -215,6 +215,7 @@ requirejs.config({
         mejs_sk: "node_modules/mediaelement/build/lang/sk",
         media: "js/modules/media.min",
         polyfill: "js/modules/polyfill.min",
+        rolelist: "js/modules/rolelist.min",
     },
     shim: {
         // Mathjax configration.

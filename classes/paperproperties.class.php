@@ -450,7 +450,7 @@ class PaperProperties
         $params['external_review_deadline'] = array('s', $this->external_review_deadline);
         $params['internal_review_deadline'] = array('s', $this->internal_review_deadline);
         $params['recache_marks'] = array('i', $this->recache_marks);
-    
+
         // Set update parameters.
         if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
             if (!$graded) {
@@ -1793,7 +1793,7 @@ class PaperProperties
     {
         return $this->password;
     }
-  
+
     /**
      * Return the password for a paper.
      *
@@ -1810,7 +1810,7 @@ class PaperProperties
             return $this->password;
         }
     }
-  
+
     /**
      * Save password to database.
      *
@@ -1827,12 +1827,12 @@ class PaperProperties
         } else {
             $this->password = '';
         }
-    
+
         if ($old_password != $password) {
             $this->changes[] = array('old' => $old_password, 'new' => $password, 'part' => 'password');
         }
     }
-  
+
     /**
      * Encrypt a password that can be de-crypted.
      *
@@ -1976,7 +1976,7 @@ class PaperProperties
         } else {
             $this->unmarked_enhancedcalc = false;
         }
-        
+
         if (!isset($this->questions)) {
             $this->load_questions();
         }
@@ -2023,7 +2023,10 @@ class PaperProperties
             $skiperrorstates = array(-5);
 
             if ($studentsonly) {
-                $rolesql = "AND (users.roles = 'Student' OR users.roles = 'graduate')";
+                $rolesql = "AND EXISTS (SELECT 1 
+                                        FROM user_roles ur
+                                        JOIN roles r ON ur.roleid = r.id
+                                        WHERE users.ID = ur.userid AND r.name IN ('Student', 'graduate'))";
             } else {
                 $rolesql = '';
             }
@@ -2099,7 +2102,7 @@ class PaperProperties
             return $this->unmarked_textbox;
         }
     }
-    
+
     /**
      * Check if textbox answers have been marked
      * @param int $studentsonly only check students in cohort
@@ -2115,7 +2118,7 @@ class PaperProperties
         } else {
             $this->unmarked_textbox = false;
         }
-        
+
         if (!isset($this->questions)) {
             $this->load_questions();
         }
@@ -2156,7 +2159,10 @@ class PaperProperties
         // Find unmarked questions.
         if (count($textbox_ids) > 0) {
             if ($studentsonly) {
-                $rolesql = "AND (users.roles = 'Student' OR users.roles = 'graduate')";
+                $rolesql = "AND EXISTS (SELECT 1 
+                                        FROM user_roles ur
+                                        JOIN roles r ON ur.roleid = r.id
+                                        WHERE users.ID = ur.userid AND r.name IN ('Student', 'graduate'))";
             } else {
                 $rolesql = '';
             }
@@ -2176,7 +2182,7 @@ class PaperProperties
             $result->close();
         }
     }
-    
+
     public function q_type_exist($type)
     {
             $paperID = $this->get_property_id();
@@ -2212,7 +2218,7 @@ class PaperProperties
     {
         return $this->externalid;
     }
-    
+
     /**
      * Set externalid id of paper
      * @param string $externalid
@@ -2225,7 +2231,7 @@ class PaperProperties
             $this->changes[] = array('old' => $old_externalid, 'new' => $externalid, 'part' => 'externalid');
         }
     }
-  
+
     /**
      * Get papers external system name
      * @return string
@@ -2234,7 +2240,7 @@ class PaperProperties
     {
         return $this->externalsys;
     }
-    
+
     /**
      * Set externalid system name of paper
      * @param string $externalsys
@@ -2820,26 +2826,32 @@ class PaperProperties
         $pid = $this->get_property_id();
         $year = $this->get_calendar_year();
         if ($this->has_metadata()) {
-            $sql = 'SELECT u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
+            $sql = "SELECT u.id, u.first_names, u.grade, u.surname, GROUP_CONCAT(r.name  SEPARATOR ','), u.title, u.username, 
+                           u.yearofstudy, s.student_id
               FROM users u
+              JOIN user_roles ur ON u.id = ur.userid
+              JOIN roles r ON r.id = ur.roleid
               JOIN modules_student ms ON ms.userID = u.id
               JOIN properties_modules pm ON pm.idMod = ms.idMod
               JOIN users_metadata um ON um.userID = u.id AND um.idMod = ms.idMod AND um.idMod = pm.idMod AND um.calendar_year = ms.calendar_year
               JOIN paper_metadata_security ps ON ps.name = um.type AND ps.value = um.value
               LEFT JOIN sid s ON s.userID = u.id
               WHERE pm.property_id = ? AND ms.calendar_year = ? AND ps.paperID = ?
-              GROUP BY u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
-              ORDER BY u.surname, u.first_names, s.student_id';
+              GROUP BY u.id, u.first_names, u.grade, u.surname, u.title, u.username, u.yearofstudy, s.student_id
+              ORDER BY u.surname, u.first_names, s.student_id";
             $params = ['iii', &$pid, &$year, &$pid];
         } else {
-            $sql = 'SELECT u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
+            $sql = "SELECT u.id, u.first_names, u.grade, u.surname, GROUP_CONCAT(r.name  SEPARATOR ','), u.title, u.username,
+                           u.yearofstudy, s.student_id
               FROM users u
+              JOIN user_roles ur ON u.id = ur.userid
+              JOIN roles r ON r.id = ur.roleid
               JOIN modules_student ms ON ms.userID = u.id
               JOIN properties_modules pm ON pm.idMod = ms.idMod
               LEFT JOIN sid s ON s.userID = u.id
               WHERE pm.property_id = ? AND ms.calendar_year = ?
-              GROUP BY u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
-              ORDER BY u.surname, u.first_names, s.student_id';
+              GROUP BY u.id, u.first_names, u.grade, u.surname, u.title, u.username, u.yearofstudy, s.student_id
+              ORDER BY u.surname, u.first_names, s.student_id";
             $params = ['ii', &$pid, &$year];
         }
         $query = $this->db->prepare($sql);

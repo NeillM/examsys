@@ -64,13 +64,25 @@ $paper = $propertyObj->get_paper_title();
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(214);
-    
+
   $candidate_no = 0;
 if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare("SELECT DISTINCT lm.userID FROM log_metadata lm INNER JOIN users u ON lm.userID = u.id WHERE lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
+    $sql = "
+    SELECT DISTINCT 
+        lm.userID 
+    FROM 
+        log_metadata lm 
+        INNER JOIN users u ON lm.userID = u.id
+        JOIN user_roles ur ON u.id = ur.userid
+        JOIN roles r ON r.id = ur.roleid 
+    WHERE 
+        lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? 
+        AND r.name IN ('Student', 'graduate')
+    ";
+    $result = $mysqli->prepare($sql);
     $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
     $result->bind_result($tmp_userID);
@@ -104,7 +116,7 @@ if ($candidate_no > 0) {
 }
 
   echo "<div id=\"content\">\n";
-  
+
   echo "<div class=\"head_title\">\n";
   echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
@@ -145,7 +157,22 @@ while ($result->fetch()) {
         } elseif ($_GET['action'] == 'finalise') {
             $candidates_marked = 0;
             // Check how many candidates are marked for this question.
-            $marked = $mysqli->prepare("SELECT mark FROM log$paper_type, log_metadata, users WHERE log$paper_type.metadataID = log_metadata.id AND log_metadata.userID = users.id AND (roles LIKE '%Student%' OR roles = 'graduate') AND paperID = ? AND q_id = ?");
+            $sql = "
+            SELECT 
+                mark 
+            FROM 
+                log$paper_type, log_metadata, users 
+            WHERE 
+                log$paper_type.metadataID = log_metadata.id AND log_metadata.userID = users.id 
+                AND EXISTS (
+                    SELECT 1 
+                    FROM user_roles ur
+                    JOIN roles r ON ur.roleid = r.id
+                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
+                )
+                AND paperID = ? AND q_id = ?
+            ";
+            $marked = $mysqli->prepare($sql);
             $marked->bind_param('ii', $paperID, $q_id);
             $marked->execute();
             $marked->bind_result($mark);
