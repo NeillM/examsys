@@ -89,6 +89,7 @@ trait frontend_hooks
         state::sanatise_tables();
         // Let the data generators have the database connection.
         loader::set_database(state::get_db());
+        $config->set_db_object(state::get_db());
 
         // Ensure the directories are empty.
         directory::reset_directories();
