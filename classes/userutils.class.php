@@ -863,6 +863,11 @@ class UserUtils
      */
     static function is_user_on_module($tmp_userID, $idMod, $session, $db)
     {
+        if ($idMod !== 0 and empty($idMod)) {
+            // Assume false when there is no module passed, it will cause SQL errors otherwise.
+            return false;
+        }
+
         if (is_array($idMod)) {
             $idMod = implode(',', $idMod);
         }
