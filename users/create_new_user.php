@@ -33,8 +33,8 @@ $render = new render($configObject);
 $lang['title'] = $string['createnewuser'];
 $additionaljs = '<script src="../js/createuserinit.min.js"></script>';
 
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/dialog.css" />
-        <link rel="stylesheet" type="text/css" href="/css/list.css" />
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+        <link rel="stylesheet" type="text/css" href="../css/list.css" />
         <style type="text/css">
           .dialog_table {background-color:#F1F5FB; border: 1px solid #95AEC8; margin-top:40px; margin-left:auto; margin-right:auto}
           .field {text-align:right; padding-right:6px; width:120px}
