@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
     $oauth = new oauth($configObject);
     $storage = $oauth->get_storage();
     $storage->setClientDetails($client, $secret, $uri, null, null, $userid);
-    
+
     $manage = array('modulemanagement', 'usermanagement', 'assessmentmanagement',
             'coursemanagement', 'schoolmanagement', 'facultymanagement');
     foreach ($manage as $management) {
@@ -87,15 +87,24 @@ if (isset($_POST['submit'])) {
     exit();
 } else {
     $users = array();
-    $result = $mysqli->prepare('SELECT id, username FROM users'
-        . " WHERE roles like 'Staff%'");
+    $sql = "
+    SELECT DISTINCT
+        u.id, username 
+    FROM 
+        users u
+        JOIN user_roles ur ON u.id = ur.userid
+        JOIN roles r ON r.id = ur.roleid
+    WHERE 
+        r.name = 'Staff'
+    ";
+    $result = $mysqli->prepare($sql);
     $result->execute();
     $result->bind_result($id, $username);
     while ($result->fetch()) {
         $users[$id] = $username;
     }
     $result->close();
-    
+
     $clientperms = array();
     $result = $mysqli->prepare('SELECT action FROM permissions');
     $result->execute();

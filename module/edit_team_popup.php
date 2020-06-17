@@ -74,9 +74,22 @@ if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
   $staff_no = 0;
   $old_letter = '';
 
-  $tmp_role = 'Staff%';
+  $tmp_role = 'Staff';
 
-  $result = $mysqli->prepare("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND roles LIKE ? AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
+  $sql = "
+    SELECT DISTINCT 
+        u.id, u.surname, u.initials, u.first_names, u.title 
+    FROM 
+        users u
+        JOIN user_roles ur ON u.id = ur.userid
+        JOIN roles r ON r.id = ur.roleid
+    WHERE 
+        u.surname != '' AND grade != 'left' AND u.user_deleted IS NULL 
+        AND r.name = ?
+    ORDER BY
+        u.surname, u.initials
+  ";
+  $result = $mysqli->prepare($sql);
   $result->bind_param('s', $tmp_role);
   $result->execute();
   $result->store_result();

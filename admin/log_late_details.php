@@ -31,9 +31,9 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-    
+
   <title>Rog&#333;: <?php echo $string['loglatedetails'] ?></title>
-    
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
@@ -50,7 +50,7 @@
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 
@@ -61,7 +61,7 @@
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
   <div class="page_title"><?php echo $string['loglatedetails'] ?></div>
 </div>
-  
+
 <table class="header" id="maindata">
 <thead>
 <tr>
@@ -72,19 +72,32 @@
 </thead>
 <tbody>
 <?php
-  $icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif');
-  $data = array();
+    $icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif');
+    $data = array();
 
-  $result = $mysqli->prepare("SELECT DISTINCT paper_type, paper_title, paperID, userID FROM log_metadata, log_late, properties, users WHERE log_late.metadataID = log_metadata.id AND log_metadata.paperID = properties.property_id AND log_metadata.userID = users.id AND (roles LIKE '%Student%' OR roles LIKE '%graduate%')");
-  $result->execute();
-  $result->bind_result($paper_type, $paper_title, $paperID, $uID);
+    $sql = "
+    SELECT DISTINCT 
+        paper_type, paper_title, paperID, lm.userID 
+    FROM 
+        log_metadata lm
+        JOIN log_late ll ON ll.metadataID = lm.id
+        JOIN properties p ON lm.paperID = p.property_id
+        JOIN users u ON lm.userID = u.id
+        JOIN user_roles ur ON u.id = ur.userid
+        JOIN roles r ON r.id = ur.roleid
+    WHERE
+        r.name IN ('Student', 'graduate')
+    ";
+    $result = $mysqli->prepare($sql);
+    $result->execute();
+    $result->bind_result($paper_type, $paper_title, $paperID, $uID);
 while ($result->fetch()) {
     $data[$paperID]['paper_title'] = $paper_title;
     $data[$paperID]['paper_type'] = $paper_type;
     $data[$paperID]['students'][] = $uID;
 }
   $result->close();
-  
+
 foreach ($data as $paperID => $row) {
     echo "<tr><td class=\"icon\"><a href=\"../paper/details.php?paperID=$paperID\"><img src=\"../artwork/" . $icons[$row['paper_type']] . "\" width=\"16\" height=\"16\" alt=\"\" /></a></td><td><a href=\"../paper/details.php?paperID=$paperID\">" . $row['paper_title'] . '</a></td><td>' . count($row['students']) . '</td></tr>';
 }

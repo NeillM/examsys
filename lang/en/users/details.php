@@ -113,6 +113,8 @@ $string['classifiedinfo'] = 'classified information';
 $string['custom'] = 'Custom';
 $string['Access Denied'] = 'Access Denied';
 $string['resitcandidate'] = 'Resit candidate';
+$string['roles'] = 'Roles';
+$string['rolesavefailure'] = 'The roles could not be updated.';
 
 //demo
 $string['demo1'] = 'Cities';

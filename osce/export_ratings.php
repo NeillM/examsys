@@ -48,7 +48,13 @@ FROM (log4, log4_overall, questions, users student, users examiner) LEFT JOIN si
 WHERE log4.log4_overallID = log4_overall.id AND log4.q_id = questions.q_id AND q_paper = ?
  AND student.id = log4_overall.userID
  AND examiner.id = log4_overall.examinerID
- AND (student.roles = 'Student' OR student.roles = 'graduate') AND student.grade LIKE ?
+ AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE student.id = ur.userid AND r.name IN ('Student', 'graduate')
+)
+ AND student.grade LIKE ?
  AND started >= ? AND started <= ?
 SQL;
 $result = $mysqli->prepare($sql);
@@ -72,7 +78,7 @@ while ($result->fetch()) {
     $user_no++;
 }
   $result->close();
-  
+
   $row_written = 0;
 foreach ($log_array as $individual) {
     $tmp_user_ID = $individual['username'];
@@ -88,7 +94,7 @@ foreach ($log_array as $individual) {
         }
         echo ",Overall Score,Feedback\n";
     }
-     
+
     // Write out the raw data.
     echo $paper_title . ',' . $individual['examiner'] . ',' . $individual['gender'] . ',' . $individual['title'] . ',' . $individual['surname'] . ',' . $individual['initials'] . ',' . $individual['username'] . ',' . $individual['student_id'] . ',' . $individual['course'] . ',' . $individual['year'] . ',' . $individual['started'];
     foreach ($questions as $question) {

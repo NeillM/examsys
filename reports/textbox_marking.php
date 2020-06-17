@@ -120,13 +120,24 @@ echo draw_toprightmenu();
 $candidate_no = 0;
 if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
-    $result = $mysqli->prepare('SELECT DISTINCT lm.userID FROM log_metadata lm '
-        . 'INNER JOIN users u '
-        . 'ON lm.userID = u.id '
-        . 'WHERE lm.paperID = ? AND '
-        . 'DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? '
-        . 'AND lm.started <= ? '
-        . "AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
+    $sql = "
+    SELECT DISTINCT
+        lm.userID
+    FROM
+        log_metadata lm
+        INNER JOIN users u ON lm.userID = u.id
+    WHERE 
+        lm.paperID = ?
+        AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
+        AND lm.started <= ?
+        AND EXISTS (
+            SELECT 1
+            FROM user_roles ur
+            JOIN roles r ON ur.roleid = r.id
+            WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+        )
+    ";
+    $result = $mysqli->prepare($sql);
     $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
     $result->bind_result($tmp_userID);
@@ -156,7 +167,12 @@ SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, r
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
+  AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+  )
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -167,7 +183,12 @@ SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, r
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
+  AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+  )
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -183,7 +204,12 @@ FROM (log{$paper_type} l, log_metadata lm, users u)
 LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
 WHERE lm.paperID = ?
 AND l.metadataID = lm.id
-AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')
+AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+)
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?

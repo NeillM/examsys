@@ -65,6 +65,8 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color, 
         $tab_array[] = 'Metadata';
     }
 
+    $tab_array[] = 'roles';
+
     foreach ($tab_array as $individual_tab) {
         if ($individual_tab == $current_tab) {
             $html .= '<td class="tabon" data-tabid="' . $individual_tab . '_tab' . '">' . $string[mb_strtolower($individual_tab)] . '</td>';
@@ -118,6 +120,19 @@ function formatsec($seconds)
 $updateadmin = param::optional('updateadmin', null, param::ALPHA, param::FETCH_POST);
 $updateaccess = param::optional('updateaccess', null, param::ALPHA, param::FETCH_POST);
 $save_metadata = param::optional('save_metadata', null, param::ALPHA, param::FETCH_POST);
+$save_roles = param::optional('updateroles', null, param::ALPHA, param::FETCH_POST);
+
+// SysAdmins can edit the role of anyone.
+$is_sysadmin = $userObject->has_role('SysAdmin');
+
+// An Admin can change the roles of users as long as they are not a AysAdmin.
+$user_roles = Role::getUsersRoles($userID);
+$is_admin = $userObject->has_role('Admin');
+$user_requires_sysadmin = (
+        (array_search('SysAdmin', $user_roles) !== false) or
+        (array_search('SysCron', $user_roles) !== false)
+);
+$can_edit_roles = ($is_sysadmin or ($is_admin and !$user_requires_sysadmin));
 
 if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     UserUtils::clear_admin_access($userID, $mysqli);
@@ -211,7 +226,36 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
         $result->execute();
         $result->close();
     }
+} elseif (!is_null($save_roles) and $can_edit_roles) {
+    // Fetch the roles the user will have.
+    $roles = param::optional("roles", [], param::ALPHA, param::FETCH_POST);
+
+    $can_change_roles = ($is_sysadmin or (
+            // Test that roles that require SysAdmin privileges are not present.
+            (array_search('SysAdmin', $roles) === false) and
+            (array_search('SysCron', $roles) === false)
+    ));
+
+    if ($can_change_roles) {
+        // The user is allowed to add all the selected roles.
+        try {
+            Role::validateCombination($roles);
+            Role::updateRoles($userID, $roles);
+        } catch (InvalidRole $e) {
+            // Something went wrong.
+            $role_save_error = true;
+        }
+    } else {
+        // An Admin tried to add the SysAdmin role.
+        $role_save_error = true;
+    }
+
+    // Update the user roles.
+    $user_roles = Role::getUsersRoles($userID);
 }
+
+// We want to be able to use the renderer anywhere when generating the page.
+$render = new render($configObject);
 ?>
 <!DOCTYPE html>
 <html>
@@ -318,11 +362,11 @@ if (stripos($user_details['roles'], 'Student') !== false) {
   echo "</tr>\n";
 if (stripos($user_details['roles'], 'Student') !== false) {
     echo '<tr><td class="field">' . $string['course'] . '</td><td>' . $user_details['grade'] . ' - ' . $course_details['description'] . '</td>';
-    echo '<td class="field">' . $string['status'] . '</td><td>' . $user_details['roles'] . '</td>';
+    echo '<td class="field"></td>';
     echo "</tr>\n";
 } else {
     echo '<tr><td class="field">' . $string['type'] . '</td><td>' . $user_details['grade'] . '</td>';
-    echo '<td class="field">' . $string['status'] . '</td><td>' . $user_details['roles'] . '</td>';
+    echo '<td class="field"></td>';
     echo "</tr>\n";
 }
 if ($demo) {
@@ -1045,12 +1089,40 @@ if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_I
     echo "<tr><td colspan=\"4\" style=\"color:#808080; text-align:center\">&lt;classified information&gt;</td></tr>\n";
 }
 
-  $mysqli->close();
+?>
+</table>
+<?php
+if ($tab == 'roles') {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"roles_tab\" style=\"width:100%\">\n";
+} else {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"roles_tab\" style=\"width:100%; display:none\">\n";
+}
+echo drawTabs('roles', 1, '', $user_details['roles'], $bg_color, $string);
+echo '<tr><td class="coltitle">&nbsp;</td></tr>' . "\n";
+echo '<tr><td>';
+
+if ($can_edit_roles) {
+    $roles_template = 'users/details/editroles.html';
+} else {
+    $roles_template = 'users/details/roles.html';
+}
+
+$roledata = [
+    'error' => isset($role_save_error),
+    'rolelist' => Role::listByGrouping(),
+    'userroles' => $user_roles,
+    'userid' => $userID,
+];
+$render->render($roledata, $string, $roles_template);
+
+echo '</td></tr>';
 ?>
 </table>
 </div>
 <?php
-$render = new render($configObject);
+
+$mysqli->close();
+
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $dataset['attributes']['userid'] = $userID;
@@ -1059,6 +1131,7 @@ $dataset['attributes']['email'] = urlencode($user_details['email']);
 $dataset['attributes']['sid'] = $student_id;
 $dataset['attributes']['searchusername'] = $search_username;
 $dataset['attributes']['searchsurname'] = $search_surname;
+$dataset['attributes']['sysadmin'] = $is_sysadmin;
 $render->render($dataset, array(), 'dataset.html');
 ?>
 </body>

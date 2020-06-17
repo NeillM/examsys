@@ -67,12 +67,11 @@ class userutilstest extends unittestdatabase
         // Student ID exists.
         $this->assertEquals(true, UserUtils::update_user($this->student['id'], 'student1', '12345678', 'Mr', 'Joe', 'Baxter', 'joseph.baxter@example.com', 'TEST', 'Male', 1, 'Student', '12345678', $this->db));
         // Check tables update as expected.
-        $querytable = $this->query(array('columns' => array('username', 'roles', 'grade', 'title', 'initials', 'surname', 'first_names', 'email', 'gender'),
+        $querytable = $this->query(array('columns' => array('username', 'grade', 'title', 'initials', 'surname', 'first_names', 'email', 'gender'),
             'table' => 'users', 'where' => array(array('column' => 'id', 'value' => $this->student['id']))));
         $expectedtable = array(
             0 => array(
                 'username' => 'student1',
-                'roles' => 'Student',
                 'grade' => 'TEST',
                 'title' => 'Mr',
                 'initials' => 'J',
@@ -81,6 +80,13 @@ class userutilstest extends unittestdatabase
                 'email' => 'joseph.baxter@example.com',
                 'gender' => 'Male'
             ),
+        );
+        $this->assertEquals($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('roleid'), 'table' => 'user_roles', 'where' => array(array('column' => 'userid', 'value' => $this->student['id']))));
+        $expectedtable = array(
+                0 => array (
+                        'roleid' => 4,
+                ),
         );
         $this->assertEquals($expectedtable, $querytable);
         $querytable = $this->query(array('columns' => array('userID', 'student_id'), 'table' => 'sid', 'where' => array(array('column' => 'userID', 'value' => $this->student['id']))));

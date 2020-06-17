@@ -127,12 +127,24 @@ class webServiceRestAPI extends restAPI
 
     public function getUserID($username, $staff = false)
     {
+        $sql = "
+        SELECT 
+            u.id 
+        FROM 
+            users u
+            JOIN user_roles ur ON ur.userid = u.id
+            JOIN roles r ON r.id = ur.roleid
+        WHERE 
+            u.username = ?
+            AND r.name = ?
+        ";
+        $res = $this->db->prepare($sql);
         if ($staff == true) {
-            $res = $this->db->prepare("SELECT id FROM users WHERE username = ? AND roles LIKE '%Staff%'");
+            $role = 'Staff';
         } else {
-            $res = $this->db->prepare("SELECT id FROM users WHERE username = ? AND roles = 'Student'");
+            $role = 'Student';
         }
-        $res->bind_param('s', $username);
+        $res->bind_param('ss', $username, $role);
         $res->execute();
         $res->bind_result($tmp_userID);
         $res->fetch();
@@ -641,7 +653,11 @@ class webServiceRestAPI extends restAPI
         } else {
             $studentid = '';
         }
-        if ($roles != 'Student' and $roles != 'Staff' and $roles != 'Staff,Admin' and $roles != 'Staff,SysAdmin') {
+
+        try {
+            $rolearray = explode(',', $roles);
+            Role::validateCombination($rolearray);
+        } catch (InvalidRole $e) {
             return 'Incorrect value for roles: ' . $roles;
         }
 

@@ -115,7 +115,12 @@ AND lm.student_grade LIKE ?
 AND lm.year LIKE ?
 AND q.q_type = 'textbox'
 AND lm.started >= ? AND lm.started <= ?
-AND (u.roles = 'Student' OR u.roles = 'graduate')
+AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+)
 ORDER BY l.screen, p.display_pos
 SQL;
 $result = $mysqli->prepare($sql);

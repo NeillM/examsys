@@ -72,7 +72,13 @@ FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
 INNER JOIN questions q ON l.q_id = q.q_id
 INNER JOIN users u on lm.userID = u.id
 WHERE lm.paperID = ?
-AND (u.roles='Student' OR u.roles='graduate') $excluded
+AND EXISTS (
+    SELECT 1 
+    FROM user_roles ur
+    JOIN roles r ON ur.roleid = r.id
+    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+)
+$excluded
 AND u.grade LIKE ?
 AND lm.started >= ? AND lm.started <= ?
 SQL;

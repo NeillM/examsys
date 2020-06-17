@@ -231,17 +231,19 @@ function add_users_from_file($fileName)
                 $salt = UserUtils::get_salt();
                 $encpw_password = \encryp::encpw($salt, $username, $password);
 
-                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, first_names = ?, surname = ?, grade = ?, password = ?, roles = ? WHERE username = ?');
-                $result->bind_param('ssssssss', $year, $title, $forname, $surname, $course, $encpw_password, $role, $username);
+                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, first_names = ?, surname = ?, grade = ?, password = ? WHERE username = ?');
+                $result->bind_param('sssssss', $year, $title, $forname, $surname, $course, $encpw_password, $username);
                 $result->execute();
                 $result->close();
             } else {
                 // No new password was provided in the CSV.
-                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, first_names = ?, surname = ?, grade = ?, roles = ? WHERE username = ?');
-                $result->bind_param('sssssss', $year, $title, $forname, $surname, $course, $role, $username);
+                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, first_names = ?, surname = ?, grade = ? WHERE username = ?');
+                $result->bind_param('ssssss', $year, $title, $forname, $surname, $course, $username);
                 $result->execute();
                 $result->close();
             }
+
+            Role::updateRoles($tmp_userID, explode(',', $role));
 
             $users['updated'][] = $username;
             $users['courses'][$course] = $course;

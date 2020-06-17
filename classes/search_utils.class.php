@@ -113,7 +113,13 @@ class search_utils
     {
         $select = "SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users";
         $order = 'ORDER BY surname, initials';
-        $roles = "(roles LIKE 'Staff%' OR roles = 'Inactive Staff')";
+        $roles = "
+        EXISTS (
+            SELECT 1 
+            FROM user_roles ur JOIN roles r ON r.id = ur.roleid 
+            WHERE r.name IN ('Staff', 'Inactive Staff') AND users.id = ur.userid
+        )
+        ";
         if ($userObj->has_role(array('SysAdmin','Admin'))) {
             $stmt = $db->prepare("$select WHERE $roles $order");
         } else {

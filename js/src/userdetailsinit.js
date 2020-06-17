@@ -18,10 +18,12 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['user', 'colourpicker', 'osce', 'classtotals', 'menu', 'jquery', 'jquerytablesorter'], function (USER, PICKER, OSCE, CLASSTOTALS, MENU, $) {
+requirejs(['user', 'colourpicker', 'osce', 'classtotals', 'menu', 'rolelist', 'jquery', 'jquerytablesorter'], function (USER, PICKER, OSCE, CLASSTOTALS, MENU, ROLELIST, $) {
     var user = new USER();
     var picker = new PICKER();
     picker.init();
+
+    ROLELIST.init($('#dataset').data('sysadmin'));
 
     user.updateAccessDemo();
 

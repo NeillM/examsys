@@ -2084,7 +2084,12 @@ if ($users_on_modules != '' and isset($_GET['repmodule']) and $_GET['repmodule']
 }
 
 if ($_GET['studentsonly'] == 1 or $paper_type == '0') {
-    $roles_sql = " AND (users.roles = 'Student' OR users.roles = 'graduate')";
+    $roles_sql = " AND EXISTS (
+                        SELECT 1 
+                        FROM user_roles ur
+                        JOIN roles r ON ur.roleid = r.id
+                        WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
+                    )";
 } else {
     $roles_sql = '';
 }

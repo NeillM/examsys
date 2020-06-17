@@ -408,7 +408,7 @@ class UserSearchTest extends testing\unittest\unittestdatabase
             'Invigilators' => [['setSearchInvigilators'], ['invigilator']],
             'Leavers' => [['setSearchLeavers'], ['leaver']],
             'Locked' => [['setSearchLocked'], ['locked']],
-            'Staff' => [['setSearchStaff'], ['staff']],
+            'Staff' => [['setSearchStaff'], ['admin', 'admin2', 'staff', 'standard']],
             'Standard' => [['setSearchStandard'], ['standard']],
             'Students' => [['setSearchStudents'], ['student', 'studentneeds', 'student1', 'student2']],
             'Suspended' => [['setSearchSuspended'], ['suspended']],

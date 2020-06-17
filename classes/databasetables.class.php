@@ -116,7 +116,7 @@ QUERY;
           PRIMARY KEY (`id`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
-        
+
         $this->tableList['config'] = <<<QUERY
         CREATE TABLE `config` (
           `component` varchar(100) NOT NULL DEFAULT 'core',
@@ -1496,7 +1496,6 @@ QUERY;
           `title` varchar(30) default NULL,
           `username` char(60) NOT NULL,
           `email` char(65) default NULL,
-          `roles` char(40) default NULL,
           `id` int(10) unsigned NOT NULL auto_increment,
           `first_names` char(60) default NULL,
           `gender` enum('Male','Female', 'Other') default NULL,
@@ -1505,8 +1504,7 @@ QUERY;
           `user_deleted` datetime default NULL,
           `password_expire` int(11) unsigned default NULL,
           PRIMARY KEY (`id`),
-          UNIQUE KEY `username_index` (`username`),
-          KEY `idx_roles` (`roles`)
+          UNIQUE KEY `username_index` (`username`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1694,8 +1692,26 @@ QUERY;
             PRIMARY KEY (`paperid`, `setting`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
+
+        $this->tableList['roles'] = <<<QUERY
+        CREATE TABLE `roles` (
+            `id` int(4) NOT NULL auto_increment,
+            `name` varchar(30) NOT NULL,
+            `grouping` varchar(30) NOT NULL,
+            `group` INT(4) NOT NULL,
+            PRIMARY KEY (`id`)
+        ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
+
+        $this->tableList['user_roles'] = <<<QUERY
+        CREATE TABLE `user_roles` (
+            `userID` int(10) unsigned NOT NULL,
+            `roleID` int(4) NOT NULL,
+            PRIMARY KEY (`userID`, `roleID`)
+        ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
     }
-  
+
     function next()
     {
         if (count($this->tableList) > 0) {

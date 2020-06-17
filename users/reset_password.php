@@ -66,8 +66,19 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
     if (count($errors) == 0) {
         $email = $_POST['email'];
         $password = $_POST['password'];
-        // Check if email address matches that of the user in the token record
-        $stmt = $mysqli->prepare('SELECT username, email, roles FROM users WHERE id = ?');
+        // Check if email address matches that of the user in the token record.
+        $sql = "
+        SELECT DISTINCT
+            u.username, u.email, GROUP_CONCAT(r.name  SEPARATOR ',')
+        FROM
+            users u
+            JOIN user_roles ur ON ur.userid = u.id
+            JOIN roles r ON r.id = ur.roleid
+        WHERE
+            u.id = ?
+        GROUP BY u.id
+        ";
+        $stmt = $mysqli->prepare($sql);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $stmt->store_result();

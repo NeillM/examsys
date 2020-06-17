@@ -73,7 +73,7 @@ switch ($_GET['type']) {
         echo $string['cohortperformance'];
         break;
 }
-    
+
     $extra = "&school=$schoolID&type=" . $_GET['type'];
 ?></span></div>
 </div>
@@ -108,7 +108,7 @@ if (count($moduleIDs) > 0) {
     get_feedback_release_dates($date_range, $moduleIDs, $papers, $mysqli);
 
     count_feedback_views($papers, $mysqli);
-    
+
     foreach ($papers as $paperID => $paper_details) {
         echo "<tr><td><a href=\"../paper/details.php?paperID=$paperID\">" . $paper_details['paper_title'] . '</a></td>';
         if (isset($paper_details['feedback_date'])) {
@@ -128,14 +128,25 @@ if (count($moduleIDs) > 0) {
 
 function count_attempts($paperID, $db)
 {
-    $sql = "SELECT COUNT(log_metadata.id) FROM log_metadata, users WHERE log_metadata.userID = users.id and roles IN ('student', 'graduate') AND paperID = ?";
+    $sql = "
+    SELECT 
+        COUNT(DISTINCT lma.id) 
+    FROM 
+        log_metadata lm, 
+        JOIN users u ON lm.userID = u.id
+        JOIN user_roles ur ON ur.userid = u.id
+        JOIN roles r ON r.id = ur.roleid
+    WHERE 
+        r.name IN ('Student', 'graduate')
+        AND lm.paperID = ?
+    ";
     $result = $db->prepare($sql);
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($attempts);
     $result->fetch();
     $result->close();
-    
+
     return $attempts;
 }
 
@@ -156,7 +167,7 @@ function count_feedback_views(&$papers, $db)
 function get_modules($schoolID, $db)
 {
     $moduleIDs = array();
-    
+
     $result = $db->prepare('SELECT id FROM modules WHERE schoolid = ? AND active = 1 AND mod_deleted IS NULL');
     $result->bind_param('i', $schoolID);
     $result->execute();
@@ -165,16 +176,16 @@ function get_modules($schoolID, $db)
         $moduleIDs[] = $id;
     }
     $result->close();
-    
+
     return $moduleIDs;
 }
 
 function get_papers_for_school($date_range, $moduleIDs, $db)
 {
     // Get the papers.
-    
+
     $papers = array();
-    
+
     $result = $db->prepare("SELECT DISTINCT properties.property_id, paper_title, start_date, end_date FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND paper_type = '2' AND idMod IN (" . implode(',', $moduleIDs) . ') AND deleted IS NULL GROUP BY property_id ORDER BY paper_title');
     $result->execute();
     $result->bind_result($paperID, $paper_title, $start_date, $end_date);
@@ -202,7 +213,7 @@ function get_feedback_release_dates($date_range, $moduleIDs, &$papers, $db)
             $report_type = 'cohort_performance';
             break;
     }
-    
+
     $sql = "SELECT feedback_release.paper_id, idfeedback_release, type, DATE_FORMAT(date, '" . $configObject->get('cfg_long_date_time') . "') FROM properties, properties_modules, feedback_release WHERE feedback_release.paper_id = properties.property_id AND properties.property_id = properties_modules.property_id $date_range AND paper_type = '2' AND feedback_release.type='$report_type' AND idMod IN (" . implode(',', $moduleIDs) . ') AND deleted IS NULL';
     $result = $db->prepare($sql);
     $result->execute();

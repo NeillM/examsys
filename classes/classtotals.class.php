@@ -1227,9 +1227,12 @@ class ClassTotals
               AND
                     modules_student.idMod = modules.id
               AND
-                    users.roles
-              LIKE
-                    '%Student%'
+                    EXISTS (
+                        SELECT 1 
+                        FROM user_roles ur 
+                        JOIN roles r ON ur.roleid = r.id 
+                        WHERE r.name = 'Student' AND ur.userid = users.id
+                    )
               AND
                     idMod
               IN
@@ -1333,7 +1336,8 @@ class ClassTotals
         if ($this->studentsonly == 0) {
             $roles_sql = '';
         } else {
-            $roles_sql = " AND (users.roles = 'Student' OR users.roles = 'graduate')";
+            $roles_sql = " AND EXISTS (SELECT 1 FROM user_roles ur JOIN roles r ON ur.roleid = r.id 
+                                WHERE r.name IN ('Student', 'graduate') AND users.id = ur.userid)";
         }
 
         $data_array = array();

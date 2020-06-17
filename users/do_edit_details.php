@@ -99,19 +99,6 @@ if (!$errors) {
 
     if (false === UserUtils::update_user($userID, $username, '', $title, $first_names, $surname, $email, $grade, $gender, $year, $tmp_roles, $sid, $mysqli, $initials)) {
         $errors = $string['unabletosaveuserdetails'];
-    } else {
-        // Remove from teams if 'left'.
-        if (mb_strtolower($tmp_roles) == 'left') {
-            UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
-        }
-
-        // Remove from admin access if role changed from Admin
-        $prev_roles = param::required('prev_roles', param::TEXT, param::FETCH_POST);
-        if ($userObject->has_role('SysAdmin')) {
-            if ($tmp_roles != $prev_roles and $prev_roles == 'Staff,Admin') {
-                UserUtils::clear_admin_access($userID, $mysqli);
-            }
-        }
     }
 }
 if (!$errors) {

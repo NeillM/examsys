@@ -129,52 +129,10 @@ if ($user_details['gender'] == 'Male') {
 }
   echo '</select></td></tr>';
 
-  echo '<tr><td>' . $string['status'] . '</td><td><select name="roles">';
-  $old_optgroup = '';
-
-  $roles_array = array('#Staff', 'Staff');
-if ($userObject->has_role('SysAdmin')) {
-    $roles_array[] = 'Staff,Admin';
-    $roles_array[] = 'Staff,SysAdmin';
-} elseif ($userObject->has_role('Admin')) {
-    $roles_array[] = 'Staff,Admin';
-}
-  $roles_array[] = 'Staff,Student';
-  $roles_array[] = 'External Examiner';
-  $roles_array[] = 'Internal Reviewer';
-  $roles_array[] = 'Staff,Standards Setter';
-  $roles_array[] = 'Invigilator';
-  $roles_array[] = 'Inactive Staff';
-  $roles_array[] = '#Students';
-  $roles_array[] = 'Student';
-  $roles_array[] = 'Graduate';
-  $roles_array[] = 'Left';
-  $roles_array[] = 'Suspended';
-  $roles_array[] = 'Locked';
-
-foreach ($roles_array as $value) {
-    if (mb_substr($value, 0, 1) == '#') {
-        if ($old_optgroup != '') {
-            echo "</optgroup>\n";
-        }
-        echo '<optgroup label="' . $string[mb_substr($value, 1)] . "\">\n";
-        $old_optgroup = $value;
-    } else {
-        $display_val = str_replace(' ', '', $value);
-        $display_val = str_replace(',', '', $display_val);
-        $display_val = $string[mb_strtolower($display_val)];
-        if (mb_strtolower($value) == mb_strtolower($user_details['roles'])) {
-            echo "<option value=\"$value\" selected>$display_val</option>";
-        } else {
-            echo "<option value=\"$value\">$display_val</option>";
-        }
-    }
-}
-  echo "</optgroup>\n</select>\n";
-  echo '<input type="hidden" name="prev_roles" value="' . $user_details['roles'] . "\" /></td></tr>\n";
-  echo '<input type="hidden" name="prev_username" value="' . $user_details['username'] . "\" /></td></tr>\n";
-  echo '<input type="hidden" name="userID" value="' . $userID . "\" /></td></tr>\n";
-  echo '<tr><td>' . $string['photo'] . '</td><td><input type="file" name="photofile" /></td></tr>';
+  echo '<tr><td><input type="hidden" name="roles" value="' . $user_details['roles'] . '" />';
+  echo '<input type="hidden" name="prev_username" value="' . $user_details['username'] . '" />';
+  echo '<input type="hidden" name="userID" value="' . $userID . '" />';
+  echo '' . $string['photo'] . '</td><td><input type="file" name="photofile" /></td></tr>';
 ?>
   </table>
 

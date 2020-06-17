@@ -31,7 +31,7 @@ class UserObject extends RogoStaticSingleton
     protected static $inst = null;
     protected static $class_name = 'UserObject';
     protected static $dont_construct = true;
-  
+
     private $password;
     private $userID;
     private $userroles;
@@ -73,7 +73,7 @@ class UserObject extends RogoStaticSingleton
     private $dismiss;
 
     private $impersonateduser;
-  
+
     /** @var string Language component name. */
     protected $langcomponent = 'classes/userobject';
     /** @var array language strings */
@@ -106,7 +106,7 @@ class UserObject extends RogoStaticSingleton
         $this->db = & $db;
         $this->configObj = & $configObject;
         self::$inst = $this;
-        
+
         $langpack = new \langpack();
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);
     }
@@ -318,7 +318,7 @@ class UserObject extends RogoStaticSingleton
 
         return $this->staffModules;
     }
-  
+
     /**
      * get the staff members teams only (not a list of all modules thay can access
      * just their temas) used in /staff/index.php
@@ -436,10 +436,10 @@ class UserObject extends RogoStaticSingleton
             $this->staffModules[$idMod] = $moduleID;
         }
         $result->close();
-    
+
         return $this->staffModules;
     }
-  
+
     /**
      * loads the modules a staff member is explicitly on the team for
      * used in /staff/index.php
@@ -461,14 +461,14 @@ class UserObject extends RogoStaticSingleton
 
         $result->bind_param('i', $this->userID);
         $result->execute();
-    
+
         $result->bind_result($idMod, $moduleID, $fullName);
         while ($result->fetch()) {
             $this->staffTeamModules[$idMod]['code'] = $moduleID;
             $this->staffTeamModules[$idMod]['fullName'] = $fullName;
         }
         $result->close();
-    
+
         return $this->staffTeamModules;
     }
 
@@ -530,11 +530,11 @@ class UserObject extends RogoStaticSingleton
     {
         return $this->first_names;
     }
-  
+
     public function get_first_first_name()
     {
         $parts = explode(' ', $this->first_names);
-    
+
         return $parts[0];
     }
 
@@ -547,7 +547,7 @@ class UserObject extends RogoStaticSingleton
     {
         return $this->surname;
     }
-  
+
     public function get_temp_surname()
     {
         return $this->temp_surname;
@@ -790,14 +790,14 @@ class UserObject extends RogoStaticSingleton
     public function store_original_user()
     {
         $data = new stdClass();
-    
+
         $data->title            = $this->title;
         $data->initials         = $this->initials;
         $data->username         = $this->username;
         $data->surname          = $this->surname;
         $data->email            = $this->email;
         $data->roles            = $this->roles;
-    
+
         $this->impersonatedfrom = $data;
     }
 
@@ -837,7 +837,14 @@ class UserObject extends RogoStaticSingleton
         $this->userID = $userID;
         $this->impersonate = false;
 
-        $stmt = $this->db->prepare('SELECT roles, title, initials, surname, first_names, username, email, grade, yearofstudy, special_needs FROM users WHERE user_deleted IS NULL AND id = ?');
+        $sql = "SELECT GROUP_CONCAT(r.name SEPARATOR ','), u.title, u.initials, u.surname, u.first_names, u.username, u.email, 
+                       u.grade, u.yearofstudy, u.special_needs 
+                FROM users u
+                LEFT JOIN user_roles ur ON u.id = ur.userid
+                JOIN roles r ON r.id = ur.roleid
+                WHERE u.user_deleted IS NULL AND u.id = ?
+                GROUP BY u.id";
+        $stmt = $this->db->prepare($sql);
         $stmt->bind_param('i', $userID);
         $stmt->execute();
         $stmt->store_result();
@@ -881,7 +888,7 @@ class UserObject extends RogoStaticSingleton
                 $this->breaks = false;
             }
         }
-    
+
         // Add temporary account data.
         if ($this->is_temporary_account()) {
             $stmt = $this->db->prepare('SELECT title, first_names, surname FROM temp_users WHERE assigned_account = ?');
@@ -928,7 +935,7 @@ class UserObject extends RogoStaticSingleton
             $result = $this->db->change_user($cfg_db_inv_user, $cfg_db_inv_passwd, $cfg_db_database);
         } else {
             $result = false;
-            
+
             // new security routine
             $notice = UserNotices::get_instance();
             if (!is_array($this->roles) or (isset($this->roles['']) and $this->roles[''] == 1)) {
@@ -954,7 +961,7 @@ class UserObject extends RogoStaticSingleton
             }
         }
     }
-  
+
     /**
      * Check if the user has completed a paper
      * @param integer $id - paper id
