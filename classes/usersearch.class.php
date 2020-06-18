@@ -110,14 +110,14 @@ class UserSearch extends Search
         // Query for finding students.
         $student_tables = $this->generateStudentTableSQL();
         $student_where = SQLFragment::combine(' AND ', $not_deleted, $year, $studentmods, $name, $username, $idnumber, $roles);
-        $student_query = "SELECT $fields FROM $student_tables WHERE $student_where->sql GROUP BY users.id, sid.student_id";
+        $student_query = "SELECT $fields FROM $student_tables WHERE $student_where->sql GROUP BY users.id, sid.student_id, special_needs.special_id";
 
         // Query for finding staff.
         $staff_tables = $this->generateStaffTableSQL();
         // Need to get only staff,student roles to avoid duplication.
         $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffyear, $staffmods, $name, $username, $idnumber, $roles);
         $where = str_replace('Student', 'Staff,Student', $staff_where->sql);
-        $staff_query = "SELECT $fields FROM $staff_tables WHERE $where GROUP BY users.id, sid.student_id";
+        $staff_query = "SELECT $fields FROM $staff_tables WHERE $where GROUP BY users.id, sid.student_id, special_needs.special_id";
 
         $sql = "($student_query) UNION ($staff_query) ORDER BY $this->orderby LIMIT $this->limit OFFSET $this->offset";
 
