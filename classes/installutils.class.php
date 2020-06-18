@@ -1633,7 +1633,6 @@ class InstallUtils
         $insert = self::$db->prepare($sql);
         $insert->execute();
         $insert->close();
-        var_dump($sql, self::$db->error, $insert);
     }
 
     /**
