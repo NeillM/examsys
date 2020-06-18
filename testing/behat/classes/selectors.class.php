@@ -59,7 +59,7 @@ class selectors
     'menu_section' => 'menu_section', //<div class="submenuheading"
     'navigation' => 'navigation', //<div class="breadcrumb"
     'paper_title' => 'paper_title', // PAPER_title => <div class="PAGE_title"
-    'content' => 'content', //<table id="sortable" class="header"
+    'main_content' => 'main_content',
     'admin_tool_link' => 'admin_tool_link',
     'pop_page_title' => 'pop_page_title',
     'menu_item' => 'menu_item',
@@ -104,7 +104,7 @@ XPATH
     ,'navigation' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' breadcrumb ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'content' => <<<XPATH
+    ,'main_content' => <<<XPATH
 //table[contains(concat(' ', normalize-space(@id), ' '), ' content ') and contains(normalize-space(.) , %locator%)]      
 XPATH
     ,'paper_title' => <<<XPATH

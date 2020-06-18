@@ -33,5 +33,6 @@ trait include_frontend
     use basic;
     use forms;
     use menu;
+    use pages;
     use paper;
 }
