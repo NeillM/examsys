@@ -2609,7 +2609,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 
         // Display any objectives mapped
-        echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $question, $q_type, $string, $mysqlidb);
+        echo display_mapped_objectives($moduleID, $calendar_year, $paperID, $paper[$question]['q_id'], $q_type, $string, $mysqlidb);
 
         if (isset($overrides[$paper[$question]['q_id']])) {
             $paper[$question]['mark'] = $overrides[$paper[$question]['q_id']]['adjmark'];
@@ -2650,14 +2650,32 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
     echo '</table>';
 }
 
-function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $question, $q_type, $string, $db)
+/**
+ * Generate mapped objectives html
+ * @param string $moduleID the module code
+ * @param integer $calendar_year the calendat year
+ * @param integer $paperID the paper identifier
+ * @param integer $q_id the question identifier
+ * @param string $q_type the question type
+ * @param array $string translations
+ * @param mysqli $db db connection
+ * @return string
+ */
+function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $q_type, $string, $db)
 {
     $html = '';
     if (count($moduleID) == 0) {
         return $html;
     }
 
-    if ($q_type != 'info' and $q_type != 'likert' and !isset($_GET['disable_mappings'])) {
+    // Check if module has ojbective mapping enabled.
+    $display_objectives = 0;
+    $module_details = module_utils::get_full_details_by_name($moduleID, $db);
+    if (mb_strpos($module_details['checklist'], 'mapping') !== false) {
+        $display_objectives = 1;
+    }
+    
+    if ($display_objectives == 1 and $q_type != 'info' and $q_type != 'likert') {
         $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $q_id, $db);
         if (count($objByModule) > 0) {
             $html .= "<br />\n<div class=\"objH\">" . $string['learningobjectives'] . "</div>\n<ul>\n";
