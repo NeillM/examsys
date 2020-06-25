@@ -88,7 +88,7 @@ class Role
     {
         if (is_null(static::$roles)) {
             // Cache the roles.
-            $sql = 'SELECT id, `name`, grouping, `group` FROM roles';
+            $sql = 'SELECT id, `name`, `grouping`, `group` FROM roles';
             $query = Config::get_instance()->db->prepare($sql);
             $query->execute();
             $query->bind_result($id, $role, $grouping, $group);
