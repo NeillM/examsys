@@ -244,8 +244,7 @@ class InvigilationTest extends unittestdatabase
         $lab_object = $lab->get_lab_based_on_client($this->pc['address']);
         $labend = new LogLabEndTime($lab_object->get_id(), $paper, $this->db);
         $timing = module_utils::modules_allow_timing($modules, $this->db);
-        // Datetime in mysql is in UTC.
-        $tz = new DateTimeZone('UTC');
+        $tz = new DateTimeZone($this->config->get('cfg_timezone'));
         $enddatetime = new DateTime($this->paper2['end_date'], $tz);
         $enddatetime->setTimezone(new DateTimeZone($paper->get_timezone()));
         $data = array(

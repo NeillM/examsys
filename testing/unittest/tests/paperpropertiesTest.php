@@ -624,8 +624,7 @@ class PaperPropertiesTest extends unittestdatabase
         $property_object = new PaperProperties($this->db);
         $property_object->set_property_id($this->pid1['id']);
         $property_object->set_paper_title($this->pid1['papertitle']);
-        // Datetime in mysql is in UTC.
-        $tz = new DateTimeZone('UTC');
+        $tz = new DateTimeZone($this->config->get('cfg_timezone'));
         $startdatetime = new DateTime($this->pid1['start_date'], $tz);
         $property_object->set_start_date($startdatetime->getTimestamp());
         $enddatetime = new DateTime($this->pid1['end_date'], $tz);
