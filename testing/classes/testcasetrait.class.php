@@ -80,9 +80,12 @@ trait testcasetrait
         }
         // Always need this academic year.
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $calendaryear = date('Y');
-        $academicyear = date('Y') . '/' . (date('y') + 1);
-        $datagenerator->create_academic_year(array('calendar_year' => $calendaryear, 'academic_year' => $academicyear));
+        // Which year is the current academic year depends on the time of the year.
+        // To be safe and allow the configuration setting to be tested we should generate an academic year that starts
+        // in both the current year (will be the adcademic year from the cut over date) and the previous year
+        // (which will be the current academic year until the cut over date)
+        $datagenerator->create_academic_year(['year' => 'last year']);
+        $datagenerator->create_academic_year(['year' => 'now']);
         // Base users.
         $datagenerator = $this->get_datagenerator('users', 'core');
         $datagenerator->create_user(array('surname' => 'Administrator', 'username' => 'admin', 'roles' => 'Staff,SysAdmin', 'grade' => 'University Lecturer',

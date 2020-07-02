@@ -41,38 +41,33 @@ class YearUtilsTest extends unittestdatabase
     public function testGenerateTabs(): void
     {
         $yearutils = new yearutils($this->db);
-        $currentsession = $yearutils->get_current_session();
-        // Current session may exist.
-        if ($yearutils->check_calendar_year($currentsession)) {
-            $expected[] = array(
-                'selected' => false,
-                'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $currentsession . '&month=05',
-                'tabyear' => $currentsession . '/' . date('y', strtotime($currentsession))
-            );
-        }
-        // Current year exists by default.
         $currentyear = date('Y');
-        $expected[] = array(
-            'selected' => true,
-            'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $currentyear . '&month=05',
-            'tabyear' => $currentyear . '/' . (date('y') + 1)
-        );
+        $expected = [
+            [
+                'selected' => false,
+                'url' => $_SERVER['PHP_SELF'] . '?calyear=' . ($currentyear - 1) . '&month=05',
+                'tabyear' => ($currentyear - 1) . '/' . substr($currentyear, -2),
+            ],
+            [
+                'selected' => true,
+                'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $currentyear . '&month=05',
+                'tabyear' => $currentyear . '/' . (substr(($currentyear + 1), -2)),
+            ],
+        ];
         $this->assertEquals($expected, $yearutils->generateTabs($currentyear, 'academic', '&month=05'));
 
-        // Current session may exist.
-        if ($yearutils->check_calendar_year($currentsession)) {
-            $expected2[] = array(
+        $expected2 = [
+            [
                 'selected' => false,
-                'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $currentsession,
-                'tabyear' => $currentsession
-            );
-        }
-        // Current year exists by default.
-        $expected2[] = array(
+                'url' => $_SERVER['PHP_SELF'] . '?calyear=' . ($currentyear - 1),
+                'tabyear' => ($currentyear - 1),
+            ],
+            [
                 'selected' => true,
                 'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $currentyear,
-                'tabyear' => $currentyear
-        );
+                'tabyear' => $currentyear,
+            ],
+        ];
         $this->assertEquals($expected2, $yearutils->generateTabs($currentyear, 'calendar', ''));
     }
 }

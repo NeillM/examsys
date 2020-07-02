@@ -42,8 +42,7 @@ class academic_year extends generator
     public function create_academic_year($parameters)
     {
         // Behat feature my added relative years such as next year, previous year
-        // now skipped as current year always created in data generation.
-        if (isset($parameters['year']) and $parameters['year'] != 'now') {
+        if (isset($parameters['year'])) {
             // Create relative year.
             $date = new \DateTime($parameters['year']);
             $year = $date->format('Y');
