@@ -1353,7 +1353,7 @@ class ClassTotals
                                     log_metadata.id,
                                     users.id,
                                     username,
-                                    roles,
+                                    GROUP_CONCAT(r.name  SEPARATOR ','),
                                     year,
                                     title,
                                     surname,
@@ -1371,6 +1371,8 @@ class ClassTotals
                                   FROM
                                     log_metadata,
                                     users
+                                  JOIN user_roles ur ON users.id = ur.userid
+                                  JOIN roles r ON r.id = ur.roleid
                                   LEFT JOIN
                                     sid
                                   ON
@@ -1380,7 +1382,11 @@ class ClassTotals
                                     paperID = ? AND
                                     grade LIKE ? $roles_sql AND
                                     DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
-                                    AND started <= ?");
+                                    AND started <= ?
+                                  GROUP BY
+                                    log_metadata.id, users.id, username, year, title, surname, initials,
+                                    first_names, email, gender, ipaddress, lab_name, student_id, attempt,
+                                    display_started, started, student_grade");
         $result->bind_param('isss', $this->paperID, $this->repcourse, $this->startdate, $this->enddate);
         $result->execute();
         $result->bind_result($metadataID, $userID, $username, $roles, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $student_id, $attempt, $display_started, $started, $student_grade);
