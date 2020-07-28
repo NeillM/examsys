@@ -39,7 +39,7 @@ class class_totals
      * @param string $data - html from function
      * @return float $mark
      */
-    function parseScript($data)
+    private function parseScript($data)
     {
         if (empty($data)) {
             return false;
@@ -62,39 +62,74 @@ class class_totals
     }
 
     /**
-     * Function to get all papers completed in time frame to scrape for marks, and then compare the class_totals and finish reports.
+     * Function to get all papers completed in time frame to scrape for marks,
+     * and then compare the class_totals and finish reports.
      *
-     * @param type $mysqli - database object
-     * @param type $username - user for db access
-     * @param type $password - the users password
-     * @param type $rootpath - root path of site
-     * @param type $userid - the user running the script
-     * @param type $start_dateSQL - start date range of papers checked
-     * @param type $end_dateSQL - end date range of papers checked
-     * @param type $server - the server we are checking
+     * @param mysqli $mysqli - database object
+     * @param int $userid - the user running the script
+     * @param string $start_dateSQL - start date range of papers checked
+     * @param string $end_dateSQL - end date range of papers checked
      * @param array $string - translation strings
      * @param object $userObject logged in user object
-     * @param type $paperid - the papers we want to check (optional, all if not supplied)
+     * @param string|int $paperid - the papers we want to check (optional, all if not supplied)
      */
-    public function process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject, $paperid = '')
+    public function processPapers($mysqli, $userid, $start_dateSQL, $end_dateSQL, $string, $userObject, $paperid = '')
     {
         global $display_correct_answer, $display_students_response, $display_feedback, $display_question_mark;
         $papers = array();
 
         if ($paperid != '') {
-            $result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE property_id = ?");
+            $result = $mysqli->prepare("
+                SELECT
+                    crypt_name,
+                    property_id,
+                    paper_title,
+                    DATE_FORMAT(start_date,'%d/%m/%Y'),
+                    DATE_FORMAT(start_date,'%Y%m%d%H%i%s'),
+                    DATE_FORMAT(end_date,'%Y%m%d%H%i%s')
+                FROM 
+                    properties
+                WHERE
+                    property_id = ?
+            ");
             $result->bind_param('i', $paperid);
         } else {
-            $result = $mysqli->prepare("SELECT crypt_name, property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y'), DATE_FORMAT(start_date,'%Y%m%d%H%i%s'), DATE_FORMAT(end_date,'%Y%m%d%H%i%s') FROM properties WHERE paper_type = '2' AND start_date > $start_dateSQL AND end_date < $end_dateSQL AND deleted IS NULL ORDER BY start_date");
+            $result = $mysqli->prepare('
+                SELECT
+                    crypt_name,
+                    property_id,
+                    paper_title,
+                    DATE_FORMAT(start_date,"%d/%m/%Y"),
+                    DATE_FORMAT(start_date,"%Y%m%d%H%i%s"),
+                    DATE_FORMAT(end_date,"%Y%m%d%H%i%s")
+                FROM
+                    properties
+                WHERE
+                    paper_type = "2"
+                AND
+                    start_date > ' . $start_dateSQL . '
+                AND
+                    end_date < ' . $end_dateSQL . '
+                AND
+                    deleted IS NULL
+                ORDER BY
+                    start_date
+            ');
         }
         $result->execute();
         $result->bind_result($crypt_name, $paperID, $title, $display_start_date, $start_date, $end_date);
         while ($result->fetch()) {
-            $papers[] = array('crypt_name' => $crypt_name, 'paperID' => $paperID, 'title' => $title, 'display_start_date' => $display_start_date, 'start_date' => $start_date, 'end_date' => $end_date);
+            $papers[] = array(
+                'crypt_name' => $crypt_name,
+                'paperID' => $paperID,
+                'title' => $title,
+                'display_start_date' => $display_start_date,
+                'start_date' => $start_date,
+                'end_date' => $end_date
+            );
         }
         $result->close();
 
-        $paper_no = count($papers);
         $current_no = 0;
 
         $result = $mysqli->prepare('DELETE FROM class_totals_test_local WHERE user_id = ?');
@@ -111,21 +146,51 @@ class class_totals
         $display_students_response  = 1;
         $display_feedback           = 1;
         foreach ($papers as $paper) {
-            $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paper['crypt_name'], $mysqli, $string, true);
+            $propertyObj = PaperProperties::get_paper_properties_by_crypt_name(
+                $paper['crypt_name'],
+                $mysqli,
+                $string,
+                true
+            );
             // Mark calculation questions.
             if ($propertyObj->unmarked_enhancedcalc(1)) {
                 $qids = $propertyObj->get_enhancedcalc_questions(1);
                 foreach ($qids as $qid) {
-                    enhancedcalc_remark('2', $paper['paperID'], $qid, QuestionUtils::get_settings($qid), $mysqli, 'all');
+                    enhancedcalc_remark(
+                        '2',
+                        $paper['paperID'],
+                        $qid,
+                        QuestionUtils::get_settings($qid),
+                        $mysqli,
+                        'all'
+                    );
                 }
             }
-            $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $propertyObj, $paper['start_date'], $paper['end_date'], '%', '', $mysqli, $string);
+            $report = new ClassTotals(
+                1,
+                100,
+                'asc',
+                0,
+                'name',
+                $userObject,
+                $propertyObj,
+                $paper['start_date'],
+                $paper['end_date'],
+                '%',
+                '',
+                $mysqli,
+                $string
+            );
             $report->compile_report(false);
             $marks_set = $report->get_user_results();
 
             $current_no++;
 
-            $insert = $mysqli->prepare("INSERT INTO class_totals_test_local(user_id, paper_id, status) VALUES(?, ?, 'in_progress')");
+            $insert = $mysqli->prepare("
+                INSERT INTO
+                    class_totals_test_local (user_id, paper_id, status)
+                VALUES (?, ?, 'in_progress')
+                ");
             $insert->bind_param('ii', $userid, $paper['paperID']);
             $insert->execute();
             $insert->close();
@@ -141,7 +206,17 @@ class class_totals
                 $log_metadata = new LogMetadata($mark['userID'], $paper['paperID'], $mysqli);
                 $log_metadata->get_record();
                 ob_start(); // Start output buffering
-                display_feedback($propertyObj, $mark['userID'], '2', $userObject, $log_metadata, $mysqli, $status_array, $overrides, null);
+                display_feedback(
+                    $propertyObj,
+                    $mark['userID'],
+                    '2',
+                    $userObject,
+                    $log_metadata,
+                    $mysqli,
+                    $status_array,
+                    $overrides,
+                    null
+                );
                 $output = ob_get_contents(); // Store buffer in variable
                 ob_end_clean(); // End buffering and clean up
 
@@ -164,7 +239,9 @@ class class_totals
                     if ($errors == '') {
                         $errors = '<ul>';
                     }
-                    $errors .= '<li>Problem with ' . $mark['userID'] . " $tmp_surname, $tmp_first_names ($tmp_username) - $script_mark / " . $mark['mark'] . '</li>';
+                    $errors .= '<li>Problem with ' . $mark['userID'] . ' ' . $tmp_surname . ', '
+                        . $tmp_first_names . ' (' . $tmp_username . ') - ' . $script_mark . ' / '
+                        . $mark['mark'] . '</li>';
                 }
             }
 
@@ -175,7 +252,16 @@ class class_totals
                 $status = 'success';
             }
 
-            $update = $mysqli->prepare('UPDATE class_totals_test_local SET status = ?, errors = ? WHERE user_id = ? AND paper_id = ?');
+            $update = $mysqli->prepare('
+                UPDATE
+                    class_totals_test_local
+                SET
+                    status = ?,
+                    errors = ?
+                WHERE
+                    user_id = ?
+                AND paper_id = ?
+            ');
             $update->bind_param('ssii', $status, $errors, $userid, $paper['paperID']);
             $update->execute();
             $update->close();

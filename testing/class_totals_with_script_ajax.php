@@ -66,20 +66,11 @@ if (!isset($protocol)) {
     $protocol = 'https://';
 }
 
-if (isset($_POST['server']) and $_POST['server'] != '') {
-    $server = $_POST['server'];
-} else {
-    $server = $protocol . $_SERVER['SERVER_ADDR'];
-}
-
 $userid = $userObject->get_user_ID();
-$rootpath = $configObject->get('cfg_root_path');
-$username = $userObject->get_username();
-$password = $_POST['passwd'];
 if (isset($_POST['paper']) and $_POST['paper'] != '') {
     $class_totals = new class_totals();
-    $class_totals->process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject, $_POST['paper']);
+    $class_totals->processPapers($mysqli, $userid, $start_dateSQL, $end_dateSQL, $string, $userObject, $_POST['paper']);
 } else {
     $class_totals = new class_totals();
-    $class_totals->process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject);
+    $class_totals->processPapers($mysqli, $userid, $start_dateSQL, $end_dateSQL, $string, $userObject);
 }

@@ -30,7 +30,6 @@ include_once dirname(__DIR__) . '/include/load_config.php';
 $language = LangUtils::getLang($cfg_web_root);
 require_once 'classes/class_totals.php';
 
-$cfg_web_host = $configObject->get('cfg_web_host');
 $cfg_cron_user = $configObject->get('cfg_cron_user');
 $cfg_cron_passwd = $configObject->get('cfg_cron_passwd');
 
@@ -75,9 +74,6 @@ function timestamp()
 
 echo "\n" . timestamp() . ": Starting class totals check.\n";
 
-// rootpath my be required depending on web server setup.
-//$rootpath =  basename(dirname(dirname(__FILE__)));
-$rootpath = '';
 $userresult = $mysqli->prepare('SELECT id FROM users WHERE username = ? LIMIT 1');
 $userresult->bind_param('s', $cfg_cron_user);
 $userresult->execute();
@@ -86,13 +82,12 @@ $userresult->fetch();
 $userresult->close();
 $end_dateSQL = 'NOW()';
 $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 DAY)';
-$server = 'https://' . $cfg_web_host . '/';
 $class_totals = new class_totals();
 $configObject->db = $mysqli;
 $userObject = new UserObject($configObject, $configObject->db);
 $userObject->load($userid);
 // Process the papers in range checking the totals.
-$class_totals->process_papers($configObject->db, $cfg_cron_user, $cfg_cron_passwd, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject);
+$class_totals->processPapers($configObject->db, $userid, $start_dateSQL, $end_dateSQL, $string, $userObject);
 // Get any failures.
 $status = 'failure';
 $testresult = $mysqli->prepare("SELECT user_id, paper_id, errors FROM class_totals_test_local WHERE status = ? and user_id = $userid");
