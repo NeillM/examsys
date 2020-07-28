@@ -267,7 +267,8 @@ class DBUtils
             $config->get('cfg_db_database'),
             $charset,
             UserNotices::get_instance(),
-            $config->get('dbclass')
+            $config->get('dbclass'),
+            $config->get('cfg_db_port')
         );
         $sql = file_get_contents($file);
         if ($link->multi_query($sql)) {

@@ -30,7 +30,8 @@ $mysqli = DBUtils::get_mysqli_link(
     $configObject->get('cfg_db_database'),
     $configObject->get('cfg_db_charset'),
     UserNotices::get_instance(),
-    $configObject->get('dbclass')
+    $configObject->get('dbclass'),
+    $configObject->get('cfg_db_port')
 );
 
 use Psr\Http\Message\ServerRequestInterface;

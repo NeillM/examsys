@@ -91,7 +91,7 @@ if (!$phpversion) {
 if (InstallUtils::config_exists()) {
     $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
     try {
-        $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
+        $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_port'));
         if (!$dbversion) {
             $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
         } else {

@@ -68,7 +68,8 @@ class oauth
             $configObject->get('cfg_db_database'),
             $configObject->get('cfg_db_charset'),
             \UserNotices::get_instance(),
-            $configObject->get('dbclass')
+            $configObject->get('dbclass'),
+            $configObject->get('cfg_db_port')
         );
         $configObject->set_db_object($this->db);
         $dsn = 'mysql:dbname=' . $configObject->get('cfg_db_database') . ';' . 'host=' . $configObject->get('cfg_db_host');

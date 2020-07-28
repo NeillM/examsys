@@ -49,7 +49,8 @@ if ($configObject->get_setting('core', 'cfg_ims_enabled')) {
         $configObject->get('cfg_db_database'),
         $configObject->get('cfg_db_charset'),
         $notice,
-        $configObject->get('dbclass')
+        $configObject->get('dbclass'),
+        $configObject->get('cfg_db_port')
     );
 
     $ims_enterprise = new ims_enterprise($mysqli);

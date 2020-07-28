@@ -32,7 +32,16 @@ require_once '../include/errors.php';
 require_once '../include/sct_review.inc';
 
 // Connect to the database as the SCT user.
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sct_user'), $configObject->get('cfg_db_sct_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+$mysqli = DBUtils::get_mysqli_link(
+    $configObject->get('cfg_db_host'),
+    $configObject->get('cfg_db_sct_user'),
+    $configObject->get('cfg_db_sct_passwd'),
+    $configObject->get('cfg_db_database'),
+    $configObject->get('cfg_db_charset'),
+    $notice,
+    $configObject->get('dbclass'),
+    $configObject->get('cfg_db_port')
+);
 
 // Check for key parameters
 $form_fields = $_SESSION['authenticationObj']['loginformfields'];

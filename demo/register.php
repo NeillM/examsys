@@ -31,7 +31,16 @@ require_once '../include/custom_error_handler.inc';
 $language = LangUtils::getLang($cfg_web_root);
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 $notice = UserNotices::get_instance();
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'), $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+$mysqli = DBUtils::get_mysqli_link(
+    $configObject->get('cfg_db_host'),
+    $configObject->get('cfg_db_sysadmin_user'),
+    $configObject->get('cfg_db_sysadmin_passwd'),
+    $configObject->get('cfg_db_database'),
+    $configObject->get('cfg_db_charset'),
+    $notice,
+    $configObject->get('dbclass'),
+    $configObject->get('cfg_db_port')
+);
 $configObject->set_db_object($mysqli);
 if ($configObject->get_setting('core', 'system_install_type') !== 'demo') {
     // If the installation type is not set to 'demo' then exit.

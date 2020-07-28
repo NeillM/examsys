@@ -62,7 +62,7 @@ class database
         }
 
         // Check database version is supported.
-        if (!\requirements::check_db($config->get('cfg_db_host'), $config->get('cfg_phpunit_db_user'), $config->get('cfg_phpunit_db_password'))) {
+        if (!\requirements::check_db($config->get('cfg_db_host'), $config->get('cfg_phpunit_db_user'), $config->get('cfg_phpunit_db_password'), $config->get('cfg_db_port'))) {
             $mysql_min_ver = $config->getxml('database', 'mysql', 'min_version');
             throw new \Exception('MySQL version does not meet minimum requirement - ' . $mysql_min_ver);
         }

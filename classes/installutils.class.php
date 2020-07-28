@@ -296,7 +296,7 @@ class InstallUtils
 
         // Check mysql version.
         try {
-            if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd)) {
+            if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_port)) {
                 $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
                 self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
             }
@@ -491,6 +491,7 @@ class InstallUtils
         $configObject->set('cfg_db_host', self::$cfg_db_host);
         $configObject->set('cfg_db_database', self::$cfg_db_name);
         $configObject->set('dbclass', 'mysqli');
+        $configObject->set('cfg_db_port', self::$cfg_db_port);
         plugin_manager::install_core_plugins(self::$db_admin_username, self::$db_admin_passwd);
 
         // Update sys_updates table.
@@ -2052,6 +2053,7 @@ class InstallUtils
   \$cfg_db_passwd   = '{cfg_db_passwd}';
   \$cfg_db_database = '{cfg_db_database}';
   \$cfg_db_host = '{cfg_db_host}';
+  \$cfg_db_port = '{cfg_db_port}';
   \$cfg_db_charset = '{cfg_db_charset}';
   \$cfg_db_collation = '{cfg_db_collation}';
 //student db user

@@ -28,7 +28,7 @@
   require '../include/load_config.php';
   $error = false;
   // Check access to database.
-  $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), 3306);
+  $mysqli = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_port'));
 if ($mysqli->connect_error) {
     echo 'ERROR::Can not Connect to MySQL on ' . $configObject->get('cfg_db_host') . "\n";
     $error = true;

@@ -50,7 +50,8 @@ if ($action == 'getModulePaperList') {
         $configObject->get('cfg_db_database'),
         $configObject->get('cfg_db_charset'),
         UserNotices::get_instance(),
-        $configObject->get('dbclass')
+        $configObject->get('dbclass'),
+        $configObject->get('cfg_db_port')
     );
 
     $result =  $mysqli->select_db($configObject->get('cfg_db_database'));

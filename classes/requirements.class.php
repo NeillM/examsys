@@ -106,14 +106,16 @@ class requirements
      * @param string $host db host
      * @param string $user db user
      * @param string $pass db password
+     * @param integer $port db port
+     * @param string $database db database
      * @return boolean
      * @throws Exception When the database cannot be connected to.
      */
-    public static function check_db($host, $user, $pass)
+    public static function check_db($host, $user, $pass, $port = 3306, $database = null)
     {
         $phpModules = get_loaded_extensions();
         if (in_array('mysqli', $phpModules)) {
-            @$check = new mysqli($host, $user, $pass);
+            @$check = new mysqli($host, $user, $pass, $database, $port);
             if ($check->connect_error != '') {
                 throw new Exception($check->connect_error);
             }
