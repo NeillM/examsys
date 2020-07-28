@@ -72,7 +72,9 @@ class oauth
             $configObject->get('cfg_db_port')
         );
         $configObject->set_db_object($this->db);
-        $dsn = 'mysql:dbname=' . $configObject->get('cfg_db_database') . ';' . 'host=' . $configObject->get('cfg_db_host');
+        $dsn = 'mysql:dbname=' . $configObject->get('cfg_db_database') . ';'
+            . 'host=' . $configObject->get('cfg_db_host') . ';'
+            . 'port=' . $configObject->get('cfg_db_port');
         $username = $configObject->get('cfg_db_sysadmin_user');
         $password = $configObject->get('cfg_db_sysadmin_passwd');
         // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
