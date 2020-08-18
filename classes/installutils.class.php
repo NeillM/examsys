@@ -2056,6 +2056,8 @@ class InstallUtils
   \$cfg_db_port = '{cfg_db_port}';
   \$cfg_db_charset = '{cfg_db_charset}';
   \$cfg_db_collation = '{cfg_db_collation}';
+  \$cfg_db_engine = '{cfg_db_engine}';
+  \$cfg_db_help_engine = '{cfg_db_help_engine}';
 //student db user
   \$cfg_db_student_user = '{cfg_db_student_user}';
   \$cfg_db_student_passwd = '{cfg_db_student_passwd}';
@@ -2158,6 +2160,8 @@ CONFIG;
         $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
         $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
         $config = str_replace('{cfg_db_collation}', self::$cfg_db_collation, $config);
+        $config = str_replace('{cfg_db_engine}', self::$cfg_db_engine, $config);
+        $config = str_replace('{cfg_db_help_engine}', self::$cfg_db_help_engine, $config);
 
         $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);
         $config = str_replace('{cfg_db_username}', self::$cfg_db_username, $config);

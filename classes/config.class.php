@@ -225,6 +225,16 @@ class Config extends RogoStaticSingleton
         if (empty($behatdatadir) or $behatdatadir === $this->get('cfg_rogo_data')) {
             return false;
         }
+        // Has a db engine for behat been configured?
+        $behatengine = $this->get('cfg_behat_db_engine');
+        if (empty($behatengine)) {
+            $this->set('cfg_behat_db_engine', $this->get('cfg_db_engine'));
+        }
+        // Has a db help engine for behat been configured?
+        $behathelpengine = $this->get('cfg_behat_db_help_engine');
+        if (empty($behathelpengine)) {
+            $this->set('cfg_behat_db_help_engine', $this->get('cfg_db_help_engine'));
+        }
         // We got this far everything is good.
         return true;
     }
@@ -245,6 +255,16 @@ class Config extends RogoStaticSingleton
         $phpunitdatadir = $this->get('cfg_phpunit_data');
         if (empty($phpunitdatadir) or $phpunitdatadir === $this->get('cfg_rogo_data')) {
             return false;
+        }
+        // Has a db engine for phpunit been configured?
+        $phpunitengine = $this->get('cfg_phpunit_db_engine');
+        if (empty($phpunitengine)) {
+            $this->set('cfg_phpunit_db_engine', $this->get('cfg_db_engine'));
+        }
+        // Has a db help engine for phpunit been configured?
+        $phpunithelpengine = $this->get('cfg_phpunit_db_help_engine');
+        if (empty($phpunithelpengine)) {
+            $this->set('cfg_phpunit_db_help_engine', $this->get('cfg_db_help_engine'));
         }
         // We got this far everything is good.
         return true;

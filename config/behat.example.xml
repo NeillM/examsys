@@ -6,4 +6,6 @@
   <db_password></db_password>
   <data></data>
   <faildump></faildump>
+  <db_engine></db_engine>
+  <db_help_engine></db_help_engine>
 </rogo>

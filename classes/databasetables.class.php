@@ -863,10 +863,12 @@ QUERY;
 
         $this->tableList['performance_details'] = <<<QUERY
           CREATE TABLE `performance_details` (
+          `id` int NOT NULL AUTO_INCREMENT,
           `perform_id` int(11) DEFAULT NULL,
           `part_no` tinyint(4) DEFAULT NULL,
           `p` tinyint(4) DEFAULT NULL,
           `d` tinyint(4) DEFAULT NULL,
+          PRIMARY KEY (`id`),
           KEY `idx_perform_id` (`perform_id`)
           ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
@@ -1327,11 +1329,11 @@ QUERY;
 
         $this->tableList['state'] = <<<QUERY
         CREATE TABLE `state` (
-          `userID` int(10) unsigned DEFAULT NULL,
-          `state_name` varchar(255) DEFAULT NULL,
+          `userID` int(10) unsigned NOT NULL,
+          `state_name` varchar(255) NOT NULL,
           `content` varchar(255) DEFAULT NULL,
-          `page` varchar(255) DEFAULT NULL,
-          UNIQUE KEY `idx_user_state` (`userID`,`state_name`,`page`)
+          `page` varchar(255) NOT NULL,
+          PRIMARY KEY (`userID`,`state_name`,`page`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1411,9 +1413,9 @@ QUERY;
 
         $this->tableList['sys_updates'] = <<<QUERY
         CREATE TABLE `sys_updates` (
-          `name` varchar(255) DEFAULT NULL,
+          `name` varchar(255) NOT NULL,
           `updated` datetime NOT NULL,
-          KEY `name` (`name`)
+          PRIMARY KEY (name)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1510,12 +1512,12 @@ QUERY;
 
         $this->tableList['users_metadata'] = <<<QUERY
         CREATE TABLE `users_metadata` (
-          `userID` int(10) unsigned default NULL,
-          `idMod` int(11) default NULL,
-          `type` varchar(255) default NULL,
+          `userID` int(10) unsigned NOT NULL,
+          `idMod` int(11) NOT NULL,
+          `type` varchar(255) NOT NULL,
           `value` varchar(255) default NULL,
-          `calendar_year` INT(4),
-          UNIQUE KEY `idx_users_metadata` (`userID`,`idMod`,`type`,`calendar_year`)
+          `calendar_year` INT(4) NOT NULL,
+          PRIMARY KEY (`userID`,`idMod`,`type`,`calendar_year`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1613,8 +1615,9 @@ QUERY;
 
         $this->tableList['oauth_scopes'] = <<<QUERY
         CREATE TABLE oauth_scopes (
-            scope TEXT,
-            is_default BOOLEAN
+            scope varchar(255) NOT NULL,
+            is_default BOOLEAN,
+            CONSTRAINT oauth_scopes_pk PRIMARY KEY (scope)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 

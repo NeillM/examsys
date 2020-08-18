@@ -2468,7 +2468,7 @@ SQL;
         foreach ($dstats_array as $qid => $question_data) {
             foreach ($question_data as $part_no => $d_value) {
                 if ($sql == '') {
-                    $sql = 'INSERT INTO performance_details VALUES (?, ?, ?, ?)';
+                    $sql = 'INSERT INTO performance_details VALUES (NULL, ?, ?, ?, ?)';
                 } else {
                     $sql .= ', (?, ?, ?, ?)';
                 }

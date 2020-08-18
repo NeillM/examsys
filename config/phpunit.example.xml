@@ -4,4 +4,6 @@
   <db_database></db_database>
   <db_user></db_user>
   <db_password></db_password>
+  <db_engine></db_engine>
+  <db_help_engine></db_help_engine>
 </rogo>

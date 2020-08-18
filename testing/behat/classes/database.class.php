@@ -91,7 +91,13 @@ class database
         // Start installing the base Rogo database.
         InstallUtils::checkDBUsers();
         InstallUtils::createDirectories();
-        InstallUtils::createDatabase($config->get('cfg_db_database'), $config->get('cfg_db_charset'), $config->get('cfg_db_collation'));
+        InstallUtils::createDatabase(
+            $config->get('cfg_db_database'),
+            $config->get('cfg_db_charset'),
+            $config->get('cfg_db_collation'),
+            $config->get('cfg_behat_db_engine'),
+            $config->get('cfg_behat_db_help_engine')
+        );
     }
 
     /**
