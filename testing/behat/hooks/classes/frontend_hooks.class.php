@@ -130,6 +130,7 @@ trait frontend_hooks
         state::save_database_state(state::TRANSACTION_SCENARIO);
 
         $session = $this->getSession();
+        $session->start();
 
         try {
             $windows = $session->getWindowNames();
