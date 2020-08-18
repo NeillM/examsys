@@ -156,7 +156,7 @@ if ($student_no > 0) {
                     username, lm.userID, title, surname, first_names, grade, gender, year, started, 
                     l.q_id, user_answer, q_type, screen, settings 
                 FROM 
-                    (log0 l, log_metadata lm, questions q, users ) 
+                    (log0 l, log_metadata lm, questions q, users u) 
                 WHERE 
                     l.metadataID = lm.id AND l.q_id = q.q_id AND lm.userID IN ($student_list) 
                     AND paperID = ? AND u.id = lm.userID 
