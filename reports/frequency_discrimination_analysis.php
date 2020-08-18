@@ -927,7 +927,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                     echo "$html</td>";
 
                     if ($display_method == 'textboxes') {
-                        echo "<td><input type=\"button\" id=\"blankcorrect\" data-qid=\"$q_id\" data-i=\"$i\" value=\"" . $string['Correct'] . '" /></td>';
+                        echo "<td><input type=\"button\" class=\"blankcorrect\" data-qid=\"$q_id\" data-i=\"$i\" value=\"" . $string['Correct'] . '" /></td>';
                     }
                     echo '</tr>';
                 }
@@ -1040,7 +1040,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                     echo ' class="excluded"';
                 }
                 echo ">$leadin</td>";
-                echo "<td><input id=\"calccorrect\" type=\"button\" data-qid=\"$q_id\" value=\"" . $string['Correct'] . '" /></td>';
+                echo "<td><input class=\"calccorrect\" type=\"button\" data-qid=\"$q_id\" value=\"" . $string['Correct'] . '" /></td>';
                 echo "</tr>\n";
                 echo '<tr><td colspan="7">&nbsp;</td></tr>';
                 if ($freq_log[$q_id][1]['correct'] !== 0 and $user_total != 0) {

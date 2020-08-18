@@ -41,11 +41,11 @@ requirejs(['media', 'html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery']
         }
     });
 
-    $('#calccorrect').click(function() {
+    $('.calccorrect').click(function() {
         freqdisc.calcCorrect($(this).attr('data-qid'));
     });
 
-    $('#blankcorrect').click(function() {
+    $('.blankcorrect').click(function() {
         freqdisc.blankCorrect($(this).attr('data-qid'), $(this).attr('data-i'));
     });
 
