@@ -84,7 +84,6 @@ class RAF
         header('Content-Disposition: attachment; filename="' . $this->zip_filename . '"');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . filesize($filepath . $this->zip_filename));
-        ob_end_flush();
         @readfile($filepath . $this->zip_filename);
 
         unlink($filepath . $this->zip_filename);
@@ -105,11 +104,14 @@ class RAF
 
         foreach ($questions as $question) {
             $this->data['items'][$item_no]['question'] = $this->get_question($question);
+            $this->data['items'][$item_no]['media'] = $this->getMedia($question['q_id']);
 
             $this->getImages_from_html($this->data['items'][$item_no]['question']['scenario']);   // Parse out any images in the question scenario.
             $this->getImages_from_html($this->data['items'][$item_no]['question']['leadin']);     // Parse out any images in the question leadin.
 
             $this->data['items'][$item_no]['options'] = $this->get_options($question['q_id']);
+
+            $this->data['items'][$item_no]['optionmedia'] = $this->getOptionMedia($question['q_id']);
 
             $this->data['items'][$item_no]['keywords'] = $this->get_keywords($question['q_id']);
 
@@ -123,18 +125,39 @@ class RAF
      */
     private function get_question($question)
     {
-        $result = $this->db->prepare('SELECT q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid, title, first_names, surname FROM questions, users WHERE questions.ownerID = users.id AND q_id = ?');
+        $result = $this->db->prepare('SELECT q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid, title, first_names, surname FROM questions, users WHERE questions.ownerID = users.id AND q_id = ?');
         $result->bind_param('i', $question['q_id']);
         $result->execute();
-        $result->bind_result($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_authorID, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid, $title, $first_names, $surname);
+        $result->bind_result($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_authorID, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid, $title, $first_names, $surname);
         $result->fetch();
         $result->close();
 
-        $this->check_media($q_media);
-
         $status = $this->status_array[$status]->get_name();
 
-        return array('screen' => $question['screen'], 'q_id' => $question['q_id'], 'q_type' => $q_type, 'theme' => $theme, 'scenario' => $scenario, 'leadin' => $leadin, 'correct_fback' => $correct_fback, 'incorrect_fback' => $incorrect_fback, 'display_method' => $display_method, 'notes' => $notes, 'ownerID' => $ownerID, 'q_media' => $q_media, 'q_media_width' => $q_media_width, 'q_media_height' => $q_media_height, 'creation_date' => $creation_date, 'last_edited' => $last_edited, 'bloom' => $bloom, 'scenario_plain' => $scenario_plain, 'leadin_plain' => $leadin_plain, 'std' => $std, 'status' => $status, 'q_option_order' => $q_option_order, 'score_method' => $score_method, 'settings' => $settings, 'guid' => $guid, 'owner' => array('title' => $title, 'first_names' => $first_names, 'surname' => $surname));
+        return array('screen' => $question['screen'], 'q_id' => $question['q_id'], 'q_type' => $q_type, 'theme' => $theme, 'scenario' => $scenario, 'leadin' => $leadin, 'correct_fback' => $correct_fback, 'incorrect_fback' => $incorrect_fback, 'display_method' => $display_method, 'notes' => $notes, 'ownerID' => $ownerID, 'creation_date' => $creation_date, 'last_edited' => $last_edited, 'bloom' => $bloom, 'scenario_plain' => $scenario_plain, 'leadin_plain' => $leadin_plain, 'std' => $std, 'status' => $status, 'q_option_order' => $q_option_order, 'score_method' => $score_method, 'settings' => $settings, 'guid' => $guid, 'owner' => array('title' => $title, 'first_names' => $first_names, 'surname' => $surname));
+    }
+
+    /**
+     * EXPORT: Retrieve a specific media record from the database for export.
+     * @param int $question - ID for a question to be looked up in the database.
+     * @return array
+     */
+    private function getMedia(int $question): array
+    {
+        $mediaobj = QuestionUtils::getMedia($question);
+        $m = array();
+        foreach ($mediaobj as $media) {
+            $this->checkMedia($media->source);
+            $m[] = array(
+                'source' => $media->source,
+                'width' => (int) $media->width,
+                'height' => (int) $media->height,
+                'alt' => $media->alt,
+                'ownerid' => (int) $media->owner,
+                'num' => (int) $media->num
+            );
+        }
+        return $m;
     }
 
     /**
@@ -145,18 +168,62 @@ class RAF
     {
         $options = array();
 
-        $result = $this->db->prepare('SELECT option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial FROM options WHERE o_id = ? ORDER BY id_num');
+        $result = $this->db->prepare('SELECT option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial FROM options WHERE o_id = ? ORDER BY id_num');
         $result->bind_param('i', $o_id);
         $result->execute();
-        $result->bind_result($option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+        $result->store_result();
+        $result->bind_result($option_text, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
         while ($result->fetch()) {
-            $options[] = array('option_text' => $option_text, 'o_media' => $o_media, 'o_media_width' => $o_media_width, 'o_media_height' => $o_media_height, 'feedback_right' => $feedback_right, 'feedback_wrong' => $feedback_wrong, 'correct' => $correct, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial);
-
-            $this->check_media($o_media);
+            $options[] = array('option_text' => $option_text, 'feedback_right' => $feedback_right, 'feedback_wrong' => $feedback_wrong, 'correct' => $correct, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial);
         }
+        $result->free_result();
         $result->close();
 
         return $options;
+    }
+
+    /**
+     * EXPORT: Retrieve all option media records for a question from the database for export.
+     * @param int $oid - The question id to be looked up in the database.
+     * @return array
+     */
+    private function getOptionMedia(int $oid): array
+    {
+        $m = array();
+        foreach ($this->getIDNums($oid) as $idnum) {
+            $media = QuestionUtils::getOptionMedia($idnum);
+            if ($media !== false) {
+                $this->checkMedia($media->source);
+                $m[] = array(
+                    'source' => $media->source,
+                    'width' => $media->width,
+                    'height' => $media->height,
+                    'alt' => $media->alt,
+                    'ownerid' => $media->owner,
+                );
+            }
+        }
+        return $m;
+    }
+
+    /**
+     * Get the id_num for an option.
+     * @param int $o_id - The question id to be looked up in the database.
+     * @return array
+     */
+    private function getIDNums(int $o_id): array
+    {
+        $idnums = array();
+        $result = $this->db->prepare('SELECT id_num FROM options WHERE o_id = ? ORDER BY id_num ASC');
+        $result->bind_param('i', $o_id);
+        $result->execute();
+        $result->bind_result($id_num);
+        while ($result->fetch()) {
+            $idnums[] = $id_num;
+        }
+        $result->fetch();
+        $result->close();
+        return $idnums;
     }
 
     /**
@@ -180,17 +247,13 @@ class RAF
     }
 
     /**
-     * EXPORT: Split a give string up and check for media - this checks database fields.
+     * Check Media is not empty and added to media array
+     * @param $media_string the media file name
      */
-    private function check_media($media_string)
+    private function checkMedia($media_string): void
     {
-        if ($media_string != '') {
-            $media_parts = explode('|', $media_string);
-            foreach ($media_parts as $media_part) {
-                if (trim($media_part) != '') {
-                    $this->media[] = trim($media_part);
-                }
-            }
+        if (trim($media_string) != '') {
+            $this->media[] = trim($media_string);
         }
     }
 
@@ -342,8 +405,17 @@ class RAF
 
             $this->write_keywords($item['keywords'], $q_id);
 
+            $i = 0;
             foreach ($item['options'] as $options) {
-                $this->write_option($options, $q_id);
+                $idnum = $this->write_option($options, $q_id);
+                if (isset($item['optionmedia'][$i])) {
+                    $this->writeOptionMedia($item['optionmedia'][$i], $idnum);
+                }
+                $i++;
+            }
+
+            foreach ($item['media'] as $media) {
+                $this->writeMedia($media, $q_id);
             }
 
             if (is_object($this->properties)) {
@@ -422,8 +494,8 @@ class RAF
             }
         }
 
-        $result = $this->db->prepare('INSERT INTO questions VALUE (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
-        $result->bind_param('ssssssssisssssssissss', $q['q_type'], $q['theme'], $q['scenario'], $q['leadin'], $q['correct_fback'], $q['incorrect_fback'], $q['display_method'], $q['notes'], $this->userID, $q['q_media'], $q['q_media_width'], $q['q_media_height'], $q['bloom'], $q['scenario_plain'], $q['leadin_plain'], $q['std'], $q['status'], $q['q_option_order'], $q['score_method'], $q['settings'], $guid);
+        $result = $this->db->prepare('INSERT INTO questions VALUE (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
+        $result->bind_param('ssssssssissssissss', $q['q_type'], $q['theme'], $q['scenario'], $q['leadin'], $q['correct_fback'], $q['incorrect_fback'], $q['display_method'], $q['notes'], $this->userID, $q['bloom'], $q['scenario_plain'], $q['leadin_plain'], $q['std'], $q['status'], $q['q_option_order'], $q['score_method'], $q['settings'], $guid);
         $result->execute();
         $q_id =  $this->db->insert_id;
         $result->close();
@@ -486,6 +558,44 @@ class RAF
     }
 
     /**
+     * IMPORT: Take the media of a question then insert into the DB.
+     * @param array $media
+     * @param integer $qid the question ID
+     */
+    private function writeMedia($media, $qid)
+    {
+        $mediaid = \media_handler::insertMedia(
+            $media['source'],
+            $media['width'],
+            $media['height'],
+            $media['alt'],
+            $media['ownerid']
+        );
+        if ($mediaid !== -1) {
+            \media_handler::linkQuestionToMedia($mediaid, $qid, $media['num']);
+        }
+    }
+
+    /**
+     * IMPORT: Take the media of a question then insert into the DB.
+     * @param array $media
+     * @param integer $oid the option ID
+     */
+    private function writeOptionMedia($media, $oid)
+    {
+        $mediaid = \media_handler::insertMedia(
+            $media['source'],
+            $media['width'],
+            $media['height'],
+            $media['alt'],
+            $media['ownerid']
+        );
+        if ($mediaid !== -1) {
+            \media_handler::linkOptionToMedia($mediaid, $oid);
+        }
+    }
+
+    /**
      * IMPORT: Load all personal keywords and keywords belonging to the team(s) of the current paper.
      * Creates a lookup array for translating the text of a keyword into IDs for insertion into the DB.
      */
@@ -517,12 +627,14 @@ class RAF
      * IMPORT: Insert a single option into the database.
      * @param array $o    - Array holding all the information to write into the options table.
      * @param int $q_id - The ID of the question the options belong to.
+     * @return int
      */
     private function write_option($o, $q_id)
     {
-        $result = $this->db->prepare('INSERT INTO options VALUE (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)');
-        $result->bind_param('isssssssddd', $q_id, $o['option_text'], $o['o_media'], $o['o_media_width'], $o['o_media_height'], $o['feedback_right'], $o['feedback_wrong'], $o['correct'], $o['marks_correct'], $o['marks_incorrect'], $o['marks_partial']);
+        $result = $this->db->prepare('INSERT INTO options VALUE (?, ?, ?, ?, ?, NULL, ?, ?, ?)');
+        $result->bind_param('issssddd', $q_id, $o['option_text'], $o['feedback_right'], $o['feedback_wrong'], $o['correct'], $o['marks_correct'], $o['marks_incorrect'], $o['marks_partial']);
         $result->execute();
         $result->close();
+        return $this->db->insert_id;
     }
 }

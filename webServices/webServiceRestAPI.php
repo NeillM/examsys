@@ -128,7 +128,7 @@ class webServiceRestAPI extends restAPI
 
     public function getUserID($username, $staff = false)
     {
-        $sql = "
+        $sql = '
         SELECT 
             u.id 
         FROM 
@@ -138,7 +138,7 @@ class webServiceRestAPI extends restAPI
         WHERE 
             u.username = ?
             AND r.name = ?
-        ";
+        ';
         $res = $this->db->prepare($sql);
         if ($staff == true) {
             $role = 'Staff';

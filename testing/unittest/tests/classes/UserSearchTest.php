@@ -67,7 +67,8 @@ class UserSearchTest extends testing\unittest\unittestdatabase
     /**
      * @see testing\unittest\unittestdatabase::datageneration()
      */
-    public function datageneration(): void {
+    public function datageneration(): void
+    {
         // Create some academic years.
         $yeargen = $this->get_datagenerator('academic_year', 'core');
         $yeargen->create_academic_year(['calendar_year' => 2012, 'academic_year' => '2012/13']);
@@ -132,18 +133,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(1, $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
         $result->query->fetch();
 
@@ -184,18 +185,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(1, $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
         $result->query->fetch();
 
@@ -218,18 +219,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(1, $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
         $result->query->fetch();
 
@@ -253,18 +254,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(2, $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
 
         $result->query->fetch();
@@ -292,18 +293,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(1, $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
         $result->query->fetch();
 
@@ -327,18 +328,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(1, $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
         $result->query->fetch();
 
@@ -370,18 +371,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(count($expected), $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
 
         foreach ($expected as $user) {
@@ -446,18 +447,18 @@ class UserSearchTest extends testing\unittest\unittestdatabase
         self::assertEquals(1, $result->total);
 
         $result->query->bind_result(
-                $id,
-                $roles,
-                $sid,
-                $surname,
-                $initials,
-                $first_names,
-                $title,
-                $username,
-                $grade,
-                $yearofstudy,
-                $email,
-                $special_id
+            $id,
+            $roles,
+            $sid,
+            $surname,
+            $initials,
+            $first_names,
+            $title,
+            $username,
+            $grade,
+            $yearofstudy,
+            $email,
+            $special_id
         );
         $result->query->fetch();
 

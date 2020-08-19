@@ -30,7 +30,8 @@ define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, jsxls, 
             $('#edit_form').validate({
                 ignore: '',
                 rules: {
-                    scenario: 'required'
+                    scenario: 'required',
+                    alt_q_media: 'required',
                 },
                 messages: {
                     scenario: jsxls.lang_string['entervignette']

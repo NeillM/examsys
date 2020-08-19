@@ -2356,16 +2356,16 @@ class PaperProperties
                           leadin,
                           correct,
                           REPLACE(option_text,'\t','') AS option_text,
-                          q_media,
-                          q_media_width,
-                          q_media_height,
-                          o_media,
-                          o_media_width,
-                          o_media_height,
+                          source,
+                          width,
+                          height,
+                          alt,
                           notes,
                           display_pos,
                           q_option_order";
-        $from = 'papers, questions LEFT JOIN options ON questions.q_id = options.o_id';
+        $from = 'papers, questions LEFT JOIN options ON questions.q_id = options.o_id 
+            LEFT JOIN options_media ON options.id_num = options_media.oid
+            LEFT JOIN media m on options_media.mediaid = m.id';
         $orderby = 'display_pos, id_num';
         if ($is_question_preview_mode) {
             $where = 'paper = ? AND
@@ -2398,7 +2398,29 @@ class PaperProperties
         }
         $question_data->execute();
         $question_data->store_result();
-        $question_data->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
+        $question_data->bind_result(
+            $screen,
+            $q_type,
+            $q_id,
+            $score_method,
+            $display_method,
+            $settings,
+            $marks_correct,
+            $marks_incorrect,
+            $marks_partial,
+            $theme,
+            $scenario,
+            $leadin,
+            $correct,
+            $option_text,
+            $option_media,
+            $option_media_width,
+            $option_media_height,
+            $option_media_alt,
+            $notes,
+            $display_pos,
+            $q_option_order
+        );
 
         $q_no = 0;
         $assigned_number = 0;
@@ -2433,9 +2455,6 @@ class PaperProperties
                 $tmp_questions_array[$q_no]['score_method'] = $score_method;
                 $tmp_questions_array[$q_no]['display_method'] = $display_method;
                 $tmp_questions_array[$q_no]['settings'] = $settings;
-                $tmp_questions_array[$q_no]['q_media'] = $q_media;
-                $tmp_questions_array[$q_no]['q_media_width'] = $q_media_width;
-                $tmp_questions_array[$q_no]['q_media_height'] = $q_media_height;
                 $tmp_questions_array[$q_no]['q_option_order'] = $q_option_order;
                 $tmp_questions_array[$q_no]['dismiss'] = '';
                 $used_questions[$q_id] = 1;
@@ -2443,15 +2462,27 @@ class PaperProperties
             $tmp_questions_array[$q_no]['options'][] = array(
               'correct' => $correct,
               'option_text' => $option_text,
-              'o_media' => $o_media,
-              'o_media_width' => $o_media_width,
-              'o_media_height' => $o_media_height,
+              'o_media' => $option_media,
+              'o_media_width' => $option_media_width,
+              'o_media_height' => $option_media_height,
+              'o_media_alt' => $option_media_alt,
               'marks_correct' => $marks_correct,
               'marks_incorrect' => $marks_incorrect,
               'marks_partial' => $marks_partial);
             $old_screen = $screen;
         }
+        $question_data->free_result();
         $question_data->close();
+
+        // Get Media.
+        for ($i = 1; $i <= $q_no; $i++) {
+            $media = QuestionUtils::getMediaAsString($tmp_questions_array[$i]['q_id']);
+            $tmp_questions_array[$i]['q_media'] = $media['source'];
+            $tmp_questions_array[$i]['q_media_width'] = $media['width'];
+            $tmp_questions_array[$i]['q_media_height'] = $media['height'];
+            $tmp_questions_array[$i]['q_media_alt'] = $media['alt'];
+            $tmp_questions_array[$i]['q_media_num'] = $media['num'];
+        }
         return $tmp_questions_array;
     }
 
@@ -2505,8 +2536,8 @@ class PaperProperties
         if ($unique) {
             // Look up selected question and overwrite data.
             $question_data = $this->db->prepare('SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,'
-                . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
-                . ' q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options'
+                . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text,"
+                . ' id_num, notes, q_option_order FROM questions LEFT JOIN options'
                 . ' ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num');
             $question_data->bind_param('i', $selected_q_id);
             $question_data->execute();
@@ -2525,12 +2556,7 @@ class PaperProperties
                 $leadin,
                 $correct,
                 $option_text,
-                $q_media,
-                $q_media_width,
-                $q_media_height,
-                $o_media,
-                $o_media_width,
-                $o_media_height,
+                $id_num,
                 $notes,
                 $q_option_order
             );
@@ -2546,18 +2572,21 @@ class PaperProperties
                           $question['score_method'] = $score_method;
                           $question['display_method'] = $display_method;
                           $question['settings'] = $settings;
-                          $question['q_media'] = $q_media;
-                          $question['q_media_width'] = $q_media_width;
-                          $question['q_media_height'] = $q_media_height;
+                          $media = QuestionUtils::getMediaAsString($q_id);
+                          $question['q_media']  = $media['source'];
+                          $question['q_media_width'] = $media['width'];
+                          $question['q_media_height'] = $media['height'];
+                          $question['q_media_alt'] = $media['alt'];
                           $question['q_option_order'] = $q_option_order;
                           $question['dismiss'] = '';
                     }
                     $question['options'][] = array(
                     'correct' => $correct,
                     'option_text' => $option_text,
-                    'o_media' => $o_media,
-                    'o_media_width' => $o_media_width,
-                    'o_media_height' => $o_media_height,
+                    'o_media' => $omedia['source'],
+                    'o_media_width' => $omedia['width'],
+                    'o_media_height' => $omedia['height'],
+                    'o_media_alt' => $omedia['alt'],
                     'marks_correct' => $marks_correct,
                     'marks_incorrect' => $marks_incorrect,
                     'marks_partial' => $marks_partial);
@@ -2580,6 +2609,8 @@ class PaperProperties
             } else {
                 $error = true;
             }
+            $question_data->free_result();
+            $question_data->close();
         } else {
             $error = true;
         }
@@ -2589,7 +2620,7 @@ class PaperProperties
             $question['q_type'] = 'random';
             $question['q_id'] = -1;
             $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
-            $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
+            $question['q_media_width'] = $question['q_media_height'] = $question['q_media_alt'] = $question['q_option_order'] = $question['dismiss'] = '';
             $question['options'] = array();
         }
 
@@ -2650,9 +2681,11 @@ class PaperProperties
         if ($unique) {
             // Look up selected question and overwrite the question data.
             $question_data = $this->db->prepare('SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,'
-                . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
-                . ' q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON'
-                . ' questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num');
+                . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text,"
+                . ' source, width, height, alt, notes, q_option_order FROM questions'
+                . ' LEFT JOIN options ON questions.q_id = options.o_id'
+                . ' LEFT JOIN options_media ON options.id_num = options_media.oid'
+                . ' LEFT JOIN media m on options_media.mediaid = m.id WHERE q_id = ? ORDER BY id_num');
             $question_data->bind_param('i', $selected_q_id);
             $question_data->execute();
             $question_data->store_result();
@@ -2670,12 +2703,10 @@ class PaperProperties
                 $leadin,
                 $correct,
                 $option_text,
-                $q_media,
-                $q_media_width,
-                $q_media_height,
-                $o_media,
-                $o_media_width,
-                $o_media_height,
+                $option_media,
+                $option_media_width,
+                $option_media_height,
+                $option_media_alt,
                 $notes,
                 $q_option_order
             );
@@ -2694,18 +2725,21 @@ class PaperProperties
                     $question['score_method'] = $score_method;
                     $question['display_method'] = $display_method;
                     $question['settings'] = $settings;
-                    $question['q_media'] = $q_media;
-                    $question['q_media_width'] = $q_media_width;
-                    $question['q_media_height'] = $q_media_height;
+                    $media = QuestionUtils::getMediaAsString($q_id);
+                    $question['q_media']  = $media['source'];
+                    $question['q_media_width'] = $media['width'];
+                    $question['q_media_height'] = $media['height'];
+                    $question['q_media_alt'] = $media['alt'];
                     $question['q_option_order'] = $q_option_order;
                     $question['dismiss'] = '';
                 }
                 $question['options'][] = array(
                 'correct' => $correct,
                 'option_text' => $option_text,
-                'o_media' => $o_media,
-                'o_media_width' => $o_media_width,
-                'o_media_height' => $o_media_height,
+                'o_media' => $option_media,
+                'o_media_width' => $option_media_width,
+                'o_media_height' => $option_media_height,
+                'o_media_alt' => $option_media_alt,
                 'marks_correct' => $marks_correct,
                 'marks_incorrect' => $marks_incorrect,
                 'marks_partial' => $marks_partial);
@@ -2732,7 +2766,7 @@ class PaperProperties
             $question['q_type'] = 'keyword_based';
             $question['q_id'] = -1;
             $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
-            $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
+            $question['q_media_width'] = $question['q_media_height'] = $question['q_media_alt'] = $question['q_option_order'] = $question['dismiss'] = '';
             $question['options'] = array();
             $question['screen'] = $random_q_data['screen'];
             $question['assigned_number'] = $random_q_data['assigned_number'];

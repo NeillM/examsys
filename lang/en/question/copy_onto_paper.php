@@ -29,6 +29,7 @@ $string['error3'] = "File <strong>'%s'</strong> could not be copied.<br />File n
 $string['success'] = 'Question copied onto <strong>%s</strong>.';
 $string['duplicatename'] = "Sorry <strong>'%s'</strong> is a name already in use.";
 $string['qcopyerrorno'] = 'Question copy error';
+$string['copyerror'] = 'Question Number (%s) Copy Error (Question) File <strong>\'%s\'</strong> could not be copied.';
 $string['qcopyerror'] = 'Question %d could not be copied';
 $string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
 $string['validateform'] = 'Please select which paper you would like to add the question to.';

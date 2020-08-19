@@ -1,0 +1,19 @@
+<div class="fileupload">
+    <div id="agreement" class="filepickerchk">
+        <input id="{{data.mediaagreement}}" name="{{data.mediaagreement}}" type="checkbox" />
+        <p id="p{{data.mediaid}}">{{lang.mediaagreement}}</p>
+    </div>
+    <div id="decorative" class="filepickerchk">
+        <input id="{{data.mediadecorative}}" name="{{data.mediadecorative}}" type="checkbox" />
+        <p id="decp{{data.mediaid}}">{{lang.decorativemedia}}</p>
+    </div>
+    <div id="file">
+        <label for="{{data.mediaid}}">{{lang.selectmedia}}</label>
+        <input id="{{data.mediaid}}" name="{{data.mediaid}}" size="65" type="file" />
+    </div>
+    <div id="alt">
+        <label for="{{data.mediaalt}}">{{lang.altmedia}}</label>
+        <textarea class="filepickertextarea" id="{{data.mediaalt}}" name="{{data.mediaalt}}"></textarea>
+    </div>
+    <input id="{{data.medianum}}" name="{{data.medianum}}" type="hidden" value="{{data.num}}"/>
+</div>

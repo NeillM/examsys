@@ -246,8 +246,8 @@ class PaperPropertiesTest extends unittestdatabase
             'display_method' => 'vertical',
             'q_option_order' => 'random',
             'q_media' => '1517406311.png',
-            'q_media_width' => '480',
-            'q_media_height' => '105',
+            'q_media_width' => 480,
+            'q_media_height' => 105,
             'settings' => '[]'));
         $this->qpaper2 = $datagenerator->add_question_to_paper(array('paper' => $this->pid1['id'], 'question' => $this->question6['id'], 'screen' => 1, 'displaypos' => 2));
         $this->options = $datagenerator->add_options_to_question(array('question' => $this->question6['id'],
@@ -389,14 +389,17 @@ class PaperPropertiesTest extends unittestdatabase
                 'q_media' => $this->question2['q_media'],
                 'q_media_width' => $this->question2['q_media_width'],
                 'q_media_height' => $this->question2['q_media_height'],
+                'q_media_alt' => $this->question2['q_media_alt'],
+                'q_media_num' => $this->question2['q_media_num'],
                 'q_option_order' => $this->question2['q_option_order'],
                 'dismiss' => '',
                 'options' => array(0 => array(
                     'correct' => null,
                     'option_text' => null,
-                    'o_media' => null,
-                    'o_media_width' => null,
-                    'o_media_height' => null,
+                    'o_media' => '',
+                    'o_media_width' => '',
+                    'o_media_height' => '',
+                    'o_media_alt' => '',
                     'marks_correct' => null,
                     'marks_incorrect' => null,
                     'marks_partial' => null
@@ -419,6 +422,8 @@ class PaperPropertiesTest extends unittestdatabase
                 'q_media' => $this->question6['q_media'],
                 'q_media_width' => $this->question6['q_media_width'],
                 'q_media_height' => $this->question6['q_media_height'],
+                'q_media_alt' => $this->question6['q_media_alt'],
+                'q_media_num' => $this->question6['q_media_num'],
                 'q_option_order' => $this->question6['q_option_order'],
                 'dismiss' => '',
                 'options' => array(0 => array(
@@ -427,6 +432,7 @@ class PaperPropertiesTest extends unittestdatabase
                     'o_media' => $this->options['o_media'],
                     'o_media_width' => $this->options['o_media_width'],
                     'o_media_height' => $this->options['o_media_height'],
+                    'o_media_alt' => $this->options['o_media_alt'],
                     'marks_correct' => $this->options['marks_correct'],
                     'marks_incorrect' => $this->options['marks_incorrect'],
                     'marks_partial' => $this->options['marks_partial']
@@ -437,6 +443,7 @@ class PaperPropertiesTest extends unittestdatabase
                         'o_media' => $this->options2['o_media'],
                         'o_media_width' => $this->options2['o_media_width'],
                         'o_media_height' => $this->options2['o_media_height'],
+                        'o_media_alt' => $this->options2['o_media_alt'],
                         'marks_correct' => $this->options2['marks_correct'],
                         'marks_incorrect' => $this->options2['marks_incorrect'],
                         'marks_partial' => $this->options['marks_partial']
@@ -447,6 +454,7 @@ class PaperPropertiesTest extends unittestdatabase
                         'o_media' => $this->options3['o_media'],
                         'o_media_width' => $this->options3['o_media_width'],
                         'o_media_height' => $this->options3['o_media_height'],
+                        'o_media_alt' => $this->options3['o_media_alt'],
                         'marks_correct' => $this->options3['marks_correct'],
                         'marks_incorrect' => $this->options3['marks_incorrect'],
                         'marks_partial' => $this->options3['marks_partial']
@@ -480,14 +488,17 @@ class PaperPropertiesTest extends unittestdatabase
             'q_media' => $this->question2['q_media'],
             'q_media_width' => $this->question2['q_media_width'],
             'q_media_height' => $this->question2['q_media_height'],
+            'q_media_alt' => $this->question2['q_media_alt'],
+            'q_media_num' => $this->question2['q_media_num'],
             'q_option_order' => $this->question2['q_option_order'],
             'dismiss' => '',
             'options' => array(0 => array(
                 'correct' => null,
                 'option_text' => null,
-                'o_media' => null,
-                'o_media_width' => null,
-                'o_media_height' => null,
+                'o_media' => '',
+                'o_media_width' => '',
+                'o_media_height' => '',
+                'o_media_alt' => '',
                 'marks_correct' => null,
                 'marks_incorrect' => null,
                 'marks_partial' => null

@@ -107,9 +107,20 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         }
     } elseif ($options[0]['q_type'] == 'extmatch' or $options[0]['q_type'] == 'matrix') {
         $matching_scenarios = explode('|', $options[0]['scenario']);
-        $matching_media = explode('|', $options[0]['q_media']);
-        $matching_media_width = explode('|', $options[0]['q_media_width']);
-        $matching_media_height = explode('|', $options[0]['q_media_height']);
+        $matching_source = explode('|', $options[0]['q_media']);
+        $matching_width = explode('|', $options[0]['q_media_width']);
+        $matching_height = explode('|', $options[0]['q_media_height']);
+        $matching_alt = explode('|', $options[0]['q_media_alt']);
+        $matching_num = explode('|', $options[0]['q_media_num']);
+        $matching_media = array();
+        for ($i = 0; $i < count($matching_source); $i++) {
+            $matching_media[$matching_num[$i]] = array(
+                'source' => $matching_source[$i],
+                'width' => $matching_width[$i],
+                'height' => $matching_height[$i],
+                'alt' => $matching_alt[$i],
+            );
+        }
         $matching_options = array();
         $matching_users_answers = explode('|', $options[0]['correct']);
     }
@@ -289,9 +300,15 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         case 'extmatch':
             $matching_answers = explode('|', $options[0]['correct']);
 
-            if ($matching_media[0] != '') {
+            if ($matching_media[0]['source'] != '') {
                 echo '<div class="mediadiv">';
-                $questiondata->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
+                $questiondata->set_media(
+                    $matching_media[0]['source'],
+                    $matching_media[0]['width'],
+                    $matching_media[0]['height'],
+                    $matching_media[0]['alt'],
+                    ''
+                );
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo '</div>';
             }
@@ -303,7 +320,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             }
             $media_scenarios = 0;
             for ($part_id = 1; $part_id < 10; $part_id++) {
-                if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
+                if (isset($matching_media[$part_id]['source']) and $matching_media[$part_id]['source'] != '') {
                     $media_scenarios++;
                 }
             }
@@ -323,9 +340,15 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                     }
                     echo '>' . $matching_scenarios[$part_id - 1] . '</div>';
                 }
-                if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
+                if (isset($matching_media[$part_id]['source']) and $matching_media[$part_id]['source'] != '') {
                     echo '<p>';
-                    $questiondata->set_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '');
+                    $questiondata->set_media(
+                        $matching_media[$part_id]['source'],
+                        $matching_media[$part_id]['width'],
+                        $matching_media[$part_id]['height'],
+                        $matching_media[$part_id]['alt'],
+                        ''
+                    );
                     $render->render($questiondata, $string, 'paper/media.html');
                     echo "</p>\n";
                 }
@@ -446,9 +469,15 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             break;
         case 'matrix':
             $part_id = 1;
-            if ($matching_media[0] != '') {
+            if ($matching_media[0]['source'] != '') {
                 echo '<div class="mediadiv">';
-                $questiondata->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
+                $questiondata->set_media(
+                    $matching_media[0]['source'],
+                    $matching_media[0]['width'],
+                    $matching_media[0]['height'],
+                    $matching_media[0]['alt'],
+                    ''
+                );
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</div>\n";
             }

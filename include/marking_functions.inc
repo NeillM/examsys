@@ -170,15 +170,15 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
     $random_on = false;
 
     if (isset($preview_q_id)) {
-        $questions = $db->prepare('SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions LEFT JOIN options ON questions.q_id=options.o_id WHERE paper=? AND questions.q_id=? AND papers.question=questions.q_id ORDER BY display_pos, id_num');
+        $questions = $db->prepare('SELECT q_id, scenario, q_type, option_text, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions LEFT JOIN options ON questions.q_id=options.o_id WHERE paper=? AND questions.q_id=? AND papers.question=questions.q_id ORDER BY display_pos, id_num');
         $questions->bind_param('ii', $paper_id, $preview_q_id);
     } else {
-        $questions = $db->prepare('SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions LEFT JOIN options ON questions.q_id=options.o_id WHERE paper=? AND screen=? AND papers.question=questions.q_id  ORDER BY display_pos, id_num');
+        $questions = $db->prepare('SELECT q_id, scenario, q_type, option_text, correct, display_method, settings, score_method, marks_correct, marks_incorrect, marks_partial, display_pos FROM papers, questions LEFT JOIN options ON questions.q_id=options.o_id WHERE paper=? AND screen=? AND papers.question=questions.q_id  ORDER BY display_pos, id_num');
         $questions->bind_param('ii', $paper_id, $screen_no);
     }
     $questions->execute();
     $questions->store_result();
-    $questions->bind_result($q_id, $scenario, $q_type, $option_text, $q_media, $correct, $display_method, $settings, $score_method, $marks_correct, $marks_incorrect, $marks_partial, $display_pos);
+    $questions->bind_result($q_id, $scenario, $q_type, $option_text, $correct, $display_method, $settings, $score_method, $marks_correct, $marks_incorrect, $marks_partial, $display_pos);
     while ($questions->fetch()) {
         if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
             if ($q_type != 'info') {
@@ -192,7 +192,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
             if ($random_on == false and count($selected_q_id) > 0) {
                 foreach ($selected_q_id as &$used_qid) {
-                    $random_data = $db->prepare('SELECT q_id, scenario, q_type, option_text, q_media, correct, display_method, settings, '
+                    $random_data = $db->prepare('SELECT q_id, scenario, q_type, option_text, correct, display_method, settings, '
                         . 'score_method, marks_correct, marks_incorrect, marks_partial '
                         . 'FROM (questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num');
 
@@ -204,7 +204,6 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                           $scenario,
                           $q_type,
                           $option_text,
-                          $q_media,
                           $correct,
                           $display_method,
                           $settings,
@@ -222,6 +221,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         $marks_partial = $settings['marks_partial'];
                     }
                     while ($random_data->fetch()) {
+                        $media = QuestionUtils::getMediaAsString($q_id);
+                        $q_media = $media['source'];
                         $paper_array[] = array('q_id' => $new_q_id, 'scenario' => $scenario, 'q_type' => $q_type, 'option_text' => $option_text,
                         'q_media' => $q_media, 'correct' => $correct, 'display_method' => $display_method, 'settings' => $settings,
                         'score_method' => $score_method, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect,
@@ -241,6 +242,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $random_on = true;
             }
         } else {
+            $media = QuestionUtils::getMediaAsString($q_id);
+            $q_media = $media['source'];
             $paper_array[] = array('q_id' => $q_id, 'scenario' => $scenario, 'q_type' => $q_type, 'option_text' => $option_text, 'q_media' => $q_media, 'correct' => $correct, 'display_method' => $display_method, 'settings' => $settings, 'score_method' => $score_method, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial, 'question_no' => $tmp_question_no, 'display_pos' => $display_pos);
         }
         $old_q_type = $q_type;

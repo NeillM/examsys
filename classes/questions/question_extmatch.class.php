@@ -56,6 +56,33 @@ class QuestionEXTMATCH extends QuestionEdit
      */
     protected $all_media_widths = array();
 
+    /**
+     * An array of the alternate text for the media files used in the question.
+     *
+     * The first entry is the leadin media, the rest of the entries are for the scenarios.
+     *
+     * @var int[]
+     */
+    protected $all_media_alts = array();
+
+    /**
+     * An array of the owners for the media files used in the question.
+     *
+     * The first entry is the leadin media, the rest of the entries are for the scenarios.
+     *
+     * @var int[]
+     */
+    protected $all_media_owners = array();
+
+    /**
+     * An array of the number for the media files used in the question.
+     *
+     * The first entry is the leadin media, the rest of the entries are for the scenarios.
+     *
+     * @var int[]
+     */
+    protected $all_media_nums = array();
+
     /** @var string[] The feedback given when answered correctly for the scenarios. */
     protected $all_feedback = array();
   
@@ -75,7 +102,7 @@ class QuestionEXTMATCH extends QuestionEdit
     protected $_fields_editable = array('theme', 'leadin', 'notes', 'score_method', 'option_order', 'bloom', 'status');
     protected $_fields_compound = array('stem', 'media', 'correct_fback');
   
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
     
@@ -97,7 +124,6 @@ class QuestionEXTMATCH extends QuestionEdit
   
     /**
      * Compound the stems into a single string and set as the scenario
-     * @return multitype:
      */
     public function set_all_stems($value)
     {
@@ -112,7 +138,7 @@ class QuestionEXTMATCH extends QuestionEdit
     public function get_all_media()
     {
         $this->get_media();
-        return array('filenames' => $this->all_media_names, 'widths' => $this->all_media_widths, 'heights' => $this->all_media_heights);
+        return array('filenames' => $this->all_media_names, 'widths' => $this->all_media_widths, 'heights' => $this->all_media_heights, 'alts' => $this->all_media_alts, 'owners' => $this->all_media_owners, 'nums' => $this->all_media_nums);
     }
   
     /**
@@ -124,6 +150,9 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->set_all_medias($value['filenames']);
         $this->set_all_media_widths($value['widths']);
         $this->set_all_media_heights($value['heights']);
+        $this->set_all_media_alts($value['alts']);
+        $this->set_all_media_owners($value['owners']);
+        $this->set_all_media_nums($value['nums']);
     }
   
     /**
@@ -138,7 +167,6 @@ class QuestionEXTMATCH extends QuestionEdit
   
     /**
      * Compound the media filenames into a single string and set as the media
-     * @return multitype:
      */
     public function set_all_medias($value)
     {
@@ -158,14 +186,70 @@ class QuestionEXTMATCH extends QuestionEdit
   
     /**
      * Compound the media widths into a single string and set as the media
-     * @return multitype:
      */
     public function set_all_media_widths($value)
     {
         $this->all_media_widths = $value;
         $this->set_media('dummy');
     }
-  
+
+    /**
+     * Get the question media alt text as an array
+     * @return array
+     */
+    public function get_all_media_alts()
+    {
+        $this->get_media();
+        return $this->all_media_alts;
+    }
+
+    /**
+     * Compound the media alt texts into a single string and set as the media
+     */
+    public function set_all_media_alts($value)
+    {
+        $this->all_media_alts = $value;
+        $this->set_media('dummy');
+    }
+
+    /**
+     * Get the question media owners as an array
+     * @return array
+     */
+    public function get_all_media_owners()
+    {
+        $this->get_media();
+        return $this->all_media_owners;
+    }
+
+    /**
+     * Compound the media owners into a single string and set as the media
+     */
+    public function set_all_media_owners($value)
+    {
+        $this->all_media_owners = $value;
+        $this->set_media('dummy');
+    }
+
+    /**
+     * Get the question media numbers as an array
+     * @return array
+     */
+    public function get_all_media_nums()
+    {
+        $this->get_media();
+        return $this->all_media_nums;
+    }
+
+    /**
+     * Compound the media numbers into a single string and set as the media
+     */
+    public function set_all_media_nums($value)
+    {
+        $this->all_media_nums = $value;
+        $this->set_media('dummy');
+    }
+
     /**
      * Get the question media heights as an array
      * @return array
@@ -178,7 +262,6 @@ class QuestionEXTMATCH extends QuestionEdit
   
     /**
      * Compound the media heights into a single string and set as the media
-     * @return multitype:
      */
     public function set_all_media_heights($value)
     {
@@ -198,7 +281,6 @@ class QuestionEXTMATCH extends QuestionEdit
     
     /**
      * Compound the question feedbacks into a single string and set as the correct feedback
-     * @return multitype:
      */
     public function set_all_correct_fbacks($value)
     {
@@ -212,15 +294,28 @@ class QuestionEXTMATCH extends QuestionEdit
      */
     public function get_media()
     {
-        if ($this->media != '') {
-            $this->all_media_names = explode('|', $this->media);
-            $this->all_media_widths = explode('|', $this->media_width);
-            $this->all_media_heights = explode('|', $this->media_height);
+        if ($this->media_source != '') {
+            $num = explode('|', $this->media_num);
+            $source = explode('|', $this->media_source);
+            $width = explode('|', $this->media_width);
+            $height = explode('|', $this->media_height);
+            $alt = explode('|', $this->media_alt);
+            $owner = explode('|', $this->media_owner);
+            // Ensure indexes match up with media number.
+            for ($i = 0; $i < count($num); $i++) {
+                $idx = $num[$i];
+                $this->all_media_nums[$idx] = $idx;
+                $this->all_media_names[$idx] = $source[$i];
+                $this->all_media_widths[$idx] = $width[$i];
+                $this->all_media_heights[$idx] = $height[$i];
+                $this->all_media_alts[$idx] = $alt[$i];
+                $this->all_media_owners[$idx] = $owner[$i];
+            }
         } else {
-            $this->all_media_names = $this->all_media_widths = $this->all_media_heights = array_fill(0, 11, '');
+            $this->all_media_names = $this->all_media_widths = $this->all_media_heights = $this->all_media_alts = $this->all_media_owners = $this->all_media_nums = array_fill(0, 11, '');
         }
           
-        return $this->media;
+        return $this->media_source;
     }
   
     /**
@@ -229,9 +324,12 @@ class QuestionEXTMATCH extends QuestionEdit
      */
     public function set_media($value)
     {
-        $this->media = implode('|', $this->all_media_names);
+        $this->media_source = implode('|', $this->all_media_names);
         $this->media_width = implode('|', $this->all_media_widths);
         $this->media_height = implode('|', $this->all_media_heights);
+        $this->media_alt = implode('|', $this->all_media_alts);
+        $this->media_owner = implode('|', $this->all_media_owners);
+        $this->media_num = implode('|', $this->all_media_nums);
     }
 
     /**
@@ -295,7 +393,10 @@ class QuestionEXTMATCH extends QuestionEdit
             $inuse = !empty($stem) or !empty($this->all_media_names[$key]) or !empty($this->all_feedback[$key])
             or !empty($this->correct_fback[$key]);
             $no_text = (trim(param::clean($stem, param::TEXT)) === '');
-            $no_media = ($this->all_media_names[$key] === '');
+            $no_media = false;
+            if (!isset($this->all_media_names[$key]) or $this->all_media_names[$key] === '') {
+                $no_media = true;
+            }
             if ($inuse and $no_text and $no_media) {
                 // The stem and media must not be empty.
                 $scenario = $key + 1;

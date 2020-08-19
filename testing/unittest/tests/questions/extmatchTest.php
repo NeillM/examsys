@@ -74,23 +74,12 @@ class extmatchtest extends unittestdatabase
     {
         $data = questiondata::get_datastore('extmatch');
         $data->scenario = "<div>It is now known as;</div>|<div>It's football team is called</div>|<div>It's most famous landmark is the</div>|||||||";
-        $data->qmedia = '1516973089.jpg|1516973089.png|1516975621.jpg||||||||';
-        $data->qmediawidth = '1480|480|951||||||||';
-        $data->qmediaheight = '776|105|121||||||||';
         $scenarios = array('<div>It is now known as;</div>',
             "<div>It's football team is called</div>",
             "<div>It's most famous landmark is the</div>", '', '', '', '', '', '', '');
-        $media = array('1516973089.jpg',
-            '1516973089.png',
-            '1516975621.jpg', '', '', '', '', '', '', '', '');
-        $width = array(1480, 480, 951, '', '', '', '', '', '', '', '');
-        $height = array(776, 105, 121, '', '', '', '', '', '', '', '');
         $useranswer = '1|3|2';
         $data->set_question(1, $useranswer, '');
         $this->assertEquals($scenarios, $data->scenarios);
-        $this->assertEquals($media, $data->media);
-        $this->assertEquals($width, $data->mediawidth);
-        $this->assertEquals($height, $data->mediaheight);
         $this->assertEquals(array('1', '3', '2'), $data->usersanswers);
         $useranswer = null;
         $data->set_question(0, $useranswer, '');
@@ -133,11 +122,11 @@ class extmatchtest extends unittestdatabase
         $data->scenarios = array('<div>It is now known as;</div>',
             "<div>It's football team is called</div>",
             "<div>It's most famous landmark is the</div>", '', '', '', '', '', '', '');
-        $data->media = array('1516973089.jpg',
-            '1516973089.png',
-            '1516975621.jpg', '', '', '', '', '', '', '', '');
-        $data->mediawidth = array(1480, 480, 951, '', '', '', '', '', '', '', '');
-        $data->mediaheight = array(776, 105, 121, '', '', '', '', '', '', '', '');
+        $data->qmedia = '1516973089.jpg|1516973089.png|1516975621.jpg||||||||';
+        $data->qmediawidth = '1480|480|951||||||||';
+        $data->qmediaheight = '776|105|121||||||||';
+        $data->qmediaalt = 'image1|image2|image3||||||||';
+        $data->qmedianum = '0|1|2||||||||';
         $data->usersanswers = array('1', '3', '2');
         $data->marks = 0;
         $cfg_root_path = $this->config->get('cfg_root_path');
@@ -150,6 +139,7 @@ class extmatchtest extends unittestdatabase
                     'mediawidth' => 480,
                     'mediaheight' => 105,
                     'mediaurl' => $cfg_root_path . '/getfile.php?type=media&filename=1516973089.png',
+                    'mediaalt' => 'image2',
                     'mediadelete' => false,
                     'mediaedit' => false,
                     'mediatype' => 2,
@@ -203,6 +193,7 @@ class extmatchtest extends unittestdatabase
                     'mediawidth' => 951,
                     'mediaheight' => 121,
                     'mediaurl' => $cfg_root_path . '/getfile.php?type=media&filename=1516975621.jpg',
+                    'mediaalt' => 'image3',
                     'mediadelete' => false,
                     'mediaedit' => false,
                     'mediatype' => 2,

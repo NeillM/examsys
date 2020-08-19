@@ -31,6 +31,7 @@ define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, Jsxls, 
                 ignore: '',
                 rules: {
                     leadin: 'required',
+                    alt_q_media: 'required',
                     option_text1: 'required',
                     option_text2: 'required'
                 },

@@ -136,35 +136,19 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     }
     closedir($dp);
 
-    //- Get all the files from the 'questions' table. ------------------------------------
-    $result = $mysqli->prepare("SELECT q_media FROM questions WHERE q_media != ''");
+    //- Get all the files from the 'media' table. ------------------------------------
+    $result = $mysqli->prepare('SELECT source FROM media');
     $result->execute();
     $result->store_result();
-    $result->bind_result($q_media);
+    $result->bind_result($source);
     while ($result->fetch()) {
-        if (mb_strlen($q_media) != mb_substr_count($q_media, '|')) {     // Extended matching with no graphics.
-            $tmp_files = explode('|', $q_media);
-            foreach ($tmp_files as $single_file) {
-                if (isset($file_array[$single_file])) {
-                    $file_array[$single_file] = 1;
-                } else {
-                    $missing_array[] = $single_file;
-                }
-            }
+        if (isset($file_array[$source])) {
+            $file_array[$source] = 1;
+        } else {
+            $missing_array[] = $source;
         }
     }
-    $result->close();
-
-    //- Get all the files from the 'options' table. ------------------------------------
-    $result = $mysqli->prepare("SELECT o_media FROM options WHERE o_media != '' ORDER BY id_num");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($o_media);
-    while ($result->fetch()) {
-        if (isset($file_array[$o_media])) {
-            $file_array[$o_media] = 1;
-        }
-    }
+    $result->free_result();
     $result->close();
 
     //- Check lead-in field for any images (Latex, etc) ---------------------------------

@@ -26,17 +26,48 @@
 require '../include/staff_auth.inc';
 require '../include/question_types.php';
 require '../include/display_functions.inc';
+require_once '../include/errors.php';
+
+$qid = check_var('q_id', 'GET', true, false, true);
+
 $marks_color = '#808080';
 $themecolor = '#316AC5';
 $labelcolor = '#C00000';
 $textsize = 100;
 $question_no = 0;
 $old_q_id = '';
-$question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, settings FROM questions LEFT JOIN options on questions.q_id=options.o_id  WHERE q_id=?  ORDER BY id_num");
-$question_data->bind_param('i', $_GET['q_id']);
+$question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct,
+    marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text,
+    source, width, height, alt, notes, settings
+    FROM questions
+    LEFT JOIN options on questions.q_id = options.o_id
+    LEFT JOIN options_media ON options.id_num = options_media.oid
+    LEFT JOIN media m on options_media.mediaid = m.id
+    WHERE q_id= ? ORDER BY id_num");
+$question_data->bind_param('i', $qid);
 $question_data->execute();
 $question_data->store_result();
-$question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $settings);
+$question_data->bind_result(
+    $q_type,
+    $q_id,
+    $score_method,
+    $display_method,
+    $settings,
+    $marks_correct,
+    $marks_incorrect,
+    $marks_partial,
+    $theme,
+    $scenario,
+    $leadin,
+    $correct,
+    $option_text,
+    $option_media,
+    $option_media_width,
+    $option_media_height,
+    $option_media_alt,
+    $notes,
+    $setting
+);
 $num_rows = $question_data->num_rows;
 while ($question_data->fetch()) {
     if ($old_q_id != $q_id) {
@@ -49,9 +80,12 @@ while ($question_data->fetch()) {
         $question['score_method'] = $score_method;
         $question['display_method'] = $display_method;
         $question['settings'] = $settings;
-        $question['q_media'] = $q_media;
-        $question['q_media_width'] = $q_media_width;
-        $question['q_media_height'] = $q_media_height;
+        $media = QuestionUtils::getMediaAsString($qid);
+        $question['q_media'] = $media['source'];
+        $question['q_media_width'] = $media['width'];
+        $question['q_media_height'] = $media['height'];
+        $question['q_media_alt'] = $media['alt'];
+        $question['q_media_num'] = $media['num'];
         $question['dismiss'] = '';
         $question['settings'] = $settings;
         $question['screen'] = 1;
@@ -67,7 +101,17 @@ while ($question_data->fetch()) {
             }
         }
     }
-    $question['options'][] = array('correct' => $correct, 'option_text' => $option_text, 'o_media' => $o_media, 'o_media_width' => $o_media_width, 'o_media_height' => $o_media_height, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial);
+    $question['options'][] = array(
+        'correct' => $correct,
+        'option_text' => $option_text,
+        'o_media' => $option_media,
+        'o_media_width' => $option_media_width,
+        'o_media_height' => $option_media_height,
+        'o_media_alt' => $option_media_alt,
+        'marks_correct' => $marks_correct,
+        'marks_incorrect' => $marks_incorrect,
+        'marks_partial' => $marks_partial
+    );
 }
 $question_data->close();
 $question_no = 0;

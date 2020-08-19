@@ -78,6 +78,8 @@ class questiondatatest extends unittestdatabase
             'q_media' => '1517406311.png',
             'q_media_width' => '480',
             'q_media_height' => '105',
+            'q_media_alt' => 'image1',
+            'q_media_num' => 0,
             'score_method' => 'Mark per Option',
             'display_method' => 'vertical',
             'options' => array(
@@ -85,8 +87,9 @@ class questiondatatest extends unittestdatabase
                     'correct' => '1',
                     'option_text' => '<div>True</div>',
                     'o_media' => '',
-                    'o_media_width' => '0',
-                    'o_media_height' => '0',
+                    'o_media_width' => '',
+                    'o_media_height' => '',
+                    'o_media_alt' => '',
                     'marks_correct' => 2,
                     'marks_incorrect' => -1,
                     'marks_partial' => 0
@@ -97,6 +100,7 @@ class questiondatatest extends unittestdatabase
                     'o_media' => '1517409282.jpg',
                     'o_media_width' => '951',
                     'o_media_height' => '121',
+                    'o_media_alt' => '',
                     'marks_correct' => 2,
                     'marks_incorrect' => -1,
                     'marks_partial' => 0,
@@ -110,6 +114,7 @@ class questiondatatest extends unittestdatabase
                     'o_media' => '1517411342.png',
                     'o_media_width' => '693',
                     'o_media_height' => '149',
+                    'o_media_alt' => '',
                     'marks_correct' => 2,
                     'marks_incorrect' => -1,
                     'marks_partial' => 0,
@@ -121,8 +126,9 @@ class questiondatatest extends unittestdatabase
                     'correct' => '1',
                     'option_text' => '<div>Depends on which country you\'re in</div>',
                     'o_media' => '',
-                    'o_media_width' => '0',
-                    'o_media_height' => '0',
+                    'o_media_width' => '',
+                    'o_media_height' => '',
+                    'o_media_alt' => '',
                     'marks_correct' => 2,
                     'marks_incorrect' => -1,
                     'marks_partial' => 0
@@ -152,6 +158,7 @@ class questiondatatest extends unittestdatabase
         $this->assertEquals('1517406311.png', $data->qmedia);
         $this->assertEquals('480', $data->qmediawidth);
         $this->assertEquals('105', $data->qmediaheight);
+        $this->assertEquals('image1', $data->qmediaalt);
         $this->assertEquals('question test leadin', $data->leadin);
         $this->assertEquals($question, $data->question);
         $this->assertEquals($user_answers, $data->useranswers);
@@ -173,9 +180,10 @@ class questiondatatest extends unittestdatabase
                 'optionmedia' => array(
                     'mediaid' => -1,
                     'mediafile' => '',
-                    'mediawidth' => '0',
-                    'mediaheight' => '0',
+                    'mediawidth' => '',
+                    'mediaheight' => '',
                     'mediaurl' => $cfg_root_path . '/getfile.php?type=media&filename=',
+                    'mediaalt' => '',
                     'mediadelete' => false,
                     'mediaedit' => false,
                     'mediatype' => 1,
@@ -204,6 +212,7 @@ class questiondatatest extends unittestdatabase
                     'mediawidth' => '951',
                     'mediaheight' => '121',
                     'mediaurl' => $cfg_root_path . '/getfile.php?type=media&filename=1517409282.jpg',
+                    'mediaalt' => '',
                     'mediadelete' => false,
                     'mediaedit' => false,
                     'mediatype' => 2,
@@ -232,6 +241,7 @@ class questiondatatest extends unittestdatabase
                     'mediawidth' => '693',
                     'mediaheight' => '149',
                     'mediaurl' => $cfg_root_path . '/getfile.php?type=media&filename=1517411342.png',
+                    'mediaalt' => '',
                     'mediadelete' => false,
                     'mediaedit' => false,
                     'mediatype' => 2,
@@ -257,9 +267,10 @@ class questiondatatest extends unittestdatabase
                 'optionmedia' => array(
                     'mediaid' => -1,
                     'mediafile' => '',
-                    'mediawidth' => '0',
-                    'mediaheight' => '0',
+                    'mediawidth' => '',
+                    'mediaheight' => '',
                     'mediaurl' => $cfg_root_path . '/getfile.php?type=media&filename=',
+                    'mediaalt' => '',
                     'mediadelete' => false,
                     'mediaedit' => false,
                     'mediatype' => 1,
@@ -322,13 +333,15 @@ class questiondatatest extends unittestdatabase
         $border_color = '#000000';
         $imageid = 1;
         $locked = true;
+        $alt = 'test media';
         $mediadirectory = rogo_directory::get_directory('media');
         $url = $mediadirectory->url($filename);
-        $data->set_media($filename, $width, $height, $border_color, false, $imageid, $locked);
+        $data->set_media($filename, $width, $height, $alt, $border_color, false, $imageid, $locked);
         $this->assertEquals($imageid, $data->mediaid);
         $this->assertEquals($filename, $data->mediafile);
         $this->assertEquals($width, $data->mediawidth);
         $this->assertEquals($height, $data->mediaheight);
+        $this->assertEquals($alt, $data->mediaalt);
         $this->assertEquals($url, $data->mediaurl);
         $this->assertFalse($data->mediadelete);
         $this->assertFalse($data->mediaedit);
@@ -337,13 +350,14 @@ class questiondatatest extends unittestdatabase
         $this->assertEquals($border_color, $data->mediabordercolour);
         // Test option media.
         $part_id = 2;
-        $data->set_media($filename, $width, $height, $border_color, false, $imageid, $locked, $part_id);
+        $data->set_media($filename, $width, $height, $alt, $border_color, false, $imageid, $locked, $part_id);
         $option['optionmedia'] = array(
             'mediaid' => $imageid,
             'mediafile' => $filename,
             'mediawidth' => $width,
             'mediaheight' => $height,
             'mediaurl' => $url,
+            'mediaalt' => 'test media',
             'mediadelete' => false,
             'mediaedit' => false,
             'mediatype' => 2,

@@ -613,3 +613,22 @@ textarea[disabled], textarea[readonly="readonly"], select:disabled, input[type=t
 .mce-widget.mce-tooltip {
   display: none !important;
 }
+
+.filepicker {
+    width: 150px;
+    height: 25px;
+    margin: 4px 4px 4px 0;
+}
+
+.filepickersection {
+    display: none;
+}
+
+.filepickertextarea {
+    width: 500px;
+    height: 50px;
+}
+
+#alt label {
+    vertical-align: top;
+}

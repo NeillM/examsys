@@ -82,7 +82,6 @@ $string['papercopyright'] = '© %s, %s';
 $string['htmlresp'] = 'html response';
 // Media.
 $string['iframes'] = 'Your browser does not support iframes!';
-$string['image'] = 'Image';
 $string['audiofile'] = 'Audio File';
 $string['datafile'] = 'Data File';
 $string['delete'] = 'Delete';

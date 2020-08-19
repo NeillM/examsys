@@ -33,9 +33,18 @@ class OptionEdit extends RogoObject
     public $id = -1;
     protected $question_id = null;
     protected $text = '';
+    /** @var int media file id. */
     protected $media = '';
+    /** @var string media file source. */
+    protected $media_source = '';
+    /** @var int|string media file width. */
     protected $media_width = '';
+    /** @var int|string media file height. */
     protected $media_height = '';
+    /** @var string media file alternate text. */
+    protected $media_alt = '';
+    /** @var int media file owner. */
+    protected $media_owner = null;
     protected $correct_fback = '';
     protected $incorrect_fback = '';
     protected $correct = '';
@@ -43,8 +52,9 @@ class OptionEdit extends RogoObject
     protected $marks_incorrect = 0;
     protected $marks_partial = 0;
 
-    protected static $_fields = array('question_id', 'text', 'media', 'media_width', 'media_height', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
-    // 'media' should not appear in the list below as they are handled separately
+    protected static $_fields = array('question_id', 'text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
+    protected static $_mfields = array('media_source', 'media_width', 'media_height', 'media_alt', 'media_owner');
+    protected static $_omfields = array('media', 'id');
     protected $_fields_editable = array('text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
     protected $_fields_required = array('question_id', 'marks_correct');
 
@@ -55,7 +65,7 @@ class OptionEdit extends RogoObject
     protected $_data = array();
 
     // Map our 'nice' property names to the database fields
-    protected $_field_map = array('question_id' => 'o_id', 'text' => 'option_text', 'media' => 'o_media', 'media_width' => 'o_media_width', 'media_height' => 'o_media_height', 'correct_fback' => 'feedback_right', 'incorrect_fback' => 'feedback_wrong');
+    protected $_field_map = array('question_id' => 'o_id', 'text' => 'option_text', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'correct_fback' => 'feedback_right', 'incorrect_fback' => 'feedback_wrong');
     protected $_pretty_names = array('question_id' => 'Question ID', 'text' => '', 'correct_fback' => 'Correct Feedback', 'incorrect_fback' => 'Incorrect Feedback', 'correct' => 'Correct Value', 'marks_correct' => 'Marks (correct)', 'marks_incorrect' => 'Marks (incorrect)', 'marks_partial' => 'Marks (partial)');
 
     // Refrence to array of localised language strings
@@ -85,6 +95,12 @@ class OptionEdit extends RogoObject
         // Array of references to the fields.  Allows succinct use of call_user_func_array
         foreach (self::$_fields as $field) {
             $this->_data[] = &$this->$field;
+        }
+        foreach (self::$_mfields as $field) {
+            $this->_mdata[$field] = &$this->$field;
+        }
+        foreach (self::$_omfields as $field) {
+            $this->_omdata[$field] = &$this->$field;
         }
 
         // Check the type of $data
@@ -210,17 +226,17 @@ class OptionEdit extends RogoObject
         if ($valid === true) {
             // If $id is -1 we're inserting a new record
             if ($this->id == -1) {
-                $params = array_merge(array('issiisssddd'), $this->_data);
+                $params = array_merge(array('issssddd'), $this->_data);
                 $query = <<< QUERY
-INSERT INTO options(o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO options(o_id, option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
                 // Otherwise we're updating an existing one
-                $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
+                $params = array_merge(array('issssdddi'), $this->_data, array(&$this->id));
                 $query = <<< QUERY
 UPDATE options
-SET o_id = ?, option_text = ?, o_media = ?, o_media_width = ?, o_media_height = ?, feedback_right = ?, feedback_wrong = ?, correct = ?, marks_correct = ?, marks_incorrect = ?, marks_partial = ?
+SET o_id = ?, option_text = ?, feedback_right = ?, feedback_wrong = ?, correct = ?, marks_correct = ?, marks_incorrect = ?, marks_partial = ?
 WHERE id_num = ?
 QUERY;
             }
@@ -228,10 +244,112 @@ QUERY;
             call_user_func_array(array($result,'bind_param'), $params);
             $result->execute();
             $success = ($result->affected_rows > -1);
-
+            $newoption = false;
             if ($success) {
+                // New Option.
                 if ($this->id == -1) {
+                    $newoption = true;
                     $this->id = $this->_mysqli->insert_id;
+                }
+                $media = $this->_omdata['media'];
+                $source = $this->_mdata['media_source'];
+                $width = $this->_mdata['media_width'];
+                $height = $this->_mdata['media_height'];
+                $alt = $this->_mdata['media_alt'];
+                $owner = $this->_mdata['media_owner'];
+
+                $insertmediaparams = array();
+                $updatemediaparams = array();
+                if ($source != '') {
+                    if (!empty($media)) {
+                        // Update.
+                        $updatemediaparams = array(
+                            'source' => $source,
+                            'width' => $width,
+                            'height' => $height,
+                            'alt' => $alt,
+                            'owner' => $owner,
+                            'id' => $media
+                        );
+                    } else {
+                        // Insert.
+                        $insertmediaparams = array(
+                            'source' => $source,
+                            'width' => $width,
+                            'height' => $height,
+                            'alt' => $alt,
+                            'owner' => $owner
+                        );
+                    }
+                }
+
+                // Insert media rows.
+                $mediaid = -1;
+                if (count($insertmediaparams) > 0) {
+                    $mediaid = \media_handler::insertMedia(
+                        $insertmediaparams['source'],
+                        $insertmediaparams['width'],
+                        $insertmediaparams['height'],
+                        $insertmediaparams['alt'],
+                        $insertmediaparams['owner']
+                    );
+                    if ($mediaid === -1) {
+                        echo $this->langstrings['showerror'] . '<br >';
+                    }
+                }
+                // Update media rows.
+                if (count($updatemediaparams) > 0) {
+                    $ok = \media_handler::updateMedia(
+                        $updatemediaparams['id'],
+                        $updatemediaparams['source'],
+                        $updatemediaparams['width'],
+                        $updatemediaparams['height'],
+                        $updatemediaparams['alt'],
+                        $updatemediaparams['owner'],
+                    );
+                    if (!$ok) {
+                        echo $this->langstrings['showerror'] . '<br >';
+                    }
+                }
+
+                // Insert questions_media rows.
+                if ($mediaid !== -1) {
+                    $ok = \media_handler::linkOptionToMedia(
+                        $mediaid,
+                        $this->id,
+                    );
+                    if (!$ok) {
+                        echo $this->langstrings['showerror'] . '<br >';
+                    }
+                }
+
+                $deletemediaparams = array();
+                $deleteoptionmediaparams = array();
+                // If media width set to 0 delete it.
+                if ($width === 0) {
+                    // Delete.
+                    $deletemediaparams = array(
+                        'id' => $media,
+                    );
+                    $deleteoptionmediaparams = array(
+                        'id' => $media,
+                        'oid' => $this->id,
+                    );
+                }
+
+                // Delete questions_media rows.
+                if (count($deleteoptionmediaparams) > 0) {
+                    $ok = \media_handler::unlinkOptionFromMedia($deleteoptionmediaparams['id'], $deleteoptionmediaparams['oid']);
+                    if (!$ok) {
+                        echo $this->langstrings['showerror'] . '<br >';
+                    }
+                    $ok = \media_handler::removeMedia($deletemediaparams['id']);
+                    if (!$ok) {
+                        echo $this->langstrings['showerror'] . '<br >';
+                    }
+                }
+
+                if ($newoption) {
                     $this->track_new($logger, $option_number);
                 } else {
                     // Log any changes
@@ -290,7 +408,7 @@ QUERY;
      */
     public function is_blank()
     {
-        return ($this->text == '' and $this->media == '');
+        return ($this->text == '' and $this->media_source == '');
     }
 
     /**
@@ -362,7 +480,7 @@ QUERY;
      */
     public function get_media()
     {
-        return array('filename' => $this->media, 'width' => $this->media_width, 'height' => $this->media_height);
+        return array('filename' => $this->media_source, 'width' => $this->media_width, 'height' => $this->media_height, 'alt' => $this->media_alt, 'owner' => $this->media_owner);
     }
 
     /**
@@ -371,11 +489,14 @@ QUERY;
      */
     public function set_media($value)
     {
-        if ($value != $this->media) {
-            $this->set_modified_field('media', $this->media, sprintf($this->_lang_strings['optionmedia'], $this->_number));
-            $this->media = $value['filename'];
+        if ($value != $this->media_source) {
+            $this->set_modified_field('media_source', $this->media_source, sprintf($this->_lang_strings['optionmedia'], $this->_number));
+            $this->set_modified_field('media_alt', $this->media_alt, sprintf($this->_lang_strings['optionmedia'], $this->_number));
+            $this->media_source = $value['filename'];
             $this->media_width = (empty($value['width'])) ? 0 : $value['width'];
             $this->media_height = (empty($value['height'])) ? 0 : $value['height'];
+            $this->media_alt = (empty($value['alt'])) ? '' : $value['alt'];
+            $this->media_owner = (empty($value['owner'])) ? null : $value['owner'];
         }
     }
 
@@ -585,7 +706,7 @@ QUERY;
     private function get_option()
     {
         $o_query = <<< QUERY
-SELECT o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial
+SELECT o_id, option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial
 FROM options
 WHERE id_num = ?
 QUERY;
@@ -595,6 +716,16 @@ QUERY;
         $result->store_result();
         call_user_func_array(array($result, 'bind_result'), $this->_data);
         $result->fetch();
+
+        $media = QuestionUtils::getOptionMedia($this->id);
+        if ($media !== false) {
+            $this->media = $media->id;
+            $this->media_source = $media->source;
+            $this->media_width = $media->width;
+            $this->media_height = $media->height;
+            $this->media_alt = $media->alt;
+            $this->media_owner = $media->owner;
+        }
     }
 
     protected function validate()
@@ -621,7 +752,7 @@ QUERY;
      */
     protected function track_new($logger, $option_number)
     {
-        $log_text = ($this->text != '') ? $this->text : $this->media;
+        $log_text = ($this->text != '') ? $this->text : $this->media_source;
         $logger->track_change($this->_lang_strings['newoption'], $this->question_id, $this->_user_id, '', $this->text, sprintf($this->_lang_strings['optionno'], $option_number));
     }
 

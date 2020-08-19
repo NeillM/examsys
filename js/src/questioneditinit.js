@@ -21,6 +21,7 @@
 requirejs(['media', 'questionedit', 'questionmapping', 'state', 'jquery'], function (Media, ADDEDIT, MAPPING, STATE, $) {
     var media = new Media();
     media.init();
+    media.filepicker();
     var addedit = new ADDEDIT();
     var mapping = new MAPPING();
     var state = new STATE();

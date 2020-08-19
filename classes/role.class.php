@@ -72,7 +72,7 @@ class Role
         $query->bind_result($id, $role);
 
         $roles = [];
-        while($query->fetch()) {
+        while ($query->fetch()) {
             $roles[$id] = $role;
         }
         $query->close();
@@ -263,7 +263,8 @@ class Role
      * @param array $roles Array of role names.
      * @throws \InvalidRole If the role combination is not valid.
      */
-    public static function validateCombination(array $roles): void {
+    public static function validateCombination(array $roles): void
+    {
         if (empty($roles)) {
             throw new InvalidRole('Users must have a role');
         }

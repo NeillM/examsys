@@ -14,9 +14,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['state', 'jqueryleadinonly', 'questioneditlikert', 'jquery'], function (STATE, LEADIN, ADDEDIT, $) {
-    var leadin = new LEADIN();
-    leadin.init();
+requirejs(['state', 'jquerylikert', 'questioneditlikert', 'jquery'], function (STATE, Likert, ADDEDIT, $) {
+    var likert = new Likert();
+    likert.init();
     var addedit = new ADDEDIT();
     $('#scale_type').change(function() {
         addedit.checkShowLikertCustom(this);

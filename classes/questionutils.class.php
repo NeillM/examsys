@@ -621,4 +621,127 @@ SQL;
             return false;
         }
     }
+
+    /**
+     * Get the question media as an array of MediaObjects
+     * @param integer $qid question id
+     * @return array
+     */
+    public static function getMedia(int $qid): array
+    {
+        $configObject = Config::get_instance();
+        $mediasql = $configObject->db->prepare('SELECT id, source, width, height, alt, ownerid, num
+            FROM media, questions_media 
+            WHERE media.id = questions_media.mediaid
+            AND questions_media.qid = ?
+            ORDER BY num ASC');
+        $mediasql->bind_param('i', $qid);
+        $mediasql->execute();
+        $mediasql->store_result();
+        $mediasql->bind_result(
+            $q_media_id,
+            $q_media_source,
+            $q_media_width,
+            $q_media_height,
+            $q_media_alt,
+            $q_media_owner,
+            $q_media_num
+        );
+        $media = array();
+        while ($mediasql->fetch()) {
+            $media[] = new \MediaObject(
+                $q_media_id,
+                $q_media_source,
+                $q_media_width,
+                $q_media_height,
+                $q_media_alt,
+                $q_media_owner,
+                $q_media_num,
+            );
+        }
+        $mediasql->free_result();
+        $mediasql->close();
+        return $media;
+    }
+
+    /**
+     * Get the question media as an array of strings
+     * @param integer $qid question id
+     * @return array
+     */
+    public static function getMediaAsString(int $qid): array
+    {
+        $media = self::getMedia($qid);
+        $mediaarray = array(
+            'source' => '',
+            'width' => '',
+            'height' => '',
+            'alt' => '',
+            'num' => '',
+            'owner' => '',
+            'id' => '',
+        );
+        foreach ($media as $m) {
+            $mediaarray['id'] .= $m->id . '|';
+            $mediaarray['source'] .= $m->source . '|';
+            $mediaarray['width'] .= $m->width . '|';
+            $mediaarray['height'] .= $m->height . '|';
+            $mediaarray['alt'] .= $m->alt . '|';
+            $mediaarray['owner'] .= $m->owner . '|';
+            $mediaarray['num'] .= $m->num . '|';
+        }
+        $mediaarray['source'] = rtrim($mediaarray['source'], '|');
+        $mediaarray['width'] = rtrim($mediaarray['width'], '|');
+        $mediaarray['height'] = rtrim($mediaarray['height'], '|');
+        $mediaarray['alt'] = rtrim($mediaarray['alt'], '|');
+        $mediaarray['owner'] = rtrim($mediaarray['owner'], '|');
+        $mediaarray['num'] = rtrim($mediaarray['num'], '|');
+        $mediaarray['id'] = rtrim($mediaarray['id'], '|');
+        return $mediaarray;
+    }
+
+    /**
+     * Get the option media
+     * @param integer $oid option id
+     * @return MediaObject|bool
+     */
+    public static function getOptionMedia(int $oid)
+    {
+        $media = false;
+        $configObject = Config::get_instance();
+        $mediasql = $configObject->db->prepare(
+            'SELECT id, source, width, height, alt, ownerid
+            FROM media, options_media 
+            WHERE media.id = options_media.mediaid
+            AND options_media.oid = ?
+            ORDER BY oid ASC'
+        );
+        $mediasql->bind_param('i', $oid);
+        $mediasql->execute();
+        $mediasql->store_result();
+        $mediasql->bind_result(
+            $o_media_id,
+            $o_media_source,
+            $o_media_width,
+            $o_media_height,
+            $o_media_alt,
+            $o_media_owner
+        );
+        $rows = $mediasql->num_rows;
+        if ($rows == 1) {
+            $mediasql->fetch();
+            $media = new \MediaObject(
+                $o_media_id,
+                $o_media_source,
+                $o_media_width,
+                $o_media_height,
+                $o_media_alt,
+                $o_media_owner,
+                0
+            );
+        }
+        $mediasql->free_result();
+        $mediasql->close();
+        return $media;
+    }
 }

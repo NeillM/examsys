@@ -44,7 +44,27 @@ define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, jsxls, 
                                 return ($('#option_media2').val() == '' && ($('#existing_media2').length == 0 || $('#existing_media2').val() == ''));
                             }
                         }
-                    }
+                    },
+                    alt_option_media1: 'required',
+                    alt_option_media2: 'required',
+                    alt_option_media3: 'required',
+                    alt_option_media4: 'required',
+                    alt_option_media5: 'required',
+                    alt_option_media6: 'required',
+                    alt_option_media7: 'required',
+                    alt_option_media8: 'required',
+                    alt_option_media9: 'required',
+                    alt_option_media10: 'required',
+                    alt_option_media11: 'required',
+                    alt_option_media12: 'required',
+                    alt_option_media13: 'required',
+                    alt_option_media14: 'required',
+                    alt_option_media15: 'required',
+                    alt_option_media16: 'required',
+                    alt_option_media17: 'required',
+                    alt_option_media18: 'required',
+                    alt_option_media19: 'required',
+                    alt_option_media20: 'required',
                 },
                 messages: {
                     leadin: jsxls.lang_string['enterleadin'],

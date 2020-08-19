@@ -42,9 +42,20 @@ class QuestionEdit extends RogoObject
     protected $standards_setting = '';
     protected $bloom = null;
     protected $owner_id = null;
+    /** @var int|string media file id(s). */
     protected $media = '';
+    /** @var string media file source(s). */
+    protected $media_source = '';
+    /** @var int|string media file width(s). */
     protected $media_width = 0;
+    /** @var int|string media file height(s). */
     protected $media_height = 0;
+    /** @var string media file alternate text(s). */
+    protected $media_alt = '';
+    /** @var int|string media file owner(s). */
+    protected $media_owner = null;
+    /** @var int|string media file number(s). */
+    protected $media_num = 0;
     protected $teams = array();
     protected $checkout_time = null;
     protected $checkout_author_id = '';
@@ -56,6 +67,8 @@ class QuestionEdit extends RogoObject
     protected $settings = '';
     protected $guid = null;
     public $options = array();
+    /** @var array the current questin media */
+    protected $currentmedia = array();
 
     public $max_options = 20;
     protected $min_options = 1;
@@ -74,7 +87,11 @@ class QuestionEdit extends RogoObject
     protected $_use_bloom = true;
 
     protected $_user_id;
-    protected $_fields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'media', 'media_width', 'media_height', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
+    protected $_qfields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
+    protected $_fields = array('id', 'type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
+    protected $_mfields = array('media_source', 'media_width', 'media_height', 'media_alt', 'media_owner');
+    protected $_qmfields = array('media', 'id', 'media_num');
+
     protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
     protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
     protected $_fields_settings = array();
@@ -107,7 +124,7 @@ class QuestionEdit extends RogoObject
     protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'correct_fback');
 
     // Map our 'nice' property names to the database fields and 'parts' in track changes
-    protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
+    protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
     protected $_change_field_map;
     protected $_pretty_names;
     public static $types = array('blank', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area', 'enhancedcalc');
@@ -162,7 +179,15 @@ class QuestionEdit extends RogoObject
         foreach ($this->_fields as $field) {
             $this->_data[] = &$this->$field;
         }
-
+        foreach ($this->_qfields as $field) {
+            $this->_qdata[] = &$this->$field;
+        }
+        foreach ($this->_mfields as $field) {
+            $this->_mdata[$field] = &$this->$field;
+        }
+        foreach ($this->_qmfields as $field) {
+            $this->_qmdata[$field] = &$this->$field;
+        }
         // Check the type of $data
         if (is_array($data)) {
             // If it is an array, assume an associative array of fields for creating a new object (but not
@@ -216,26 +241,25 @@ class QuestionEdit extends RogoObject
      * Populate media for this question
      * @param string $field name of the field to use in $media_data array
      * @param array $media_data the data source for the media information, normally the $_FILES array
-     * @param array $deletion_data the data source for flagging media to be deleted, normally the $_POST array
+     * @param array $post_data the extra data source, normally the $_POST array
      */
-    public function populate_media($field, $media_data, $deletion_data)
+    public function populate_media($field, $media_data, $post_data)
     {
-        if (is_array($media_data) and count($media_data) > 0) {
-            $old_media = $this->get_media();
-            if ($media_data[$field]['name'] != $old_media['filename'] and ($media_data[$field]['name'] != 'none' and $media_data[$field]['name'] != '')) {
-                if ($old_media['filename'] != '') {
-                    media_handler::deleteMedia($old_media['filename']);
-                }
-                $newmedia = media_handler::uploadFile($field);
-                if ($newmedia !== false) {
-                    $this->set_media($newmedia);
-                }
-            } else {
-                // Delete existing media if asked
-                if (isset($deletion_data['delete_media0']) and $deletion_data['delete_media0'] == 'on') {
-                    media_handler::deleteMedia($old_media['filename']);
-                    $this->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
-                }
+        $old_media = $this->get_media();
+        if (isset($media_data[$field]['name']) and $media_data[$field]['name'] != $old_media['filename'] and ($media_data[$field]['name'] != 'none' and $media_data[$field]['name'] != '')) {
+            if ($old_media['filename'] != '') {
+                media_handler::deleteMedia($old_media['filename']);
+            }
+            $newmedia = media_handler::uploadFile($field, $post_data['alt_q_media']);
+            if ($newmedia !== false) {
+                $newmedia['num'] = 0;
+                $this->set_media($newmedia);
+            }
+        } else {
+            // Delete existing media if asked
+            if (isset($post_data['delete_media0']) and $post_data['delete_media0'] == 'on') {
+                media_handler::deleteMedia($old_media['filename']);
+                $this->set_media(array('filename' => '', 'width' => 0, 'height' => 0, 'alt' => '', 'owner' => null, 'num' => -1));
             }
         }
     }
@@ -277,37 +301,53 @@ class QuestionEdit extends RogoObject
      * Populate 'compound' media for this question. These fields are a concatenated version of number of form fields.
      * Assumes the the first item in the compound field will be the general question media
      * @param array $media_data the data source for the media information, normally the $_FILES array
-     * @param array $deletion_data the data source for flagging media to be deleted, normally the $_POST array
+     * @param array $post_data the extra data source, normally the $_POST array
      * @param string $general_field name of the field to use for the general question details media
      * @param string $prefix a prefix to apply to field names when used as keys into data array
      */
-    public function populate_compound_media($media_data, $deletion_data, $general_field = 'q_media', $prefix = 'question_media')
+    public function populate_compound_media($media_data, $post_data, $general_field = 'q_media', $prefix = 'question_media')
     {
+        // Get the current media associated with a question.
         $old_media = $this->get_all_media();
-        $media_change = false;
+        // We need to check all media on the question edit UI.
         for ($i = 0; $i <= $this->max_stems; $i++) {
             $post_field = ($i == 0) ? $general_field : "{$prefix}$i";
-
             $media_name = (isset($old_media['filenames'][$i])) ? $old_media['filenames'][$i] : '';
-            if ($media_data[$post_field]['name'] != $media_name and ($media_data[$post_field]['name'] != 'none' and $media_data[$post_field]['name'] != '')) {
+            // If the media element has something new to upload process it.
+            if (isset($media_data[$post_field]['name']) and $media_data[$post_field]['name'] != $media_name and ($media_data[$post_field]['name'] != 'none' and $media_data[$post_field]['name'] != '')) {
+                // Delete the old media associated with this media element.
                 if ($media_name != '') {
                     media_handler::deleteMedia($media_name);
                 }
-                $new_media = media_handler::uploadFile($post_field);
+                // Upload the new file.
+                $new_media = media_handler::uploadFile($post_field, $post_data['alt_' . $post_field]);
                 if ($new_media !== false) {
-                    $old_media['filenames'][$i] = $new_media['filename'];
-                    $old_media['widths'][$i] = $new_media['width'];
-                    $old_media['heights'][$i] = $new_media['height'];
-                    $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$i], $new_media['filename'], $this->_lang_strings['editscenario']);
+                    // Get the media positon.
+                    $num = $post_data['num_' . $post_field];
+                    $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$num], $new_media['filename'], $this->_lang_strings['editscenario']);
+                    // Add new media definition.
+                    $old_media['filenames'][$num] = $new_media['filename'];
+                    $old_media['widths'][$num] = $new_media['width'];
+                    $old_media['heights'][$num] = $new_media['height'];
+                    $old_media['alts'][$num] = $new_media['alt'];
+                    $old_media['owners'][$num] = $new_media['owner'];
+                    $old_media['nums'][$num] = $post_data['num_' . $post_field];
                 }
             } else {
-                // Delete existing media if asked
-                if (isset($deletion_data["delete_media$i"]) and $deletion_data["delete_media$i"] == 'on') {
+                // Delete existing media if asked.
+                if (isset($post_data["delete_media$i"]) and $post_data["delete_media$i"] == 'on') {
+                    // Delete the old media associated with this media element.
                     media_handler::deleteMedia($media_name);
                     $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $media_name, '', $this->_lang_strings['mediadeleted']);
-                    $old_media['filenames'][$i] = '';
-                    $old_media['widths'][$i] = 0;
-                    $old_media['heights'][$i] = 0;
+                    // Get the media positon.
+                    $num = $post_data['num_' . $post_field];
+                    // Remove old media definition.
+                    $old_media['filenames'][$num] = '';
+                    $old_media['widths'][$num] = 0;
+                    $old_media['heights'][$num] = 0;
+                    $old_media['alts'][$num] = '';
+                    $old_media['owners'][$num] = null;
+                    $old_media['nums'][$num] = -1;
                 }
             }
         }
@@ -352,25 +392,26 @@ class QuestionEdit extends RogoObject
                 $this->last_edited = date('Y-m-d H:i:s');
                 $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
                 $this->guid = $server_ipaddress . uniqid('', true);
-                $params = array_merge(array('ssssssssssssssissssisssssss'), $this->_data);
+                $params = array_merge(array('sssssssssssssiisisssssss'), $this->_qdata);
                 $query = <<< QUERY
 INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
-display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID,
+display_method, q_option_order, std, bloom, ownerID, checkout_time, checkout_authorID,
 creation_date, last_edited, locked, deleted, status, settings, guid)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
                 // Otherwise we're updating an existing one
-                $params = array_merge(array('ssssssssssssssissssisssssssi'), $this->_data, array(&$this->id));
+                $params = array_merge(array('sssssssssssssiisisssssssi'), $this->_qdata, array(&$this->id));
                 $this->last_edited = date('Y-m-d H:i:s');
                 $query = <<< QUERY
 UPDATE questions
 SET q_type = ?, theme = ?, scenario = ?, scenario_plain = ?, leadin = ?, leadin_plain = ?, notes = ?, correct_fback = ?, incorrect_fback = ?,
-score_method = ?, display_method = ?, q_option_order = ?, std = ?, bloom = ?, ownerID = ?, q_media = ?, q_media_width = ?, q_media_height = ?,
+score_method = ?, display_method = ?, q_option_order = ?, std = ?, bloom = ?, ownerID = ?,
 checkout_time = ?, checkout_authorID = ?, creation_date = ?, last_edited = ?, locked = ?, deleted = ?, status = ?, settings = ?, guid = ?
 WHERE q_id = ?
 QUERY;
             }
+
             $result = $this->_mysqli->prepare($query);
             call_user_func_array(array($result,'bind_param'), $params);
             $result->execute();
@@ -378,9 +419,150 @@ QUERY;
             if ($this->_mysqli->error) {
                 echo $this->langstrings['showerror'] . '<br >';
             }
+            $result->close();
+            $newquestion = false;
             if ($success) {
+                // New question.
                 if ($this->id == -1) {
+                    $newquestion = true;
+                    // Get newly generated question id.
                     $this->id = $this->_mysqli->insert_id;
+                }
+
+                $media = explode('|', $this->_qmdata['media']);
+                $source = explode('|', $this->_mdata['media_source']);
+                if (!isset($this->currentmedia['num'])) {
+                    $current_num = array();
+                } else {
+                    $current_num = explode('|', $this->currentmedia['num']);
+                }
+                $num = explode('|', $this->_qmdata['media_num']);
+                $width = explode('|', $this->_mdata['media_width']);
+                $height = explode('|', $this->_mdata['media_height']);
+                $alt = explode('|', $this->_mdata['media_alt']);
+                $owner = explode('|', $this->_mdata['media_owner']);
+
+                $insertmediaparams = array();
+                $updatemediaparams = array();
+                $numarray = array();
+                for ($i = 0; $i < count($source); $i++) {
+                    if ($source[$i] != '') {
+                        if (in_array($num[$i], $current_num)) {
+                            // Update.
+                            $updatemediaparams[] = array(
+                                'source' => $source[$i],
+                                'width' => $width[$i],
+                                'height' => $height[$i],
+                                'alt' => $alt[$i],
+                                'owner' => $owner[$i],
+                                'id' => $media[$i]
+                            );
+                        } else {
+                            // Insert.
+                            $insertmediaparams[] = array(
+                                'source' => $source[$i],
+                                'width' => $width[$i],
+                                'height' => $height[$i],
+                                'alt' => $alt[$i],
+                                'owner' => $owner[$i]
+                            );
+                            $numarray[] = $num[$i];
+                        }
+                    }
+                }
+
+                // Insert media rows.
+                $mediaids = array();
+                if (count($insertmediaparams) > 0) {
+                    foreach ($insertmediaparams as $mparam) {
+                        $id = \media_handler::insertMedia(
+                            $mparam['source'],
+                            $mparam['width'],
+                            $mparam['height'],
+                            $mparam['alt'],
+                            $mparam['owner']
+                        );
+                        if ($id === -1) {
+                            echo $this->langstrings['showerror'] . '<br >';
+                        }
+                        $mediaids[] = $id;
+                    }
+                }
+                // Update media rows.
+                if (count($updatemediaparams) > 0) {
+                    foreach ($updatemediaparams as $mparam) {
+                        $ok = \media_handler::updateMedia(
+                            $mparam['id'],
+                            $mparam['source'],
+                            $mparam['width'],
+                            $mparam['height'],
+                            $mparam['alt'],
+                            $mparam['owner'],
+                        );
+                        if (!$ok) {
+                            echo $this->langstrings['showerror'] . '<br >';
+                        }
+                    }
+                }
+
+                // Insert questions_media rows.
+                if (count($mediaids) > 0) {
+                    $questionmediaparams = array();
+                    for ($i = 0; $i < count($mediaids); $i++) {
+                        $questionmediaparams[] = array(
+                            'mediaid' => $mediaids[$i],
+                            'qid' => $this->id,
+                            'num' => $numarray[$i]
+                        );
+                    }
+                    foreach ($questionmediaparams as $qmparam) {
+                        $ok = \media_handler::linkQuestionToMedia(
+                            $qmparam['mediaid'],
+                            $qmparam['qid'],
+                            $qmparam['num']
+                        );
+                        if (!$ok) {
+                            echo $this->langstrings['showerror'] . '<br >';
+                        }
+                    }
+                }
+
+                $deletemediaparams = array();
+                $deletequestionmediaparams = array();
+                $i = 0;
+                foreach ($num as $n) {
+                    // If media number set to -1 delete it.
+                    if ($n != '' and $n == -1) {
+                        // Delete.
+                        $deletemediaparams[] = array(
+                            'id' => $media[$i],
+                        );
+                        $deletequestionmediaparams[] = array(
+                            'id' => $media[$i],
+                            'qid' => $this->id,
+                        );
+                    }
+                    $i++;
+                }
+
+                // Delete questions_media rows.
+                if (count($deletequestionmediaparams) > 0) {
+                    foreach ($deletequestionmediaparams as $dqmparam) {
+                        $ok = \media_handler::unlinkQuestionFromMedia($dqmparam['id'], $dqmparam['qid']);
+                        if (!$ok) {
+                            echo $this->langstrings['showerror'] . '<br >';
+                        }
+                    }
+                    foreach ($deletemediaparams as $dmparam) {
+                        $ok = \media_handler::removeMedia($dmparam['id']);
+                        if (!$ok) {
+                            echo $this->langstrings['showerror'] . '<br >';
+                        }
+                    }
+                }
+
+                // Logging.
+                if ($newquestion) {
                     $this->_logger->track_change('New Question', $this->id, $this->_user_id, $this->get_leadin(), '', '');
                 } else {
                     // Log any changes
@@ -397,7 +579,6 @@ QUERY;
                     }
                 }
             }
-            $result->close();
 
             if ($success) {
                 // Updates the teams/question modules
@@ -1120,16 +1301,25 @@ QUERY;
      */
     public function get_media()
     {
-        return array('filename' => $this->media, 'width' => $this->media_width, 'height' => $this->media_height);
+        return array('filename' => $this->media_source, 'width' => $this->media_width, 'height' => $this->media_height, 'alt' => $this->media_alt, 'owner' => $this->media_owner, 'num' => $this->media_num);
     }
 
     /**
      * Get the question media filename only
-     * @return array
+     * @return string
      */
     public function get_media_filename()
     {
-        return $this->media;
+        return $this->media_source;
+    }
+
+    /**
+     * Get the question media alt text only
+     * @return string
+     */
+    public function get_media_alt()
+    {
+        return $this->media_alt;
     }
 
     /**
@@ -1138,11 +1328,15 @@ QUERY;
      */
     public function set_media($value)
     {
-        if ($value['filename'] != $this->media) {
-            $this->set_modified_field('media', $this->media);
-            $this->media = $value['filename'];
+        if ($value['filename'] != $this->media_source) {
+            $this->set_modified_field('media', $this->media_source);
+            $this->set_modified_field('media_alt', $this->media_alt);
+            $this->media_source = $value['filename'];
             $this->media_width = (empty($value['width'])) ? 0 : $value['width'];
             $this->media_height = (empty($value['height'])) ? 0 : $value['height'];
+            $this->media_alt = (empty($value['alt'])) ? '' : $value['alt'];
+            $this->media_owner = (empty($value['owner'])) ? null : $value['owner'];
+            $this->media_num = (empty($value['num'])) ? 0 : $value['num'];
         }
     }
 
@@ -1557,8 +1751,8 @@ QUERY;
         $success = false;
 
         $q_query = <<< QUERY
-SELECT q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method, display_method,
- q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID, creation_date,
+SELECT q_id, q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method, display_method,
+ q_option_order, std, bloom, questions.ownerID, checkout_time, checkout_authorID, creation_date,
  last_edited, locked, deleted, status, settings, guid
 FROM questions
 WHERE q_id = ?
@@ -1573,6 +1767,15 @@ QUERY;
             $found = $result->num_rows;
         }
         $result->close();
+
+        $this->currentmedia = QuestionUtils::getMediaAsString($this->id);
+        $this->media = $this->currentmedia['id'];
+        $this->media_source = $this->currentmedia['source'];
+        $this->media_width = $this->currentmedia['width'];
+        $this->media_height = $this->currentmedia['height'];
+        $this->media_alt = $this->currentmedia['alt'];
+        $this->media_owner = $this->currentmedia['owner'];
+        $this->media_num = $this->currentmedia['num'];
 
         $this->unserialize_settings();
 
@@ -1604,7 +1807,7 @@ QUERY;
 
             // Get the options
             $o_query = <<< QUERY
-  SELECT id_num, o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial
+  SELECT id_num, o_id, option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial
   FROM options
   WHERE o_id = ?
   ORDER BY id_num ASC
@@ -1617,6 +1820,22 @@ QUERY;
             // TODO: handle 'correctness' more nicely
             $i = 1;
             while ($success = $result->fetch()) {
+                $omedia = QuestionUtils::getOptionMedia($opt_data['id']);
+                if ($omedia !== false) {
+                    $opt_data['media'] = $omedia->id;
+                    $opt_data['media_source'] = $omedia->source;
+                    $opt_data['media_width'] = $omedia->width;
+                    $opt_data['media_height'] = $omedia->height;
+                    $opt_data['media_alt'] = $omedia->alt;
+                    $opt_data['media_owner'] = $omedia->owner;
+                } else {
+                    $opt_data['media'] = -1;
+                    $opt_data['media_source'] = '';
+                    $opt_data['media_width'] = 0;
+                    $opt_data['media_height'] = 0;
+                    $opt_data['media_alt'] = '';
+                    $opt_data['media_owner'] = '';
+                }
                 $this->options[$opt_data['id']] = OptionEdit::option_factory($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, $opt_data);
                 $i++;
             }

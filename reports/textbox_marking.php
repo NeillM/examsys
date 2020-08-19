@@ -299,11 +299,11 @@ if ($no_screens > 1) {
   $old_screen = 1;
   $reminders = array();
 
-  $question_data = $mysqli->prepare('SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback, settings FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num');
+  $question_data = $mysqli->prepare('SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, notes, marks_correct, correct_fback, settings FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num');
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($screen, $q_type, $q_id, $option_id, $option_text, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback, $settings);
+  $question_data->bind_result($screen, $q_type, $q_id, $option_id, $option_text, $theme, $scenario, $leadin, $notes, $marks_correct, $correct_fback, $settings);
   $num_rows = $question_data->num_rows;
 while ($question_data->fetch()) {
     $marks_array[$q_id] = $marks_correct;
@@ -355,15 +355,22 @@ while ($question_data->fetch()) {
         if ($li_set == 0) {
             echo "</td><td style=\"background-color:$tmp_color\">";
         }
+        // Get Media.
+        $media = QuestionUtils::getMediaAsString($q_id);
+        $q_media = $media['source'];
+        $q_media_height = $media['height'];
+        $q_media_width = $media['width'];
+        $q_media_alt = $media['alt'];
         if ($q_media != '' and $q_media != null) {
             $media_list = explode('|', $q_media);
             $media_list_width = explode('|', $q_media_width);
             $media_list_height = explode('|', $q_media_height);
+            $media_list_alt = explode('|', $q_media_alt);
             $questiondata = new plugins\questions\textbox\renderdata();
             $render = new render($configObject);
             for ($i = 0; $i < count($media_list); $i++) {
                 if ($media_list[$i] != '') {
-                    $questiondata->set_media($media_list[$i], $media_list_width[$i], $media_list_height[$i], '', true);
+                    $questiondata->set_media($media_list[$i], $media_list_width[$i], $media_list_height[$i], $media_list_alt[$i], '', true);
                     echo '<div class="mediadiv">';
                     $render->render($questiondata, $string, 'paper/media.html');
                     echo "</div>\n";

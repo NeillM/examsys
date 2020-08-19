@@ -37,11 +37,54 @@ if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
 
 function display_q($configObject, $target_id, $db)
 {
-    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
+    $question_data = $db->prepare("
+        SELECT
+            q_type,
+            q_id,
+            score_method,
+            display_method,
+            settings,
+            marks_correct,
+            marks_incorrect,
+            marks_partial,
+            theme,
+            scenario,
+            leadin,
+            correct,
+            REPLACE(option_text,'\t','') AS option_text,
+            source,
+            width,
+            height,
+            alt,
+            notes
+        FROM questions LEFT JOIN options ON questions.q_id = options.o_id
+        LEFT JOIN options_media ON options.id_num = options_media.oid
+        LEFT JOIN media m on options_media.mediaid = m.id
+        WHERE q_id = ?
+        ORDER BY id_num");
     $question_data->bind_param('i', $target_id);
     $question_data->execute();
     $question_data->store_result();
-    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
+    $question_data->bind_result(
+        $q_type,
+        $q_id,
+        $score_method,
+        $display_method,
+        $settings,
+        $marks_correct,
+        $marks_incorrect,
+        $marks_partial,
+        $theme,
+        $scenario,
+        $leadin,
+        $correct,
+        $option_text,
+        $option_media,
+        $option_media_width,
+        $option_media_height,
+        $option_media_alt,
+        $notes
+    );
     $num_rows = $question_data->num_rows;
     echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
     echo "<col width=\"40\"><col>\n";
@@ -57,13 +100,26 @@ function display_q($configObject, $target_id, $db)
             $question['score_method'] = $score_method;
             $question['display_method'] = $display_method;
             $question['settings'] = $settings;
-            $question['q_media'] = $q_media;
-            $question['q_media_width'] = $q_media_width;
-            $question['q_media_height'] = $q_media_height;
+            $media = QuestionUtils::getMediaAsString($q_id);
+            $question['q_media'] = $media['source'];
+            $question['q_media_width'] = $media['width'];
+            $question['q_media_height'] = $media['height'];
+            $question['q_media_alt'] = $media['alt'];
+            $question['q_media_num'] = $media['num'];
             $question['dismiss'] = '';
             $question['assigned_number'] = $_GET['qNo'];
         }
-        $question['options'][] = array('correct' => $correct, 'option_text' => $option_text, 'o_media' => $o_media, 'o_media_width' => $o_media_width, 'o_media_height' => $o_media_height, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial);
+        $question['options'][] = array(
+            'correct' => $correct,
+            'option_text' => $option_text,
+            'o_media' => $option_media,
+            'o_media_width' => $option_media_width,
+            'o_media_height' => $option_media_height,
+            'o_media_alt' => $option_media_alt,
+            'marks_correct' => $marks_correct,
+            'marks_incorrect' => $marks_incorrect,
+            'marks_partial' => $marks_partial
+        );
     }
     $question_data->close();
 

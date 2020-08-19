@@ -97,6 +97,7 @@ define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, Jsxls, 
             $('#edit_form').validate({
                 rules: {
                     leadin: 'required',
+                    alt_q_media: 'required',
                     option_text1: 'matrixlabels',
                     question_stem1: 'matrixstems',
                     option_text2: 'matrixlabels',

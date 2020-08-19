@@ -187,6 +187,12 @@ abstract class questiondata
     public $qmedia;
 
     /**
+     * Question media alt text
+     * @var string
+     */
+    public $qmediaalt;
+
+    /**
      * Question media height
      * @var string
      */
@@ -197,6 +203,12 @@ abstract class questiondata
      * @var string
      */
     public $qmediawidth;
+
+    /**
+     * Question media diplay number
+     * @var string
+     */
+    public $qmedianum;
 
     /**
      * Question type
@@ -269,11 +281,17 @@ abstract class questiondata
      * @var integer
      */
     public $mediawidth;
+
+    /**
+     * Question media alt text
+     * @var string
+     */
+    public $mediaalt;
+
     /**
      * Question media height
      * @var integer
      */
-
     public $mediaheight;
 
     /**
@@ -625,6 +643,8 @@ abstract class questiondata
         $this->qmedia = $question['q_media'];
         $this->qmediawidth = $question['q_media_width'];
         $this->qmediaheight = $question['q_media_height'];
+        $this->qmediaalt = $question['q_media_alt'];
+        $this->qmedianum = $question['q_media_num'];
         $this->leadin = $question['leadin'];
         $this->language = $language;
         if (isset($question['settings'])) {
@@ -635,7 +655,7 @@ abstract class questiondata
         }
         $this->question = $question;
         $this->useranswers = $user_answers;
-        $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
+        $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '');
 
         // Set question header.
         $this->set_question_head();
@@ -681,7 +701,7 @@ abstract class questiondata
             'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
             'position' => $tmp_part_id
             ));
-            $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', false, -1, false, $part_id);
+            $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', false, -1, false, $part_id);
 
             // Set question options.
             $this->set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
@@ -712,13 +732,14 @@ abstract class questiondata
      * @param string $filename media file name
      * @param integer $width media width
      * @param integer $height media height
+     * @param string $alt media alternate text
      * @param string $border_color media border colour
      * @param boolean $delay delay media rendering on screen
      * @param integer $imageid media id
      * @param boolean $locked is media locked
      * @param string $part_id option part id
      */
-    public function set_media($filename, $width, $height, $border_color, $delay = false, $imageid = -1, $locked = false, $part_id = null)
+    public function set_media($filename, $width, $height, $alt, $border_color, $delay = false, $imageid = -1, $locked = false, $part_id = null)
     {
 
         $mediadirectory = rogo_directory::get_directory('media');
@@ -815,6 +836,7 @@ abstract class questiondata
             'mediafile' => $filename,
             'mediawidth' => $width,
             'mediaheight' => $height,
+            'mediaalt' => $alt,
             'mediaurl' => $url,
             'mediadelete' => $mediadelete,
             'mediaedit' => $mediaedit,
@@ -831,6 +853,7 @@ abstract class questiondata
             $this->mediafile = $filename;
             $this->mediawidth = $width;
             $this->mediaheight = $height;
+            $this->mediaalt = $alt;
             $this->mediaurl = $url;
             $this->mediadelete = $mediadelete;
             $this->mediaedit = $mediaedit;

@@ -150,7 +150,7 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
     return $html;
 }
 
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language)
+function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $q_media_alt, $q_media_num, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language)
 {
     $configObject = Config::get_instance();
 
@@ -177,7 +177,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 echo $leadin;
                 if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
                     echo '<div class="mediadiv">';
-                    $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
+                    $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
                     $render->render($questiondata, $string, 'paper/media.html');
                     echo "</div>\n";
                 }
@@ -188,7 +188,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
                 if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
                     echo '<div class="mediadiv">';
-                    $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
+                    $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
                     $render->render($questiondata, $string, 'paper/media.html');
                     echo "</div>\n";
                 }
@@ -454,10 +454,21 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "</ol>\n</td></tr>\n";
     } elseif ($q_type == 'extmatch') {
         $matching_scenarios = explode('|', $scenario);
-        $matching_media = explode('|', $q_media);
-        $tmp_media_width_array = explode('|', $q_media_width);
-        $tmp_media_height_array = explode('|', $q_media_height);
+        $matching_source = explode('|', $q_media);
+        $matching_width = explode('|', $q_media_width);
+        $matching_height = explode('|', $q_media_height);
+        $matching_alt = explode('|', $q_media_alt);
+        $matching_num = explode('|', $q_media_num);
         $tmp_answers_array = explode('|', $correct_buf[0]);
+        $matching_media = array();
+        for ($i = 0; $i < count($matching_source); $i++) {
+            $matching_media[$matching_num[$i]] = array(
+                'source' => $matching_source[$i],
+                'width' => $matching_width[$i],
+                'height' => $matching_height[$i],
+                'alt' => $matching_alt[$i],
+            );
+        }
         $tmp_std_array = explode(',', $std);
         $std_part = 0;
 
@@ -467,24 +478,38 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
             if (
                 (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id], '<img>')) != '')
-                or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')
+                or (isset($matching_media[$part_id]['source']) and $matching_media[$part_id]['source'] != '')
             ) {
                 $scenario_no++;
             }
         }
 
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
-        if ($matching_media[0] != '') {
+        if ($matching_media[0]['source'] != '') {
             echo '<div class="mediadiv">';
-            $questiondata->set_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '', true);
+            $questiondata->set_media(
+                $matching_media[0]['source'],
+                $matching_media[0]['width'],
+                $matching_media[0]['height'],
+                $matching_media[0]['alt'],
+                '',
+                true
+            );
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
         }
         for ($i = 1; $i <= $scenario_no; $i++) {
             echo "<li>\n";
-            if (isset($matching_media[$i]) and $matching_media[$i] != '') {
+            if (isset($matching_media[$i]['source']) and $matching_media[$i]['source'] != '') {
                 echo '<div>';
-                $questiondata->set_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '', true);
+                $questiondata->set_media(
+                    $matching_media[$i]['source'],
+                    $matching_media[$i]['width'],
+                    $matching_media[$i]['height'],
+                    $matching_media[$i]['alt'],
+                    '',
+                    true
+                );
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</div>\n";
             }
@@ -685,18 +710,25 @@ foreach ($reviewer_data as $reviewerID => $reviewer_detail) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare('SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
+  $result = $mysqli->prepare('SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, correct, std, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std, $settings);
+  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $correct, $std, $settings);
 while ($result->fetch()) {
+    // Get Media.
+    $media = QuestionUtils::getMediaAsString($q_id);
+    $q_media = $media['source'];
+    $q_media_height = $media['height'];
+    $q_media_width = $media['width'];
+    $q_media_alt = $media['alt'];
+    $q_media_num = $media['num'];
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
         $question_no++;
         if ($old_q_type == 'info') {
             $question_no--;
         }
-        displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
+        displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
         $options_buffer = array();
         $correct_buffer = array();
         if ($old_screen != $screen) {
@@ -746,6 +778,8 @@ while ($result->fetch()) {
     $old_q_media = $q_media;
     $old_q_media_width = $q_media_width;
     $old_q_media_height = $q_media_height;
+    $old_q_media_alt = $q_media_alt;
+    $old_q_media_num = $q_media_num;
     $old_correct = $correct;
     $old_settings = $settings;
     $old_display_method = $display_method;
@@ -758,7 +792,7 @@ while ($result->fetch()) {
 if ($old_q_type == 'info') {
     $question_no--;
 }
-  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
+  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
   $mysqli->close();
 ?>
 </table>

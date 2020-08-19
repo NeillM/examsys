@@ -96,10 +96,11 @@ if ($folderID != '') {
   $temp_array = array();
   $questionID_list = '';
 
-  $result = $mysqli->prepare("SELECT random_mark, total_mark, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+  $result = $mysqli->prepare("SELECT random_mark, total_mark, p_id, q_id, q_type, screen, leadin, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
   $result->bind_param('ii', $paperID, $paperID);
   $result->execute();
-  $result->bind_result($random_mark, $total_mark, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
+  $result->store_result();
+  $result->bind_result($random_mark, $total_mark, $p_id, $q_id, $q_type, $screen, $leadin, $display_last_edited, $display_pos);
 while ($result->fetch()) {
     $row_no++;
     $temp_array[$q_id]['screen'] = $screen;
@@ -108,9 +109,11 @@ while ($result->fetch()) {
     $temp_array[$q_id]['p_id'] = $p_id;
     $temp_array[$q_id]['q_id'] = $q_id;
     $temp_array[$q_id]['display_last_edited'] = $display_last_edited;
-    $temp_array[$q_id]['q_media'] = $q_media;
-    $temp_array[$q_id]['q_media_width'] = $q_media_width;
-    $temp_array[$q_id]['q_media_height'] = $q_media_height;
+    $media = QuestionUtils::getMediaAsString($q_id);
+    $temp_array[$q_id]['q_media'] = $media['source'];
+    $temp_array[$q_id]['q_media_width'] = $media['width'];
+    $temp_array[$q_id]['q_media_height'] = $media['height'];
+    $temp_array[$q_id]['q_media_alt'] = $media['alt'];
     $temp_array[$q_id]['display_pos'] = $display_pos;
 
     $temp_array[$q_id]['qnumber'] = $display_pos - $info_count;
@@ -124,6 +127,7 @@ while ($result->fetch()) {
     $temp_total_marks = $total_mark;
     $questionID_list .= $q_id . ',';
 }
+  $result->free_result();
   $result->close();
 
 ?>

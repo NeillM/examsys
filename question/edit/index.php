@@ -67,7 +67,15 @@ function get_post_params($part_names, $option, $option_no)
     return $postparams;
 }
 
-function save_options($question, $userObject, $db)
+/**
+ * Save option fields
+ * @param array $update_options_media data store for option media
+ * @param QuestionEdit $question the question
+ * @param UserObject $userObject the logged in user
+ * @param mysqli $db the database connection
+ * @return string
+ */
+function save_options(&$update_options_media, $question, $userObject, $db)
 {
 
     global $string;
@@ -139,22 +147,32 @@ function save_options($question, $userObject, $db)
 
         if ($option != null and !in_array('media', $question->get_compound_fields())) {
             // Handle changes in media
+            // Update the alternate text of the options media.
+            $current_media = QuestionUtils::getOptionMedia($option->id);
+            if ($current_media !== false) {
+                $current_alt = $current_media->alt;
+                $current_mediaid = $current_media->id;
+                $new_media_alt = param::optional("currentalt$option_no", $current_alt, param::TEXT, param::FETCH_POST);
+            }
             $old_media = $option->get_media();
             if (isset($_FILES["option_media$option_no"]) and $_FILES["option_media$option_no"]['name'] != $old_media['filename'] and ($_FILES["option_media$option_no"]['name'] != 'none' and $_FILES["option_media$option_no"]['name'] != '')) {
                 if ($old_media['filename'] != '') {
                     media_handler::deleteMedia($old_media['filename']);
                 }
-                $newmedia = media_handler::uploadFile("option_media$option_no");
+                $alt = param::optional('alt_option_media' . $option_no, '', param::TEXT, param::FETCH_POST);
+                $newmedia = media_handler::uploadFile("option_media$option_no", $alt);
                 if ($newmedia !== false) {
                     $option->set_media($newmedia);
                 } else {
                     return $string['mediauploaderror'];
                 }
+            } elseif (isset($current_alt) and $new_media_alt !== $current_alt) {
+                $update_options_media[] = array('mid' => $current_mediaid, 'alt' => $new_media_alt);
             } else {
                 // Delete existing media if asked
                 if (isset($_POST["delete_media$option_no"]) and $_POST["delete_media$option_no"] == 'on') {
                     media_handler::deleteMedia($old_media['filename']);
-                    $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
+                    $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0, 'alt' => '', 'owner' => null));
                 }
             }
         }
@@ -251,6 +269,7 @@ if ($critical_error == '') {
     $do_save = false;
     $show_media_upload = false;
     $show_correction_intermediate = false;
+    $update_options_media = array();
     if ($question->requires_media() and ((isset($_POST['submit']) and $_POST['submit'] == 'Replace Media') or $current_media['filename'] == '')) {
         $show_media_upload = true;
     } elseif (isset($_POST['submit']) and $_POST['submit'] == $string['limitedsave']) {
@@ -328,7 +347,7 @@ if ($critical_error == '') {
             }
 
             if ($question->allow_option_edit()) {
-                $critical_error = save_options($question, $userObject, $mysqli);
+                $critical_error = save_options($update_options_media, $question, $userObject, $mysqli);
                 if ($critical_error !== '') {
                     $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
                 }
@@ -365,7 +384,7 @@ if ($critical_error == '') {
                 }
             }
             $question->set_teams($question_teams);
-            $critical_error = save_options($question, $userObject, $mysqli);
+            $critical_error = save_options($update_options_media, $question, $userObject, $mysqli);
             if ($critical_error !== '') {
                 $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
             }
@@ -416,6 +435,31 @@ if ($critical_error == '') {
                             if ($scale_type == 'custom') {
                                 $stateutil->setState($userObject->get_user_ID(), 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
                             }
+                        }
+
+                        // Update the alternate text of the question media.
+                        $current_media = QuestionUtils::getMedia($question->id);
+                        for ($i = 0; $i < count($current_media); $i++) {
+                            if ($current_media[$i]->num == 0) {
+                                $name = 'currentalt';
+                                $uploadmedianame = 'alt_q_media';
+                            } else {
+                                $name = 'currentalt' . $current_media[$i]->num;
+                                $uploadmedianame = 'alt_question_media' . $current_media[$i]->num;
+                            }
+                            $new_media_alt = param::optional($name, false, param::TEXT, param::FETCH_POST);
+                            $upload_media_alt = param::optional($uploadmedianame, false, param::TEXT, param::FETCH_POST);
+                            // Update if not uploading new media.
+                            if ($new_media_alt !== false and $upload_media_alt === false) {
+                                if ($new_media_alt !== $current_media[$i]->alt) {
+                                    media_handler::updateMediaAltText($current_media[$i]->id, $new_media_alt);
+                                }
+                            }
+                        }
+
+                        // Update the alternate text of the options media.
+                        foreach ($update_options_media as $m) {
+                            media_handler::updateMediaAltText($m['mid'], $m['alt']);
                         }
                     }
                 }
@@ -474,6 +518,7 @@ if ($critical_error == '') {
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 <link rel="stylesheet" href="../../css/html5.css" type="text/css" />
 <link rel="stylesheet" href="../../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
+<link rel="stylesheet" href="../../css/filepicker.css" type="text/css" />
 
 <?php
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');

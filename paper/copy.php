@@ -186,11 +186,95 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     $result->bind_result($question, $screen, $display_pos);
     while ($result->fetch()) {
         $line = 0;
-        $qData = $mysqli->prepare('SELECT * FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num');
+        $qData = $mysqli->prepare('
+            SELECT
+                q_id,
+                q_type,
+                theme,
+                scenario,
+                leadin,
+                correct_fback,
+                incorrect_fback,
+                display_method,
+                notes,
+                questions.ownerID,
+                creation_date,
+                last_edited,
+                bloom,
+                scenario_plain,
+                leadin_plain,
+                checkout_time,
+                checkout_authorID,
+                deleted,
+                locked,
+                std,
+                status,
+                q_option_order,
+                score_method,
+                settings,
+                guid,
+                o_id,
+                option_text,
+                source,
+                width,
+                height,
+                alt,
+                m.ownerid,
+                feedback_right,
+                feedback_wrong,
+                correct,
+                marks_correct,
+                marks_incorrect,
+                marks_partial
+            FROM questions
+            LEFT JOIN options ON questions.q_id = options.o_id
+            LEFT JOIN options_media ON options.id_num = options_media.oid
+            LEFT JOIN media m on options_media.mediaid = m.id
+            WHERE q_id = ?
+            ORDER BY id_num');
         $qData->bind_param('i', $question);
         $qData->execute();
         $qData->store_result();
-        $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
+        $qData->bind_result(
+            $q_id,
+            $q_type,
+            $theme,
+            $scenario,
+            $leadin,
+            $correct_fback,
+            $incorrect_fback,
+            $display_method,
+            $notes,
+            $owner,
+            $creation_date,
+            $last_edited,
+            $bloom,
+            $scenario_plain,
+            $leadin_plain,
+            $checkout_time,
+            $checkout_author,
+            $deleted,
+            $locked,
+            $std,
+            $status,
+            $q_option_order,
+            $score_method,
+            $settings,
+            $guid,
+            $o_id,
+            $option_text,
+            $option_media,
+            $option_media_width,
+            $option_media_height,
+            $option_media_alt,
+            $option_media_owner,
+            $feedback_right,
+            $feedback_wrong,
+            $correct,
+            $marks_correct,
+            $marks_incorrect,
+            $marks_partial
+        );
         while ($qData->fetch()) {
             if (!in_array($question, $old_qids)) {
                 $old_qids[] = $question;
@@ -200,66 +284,8 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 if ($q_type != 'info') {
                     $q_no++;
                 }
-                if (trim($q_media) != '') {
-                    $media_array = array();
-                    $media_array = explode('|', $q_media);
-                    $new_q_media = '';
-                    $image_part = 0;
-                    foreach ($media_array as $individual_media) {
-                        if ($line == 0) {
-                            $new_media_name = '';
-                            if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
-                                $new_media_name = media_handler::unique_filename($individual_media);
-                                if (file_exists($mediadirectory->fullpath($individual_media))) {
-                                    if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
-                                        $error[] = sprintf($string['copyerror'], $individual_media);
-                                        // If the image is missing dont put the file name in the new question
-                                        $new_media_name = '';
-                                    }
-                                } else {
-                                    $new_media_name = '';
-                                }
-                            }
-                            if ($image_part == 0) {
-                                $new_q_media = $new_media_name;
-                            } else {
-                                $new_q_media .= '|' . $new_media_name;
-                            }
-                        }
-                        $image_part++;
-                    }
-                } else {
-                    $new_q_media = '';
-                }
             }
 
-            // Option data
-            if (trim($o_media) != '') {
-                $media_array = array();
-                $media_array = explode('|', $o_media);
-                $new_o_media = '';
-                foreach ($media_array as $individual_media) {
-                    if (trim($individual_media) != '' and trim($individual_media) != 'NULL') {
-                        $new_media_name = media_handler::unique_filename($individual_media);
-                        if (file_exists($mediadirectory->fullpath($individual_media))) {
-                            if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
-                                $error[] = sprintf($string['copyerror'], $individual_media);
-                                //if the image is missing don't put the file name in the new question
-                                $new_media_name = '';
-                            }
-                        } else {
-                            $new_media_name = '';
-                        }
-                        if ($new_o_media == '') {
-                            $new_o_media = $new_media_name;
-                        } else {
-                            $new_o_media .= '|' . $new_media_name;
-                        }
-                    }
-                }
-            } else {
-                $new_o_media = '';
-            }
             if ($marks_correct == '') {
                 $marks_correct = 1;
             }
@@ -275,13 +301,13 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
                 $guid = $server_ipaddress . uniqid('', true);
 
-                $addQuestion = $mysqli->prepare('INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
+                $addQuestion = $mysqli->prepare('INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
 
                 if ($mysqli->error) {
                     echo $string['showerror'] . '<br />';
                 }
 
-                $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
+                $addQuestion->bind_param('ssssssssissssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
                 $addQuestion->execute();
                 $new_qids[] = $question_id = $mysqli->insert_id;
                 //making duplicate question a killer question
@@ -294,6 +320,50 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                     $calculation_qid_map[$q_id] = $question_id;
                 }
                 $addQuestion->close();
+
+                // Copy Question Media.
+                $media = QuestionUtils::getMediaAsString($q_id);
+                $newmedia = array();
+                if ($media['id'] != '') {
+                    $media_array = explode('|', $media['source']);
+                    $mediawidth_array = explode('|', $media['width']);
+                    $mediaheight_array = explode('|', $media['height']);
+                    $mediaalt_array = explode('|', $media['alt']);
+                    $mediaowner_array = explode('|', $media['owner']);
+                    $medianum_array = explode('|', $media['num']);
+                    $image_part = 0;
+                    foreach ($media_array as $individual_media) {
+                        $new_media_name = '';
+                        if (trim($individual_media) != '') {
+                            $new_media_name = media_handler::unique_filename($individual_media);
+                            if (file_exists($mediadirectory->fullpath($individual_media))) {
+                                if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
+                                    $error[] = sprintf($string['copyerror'], $q_no, $individual_media);
+                                } else {
+                                    $id = \media_handler::insertMedia(
+                                        $new_media_name,
+                                        $mediawidth_array[$image_part],
+                                        $mediaheight_array[$image_part],
+                                        $mediaalt_array[$image_part],
+                                        $mediaowner_array[$image_part]
+                                    );
+                                    if ($id === -1) {
+                                        $error[] = sprintf($string['copyerror'], $q_no, $individual_media);
+                                    } else {
+                                        $newmedia[$medianum_array[$image_part]] = $id;
+                                    }
+                                }
+                            }
+                        }
+                        $image_part++;
+                    }
+                }
+                foreach ($newmedia as $idx => $value) {
+                    $ok = \media_handler::linkQuestionToMedia($value, $question_id, $idx);
+                    if (!$ok) {
+                        $error[] = sprintf($string['copyerror'], $q_no, $value);
+                    }
+                }
 
                 // Add in a record to the papers table.
                 Paper_utils::add_question($new_paper_id, $question_id, $screen, $display_pos, $mysqli);
@@ -336,9 +406,6 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $tmp_questions_array['status']      = $status;
                 $tmp_questions_array['display_method']  = $display_method;
                 $tmp_questions_array['settings']    = $settings;
-                $tmp_questions_array['q_media']     = $q_media;
-                $tmp_questions_array['q_media_width']   = $q_media_width;
-                $tmp_questions_array['q_media_height']  = $q_media_height;
                 $tmp_questions_array['q_option_order']  = $q_option_order;
                 $tmp_questions_array['dismiss']     = '';
                 $tmp_questions_array['leadin_plain']     = trim($leadin_plain);
@@ -393,10 +460,43 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
             }
       
             if ($q_type != 'enhancedcalc') {  // Calculation questions have no options.
-                $addOption = $mysqli->prepare('INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)');
-                $addOption->bind_param('isssssssidd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+                $addOption = $mysqli->prepare('INSERT INTO options VALUES(?, ?, ?, ?, ?, NULL, ?, ?, ?)');
+                $addOption->bind_param('issssidd', $question_id, $option_text, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
                 $addOption->execute();
                 $addOption->close();
+                $newidnum = $mysqli->insert_id;
+                // Option media.
+                $newomedia = false;
+                if (isset($option_media) and trim($option_media) != '') {
+                    $new_media_name = media_handler::unique_filename($option_media);
+                    if (file_exists($mediadirectory->fullpath($option_media))) {
+                        if (!copy($mediadirectory->fullpath($option_media), $mediadirectory->fullpath($new_media_name))) {
+                            $error[] = sprintf($string['copyerror'], $q_no, $option_media);
+                        } else {
+                            $id = \media_handler::insertMedia(
+                                $new_media_name,
+                                $option_media_width,
+                                $option_media_height,
+                                $option_media_alt,
+                                $option_media_owner
+                            );
+                            if ($id === -1) {
+                                $error[] = sprintf($string['copyerror'], $q_no, $option_media);
+                            } else {
+                                $newomedia = $id;
+                            }
+                        }
+                    }
+                }
+                if ($newomedia !== false) {
+                    $ok = \media_handler::linkOptionToMedia(
+                        $newomedia,
+                        $newidnum,
+                    );
+                    if (!$ok) {
+                        $error[] = sprintf($string['copyerror'], $q_no, $newomedia);
+                    }
+                }
             }
             $line++;
         }

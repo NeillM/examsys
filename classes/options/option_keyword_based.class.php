@@ -42,17 +42,17 @@ class OptionKEYWORD_BASED extends OptionEdit
         if ($valid === true) {
             // If $id is -1 we're inserting a new record
             if ($this->id == -1) {
-                $params = array_merge(array('issiisssddd'), $this->_data);
+                $params = array_merge(array('issssddd'), $this->_data);
                 $query = <<< QUERY
-INSERT INTO options(o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+INSERT INTO options(o_id, option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
                 // Otherwise we're updating an existing one
-                $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
+                $params = array_merge(array('issssdddi'), $this->_data, array(&$this->id));
                 $query = <<< QUERY
 UPDATE options
-SET o_id = ?, option_text = ?, o_media = ?, o_media_width = ?, o_media_height = ?, feedback_right = ?, feedback_wrong = ?, correct = ?, marks_correct = ?, marks_incorrect = ?, marks_partial = ?
+SET o_id = ?, option_text = ?, feedback_right = ?, feedback_wrong = ?, correct = ?, marks_correct = ?, marks_incorrect = ?, marks_partial = ?
 WHERE id_num = ?
 QUERY;
             }

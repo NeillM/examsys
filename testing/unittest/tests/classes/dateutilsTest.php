@@ -82,7 +82,8 @@ class DateUtilsTest extends unittest
      *
      * @return array
      */
-    public function dataGetTimestampFromTime(): array {
+    public function dataGetTimestampFromTime(): array
+    {
         return [
             'london-early' => ['Europe/London', 1, 30],
             'london-noon' => ['Europe/London', 12, 0],

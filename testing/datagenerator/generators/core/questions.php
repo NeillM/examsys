@@ -57,9 +57,13 @@ class questions extends generator
             'notes' => '',
             'display_method' => 'vertical',
             'ownerID' => $userid,
-            'q_media' => null,
-            'q_media_width' => 0,
-            'q_media_height' => 0,
+            'q_media_id' => -1,
+            'q_media' => '',
+            'q_media_width' => '',
+            'q_media_height' => '',
+            'q_media_alt' => '',
+            'q_media_owner' => $userid,
+            'q_media_num' => '',
             'creation_date' => date('Y-m-d H:i:s'),
             'last_edited' => date('Y-m-d H:i:s'),
             'bloom' => null,
@@ -84,16 +88,18 @@ class questions extends generator
         } else {
             $qdata['deleted'] = null;
         }
-        $sqlquery = <<< SQLQUERY
-INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
-display_method, q_option_order, std, bloom, ownerID, q_media, q_media_width, q_media_height, checkout_time, checkout_authorID,
-creation_date, last_edited, locked, deleted, status, settings, guid)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-SQLQUERY;
+        $sqlquery = '
+            INSERT INTO questions (
+                q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes,
+                correct_fback, incorrect_fback, score_method, display_method, q_option_order,
+                std, bloom, ownerID, checkout_time, checkout_authorID, creation_date, last_edited,
+                locked, deleted, status, settings, guid)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ';
         try {
             $result = $this->db->prepare($sqlquery);
             $result->bind_param(
-                'ssssssssssssssissssisssssss',
+                'ssssssssssssssisisssssss',
                 $qdata['q_type'],
                 $qdata['theme'],
                 $qdata['scenario'],
@@ -109,9 +115,6 @@ SQLQUERY;
                 $qdata['std'],
                 $qdata['bloom'],
                 $qdata['ownerID'],
-                $qdata['q_media'],
-                $qdata['q_media_width'],
-                $qdata['q_media_height'],
                 $qdata['checkout_time'],
                 $qdata['checkout_authorID'],
                 $qdata['creation_date'],
@@ -123,8 +126,22 @@ SQLQUERY;
                 $qdata['guid']
             );
             $result->execute();
-            $qdata['id'] = $result->insert_id;
+            $qdata['id'] = $this->db->insert_id;
             $result->close();
+            if ($qdata['q_media'] != '') {
+                $id = \media_handler::insertMedia(
+                    $qdata['q_media'],
+                    $qdata['q_media_width'],
+                    $qdata['q_media_height'],
+                    $qdata['q_media_alt'],
+                    $qdata['q_media_owner']
+                );
+                $qdata['q_media_id'] = $id;
+                $qdata['q_media_num'] = 0;
+                if ($id !== -1) {
+                    \media_handler::linkQuestionToMedia($qdata['q_media_id'], $qdata['id'], $qdata['q_media_num']);
+                }
+            }
             return $qdata;
         } catch (Exception $e) {
             echo 'Error No: ' . $e->getCode() . ' - ' . $e->getMessage() . '<br />';
@@ -203,13 +220,67 @@ SQLQUERY;
         if (empty($parameters['question'])) {
             throw new data_error('question must be provided');
         }
-        $defaults = array('option_text' => null, 'o_media' => '', 'o_media_width' => '0', 'o_media_height' => '0', 'feedback_right' => null, 'feedback_wrong' => null, 'correct' => null, 'marks_correct' => null, 'marks_incorrect' => null, 'marks_partial' => null);
+        $defaults = array(
+            'option_text' => null,
+            'o_media_id' => -1,
+            'o_media' => '',
+            'o_media_width' => '',
+            'o_media_height' => '',
+            'o_media_alt' => '',
+            'o_media_owner' => QuestionUtils::get_ownerID($parameters['question'], $this->db),
+            'feedback_right' => null,
+            'feedback_wrong' => null,
+            'correct' => null,
+            'marks_correct' => null,
+            'marks_incorrect' => null,
+            'marks_partial' => null,
+        );
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
-        $result = $this->db->prepare('INSERT INTO options VALUE (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)');
-        $result->bind_param('isssssssddd', $parameters['question'], $settings['option_text'], $settings['o_media'], $settings['o_media_width'], $settings['o_media_height'], $settings['feedback_right'], $settings['feedback_wrong'], $settings['correct'], $settings['marks_correct'], $settings['marks_incorrect'], $settings['marks_partial']);
+        $result = $this->db->prepare('
+            INSERT INTO options (
+                o_id,
+                option_text,
+                feedback_right,
+                feedback_wrong,
+                correct,
+                marks_correct,
+                marks_incorrect,
+                marks_partial
+                ) 
+                VALUE
+                (?, ?, ?, ?, ?, ?, ?, ?)
+            ');
+        $result->bind_param(
+            'issssddd',
+            $parameters['question'],
+            $settings['option_text'],
+            $settings['feedback_right'],
+            $settings['feedback_wrong'],
+            $settings['correct'],
+            $settings['marks_correct'],
+            $settings['marks_incorrect'],
+            $settings['marks_partial']
+        );
         $result->execute();
+        $settings['id_num'] = $this->db->insert_id;
         $result->close();
+        if ($settings['o_media'] != '') {
+            $id = \media_handler::insertMedia(
+                $settings['o_media'],
+                $settings['o_media_width'],
+                $settings['o_media_height'],
+                $settings['o_media_alt'],
+                $settings['o_media_owner'],
+            );
+            $settings['o_media_id'] = $id;
+            if ($id !== -1) {
+                \media_handler::linkOptionToMedia(
+                    $settings['o_media_id'],
+                    $settings['id_num'],
+                );
+            }
+        }
         $settings['question'] = $parameters['question'];
         return $settings;
     }

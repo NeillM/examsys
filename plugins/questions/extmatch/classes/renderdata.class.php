@@ -43,24 +43,6 @@ class renderdata extends \questiondata
     public $scenarios;
 
     /**
-     * Matching media
-     * @var array
-     */
-    public $media;
-
-    /**
-     * Matching media width
-     * @var array
-     */
-    public $mediawidth;
-
-    /**
-     * Matching media height
-     * @var array
-     */
-    public $mediaheight;
-
-    /**
      * Matching user answers
      * @var array
      */
@@ -121,9 +103,6 @@ class renderdata extends \questiondata
     public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
     {
         $this->scenarios = explode('|', $this->scenario);
-        $this->media = explode('|', $this->qmedia);
-        $this->mediawidth = explode('|', $this->qmediawidth);
-        $this->mediaheight = explode('|', $this->qmediaheight);
         if (!is_null($useranswer)) {
             $this->usersanswers = explode('|', $useranswer);
         } else {
@@ -156,16 +135,33 @@ class renderdata extends \questiondata
     {
         $option = $this->get_opt($part_id);
         $matching_answers = explode('|', $option['correct']);
-        $matching_media = $this->media;
-        $matching_media_width = $this->mediawidth;
-        $matching_media_height = $this->mediaheight;
+        $matching_source = explode('|', $this->qmedia);
+        $matching_width = explode('|', $this->qmediawidth);
+        $matching_height = explode('|', $this->qmediaheight);
+        $matching_alt = explode('|', $this->qmediaalt);
+        $matching_num = explode('|', $this->qmedianum);
+        $matching_media = array();
+        for ($i = 0; $i < count($matching_source); $i++) {
+            $matching_media[$matching_num[$i]] = array(
+                'source' => $matching_source[$i],
+                'width' => $matching_width[$i],
+                'height' => $matching_height[$i],
+                'alt' => $matching_alt[$i],
+            );
+        }
         $matching_scenarios = $this->scenarios;
         $matching_options = $this->matchoptions;
         $matching_users_answers = $this->usersanswers;
         $option_order = explode(',', $this->optionorder);
-        if ($matching_media[0] != '') {
+        if (!empty($matching_media[0])) {
             $this->extmatchdisplaymedia =  true;
-            $this->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
+            $this->set_media(
+                $matching_media[0]['source'],
+                $matching_media[0]['width'],
+                $matching_media[0]['height'],
+                $matching_media[0]['alt'],
+                ''
+            );
         }
 
         array_unshift($matching_scenarios, '');
@@ -174,7 +170,7 @@ class renderdata extends \questiondata
         for ($id = 1; $id < $max_scenarios; $id++) {
             if (
                 (isset($matching_scenarios[$id]) and trim(strip_tags($matching_scenarios[$id], '<img>')) != '')
-                or (isset($matching_media[$id]) and $matching_media[$id] != '')
+                or (isset($matching_media[$id]['source']) and $matching_media[$id]['source'] != '')
             ) {
                 $scenario_no++;
             }
@@ -197,9 +193,20 @@ class renderdata extends \questiondata
                 $matchstem[$id - 1]['scenario'] = $matching_scenarios[$id];
             }
             $matchstem[$id - 1]['display'] = false;
-            if (isset($matching_media[$id]) and $matching_media[$id] != '') {
+
+            if (isset($matching_media[$id]['source']) and $matching_media[$id]['source'] != '') {
                 $matchstem[$id - 1]['display'] = true;
-                $this->set_media($matching_media[$id], $matching_media_width[$id], $matching_media_height[$id], '', false, -1, false, $id);
+                $this->set_media(
+                    $matching_media[$id]['source'],
+                    $matching_media[$id]['width'],
+                    $matching_media[$id]['height'],
+                    $matching_media[$id]['alt'],
+                    '',
+                    false,
+                    -1,
+                    false,
+                    $id
+                );
                 $mediaoption = $this->get_opt($id);
                 $matchstem[$id - 1]['media'] = $mediaoption['optionmedia'];
             }

@@ -36,6 +36,7 @@ class IE_Local_Save extends IE_Main
     var $q_row = array();
     var $o_rows = array();
     var $o_row = array();
+    var $m_row = array();
     var $db;
     var $statuses = array();
 
@@ -149,10 +150,6 @@ class IE_Local_Save extends IE_Main
 
             $this->q_row['bloom'] = $question->bloom;
 
-            $this->q_row['q_media'] = $question->media;
-            $this->q_row['q_media_width'] = $question->media_width;
-            $this->q_row['q_media_height'] = $question->media_height;
-
             $this->q_row['deleted'] = null;
             $this->q_row['locked'] = null;
             $this->q_row['std'] = null;
@@ -162,6 +159,14 @@ class IE_Local_Save extends IE_Main
             if (isset($question->settings)) {
                 $this->q_row['settings'] = $question->settings;
             }
+
+            // Store media row.
+            $this->m_row[0] = $this->db->GetBlankTableRow('media');
+            $this->m_row[0]['source'] = $question->media;
+            $this->m_row[0]['width'] = $question->media_width;
+            $this->m_row[0]['height'] = $question->media_height;
+            $this->m_row[0]['alt'] = $question->media_alt;
+            $this->m_row[0]['ownerid'] = $userID;
 
             $oiii = print_r($question, true);
             $t = 8;
@@ -174,8 +179,6 @@ class IE_Local_Save extends IE_Main
                 $this->SaveDichotomous($question);
             } elseif ($question->type == 'extmatch') {
                 $this->SaveExtMatch($question);
-            } elseif ($question->type == 'flash') {
-                $this->SaveFlash($question);
             } elseif ($question->type == 'hotspot') {
                 $this->SaveHotspot($question);
             } elseif ($question->type == 'info') {
@@ -228,6 +231,14 @@ class IE_Local_Save extends IE_Main
             $this->db->InsertRow('questions', 'q_id', $this->q_row);
             $question->save_id = $this->q_row['q_id'];
 
+            // Insert Questions Media.
+            $this->db->InsertRow('media', 'id', $this->m_row[0]);
+            $qmed_row = $this->db->GetBlankTableRow('questions_media');
+            $qmed_row['qid'] = $this->q_row['q_id'];
+            $qmed_row['mediaid'] = $this->m_row[0]['id'];
+            $qmed_row['num'] = 0;
+            $this->db->InsertRow('questions_media', 'temp', $qmed_row);
+
             $this->qm_row = $this->db->GetBlankTableRow('questions_modules');
             $this->qm_row['q_id'] = $this->q_row['q_id'];
             if (is_array($module_id)) {
@@ -262,6 +273,24 @@ class IE_Local_Save extends IE_Main
                 $this->db->InsertRow('options', 'id_num', $o_row);
             }
 
+            // Insert Option/Stem Media.
+            $mediaidx = 0;
+            for ($i = 1; $i < count($this->m_row); $i++) {
+                $this->db->InsertRow('media', 'id', $this->m_row[$i]);
+                if ($question->type == 'extmatch') {
+                    $qmed_row = $this->db->GetBlankTableRow('questions_media');
+                    $qmed_row['qid'] = $this->q_row['q_id'];
+                    $qmed_row['mediaid'] = $this->m_row[$i]['id'];
+                    $qmed_row['num'] = $i;
+                    $this->db->InsertRow('questions_media', 'temp', $qmed_row);
+                } else {
+                    $omed_row = $this->db->GetBlankTableRow('options_media');
+                    $omed_row['oid'] = $this->o_rows[$mediaidx]['id_num'];
+                    $omed_row['mediaid'] = $this->m_row[$i]['id'];
+                    $this->db->InsertRow('options_media', 'temp', $omed_row);
+                }
+                $mediaidx++;
+            }
             // store additional metadata
             if ($question->load_id != '') {
                 $meta_row = array('id' => null, 'questionID' => $question->save_id, 'type' => 'QTI Ident', 'value' => $question->load_id);
@@ -384,6 +413,9 @@ class IE_Local_Save extends IE_Main
         $this->q_row['score_method'] = $question->score_method;
         $this->q_row['display_method'] = $question->display_method;
 
+        $userObj = UserObject::get_instance();
+        $userID = $userObj->get_user_ID();
+        $i = 0;
         foreach ($question->options as $option) {
             $o_row = $this->db->GetBlankTableRow('options');
 
@@ -398,11 +430,16 @@ class IE_Local_Save extends IE_Main
             $o_row['marks_correct'] = $option->marks_correct;
             $o_row['marks_incorrect'] = $option->marks_incorrect;
             $o_row['marks_partial'] = 0;
-            $o_row['o_media'] = $option->media;
-            $o_row['o_media_width'] = $option->media_width;
-            $o_row['o_media_height'] = $option->media_height;
 
             $this->o_rows[] = $o_row;
+
+            $this->m_row[$i + 1] = $this->db->GetBlankTableRow('media');
+            $this->m_row[$i + 1]['source'] = $option->media;
+            $this->m_row[$i + 1]['width'] = $option->media_width;
+            $this->m_row[$i + 1]['height'] = $option->media_height;
+            $this->m_row[$i + 1]['alt'] = $option->media_alt;
+            $this->m_row[$i + 1]['ownerid'] = $userID;
+            $i++;
         }
     }
 
@@ -412,41 +449,41 @@ class IE_Local_Save extends IE_Main
         $feedback = '';
         $answer_text = '';
 
-        $media = $question->media . '|';
-        $media_width = $question->media_width . '|';
-        $media_height = $question->media_height . '|';
-
-        $count = 0;
+        $media = array();
+        $media_width = array();
+        $media_height = array();
+        $media_alt = array();
 
         foreach ($question->scenarios as $scenario) {
             $scenario_text .= $scenario->stem . '|';
             $feedback .= $scenario->feedback . '|';
             $answer_text .= implode('$', $scenario->correctans) . '|';
-
-            $media .= $scenario->media . '|';
-            $media_width .= $scenario->media_width . '|';
-            $media_height .= $scenario->media_height . '|';
-            $count++;
+            $media[] = $scenario->media;
+            $media_width[] = $scenario->media_width;
+            $media_height[] = $scenario->media_height;
+            $media_alt[] = $scenario->media_alt;
         }
 
         $scenario_text = mb_substr($scenario_text, 0, mb_strlen($scenario_text) - 1);
         $feedback = mb_substr($feedback, 0, mb_strlen($feedback) - 1);
         $answer_text = mb_substr($answer_text, 0, mb_strlen($answer_text) - 1);
+        $userObj = UserObject::get_instance();
+        $userID = $userObj->get_user_ID();
 
-        for ($i = $count; $i < 10; $i++) {
-            $media .= '|';
-            $media_width .= '|';
-            $media_height .= '|';
+        // Store media.
+        for ($i = 0; $i < count($media); $i++) {
+            $this->m_row[$i + 1] = $this->db->GetBlankTableRow('media');
+            $this->m_row[$i + 1]['source'] = $media[$i];
+            $this->m_row[$i + 1]['width'] = $media_width[$i];
+            $this->m_row[$i + 1]['height'] = $media_height[$i];
+            $this->m_row[$i + 1]['alt'] = $media_alt[$i];
+            $this->m_row[$i + 1]['ownerid'] = $userID;
         }
 
         $this->q_row['scenario'] = $scenario_text;
         $this->q_row['correct_fback'] = $feedback;
         $this->q_row['score_method'] = 'Mark per Option';
         $this->q_row['display_method'] = '';
-
-        $this->q_row['q_media'] = $media;
-        $this->q_row['q_media_width'] = $media_width;
-        $this->q_row['q_media_height'] = $media_height;
 
         foreach ($question->optionlist as $option) {
             $o_row = $this->db->GetBlankTableRow('options');
@@ -459,22 +496,6 @@ class IE_Local_Save extends IE_Main
 
             $this->o_rows[] = $o_row;
         }
-    }
-
-    function SaveFlash($question)
-    {
-        $this->q_row['q_media'] = $question->question_swf;
-        $this->q_row['q_media_width'] = $question->question_swf_width;
-        $this->q_row['q_media_height'] = $question->question_swf_height;
-
-        $o_row = $this->db->GetBlankTableRow('options');
-
-        $o_row['o_media'] = $question->feedback_swf;
-        $o_row['o_media_width'] = $question->feedback_swf_width;
-        $o_row['o_media_height'] = $question->feedback_swf_height;
-        $o_row['marks_correct'] = $question->marks;
-
-        $this->o_rows[] = $o_row;
     }
 
     function SaveHotspot($question)
@@ -644,6 +665,9 @@ class IE_Local_Save extends IE_Main
         $this->q_row['score_method'] = 'Mark per Question';
         $this->q_row['display_method'] = 'vertical';
 
+        $userObj = UserObject::get_instance();
+        $userID = $userObj->get_user_ID();
+        $i = 0;
         foreach ($question->options as $option) {
             $o_row = $this->db->GetBlankTableRow('options');
 
@@ -654,14 +678,18 @@ class IE_Local_Save extends IE_Main
             $o_row['marks_incorrect'] = $option->marks_incorrect;
             $o_row['marks_partial'] = 0;
 
-            $o_row['o_media'] = $option->media;
-            $o_row['o_media_width'] = $option->media_width;
-            $o_row['o_media_height'] = $option->media_height;
-
             $o_row['feedback_right'] = $option->fb_correct;
             $o_row['feedback_wrong'] = $option->fb_incorrect;
 
             $this->o_rows[] = $o_row;
+
+            $this->m_row[$i + 1] = $this->db->GetBlankTableRow('media');
+            $this->m_row[$i + 1]['source'] = $option->media;
+            $this->m_row[$i + 1]['width'] = $option->media_width;
+            $this->m_row[$i + 1]['height'] = $option->media_height;
+            $this->m_row[$i + 1]['alt'] = $option->media_alt;
+            $this->m_row[$i + 1]['ownerid'] = $userID;
+            $i++;
         }
     }
 
@@ -678,6 +706,9 @@ class IE_Local_Save extends IE_Main
         $this->q_row['correct_fback'] = $question->fb_correct;
         $this->q_row['incorrect_fback'] = $question->fb_incorrect;
 
+        $userObj = UserObject::get_instance();
+        $userID = $userObj->get_user_ID();
+        $i = 0;
         foreach ($question->options as $option) {
             $o_row = $this->db->GetBlankTableRow('options');
 
@@ -688,15 +719,18 @@ class IE_Local_Save extends IE_Main
             $o_row['marks_incorrect'] = $option->marks_incorrect;
             $o_row['marks_partial'] = 0;
 
-            $o_row['o_media'] = $option->media;
-            $o_row['o_media_width'] = $option->media_width;
-            $o_row['o_media_height'] = $option->media_height;
-
             $o_row['feedback_right'] = $question->fb_correct;
             $o_row['feedback_wrong'] = $question->fb_incorrect;
 
-
             $this->o_rows[] = $o_row;
+
+            $this->m_row[$i + 1] = $this->db->GetBlankTableRow('media');
+            $this->m_row[$i + 1]['source'] = $option->media;
+            $this->m_row[$i + 1]['width'] = $option->media_width;
+            $this->m_row[$i + 1]['height'] = $option->media_height;
+            $this->m_row[$i + 1]['alt'] = $option->media_alt;
+            $this->m_row[$i + 1]['ownerid'] = $userID;
+            $i++;
         }
     }
 
@@ -708,6 +742,9 @@ class IE_Local_Save extends IE_Main
         $this->q_row['q_option_order'] = $question->score_method;
         $this->q_row['score_method'] = 'Mark per Option';
 
+        $userObj = UserObject::get_instance();
+        $userID = $userObj->get_user_ID();
+        $i = 0;
         foreach ($question->options as $option) {
             $o_row = $this->db->GetBlankTableRow('options');
 
@@ -721,11 +758,16 @@ class IE_Local_Save extends IE_Main
             }
             $o_row['feedback_right'] = $option->fb_correct;
             $o_row['feedback_wrong'] = $option->fb_incorrect;
-            $o_row['o_media'] = $option->media;
-            $o_row['o_media_width'] = $option->media_width;
-            $o_row['o_media_height'] = $option->media_height;
 
             $this->o_rows[] = $o_row;
+
+            $this->m_row[$i + 1] = $this->db->GetBlankTableRow('media');
+            $this->m_row[$i + 1]['source'] = $option->media;
+            $this->m_row[$i + 1]['width'] = $option->media_width;
+            $this->m_row[$i + 1]['height'] = $option->media_height;
+            $this->m_row[$i + 1]['alt'] = $option->media_alt;
+            $this->m_row[$i + 1]['ownerid'] = $userID;
+            $i++;
         }
     }
 

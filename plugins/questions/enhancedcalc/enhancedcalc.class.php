@@ -748,7 +748,7 @@ class EnhancedCalc extends Question implements questionInterface
             $questiondata = new plugins\questions\enhancedcalc\renderdata();
             $configObject = Config::get_instance();
             $render = new render($configObject);
-            $questiondata->set_media($this->q_media, $this->q_media_width, $this->q_media_height, '');
+            $questiondata->set_media($this->q_media, $this->q_media_width, $this->q_media_height, $this->q_media_alt, '');
             echo '<div class="mediadiv">';
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";

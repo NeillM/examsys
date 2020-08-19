@@ -14,7 +14,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['jqueryrandom', 'questioneditsct', 'jquery'], function (SCT, ADDEDIT, $) {
+requirejs(['jquerysct', 'questioneditsct', 'jquery'], function (SCT, ADDEDIT, $) {
     var sct = new SCT();
     sct.init();
     var addedit = new ADDEDIT();

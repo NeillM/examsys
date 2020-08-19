@@ -43,7 +43,7 @@ lang.deleteimage - delete image
 {% endif %}
 {# Display images #}
 {% if data.mediatype == 2 %}
-    <img src="{{data.mediaurl}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}" alt="{{lang.image}}"
+    <img src="{{data.mediaurl}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}" alt="{{data.mediaalt}}"
     {% if data.mediaborder %} 
      style="border: 1px solid {{data.mediabordercolour}}"
     {% endif %}

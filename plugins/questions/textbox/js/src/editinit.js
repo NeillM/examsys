@@ -14,7 +14,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['jsxls', 'jquery'], function (Jsxls, $) {
+requirejs(['jquerytextbox', 'jsxls', 'jquery'], function (Text, Jsxls, $) {
+    var text = new Text();
+    text.init();
     $('#addterm').click(function () {
         var disclass = $('#termattrs').attr('data-disclass');
         var readonly = $('#termattrs').attr('data-readonly');

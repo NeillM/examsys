@@ -102,13 +102,16 @@ if (isset($_POST['std_setID']) and $_POST['std_setID'] != '') {
 $last_question = 0;
 $old_q_id = 0;
 
-$result = $mysqli->prepare("SELECT q_id, scenario, leadin, q_type, option_text, q_media, correct, score_method, marks_correct, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY display_pos, id_num");
+$result = $mysqli->prepare("SELECT q_id, scenario, leadin, q_type, option_text, correct, score_method, marks_correct, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY display_pos, id_num");
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->store_result();
-$result->bind_result($q_id, $scenario, $leadin, $q_type, $option_text, $q_media, $correct, $score_method, $marks_correct, $settings);
+$result->bind_result($q_id, $scenario, $leadin, $q_type, $option_text, $correct, $score_method, $marks_correct, $settings);
 while ($result->fetch()) {
     if ($old_q_id != $q_id) {
+        // Get Media.
+        $media = QuestionUtils::getMediaAsString($q_id);
+        $q_media = $media['source'];
         if ($question_no > 0) {
             if ($old_type == 'rank' and $old_score_method == 'Bonus Mark') {
                 $question_part++;

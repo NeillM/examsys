@@ -60,7 +60,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db)
             echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         }
         echo '<div class="mediadiv">';
-        $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
+        $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '');
         $render->render($questiondata, $string, 'paper/media.html');
         echo "</div>\n";
         $li_set = 1;
@@ -190,11 +190,11 @@ while ($stmt->fetch()) {
   $old_q_id = '';
 $q_no = 0;
 $question_no = 0;
-$stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, display_method, q_media, q_media_width, q_media_height, q_option_order, option_text, id_num FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
+$stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, display_method, q_option_order, option_text, id_num FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
 $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $display_method, $q_media, $q_media_width, $q_media_height, $q_option_order, $option_text, $id_num);
+$stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $display_method, $q_option_order, $option_text, $id_num);
 while ($stmt->fetch()) {
     if ($old_q_id != $q_id) {
         $q_no++;
@@ -204,9 +204,12 @@ while ($stmt->fetch()) {
         $questions_array[$q_no]['notes'] = trim($notes);
         $questions_array[$q_no]['q_id'] = $q_id;
         $questions_array[$q_no]['display_method'] = $display_method;
-        $questions_array[$q_no]['q_media'] = $q_media;
-        $questions_array[$q_no]['q_media_width'] = $q_media_width;
-        $questions_array[$q_no]['q_media_height'] = $q_media_height;
+        // Get media.
+        $media = QuestionUtils::getMediaAsString($q_id);
+        $questions_array[$q_no]['q_media'] = $media['source'];
+        $questions_array[$q_no]['q_media_width'] = $media['width'];
+        $questions_array[$q_no]['q_media_height'] = $media['height'];
+        $questions_array[$q_no]['q_media_alt'] = $media['alt'];
         $questions_array[$q_no]['q_option_order'] = $q_option_order;
     }
     $questions_array[$q_no]['options'][$id_num] = $option_text;

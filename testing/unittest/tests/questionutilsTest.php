@@ -35,7 +35,17 @@ class QuestionUtilsTest extends unittestdatabase
     /**
      * @var array Storage for options data in tests
      */
-    private $options1, $options2, $options3;
+    private $options1;
+
+    /**
+     * @var array Storage for options data in tests
+     */
+    private $options2;
+
+    /**
+     * @var array Storage for options data in tests
+     */
+    private $options3;
 
     /**
      * Generate data for test.
@@ -54,6 +64,7 @@ class QuestionUtilsTest extends unittestdatabase
             'q_media' => '1517406311.png',
             'q_media_width' => 480,
             'q_media_height' => 105,
+            'q_media_alt' => 'question image',
             'q_option_order' => 'random',
             'display_method' => 'vertical',
             'score_method' => 'Mark per Option'));
@@ -63,6 +74,7 @@ class QuestionUtilsTest extends unittestdatabase
             'o_media' => '1517409282.jpg',
             'o_media_width' => 951,
             'o_media_height' => 121,
+            'o_media_alt' => 'option image',
             'marks_correct' => 2,
             'marks_incorrect' => -2,
             'marks_partial' => 0));
@@ -90,7 +102,7 @@ class QuestionUtilsTest extends unittestdatabase
      *
      * @group questions
      */
-    public function test_question_answered_in_summative()
+    public function testQuestionAnsweredInSummative()
     {
         // Answered by student.
         $this->assertTrue(QuestionUtils::question_answered_in_summative(33, $this->db));
@@ -104,7 +116,7 @@ class QuestionUtilsTest extends unittestdatabase
      * Test get question details
      * @group questions
      */
-    public function test_get_correct_answer()
+    public function testGetCorrectAnswer()
     {
         $question = array();
         $expected['ID'] = $this->question['id'];
@@ -120,7 +132,7 @@ class QuestionUtilsTest extends unittestdatabase
      * Test fix correct (fill in the blank)
      * @group questions
      */
-    public function test_fix_correct()
+    public function testFixCorrect()
     {
         $expected = ',a';
         $q_type = 'blank';
@@ -128,5 +140,62 @@ class QuestionUtilsTest extends unittestdatabase
         $old_correct = '';
         $option_text = '<div>test [blank]a,b,c[/blank]</div> ';
         $this->assertEquals($expected, QuestionUtils::fix_correct($q_type, $correct, $old_correct, $option_text));
+    }
+
+    /**
+     * Test get question media
+     * @group questions
+     */
+    public function testGetMedia()
+    {
+        $expected = array(
+            new \MediaObject(
+                $this->question['q_media_id'],
+                $this->question['q_media'],
+                $this->question['q_media_width'],
+                $this->question['q_media_height'],
+                $this->question['q_media_alt'],
+                $this->question['q_media_owner'],
+                $this->question['q_media_num'],
+            )
+        );
+        $this->assertEquals($expected, QuestionUtils::getMedia($this->question['id']));
+    }
+
+    /**
+     * Test get question media
+     * @group questions
+     */
+    public function testGetMediaAsString()
+    {
+        $expected = array(
+            'id' => $this->question['q_media_id'],
+            'source' => $this->question['q_media'],
+            'width' => $this->question['q_media_width'],
+            'height' => $this->question['q_media_height'],
+            'alt' => $this->question['q_media_alt'],
+            'owner' => $this->question['q_media_owner'],
+            'num' => $this->question['q_media_num'],
+        );
+        $this->assertEquals($expected, QuestionUtils::getMediaAsString($this->question['id']));
+    }
+
+    /**
+     * Test get question media
+     * @group questions
+     */
+    public function testGetOptionMedia()
+    {
+        $expected = new \MediaObject(
+            $this->options1['o_media_id'],
+            $this->options1['o_media'],
+            $this->options1['o_media_width'],
+            $this->options1['o_media_height'],
+            $this->options1['o_media_alt'],
+            $this->options1['o_media_owner'],
+            0,
+        );
+        $this->assertEquals($expected, QuestionUtils::getOptionMedia($this->options1['id_num']));
+        $this->assertFalse(QuestionUtils::getOptionMedia($this->options2['id_num']));
     }
 }

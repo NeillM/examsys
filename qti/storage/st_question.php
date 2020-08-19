@@ -34,6 +34,7 @@ class ST_Question
     var $media = '';
     var $media_width = 0;
     var $media_height = 0;
+    var $media_alt = '';
     var $media_type = '';
 
     var $status;
@@ -110,6 +111,7 @@ class STQ_Dic_Options
     var $media;
     var $media_width;
     var $media_height;
+    var $media_alt;
     var $media_type;
     var $fb_correct;
     var $fb_incorrect;
@@ -138,6 +140,7 @@ class STQ_Extm_Scenario
     var $media;
     var $media_width;
     var $media_height;
+    var $media_alt;
     var $media_type;
     var $feedback;
     var $correctans = array(); // array of Keys for correct answers based on optionlist
@@ -171,18 +174,6 @@ class ST_Question_Extmatch extends ST_Question
 {
     var $optionlist = array(); // string array of STQ_Extm_Option options by Key (A-Z)
     var $scenarios = array(); // array of STQ_Extm_Scenario, key as scenarion no
-}
-
-class ST_Question_Flash extends ST_Question
-{
-    // NO SCENARIO
-    var $question_swf = '';
-    var $question_swf_width = '';
-    var $question_swf_height = '';
-    var $feedback_swf = '';
-    var $feedback_swf_width = '';
-    var $feedback_swf_height = '';
-    var $marks = 1;
 }
 
 class STQ_Hotspot_Spot
@@ -297,6 +288,7 @@ class STQ_Mcq_Option
     var $media = '';
     var $media_width = 0;
     var $media_height = 0;
+    var $media_alt = '';
     var $media_type;
   
     var $marks_correct;
@@ -340,6 +332,7 @@ class STQ_Mrq_Option
     var $media = '';
     var $media_width = 0;
     var $media_height = 0;
+    var $media_alt = '';
     var $media_type;
     var $fb_correct;
     var $fb_incorrect;

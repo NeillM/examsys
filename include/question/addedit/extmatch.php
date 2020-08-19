@@ -40,16 +40,27 @@ $option_texts = array();
 $all_media = $question->get_all_media();
 $stems = $question->get_all_stems();
 $all_feedback = $question->get_all_correct_fbacks();
-$current_media = array('filename' => $all_media['filenames'][0], 'width' => $all_media['widths'][0], 'height' => $all_media['heights'][0]);
+$current_media = array('filename' => $all_media['filenames'][0], 'width' => $all_media['widths'][0], 'height' => $all_media['heights'][0], 'alt' => $all_media['alts'][0], 'owner' => $all_media['owners'][0], 'num' => $all_media['nums'][0]);
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 
 // Work out how many 'questions' to show
-$visible_questions = 0;
+$visble = array();
 for ($i = 0; $i < $question->max_stems; $i++) {
-    if ((isset($stems[$i]) and $stems[$i] != '') or (isset($all_media['filenames'][$i + 1]) and $all_media['filenames'][$i + 1] != '')) {
-        $visible_questions = $i + 1;
+    if ((isset($stems[$i]) and $stems[$i] != '')) {
+        $visble[] = $i;
     }
 }
+foreach ($all_media['nums'] as $num) {
+    if ($num != '' and $num != 0) {
+        $n = $num - 1;
+        if ($n != 0) {
+            if (!in_array($n, $visble)) {
+                $visble[] = $n;
+            }
+        }
+    }
+}
+$visible_questions = count($visble);
 ?>
 
         <div id="extmatch-options">

@@ -44,5 +44,44 @@ define(['mejs', 'jquery'], function (mejs, $) {
                 }
             }
         };
+
+        /**
+         * Initialise file picker.
+         */
+        this.filepicker = function () {
+            $('.filepicker').click(function(e) {
+                e.preventDefault();
+                var id = $(this).attr('id');
+                $('#filepickersection' + id.substr(10)).toggle();
+            });
+            $('#file input').prop('disabled', true);
+            $('#alt textarea').prop('disabled', true);
+            $('#agreement input').change(function() {
+                var id = $(this).attr('id').substr(10);
+                if ($(this).is(':checked')) {
+                    $('#' + id).prop('disabled', false);
+                    $('#alt_' + id).prop('disabled', false);
+                } else {
+                    $('#' + id).prop('disabled', true);
+                    $('#alt_' + id).prop('disabled', true);
+                }
+            });
+            $('#agreement p').click(function() {
+                var id = $(this).attr('id').substr(1);
+                $('#agreement_' + id).click();
+            });
+            $('#decorative input').change(function() {
+                var id = $(this).attr('id').substr(4);
+                if ($(this).is(':checked')) {
+                    $('#alt_' + id).prop('disabled', true);
+                } else if ($('#agreement_' + id).is(':checked')){
+                    $('#alt_' + id).prop('disabled', false);
+                }
+            });
+            $('#decorative p').click(function() {
+                var id = $(this).attr('id').substr(4);
+                $('#dec_' + id).click();
+            });
+        };
     }
 });

@@ -232,180 +232,255 @@ switch ($_GET['method']) {
   $options_array = array();
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
-  $result = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, correct_fback, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos, id_num");
+  $result = $mysqli->prepare("
+    SELECT
+      screen,
+      q_type,
+      q_id,
+      score_method,
+      display_method,
+      settings,
+      marks_correct,
+      marks_incorrect,
+      theme,
+      scenario,
+      leadin,
+      correct,
+      REPLACE(option_text,'\t','') AS option_text,
+      source,
+      width,
+      height,
+      alt,
+      notes,
+      correct_fback
+    FROM (papers, questions)
+    LEFT JOIN options ON questions.q_id = options.o_id
+    LEFT JOIN options_media ON options.id_num = options_media.oid
+    LEFT JOIN media m on options_media.mediaid = m.id
+    WHERE paper = ?
+    AND papers.question = questions.q_id
+    ORDER BY display_pos, id_num
+  ");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $correct_fback, $settings);
+  $result->bind_result(
+      $screen,
+      $q_type,
+      $q_id,
+      $score_method,
+      $display_method,
+      $settings,
+      $marks_correct,
+      $marks_incorrect,
+      $theme,
+      $scenario,
+      $leadin,
+      $correct,
+      $option_text,
+      $option_media,
+      $option_media_width,
+      $option_media_height,
+      $option_media_alt,
+      $notes,
+      $correct_fback
+  );
   $configObj = Config::get_instance();
   $render = new render($configObj);
-while ($result->fetch()) {
-    $questiondata = \questiondata::get_datastore($q_type);
-    if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
-        echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
-        $prologue_show = 0;
-    }
+  while ($result->fetch()) {
+      $questiondata = \questiondata::get_datastore($q_type);
+      if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
+          echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
+          $prologue_show = 0;
+      }
 
-    if ($question_no == 0) {
-        echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    }
-    if ($old_q_id != $q_id) {          // New Question
-        // Print the options of the previous question
-        $li_set = 0;
-        if ($old_leadin != '') {
-            if ($li_set == 1) {
-                echo "</td></tr>\n";
-            }
-            $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-            if (count($options_array) > 0) {
-                display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
-            }
-            if ($old_screen != $screen) {
-                echo '<tr><td colspan="2">';
-                echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
-                echo '</td></tr>';
-            }
-        }
-        $question_no++;
-        if (($old_q_type == 'likert' and $q_type != 'likert') or ($old_q_type != 'likert' and $q_type == 'likert')) {
-            echo "</table>\n<br />\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
-        }
+      if ($question_no == 0) {
+          echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+      }
+      // New Question
+      if ($old_q_id != $q_id) {
+          // Get Media.
+          $media = QuestionUtils::getMediaAsString($q_id);
+          $q_media = $media['source'];
+          $q_media_height = $media['height'];
+          $q_media_width = $media['width'];
+          $q_media_alt = $media['alt'];
+          $q_media_num = $media['num'];
+          // Print the options of the previous question
+          $li_set = 0;
+          if ($old_leadin != '') {
+              if ($li_set == 1) {
+                  echo "</td></tr>\n";
+              }
+              $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
+              if (count($options_array) > 0) {
+                  display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
+              }
+              if ($old_screen != $screen) {
+                  echo '<tr><td colspan="2">';
+                  echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
+                  echo '</td></tr>';
+              }
+          }
+          $question_no++;
+          if (($old_q_type == 'likert' and $q_type != 'likert') or ($old_q_type != 'likert' and $q_type == 'likert')) {
+              echo "</table>\n<br />\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
+          }
 
-        if ($theme != '') {
-            if ($old_q_type == 'likert') {
-                echo '</table><br /><table cellpadding="4" cellspacing="0" border="0" width="100%">';  // Close off table if last question was likert scale.
-            }
-            echo '<tr><td colspan="2" class="theme">' . $theme . '</td></tr>';
-        }
+          if ($theme != '') {
+              if ($old_q_type == 'likert') {
+                  echo '</table><br /><table cellpadding="4" cellspacing="0" border="0" width="100%">';  // Close off table if last question was likert scale.
+              }
+              echo '<tr><td colspan="2" class="theme">' . $theme . '</td></tr>';
+          }
 
-        if (trim($notes) != '' and $q_type != 'likert') {
-            echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
-        }
+          if (trim($notes) != '' and $q_type != 'likert') {
+              echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
+          }
 
-        if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'enhancedcalc') {
-            echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
-            $li_set = 1;
-        }
-        if ($q_media != '' and $q_media != null and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'area') {
-            if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
-                if ($li_set == 0) {
-                    echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
-                }
-                $li_set = 1;
-                echo '<div class="mediadiv">';
-                $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
-                $render->render($questiondata, $string, 'paper/media.html');
-                echo "</div>\n";
-            } else {
-                if ($li_set == 0) {
-                    echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
-                }
-                $li_set = 1;
-                echo '<div class="mediadiv">';
-                $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
-                $render->render($questiondata, $string, 'paper/media.html');
-                echo "</div>\n";
-            }
-        }
-        if ($q_type != 'likert' and $q_type != 'enhancedcalc' and $q_type != 'info' and $q_type != 'hotspot' and $q_type != 'area') {
-            if ($li_set == 0) {
-                echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
-            }
-            $li_set = 1;
-            echo $leadin;
-        }
-        if ($q_type == 'info') {
-            if ($li_set == 0) {
-                echo '<tr><td colspan="2" style="padding-left:20px; padding-right:20px">' . $leadin;
-            }
-            $li_set = 1;
-            $question_no--;
-        }
+          if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'enhancedcalc') {
+              echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
+              $li_set = 1;
+          }
+          if ($q_media != '' and $q_media != null and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'area') {
+              if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
+                  if ($li_set == 0) {
+                      echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
+                  }
+                  $li_set = 1;
+                  echo '<div class="mediadiv">';
+                  $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                  $render->render($questiondata, $string, 'paper/media.html');
+                  echo "</div>\n";
+              } else {
+                  if ($li_set == 0) {
+                      echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
+                  }
+                  $li_set = 1;
+                  echo '<div class="mediadiv">';
+                  $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                  $render->render($questiondata, $string, 'paper/media.html');
+                  echo "</div>\n";
+              }
+          }
+          if ($q_type != 'likert' and $q_type != 'enhancedcalc' and $q_type != 'info' and $q_type != 'hotspot' and $q_type != 'area') {
+              if ($li_set == 0) {
+                  echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
+              }
+              $li_set = 1;
+              echo $leadin;
+          }
+          if ($q_type == 'info') {
+              if ($li_set == 0) {
+                  echo '<tr><td colspan="2" style="padding-left:20px; padding-right:20px">' . $leadin;
+              }
+              $li_set = 1;
+              $question_no--;
+          }
 
-        $old_leadin = $leadin;
-        $old_scenario = $scenario;
-        $old_notes = $notes;
-        $old_q_type = $q_type;
-        $old_q_id = $q_id;
-        $old_theme = $theme;
-        $old_screen = $screen;
-        $old_correct_fback = $correct_fback;
-        $options_array = array();          // Clear options array
-    }
-
-    $options_array[] = array('q_type' => $q_type, 'score_method' => $score_method, 'display_method' => $display_method, 'settings' => $settings, 'correct' => $correct, 'scenario' => $scenario, 'leadin' => $leadin, 'q_media' => $q_media, 'q_media_width' => $q_media_width, 'q_media_height' => $q_media_height, 'option_text' => $option_text, 'o_media' => $o_media, 'o_media_width' => $o_media_width, 'o_media_height' => $o_media_height, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect);
-}         // End of While loop
+          $old_leadin = $leadin;
+          $old_scenario = $scenario;
+          $old_notes = $notes;
+          $old_q_type = $q_type;
+          $old_q_id = $q_id;
+          $old_theme = $theme;
+          $old_screen = $screen;
+          $old_correct_fback = $correct_fback;
+          $options_array = array();
+      }
+      $options_array[] = array(
+        'q_type' => $q_type,
+        'score_method' => $score_method,
+        'display_method' => $display_method,
+        'settings' => $settings,
+        'correct' => $correct,
+        'scenario' => $scenario,
+        'leadin' => $leadin,
+        'q_media' => $q_media,
+        'q_media_width' => $q_media_width,
+        'q_media_height' => $q_media_height,
+        'q_media_alt' => $q_media_alt,
+        'q_media_num' => $q_media_num,
+        'option_text' => $option_text,
+        'o_media' => $option_media,
+        'o_media_width' => $option_media_width,
+        'o_media_height' => $option_media_height,
+        'o_media_alt' => $option_media_alt,
+        'marks_correct' => $marks_correct,
+        'marks_incorrect' => $marks_incorrect
+      );
+  }
   $result->close();
 
   // Print the options for the last question on the screen.
   $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
-if (count($options_array) > 0) {
-    display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
-}
+  if (count($options_array) > 0) {
+      display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, $_GET['method'], $reviews, $excluded, false);
+  }
 
   echo '</td></tr></table></td></tr>';
   echo "<tr><td colspan=\"2\" style=\"border-top: dotted #808080 1px; color:#808080; font-size:90%; font-weight:bold\">&nbsp;</td>\n</tr>\n";
   echo '</table>';
-if ($_GET['method'] == 'ebel') {
-    if (isset($_GET['std_setID'])) {
-        $result = $mysqli->prepare('SELECT category, percentage FROM ebel WHERE std_setID = ?');
-        $result->bind_param('i', $_GET['std_setID']);
-        $result->execute();
-        $result->bind_result($category, $percentage);
-        while ($result->fetch()) {
-            $ebel[$category] = (isset($percentage)) ? round($percentage, 2) : null;
-        }
-        $result->close();
-    }
+  if ($_GET['method'] == 'ebel') {
+      if (isset($_GET['std_setID'])) {
+          $result = $mysqli->prepare('SELECT category, percentage FROM ebel WHERE std_setID = ?');
+          $result->bind_param('i', $_GET['std_setID']);
+          $result->execute();
+          $result->bind_result($category, $percentage);
+          while ($result->fetch()) {
+              $ebel[$category] = (isset($percentage)) ? round($percentage, 2) : null;
+          }
+          $result->close();
+      }
 
-    if (empty($ebel)) {
-        $templateID = '';
-        // If empty look to see if there is a default grid to load
-        $result = $mysqli->prepare('SELECT ebel_grid_template FROM modules WHERE id = ?');
-        $result->bind_param('i', $_GET['module']);
-        $result->execute();
-        $result->bind_result($templateID);
-        $result->fetch();
-        $result->close();
-        if ($templateID == '') {
+      if (empty($ebel)) {
+          $templateID = '';
+          // If empty look to see if there is a default grid to load
+          $result = $mysqli->prepare('SELECT ebel_grid_template FROM modules WHERE id = ?');
+          $result->bind_param('i', $_GET['module']);
+          $result->execute();
+          $result->bind_result($templateID);
+          $result->fetch();
+          $result->close();
+          if ($templateID == '') {
                 $ebel = array('EE' => 0, 'EI' => 0, 'EN' => 0, 'ME' => 0, 'MI' => 0, 'MN' => 0, 'HE' => 0, 'HI' => 0, 'HN' => 0, 'EE2' => 0, 'EI2' => 0, 'EN2' => 0, 'ME2' => 0, 'MI2' => 0, 'MN2' => 0, 'HE2' => 0, 'HI2' => 0, 'HN2' => 0);
-        } else {
-            $result = $mysqli->prepare('SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?');
-            $result->bind_param('i', $templateID);
-            $result->execute();
-            $result->bind_result($ebel['EE'], $ebel['EI'], $ebel['EN'], $ebel['ME'], $ebel['MI'], $ebel['MN'], $ebel['HE'], $ebel['HI'], $ebel['HN'], $ebel['EE2'], $ebel['EI2'], $ebel['EN2'], $ebel['ME2'], $ebel['MI2'], $ebel['MN2'], $ebel['HE2'], $ebel['HI2'], $ebel['HN2'], $name);
-            $result->fetch();
-            $result->close();
+          } else {
+              $result = $mysqli->prepare('SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?');
+              $result->bind_param('i', $templateID);
+              $result->execute();
+              $result->bind_result($ebel['EE'], $ebel['EI'], $ebel['EN'], $ebel['ME'], $ebel['MI'], $ebel['MN'], $ebel['HE'], $ebel['HI'], $ebel['HN'], $ebel['EE2'], $ebel['EI2'], $ebel['EN2'], $ebel['ME2'], $ebel['MI2'], $ebel['MN2'], $ebel['HE2'], $ebel['HI2'], $ebel['HN2'], $name);
+              $result->fetch();
+              $result->close();
 
-            // Foreach
-            foreach ($ebel as $key => $value) {
-                $ebel[$key] = round($value / 100, 2);
-            }
-        }
-    }
+              // Foreach
+              foreach ($ebel as $key => $value) {
+                  $ebel[$key] = round($value / 100, 2);
+              }
+          }
+      }
 
-    echo "<br />\n<div class=\"key\">" . $string['step2'] . "<br />&nbsp;</div>\n<br />\n";
+      echo "<br />\n<div class=\"key\">" . $string['step2'] . "<br />&nbsp;</div>\n<br />\n";
 
-    echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
-    echo '<tr><td>&nbsp;</td><td style="width:220px; text-align:center"><strong>' . $string['essential'] . '</strong></td><td style="width:220px; text-align:center"><strong>' . $string['important'] . '</strong></td><td style="width:220px; text-align:center"><strong>' . $string['nicetoknow'] . "</strong></td></tr>\n";
-    echo '<tr><td style="text-align:right"><strong>' . $string['easy'] . '</strong></td><td style="text-align:center; background-color:#F8F8F2"><input type="text" style="text-align:right; background-color:#F8F8F2; border:0; color:red; text-decoration:line-through" name="origee" id="origee" size="3" value="0" /><input type="text" style="text-align:right; background-color:#F8F8F2; border:0" name="ee" id="ee" size="7" value="0" />&nbsp;' . ebelDropdown('EE', $ebel) . '</td><td style="text-align:center; background-color:#F0F0E6"><input type="text" style="text-align:right; background-color:#F0F0E6; border:0; color:red; text-decoration:line-through" name="origei" id="origei" size="3" value="" /><input type="text" style="text-align:right; background-color:#F0F0E6; border:0" name="ei" id="ei" size="7" value="0" />&nbsp;' . ebelDropdown('EI', $ebel) . '</td><td style="text-align:center; background-color:#E4E4D2"><input type="text" style="text-align:right; background-color:#E4E4D2; border:0; color:red; text-decoration:line-through" name="origen" id="origen" size="3" value="" /><input type="text" style="text-align:right; background-color:#E4E4D2; border:0" name="en" id="en" size="7" value="0" />&nbsp;' . ebelDropdown('EN', $ebel) . "</td><td style=\"border:0\"><input type=\"text\" value=\"\" name=\"easy_total\" id=\"easy_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo '<tr><td style="text-align:right"><strong>' . $string['medium'] . '</strong></td><td style="text-align:center; background-color:#F0F0E6"><input type="text" style="text-align:right; background-color:#F0F0E6; border:0 solid red; color:red; text-decoration:line-through" name="origme" id="origme" size="3" value="" /><input type="text" style="text-align:right; background-color:#F0F0E6; border:0" name="me" id="me" size="7" value="0" />&nbsp;' . ebelDropdown('ME', $ebel) . '</td><td style="text-align:center; background-color:#E4E4D2"><input type="text" style="text-align:right; background-color:#E4E4D2; border:0; color:red; text-decoration:line-through" name="origmi" id="origmi" size="3" value="" /><input type="text" style="text-align:right; background-color:#E4E4D2; border:0" name="mi" id="mi" size="7" value="0" />&nbsp;' . ebelDropdown('MI', $ebel) . '</td><td style="text-align:center; background-color:#D5D5BB"><input type="text" style="text-align:right; background-color:#D5D5BB; border:0; color:red; text-decoration:line-through" name="origmn" id="origmn" size="3" value="" /><input type="text" style="text-align:right; background-color:#D5D5BB; border:0" name="mn" id="mn" size="7" value="0" />&nbsp;' . ebelDropdown('MN', $ebel) . "</td><td style=\"border:0\"><input type=\"text\" value=\"\" name=\"medium_total\" id=\"medium_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo '<tr><td style="text-align:right"><strong>' . $string['hard'] . '</strong></td><td style="text-align:center; background-color:#E4E4D2"><input type="text" style="text-align:right; background-color:#E4E4D2; border:0; color:red; text-decoration:line-through" name="orighe" id="orighe" size="3" value="" /><input type="text" style="text-align:right; background-color:#E4E4D2; border:0" name="he" id="he" size="7" value="0" />&nbsp;' . ebelDropdown('HE', $ebel) . '</td><td style="text-align:center; background-color:#D5D5BB"><input type="text" style="text-align:right; background-color:#D5D5BB; border:0; color:red; text-decoration:line-through" name="orighi" id="orighi" size="3" value="" /><input type="text" style="text-align:right; background-color:#D5D5BB; border:0" name="hi" id="hi" size="7" value="0" />&nbsp;' . ebelDropdown('HI', $ebel) . '</td><td style="text-align:center; background-color:#C8C8A6"><input type="text" style="text-align:right; background-color:#C8C8A6; border:0; color:red; text-decoration:line-through" name="orighn" id="orighn" size="3" value="" /><input type="text" style="text-align:right; background-color:#C8C8A6; border:0" name="hn" id="hn" size="7" value="0" />&nbsp;' . ebelDropdown('HN', $ebel) . "</td><td style=\"border:0\"><input type=\"text\" value=\"\" name=\"hard_total\" id=\"hard_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential_total\" id=\"essential_total\" size=\"8\" style=\"text-align:center; border:0\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important_total\" id=\"important_total\" size=\"8\" style=\"text-align:center; border:0\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice_total\" id=\"nice_total\" size=\"8\" style=\"text-align:center; border:0\" /></td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0; text-align:center\" name=\"cut_score\" id=\"cut_score\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
-    echo "</table>\n</div>\n<br />\n";
+      echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
+      echo '<tr><td>&nbsp;</td><td style="width:220px; text-align:center"><strong>' . $string['essential'] . '</strong></td><td style="width:220px; text-align:center"><strong>' . $string['important'] . '</strong></td><td style="width:220px; text-align:center"><strong>' . $string['nicetoknow'] . "</strong></td></tr>\n";
+      echo '<tr><td style="text-align:right"><strong>' . $string['easy'] . '</strong></td><td style="text-align:center; background-color:#F8F8F2"><input type="text" style="text-align:right; background-color:#F8F8F2; border:0; color:red; text-decoration:line-through" name="origee" id="origee" size="3" value="0" /><input type="text" style="text-align:right; background-color:#F8F8F2; border:0" name="ee" id="ee" size="7" value="0" />&nbsp;' . ebelDropdown('EE', $ebel) . '</td><td style="text-align:center; background-color:#F0F0E6"><input type="text" style="text-align:right; background-color:#F0F0E6; border:0; color:red; text-decoration:line-through" name="origei" id="origei" size="3" value="" /><input type="text" style="text-align:right; background-color:#F0F0E6; border:0" name="ei" id="ei" size="7" value="0" />&nbsp;' . ebelDropdown('EI', $ebel) . '</td><td style="text-align:center; background-color:#E4E4D2"><input type="text" style="text-align:right; background-color:#E4E4D2; border:0; color:red; text-decoration:line-through" name="origen" id="origen" size="3" value="" /><input type="text" style="text-align:right; background-color:#E4E4D2; border:0" name="en" id="en" size="7" value="0" />&nbsp;' . ebelDropdown('EN', $ebel) . "</td><td style=\"border:0\"><input type=\"text\" value=\"\" name=\"easy_total\" id=\"easy_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+      echo '<tr><td style="text-align:right"><strong>' . $string['medium'] . '</strong></td><td style="text-align:center; background-color:#F0F0E6"><input type="text" style="text-align:right; background-color:#F0F0E6; border:0 solid red; color:red; text-decoration:line-through" name="origme" id="origme" size="3" value="" /><input type="text" style="text-align:right; background-color:#F0F0E6; border:0" name="me" id="me" size="7" value="0" />&nbsp;' . ebelDropdown('ME', $ebel) . '</td><td style="text-align:center; background-color:#E4E4D2"><input type="text" style="text-align:right; background-color:#E4E4D2; border:0; color:red; text-decoration:line-through" name="origmi" id="origmi" size="3" value="" /><input type="text" style="text-align:right; background-color:#E4E4D2; border:0" name="mi" id="mi" size="7" value="0" />&nbsp;' . ebelDropdown('MI', $ebel) . '</td><td style="text-align:center; background-color:#D5D5BB"><input type="text" style="text-align:right; background-color:#D5D5BB; border:0; color:red; text-decoration:line-through" name="origmn" id="origmn" size="3" value="" /><input type="text" style="text-align:right; background-color:#D5D5BB; border:0" name="mn" id="mn" size="7" value="0" />&nbsp;' . ebelDropdown('MN', $ebel) . "</td><td style=\"border:0\"><input type=\"text\" value=\"\" name=\"medium_total\" id=\"medium_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+      echo '<tr><td style="text-align:right"><strong>' . $string['hard'] . '</strong></td><td style="text-align:center; background-color:#E4E4D2"><input type="text" style="text-align:right; background-color:#E4E4D2; border:0; color:red; text-decoration:line-through" name="orighe" id="orighe" size="3" value="" /><input type="text" style="text-align:right; background-color:#E4E4D2; border:0" name="he" id="he" size="7" value="0" />&nbsp;' . ebelDropdown('HE', $ebel) . '</td><td style="text-align:center; background-color:#D5D5BB"><input type="text" style="text-align:right; background-color:#D5D5BB; border:0; color:red; text-decoration:line-through" name="orighi" id="orighi" size="3" value="" /><input type="text" style="text-align:right; background-color:#D5D5BB; border:0" name="hi" id="hi" size="7" value="0" />&nbsp;' . ebelDropdown('HI', $ebel) . '</td><td style="text-align:center; background-color:#C8C8A6"><input type="text" style="text-align:right; background-color:#C8C8A6; border:0; color:red; text-decoration:line-through" name="orighn" id="orighn" size="3" value="" /><input type="text" style="text-align:right; background-color:#C8C8A6; border:0" name="hn" id="hn" size="7" value="0" />&nbsp;' . ebelDropdown('HN', $ebel) . "</td><td style=\"border:0\"><input type=\"text\" value=\"\" name=\"hard_total\" id=\"hard_total\" size=\"8\" style=\"border: 0px\" /></td></tr>\n";
+      echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential_total\" id=\"essential_total\" size=\"8\" style=\"text-align:center; border:0\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important_total\" id=\"important_total\" size=\"8\" style=\"text-align:center; border:0\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice_total\" id=\"nice_total\" size=\"8\" style=\"text-align:center; border:0\" /></td></tr>\n";
+      echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0; text-align:center\" name=\"cut_score\" id=\"cut_score\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
+      echo "</table>\n</div>\n<br />\n";
 
-    echo "<br />\n";
-    echo '<div class="key">' . $string['step3'] . '<br />';
-    ?>
+      echo "<br />\n";
+      echo '<div class="key">' . $string['step3'] . '<br />';
+        ?>
     <blockquote style="margin-top:8px; margin-bottom:8px">
-    <?php
-    if (isset($_GET['std_setID'])) {
-        $ebel_dist = check_ebel_distinction_type($_GET['std_setID'], $mysqli);
-    } else {
-        $ebel_dist = 'grid';
-    }
-    ?>
+      <?php
+        if (isset($_GET['std_setID'])) {
+            $ebel_dist = check_ebel_distinction_type($_GET['std_setID'], $mysqli);
+        } else {
+            $ebel_dist = 'grid';
+        }
+        ?>
     <input type="radio" id="distinction_type_grid" name="distinction_type" value="1"<?php if ($ebel_dist == 'grid') {
         echo ' checked="checked"';
                                                                                     } ?> /> <label for="distinction_type_grid"><?php echo $string['gridbelow']; ?></label><br />
@@ -416,7 +491,7 @@ if ($_GET['method'] == 'ebel') {
         echo ' checked="checked"';
                                                                                    } ?> /> <label for="distinction_type_dna"><?php echo $string['donotapply']; ?></label><br />
     </blockquote>
-    <?php
+      <?php
         echo "</div>\n<br />\n";
 
         echo "<div align=\"center\">\n<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\">\n";
@@ -427,20 +502,20 @@ if ($_GET['method'] == 'ebel') {
         echo "<tr><td>&nbsp;</td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"essential2_total\" id=\"essential2_total\" size=\"8\" style=\"text-align:center; border:0\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"important2_total\" id=\"important2_total\" size=\"8\" style=\"text-align:center; border:0\" /></td><td style=\"text-align:center\"><input type=\"text\" value=\"\" name=\"nice2_total\" id=\"nice2_total\" size=\"8\" style=\"text-align:center; border:0\" /></td></tr>\n";
         echo "<tr><td>&nbsp;</td><td style=\"text-align:center\" colspan=\"3\"><input type=\"text\" style=\"border:0; text-align:center\" name=\"cut_score2\" id=\"cut_score2\" size=\"70\" value=\"cut score=0%\" /></td></tr>\n";
         echo "</table>\n</div>\n<br />\n";
-}
-if ($_GET['method'] == 'modified_angoff') {
-    echo '<input type="hidden" name="method" value="Modified Angoff" />';
-} else {
-    echo '<input type="hidden" name="method" value="Ebel" />';
-}
+  }
+  if ($_GET['method'] == 'modified_angoff') {
+      echo '<input type="hidden" name="method" value="Modified Angoff" />';
+  } else {
+      echo '<input type="hidden" name="method" value="Ebel" />';
+  }
   echo '<input type="hidden" name="module" value="' . $module . '" />';
   echo '<input type="hidden" name="folder" value="' . $folder . '" />';
   echo '<input type="hidden" name="paperID" value="' . $paperID . '" />';
-if (isset($_GET['std_setID'])) {
-    echo '<input type="hidden" name="std_setID" value="' . $_GET['std_setID'] . '" />';
-}
+  if (isset($_GET['std_setID'])) {
+      echo '<input type="hidden" name="std_setID" value="' . $_GET['std_setID'] . '" />';
+  }
   echo '<input type="hidden" name="stdIDNo" id="stdIDNo" value="' . $stdID . '" />';
-?>
+    ?>
 <div align="center">
 <table cellpadding="2" cellspacing="0" border="0">
 <tr><td style="text-align:center; color:#808080">ALT + S</td><td style="text-align:center; color:#808080">ALT + C</td><td></td><td></td></tr>

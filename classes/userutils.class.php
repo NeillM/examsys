@@ -39,7 +39,7 @@ class UserUtils
         foreach ($roles as $rolename) {
             try {
                 Role::validateRole($rolename);
-            } catch(InvalidRole $e) {
+            } catch (InvalidRole $e) {
                 // Not a valid role.
                 return false;
             }

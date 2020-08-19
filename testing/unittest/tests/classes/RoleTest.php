@@ -23,11 +23,13 @@
  * @group core
  * @group users
  */
-class RoleTest extends \testing\unittest\unittestdatabase {
+class RoleTest extends \testing\unittest\unittestdatabase
+{
     /**
      * @inheritDoc
      */
-    public function datageneration(): void {
+    public function datageneration(): void
+    {
         // Do nothing.
     }
 
@@ -58,7 +60,7 @@ class RoleTest extends \testing\unittest\unittestdatabase {
         return [
             'single role' => ['Student', [4 => 'Student']],
             'same grouping' => ['Staff,SysAdmin', [3 => 'Staff', 1 => 'SysAdmin']],
-            'multiple groupings' => ['Student,Staff,Admin', [4 => 'Student', 3=> 'Staff', 2 => 'Admin']],
+            'multiple groupings' => ['Student,Staff,Admin', [4 => 'Student', 3 => 'Staff', 2 => 'Admin']],
         ];
     }
 

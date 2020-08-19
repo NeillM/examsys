@@ -755,6 +755,7 @@ class ST_QTI12_Material // <material>
     var $y_scale = 1;
     var $media_width = 0;
     var $media_height = 0;
+    var $media_alt = '';
     var $orderid = 0;
 
     var $notrim = 0;
@@ -804,12 +805,12 @@ class ST_QTI12_Material // <material>
             }
             // load any images here
             if ($xml->matimage) {
-                $this->addImage((string) $xml->matimage->attributes()->uri, (string) $xml->matimage->attributes()->width, (string) $xml->matimage->attributes()->height, (string)$xml->matimage);
+                $this->addImage((string) $xml->matimage->attributes()->uri, (string) $xml->matimage->attributes()->width, (string) $xml->matimage->attributes()->height, (string)$xml->matimage, (string) $xml->matimage->attributes()->label);
             }
         }
     }
 
-    function addImage($image, $width = '', $height = '', $imgnam = '')
+    function addImage($image, $width = '', $height = '', $imgnam = '', $imglabel = '')
     {
         global $import_directory;
         global $q_warnings;
@@ -843,6 +844,9 @@ class ST_QTI12_Material // <material>
             $identifier_size = GetImageSize($imagefile);
             $this->media_width = $identifier_size[0];
             $this->media_height = $identifier_size[1];
+            if ($imglabel != '') {
+                $this->media_alt = $imglabel;
+            }
 
             // if size different, then resize the image
             if ($width > 0 && $height > 0 && ($width != $this->media_width || $height != $this->media_height)) {

@@ -26,7 +26,7 @@
   require '../include/staff_auth.inc';
   require '../include/survey_quantitative.inc.php';
 
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $candidates)
+function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $q_media_alt, $q_media_num, $options, $log, $correct_buf, $screen, $candidates)
 {
     global $old_likert_scale, $old_score_method, $old_display_method, $table_on, $string;
 
@@ -59,7 +59,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo $leadin;
             if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
                 echo '<div class="mediadiv">';
-                $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+                $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '');
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</div>\n";
             }
@@ -70,7 +70,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
             if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
                 echo '<div class="mediadiv">';
-                $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+                $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '');
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</div>\n";
             }
@@ -338,9 +338,20 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "</table>\n";
         }
     } elseif ($q_type == 'matrix') {
-        $tmp_media_array = explode('|', $q_media);
-        $tmp_media_width_array = explode('|', $q_media_width);
-        $tmp_media_height_array = explode('|', $q_media_height);
+        $matching_source = explode('|', $q_media);
+        $matching_width = explode('|', $q_media_width);
+        $matching_height = explode('|', $q_media_height);
+        $matching_alt = explode('|', $q_media_alt);
+        $matching_num = explode('|', $q_media_num);
+        $tmp_media_array = array();
+        for ($i = 0; $i < count($matching_source); $i++) {
+            $tmp_media_array[$matching_num[$i]] = array(
+                'source' => $matching_source[$i],
+                'width' => $matching_width[$i],
+                'height' => $matching_height[$i],
+                'alt' => $matching_alt[$i],
+            );
+        }
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $correct_buf[0]);
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>";
@@ -371,23 +382,46 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         echo "</table>\n</td></tr>\n";
     } elseif ($q_type == 'extmatch') {
-        $tmp_media_array = explode('|', $q_media);
-        $tmp_media_width_array = explode('|', $q_media_width);
-        $tmp_media_height_array = explode('|', $q_media_height);
+        $matching_source = explode('|', $q_media);
+        $matching_width = explode('|', $q_media_width);
+        $matching_height = explode('|', $q_media_height);
+        $matching_alt = explode('|', $q_media_alt);
+        $matching_num = explode('|', $q_media_num);
+        $tmp_media_array = array();
+        for ($i = 0; $i < count($matching_source); $i++) {
+            $tmp_media_array[$matching_num[$i]] = array(
+                'source' => $matching_source[$i],
+                'width' => $matching_width[$i],
+                'height' => $matching_height[$i],
+                'alt' => $matching_alt[$i],
+            );
+        }
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $correct_buf[0]);
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n<ol type=\"i\">";
-        if ($tmp_media_array[0] != '') {
+        if ($tmp_media_array[0]['source'] != '') {
             echo '<div class="mediadiv">';
-            $questiondata->set_media($tmp_media_array[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '');
+            $questiondata->set_media(
+                $tmp_media_array[0]['source'],
+                $tmp_media_array[0]['width'],
+                $tmp_media_array[0]['height'],
+                $tmp_media_array[0]['alt'],
+                ''
+            );
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
         }
         for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
             echo "<li>\n";
-            if ($tmp_media_array[$i] != '') {
+            if ($tmp_media_array[$i]['source'] != '') {
                 echo '<p>';
-                $questiondata->set_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '');
+                $questiondata->set_media(
+                    $tmp_media_array[$i]['source'],
+                    $tmp_media_array[$i]['width'],
+                    $tmp_media_array[$i]['height'],
+                    $tmp_media_array[$i]['alt'],
+                    ''
+                );
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</p>\n";
             }
@@ -527,10 +561,11 @@ if ($module != '' and $module != 0) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare('SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, score_method, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num');
+  $result = $mysqli->prepare('SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, score_method, display_method, correct FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num');
   $result->bind_param('i', $_GET['paperID']);
   $result->execute();
-  $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $display_method, $q_media, $q_media_width, $q_media_height, $correct);
+  $result->store_result();
+  $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $score_method, $display_method, $correct);
 while ($result->fetch()) {
     // Replace &nbsp; with spaces.
     $theme = str_replace('&nbsp;', ' ', $theme);
@@ -590,7 +625,7 @@ while ($result->fetch()) {
             }
         }
         if ($old_q_type != 'info') {
-            displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags($old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
+            displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags($old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
             $question_no++;
         }
         if ($old_screen < $screen) {
@@ -627,13 +662,18 @@ while ($result->fetch()) {
     $old_scenario = $scenario;
     $old_leadin = $leadin;
     $old_q_type = $q_type;
-    $old_q_media = $q_media;
-    $old_q_media_width = $q_media_width;
-    $old_q_media_height = $q_media_height;
+    // Get Media.
+    $media = QuestionUtils::getMediaAsString($q_id);
+    $old_q_media = $media['source'];
+    $old_q_media_height = $media['height'];
+    $old_q_media_width = $media['width'];
+    $old_q_media_alt = $media['alt'];
+    $old_q_media_num = $media['num'];
     $old_correct = $correct;
     $old_score_method = $score_method;
     $old_display_method = $display_method;
 }
+  $result->free_result();
   $result->close();
 
 if ($old_q_type == 'likert') {
@@ -675,7 +715,7 @@ if ($question_no == 1 or $display_respondents == 1) { // Calculate how many cand
     echo "<tr><td colspan=\"2\">($respondents Respondents)</td></tr>\n";
 }
 if ($old_q_type != 'info') {
-    displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags($old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
+    displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags($old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
 }
 
 if ($table_on == 1) {

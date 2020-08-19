@@ -200,12 +200,60 @@ $question_no      = 0;
 $old_screen       = 1;
 $prologue_show    = 1;
 
-$stmt = $mysqli->prepare("SELECT screen, q_type, q_id, score_method, display_method, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM papers, questions, options WHERE paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, id_num");
+$stmt = $mysqli->prepare("
+SELECT
+    screen,
+    q_type,
+    q_id,
+    score_method,
+    display_method,
+    marks_correct,
+    marks_incorrect,
+    marks_partial,
+    theme,
+    scenario,
+    leadin,
+    correct,
+    REPLACE(option_text,'\t','') AS option_text,
+    source,
+    width,
+    height,
+    alt,
+    notes
+FROM
+    papers, questions, options
+LEFT JOIN options_media ON options.id_num = options_media.oid
+LEFT JOIN media m on options_media.mediaid = m.id
+WHERE
+    paper = ?
+AND papers.question=questions.q_id
+AND questions.q_id=options.o_id 
+ORDER BY display_pos, id_num
+");
 $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->store_result();
 $num_rows = $stmt->num_rows;
-$stmt->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
+$stmt->bind_result(
+    $screen,
+    $q_type,
+    $q_id,
+    $score_method,
+    $display_method,
+    $marks_correct,
+    $marks_incorrect,
+    $marks_partial,
+    $theme,
+    $scenario,
+    $leadin,
+    $correct,
+    $option_text,
+    $option_media,
+    $option_media_width,
+    $option_media_height,
+    $option_media_alt,
+    $notes
+);
 
 $configObj = Config::get_instance();
 $render = new render($configObj);
@@ -213,6 +261,12 @@ $render = new render($configObj);
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"text-align:left\">\n";
 
 while ($stmt->fetch()) {
+    // Get Media.
+    $media = QuestionUtils::getMediaAsString($q_id);
+    $q_media = $media['source'];
+    $q_media_height = $media['height'];
+    $q_media_width = $media['width'];
+    $q_media_alt = $media['alt'];
     $questiondata = \questiondata::get_datastore($q_type);
     if ($prologue_show == 1 and $paper_prologue != '') {
         echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
@@ -265,7 +319,7 @@ while ($stmt->fetch()) {
                 }
                 $li_set = 1;
                 echo '<div class="mediadiv">';
-                $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
+                $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "<div>\n";
             } else {
@@ -274,7 +328,7 @@ while ($stmt->fetch()) {
                 }
                 $li_set = 1;
                 echo '<p>';
-                $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
+                $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</p>\n";
             }
@@ -301,11 +355,28 @@ while ($stmt->fetch()) {
         $old_q_id       = $q_id;
         $old_theme      = $theme;
         $old_screen     = $screen;
-        $options_array  = array();          // Clear options array
+        $options_array  = array();
     }
-
-    $options_array[] = array('q_type' => $q_type, 'score_method' => $score_method, 'display_method' => $display_method, 'correct' => $correct, 'scenario' => $scenario, 'q_media' => $q_media, 'q_media_width' => $q_media_width, 'q_media_height' => $q_media_height, 'option_text' => $option_text, 'o_media' => $o_media, 'o_media_width' => $o_media_width, 'o_media_height' => $o_media_height, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial);
-}         // End of While loop
+    $options_array[] = array(
+        'q_type' => $q_type,
+        'score_method' => $score_method,
+        'display_method' => $display_method,
+        'correct' => $correct,
+        'scenario' => $scenario,
+        'q_media' => $q_media,
+        'q_media_width' => $q_media_width,
+        'q_media_height' => $q_media_height,
+        'q_media_alt' => $q_media_alt,
+        'option_text' => $option_text,
+        'o_media' => $option_media,
+        'o_media_width' => $option_media_width,
+        'o_media_height' => $option_media_height,
+        'o_media_alt' => $option_media_alt,
+        'marks_correct' => $marks_correct,
+        'marks_incorrect' => $marks_incorrect,
+        'marks_partial' => $marks_partial
+    );
+}
 $stmt->close();
 
 // Print the options for the last question on the screen.

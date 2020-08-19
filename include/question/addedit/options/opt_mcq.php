@@ -52,7 +52,7 @@ if ($option->id != -1) {
         $configObj = Config::get_instance();
         $questiondata = new plugins\questions\mcq\renderdata();
         $render = new render($configObj);
-        $questiondata->set_media($media['filename'], $media['width'], $media['height'], '', false, $index, $locked);
+        $questiondata->set_media($media['filename'], $media['width'], $media['height'], $media['alt'], '', false, $index, $locked);
         ?>
               <tr<?php echo $alt_c ?>>
                 <th><?php echo $string['current'] . ' ' . $string['media'] ?></th>
@@ -64,6 +64,16 @@ if ($option->id != -1) {
                 <td>&nbsp;</td>
               </tr>
         <?php
+        if ($media['alt'] != '') {
+            ?>
+            <tr>
+                <th><?php echo $string['current'] . ' ' . $string['mediaalt']?></th>
+                <td>
+                    <textarea id="currentalt<?php echo $index ?>" name="currentalt<?php echo $index ?>" class="filepickertextarea" <?php echo $disabled; ?>><?php echo $media['alt']; ?></textarea>
+                </td>
+            </tr>
+            <?php
+        }
     }
 }
 
@@ -71,7 +81,19 @@ if ($option->id != -1) {
             <tr<?php echo $alt_c ?>>
               <th><label for="option_media<?php echo $index ?>"><?php echo $string['change'] . ' ' . $string['media'] ?></label></th>
               <td>
-                <input id="option_media<?php echo $index ?>" name="option_media<?php echo $index ?>" type="file" size="50"<?php echo $disabled ?> />
+                <button id="filepickeroption_media<?php echo $index ?>" data-mediaid="option_media<?php echo $index ?>" class="filepicker" <?php echo $disabled ?>><?php echo $string['uploadmedia']; ?></button>
+                <div id="filepickersectionoption_media<?php echo $index ?>" class="filepickersection">
+                    <?php
+                    $mediadata = array(
+                        'mediaid' => 'option_media' . $index,
+                        'mediaalt' => 'alt_option_media' . $index,
+                        'mediaagreement' => 'agreement_option_media' . $index,
+                        'mediadecorative' => 'dec_option_media' . $index,
+                    );
+                    $render = new render($configObject);
+                    echo $render->render($mediadata, $string, 'filepicker.html');
+                    ?>
+                </div>
               </td>
               <td>&nbsp;</td>
             </tr>

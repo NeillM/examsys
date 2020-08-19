@@ -68,10 +68,11 @@ function getPaper($paperID)
     $old_p_id = 0;
     $row_no = 0;
     $info_count = 0;
-    $result = $mysqli->prepare("SELECT random_mark, total_mark, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+    $result = $mysqli->prepare("SELECT random_mark, total_mark, p_id, q_id, q_type, screen, leadin, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
     $result->bind_param('ii', $paperID, $paperID);
     $result->execute();
-    $result->bind_result($random_mark, $total_mark, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
+    $result->store_result();
+    $result->bind_result($random_mark, $total_mark, $p_id, $q_id, $q_type, $screen, $leadin, $display_last_edited, $display_pos);
     $temp_array['questionID'] = '';
     while ($result->fetch()) {
         $row_no++;
@@ -84,9 +85,11 @@ function getPaper($paperID)
         $temp_array['questions'][$q_id]['p_id'] = $p_id;
         $temp_array['questions'][$q_id]['q_id'] = $q_id;
         $temp_array['questions'][$q_id]['display_last_edited'] = $display_last_edited;
-        $temp_array['questions'][$q_id]['q_media'] = $q_media;
-        $temp_array['questions'][$q_id]['q_media_width'] = $q_media_width;
-        $temp_array['questions'][$q_id]['q_media_height'] = $q_media_height;
+        $media = QuestionUtils::getMediaAsString($q_id);
+        $temp_array['questions'][$q_id]['q_media'] = $media['source'];
+        $temp_array['questions'][$q_id]['q_media_width'] = $media['width'];
+        $temp_array['questions'][$q_id]['q_media_height'] = $media['height'];
+        $temp_array['questions'][$q_id]['q_media_alt'] = $media['alt'];
         $temp_array['questions'][$q_id]['display_pos'] = $display_pos;
 
         $temp_array['questions'][$q_id]['qnumber'] = $display_pos - $info_count;
@@ -100,6 +103,7 @@ function getPaper($paperID)
         $temp_array['temp_total_marks'] = $total_mark;
         $temp_array['questionID'] .= $q_id . ',';
     }
+    $result->free_result();
     $result->close();
     $temp_array['questionID'] = mb_substr($temp_array['questionID'], 0, -1);
     return $temp_array;

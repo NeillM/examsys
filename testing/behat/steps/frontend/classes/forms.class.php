@@ -218,10 +218,10 @@ trait forms
         $formelement = $this->getForm($form);
         $submit = $formelement->find('css', 'input[type=submit]');
         if (is_null($submit)) {
-            throw new \Exception("The form has no submit button");
+            throw new \Exception('The form has no submit button');
         }
         if ($this->assertFieldIsDisabled($submit)) {
-            throw new \Exception("Saving is disabled.");
+            throw new \Exception('Saving is disabled.');
         }
         $submit->press();
     }
@@ -239,10 +239,10 @@ trait forms
         $formelement = $this->getForm($form);
         $submit = $formelement->find('css', 'input[type=submit]');
         if (is_null($submit)) {
-            throw new \Exception("The form has no submit button");
+            throw new \Exception('The form has no submit button');
         }
         if (!$this->assertFieldIsDisabled($submit)) {
-            throw new \Exception("Saving is enabled.");
+            throw new \Exception('Saving is enabled.');
         }
     }
 }

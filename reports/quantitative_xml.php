@@ -38,7 +38,7 @@ header('Pragma: public');
 header('Content-disposition: attachment; filename=report.xml');
 header('Content-type: text/xml');
 
-function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $question_number, $candidates)
+function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $options, $log, $correct_buf, $screen, $question_number, $candidates)
 {
     global $old_likert_scale, $old_display_method, $table_on;
 
@@ -277,9 +277,6 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
                 break;
         }
     } else {
-        $tmp_media_array = explode('|', $q_media);
-        $tmp_media_width_array = explode('|', $q_media_width);
-        $tmp_media_height_array = explode('|', $q_media_height);
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $correct_buf[0]);
         echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
@@ -348,10 +345,11 @@ if ($hits > 0) {
     $options_buffer = array();
     $correct_buffer = array();
 
-    $result = $mysqli->prepare('SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
+    $result = $mysqli->prepare('SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, correct FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
     $result->bind_param('i', $paperID);
     $result->execute();
-    $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $q_media, $q_media_width, $q_media_height, $correct);
+    $result->store_result();
+    $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $correct);
     while ($result->fetch()) {
         $theme = str_replace('&nbsp;', ' ', $theme);
         $scenario = str_replace('&nbsp;', ' ', $scenario);
@@ -407,7 +405,7 @@ if ($hits > 0) {
                 $display_respondents = 0;
             }
             if ($old_q_type != 'info') {
-                displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
+                displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
                 $question_no++;
             }
             if ($old_screen < $screen) {
@@ -443,12 +441,10 @@ if ($hits > 0) {
         $old_scenario = $scenario;
         $old_leadin = $leadin;
         $old_q_type = $q_type;
-        $old_q_media = $q_media;
-        $old_q_media_width = $q_media_width;
-        $old_q_media_height = $q_media_height;
         $old_correct = $correct;
         $old_display_method = $display_method;
     }
+    $result->free_result();
     $result->close();
 
     if ($old_q_type == 'likert') {
@@ -476,7 +472,7 @@ if ($hits > 0) {
         }
     }
 
-    displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
+    displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
 }
 
 if ($table_on == 1) {

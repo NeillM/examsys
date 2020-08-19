@@ -28,7 +28,7 @@ echo $headertext;
                 <material>
                     <mattext texttype="text/html"><![CDATA[<?php echo $scn->stem ?>]]></mattext>
     <?php if ($scn->media) : ?>
-                    <matimage imagtype="<?php echo $scn->media_type ?>" uri="<?php echo $scn->media ?>"/>
+                    <matimage imagtype="<?php echo $scn->media_type ?>" uri="<?php echo $scn->media ?>" uri="<?php echo $scn->media_alt ?>"/>
     <?php endif; ?>
                 </material>
                 

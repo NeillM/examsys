@@ -296,7 +296,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 echo '</td><td>';
             }
             echo '<div class="mediadiv">';
-            $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '', true);
+            $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '', true);
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
             $li_set = 1;
@@ -325,7 +325,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
         if ($question['q_media'] != '') {
             echo '<div class="mediadiv">';
-            $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '', true);
+            $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '', true);
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
             ;
@@ -448,9 +448,20 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         case 'extmatch':
         case 'matrix':
             $matching_scenarios = explode('|', $question['scenario']);
-            $matching_media = explode('|', $question['q_media']);
-            $matching_media_width = explode('|', $question['q_media_width']);
-            $matching_media_height = explode('|', $question['q_media_height']);
+            $matching_source = explode('|', $question['q_media']);
+            $matching_width = explode('|', $question['q_media_width']);
+            $matching_height = explode('|', $question['q_media_height']);
+            $matching_alt = explode('|', $question['q_media_alt']);
+            $matching_num = explode('|', $question['q_media_num']);
+            $matching_media = array();
+            for ($i = 0; $i < count($matching_source); $i++) {
+                $matching_media[$matching_num[$i]] = array(
+                    'source' => $matching_source[$i],
+                    'width' => $matching_width[$i],
+                    'height' => $matching_height[$i],
+                    'alt' => $matching_alt[$i],
+                );
+            }
             $matching_options = array();
             if (isset($user_answers[$current_screen][$q_id])) {
                 $matching_users_answers = explode('|', $user_answers[$current_screen][$q_id]);
@@ -482,7 +493,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     echo '</td><td>';
                 }
                 echo '<div class="mediadiv">';
-                $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '', true);
+                $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '', true);
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</div>\n";
                 $li_set = 1;
@@ -602,7 +613,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     if ($display_option['option_text'] != '') {
                         echo '<br />';
                     }
-                    $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+                    $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $question['q_media_alt'], '', true);
                     $render->render($questiondata, $string, 'paper/media.html');
                 }
                 echo "</td></tr>\n";
@@ -668,7 +679,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         if ($display_option['option_text'] != '') {
                             echo '<br />';
                         }
-                        $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+                        $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $question['q_media_alt'], '', true);
                         $render->render($questiondata, $string, 'paper/media.html');
                     }
                     echo "</td></tr>\n";
@@ -683,7 +694,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         echo '&nbsp;' . $display_option['option_text'];
                     }
                     if ($display_option['o_media'] != '') {
-                        $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+                        $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $question['q_media_alt'], '', true);
                         echo '&nbsp;';
                         $render->render($questiondata, $string, 'paper/media.html');
                     }
@@ -729,7 +740,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     if ($display_option['option_text'] != '') {
                         echo '<br />';
                     }
-                    $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+                    $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $question['q_media_alt'], '', true);
                     $render->render($questiondata, $string, 'paper/media.html');
                 }
                 echo "</td></tr>\n";
@@ -1279,9 +1290,15 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     } elseif ($question['q_type'] == 'extmatch') {
         $matching_answers = explode('|', $question['options'][0]['correct']);
 
-        if ($matching_media[0] != '') {
+        if (!empty($matching_media[0])) {
             echo '<div class="mediadiv">';
-            $questiondata->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '', true);
+            $questiondata->set_media(
+                $matching_media[0]['source'],
+                $matching_media[0]['width'],
+                $matching_media[0]['height'],
+                $matching_media[0]['alt'],
+                ''
+            );
             $render->render($questiondata, $string, 'paper/media.html');
             echo '</div>';
         }
@@ -1292,7 +1309,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
             if (
                 (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id], '<img>')) != '')
-                or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')
+                or (isset($matching_media[$part_id]['source']) and $matching_media[$part_id]['source'] != '')
             ) {
                 $scenario_no++;
             }
@@ -1320,9 +1337,16 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
                 echo '<div>' . $matching_scenarios[$part_id] . '</div>';
             }
-            if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
+            if (isset($matching_media[$part_id]['source']) and $matching_media[$part_id]['source'] != '') {
                 echo '<div>';
-                $questiondata->set_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '', true);
+                $questiondata->set_media(
+                    $matching_media[$part_id]['source'],
+                    $matching_media[$part_id]['width'],
+                    $matching_media[$part_id]['height'],
+                    $matching_media[$part_id]['alt'],
+                    '',
+                    true
+                );
                 $render->render($questiondata, $string, 'paper/media.html');
                 echo "</div>\n<br />";
             }

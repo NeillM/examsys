@@ -45,28 +45,60 @@ $locked = ($dis_class != '');
               </td>
             </tr>
 <?php
-
-if (isset($all_media['filenames'][$index]) and $all_media['filenames'][$index] != '') {
-    $configObj = Config::get_instance();
-    $questiondata = new plugins\questions\extmatch\renderdata();
-    $render = new render($configObj);
-    $questiondata->set_media($all_media['filenames'][$index], $all_media['widths'][$index], $all_media['heights'][$index], '', false, $index, $locked);
-    ?>
-              <tr<?php echo $alt_c ?>>
-                <th><?php echo $string['current'] . ' ' . $string['media'] ?></th>
-                <td>
-                  <?php
-                    $render->render($questiondata, $string, 'paper/media.html');
-                    ?>
-                </td>
-              </tr>
-    <?php
+for ($i = 0; $i < count($all_media); $i++) {
+    if (isset($all_media['nums'][$i]) and $all_media['nums'][$i] == $index) {
+        if (isset($all_media['filenames'][$i]) and $all_media['filenames'][$i] != '') {
+            $configObj = Config::get_instance();
+            $questiondata = new plugins\questions\extmatch\renderdata();
+            $render = new render($configObj);
+            $alt = '';
+            if (isset($all_media['alts'][$i])) {
+                $alt = $all_media['alts'][$i];
+            }
+            $questiondata->set_media($all_media['filenames'][$i], $all_media['widths'][$i], $all_media['heights'][$i], $alt, '', false, $index, $locked);
+            ?>
+                      <tr<?php echo $alt_c ?>>
+                        <th><?php echo $string['current'] . ' ' . $string['media'] ?></th>
+                        <td>
+                          <?php
+                            $render->render($questiondata, $string, 'paper/media.html');
+                            ?>
+                        </td>
+                      </tr>
+            <?php
+            if ($alt != '') {
+                ?>
+                <tr>
+                    <th><?php echo $string['current'] . ' ' . $string['mediaalt']?></th>
+                    <td>
+                        <textarea id="currentalt<?php echo $index ?>" name="currentalt<?php echo $index ?>" class="filepickertextarea" <?php echo $disabled; ?>><?php echo $alt; ?></textarea>
+                    </td>
+                </tr>
+                <?php
+            }
+        }
+        break;
+    }
 }
 ?>
             <tr<?php echo $alt_c ?>>
               <th><label for="question_media<?php echo $index ?>"><?php echo $string['change'] . ' ' . $string['media'] ?></label></th>
               <td>
-                <input id="question_media<?php echo $index ?>" name="question_media<?php echo $index ?>" type="file" size="50"<?php echo $disabled ?> />
+                <button id="filepicker<?php echo $index ?>" data-mediaid="question_media<?php echo $index ?>" class="filepicker" <?php echo $disabled ?>><?php echo $string['uploadmedia']; ?></button>
+                <div id="filepickersection<?php echo $index ?>" class="filepickersection">
+                  <?php
+                    $mediadata = array(
+                      'mediaid' => 'question_media' . $index,
+                      'mediaalt' => 'alt_question_media' . $index,
+                      'mediaagreement' => 'agreement_question_media' . $index,
+                      'mediadecorative' => 'dec_question_media' . $index,
+                      'medianum' => 'num_question_media' . $index,
+                      'num' => $index,
+                    );
+                      $render = new render($configObject);
+                    echo $render->render($mediadata, $string, 'filepicker.html');
+                    ?>
+                </div>
               </td>
             </tr>
             <tr<?php echo $alt_c ?>>
@@ -85,4 +117,3 @@ echo ViewHelper::render_options($option_texts, $selected, 3);
                 </select>
               </td>
             </tr>
-            

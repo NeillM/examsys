@@ -221,8 +221,17 @@ class IE_Local_Load extends IE_Main
 
         $store->keywords = $keywords;
 
-        // standard media, gets cleared for extmatch
-        $this->AddMedia($store, $q_row['q_media'], $q_row['q_media_width'], $q_row['q_media_height']);
+        // Standard media
+        $db = new Database();
+        $db->SetTable('media', 'm');
+        $db->AddField('source');
+        $db->AddField('width');
+        $db->AddField('height');
+        $db->AddField('alt');
+        $db->AddInnerJoin('questions_media', 'qm', 'id', 'mediaid');
+        $db->AddWhere('qm.qid', $q_row['q_id'], 'i');
+        $m_rows = $db->GetSingleRow();
+        $this->AddMedia($store, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
 
         $store->status = $this->statuses[$q_row['status']];
     }
@@ -359,7 +368,16 @@ class IE_Local_Load extends IE_Main
                 $options->fb_incorrect = $options->fb_correct;
             }
 
-            $this->AddMedia($options, $o_row['o_media'], $o_row['o_media_width'], $o_row['o_media_height']);
+            $db = new Database();
+            $db->SetTable('media', 'm');
+            $db->AddField('source');
+            $db->AddField('width');
+            $db->AddField('height');
+            $db->AddField('alt');
+            $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
+            $db->AddWhere('om.oid', $o_row['id_num'], 'i');
+            $m_rows = $db->GetSingleRow();
+            $this->AddMedia($options, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
 
             $options->marks_correct = $o_row['marks_correct'];
             $options->marks_incorrect = $o_row['marks_incorrect'];
@@ -371,11 +389,6 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionExtmatch($store, $q_row, $o_rows)
     {
-        // no question media for this qtype
-        $store->media = '';
-        $store->media_width = 0;
-        $store->media_height = 0;
-
         // get list of possible answers
         $optno = 1;
         foreach ($o_rows as $o_row) {
@@ -385,15 +398,39 @@ class IE_Local_Load extends IE_Main
 
         // split all stuff from q_row into arrays for processing
         $feedbacks = explode('|', $q_row['correct_fback']);
-        $medias = explode('|', $q_row['q_media']);
-        $media_widths = explode('|', $q_row['q_media_width']);
-        $media_heights = explode('|', $q_row['q_media_height']);
+        $medias = array();
+        $media_widths = array();
+        $medias_heights = array();
+        $medias_alts = array();
+        $medias_nums = array();
         $tmp_scenarios = explode('|', $q_row['scenario']);
+
+        // Get media for question
+        $db = new Database();
+        $db->SetTable('media', 'm');
+        $db->AddField('source');
+        $db->AddField('width');
+        $db->AddField('height');
+        $db->AddField('alt');
+        $db->AddField('num');
+        $db->AddInnerJoin('questions_media', 'qm', 'id', 'mediaid');
+        $db->AddWhere('qm.qid', $q_row['q_id'], 'i');
+        $m_rows = $db->GetMultiRow();
+
+        foreach ($m_rows as $row) {
+            $medias[$row['num']] = $row['source'];
+            $medias_widths[$row['num']] = $row['width'];
+            $medias_heights[$row['num']] = $row['height'];
+            $medias_alts[$row['num']] = $row['alt'];
+        }
+
         $scenarios = array();
+        $i = 0;
         foreach ($tmp_scenarios as $s) {
-            if ($s != '') {
+            if ($s != '' or isset($medias[$i + 1])) {
                 $scenarios[] = $s;
             }
+            $i++;
         }
 
         $correct = explode('|', $o_rows[0]['correct']);
@@ -405,7 +442,7 @@ class IE_Local_Load extends IE_Main
             $ems->stem = $scenarios[$i];
 
             if (isset($medias[$i + 1])) {
-                $this->AddMedia($ems, $medias[$i + 1], $media_widths[$i + 1], $media_heights[$i + 1]);
+                $this->AddMedia($ems, $medias[$i + 1], $media_widths[$i + 1], $medias_heights[$i + 1], $medias_alts[$i + 1]);
             }
 
             $ems->marks_correct = $o_rows[0]['marks_correct'];
@@ -418,28 +455,6 @@ class IE_Local_Load extends IE_Main
             $store->scenarios[$scenariono] = $ems;
             $scenariono++;
         }
-
-        $this->AddMedia($store, $medias[0], $media_widths[0], $media_heights[0]);
-    }
-
-    function LoadQuestionFlash($store, $q_row, $o_rows)
-    {
-        // No question media for this question type
-        $store->media = '';
-        $store->media_width = 0;
-        $store->media_height = 0;
-
-        $store->question_swf = $q_row['q_media'];
-        $store->question_swf_width = $q_row['q_media_width'];
-        $store->question_swf_height = $q_row['q_media_height'];
-
-        $store->feedback_swf = $o_rows[0]['o_media'];
-        $store->feedback_swf_width = $o_rows[0]['o_media_width'];
-        $store->feedback_swf_height = $o_rows[0]['o_media_height'];
-
-        $store->marks_correct = $o_rows[0]['marks_correct'];
-        $store->marks_incorrect = $o_rows[0]['marks_incorrect'];
-        $store->marks_partial = $o_rows[0]['marks_partial'];
     }
 
     // TODO - Does this deal with multi-layered hotspot questions?
@@ -652,7 +667,16 @@ class IE_Local_Load extends IE_Main
             $option->marks_correct = $o_row['marks_correct'];
             $option->marks_incorrect = $o_row['marks_incorrect'];
             $option->marks_partial = $o_row['marks_partial'];
-            $this->AddMedia($option, $o_row['o_media'], $o_row['o_media_width'], $o_row['o_media_height']);
+            $db = new Database();
+            $db->SetTable('media', 'm');
+            $db->AddField('source');
+            $db->AddField('width');
+            $db->AddField('height');
+            $db->AddField('alt');
+            $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
+            $db->AddWhere('om.oid', $o_row['id_num'], 'i');
+            $m_rows = $db->GetSingleRow();
+            $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height']);
 
             $store->options[$optionno] = $option;
             $optionno++;
@@ -678,7 +702,16 @@ class IE_Local_Load extends IE_Main
             $option->marks_correct = $o_row['marks_correct'];
             $option->marks_incorrect = $o_row['marks_incorrect'];
             $option->marks_partial = $o_row['marks_partial'];
-            $this->AddMedia($option, $o_row['o_media'], $o_row['o_media_width'], $o_row['o_media_height']);
+            $db = new Database();
+            $db->SetTable('media', 'm');
+            $db->AddField('source');
+            $db->AddField('width');
+            $db->AddField('height');
+            $db->AddField('alt');
+            $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
+            $db->AddWhere('om.oid', $o_row['id_num'], 'i');
+            $m_rows = $db->GetSingleRow();
+            $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
 
             $store->options[$optionno] = $option;
             $optionno++;
@@ -715,7 +748,16 @@ class IE_Local_Load extends IE_Main
             $option->marks_incorrect = $o_row['marks_incorrect'];
             $option->marks_partial = $o_row['marks_partial'];
 
-            $this->AddMedia($option, $o_row['o_media'], $o_row['o_media_width'], $o_row['o_media_height']);
+            $db = new Database();
+            $db->SetTable('media', 'm');
+            $db->AddField('source');
+            $db->AddField('width');
+            $db->AddField('height');
+            $db->AddField('alt');
+            $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
+            $db->AddWhere('om.oid', $o_row['id_num'], 'i');
+            $m_rows = $db->GetSingleRow();
+            $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
             $store->options[$optionno] = $option;
             $optionno++;
         }
@@ -781,7 +823,7 @@ class IE_Local_Load extends IE_Main
         return "Error: SCT questions can't be exported.";
     }
 
-    function AddMedia(&$question, $media, $width = 0, $height = 0)
+    function AddMedia(&$question, $media, $width = 0, $height = 0, $alt = '')
     {
         if ($media == '') {
             return;
@@ -790,6 +832,7 @@ class IE_Local_Load extends IE_Main
         $question->media = $media;
         $question->media_width = $width;
         $question->media_height = $height;
+        $question->media_alt = $alt;
         $question->media_type = GenerateMediaType($question->media);
         $this->GetMedia($question->media);
     }

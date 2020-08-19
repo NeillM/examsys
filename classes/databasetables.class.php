@@ -787,9 +787,6 @@ QUERY;
         CREATE TABLE `options` (
           `o_id` int(4) NOT NULL default '0',
           `option_text` text,
-          `o_media` varchar(255) default NULL,
-          `o_media_width` varchar(4) default NULL,
-          `o_media_height` varchar(4) default NULL,
           `feedback_right` text,
           `feedback_wrong` text,
           `correct` text,
@@ -1004,9 +1001,6 @@ QUERY;
           `display_method` text,
           `notes` text,
           `ownerID` int(11) default NULL,
-          `q_media` text,
-          `q_media_width` varchar(100) default NULL,
-          `q_media_height` varchar(100) default NULL,
           `creation_date` datetime default NULL,
           `last_edited` datetime default NULL,
           `bloom` enum('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation') default NULL,
@@ -1711,6 +1705,35 @@ QUERY;
             `userID` int(10) unsigned NOT NULL,
             `roleID` int(4) NOT NULL,
             PRIMARY KEY (`userID`, `roleID`)
+        ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
+
+        $this->tableList['media'] = <<<QUERY
+        CREATE TABLE `media` (
+            `id` int unsigned NOT NULL auto_increment,
+            `source` TEXT NOT NULL,
+            `width` smallint,
+            `height` smallint,
+            `alt` TEXT,
+            `ownerid` int(10) unsigned NOT NULL,
+            PRIMARY KEY (`id`)
+        ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
+
+        $this->tableList['questions_media'] = <<<QUERY
+        CREATE TABLE `questions_media` (
+            `qid` int NOT NULL,
+            `mediaid` int unsigned NOT NULL,
+            `num` int unsigned NOT NULL,
+            UNIQUE INDEX `questions_media_idx0` (`qid`, `mediaid`)
+        ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
+
+        $this->tableList['options_media'] = <<<QUERY
+        CREATE TABLE `options_media` (
+        `oid` int NOT NULL,
+        `mediaid` int unsigned NOT NULL,
+        UNIQUE INDEX `options_media_idx0` (`oid`, `mediaid`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
     }

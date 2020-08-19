@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\behat\helpers\rogo;
  * @package testing
  * @subpackage behat
  */
-class Url {
+class Url
+{
     /**
      * Generates the URL to a user profile page.
      *

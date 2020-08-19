@@ -119,10 +119,11 @@ if ($folderID != '') {
     $row_no = 0;
     $temp_array = array();
 
-    $result = $mysqli->prepare("SELECT random_mark, total_mark, paper_ownerID, ownerID, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+    $result = $mysqli->prepare("SELECT random_mark, total_mark, paper_ownerID, ownerID, p_id, q_id, q_type, screen, leadin, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
     $result->bind_param('ii', $paperID, $paperID);
     $result->execute();
-    $result->bind_result($total_random_mark, $total_marks, $paper_ownerID, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
+    $result->store_result();
+    $result->bind_result($total_random_mark, $total_marks, $paper_ownerID, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $display_last_edited, $display_pos);
     while ($result->fetch()) {
         $row_no++;
         $temp_array[$row_no]['screen'] = $screen;
@@ -134,13 +135,16 @@ if ($folderID != '') {
         $temp_array[$row_no]['p_id'] = $p_id;
         $temp_array[$row_no]['q_id'] = $q_id;
         $temp_array[$row_no]['display_last_edited'] = $display_last_edited;
-        $temp_array[$row_no]['q_media'] = $q_media;
-        $temp_array[$row_no]['q_media_width'] = $q_media_width;
-        $temp_array[$row_no]['q_media_height'] = $q_media_height;
+        $media = QuestionUtils::getMediaAsString($q_id);
+        $temp_array[$row_no]['q_media'] = $media['source'];
+        $temp_array[$row_no]['q_media_width'] = $media['width'];
+        $temp_array[$row_no]['q_media_height'] = $media['height'];
+        $temp_array[$row_no]['q_media_alt'] = $media['alt'];
         $temp_array[$row_no]['ownerID'] = $ownerID;
         $temp_array[$row_no]['display_pos'] = $display_pos;
         $temp_total_marks = $total_marks;
     }
+    $result->free_result();
     $result->close();
 
     $total_random_mark = 0;
@@ -152,10 +156,10 @@ if ($folderID != '') {
         $old_marks = 0;
         $row_no2 = 1;
         $stems = 0;
-        $result = $mysqli->prepare('SELECT q_type, q_id, correct, score_method, q_media_height, q_media_width, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, o_id');
+        $result = $mysqli->prepare('SELECT q_type, q_id, correct, score_method, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, o_id');
         $result->bind_param('i', $paperID);
         $result->execute();
-        $result->bind_result($q_type, $q_id, $correct, $score_method, $q_media_height, $q_media_width, $option_text);
+        $result->bind_result($q_type, $q_id, $correct, $score_method, $option_text);
         while ($result->fetch()) {
             if ($old_q_id != $q_id and $old_q_id != 0) {
                 $old_marks = $total_marks;
@@ -168,8 +172,6 @@ if ($folderID != '') {
             $old_q_type = $q_type;
             $old_score_method = $score_method;
             $old_correct = $correct;
-            $old_q_media_width = $q_media_width;
-            $old_q_media_height = $q_media_height;
             $old_option_text = $option_text;
             if ($q_type == 'mrq') {
                 if ($correct == 'y') {
@@ -240,7 +242,7 @@ if ($folderID != '') {
                     echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
                 }
             } else {
-                echo '<td><img src="' . $mediadirectory->url($temp_array[$x]['q_media']) . '" width="' . ($temp_array[$x]['q_media_width'] / 3) . '" height="' . ($temp_array[$x]['q_media_height'] / 3) . '" alt="Media file" border="1" />';
+                echo '<td><img src="' . $mediadirectory->url($temp_array[$x]['q_media']) . '" width="' . ($temp_array[$x]['q_media_width'] / 3) . '" height="' . ($temp_array[$x]['q_media_height'] / 3) . '" alt="' . $temp_array[$x]['q_media_alt'] . '" border="1" />';
                 if ($temp_array[$x]['q_type'] != 'info') {
                     echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
                 }

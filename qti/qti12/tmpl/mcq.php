@@ -27,7 +27,7 @@ require('header.php');
                         <material>
                             <mattext texttype='text/html'><![CDATA[<?php echo $option->stem ?>]]></mattext>
     <?php if ($option->media) : ?>
-                            <matimage imagtype="<?php echo $option->media_type ?>" uri="<?php echo $option->media ?>"/>
+                            <matimage imagtype="<?php echo $option->media_type ?>" uri="<?php echo $option->media ?>" label="<?php echo $option->media_alt ?>"/>
     <?php endif; ?>
                       </material>
                     </response_label>

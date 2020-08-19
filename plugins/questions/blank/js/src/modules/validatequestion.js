@@ -31,7 +31,8 @@ define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, Jsxls, 
                 ignore: '',
                 rules: {
                     leadin: 'required',
-                    option_text: 'required'
+                    option_text: 'required',
+                    alt_q_media: 'required',
                 },
                 messages: {
                     leadin: Jsxls.lang_string['enterleadin'],

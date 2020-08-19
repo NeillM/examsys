@@ -213,8 +213,6 @@ class IE_qti12_Load extends IE_Main
             $question = $this->LoadDichotomous($q_imp);
         } elseif ($type == 'extmatch') {
             $question = $this->LoadExtmatch($q_imp);
-        } elseif ($type == 'flash') {
-            $question = $this->LoadFlash($q_imp);
         } elseif ($type == 'hotspot') {
             $question = $this->LoadHotspot($q_imp);
         } elseif ($type == 'info') {
@@ -293,6 +291,7 @@ class IE_qti12_Load extends IE_Main
             $question->media = $q_imp->material->media;
             $question->media_width = $q_imp->material->media_width;
             $question->media_height = $q_imp->material->media_height;
+            $question->media_alt = $q_imp->material->media_alt;
         }
 
         // load taxinomy and keywords
@@ -1166,6 +1165,7 @@ class IE_qti12_Load extends IE_Main
                 $option->media = $response->material->media;
                 $option->media_width = $response->material->media_width;
                 $option->media_height = $response->material->media_height;
+                $option->media_alt = $response->material->media_alt;
             }
 
             $dest->options[$optionid] = $option;
@@ -1285,6 +1285,7 @@ class IE_qti12_Load extends IE_Main
                 $stem->media = $response->material->media;
                 $stem->media_width = $response->material->media_width;
                 $stem->media_height = $response->material->media_height;
+                $stem->media_alt = $response->material->media_alt;
             }
 
             $dest->scenarios[$stemid++] = $stem;
@@ -1331,22 +1332,6 @@ class IE_qti12_Load extends IE_Main
 
             $stem->feedback = $this->GetFeedbackFromArray($source, $fb);
         }
-
-        return $dest;
-    }
-
-    // NEW
-    function LoadFlash(&$source)
-    {
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
-        $dest = new ST_Question_Flash();
-
-        $dest->load_id = $source->load_id;
-        $dest->status = $source->qmd_status;
-        $dest->type = 'flash';
-
-        $response = reset($source->responses);
-        $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
         return $dest;
     }
@@ -1691,6 +1676,7 @@ class IE_qti12_Load extends IE_Main
                 $choice->media = $label->material->media;
                 $choice->media_width = $label->material->media_width;
                 $choice->media_height = $label->material->media_height;
+                $choice->media_alt = $label->material->media_alt;
             }
 
             $choice->marks_correct = $marks_correct;
@@ -1830,6 +1816,7 @@ class IE_qti12_Load extends IE_Main
                 $choice->media = $label->material->media;
                 $choice->media_width = $label->material->media_width;
                 $choice->media_height = $label->material->media_height;
+                $choice->media_alt = $label->material->media_alt;
             }
 
             $choice->marks_correct = $marks_correct;
@@ -1958,6 +1945,7 @@ class IE_qti12_Load extends IE_Main
                     $choice->media = $label->material->media;
                     $choice->media_width = $label->material->media_width;
                     $choice->media_height = $label->material->media_height;
+                    $choice->media_alt = $label->material->media_alt;
                 }
 
                 $dest->options[$choiceno] = $choice;

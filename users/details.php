@@ -228,7 +228,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     }
 } elseif (!is_null($save_roles) and $can_edit_roles) {
     // Fetch the roles the user will have.
-    $roles = param::optional("roles", [], param::ALPHA, param::FETCH_POST);
+    $roles = param::optional('roles', [], param::ALPHA, param::FETCH_POST);
 
     $can_change_roles = ($is_sysadmin or (
             // Test that roles that require SysAdmin privileges are not present.

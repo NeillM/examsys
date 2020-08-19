@@ -119,8 +119,6 @@ class IE_qti12_Save extends IE_Main
             $this->SaveDichotomous($question);
         } elseif ($question->type == 'extmatch') {
             $this->SaveExtMatch($question);
-        } elseif ($question->type == 'flash') {
-            $this->SaveFlash($question);
         } elseif ($question->type == 'hotspot') {
             $this->SaveHotspot($question);
         } elseif ($question->type == 'info') {
@@ -181,7 +179,7 @@ class IE_qti12_Save extends IE_Main
         if ($image && !empty($question->media)) {
             $output .= "
 			<material label='media'>
-				<matimage imagtype='" . $question->media_type . "' uri='" . $question->media . "'/>
+				<matimage imagtype='" . $question->media_type . "' uri='" . $question->media . "' label='" . $question->media_alt . "'/>
 			</material>";
         }
 
@@ -355,12 +353,6 @@ class IE_qti12_Save extends IE_Main
                 $this->data->files[] = new ST_File($scenarios->media, $scenarios->media, $scenarios->params->dir, 'image');
             }
         }
-    }
-
-    // TODO
-    function SaveFlash(&$question)
-    {
-        $this->AddError('Question type ' . $question->type . ' not yet supported', $question->load_id);
     }
 
     // TODO

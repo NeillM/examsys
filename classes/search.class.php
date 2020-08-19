@@ -90,13 +90,14 @@ abstract class Search
             $page = 1;
         }
         $this->page = $page;
-        $this->calculateOffeset();;
+        $this->calculateOffeset();
     }
 
     /**
      * Recalculates the offset.
      */
-    protected function calculateOffeset(): void {
+    protected function calculateOffeset(): void
+    {
         $this->offset = ($this->page - 1) * $this->limit;
     }
 }

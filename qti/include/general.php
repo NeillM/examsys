@@ -270,9 +270,6 @@ function ConvertType($type)
     if ($type == 'extmatch') {
         return 'Extended Matching';
     }
-    if ($type == 'flash') {
-        return 'Flash Interface';
-    }
     if ($type == 'hotspot') {
         return 'Image Hotspot';
     }

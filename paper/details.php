@@ -301,13 +301,16 @@ function randomDetails($questionID, $configObject, $db)
     $old_correct = array();
     $old_option_text = array();
 
-    $result = $db->prepare("SELECT theme, options1.q_id, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM random_link AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.q_id=questions.q_id AND options1.id=? ");
+    $result = $db->prepare("SELECT theme, options1.q_id, leadin, scenario, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM random_link AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.q_id=questions.q_id AND options1.id=? ");
     $result->bind_param('i', $questionID);
     $result->execute();
     $result->store_result();
     if ($result->num_rows > 0) {
-        $result->bind_result($theme, $q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status, $settings);
+        $result->bind_result($theme, $q_id, $leadin, $scenario, $correct, $marks, $option_text, $q_type, $display_method, $score_method, $display_last_edited, $status, $settings);
         while ($result->fetch()) {
+            $media = QuestionUtils::getMediaAsString($q_id);
+            $q_media_width = $media['width'];
+            $q_media_height = $media['height'];
             if ($old_q_id != $q_id and $old_q_id != '') {
                 $old_leadin = QuestionUtils::clean_leadin($old_leadin);
                 $random_questions[$question_no]['theme'] = $old_theme;
@@ -496,114 +499,128 @@ if ($properties->get_deleted() != '') {
   $q_mod_check        = array();
 
   // Get the questions (if any).
-  $result = $mysqli->prepare("SELECT theme, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, o_media, correct, display_method, score_method, q_media, q_media_width, q_media_height, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
+  $result = $mysqli->prepare("
+        SELECT theme, questions.ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text,
+            source, width, height, correct, display_method, score_method,
+            marks_correct, marks_incorrect, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_last_edited,
+            display_pos, status, correct_fback, feedback_right, locked, settings, id_num
+        FROM (papers, questions)
+        LEFT JOIN options ON questions.q_id = options.o_id
+        LEFT JOIN options_media ON options.id_num = options_media.oid
+        LEFT JOIN media m on options_media.mediaid = m.id
+        WHERE paper=? AND papers.question=questions.q_id
+        ORDER BY screen, display_pos, o_id");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
+  $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $o_media_width, $o_media_height, $correct, $display_method, $score_method, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings, $id_num);
   $leadinlength = $configObject->get_setting('core', 'misc_search_leadin_length');
-while ($result->fetch()) {
-    if ($q_type == 'sct') {
-        $parts = explode('~', $leadin);
-        $leadin = $parts[0];
-    }
+  while ($result->fetch()) {
+      $media = QuestionUtils::getMediaAsString($q_id);
+      $q_media = $media['source'];
+      $q_media_width = $media['width'];
+      $q_media_height = $media['height'];
+      if ($q_type == 'sct') {
+          $parts = explode('~', $leadin);
+          $leadin = $parts[0];
+      }
 
-    if (!is_null($settings) and !is_array($settings)) {
-        $settings = json_decode($settings, true);
-    }
-    if (isset($settings['marks_correct'])) {
-        $marks_correct = $settings['marks_correct'];
-    }
-    if (isset($settings['marks_incorrect'])) {
-        $marks_incorrect = $settings['marks_incorrect'];
-    }
+      if (!is_null($settings) and !is_array($settings)) {
+          $settings = json_decode($settings, true);
+      }
+      if (isset($settings['marks_correct'])) {
+          $marks_correct = $settings['marks_correct'];
+      }
+      if (isset($settings['marks_incorrect'])) {
+          $marks_incorrect = $settings['marks_incorrect'];
+      }
 
-    // Check for negative marking
-    if ($marks_incorrect < 0) {
-        $neg_marking = true;
-    }
+      // Check for negative marking
+      if ($marks_incorrect < 0) {
+          $neg_marking = true;
+      }
 
-    if ($old_p_id != $p_id or $old_display_pos != $display_pos) {
-        // Check for status that's excluded from marking
-        $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
+      if ($old_p_id != $p_id or $old_display_pos != $display_pos) {
+          // Check for status that's excluded from marking
+          $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
 
-        if ($old_display_pos != -1) {
-            $temp_array[$row_no2]['options'] = $options;
-            if (empty($old_o_media)) {
-                $temp_array[$row_no2]['o_media'] = array();
-            } else {
-                $temp_array[$row_no2]['o_media'] = $old_o_media;
-            }
-        }
-        $options = 0;
-        $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
-        if ($old_q_type == 'random') {
-            $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-            if ($do_marking) {
-                $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-                if (count($temp_array[$row_no2]['random']) > 0) {
-                    $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
-                }
-            }
-        } else {
-            $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-            if ($do_marking) {
-                $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-                $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-            }
-        }
-        if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') {
-            $total_marks += $temp_array[$row_no2]['marks'];
-        }
-        $temp_array[$row_no2]['display_method'] = $old_display_method;
-        $temp_array[$row_no2]['score_method'] = $old_score_method;
-        if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-            checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
-        }
-        $old_correct      = array();
-        $old_option_text  = array();
-        $old_o_media      = array();
-        $old_marks = 0;
-        $row_no2++;
+          if ($old_display_pos != -1) {
+              $temp_array[$row_no2]['options'] = $options;
+              if (empty($old_o_media)) {
+                  $temp_array[$row_no2]['o_media'] = array();
+              } else {
+                  $temp_array[$row_no2]['o_media'] = $old_o_media;
+              }
+          }
+          $options = 0;
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+          if ($old_q_type == 'random') {
+              $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
+              if ($do_marking) {
+                  $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
+                  if (count($temp_array[$row_no2]['random']) > 0) {
+                      $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'];
+                  }
+              }
+          } else {
+              $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+              if ($do_marking) {
+                  $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
+                  $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+              }
+          }
+          if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') {
+              $total_marks += $temp_array[$row_no2]['marks'];
+          }
+          $temp_array[$row_no2]['display_method'] = $old_display_method;
+          $temp_array[$row_no2]['score_method'] = $old_score_method;
+          if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
+              checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
+          }
+          $old_correct      = array();
+          $old_option_text  = array();
+          $old_o_media      = array();
+          $old_marks = 0;
+          $row_no2++;
 
-        $row_no++;
-        $temp_array[$row_no]['theme']           = $theme;
-        $temp_array[$row_no]['screen']          = $screen;
-        $temp_array[$row_no]['q_type']          = $q_type;
-        $temp_array[$row_no]['fulltext']        = QuestionUtils::clean_leadin($leadin, 0);
-        $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin, $leadinlength);
-        $temp_array[$row_no]['scenario']        = $scenario;
-        $temp_array[$row_no]['p_id']            = $p_id;
-        $temp_array[$row_no]['q_id']            = $q_id;
-        $temp_array[$row_no]['display_last_edited'] = $display_last_edited;
-        $temp_array[$row_no]['q_media']         = $q_media;
-        $temp_array[$row_no]['q_media_width']   = $q_media_width;
-        $temp_array[$row_no]['q_media_height']  = $q_media_height;
-        $temp_array[$row_no]['ownerID']         = $ownerID;
-        $temp_array[$row_no]['display_pos']     = $display_pos;
-        $temp_array[$row_no]['correct']         = $correct;
-        $temp_array[$row_no]['status']          = $status;
-        $temp_array[$row_no]['warnings']        = [];
-        $temp_array[$row_no]['random']          = array();
+          $row_no++;
+          $temp_array[$row_no]['theme']           = $theme;
+          $temp_array[$row_no]['screen']          = $screen;
+          $temp_array[$row_no]['q_type']          = $q_type;
+          $temp_array[$row_no]['fulltext']        = QuestionUtils::clean_leadin($leadin, 0);
+          $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin, $leadinlength);
+          $temp_array[$row_no]['scenario']        = $scenario;
+          $temp_array[$row_no]['p_id']            = $p_id;
+          $temp_array[$row_no]['q_id']            = $q_id;
+          $temp_array[$row_no]['display_last_edited'] = $display_last_edited;
+          $temp_array[$row_no]['q_media']         = $q_media;
+          $temp_array[$row_no]['q_media_width']   = $q_media_width;
+          $temp_array[$row_no]['q_media_height']  = $q_media_height;
+          $temp_array[$row_no]['ownerID']         = $ownerID;
+          $temp_array[$row_no]['display_pos']     = $display_pos;
+          $temp_array[$row_no]['correct']         = $correct;
+          $temp_array[$row_no]['status']          = $status;
+          $temp_array[$row_no]['warnings']        = [];
+          $temp_array[$row_no]['random']          = array();
 
-        $q_mod_check[] = $q_id;
+          $q_mod_check[] = $q_id;
 
-        if ($q_type == 'random') {
-            $temp_array[$row_no]['random'] = randomDetails($q_id, $configObject, $mysqli);
-        }
+          if ($q_type == 'random') {
+              $temp_array[$row_no]['random'] = randomDetails($q_id, $configObject, $mysqli);
+          }
 
-        // If summative paper is locked and the question is unlocked
-        // - lock it
-        if ($properties->get_summative_lock() and $locked == '') {
-            QuestionUtils::lock_question($q_id, $mysqli);
-            // If summative paper is not locked and the question is locked
-            // - unlock it if it has not been answered by a student
-        } elseif (!$properties->get_summative_lock() and $locked != '') {
-            if (!QuestionUtils::question_answered_in_summative($q_id, $mysqli)) {
-                QuestionUtils::unlock_question($q_id, $mysqli);
-            }
-        }
-    }
+          // If summative paper is locked and the question is unlocked
+          // - lock it
+          if ($properties->get_summative_lock() and $locked == '') {
+              QuestionUtils::lock_question($q_id, $mysqli);
+              // If summative paper is not locked and the question is locked
+              // - unlock it if it has not been answered by a student
+          } elseif (!$properties->get_summative_lock() and $locked != '') {
+              if (!QuestionUtils::question_answered_in_summative($q_id, $mysqli)) {
+                  QuestionUtils::unlock_question($q_id, $mysqli);
+              }
+          }
+      }
       $old_p_id           = $p_id;
       $old_q_id           = $q_id;
       $old_display_pos    = $display_pos;
@@ -617,94 +634,94 @@ while ($result->fetch()) {
       $old_q_media_height = $q_media_height;
       $old_settings       = $settings;
       $old_option_text[]  = $option_text;
-    if (trim($o_media != '')) {
-        $old_o_media[]    = $o_media;
-    }
+      if (trim($o_media != '')) {
+          $old_o_media[]    = $o_media;
+      }
       $old_marks          = $marks_correct;
 
-    if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash', 'enhancedcalc'))) {
-        $options++;
-    }
-}
+      if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash', 'enhancedcalc'))) {
+          $options++;
+      }
+  }
   $result->close();
 
-if (!$properties->get_summative_lock()) {
-    $q_mod_check = array_unique($q_mod_check);
-    if (count($q_mod_check) > 0) {
-        $q_mod_found = QuestionUtils::multi_get_modules($q_mod_check, $mysqli);
-        $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
-        foreach ($q_mod_check as $tmp_q_id) {
-            foreach ($paper_modules as $p_mod_id => $mod) {
-                if (!isset($q_mod_found[$tmp_q_id][$p_mod_id])) {
-                    QuestionUtils::add_modules($paper_modules, $tmp_q_id, $mysqli);         // Question is not on a module that the paper is assigned to so add.
-                    break;
-                }
-            }
-        }
-    }
-}
+  if (!$properties->get_summative_lock()) {
+      $q_mod_check = array_unique($q_mod_check);
+      if (count($q_mod_check) > 0) {
+          $q_mod_found = QuestionUtils::multi_get_modules($q_mod_check, $mysqli);
+          $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
+          foreach ($q_mod_check as $tmp_q_id) {
+              foreach ($paper_modules as $p_mod_id => $mod) {
+                  if (!isset($q_mod_found[$tmp_q_id][$p_mod_id])) {
+                      QuestionUtils::add_modules($paper_modules, $tmp_q_id, $mysqli);         // Question is not on a module that the paper is assigned to so add.
+                      break;
+                  }
+              }
+          }
+      }
+  }
 
-if ($row_no > 0) {
-    $temp_array[$row_no]['options'] = $options;
-    $temp_array[$row_no]['o_media'] = $old_o_media;
-    $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+  if ($row_no > 0) {
+      $temp_array[$row_no]['options'] = $options;
+      $temp_array[$row_no]['o_media'] = $old_o_media;
+      $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
-    // Check for status that's excluded from marking
-    $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
+      // Check for status that's excluded from marking
+      $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
 
-    if ($old_q_type == 'random') {
-        $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
-        if ($do_marking) {
-            $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-            $total_random_mark += isset($temp_array[$row_no2]['random'][0]['random_mark']) ?  $temp_array[$row_no2]['random'][0]['random_mark'] : 0;
-        }
-    } else {
-        $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
-        if ($do_marking) {
-            $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-            $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-        }
-    }
-    if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') {
-        $total_marks += $temp_array[$row_no2]['marks'];
-    }
-    $temp_array[$row_no2]['display_pos'] = $old_display_pos;
-    $temp_array[$row_no2]['score_method'] = $old_score_method;
-    if ($properties->get_paper_type() < 3) {
-        $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+      if ($old_q_type == 'random') {
+          $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
+          if ($do_marking) {
+              $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
+              $total_random_mark += isset($temp_array[$row_no2]['random'][0]['random_mark']) ?  $temp_array[$row_no2]['random'][0]['random_mark'] : 0;
+          }
+      } else {
+          $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+          if ($do_marking) {
+              $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
+              $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
+          }
+      }
+      if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') {
+          $total_marks += $temp_array[$row_no2]['marks'];
+      }
+      $temp_array[$row_no2]['display_pos'] = $old_display_pos;
+      $temp_array[$row_no2]['score_method'] = $old_score_method;
+      if ($properties->get_paper_type() < 3) {
+          $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
             checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
-    }
+      }
 
 
-    if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
-        $update_params = array(
-        'random_mark' => array('d', $total_random_mark),
-        'total_mark' => array('i', $total_marks)
-        );
-        $assessment->db_update_assessment($paperID, $update_params);
+      if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
+          $update_params = array(
+          'random_mark' => array('d', $total_random_mark),
+          'total_mark' => array('i', $total_marks)
+          );
+          $assessment->db_update_assessment($paperID, $update_params);
 
-        // Update standard set as marks has changed.
-        $no_reviews = 0;
-        $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
-        foreach ($reviews as $review) {
-            if ($review['method'] != 'Hofstee') {
-                updateDB($review, $mysqli);
-            }
-        }
-    }
-}
-try {
-    require '../include/paper_options.php';
-} catch (Exception $e) {
-    $contactemail = support::get_email();
-    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-    $notice->display_notice_and_exit($mysqli, $string['problemwithpaper'], $msg, $string['problemwithpaper'], '/artwork/page_not_found.png', '#C00000', true, true);
-}
+          // Update standard set as marks has changed.
+          $no_reviews = 0;
+          $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
+          foreach ($reviews as $review) {
+              if ($review['method'] != 'Hofstee') {
+                  updateDB($review, $mysqli);
+              }
+          }
+      }
+  }
+  try {
+      require '../include/paper_options.php';
+  } catch (Exception $e) {
+      $contactemail = support::get_email();
+      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+      $notice->display_notice_and_exit($mysqli, $string['problemwithpaper'], $msg, $string['problemwithpaper'], '/artwork/page_not_found.png', '#C00000', true, true);
+  }
   require '../include/toprightmenu.inc';
 
     echo draw_toprightmenu();
-?>
+    ?>
 <div id="content">
 
 <?php

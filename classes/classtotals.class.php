@@ -356,7 +356,7 @@ class ClassTotals
         if ($parent_q_type == 'random') {
             $result = $this->db->prepare('
                 SELECT
-                    random_link.q_id, leadin, scenario, q_media_width, q_media_height, options.correct,
+                    random_link.q_id, leadin, scenario, options.correct,
                     options.marks_correct, options.marks_incorrect, options.option_text, q_type,
                     display_method, score_method, status, settings
                 FROM
@@ -369,7 +369,7 @@ class ClassTotals
         } elseif ($parent_q_type == 'keyword_based') {
             $result = $this->db->prepare('
                 SELECT
-                    keywords_question.q_id, leadin, scenario, q_media_width, q_media_height, options.correct,
+                    keywords_question.q_id, leadin, scenario, options.correct,
                     options.marks_correct, options.marks_incorrect, options.option_text, q_type,
                     display_method, score_method, status, settings
                 FROM
@@ -388,7 +388,7 @@ class ClassTotals
         $result->execute();
         $result->store_result();
         if ($result->num_rows > 0) {
-            $result->bind_result($q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status, $settings);
+            $result->bind_result($q_id, $leadin, $scenario, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status, $settings);
             while ($result->fetch()) {
                 if ($old_q_id != $q_id and $old_q_id != 0) {
                     $old_leadin = trim(str_replace('&nbsp;', ' ', (strip_tags($old_leadin))));
@@ -421,8 +421,11 @@ class ClassTotals
                 $old_option_text[]    = $option_text;
                 $old_display_method   = $display_method;
                 $old_score_method     = $score_method;
-                $old_q_media_width    = $q_media_width;
-                $old_q_media_height   = $q_media_height;
+                $media = QuestionUtils::getMediaAsString($q_id);
+                $old_q_media_height = $media['height'];
+                $old_q_media_width = $media['width'];
+                $old_q_media_height = rtrim($old_q_media_height, '|');
+                $old_q_media_width = rtrim($old_q_media_width, '|');
             }
 
             // Write out the last question.
@@ -1059,11 +1062,11 @@ class ClassTotals
         $this->display_experimental = array();
 
         // Load the correct answers into 'paper_buffer' array.
-        $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
+        $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_type, correct, score_method, option_text, status, display_pos, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
         $result->bind_param('i', $this->paperID);
         $result->execute();
         $result->store_result();
-        $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_media_height, $q_media_width, $q_type, $correct, $score_method, $option_text, $status, $display_pos, $settings);
+        $result->bind_result($q_id, $marks_correct, $marks_incorrect, $display_method, $score_method, $q_type, $correct, $score_method, $option_text, $status, $display_pos, $settings);
         while ($result->fetch()) {
             if ($q_id != $old_q_id or $old_display_pos != $display_pos) {
                 if ($old_q_id != 0) {
@@ -1127,8 +1130,11 @@ class ClassTotals
             $old_display_method   = $display_method;
             $old_score_method     = $score_method;
             $old_correct[]        = $correct;
-            $old_q_media_width    = $q_media_width;
-            $old_q_media_height   = $q_media_height;
+            $media = QuestionUtils::getMediaAsString($q_id);
+            $old_q_media_height = $media['height'];
+            $old_q_media_width = $media['width'];
+            $old_q_media_height = rtrim($old_q_media_height, '|');
+            $old_q_media_width = rtrim($old_q_media_width, '|');
             $old_option_text[]    = $option_text;
             $old_marks_correct    = $this->get_marks_correct($q_type, $marks_correct, $settings);
             $old_marks_incorrect  = $marks_incorrect;
