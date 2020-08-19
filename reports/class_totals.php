@@ -162,18 +162,23 @@ ob_start();
 
 <body>
 <div id="noteDiv" class="studentnote">
-  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="<?php echo $string['close'] ?>" /></div>
   <div id="noteMsg"></div>
 </div>
 
 <div id="accessDiv" class="studentaccess">
-  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="<?php echo $string['close'] ?>" /></div>
   <div id="accessMsg"></div>
 </div>
 
 <div id="toiletDiv" class="toiletbreak">
-  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="<?php echo $string['close'] ?>" /></div>
   <div id="toiletMsg"></div>
+</div>
+
+<div id="breakDiv" class="break">
+    <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="<?php echo $string['close'] ?>" /></div>
+    <div id="breakMsg"></div>
 </div>
 
 <?php
@@ -245,6 +250,7 @@ for (
 $notes = PaperNotes::get_all_notes_by_paper($paperID, $mysqli);
 
 $toilet_breaks = ToiletBreaks::get_all_breaks_by_paper($paperID, $mysqli);
+$breaks = Breaks::getAllBreaks($paperID);
 
 if ($marking == '0') {
     $marking_label = $string['%'];
@@ -418,7 +424,7 @@ for ($i = 0; $i < $user_no; $i++) {
             echo "<td class=\"$class $role_css\">" . $user_results[$i]['surname'] . '</td>';
             echo "<td class=\"$class $role_css\">" . $user_results[$i]['first_names'];
         }
-        if ($report->has_special_need($user_results[$i]['userID']) or $user_results[$i]['attempt'] > 1 or isset($toilet_breaks[$user_results[$i]['userID']])) {
+        if ($report->has_special_need($user_results[$i]['userID']) or $user_results[$i]['attempt'] > 1 or isset($toilet_breaks[$user_results[$i]['userID']]) or isset($breaks[$user_results[$i]['userID']])) {
             echo '&nbsp;&nbsp;';
         }
         if ($report->has_special_need($user_results[$i]['userID'])) {
@@ -429,11 +435,16 @@ for ($i = 0; $i < $user_no; $i++) {
             echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" title="' . $string['resitcandidate'] . '" />';
         }
         if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
-            echo '<img src="../artwork/notes_icon.gif" alt="Notes" data-paperid="' . $paperID . '" data-id="' . $user_results[$i]['userID'] . '" class="note" title="' . $string['viewstudentnote'] . '" />';
+            echo '<img src="../artwork/notes_icon.gif" alt="' . $string['notes'] . '" data-paperid="' . $paperID . '" data-id="' . $user_results[$i]['userID'] . '" class="note" title="' . $string['viewstudentnote'] . '" />';
         }
         if (isset($toilet_breaks[$user_results[$i]['userID']])) {
             foreach ($toilet_breaks[$user_results[$i]['userID']] as $toilet_break) {
-                echo '<img src="../artwork/wc.png" alt="Toilet" class="icon16_active" data-id="' . $toilet_break . '"/>';
+                echo '<img src="../artwork/wc.png" alt="' . $string['tbreak'] . '" class="tbreak icon16_active" data-id="' . $toilet_break . '"/>';
+            }
+        }
+        if (isset($breaks[$user_results[$i]['userID']])) {
+            foreach ($breaks[$user_results[$i]['userID']] as $bid) {
+                echo '<img src="../artwork/break.png" alt="' . $string['break'] . '" class="abreak icon16_active" data-id="' . $bid . '"/>';
             }
         }
         echo '</td>';

@@ -116,6 +116,10 @@ $string['gradepublish'] = 'Marks Published';
 $string['formative'] = 'Formative paper';
 $string['summative'] = 'Summative paper';
 $string['progress'] = 'Progress paper';
+$string['close'] = 'Close';
+$string['notes'] = 'Notes';
+$string['tbreak'] = 'Toilet Break';
+$string['break'] = 'Accomodation Break';
 
 // Ajax errors.
 $string['ajaxerror'] = 'Error: ';

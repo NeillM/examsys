@@ -47,9 +47,9 @@ class UserObject extends RogoStaticSingleton
     private $special_needs_percentage;
 
     /**
-     * @var bool flag to indicace if user requires breaks in exams.
+     * @var integer break percentage a user is allowed in an exam.
      */
-    private $breaks = false;
+    private $breaks = 0;
     private $record_no;
     private $split_username;
     private $demomode = false;
@@ -604,9 +604,9 @@ class UserObject extends RogoStaticSingleton
     }
 
     /**
-     * Does the user require breaks in an exam
+     * Breaks percentage allowed in an exam
      *
-     * @return bool
+     * @return integer
      */
     public function getRequiresBreaks()
     {
@@ -870,7 +870,7 @@ class UserObject extends RogoStaticSingleton
                     font,
                     unanswered,
                     dismiss,
-                    CHAR_LENGTH(breaks) > 0
+                    break_time
                 FROM
                     special_needs
                 WHERE
@@ -879,14 +879,9 @@ class UserObject extends RogoStaticSingleton
             $stmt->bind_param('i', $userID);
             $stmt->execute();
             $stmt->store_result();
-            $stmt->bind_result($this->background, $this->foreground, $this->textsize, $this->extra_time, $this->marks_color, $this->themecolor, $this->labelcolor, $this->font, $this->unanswered, $this->dismiss, $breaks);
+            $stmt->bind_result($this->background, $this->foreground, $this->textsize, $this->extra_time, $this->marks_color, $this->themecolor, $this->labelcolor, $this->font, $this->unanswered, $this->dismiss, $this->breaks);
             $stmt->fetch();
             $stmt->close();
-            if ($breaks == 1) {
-                $this->breaks = true;
-            } else {
-                $this->breaks = false;
-            }
         }
 
         // Add temporary account data.

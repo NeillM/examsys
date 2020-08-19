@@ -639,6 +639,15 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
+        $this->tableList['log_break_time'] = <<<QUERY
+        CREATE TABLE `log_break_time` (
+          `paperID` mediumint(8) unsigned NOT NULL,
+          `userID` int(10) unsigned NOT NULL,
+          `time` smallint unsigned NOT NULL,
+          PRIMARY KEY (`paperID`,`userID`)
+        ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
+
         $this->tableList['lti_context'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_context` (
           `lti_context_key` VARCHAR(255) NOT NULL,
@@ -1247,10 +1256,11 @@ QUERY;
           `labelcolor` varchar(20) default NULL,
           `font` varchar(50) default NULL,
           `unanswered` varchar(20) default NULL,
-					`dismiss` varchar(20) default NULL,
-					`medical` text,
-					`breaks` text,
-					PRIMARY KEY (`special_id`),
+          `dismiss` varchar(20) default NULL,
+          `medical` text,
+          `breaks` text,
+          `break_time` smallint default NULL,
+          PRIMARY KEY (`special_id`),
           UNIQUE KEY `idx_userID` (`userID`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
@@ -1735,6 +1745,17 @@ QUERY;
         `mediaid` int unsigned NOT NULL,
         UNIQUE INDEX `options_media_idx0` (`oid`, `mediaid`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
+
+        $this->tableList['breaks'] = <<<QUERY
+        CREATE TABLE `breaks` (
+            `id` int unsigned NOT NULL AUTO_INCREMENT,
+            `userID` int(10) unsigned NOT NULL,
+            `paperID` mediumint(8) unsigned NOT NULL,
+            `break_taken` datetime NOT NULL,
+            PRIMARY KEY (`id`),
+            KEY `paperID` (`paperID`)
+        ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
     }
 

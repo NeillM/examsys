@@ -27,7 +27,7 @@ require '../../include/staff_student_auth.inc';
 require_once '../../include/errors.php';
 
 $paperID = check_var('paperID', 'POST', true, false, true);
-
+$type = param::optional('type', 0, param::INT, param::FETCH_POST);
 if ($userObject->has_role('Invigilator')) {
     $userID  = check_var('userID', 'POST', true, false, true);
 } else {
@@ -49,6 +49,9 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
     exit();
 }
 
-ToiletBreaks::add_toilet_break($userID, $paperID, $mysqli);
-    
+if ($type === Breaks::TYPE_ACCOMIDATION) {
+    Breaks::addBreak($userID, $paperID);
+} else {
+    ToiletBreaks::add_toilet_break($userID, $paperID, $mysqli);
+}
 $mysqli->close();

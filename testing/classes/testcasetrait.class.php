@@ -88,12 +88,50 @@ trait testcasetrait
         $datagenerator->create_academic_year(['year' => 'now']);
         // Base users.
         $datagenerator = $this->get_datagenerator('users', 'core');
-        $datagenerator->create_user(array('surname' => 'Administrator', 'username' => 'admin', 'roles' => 'Staff,SysAdmin', 'grade' => 'University Lecturer',
-            'initials' => 'S', 'title' => 'Miss', 'email' => 'admin@example.com', 'first_names' => 'System', 'gender' => null));
-        $datagenerator->create_user(array('surname' => 'User1', 'username' => 'test1', 'roles' => 'Student', 'grade' => 'TEST2',
-            'initials' => 'A', 'title' => 'Dr', 'first_names' => 'A', 'sid' => '1234567890', 'gender' => null, 'special_needs' => array('breaks' => 'yes')));
-        $datagenerator->create_user(array('surname' => 'User2', 'username' => 'test2', 'roles' => 'Student', 'grade' => 'TEST2',
-            'initials' => 'A', 'title' => 'Dr', 'first_names' => 'A', 'sid' => '00000001', 'gender' => null));
+        $datagenerator->create_user(
+            array(
+                'surname' => 'Administrator',
+                'username' => 'admin',
+                'roles' => 'Staff,SysAdmin',
+                'grade' => 'University Lecturer',
+                'initials' => 'S',
+                'title' => 'Miss',
+                'email' => 'admin@example.com',
+                'first_names' => 'System',
+                'gender' => null
+            )
+        );
+        $datagenerator->create_user(
+            array(
+                'surname' => 'User1',
+                'username' => 'test1',
+                'roles' => 'Student',
+                'grade' => 'TEST2',
+                'initials' => 'A',
+                'title' => 'Dr',
+                'first_names' => 'A',
+                'sid' => '1234567890',
+                'gender' => null,
+                'special_needs' => array(
+                    'extra_time' => 5,
+                    'breaks' => 'yes',
+                    'break_time' => 10
+                )
+            )
+        );
+        $datagenerator->create_user(
+            array(
+                'surname' => 'User2',
+                'username' => 'test2',
+                'roles' => 'Student',
+                'grade' => 'TEST2',
+                'initials' => 'A',
+                'title' => 'Dr',
+                'first_names' => 'A',
+                'sid' => '00000001',
+                'gender' => null
+            )
+        );
     }
 
     /**

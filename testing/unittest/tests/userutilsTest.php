@@ -27,6 +27,15 @@ use testing\unittest\unittestdatabase;
  */
 class userutilstest extends unittestdatabase
 {
+    /**
+     * @var array Storage for a student in tests
+     */
+    private $student1;
+
+    /**
+     * @var array Storage for a student in tests
+     */
+    private $student2;
 
     /**
      * @var integer Storage for module id in tests
@@ -44,13 +53,25 @@ class userutilstest extends unittestdatabase
         $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
         $datagenerator = $this->get_datagenerator('modules', 'core');
         $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module, 'calendar_year' => 2016));
+        $datagenerator = $this->get_datagenerator('users', 'core');
+        $this->student1 = $datagenerator->create_user(
+            array('roles' => 'Student',
+                'sid' => '24680',
+                'surname' => 'Smith',
+                'special_needs' => array(
+                    'extra_time' => 10,
+                    'break_time' => 5
+                )
+            )
+        );
+        $this->student2 = $datagenerator->create_user(['roles' => 'Student', 'sid' => '13579', 'surname' => 'Johnson']);
     }
 
     /**
      * Test getting enrolment id
      * @group user
      */
-    public function test_get_enrolement_id()
+    public function testGetEnrolementId()
     {
         // Enrolment exists.
         $this->assertIsInt(UserUtils::get_enrolement_id($this->student['id'], $this->module, 2016, $this->db));
@@ -62,7 +83,7 @@ class userutilstest extends unittestdatabase
      * Test updating user
      * @group user
      */
-    public function test_update_user()
+    public function testUpdateUser()
     {
         // Student ID exists.
         $this->assertEquals(true, UserUtils::update_user($this->student['id'], 'student1', '12345678', 'Mr', 'Joe', 'Baxter', 'joseph.baxter@example.com', 'TEST', 'Male', 1, 'Student', '12345678', $this->db));
@@ -97,5 +118,25 @@ class userutilstest extends unittestdatabase
             ),
         );
         $this->assertEquals($expectedtable, $querytable);
+    }
+
+    /**
+     * Test getting extra time data
+     * @group user
+     */
+    public function testGetExtraTime()
+    {
+        // Has extra time.
+        $expected = array(
+            'extratime' => $this->student1['extra_time'],
+            'breaktime' => $this->student1['break_time'],
+        );
+        $this->assertEquals($expected, UserUtils::getExtraTime($this->student1['id'], $this->db));
+        // No extra time.
+        $expected = array(
+            'extratime' => 0,
+            'breaktime' => 0,
+        );
+        $this->assertEquals($expected, UserUtils::getExtraTime($this->student2['id'], $this->db));
     }
 }

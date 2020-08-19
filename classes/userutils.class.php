@@ -1139,4 +1139,29 @@ class UserUtils
         $result->execute();
         $result->close();
     }
+
+    /**
+     * Get the extra time allocaed to a user
+     * @param int $id the user id
+     * @param mysqli $db the database connection
+     * @return array
+     */
+    public static function getExtraTime(int $id, $db): array
+    {
+        $extra = 0;
+        $break = 0;
+        $result = $db->prepare('SELECT extra_time, break_time FROM special_needs WHERE userID = ?');
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->bind_result($extratime, $breaktime);
+        while ($result->fetch()) {
+            $extra = $extratime;
+            $break = $breaktime;
+        }
+        $result->close();
+        return array(
+            'extratime' => $extra,
+            'breaktime' => $break
+        );
+    }
 }

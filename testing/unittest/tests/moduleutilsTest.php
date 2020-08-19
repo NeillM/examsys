@@ -233,7 +233,8 @@ class moduleutilstest extends unittestdatabase
         $expected[$this->student['id']]['surname'] = $this->student['surname'];
         $expected[$this->student['id']]['first_names'] = $this->student['first_names'];
         $expected[$this->student['id']]['title'] = $this->student['title'];
-        $expected[$this->student['id']]['extra_time_percentage'] = null;
+        $et = UserUtils::getExtraTime($this->student['id'], $this->db);
+        $expected[$this->student['id']]['extra_time_percentage'] = $et['extratime'];
         $expected[$this->student['id']]['medical'] = null;
         $expected[$this->student['id']]['breaks'] = 'yes';
         $expected[$this->user]['user_ID'] = $this->user;

@@ -162,7 +162,8 @@ class PaperPropertiesTest extends unittestdatabase
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2015, 'academic_year' => '2015/16'));
         $datagenerator = $this->get_datagenerator('modules', 'core');
-        $datagenerator->create_module(array('fullname' => 'Test module 3', 'moduleid' => 'TEST3', 'timed_exams' => 1));
+        $mod = $datagenerator->create_module(array('fullname' => 'Test module 3', 'moduleid' => 'TEST3', 'timed_exams' => 1));
+        $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $mod['id'], 'calendar_year' => 2015));
         $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module, 'calendar_year' => 2015));
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->config->set_setting('cfg_summative_mgmt', false, \Config::BOOLEAN);
@@ -183,7 +184,8 @@ class PaperPropertiesTest extends unittestdatabase
             'password' => 'EC1VbYJtOq8NsidA+q60rDEzjZZ8eHmHm6dEtfVBpeQ=',
             'modulename' => 'Test module 3',
             'paperowner' => 'admin',
-            'papertype' => '2'));
+            'papertype' => '2',
+            'duration' => 60));
         $this->pid3 = $datagenerator->create_paper(array('papertitle' => 'Test progressive',
             'calendaryear' => 2015,
             'duration' => 60,
@@ -747,5 +749,40 @@ class PaperPropertiesTest extends unittestdatabase
         $this->assertEquals('0', $properties2->getSetting('remote_summative'));
         $this->expectExceptionMessage('invalid_paper_setting');
         $this->assertEquals('1', $properties->getSetting('doesnotexit'));
+    }
+
+    /**
+     * Test getting a papers minimum availability.
+     * @group paper
+     */
+    public function testGetMinAvailability(): void
+    {
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, array());
+        // Exam has no duration so expect 0.
+        $this->assertEquals(0, $properties->getMinAvailability());
+        // Passing duration.
+        $duration = 100;
+        $et = UserUtils::getExtraTime($this->student['id'], $this->db);
+        $breaktime = 1 + ($et['breaktime'] / 100);
+        $extatime = 1 + ($et['extratime'] / 100);
+        $totalexamtime = $duration * $extatime;
+        $expected = round($totalexamtime * $breaktime);
+        $this->assertEquals($expected, $properties->getMinAvailability($duration));
+        $this->config->set_setting('paper_breaktime_mins', true, \Config::BOOLEAN);
+        $breaktime = ceil($totalexamtime / 60) * $et['breaktime'];
+        $expected = round($totalexamtime + $breaktime);
+        $this->assertEquals($expected, $properties->getMinAvailability($duration));
+        $this->config->set_setting('paper_breaktime_mins', false, \Config::BOOLEAN);
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, array());
+        // Exam has a duration.
+        $totalexamtime = $properties->get_exam_duration() * $extatime;
+        $breaktime = 1 + ($et['breaktime'] / 100);
+        $expected = round($totalexamtime * $breaktime);
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, '');
+        $this->assertEquals($expected, $properties->getMinAvailability());
+        $this->config->set_setting('paper_breaktime_mins', true, \Config::BOOLEAN);
+        $breaktime = ceil($totalexamtime / 60) * $et['breaktime'];
+        $expected = round($totalexamtime + $breaktime);
+        $this->assertEquals($expected, $properties->getMinAvailability());
     }
 }

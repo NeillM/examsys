@@ -65,7 +65,11 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
                 scope.view('access', $(this).attr('data-id'), $(this).attr('data-paperid'), event);
             });
 
-            $('.icon16_active').click(function(event) {
+            $('.tbreak').click(function(event) {
+                scope.view('toilet_break', $(this).attr('data-id'), $(this).attr('data-paperid'), event);
+            });
+
+            $('.abreak').click(function(event) {
                 scope.view('break', $(this).attr('data-id'), $(this).attr('data-paperid'), event);
             });
 
@@ -91,6 +95,10 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
 
             $('#toiletDiv').click(function() {
                 $('#toiletDiv').hide();
+            });
+
+            $('#breakDiv').click(function() {
+                $('#breakDiv').hide();
             });
 
             $("tr[id^=res]").click(function() {
@@ -185,10 +193,15 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
             var selector = '';
             var div = '';
             switch (type) {
-                case "break":
-                    dataSource = "../ajax/reports/getToiletBreak.php?breakID=" + id;
+                case "toilet_break":
+                    dataSource = "../ajax/reports/getPaperBreak.php?breakID=" + id;
                     selector = "#toiletMsg";
                     div = "#toiletDiv";
+                    break;
+                case "break":
+                    dataSource = "../ajax/reports/getPaperBreak.php?breakID=" + id + "&type=1";
+                    selector = "#breakMsg";
+                    div = "#breakDiv";
                     break;
                 case "access":
                     dataSource = "../ajax/reports/getAccessibility.php?userID=" + id;

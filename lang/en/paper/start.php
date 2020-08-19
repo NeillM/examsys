@@ -101,3 +101,4 @@ $string['threeplyerror'] = 'Your browser does not support the display of %s file
 $string['paperpaused'] = 'The paper is paused. Click OK to resume.';
 $string['pause'] = 'Pause';
 $string['resume'] = 'Resume';
+$string['breakremaining'] = 'Break time remaining:';

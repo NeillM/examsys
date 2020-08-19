@@ -172,7 +172,7 @@ define(['jquery', 'jqueryui'], function($) {
         this.newToiletBreak = function() {
             var scope = this;
             $('#menudiv').hide();
-            $.post("../ajax/invigilator/toilet_break.php",
+            $.post("../ajax/invigilator/paper_break.php",
                 {
                     userID:$('#userID').val(),
                     paperID:$('#paperID').val()

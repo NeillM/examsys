@@ -168,6 +168,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     }
     $textsize = param::optional('textsize', 0, param::INT, param::FETCH_POST);
     $extra_time = param::optional('extra_time', 0, param::INT, param::FETCH_POST);
+    $break_time = param::optional('break_time', 0, param::INT, param::FETCH_POST);
     $font = param::optional('font', null, param::ALPHA, param::FETCH_POST);
     if ($colour_marks) {
         $marks_color = param::optional('marks_color', null, param::TEXT, param::FETCH_POST);
@@ -202,9 +203,9 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     $result->execute();
     $result->close();
 
-    if ($background != null or $foreground != null or $marks_color != null or $textsize != 0 or $extra_time != 0 or $font != null or $themecolor != null or $labelcolor != null or $unansweredcolor != null or $dismisscolor != null or $medical != '' or $breaks != '') {
-        $result = $mysqli->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $result->bind_param('issiissssssss', $userID, $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks);
+    if ($background != null or $foreground != null or $marks_color != null or $textsize != 0 or $extra_time != 0 or $font != null or $themecolor != null or $labelcolor != null or $unansweredcolor != null or $dismisscolor != null or $medical != '' or $breaks != '' or $break_time != 0) {
+        $result = $mysqli->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $result->bind_param('issiissssssssi', $userID, $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks, $break_time);
         $result->execute();
         $result->close();
 
@@ -764,11 +765,11 @@ if ($tab == 'accessibility') {
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo '<tr><td align="center"><table cellspacing="1" cellpadding="1" border="0" style="padding-top:20px; text-align:left">';
 
-  $result = $mysqli->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss, medical, breaks FROM special_needs WHERE userID = ? LIMIT 1');
+  $result = $mysqli->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss, medical, breaks, break_time FROM special_needs WHERE userID = ? LIMIT 1');
   $result->bind_param('i', $userID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks);
+  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks, $break_time);
   $result->fetch();
 if ($result->num_rows > 0) {
     $special_needs = true;
@@ -793,6 +794,9 @@ if (!isset($textsize)) {
 }
 if (!isset($extra_time)) {
     $extra_time = 0;
+}
+if (!isset($break_time)) {
+    $break_time = 0;
 }
 if (!isset($font)) {
     $font = '';
@@ -1001,7 +1005,39 @@ if ($dismisscolor == '') {
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr><td class="medical"><?php echo $string['medical'] ?></td><td colspan="4"><textarea cols="60" rows="3" name="medical" style="width:100%"><?php echo $medical ?></textarea></td></tr>
 <tr><td class="breaks"><?php echo $string['breaks'] ?></td><td colspan="4"><textarea cols="60" rows="3" name="breaks" style="width:100%"><?php echo $breaks ?></textarea></td></tr>
-<tr><td colspan="5">&nbsp;</td></tr>
+<tr>
+<?php
+if ($configObject->get_setting('core', 'paper_breaktime_mins')) {
+    $scaletype = $string['breaktimeminpserhour'];
+} else {
+    $scaletype = $string['breaktime'];
+}
+?>
+    <td><?php echo $scaletype; ?></td>
+    <td colspan="2">
+        <select name="break_time">
+            <?php
+            $scale = $configObject->get_setting('core', 'paper_breaktime_scale');
+            echo '<optgroup>' . PHP_EOL;
+            echo '<option value="0">' . $string['nobreaktime'] . '</option>' . PHP_EOL;
+            foreach ($scale as $individual_time) {
+                if ($individual_time == $break_time) {
+                    echo '<option value="' . $individual_time . '" selected>' . $individual_time . '</option>' . PHP_EOL;
+                } else {
+                    echo '<option value="' . $individual_time . '">' . $individual_time . '</option>' . PHP_EOL;
+                }
+            }
+            echo '</optgroup>' . PHP_EOL;
+            // Still display students settings even if no longer available as an option.
+            if ($break_time != 0 and !in_array($break_time, $scale)) {
+                echo '<optgroup>' . PHP_EOL;
+                echo '<option value="' . $break_time . '" selected>' . $break_time . '</option>' . PHP_EOL;
+                echo '</optgroup>' . PHP_EOL;
+            }
+            ?>
+        </select>
+    </td>
+</tr>
 <?php
 if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
     echo '<tr><td colspan="5" align="center"><input type="submit" name="updateaccess" value="' . $string['save'] . "\" class=\"ok\" /></td></tr>\n";

@@ -85,6 +85,27 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
         };
 
         /**
+         * Update the break timer clock
+         * @param integer hours hour
+         * @param integer minutes minute
+         * @param integer seconds second
+         */
+        this.UpdateBreakClock = function(hours, minutes, seconds) {
+            scope.KillBreakClock();
+
+            if ( hours == 0 ){
+                hours   = '';
+                minutes = ( ( minutes  < 10 ) ? "0" : "" ) + minutes;
+            } else {
+                hours   = ( ( hours < 10 ) ? "0" : "" ) + hours;
+                minutes = ( ( minutes  < 10 ) ? ":0" : ":" ) + minutes;
+            }
+            seconds = ( ( seconds < 10 ) ? ":0" : ":" ) + seconds;
+
+            $('#info_submit_dialog_extra').html(Jsxls.lang_string['breakremaining'] + " " + hours + minutes + seconds);
+        };
+
+        /**
          * Regular heartbeat that confirms remaining time if missed.
          */
         this.heartbeat = function() {
@@ -96,11 +117,21 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             scope.lastheartbeat = now;
             // Give some wiggle room.
             if (offBy > 100) {
-                // If an exam is pause leave it paused. Otherwise update the timer.
                 if (!scope.paused) {
-                    // Remaining time is the current time subtracted from the end time with the total pause duration added.
-                    var remaingtime = Math.floor((scope.endtime.getTime() - nowtime + scope.pausedduration) / 1000);
-                    scope.UpdateTimerWithRemainingTime(remaingtime, true);
+                    // Not paused so just need to update the exam timer.
+                    //   - taking into account time since last heartbeat with the break time added.
+                    var remaingtime = Math.floor((scope.endtime.getTime() - nowtime) / 1000);
+                    var breakdiff = $('#dataset').attr('data-breaks') - scope.breaktime;
+                    scope.UpdateTimerWithRemainingTime(remaingtime + breakdiff, true);
+                } else {
+                    // Paused so need to update the break timer.
+                    //   - taking into account time since last heartbeat.
+                    var breakremaining = Math.floor(scope.breaktime - (diff / 1000));
+                    scope.UpdateBreakTimerWithRemainingTime(breakremaining);
+                    // If break time used up by outage then adjust exam timer as well.
+                    if (breakremaining < 0) {
+                        scope.UpdateTimerWithRemainingTime(scope.examtime + breakremaining, true);
+                    }
                 }
             }
         }
@@ -121,7 +152,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                 var minutes = Math.floor(remaining_time / 60);
                 minutes = Math.round(minutes);
                 var seconds = remaining_time % 60;
-
+                scope.examtime = remaining_time;
                 scope.UpdateClock(0, minutes, seconds);
 
                 if (remaining_time == 0 && close == true) {
@@ -134,6 +165,41 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                 }
             }
             scope.clockID = setTimeout(scope.UpdateTimerWithRemainingTime, 1000, remaining_time, close);
+        };
+
+        /**
+         * Performs break timer countdown.
+         * @param integer remaining_time time remaining to finish exam
+         */
+        this.UpdateBreakTimerWithRemainingTime = function(remaining_time) {
+            var resume = false;
+            if ($('#breaks').hasClass('play')) {
+                resume = true;
+            }
+
+            if (resume) {
+                var minutes = Math.floor(remaining_time / 60);
+                minutes = Math.round(minutes);
+                var seconds = Math.round(remaining_time % 60);
+                scope.breaktime = remaining_time;
+                scope.UpdateBreakClock(0, minutes, seconds);
+
+                if (remaining_time <= 0) {
+                    scope.KillBreakClock();
+                    $('#breaks').removeClass('play');
+                    $('#breakstext').html(Jsxls.lang_string['pause']);
+                    $("#info_overlay").hide();
+                    scope.paused = false;
+                    $('#breakstext').css('display', 'none');
+                    $('#breaktimeremaining').css('display', 'none');
+                    scope.saveBreaks(0);
+                    return;
+                }
+                if (remaining_time > 0) {
+                    remaining_time = remaining_time - 1;
+                }
+            }
+            scope.breakID = setTimeout(scope.UpdateBreakTimerWithRemainingTime, 1000, remaining_time);
         };
 
         /**
@@ -163,6 +229,15 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
         };
 
         /**
+         * Start the break timer
+         * @param integer remaining_time remaining time in seconds
+         * @param bool close if true exam closed when time remainign reaches 0
+         */
+        this.StartBreakTimer = function(remaining_time) {
+            scope.breakID = setTimeout(scope.UpdateBreakTimerWithRemainingTime, 500, remaining_time);
+        };
+
+        /**
          * Start the clock.
          */
         this.StartClock = function() {
@@ -179,6 +254,15 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             }
         };
 
+        /**
+         * Stop the break timer clock.
+         */
+        this.KillBreakClock = function() {
+            if (scope.breakID) {
+                clearTimeout(scope.breakID);
+                scope.breakID = 0;
+            }
+        };
 
         /**
          * Strikethrough an option in a question
@@ -651,32 +735,46 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
 
         /**
          * Pause the exam.
-         * @param int userid user idenifier
-         * @param int paperid paper identigier
+         * @param int paperid paper identifier
          */
         this.pause = function(paperid) {
             scope.paused = true;
-            var start = new Date();
-            scope.pausedtimestart = start.getTime();
+            scope.StartBreakTimer(scope.breaktime);
             // Record break.
-            $.post($('#dataset').attr('data-rootpath') + "/ajax/invigilator/toilet_break.php",
+            $.post($('#dataset').attr('data-rootpath') + "/ajax/invigilator/paper_break.php",
                 {
-                    paperID: paperid
+                    paperID: paperid,
+                    type: 1
                 });
             $('#breaks').removeClass('pause');
             $('#breaks').addClass('play');
             $('#breakstext').html(Jsxls.lang_string['resume']);
             scope.info_dialog(Jsxls.lang_string['paperpaused']);
+        }
 
-            $("#info_dialog_ok").one('click', function() {
-                $('#breaks').removeClass('play');
-                $('#breaks').addClass('pause');
-                $('#breakstext').html(Jsxls.lang_string['pause']);
-                $("#info_overlay").hide();
-                scope.paused = false;
-                var stop = new Date();
-                scope.pausedduration += stop.getTime() - scope.pausedtimestart;
-            });
+        /**
+         * Save break time left
+         * @param int remaining_time the remaining break time
+         */
+        this.saveBreaks = function(remaining_time) {
+            var el = document.getElementById('paper');
+            $.post($('#dataset').attr('data-rootpath') + "/paper/save_breaks.php",
+                {
+                    paperID: el.dataset.paperid,
+                    time: Math.round(remaining_time)
+                });
+        }
+
+        /**
+         * Format the break time remaing for display.
+         */
+        this.formatTimeRemaining = function(breaktime_remaining) {
+            var minutes = Math.floor(breaktime_remaining / 60);
+            minutes = Math.round(minutes);
+            var seconds = Math.round(breaktime_remaining % 60);
+            minutes = ( ( minutes  < 10 ) ? "0" : "" ) + minutes;
+            seconds = ( ( seconds < 10 ) ? ":0" : ":" ) + seconds;
+            $('#breaktimeremaining').html(Jsxls.lang_string['breakremaining'] + ' <span class="thetime">' + minutes + seconds + '</span>');
         }
     }
 });

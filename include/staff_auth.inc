@@ -74,7 +74,7 @@ $internal_allowed_pages = array(
 
 $invigilator_allowed_pages = array(
                               '/ajax/invigilator/refresh_cohort_list.php' => 1,
-                              '/ajax/invigilator/toilet_break.php' => 1,
+                              '/ajax/invigilator/paper_break.php' => 1,
                               '/invigilator/check_exam_announcements.php' => 1,
                               '/invigilator/check_unfinish_exam.php' => 1,
                               '/invigilator/do_unfinish_exam.php' => 1,

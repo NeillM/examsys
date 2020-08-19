@@ -61,6 +61,8 @@ if ($user_details === false) {
 }
 
 $log_metadata->set_started_to_null();
+// Delete break time.
+LogBreakTime::deleteBreak($userID, $paperID);
 
 $mysqli->close();
 echo json_encode('SUCCESS');

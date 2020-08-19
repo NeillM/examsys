@@ -101,3 +101,6 @@ $string['summative_remote'] = 'Enable/Disable remote summative exam functionalit
 $string['summative_issuelink'] = 'Link to issue reporting site for remote summative exams on the paper index screen.';
 $string['summative_issuelink2'] = 'Link to issue reporting site for remote summative exams on the paper finish screen.';
 $string['paper_types'] = 'Enable/Disable paper types from being available';
+$string['paper_breaktime_scale'] = 'Scale for additional break time availble to students during exams.';
+$string['paper_breaktime_mins'] = 'If selected scale values are minutes per hour, otherwise they are a percentage of the total exam time.';
+$string['paper_pause_exam'] = 'Enable/Disable pausing of remote summative exams for students with accomodations.';

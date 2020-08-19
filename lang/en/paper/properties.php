@@ -114,6 +114,7 @@ $string['restricttometadata'] = 'Restrict to Metadata';
 $string['na'] = 'N/A';
 $string['tooltip_password'] = 'This will put an extra password on the paper in addition to students logging into Rogo with their own personal password. This password can be given out to students within the computer lab.';
 $string['donotchangewarning'] = 'This paper is locked. It is recommended you only make changes if no students have attempted this paper';
+$string['minavailability'] = '*The minimum valid availability due to student accomodations is %s minutes.';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Reviewers';

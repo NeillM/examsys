@@ -3113,4 +3113,43 @@ class PaperProperties
     {
         PaperSettings::renderNewSettings($strings, $papertype, $category);
     }
+
+    /**
+     * Get the minimum time a paper should be available based on student accomodations.
+     * @param int $duration exam duartion in minutes
+     * @return int
+     */
+    public function getMinAvailability(int $duration = -1): int
+    {
+        $minduration = array();
+        $calendar_year = $this->get_calendar_year();
+        $modules = array_keys($this->get_modules());
+        // Get the stored exam duartion if non provided.
+        if ($duration === -1) {
+            $duration = $this->get_exam_duration();
+        }
+        foreach ($modules as $module) {
+            $members = module_utils::get_student_members($calendar_year, $module, $this->db);
+            foreach ($members as $member) {
+                $extra = UserUtils::getExtraTime($member['userID'], $this->db);
+                if ($extra['extratime'] > 0) {
+                    $extra['extratime'] = 1 + ($extra['extratime'] / 100);
+                } else {
+                    $extra['extratime'] = 1;
+                }
+                $totalexamtime = $duration * $extra['extratime'];
+                if ($this->configObject->get_setting('core', 'paper_breaktime_mins')) {
+                    $minduration[] =  $totalexamtime + (ceil($totalexamtime / 60) * $extra['breaktime']);
+                } else {
+                    if ($extra['breaktime'] > 0) {
+                        $extra['breaktime'] = 1 + ($extra['breaktime'] / 100);
+                    } else {
+                        $extra['breaktime'] = 1;
+                    }
+                    $minduration[] = $totalexamtime * $extra['breaktime'];
+                }
+            }
+        }
+        return round(max($minduration));
+    }
 }

@@ -96,9 +96,10 @@ lang.screen
                     <div class="timer">
                         {{data.timerlabel}} <span id="theTime" type="text" class="thetime"></span>
                     </div>
-                    {% if data.breaks %}
-                    <div id ="breaks" class="pause"></div>
-                    <div id ="breakstext">{{lang.pause}}</div>
+                    {% if data.breaks != -1 %}
+                    <div id="breaks" class="pause"></div>
+                    <div id="breakstext">{{lang.pause}}</div>
+                    <div id="breaktimeremaining"></div>
                     {% endif %}
                 </div>
                 <div class="controls">

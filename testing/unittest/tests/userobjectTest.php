@@ -72,9 +72,18 @@ class UserObjectTest extends unittestdatabase
     {
         // Does require breaks.
         $this->set_active_user($this->student['id']);
-        $this->assertTrue($this->userobject->getRequiresBreaks());
+        $et = UserUtils::getExtraTime($this->student['id'], $this->db);
+        $this->assertEquals($et['breaktime'], $this->userobject->getRequiresBreaks());
+    }
+
+    /**
+     * Test if user requires breaks
+     * @group user
+     */
+    public function testGetRequiresBreaks2()
+    {
         // Does not require breaks.
-        $this->set_active_user($this->get_user_id('test2'));
-        $this->assertTrue($this->userobject->getRequiresBreaks());
+        $this->set_active_user($this->studentneeds['id']);
+        $this->assertEquals(0, $this->userobject->getRequiresBreaks());
     }
 }

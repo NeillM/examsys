@@ -67,7 +67,7 @@ a.user:hover {
   line-height: 150%;
   float: left;
   background-color: #FCE699;
-	border: 1px solid #E6B10D;
+  border: 1px solid #E6B10D;
 }
 .studentnote {
   display: none;
@@ -78,7 +78,7 @@ a.user:hover {
   z-index: 10000;
   font-size: 90%;
   background-color: #FCE699;
-	border: 1px solid #E6B10D;
+  border: 1px solid #E6B10D;
 }
 .studentaccess {
   display: none;
@@ -89,7 +89,7 @@ a.user:hover {
   z-index: 10000;
   font-size: 90%;
   background-color: #EEF4FF;
-	border: 1px solid #295AAD;
+  border: 1px solid #295AAD;
 }
 .toiletbreak {
   display: none;
@@ -100,7 +100,18 @@ a.user:hover {
   z-index: 10000;
   font-size: 90%;
   background-color: #D3F3FF;
-	border: 1px solid #019CD5;  
+  border: 1px solid #019CD5;
+}
+.break {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 450px;
+  z-index: 10000;
+  font-size: 90%;
+  background-color: #D3F3FF;
+  border: 1px solid #019CD5;
 }
 .staff {
   background-color: #FCD5B4;

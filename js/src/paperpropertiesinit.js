@@ -108,6 +108,23 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
         }
     });
 
+    $('#exam_duration_hours').change(function () {
+        if ($('#exam_duration_hours').val() != 'NULL' && $('#exam_duration_mins').val() != 'NULL') {
+            properties.updateAvailability();
+        } else {
+            $('#minavail').css('display','none');
+            $('#minavailflag').css('display','none');
+        }
+    });
+    $('#exam_duration_mins').change(function () {
+        if ($('#exam_duration_mins').val() != 'NULL' && $('#exam_duration_hours').val() != 'NULL') {
+            properties.updateAvailability();
+        } else {
+            $('#minavail').css('display','none');
+            $('#minavailflag').css('display','none');
+        }
+    });
+
     // Disable labs if remote summative.
     if ($('#remote_summative').is(':checked')) {
         $("input[id^=lab]", $("#labs_list")).each(function() {

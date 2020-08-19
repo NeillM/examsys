@@ -25,3 +25,5 @@ $string['unansweredbackground'] = 'Unanswered background';
 $string['questiondismiss'] = 'Question dismiss';
 $string['fontsize'] = 'Font size';
 $string['typeface'] = 'Typeface';
+$string['breaktime'] = 'Break Time (percent)';
+$string['breaktimeminpserhour'] = 'Break Time (mins per hour)';

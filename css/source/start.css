@@ -329,6 +329,9 @@ pre {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+#info_submit_dialog_extra {
+  text-align: left;
+}
 .callout {
   margin-left: auto;
   margin-right: 10px;
@@ -460,4 +463,9 @@ div.error {
   cursor: pointer;
   color: white;
   font-weight: bold;
+}
+
+#breaktimeremaining {
+  padding-left: 25px;
+  color: white;
 }

@@ -115,6 +115,9 @@ $string['Access Denied'] = 'Access Denied';
 $string['resitcandidate'] = 'Resit candidate';
 $string['roles'] = 'Roles';
 $string['rolesavefailure'] = 'The roles could not be updated.';
+$string['breaktime'] = 'Break Time (percent)';
+$string['breaktimeminpserhour'] = 'Break Time (mins per hour)';
+$string['nobreaktime'] = 'no break time';
 
 //demo
 $string['demo1'] = 'Cities';

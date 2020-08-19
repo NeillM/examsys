@@ -40,10 +40,11 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
 
         if (el.dataset.timed) {
             start.paused = false;
-            start.pausedduration = 0;
-            start.StartTimer(el2.dataset.remaining_time, true);
+            start.examtime = el2.dataset.remaining_time;
+            start.breaktime = $('#dataset').attr('data-breaks');
+            start.StartTimer(start.examtime, true);
             // Set endtime of exam.
-            var end = new Date(Date.now() + (el2.dataset.remaining_time * 1000));
+            var end = new Date(Date.now() + (start.examtime * 1000));
             start.endtime = end;
             // Initialise heartbeat to confirm browser is active.
             var now = new Date();
@@ -128,8 +129,14 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
             $('#unansweredkey').show();
         }
 
+        // Format break time remaining.
+        if ($('#dataset').attr('data-remotesummative') == 1 && start.breaktime > 0) {
+            start.formatTimeRemaining(start.breaktime);
+        }
+
+        // Format break button.
         $('#breaks, #breakstext').click(function() {
-            if ($('#dataset').attr('data-remotesummative') == 1 && $('#dataset').attr('data-breaks') == 1) {
+            if ($('#dataset').attr('data-remotesummative') == 1 && start.breaktime > 0) {
                 if ($('#breaks').hasClass('pause')) {
                     // Pause exam.
                     start.pause(el.dataset.paperid);
@@ -140,6 +147,17 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
                     $('#breakstext').html(Jsxls.lang_string['pause']);
                 }
             }
+        });
+
+        // Update break button display and update timer when dialog 'ok' clicked.
+        $("#info_dialog_ok").click(function() {
+            $('#breaks').removeClass('play');
+            $('#breaks').addClass('pause');
+            $('#breakstext').html(Jsxls.lang_string['pause']);
+            $("#info_overlay").hide();
+            start.paused = false;
+            start.formatTimeRemaining(start.breaktime);
+            start.saveBreaks(start.breaktime);
         });
 
         start.html5init();

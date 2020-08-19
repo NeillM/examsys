@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
+define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
     return function () {
         /**
          * Get the paper metadata.
@@ -148,30 +148,49 @@ define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
                     return false;
                 }
 
-                // Calculate the minimum to hour and minutes.
-                var calculated_min_thours = parseInt($('#fhour').val()) + parseInt($('#exam_duration_hours').val());
-                var calculated_min_tminutes = parseInt($('#fminute').val()) + parseInt($('#exam_duration_mins').val());
-                if (calculated_min_tminutes > 60) {
-                    calculated_min_thours  += calculated_min_tminutes % 60;
-                    calculated_min_tminutes -= 60;
-                }
-
-                // Check that availability meets the duration requirement.
-                var durationnotmet = false;
-                if (parseInt($('#thour').val()) < calculated_min_thours) {
-                    durationnotmet = true;
-                }
-                if (parseInt($('#thour').val()) === calculated_min_thours && parseInt($('#tminute').val()) < calculated_min_tminutes) {
-                    durationnotmet = true;
-                }
-                if (durationnotmet) {
-                    alert.notification('durationnotmet');
-                    return false;
-                }
-
                 if ($('#session').val() == '') {
                     alert.notification('msg4');
                     return false;
+                }
+            }
+
+            if ($('#paper_type').val() == '2') {
+                // Calculate the minimum hour and minutes based on student accomodations.
+                var minavilability = $('#dataset').attr('data-minavail');
+                var monthsdiff = parseInt($('#tmonth').val()) - parseInt($('#fmonth').val());
+                // Only do the check if exam is in the same month.
+                if (monthsdiff == 0) {
+                    var daysdiff = parseInt($('#tday').val()) - parseInt($('#fday').val());
+                    // Only do check if exam is within a day.
+                    if (daysdiff <= 1) {
+                        var daysdiffhour = daysdiff * 24;
+                        if (minavilability > 60) {
+                            var minavilability_hour = Math.floor(minavilability / 60);
+                            var minavilability_min = minavilability % 60;
+                        } else {
+                            minavilability_hour = 0;
+                            minavilability_min = minavilability;
+                        }
+                        // Map minimum hour and minute to 'to hour / to minute'
+                        var calculated_min_thours = parseInt($('#fhour').val()) + parseInt(minavilability_hour);
+                        var calculated_min_tminutes = parseInt($('#fminute').val()) + parseInt(minavilability_min);
+                        if (calculated_min_tminutes > 60) {
+                            calculated_min_thours += 1;
+                            calculated_min_tminutes -= 60;
+                        }
+                        // Check that availability meets the duration requirement.
+                        var durationnotmet = false;
+                        if (parseInt($('#thour').val() + daysdiffhour) < calculated_min_thours) {
+                            durationnotmet = true;
+                        }
+                        if (parseInt($('#thour').val() + daysdiffhour) === calculated_min_thours && parseInt($('#tminute').val()) < calculated_min_tminutes) {
+                            durationnotmet = true;
+                        }
+                        if (durationnotmet) {
+                            alert.notification('durationnotmet');
+                            return false;
+                        }
+                    }
                 }
             }
 
@@ -253,6 +272,29 @@ define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
                 $('#feedback_on').hide();
                 $('#feedback_off').show();
             }
+        };
+
+        /**
+         * Update the availability warning message.
+         */
+        this.updateAvailability = function () {
+            var alert = new ALERT();
+            $.ajax({
+                url: $('#dataset').attr('data-rootpath') + '/paper/get_min_availability.php',
+                type: "post",
+                data: {paperid: this.paperid, exam_duration_hours: $('#exam_duration_hours').val(), exam_duration_mins: $('#exam_duration_mins').val()},
+                dataType: "json",
+                success: function (data) {
+                    if (data[0] == 'SUCCESS') {
+                        $('#minavail').html(JsXls.lang_string['minavailability'].replace('%s', data[1]));
+                        $('#minavail').css('display','block');
+                        $('#minavailflag').css('display','contents');
+                    }
+                },
+                error: function (xhr, textStatus) {
+                    alert.plain(textStatus);
+                },
+            });
         };
     }
 });

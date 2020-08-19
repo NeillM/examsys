@@ -92,7 +92,7 @@ function setup_change_callbacks(&$changed_reviewers, &$changed_labs)
 }
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
-
+$minavailability = $properties->getMinAvailability();
 $modules_array = $properties->get_modules();
 
 $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
@@ -1204,8 +1204,16 @@ for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
         echo '<option value="' . $display_minute . '">' . $display_minute . "</option>\n";
     }
 }
-    echo "</select>\n</td></tr>\n";
-    echo "</table>\n";
+    echo "</select>";
+    if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
+        echo '<span id="minavailflag">*</span>';
+    }
+    echo "\n</td></tr>\n</table>\n";
+    if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
+        echo '<div id="minavail">';
+        echo sprintf($string['minavailability'], $minavailability);
+        echo '</div>';
+    }
     $properties->renderSettings('security');
     echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
     echo '<tr><td class="headbar" style="padding:2px; width:400px">&nbsp;' . $string['modules'] . '</td><td class="headbar" style="padding:2px">&nbsp;' . $string['restricttolabs'] . '</td></tr>';
@@ -1843,8 +1851,10 @@ for ($i = 0; $i < $rows; $i++) {
 </form>
 <?php
 $dataset['name'] = 'dataset';
+$dataset['attributes']['rootpath'] = $cfg_root_path;
 $dataset['attributes']['type'] = $properties->get_paper_type();
 $dataset['attributes']['id'] = $paperID;
+$dataset['attributes']['minavail'] = $minavailability;
 $render->render($dataset, array(), 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';

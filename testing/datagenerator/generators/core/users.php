@@ -412,12 +412,13 @@ class users extends generator
             'unansweredcolor' => null,
             'dismisscolor' => null,
             'medical' => null,
-            'breaks' => null
+            'breaks' => null,
+            'break_time' => null
         );
         $special = $this->set_defaults_and_clean($default_needs, $special);
-        $result = $this->db->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $result = $this->db->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $result->bind_param(
-            'issiissssssss',
+            'issiissssssssi',
             $userID,
             $special['background'],
             $special['foreground'],
@@ -430,7 +431,8 @@ class users extends generator
             $special['unansweredcolor'],
             $special['dismisscolor'],
             $special['medical'],
-            $special['breaks']
+            $special['breaks'],
+            $special['break_time']
         );
         $result->execute();
         $result->close();

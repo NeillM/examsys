@@ -27,13 +27,21 @@ require '../../include/staff_auth.inc';
 require '../../include/errors.php';
 
 $breakID  = check_var('breakID', 'GET', true, false, true);
+$type = param::optional('type', 0, param::INT, param::FETCH_GET);
 
-$details = ToiletBreaks::toilet_break_by_id($breakID, $mysqli);
-
+if ($type === Breaks::TYPE_ACCOMIDATION) {
+    $details = Breaks::getBreak($breakID);
+} else {
+    $details = ToiletBreaks::toilet_break_by_id($breakID, $mysqli);
+}
 if ($details === false) {
     echo '<div style="padding:10px">' . $string['err'] . "</div>\n";
 } else {
-    echo '<div style="padding:10px">' . $string['toiletbreak'] . "</div>\n";
+    if ($type === Breaks::TYPE_ACCOMIDATION) {
+        echo '<div style="padding:10px">' . $string['break'] . "</div>\n";
+    } else {
+        echo '<div style="padding:10px">' . $string['toiletbreak'] . "</div>\n";
+    }
     echo '<div style="padding:10px">' . $details . "</div>\n";
 }
 
