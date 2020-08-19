@@ -35,4 +35,5 @@ trait include_frontend
     use menu;
     use pages;
     use paper;
+    use Question;
 }

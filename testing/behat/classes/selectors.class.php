@@ -72,6 +72,7 @@ class selectors
     'main_menu_item' => 'main_menu_item', //<div id="toprightmenu"
     'sub_search_menu_item' => 'sub_search_menu_item',
     'paper_type' => 'paper_type',
+    'question_type' => 'question_type',
     );
 
     /**
@@ -139,6 +140,9 @@ XPATH
 XPATH
     ,'paper_type' => <<<XPATH
 //td[contains(concat(' ', normalize-space(@class), ' '), ' icon ') and contains(normalize-space(.) , %locator%)]
+XPATH
+    ,'question_type' => <<<XPATH
+//tr[contains(concat(' ', normalize-space(@class), ' '), 'q') and contains(@data-qtype , %locator%)]
 XPATH
     );
 

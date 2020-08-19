@@ -396,4 +396,88 @@ JS;
     {
         $this->getSession()->getDriver()->getWebDriverSession()->dismiss_alert();
     }
+
+    /**
+     * Fill a dropdown field
+     * @param string $id dropdown id
+     * @param string $values comma seperate list of options to select
+     */
+    public function fillDropDown(string $id, string $values): void
+    {
+        $select = $this->find('xpath', '//*[@id="' . $id . '"]');
+        foreach (explode(',', $values) as $option) {
+            $select->selectOption($option, true);
+        }
+    }
+
+    /**
+     * Select check points.
+     * @param string $id checkpoint id
+     * @param string $values comma seperate list of checkpoints to select
+     */
+    public function selectCheckPoints(string $id, string $values): void
+    {
+        foreach (explode(',', $values) as $option) {
+            $select = $this->find('xpath', '//*[@id="' . $id . $option . '"]');
+            $select->click();
+        }
+    }
+
+    /**
+     * Select a radio field.
+     * @param string $id radio id
+     */
+    public function selectRadio(string $id): void
+    {
+        $select = $this->find('xpath', '//*[@id="' . $id . '"]');
+        $select->click();
+    }
+
+    /**
+     * Scroll the browser window to the element.
+     * Useful in question edit page where the bottom-bar div blocks elements.
+     * @param string $id element id
+     */
+    public function scrollToElement(string $id): void
+    {
+        $this->getSession()->executeScript(
+            "requirejs(['jquery'], function ($) {
+                $('" . $id . "')[0].scrollIntoView();
+            });"
+        );
+    }
+
+    /**
+     * Fill a tinymce editor field.
+     * We need to wait for the editor to load.
+     * Retry mechanism copied from https://github.com/MaharaProject/mahara/blob/master/htdocs/testing/frameworks/behat/classes/FormFields/BehatFormEditor.php
+     * @param string $id editor id
+     * @param string $value fill contents
+     * @throws Exception
+     */
+    public function fillTinyMCE(string $id, string $value): void
+    {
+        $lastexception = null;
+
+        for ($i = 0; $i < 10; $i++) {
+            try {
+                $this->getSession()->executeScript(
+                    "requirejs(['tinyMCE'], function () {
+                        tinyMCE.get('" . $id . "').setContent('" . $value . "');
+                    });"
+                );
+            } catch (Exception $e) {
+                // Catching any kind of exception and ignoring it until times out.
+                $lastexception = $e;
+
+                // Waiting 0.1 seconds.
+                usleep(100000);
+            }
+        }
+
+        // If it is not available we throw the last exception.
+        if (is_a($lastexception, 'Exception')) {
+            throw $lastexception;
+        }
+    }
 }
