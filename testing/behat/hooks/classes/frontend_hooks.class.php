@@ -194,9 +194,9 @@ trait frontend_hooks
      */
     public function teardown_scenario(AfterScenarioScope $event)
     {
+        $session = $this->getSession();
         try {
             // Close all popup windows.
-            $session = $this->getSession();
             $driver = $session->getDriver();
             $windows = $session->getWindowNames();
             foreach ($windows as $key => $window) {
@@ -210,6 +210,7 @@ trait frontend_hooks
         } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
             // The current driver does not support window switching.
         }
+        $session->stop();
         $this->mainwindow = null;
         // Reset the config object.
         RogoConfig::set_mock_instance(clone(self::$rogo_config));
