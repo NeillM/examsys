@@ -2540,7 +2540,7 @@ SQL;
                 if ($sql == '') {
                     $sql = 'INSERT INTO performance_details VALUES (NULL, ?, ?, ?, ?)';
                 } else {
-                    $sql .= ', (?, ?, ?, ?)';
+                    $sql .= ', (NULL, ?, ?, ?, ?)';
                 }
                 $params .= 'iiii';
                 $variables[] = $q_rec_ids[$qid];
