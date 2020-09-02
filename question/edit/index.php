@@ -225,6 +225,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
         $new_media['filename'] = $_POST['q_media'];
         $new_media['width'] = (isset($_POST['q_media_width']) and $_POST['q_media_width'] != '') ? $_POST['q_media_width'] : 0;
         $new_media['height'] = (isset($_POST['q_media_height']) and $_POST['q_media_height'] != '') ? $_POST['q_media_height'] : 0;
+        $new_media['owner'] = (isset($_POST['q_media_owner']) and $_POST['q_media_owner'] != '') ? $_POST['q_media_owner'] : $userObject->get_user_ID();
     } else {
         $new_media = media_handler::uploadFile('q_media');
     }
