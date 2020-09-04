@@ -34,6 +34,47 @@ use Exception;
 trait basic
 {
     /**
+     * Helper function to click at specified locations.
+     * @param array $coordinates coordinates to click on image to create ploygon
+     */
+    private function polygonClicks($coordinates): void
+    {
+        $last = count($coordinates);
+        $count = 1;
+        foreach ($coordinates as $coord) {
+            $this->getSession()->getDriver()->getWebDriverSession()->moveto(
+                array(
+                    'xoffset' => (int) $coord['x'],
+                    'yoffset' => (int) $coord['y']
+                )
+            );
+            if ($count < $last) {
+                $this->getSession()->getDriver()->getWebDriverSession()->click();
+            } else {
+                $this->getSession()->getDriver()->getWebDriverSession()->doubleclick();
+            }
+            $count++;
+        }
+    }
+
+    /**
+     * Helper function to drag mouse to a location
+     * @param int $x the x coordinate
+     * @param int $y the y coordinate
+     */
+    private function dragTo(int $x, int $y): void
+    {
+        $this->getSession()->getDriver()->getWebDriverSession()->buttondown();
+        $this->getSession()->getDriver()->getWebDriverSession()->moveto(
+            array(
+                'xoffset' => $x,
+                'yoffset' => $y
+            )
+        );
+        $this->getSession()->getDriver()->getWebDriverSession()->buttonup();
+    }
+
+    /**
      * Click on an element on the page.
      *
      * @Given /^I click "([^"]*)" "([^"]*)"$/
@@ -479,5 +520,109 @@ JS;
         if (is_a($lastexception, 'Exception')) {
             throw $lastexception;
         }
+    }
+
+    /**
+     * Draw a polygon.
+     * Will draw a shape based on the coordinates provided in the feauture.
+     * @param string $id element id
+     * @param array $coordinates coordinates to click on image to create ploygon
+     */
+    public function drawAPolygon(string $id, array $coordinates): void
+    {
+        // We click on the canvas to start drawing the polygon.
+        $element = $this->find('id', $id);
+        $element->click();
+        // Positions of everthing below is related to the position of the above click.
+        $this->polygonClicks($coordinates);
+    }
+
+    /**
+     * Draw a hotspot on a canvas.
+     * Will draw the shape provided in the feature.
+     * @param string $shape shape of hotspot
+     * @param array $coordinates coordinates to click on image to create hotspot
+     */
+    public function addAHotspot(
+        string $shape,
+        array $coordinates
+    ): void {
+        switch ($shape) {
+            case 'ellipse':
+                $shape_element = $this->find('id', 'question1-ellipse');
+                break;
+            case 'polygon':
+                $shape_element = $this->find('id', 'question1-polygon');
+                break;
+            default:
+                $shape_element = $this->find('id', 'question1-rectangle');
+                break;
+        }
+        $shape_element->click();
+        // Positions of everthing below is related to the shape button clicked.
+        // Start position.
+        $this->getSession()->getDriver()->getWebDriverSession()->moveto(
+            array(
+                'xoffset' => (int) $coordinates[0]['x'],
+                'yoffset' => (int) $coordinates[0]['y']
+            )
+        );
+        $this->getSession()->getDriver()->getWebDriverSession()->click();
+        // Other coords.
+        $coordinates = array_splice($coordinates, 1);
+        if ($shape === 'polygon') {
+            $this->polygonClicks($coordinates);
+        } else {
+            $this->dragTo((int) $coordinates[0]['x'], (int) $coordinates[0]['y']);
+        }
+    }
+
+    /**
+     * Draw labels.
+     * Adds labels to the image for each pair of coordinates provided in the feature.
+     * @param int $xlabel x position in pixels of a label
+     * @param int $ylabel y position in pixels of a label
+     * @param array $coordinates coordinates to drag label to on image
+     */
+    public function addALabel(
+        array $coordinates,
+        int $xlabel = 10,
+        int $ylabel = 50
+    ): void {
+        $chars = 'abcdefghijklmnopqrst';
+        $count = 0;
+        foreach ($coordinates as $coords) {
+            $element = $this->find(
+                'xpath',
+                '//*[@class="align-left" and contains(text(), "Image")]//*[@class="mandatory"]'
+            );
+            $element->click();
+            // Positions of everthing below is related to the image label clicked above.
+            // The click is requried so moveto knows where to start from.
+            // Click on a label textarea in the topleft.
+            $this->getSession()->getDriver()->getWebDriverSession()->moveto(
+                array(
+                    'xoffset' => $xlabel,
+                    'yoffset' => $ylabel
+                )
+            );
+            $this->getSession()->getDriver()->getWebDriverSession()->click();
+            // Add Text.
+            $element = $this->find('id', 'canvas1');
+            $element->keyPress(substr($chars, $count, 1));
+            // Move Label.
+            $this->dragTo((int)$coords['x'], (int)$coords['y']);
+            $count++;
+        }
+    }
+
+    /**
+     * Set the upload source path for the test
+     * @Given The upload source path is :path
+     * @param string $path location of test upload assets
+     */
+    public function theUploadSourcePathIs(string $path): void
+    {
+        $this->setFilesPath($path);
     }
 }

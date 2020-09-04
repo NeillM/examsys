@@ -15,6 +15,20 @@ Feature: Question creation
       | moduleid | username |
       | TEST1001 | teacher |
 
+  @question_area @mousemanipulation
+  Scenario: Create a area question
+    Given I login as "teacher"
+    And I follow "TEST1001"
+    And The upload source path is "questions/html5"
+    When I create a new "area" question:
+      | theme | area theme |
+      | notes | area notes |
+      | scenario | area scenario |
+      | leadin | area leadin |
+      | file | plants.jpg |
+      | coordinates | 100,0,0,100,-100,0,0,-100 |
+    Then I should see "Module: TEST1001" "paper_title"
+
   @question_enhancedcalc
   Scenario: Create a enhancedcalc question
     Given I login as "teacher"
@@ -101,6 +115,35 @@ Feature: Question creation
       | row_2 | this is row B |
       | select_1 | 1 |
       | select_2 | 2 |
+    Then I should see "Module: TEST1001" "paper_title"
+
+  @question_hotspot @mousemanipulation
+  Scenario: Create a hotspot question
+    Given I login as "teacher"
+    And I follow "TEST1001"
+    And The upload source path is "questions/html5"
+    When I create a new "hotspot" question:
+      | theme | hotspot theme |
+      | notes | hotspot notes |
+      | scenario | hotspot scenario |
+      | file | plants.jpg |
+      | hotspot_1 | rectangle,0,200,100,100 |
+      | hotspot_2 | ellipse,100,100,100,100 |
+      | hotspot_3 | polygon,100,50,100,0,0,100,-100,-100 |
+    Then I should see "Module: TEST1001" "paper_title"
+
+  @question_labelling @mousemanipulation
+  Scenario: Create a labelling question
+    Given I login as "teacher"
+    And I follow "TEST1001"
+    And The upload source path is "questions/html5"
+    When I create a new "labelling" question:
+      | theme | labelling theme |
+      | notes | labelling notes |
+      | scenario | labelling scenario |
+      | leadin | labelling leadin |
+      | file | plants.jpg |
+      | coordinates | 500,100,500,200 |
     Then I should see "Module: TEST1001" "paper_title"
 
   @question_likert

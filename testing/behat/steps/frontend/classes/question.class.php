@@ -42,6 +42,9 @@ trait Question
         $this->i_click('New Question', 'link');
         $this->i_focus_popup('Rogō: New Question');
         switch ($type) {
+            case 'area':
+                $this->createArea($data);
+                break;
             case 'enhancedcalc':
                 $this->createEnhancedcalc($data);
                 break;
@@ -59,6 +62,12 @@ trait Question
                 break;
             case 'matrix':
                 $this->createMatrix($data);
+                break;
+            case 'hotspot':
+                $this->createHotspot($data);
+                break;
+            case 'labelling':
+                $this->createLabelling($data);
                 break;
             case 'likert':
                 $this->createLikert($data);
@@ -85,6 +94,35 @@ trait Question
                 throw new PendingException('No handler for creating ' . $type . 'questions');
         }
         $this->i_click('Add to Bank', 'button');
+    }
+
+    /**
+     * Creates a area question.
+     *
+     * @param TableNode $data
+     */
+    protected function createArea(TableNode $data): void
+    {
+        $fields = $data->getRowsHash();
+        $this->questionBasics('area');
+        $this->attachFileToField('q_media', $fields['file']);
+        $this->pressButton('submit_media');
+        $this->genericfields($fields);
+        // Bottom Bar obscures page elements so need to scroll so we can draw.
+        $this->scrollToElement('#canvas1');
+        // Get coordinates and validate them.
+        $coords = explode(',', $fields['coordinates']);
+        if (!empty($coords) and count($coords) % 2 == 0) {
+            $coordinates = array();
+            $count = 0;
+            for ($i = 0; $i < count($coords); $i++) {
+                $coordinates[$count]['x'] = $coords[$i];
+                $coordinates[$count]['y'] = $coords[$i + 1];
+                $i++;
+                $count++;
+            }
+            $this->drawAPolygon('canvas1', $coordinates);
+        }
     }
 
     /**
@@ -197,6 +235,83 @@ trait Question
         $this->fillField('option_text2', $fields['column_2']);
         $this->selectRadio('option_correct1_' . $fields['select_1']);
         $this->selectRadio('option_correct2_' . $fields['select_2']);
+    }
+
+    /**
+     * Creates a hotspot question.
+     *
+     * @param TableNode $data
+     */
+    protected function createHotspot(TableNode $data): void
+    {
+        $fields = $data->getRowsHash();
+        $this->questionBasics('hotspot');
+        $this->attachFileToField('q_media', $fields['file']);
+        $this->pressButton('submit_media');
+        $this->fillField('theme', $fields['theme']);
+        $this->fillField('notes', $fields['notes']);
+        $this->fillTinyMCE('scenario', $fields['scenario']);
+        // Draw Hotspots.
+        $hotspots = array($fields['hotspot_1'], $fields['hotspot_2'], $fields['hotspot_3']);
+        $layer = 0;
+        $last = count($hotspots) - 1;
+        foreach ($hotspots as $h) {
+            // Add label.
+            $key = $this->find('xpath', '//*[@id="question1-layer-' . $layer . '"]//*[@class="mainarea"]//*[@class="textarea"]');
+            $keynum = $layer + 1;
+            $key->setValue('key' . $keynum);
+            // Draw hotspot.
+            $hotspot = explode(',', $h);
+            $shape = $hotspot[0];
+            $coords = array_slice($hotspot, 1);
+            // Get coordinates and validate them.
+            if (!empty($coords) and count($coords) % 2 == 0) {
+                $coordinates = array();
+                $count = 0;
+                for ($i = 0; $i < count($coords); $i++) {
+                    $coordinates[$count]['x'] = $coords[$i];
+                    $coordinates[$count]['y'] = $coords[$i + 1];
+                    $i++;
+                    $count++;
+                }
+                $this->addAHotspot($shape, $coordinates);
+            }
+            if ($layer < $last) {
+                // Add another layer.
+                $addlayer = $this->find('id', 'question1-add_layer');
+                $addlayer->click();
+            }
+            $layer++;
+        }
+    }
+
+    /**
+     * Creates a labelling question.
+     *
+     * @param TableNode $data
+     */
+    protected function createLabelling(TableNode $data): void
+    {
+        $fields = $data->getRowsHash();
+        $this->questionBasics('labelling');
+        $this->attachFileToField('q_media', $fields['file']);
+        $this->pressButton('submit_media');
+        $this->genericfields($fields);
+        // Bottom Bar obscures page elements so need to scroll so we can draw.
+        $this->scrollToElement('#leadin_ifr');
+        // Get coordinates and validate them.
+        $coords = explode(',', $fields['coordinates']);
+        if (!empty($coords) and count($coords) % 2 == 0) {
+            $coordinates = array();
+            $count = 0;
+            for ($i = 0; $i < count($coords); $i++) {
+                $coordinates[$count]['x'] = $coords[$i];
+                $coordinates[$count]['y'] = $coords[$i + 1];
+                $i++;
+                $count++;
+            }
+            $this->addALabel($coordinates);
+        }
     }
 
     /**

@@ -208,4 +208,16 @@ class rogo_test extends MinkContext
     {
         return get_class($this->getSession()->getDriver()) !== 'Behat\Mink\Driver\GoutteDriver';
     }
+
+    /**
+     * Sets files_path for the test
+     * @param string $path location of test upload assets
+     */
+    public function setFilesPath(string $path): void
+    {
+        $this->setMinkParameter(
+            'files_path',
+            environment::get_basedir() . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $path
+        );
+    }
 }

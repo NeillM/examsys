@@ -120,7 +120,7 @@ class environment
      *
      * @return string
      */
-    protected static function get_basedir()
+    public static function get_basedir()
     {
         return self::get_rogo_basedir() . DIRECTORY_SEPARATOR . 'testing' . DIRECTORY_SEPARATOR . 'behat';
     }
