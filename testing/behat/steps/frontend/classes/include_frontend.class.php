@@ -36,4 +36,5 @@ trait include_frontend
     use pages;
     use paper;
     use Question;
+    use Keyword;
 }

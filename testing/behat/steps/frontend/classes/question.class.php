@@ -78,6 +78,12 @@ trait Question
             case 'mrq':
                 $this->createMrq($data);
                 break;
+            case 'keyword_based':
+                $this->createKeywordBased($data);
+                break;
+            case 'random':
+                $this->createRandom($data);
+                break;
             case 'rank':
                 $this->createRank($data);
                 break;
@@ -361,6 +367,39 @@ trait Question
         // Bottom Bar obscures page elements so need to scroll so we can click.
         $this->scrollToElement('#option_correct_fback1');
         $this->selectCheckPoints('option_correct', $fields['correct']);
+    }
+
+    /**
+     * Creates a keyword_based question.
+     *
+     * @param TableNode $data
+     */
+    protected function createKeywordBased(TableNode $data): void
+    {
+        $fields = $data->getRowsHash();
+        $this->questionBasics('keyword_based');
+        $this->fillField('leadin', $fields['description']);
+        $this->fillDropDown('option_text1', $fields['keyword']);
+    }
+
+    /**
+     * Creates a random question.
+     *
+     * @param TableNode $data
+     */
+    protected function createRandom(TableNode $data): void
+    {
+        $fields = $data->getRowsHash();
+        $this->questionBasics('random');
+        $this->fillField('leadin', $fields['description']);
+        $this->i_click('Add Questions(s)', 'button');
+        $this->i_focus_popup('Questions Bank');
+        // Pop is using iframes so need to switch to it in order to be able to select the checkboxes.
+        $this->getSession()->getDriver()->switchToIFrame('iframeurl');
+        $this->selectCheckPoints('q', $fields['questions']);
+        $this->i_focus_popup('Questions Bank');
+        $this->i_click('Add Questions', 'button');
+        $this->i_focus_main_window();
     }
 
     /**

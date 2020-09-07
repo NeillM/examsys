@@ -79,7 +79,8 @@ class questions extends generator
             'q_option_order' => 'display order',
             'score_method' => 'Mark per Option',
             'settings' => '',
-            'guid' => uniqid()
+            'guid' => uniqid(),
+            'keywords' => '',
         );
         $qdata = $this->set_defaults_and_clean($defaults, $data);
         $now = date('Y-m-d H:i:s');
@@ -141,6 +142,12 @@ class questions extends generator
                 if ($id !== -1) {
                     \media_handler::linkQuestionToMedia($qdata['q_media_id'], $qdata['id'], $qdata['q_media_num']);
                 }
+            }
+            // Keywords may be provided as a json array.
+            if (!empty($qdata['keywords'])) {
+                $keywordparams['questionid'] = $qdata['id'];
+                $keywordparams['keywords'] = json_decode($qdata['keywords']);
+                $this->addKeywordsToQuestion($keywordparams);
             }
             return $qdata;
         } catch (Exception $e) {
@@ -327,5 +334,37 @@ class questions extends generator
         if (!random_utils::insert_random_link($parameters['block'], $parameters['question'], $this->db)) {
             throw new data_error('question ' . $parameters['question'] . ' not inserted into random block');
         }
+    }
+
+    /**
+     * Add keywords to question
+     * @param array parameters
+     *  int parameters[id] the question id
+     *  array parameters[keywords] keywords
+     * @throws data_error If passed parameter is invalid
+     */
+    public function addKeywordsToQuestion(array $parameters): void
+    {
+        $questionid = $parameters['questionid'];
+        $keywords = $parameters['keywords'];
+
+        if (empty($questionid)) {
+            throw new data_error('Adding keywords failed as question (id ' . $questionid . ') does not exit');
+        }
+
+        $keywordsstring = implode('","', $keywords);
+        $keywordsstring = '"' . $keywordsstring . '"';
+        $keywordarray = array();
+
+        $sql = 'SELECT id FROM keywords_user WHERE keyword IN (' . $keywordsstring . ')';
+        $result = $this->db->prepare($sql);
+        $result->execute();
+        $result->bind_result($keywordid);
+        while ($result->fetch()) {
+            $keywordarray[] = $keywordid;
+        }
+        $result->close();
+
+        QuestionUtils::add_keywords($keywordarray, $questionid, $this->db);
     }
 }

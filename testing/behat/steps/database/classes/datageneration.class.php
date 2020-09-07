@@ -52,6 +52,7 @@ trait datageneration
     'campuses' => array('labs', 'core', 'create_campus'),
     'labs' => array('labs', 'core', 'create_lab'),
     'exam pcs' => array('labs', 'core', 'create_exam_pc'),
+    'module keywords' => array('modules', 'core', 'createModuleKeywords'),
     );
 
     /**

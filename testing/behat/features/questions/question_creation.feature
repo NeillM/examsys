@@ -14,6 +14,16 @@ Feature: Question creation
     And the following "module team members" exist:
       | moduleid | username |
       | TEST1001 | teacher |
+    And the following "module keywords" exist:
+      | moduleid | keyword |
+      | TEST1001 | test |
+      | TEST1001 | key |
+      | TEST1001 | words |
+    And the following "questions" exist:
+      | user | type | leadin | scenario | keywords |
+      | teacher | true_false | tf 1 leadin | tf 1 scenario | ["test"] |
+      | teacher | true_false | tf 2 leadin | tf 2 scenario | ["key","words"] |
+      | teacher | true_false | tf 3 leadin | tf 3 scenario | |
 
   @question_area @mousemanipulation
   Scenario: Create a area question
@@ -186,6 +196,24 @@ Feature: Question creation
       | option_2 | mrq option 2 |
       | option_3 | mrq option 3 |
       | correct | 2,3 |
+    Then I should see "Module: TEST1001" "paper_title"
+
+  @question_keyword_based
+  Scenario: Create a keyword_based question
+    Given I login as "teacher"
+    And I follow "TEST1001"
+    When I create a new "keyword_based" question:
+      | keyword | key |
+      | description | keyword description |
+    Then I should see "Module: TEST1001" "paper_title"
+
+  @question_random @iframe
+  Scenario: Create a random question
+    Given I login as "teacher"
+    And I follow "TEST1001"
+    When I create a new "random" question:
+      | description | random block description |
+      | questions | 1,3 |
     Then I should see "Module: TEST1001" "paper_title"
 
   @question_rank

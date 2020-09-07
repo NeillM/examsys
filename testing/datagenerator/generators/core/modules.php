@@ -123,4 +123,29 @@ class modules extends generator
             throw new data_error('Create new module enrolment failed with parameters: ' . $userid . '--' . $moduleid . '--' . implode('--', $settings));
         }
     }
+
+    /**
+     * Create a module keyword
+     * @param array parameters
+     *  string parameters[moduleid] the module to add the keyword to
+     *  string parameters[keyword] the keyword
+     * @throws data_error If passed parameter is invalid
+     */
+    public function createModuleKeywords(array $parameters): void
+    {
+        $moduleid = $parameters['moduleid'];
+        $new_keyword = $parameters['keyword'];
+        $moduleid = module_utils::get_idMod($moduleid, $this->db);
+
+        if (empty($moduleid)) {
+            throw new data_error('Create new module keyword failed as module (id ' . $moduleid . ') does not exist');
+        }
+
+        $sql = 'INSERT INTO keywords_user VALUES (NULL, ?, ?, ?)';
+        $query = $this->db->prepare($sql);
+        $type = 'team';
+        $query->bind_param('iss', $moduleid, $new_keyword, $type);
+        $query->execute();
+        $query->close();
+    }
 }
