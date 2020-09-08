@@ -69,7 +69,7 @@ if ($updater_utils->check_version('7.2.0')) {
         $sqlgrantuserroles_staff = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $configObject->get('cfg_db_database') . ".user_roles TO '" . $configObject->get('cfg_db_staff_user') . "'@'" . $configObject->get('cfg_web_host') . "'";
         $updater_utils->execute_query($sqlgrantuserroles_staff, false);
 
-        $updater_utils->record_update('rogo_2419-newtables');
+        $updater_utils->record_update('rogo_2691-newtables');
     }
 
     // Migrate the roles data.
@@ -89,13 +89,13 @@ if ($updater_utils->check_version('7.2.0')) {
                 Role::updateRoles($id, ['Locked']);
             }
         }
-        $updater_utils->record_update('rogo_2419-migration');
+        $updater_utils->record_update('rogo_2691-migration');
     }
 
     // Delete the old roles column.
     if (!$updater_utils->has_updated('rogo_2691-cleanup')) {
         $dropsql = 'ALTER TABLE users DROP COLUMN roles';
         $updater_utils->execute_query($dropsql, false);
-        $updater_utils->record_update('rogo_2419-cleanup');
+        $updater_utils->record_update('rogo_2691-cleanup');
     }
 }

@@ -647,7 +647,7 @@ class UserUtils
         $result->execute();
         $result->close();
 
-        if ($userObject->get_user_ID() == $tmp_userID) {
+        if (!is_null($userObject) and $userObject->get_user_ID() == $tmp_userID) {
             $userObject->load_staff_modules();     // Re-cache modules if the user is the currently logged in person.
         }
     }
