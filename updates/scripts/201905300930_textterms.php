@@ -1,11 +1,11 @@
 <?php
 if ($updater_utils->check_version('7.1.0')) {
     if (!$updater_utils->has_updated('rogo2599')) {
-        $selectsql = $mysqli->prepare("SELECT q_id, settings FROM questions where q_type = 'textbox'");
+        $selectsql = $update_mysqli->prepare("SELECT q_id, settings FROM questions where q_type = 'textbox'");
         $selectsql->execute();
         $selectsql->store_result();
         $selectsql->bind_result($q_id, $settings);
-        $updatesql = $mysqli->prepare('UPDATE questions SET settings = ? WHERE q_id = ?');
+        $updatesql = $update_mysqli->prepare('UPDATE questions SET settings = ? WHERE q_id = ?');
         while ($selectsql->fetch()) {
             $oldsettings = json_decode($settings, true);
             if (isset($oldsettings['terms'])) {

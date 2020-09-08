@@ -106,7 +106,7 @@ if ($updater_utils->check_version('7.2.0')) {
         $updater_utils->execute_query($sql, false);
 
         // Migrate data to new table. Non extmach first.
-        $sqlmigrateselect = $mysqli->prepare('SELECT
+        $sqlmigrateselect = $update_mysqli->prepare('SELECT
                 q_id,
                 q_media,
                 q_media_width,
@@ -122,12 +122,12 @@ if ($updater_utils->check_version('7.2.0')) {
         $sqlmigrateselect->execute();
         $sqlmigrateselect->bind_result($qid, $qmedia, $qwidth, $qheight, $qowner);
         $sqlmigrateselect->store_result();
-        $migrateinsert = $mysqli->prepare('INSERT INTO media (source, width, height, ownerid) VALUES (?, ?, ?, ?)');
-        $insertquestionsmedia = $mysqli->prepare('INSERT INTO questions_media (qid, mediaid, num) VALUES (?, ?, ?)');
+        $migrateinsert = $update_mysqli->prepare('INSERT INTO media (source, width, height, ownerid) VALUES (?, ?, ?, ?)');
+        $insertquestionsmedia = $update_mysqli->prepare('INSERT INTO questions_media (qid, mediaid, num) VALUES (?, ?, ?)');
         while ($sqlmigrateselect->fetch()) {
             $migrateinsert->bind_param('siii', $qmedia, $qwidth, $qheight, $qowner);
             $migrateinsert->execute();
-            $mediaid = $mysqli->insert_id;
+            $mediaid = $update_mysqli->insert_id;
             $count = 0;
             $insertquestionsmedia->bind_param('iii', $qid, $mediaid, $count);
             $insertquestionsmedia->execute();
@@ -135,7 +135,7 @@ if ($updater_utils->check_version('7.2.0')) {
         $sqlmigrateselect->close();
 
         // Migrate extmach data.
-        $sqlmigrateselect = $mysqli->prepare('SELECT
+        $sqlmigrateselect = $update_mysqli->prepare('SELECT
                 q_id,
                 q_media,
                 q_media_width,
@@ -160,7 +160,7 @@ if ($updater_utils->check_version('7.2.0')) {
                 if ($media != '') {
                     $migrateinsert->bind_param('siii', $media, $widtharray[$count], $heightarray[$count], $qowner);
                     $migrateinsert->execute();
-                    $mediaid = $mysqli->insert_id;
+                    $mediaid = $update_mysqli->insert_id;
                     $insertquestionsmedia->bind_param('iii', $qid, $mediaid, $count);
                     $insertquestionsmedia->execute();
                 }
@@ -179,7 +179,7 @@ if ($updater_utils->check_version('7.2.0')) {
         $updater_utils->execute_query($sqlalter, false);
 
         // Migrate options data to new table
-        $sqlmigrateselect = $mysqli->prepare('SELECT
+        $sqlmigrateselect = $update_mysqli->prepare('SELECT
                 id_num,
                 o_media,
                 o_media_width,
@@ -195,12 +195,12 @@ if ($updater_utils->check_version('7.2.0')) {
         $sqlmigrateselect->execute();
         $sqlmigrateselect->bind_result($idnum, $omedia, $owidth, $oheight, $qowner);
         $sqlmigrateselect->store_result();
-        $migrateinsert = $mysqli->prepare('INSERT INTO media (source, width, height, ownerid) VALUES (?, ?, ?, ?)');
-        $insertquestionsmedia = $mysqli->prepare('INSERT INTO options_media (oid, mediaid) VALUES (?, ?)');
+        $migrateinsert = $update_mysqli->prepare('INSERT INTO media (source, width, height, ownerid) VALUES (?, ?, ?, ?)');
+        $insertquestionsmedia = $update_mysqli->prepare('INSERT INTO options_media (oid, mediaid) VALUES (?, ?)');
         while ($sqlmigrateselect->fetch()) {
             $migrateinsert->bind_param('siii', $omedia, $owidth, $oheight, $qowner);
             $migrateinsert->execute();
-            $mediaid = $mysqli->insert_id;
+            $mediaid = $update_mysqli->insert_id;
             $insertquestionsmedia->bind_param('ii', $idnum, $mediaid);
             $insertquestionsmedia->execute();
         }

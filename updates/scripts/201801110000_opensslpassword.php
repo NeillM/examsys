@@ -25,7 +25,7 @@ if ($updater_utils->check_version('6.5.0')) {
             $passwords[$property_id] = \encryp::openssl_encrypt_decrypt('encrypt', $oldpass) ;
         }
 
-        $update = $mysqli->prepare('UPDATE properties SET password = ? WHERE property_id = ?');
+        $update = $update_mysqli->prepare('UPDATE properties SET password = ? WHERE property_id = ?');
         foreach ($passwords as $p_id => $pass) {
             $update->bind_param('si', $pass, $p_id);
             $update->execute();
@@ -45,7 +45,7 @@ if ($updater_utils->check_version('6.5.0')) {
             $passwords[$component] = array($setting, \encryp::openssl_encrypt_decrypt('encrypt', $oldpass));
         }
 
-        $update2 = $mysqli->prepare("UPDATE config SET value = ? WHERE setting = ? and component = ? and type = 'password'");
+        $update2 = $update_mysqli->prepare("UPDATE config SET value = ? WHERE setting = ? and component = ? and type = 'password'");
         foreach ($passwords as $component => $setting) {
             $value = $setting[1];
             $name = $setting[0];

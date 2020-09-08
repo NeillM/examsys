@@ -31,6 +31,9 @@ if ($updater_utils->check_version('7.2.0')) {
         $sqlperf = 'ALTER TABLE performance_details ADD COLUMN id int NOT NULL AUTO_INCREMENT KEY FIRST';
         $updater_utils->execute_query($sqlperf, false);
 
+        // Fix bad data.
+        $sql = 'DELETE FROM state WHERE state_name is NULL';
+        $updater_utils->execute_query($sql, false);
         // Schame update - state.
         $sqlstate = 'ALTER TABLE state MODIFY COLUMN userID int(10) unsigned NOT NULL';
         $updater_utils->execute_query($sqlstate, false);

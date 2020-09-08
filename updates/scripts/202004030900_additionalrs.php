@@ -133,11 +133,11 @@ if ($updater_utils->check_version('7.2.0')) {
         // Install Categories.
         $categories = array('general', 'security', 'prologue', 'postscript',
             'rubric', 'feedback', 'reviewers', 'reference');
-        PaperSettings::createPaperSettingsCategories($mysqli, $categories);
+        PaperSettings::createPaperSettingsCategories($update_mysqli, $categories);
 
         // Install Setting declarations.
         PaperSettings::createPaperSettingsSetting(
-            $mysqli,
+            $update_mysqli,
             'remote_summative',
             'security',
             'boolean',
