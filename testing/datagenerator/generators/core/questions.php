@@ -81,6 +81,7 @@ class questions extends generator
             'settings' => '',
             'guid' => uniqid(),
             'keywords' => '',
+            'options' => '',
         );
         $qdata = $this->set_defaults_and_clean($defaults, $data);
         $now = date('Y-m-d H:i:s');
@@ -148,6 +149,12 @@ class questions extends generator
                 $keywordparams['questionid'] = $qdata['id'];
                 $keywordparams['keywords'] = json_decode($qdata['keywords']);
                 $this->addKeywordsToQuestion($keywordparams);
+            }
+            // Options may be passed as a json array.
+            if (!empty($qdata['options'])) {
+                $qdata['options'] = json_decode($qdata['options'], true);
+                $qdata['options']['question'] = $qdata['id'];
+                $this->add_options_to_question($qdata['options']);
             }
             return $qdata;
         } catch (Exception $e) {

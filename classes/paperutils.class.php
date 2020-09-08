@@ -429,6 +429,24 @@ class PaperUtils
     }
 
     /**
+     * Get a papers id
+     * Useful in automated testing to jump to a paper you know exists.
+     * @param string $title the paper title
+     * @return ?int
+     */
+    public function getPaperId(string $title): ?int
+    {
+        $configObject = Config::get_instance();
+        $result = $configObject->db->prepare('SELECT property_id FROM properties WHERE paper_title = ? LIMIT 1');
+        $result->bind_param('s', $title);
+        $result->execute();
+        $result->bind_result($paperid);
+        $result->fetch();
+        $result->close();
+        return $paperid;
+    }
+
+    /**
      * Delete a paper (Note: sets the deleted field we don't actuality delete the row form the papers table)
      * @param $paperID the id of the paper or property_id
      * @param $owner the owner we want to set the deleted paper to

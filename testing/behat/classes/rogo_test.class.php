@@ -17,6 +17,7 @@
 
 namespace testing\behat;
 
+use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Tester\Exception\PendingException;
 use testing\datagenerator\loader;
@@ -124,6 +125,16 @@ class rogo_test extends MinkContext
         return $page->find($selector, $locator);
     }
 
+    /**
+     * Gets the attribute from the element
+     * @param NodeElement $element the element
+     * @param string $attribute the attribute
+     * @return string
+     */
+    public function getAttribute(NodeElement $element, string $attribute): string
+    {
+        return $element->getAttribute($attribute);
+    }
     /**
      * Checks if an element with the specified selector
      *

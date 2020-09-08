@@ -633,4 +633,15 @@ class paperutilstest extends unittestdatabase
             '. separator' => ['2019.20', '2019/20'],
         ];
     }
+
+    /**
+     * Tests getting the paper id given the paper title
+     * @group assessment
+     */
+    public function testGetPaperId(): void
+    {
+        $this->assertEquals($this->pid1['id'], Paper_utils::getPaperId($this->pid1['papertitle']));
+        $this->assertNull(Paper_utils::getPaperId('Paper 3'));
+    }
+
 }

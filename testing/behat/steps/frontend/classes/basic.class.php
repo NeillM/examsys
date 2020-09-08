@@ -441,12 +441,12 @@ JS;
     /**
      * Fill a dropdown field
      * @param string $id dropdown id
-     * @param string $values comma seperate list of options to select
+     * @param array  $values options to select
      */
-    public function fillDropDown(string $id, string $values): void
+    public function fillDropDown(string $id, array $values): void
     {
         $select = $this->find('xpath', '//*[@id="' . $id . '"]');
-        foreach (explode(',', $values) as $option) {
+        foreach ($values as $option) {
             $select->selectOption($option, true);
         }
     }
@@ -454,11 +454,11 @@ JS;
     /**
      * Select check points.
      * @param string $id checkpoint id
-     * @param string $values comma seperate list of checkpoints to select
+     * @param array $values checkpoints to select
      */
-    public function selectCheckPoints(string $id, string $values): void
+    public function selectCheckPoints(string $id, array $values): void
     {
-        foreach (explode(',', $values) as $option) {
+        foreach ($values as $option) {
             $select = $this->find('xpath', '//*[@id="' . $id . $option . '"]');
             $select->click();
         }
@@ -624,5 +624,26 @@ JS;
     public function theUploadSourcePathIs(string $path): void
     {
         $this->setFilesPath($path);
+    }
+
+    /**
+     * Focus on the iframe so we can select elements from it
+     * @param $name
+     */
+    public function iFocusOnIframe($name): void
+    {
+        $this->getSession()->getDriver()->switchToIFrame($name);
+    }
+
+    /**
+     * Waits for the an element loaded by ajax to be visible. So we know it has finished loading.
+     * @param string $element the element we are waiting for
+     */
+    public function iWaitForTheAjaxToLoad(string $element): void
+    {
+        $session = $this->getSession();
+        $this->spin(function (rogo_test $context) use ($session, $element) {
+            return $session->evaluateScript("return $('" . $element . "').is(':visible');");
+        });
     }
 }

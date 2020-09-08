@@ -64,4 +64,15 @@ class Url
         }
         return "/users/details.php?userID={$userid}{$sectionparam}";
     }
+
+    /**
+     * Generates the URL to a paper details page.
+     *
+     * @param int $paperid The id of the paper.
+     * @return string
+     */
+    public static function paperDetails(int $paperid): string
+    {
+        return '/paper/details.php?paperID=' . $paperid;
+    }
 }

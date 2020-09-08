@@ -31,7 +31,23 @@ use Behat\Behat\Tester\Exception\PendingException;
 trait Question
 {
     /**
-     * Creates a new question when the user is on a module page.
+     * Select a question type from the module page.
+     *
+     * @Given I select a :type question type
+     * @param string $type The type of question
+     */
+    public function iSelectAQuestionType(string $type): void
+    {
+        $this->i_click('New Question', 'link');
+        $this->i_focus_popup('Rogō: New Question');
+        $this->i_click($type, 'question_type');
+        $this->only_main_window();
+        $this->i_focus_main_window();
+        $this->i_wait_for_page_to_load();
+    }
+
+    /**
+     * Creates a new question of the specified type.
      *
      * @Given I create a new :type question:
      * @param string $type The type of question
@@ -39,8 +55,6 @@ trait Question
      */
     public function iCreateANewQuestion($type, TableNode $data): void
     {
-        $this->i_click('New Question', 'link');
-        $this->i_focus_popup('Rogō: New Question');
         switch ($type) {
             case 'area':
                 $this->createArea($data);
@@ -99,7 +113,56 @@ trait Question
             default:
                 throw new PendingException('No handler for creating ' . $type . 'questions');
         }
-        $this->i_click('Add to Bank', 'button');
+    }
+
+    /**
+     * Add a question via a question bank popup
+     * @Given I add the following questions via :bank:
+     * @param string $name title of question bank popup
+     * @param TableNode $data table of question leadins
+     */
+    public function iAddTheFollowingQuestionsVia(string $name, TableNode $data): void
+    {
+        $this->i_focus_popup($name);
+        // Pop is using iframes so need to switch to it in order to be able to select the checkboxes.
+        $this->iFocusOnIframe('iframeurl');
+        $rows = $data->getRows();
+        $questions = array();
+        foreach ($rows as $row) {
+            $question = array_shift($row);
+            $leadin = $this->find('bank_question_leadin', $question);
+            $questions[] = $this->getAttribute($leadin, 'data-qid');
+        }
+        $this->selectCheckPoints('q', $questions);
+        $this->i_focus_popup($name);
+        $this->i_click('Add Questions', 'button');
+        $this->i_focus_main_window();
+    }
+
+    /**
+     * Check questions are displayed in paper list.
+     *
+     * @Then /^I should see questions:$/
+     * @throws Exception
+     */
+    public function iSeeQuestions(TableNode $table)
+    {
+        $rows = $table->getRows();
+        foreach ($rows as $row) {
+            $question = array_shift($row);
+            $found = $this->find('paper_question_leadin', $question);
+            if (empty($found)) {
+                throw new Exception('the question "' . $question . '" could not been found');
+            }
+        }
+    }
+
+    /**
+     * Wait for the add question ajax to finish loading on the page
+     * @Given I wait for questions to load
+     */
+    public function iWaitForQuestionsToLoad() {
+        $this->iWaitForTheAjaxToLoad('#link_1');
     }
 
     /**
@@ -110,7 +173,6 @@ trait Question
     protected function createArea(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('area');
         $this->attachFileToField('q_media', $fields['file']);
         $this->pressButton('submit_media');
         $this->genericfields($fields);
@@ -139,7 +201,6 @@ trait Question
     protected function createEnhancedcalc(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('enhancedcalc');
         $this->genericfields($fields);
         $this->fillField('option_min1', $fields['variable_min_1']);
         $this->fillField('option_max1', $fields['variable_max_1']);
@@ -156,7 +217,6 @@ trait Question
     protected function createDichotomous(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('dichotomous');
         $this->genericfields($fields);
         $this->fillField('option_text1', $fields['stem_1']);
         if ($fields['stem_true_1'] == 1) {
@@ -182,7 +242,6 @@ trait Question
     protected function createExtmatch(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('extmatch');
         $this->fillField('theme', $fields['theme']);
         $this->fillField('notes', $fields['notes']);
         $this->fillTinyMCE('leadin', $fields['leadin']);
@@ -191,8 +250,8 @@ trait Question
         $this->fillField('option_text1', $fields['option_1']);
         $this->fillField('option_text2', $fields['option_2']);
         $this->fillField('option_text3', $fields['option_3']);
-        $this->fillDropDown('option_correct1', $fields['stem_select_1']);
-        $this->fillDropDown('option_correct2', $fields['stem_select_2']);
+        $this->fillDropDown('option_correct1', json_decode($fields['stem_select_1']));
+        $this->fillDropDown('option_correct2', json_decode($fields['stem_select_2']));
     }
 
     /**
@@ -203,7 +262,6 @@ trait Question
     protected function createBlank(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('blank');
         $this->fillField('theme', $fields['theme']);
         $this->fillField('notes', $fields['notes']);
         $this->fillTinyMCE('leadin', $fields['leadin']);
@@ -218,7 +276,6 @@ trait Question
     protected function createInfo(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('info');
         $this->fillField('theme', $fields['theme']);
         $this->fillTinyMCE('leadin', $fields['text']);
     }
@@ -231,7 +288,6 @@ trait Question
     protected function createMatrix(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('matrix');
         $this->fillField('theme', $fields['theme']);
         $this->fillField('notes', $fields['notes']);
         $this->fillTinyMCE('leadin', $fields['leadin']);
@@ -251,7 +307,6 @@ trait Question
     protected function createHotspot(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('hotspot');
         $this->attachFileToField('q_media', $fields['file']);
         $this->pressButton('submit_media');
         $this->fillField('theme', $fields['theme']);
@@ -299,7 +354,6 @@ trait Question
     protected function createLabelling(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('labelling');
         $this->attachFileToField('q_media', $fields['file']);
         $this->pressButton('submit_media');
         $this->genericfields($fields);
@@ -328,9 +382,8 @@ trait Question
     protected function createLikert(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('likert');
         $this->genericfields($fields);
-        $this->fillDropDown('scale_type', $fields['scale']);
+        $this->fillDropDown('scale_type', array($fields['scale']));
     }
 
     /**
@@ -341,7 +394,6 @@ trait Question
     protected function createMcq(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('mcq');
         $this->genericfields($fields);
         $this->fillTinyMCE('option_text1', $fields['option_1']);
         $this->fillTinyMCE('option_text2', $fields['option_2']);
@@ -359,14 +411,13 @@ trait Question
     protected function createMrq(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('mrq');
         $this->genericfields($fields);
         $this->fillTinyMCE('option_text1', $fields['option_1']);
         $this->fillTinyMCE('option_text2', $fields['option_2']);
         $this->fillTinyMCE('option_text3', $fields['option_3']);
         // Bottom Bar obscures page elements so need to scroll so we can click.
         $this->scrollToElement('#option_correct_fback1');
-        $this->selectCheckPoints('option_correct', $fields['correct']);
+        $this->selectCheckPoints('option_correct', json_decode($fields['correct']));
     }
 
     /**
@@ -377,9 +428,8 @@ trait Question
     protected function createKeywordBased(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('keyword_based');
         $this->fillField('leadin', $fields['description']);
-        $this->fillDropDown('option_text1', $fields['keyword']);
+        $this->fillDropDown('option_text1', array($fields['keyword']));
     }
 
     /**
@@ -390,16 +440,15 @@ trait Question
     protected function createRandom(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('random');
         $this->fillField('leadin', $fields['description']);
         $this->i_click('Add Questions(s)', 'button');
-        $this->i_focus_popup('Questions Bank');
-        // Pop is using iframes so need to switch to it in order to be able to select the checkboxes.
-        $this->getSession()->getDriver()->switchToIFrame('iframeurl');
-        $this->selectCheckPoints('q', $fields['questions']);
-        $this->i_focus_popup('Questions Bank');
-        $this->i_click('Add Questions', 'button');
-        $this->i_focus_main_window();
+        $questions = json_decode($fields['questions']);
+        $questionarray = array();
+        foreach ($questions as $q) {
+            $questionarray[] = array($q);
+        }
+        $questionstable = new TableNode($questionarray);
+        $this->iAddTheFollowingQuestionsVia('Questions Bank', $questionstable);
     }
 
     /**
@@ -410,14 +459,13 @@ trait Question
     protected function createRank(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('rank');
         $this->genericfields($fields);
         $this->fillField('option_text1', $fields['option_1']);
         $this->fillField('option_text2', $fields['option_2']);
         $this->fillField('option_text3', $fields['option_3']);
-        $this->fillDropDown('option_correct1', $fields['rank_1']);
-        $this->fillDropDown('option_correct2', $fields['rank_2']);
-        $this->fillDropDown('option_correct3', $fields['rank_3']);
+        $this->fillDropDown('option_correct1', array($fields['rank_1']));
+        $this->fillDropDown('option_correct2', array($fields['rank_2']));
+        $this->fillDropDown('option_correct3', array($fields['rank_3']));
     }
 
     /**
@@ -428,16 +476,15 @@ trait Question
     protected function createSct(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('sct');
         $this->fillField('theme', $fields['theme']);
         $this->fillField('notes', $fields['notes']);
         $this->fillTinyMCE('scenario', $fields['clinical vignette']);
         $this->fillTinyMCE('hypothesis', $fields['hypothesis']);
-        $this->fillDropDown('option_correct1', $fields['experts_1']);
-        $this->fillDropDown('option_correct2', $fields['experts_2']);
-        $this->fillDropDown('option_correct3', $fields['experts_3']);
-        $this->fillDropDown('option_correct4', $fields['experts_4']);
-        $this->fillDropDown('option_correct5', $fields['experts_5']);
+        $this->fillDropDown('option_correct1', array($fields['experts_1']));
+        $this->fillDropDown('option_correct2', array($fields['experts_2']));
+        $this->fillDropDown('option_correct3', array($fields['experts_3']));
+        $this->fillDropDown('option_correct4', array($fields['experts_4']));
+        $this->fillDropDown('option_correct5', array($fields['experts_5']));
     }
 
     /**
@@ -448,7 +495,6 @@ trait Question
     protected function createTextbox(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('textbox');
         $this->genericfields($fields);
     }
 
@@ -460,7 +506,6 @@ trait Question
     protected function createTrueFalse(TableNode $data): void
     {
         $fields = $data->getRowsHash();
-        $this->questionBasics('true_false');
         $this->genericfields($fields);
         // Bottom Bar obscures page elements so need to scroll so we can click.
         $this->scrollToElement('#leadin_ifr');
@@ -470,19 +515,6 @@ trait Question
             $select = 'option_correct1_f';
         }
         $this->selectRadio($select);
-    }
-
-    /**
-     * Fills in the first page of the question creation dialogue.
-     *
-     * @param string $type The type of question to be created.
-     */
-    protected function questionBasics($type): void
-    {
-        $this->i_click($type, 'question_type');
-        $this->only_main_window();
-        $this->i_focus_main_window();
-        $this->i_wait_for_page_to_load();
     }
 
     /**

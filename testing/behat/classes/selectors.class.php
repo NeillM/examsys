@@ -37,42 +37,44 @@ class selectors
      * @var array
      */
     protected static $allowedrogoselectors = array(
-    // Built in selectors.
-    'id' => 'id',
-    'id_or_name' => 'id_or_name',
-    'link' => 'link',
-    'button' => 'button',
-    'link_or_button' => 'link_or_button',
-    'content' => 'content',
-    'field' => 'field',
-    'select' => 'select',
-    'checkbox' => 'checkbox',
-    'radio' => 'radio',
-    'file' => 'file',
-    'optgroup' => 'optgroup',
-    'option' => 'option',
-    'fieldset' => 'fieldset',
-    'table' => 'table',
-    // Rogo selectors.
-    'menu' => 'menu', //<div class="sidebar
-    'sub_menu' => 'sub_menu', //<div id="popup3" class="popup"
-    'menu_section' => 'menu_section', //<div class="submenuheading"
-    'navigation' => 'navigation', //<div class="breadcrumb"
-    'paper_title' => 'paper_title', // PAPER_title => <div class="PAGE_title"
-    'main_content' => 'main_content',
-    'admin_tool_link' => 'admin_tool_link',
-    'pop_page_title' => 'pop_page_title',
-    'menu_item' => 'menu_item',
-    'page_title' => 'page_title',
-    'content_section' => 'content_section',
-    'folder' => 'folder',
-    'search_menu' => 'search_menu',
-    'main_menu' => 'main_menu',
-    'main_menu_icon' => 'main_menu_icon',
-    'main_menu_item' => 'main_menu_item', //<div id="toprightmenu"
-    'sub_search_menu_item' => 'sub_search_menu_item',
-    'paper_type' => 'paper_type',
-    'question_type' => 'question_type',
+        // Built in selectors.
+        'id' => 'id',
+        'id_or_name' => 'id_or_name',
+        'link' => 'link',
+        'button' => 'button',
+        'link_or_button' => 'link_or_button',
+        'content' => 'content',
+        'field' => 'field',
+        'select' => 'select',
+        'checkbox' => 'checkbox',
+        'radio' => 'radio',
+        'file' => 'file',
+        'optgroup' => 'optgroup',
+        'option' => 'option',
+        'fieldset' => 'fieldset',
+        'table' => 'table',
+        // Rogo selectors.
+        'menu' => 'menu', //<div class="sidebar
+        'sub_menu' => 'sub_menu', //<div id="popup3" class="popup"
+        'menu_section' => 'menu_section', //<div class="submenuheading"
+        'navigation' => 'navigation', //<div class="breadcrumb"
+        'paper_title' => 'paper_title', // PAPER_title => <div class="PAGE_title"
+        'main_content' => 'main_content',
+        'admin_tool_link' => 'admin_tool_link',
+        'pop_page_title' => 'pop_page_title',
+        'menu_item' => 'menu_item',
+        'page_title' => 'page_title',
+        'content_section' => 'content_section',
+        'folder' => 'folder',
+        'search_menu' => 'search_menu',
+        'main_menu' => 'main_menu',
+        'main_menu_icon' => 'main_menu_icon',
+        'main_menu_item' => 'main_menu_item', //<div id="toprightmenu"
+        'sub_search_menu_item' => 'sub_search_menu_item',
+        'paper_type' => 'paper_type',
+        'question_type' => 'question_type',
+        'paper_question_leadin' => 'paper_question_leadin',
+        'bank_question_leadin' => 'bank_question_leadin',
     );
 
     /**
@@ -143,6 +145,12 @@ XPATH
 XPATH
     ,'question_type' => <<<XPATH
 //tr[contains(concat(' ', normalize-space(@class), ' '), 'q') and contains(@data-qtype , %locator%)]
+XPATH
+    ,'paper_question_leadin' => <<<XPATH
+//td[contains(@class, 'l') and contains(normalize-space(.) , %locator%)]
+XPATH
+    ,'bank_question_leadin' => <<<XPATH
+//*[contains(@class, 'viewq') and contains(normalize-space(.) , %locator%)]
 XPATH
     );
 

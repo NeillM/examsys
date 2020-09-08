@@ -99,6 +99,9 @@ trait pages
             case 'User profile':
                 $this->visit_user_profile($data, $section);
                 break;
+            case 'Paper Details':
+                $this->visitPaperDetails($data, $section);
+                break;
             default:
                 // Unsupported page type.
                 throw new PendingException("A handler for the '$page' page has not been implemented.");
@@ -130,5 +133,21 @@ trait pages
             throw new \Exception('Invalid username');
         }
         $this->visit(Url::userProfile($userid, $tab));
+    }
+
+    /**
+     * Loads the paper details page for a paper.
+     *
+     * @param string $paper the paper name
+     * @throws \Exception
+     * @throws PendingException
+     */
+    protected function visitPaperDetails(string $paper): void
+    {
+        $paperid = \PaperUtils::getPaperId($paper);
+        if ($paperid === null) {
+            throw new \Exception('Invalid paper title');
+        }
+        $this->visit(Url::paperDetails($paperid));
     }
 }
