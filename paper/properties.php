@@ -419,7 +419,6 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src='../js/paperpropertiesinit.min.js'></script>
 <?php
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::PROPERTIES);
@@ -1862,5 +1861,6 @@ $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 $mysqli->close();
 ?>
+<script src='../js/paperpropertiesinit.min.js'></script>
 </body>
 </html>
