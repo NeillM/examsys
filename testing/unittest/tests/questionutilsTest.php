@@ -163,6 +163,24 @@ class QuestionUtilsTest extends unittestdatabase
     }
 
     /**
+     * Test set media object with no alt text
+     * @group questions
+     */
+    public function testGetMediaNoAlt()
+    {
+        $media = new \MediaObject(
+            $this->question['q_media_id'],
+            $this->question['q_media'],
+            $this->question['q_media_width'],
+            $this->question['q_media_height'],
+            null,
+            $this->question['q_media_owner'],
+            $this->question['q_media_num'],
+        );
+        $this->assertInstanceOf('MediaObject', $media);
+    }
+
+    /**
      * Test get question media
      * @group questions
      */
