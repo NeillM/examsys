@@ -112,8 +112,15 @@ class UserSearchTest extends testing\unittest\unittestdatabase
 
         // Enrol the students on a module.
         $modgen = $this->get_datagenerator('modules', 'core');
-        $modgen->create_enrolment(array('userid' => $this->student1['id'], 'moduleid' => $this->module, 'calendar_year' => 2012));
-        $modgen->create_enrolment(array('userid' => $this->student2['id'], 'moduleid' => $this->module, 'calendar_year' => 2013));
+        $modgen->create_enrolment(['userid' => $this->student1['id'], 'moduleid' => $this->module, 'calendar_year' => 2012]);
+        $modgen->create_enrolment(['userid' => $this->student2['id'], 'moduleid' => $this->module, 'calendar_year' => 2013]);
+        $othermodule = $modgen->create_module(['moduleid' => 'ROLETEST', 'fullname' => 'Other module']);
+        $modgen->create_enrolment(['userid' => $this->student1['id'], 'moduleid' => $othermodule['id'], 'calendar_year' => 2012]);
+
+        // Staff in a team.
+        $modgen->create_module_team(['moduleid' => $othermodule['moduleid'], 'username' => $this->staff['username']]);
+        $othermodule2 = $modgen->create_module(['moduleid' => 'ROLETEST2', 'fullname' => 'Yet Another module']);
+        $modgen->create_module_team(['moduleid' => $othermodule2['moduleid'], 'username' => $this->staff['username']]);
     }
 
     /**
