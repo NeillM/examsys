@@ -749,16 +749,16 @@ class UserSearch extends Search
         // Query for finding students.
         $student_tables = $this->generateStudentTableSQL();
         $student_where = SQLFragment::combine(' AND ', $not_deleted, $year, $studentmods, $name, $username, $idnumber, $roles);
-        $student_query = "SELECT COUNT(DISTINCT users.id) AS counter FROM $student_tables WHERE $student_where->sql";
+        $student_query = "SELECT users.id FROM $student_tables WHERE $student_where->sql";
 
         // Query for finding staff.
         $staff_tables = $this->generateStaffTableSQL();
-        // Need to get only staff,student roles to aviud duplication.
+        // Need to get only staff,student roles to avoid duplication.
         $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffyear, $staffmods, $name, $username, $idnumber, $roles);
         $where = str_replace('Student', 'Staff,Student', $staff_where->sql);
-        $staff_query = "SELECT COUNT(DISTINCT users.id) AS counter FROM $staff_tables WHERE $where";
+        $staff_query = "SELECT users.id FROM $staff_tables WHERE $where";
 
-        $sql = "$student_query UNION ALL $staff_query";
+        $sql = "SELECT COUNT(id) FROM ($student_query UNION DISTINCT $staff_query) AS users";
 
         $query = Config::get_instance()->db->prepare($sql);
 
