@@ -286,11 +286,13 @@ Feature: Question creation
     Given I login as "teacher"
     And I follow "TEST1001"
     And I select a "textbox" question type
+    And The upload source path is "questions/media"
     And I create a new "textbox" question:
       | theme | textbox theme |
       | notes | textbox notes |
       | scenario | textbox scenario |
       | leadin | textbox leadin |
+      | file | {"filename":"frog.jpg"} |
     When I click "Add to Bank" "button"
     Then I should see "Module: TEST1001" "paper_title"
 
@@ -299,11 +301,13 @@ Feature: Question creation
     Given I login as "teacher"
     And I follow "TEST1001"
     And I select a "true_false" question type
+    And The upload source path is "questions/media"
     And I create a new "true_false" question:
       | theme | textbox theme |
       | notes | textbox notes |
       | scenario | textbox scenario |
       | leadin | textbox leadin |
       | true | 0 |
+      | file | {"filename":"frog.jpg","alt":"alternate text"} |
     When I click "Add to Bank" "button"
     Then I should see "Module: TEST1001" "paper_title"

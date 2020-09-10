@@ -92,13 +92,13 @@ class media_handler
     /**
      * Uploads a file onto the server from an HTML form and return its width and height.
      * @param string $fileID
-     * @param string $alt - alternate text for media
+     * @param ?string $alt - alternate text for media
      * @return array|bool containing new media details as 'filename', 'width', 'height', 'alt',
      *         'owner' and 'rejection state' or false on error
      * @throws directory_not_found
      * @throws getid3_exception
      */
-    public static function uploadFile(string $fileID, string $alt = '')
+    public static function uploadFile(string $fileID, ?string $alt = '')
     {
         $userObj = UserObject::get_instance();
         $owner = $userObj->get_user_ID();

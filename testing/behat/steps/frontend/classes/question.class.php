@@ -496,6 +496,7 @@ trait Question
     {
         $fields = $data->getRowsHash();
         $this->genericfields($fields);
+        $this->uploadQuestionMedia($fields['file']);
     }
 
     /**
@@ -507,6 +508,7 @@ trait Question
     {
         $fields = $data->getRowsHash();
         $this->genericfields($fields);
+        $this->uploadQuestionMedia($fields['file']);
         // Bottom Bar obscures page elements so need to scroll so we can click.
         $this->scrollToElement('#leadin_ifr');
         if ($fields['true'] == 1) {
@@ -527,5 +529,23 @@ trait Question
         $this->fillField('notes', $fields['notes']);
         $this->fillTinyMCE('scenario', $fields['scenario']);
         $this->fillTinyMCE('leadin', $fields['leadin']);
+    }
+
+    /**
+     * Upload a media file to the question
+     * @param string $fileinfo json string containing filename and alternate text
+     */
+    protected function uploadQuestionMedia(string $fileinfo): void
+    {
+        $this->i_click('Upload Media', 'button');
+        $this->fillField('agreement_q_media', true);
+        $file = json_decode($fileinfo, true);
+        if (empty($file['alt'])) {
+            $this->fillField('dec_q_media', true);
+        } else {
+            $this->fillField('alt_q_media', $file['alt']);
+        }
+        $this->i_click('Upload Media', 'button');
+        $this->attachFileToField('q_media', $file['filename']);
     }
 }
