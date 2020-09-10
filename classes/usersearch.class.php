@@ -400,7 +400,7 @@ class UserSearch extends Search
     {
         return [
                 'users.id',
-                "GROUP_CONCAT(roles.name  SEPARATOR ',')",
+                "GROUP_CONCAT(DISTINCT roles.name  SEPARATOR ',')",
                 'student_id',
                 'surname',
                 'initials',
