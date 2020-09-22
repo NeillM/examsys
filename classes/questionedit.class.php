@@ -250,7 +250,11 @@ class QuestionEdit extends RogoObject
             if ($old_media['filename'] != '') {
                 media_handler::deleteMedia($old_media['filename']);
             }
-            $newmedia = media_handler::uploadFile($field, $post_data['alt_q_media']);
+            $alt = null;
+            if (isset($post_data['alt_q_media'])) {
+                $alt = $post_data['alt_q_media'];
+            }
+            $newmedia = media_handler::uploadFile($field, $alt);
             if ($newmedia !== false) {
                 $newmedia['num'] = 0;
                 $this->set_media($newmedia);
@@ -320,7 +324,11 @@ class QuestionEdit extends RogoObject
                     media_handler::deleteMedia($media_name);
                 }
                 // Upload the new file.
-                $new_media = media_handler::uploadFile($post_field, $post_data['alt_' . $post_field]);
+                $alt = null;
+                if (isset($post_data['alt_' . $post_field])) {
+                    $alt = $post_data['alt_' . $post_field];
+                }
+                $new_media = media_handler::uploadFile($post_field, $alt);
                 if ($new_media !== false) {
                     // Get the media positon.
                     $num = $post_data['num_' . $post_field];
