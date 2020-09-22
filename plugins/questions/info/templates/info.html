@@ -29,9 +29,9 @@ data.leadin - the leadin
 <tr>
     <td colspan="2" style="padding-left:10px; padding-right:10px">
 {% if data.displaymedia %}
-        <p align="center">
+        <div class="mediadiv">
 {% include 'paper/media.html' %}
-        </p>
+        </div>
 {% endif %}
 {% if data.displayleadin %}
         {{data.leadin|raw}}
