@@ -128,7 +128,12 @@ try {
         } else {
             $barriers_needed = 0;
         }
-        $assessment->schedule($property_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
+        $period = param::optional('period', '', param::TEXT, param::FETCH_POST);
+        $cohort_size = param::optional('cohort_size', '<whole cohort>', param::TEXT, param::FETCH_POST);
+        $notes = param::optional('notes', '', param::TEXT, param::FETCH_POST);
+        $sittings = param::optional('sittings', 1, param::INT, param::FETCH_POST);
+        $campus = param::optional('campus', '', param::TEXT, param::FETCH_POST);
+        $assessment->schedule($property_id, $period, $barriers_needed, $cohort_size, $notes, $sittings, $campus);
     }
 } catch (Exception $e) {
     $log = new logger($mysqli);
