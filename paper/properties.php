@@ -1053,15 +1053,28 @@ for ($i = 0; $i < 12; $i++) {
 if ($start_date == '') {
     echo '<option value=""></option>';
 }
-for ($i = 2002; $i < 2021; $i++) {
+$startfyear = date('Y');
+if ($split_year !== 0 and $split_year < $startfyear) {
+    $startfyear = $split_year;
+}
+echo "<optgroup>";
+for ($i = $startfyear; $i < ($startfyear + 21); $i++) {
     if ($i == $split_year) {
         echo "<option value=\"$i\" selected>$i</option>\n";
     } else {
         echo "<option value=\"$i\">$i</option>\n";
     }
 }
-    echo "</select><select id=\"fhour\" name=\"fhour\" $sum_disabled>\n";
-    // Available from Hour
+echo "</optgroup><optgroup>";
+$diffyears = $startfyear - 2002;
+if ($diffyears > 0) {
+    for ($i = 2002; $i < (2002 + $diffyears); $i++) {
+        echo "<option value=\"$i\">$i</option>\n";
+    }
+}
+echo "</optgroup>";
+echo "</select><select id=\"fhour\" name=\"fhour\" $sum_disabled>\n";
+// Available from Hour
 if ($start_date == '') {
     echo '<option value=""></option>';
 }
@@ -1164,15 +1177,28 @@ for ($i = 0; $i < 12; $i++) {
 if ($end_date == '') {
     echo '<option value=""></option>';
 }
-for ($i = 2002; $i < (date('Y') + 21); $i++) {
+$starttyear = date('Y');
+if ($split_year !== 0 and $split_year < $starttyear) {
+    $starttyear = $split_year;
+}
+echo "<optgroup>";
+for ($i = $starttyear; $i < ($starttyear + 21); $i++) {
     if ($i == $split_year) {
         echo "<option value=\"$i\" selected>$i</option>\n";
     } else {
         echo "<option value=\"$i\">$i</option>\n";
     }
 }
-    echo "</select><select id=\"thour\" name=\"thour\" $sum_disabled>\n";
-    // Available from Hour
+echo "</optgroup><optgroup>";
+$diffyears = $starttyear - 2002;
+if ($diffyears > 0) {
+    for ($i = 2002; $i < (2002 + $diffyears); $i++) {
+        echo "<option value=\"$i\">$i</option>\n";
+    }
+}
+echo "</optgroup>";
+echo "</select><select id=\"thour\" name=\"thour\" $sum_disabled>\n";
+// Available from Hour
 if ($start_date == '') {
     echo '<option value=""></option>';
 }
