@@ -1386,7 +1386,7 @@ class ClassTotals
                                   WHERE
                                     log_metadata.userID = users.id AND
                                     paperID = ? AND
-                                    grade LIKE ? $roles_sql AND
+                                    student_grade LIKE ? $roles_sql AND
                                     DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
                                     AND started <= ?
                                   GROUP BY
