@@ -92,7 +92,11 @@ function setup_change_callbacks(&$changed_reviewers, &$changed_labs)
 }
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
-$minavailability = $properties->getMinAvailability();
+if ($properties->get_paper_type() == '2') {
+    $minavailability = $properties->getMinAvailability();
+} else {
+    $minavailability = 0;
+}
 $modules_array = $properties->get_modules();
 
 $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.

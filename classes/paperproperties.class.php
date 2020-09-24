@@ -3150,6 +3150,14 @@ class PaperProperties
                 }
             }
         }
-        return round(max($minduration));
+        if (empty($minduration)) {
+            if (is_null($duration)) {
+                $duration = 0;
+            }
+            $minavail = $duration;
+        } else {
+            $minavail = round(max($minduration));
+        }
+        return $minavail;
     }
 }

@@ -109,7 +109,7 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
     });
 
     $('#exam_duration_hours').change(function () {
-        if ($('#exam_duration_hours').val() != 'NULL' && $('#exam_duration_mins').val() != 'NULL') {
+        if (type == 2 && $('#exam_duration_hours').val() != 'NULL' && $('#exam_duration_mins').val() != 'NULL') {
             properties.updateAvailability();
         } else {
             $('#minavail').css('display','none');
@@ -117,7 +117,7 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
         }
     });
     $('#exam_duration_mins').change(function () {
-        if ($('#exam_duration_mins').val() != 'NULL' && $('#exam_duration_hours').val() != 'NULL') {
+        if (type == 2 && $('#exam_duration_mins').val() != 'NULL' && $('#exam_duration_hours').val() != 'NULL') {
             properties.updateAvailability();
         } else {
             $('#minavail').css('display','none');
