@@ -33,6 +33,7 @@ class apache_auth extends outline_authentication
 
     private $lookupuserobj;
 
+    private $createnewuserassociation = false;
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
