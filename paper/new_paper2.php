@@ -133,6 +133,10 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     }
     echo "</select><select id=\"fyear\" name=\"fyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < ($date_array['year'] + 21); $i++) {
+        // Temp bailout to handle 2038 mysql unixtimestamp issue.
+        if ($i > 2037) {
+            break;
+        }
         if ($current_month == 1 and $i == ($date_array['year'] + 1)) {
             echo "<option value=\"$i\" selected>$i</option>\n";
         } else {
@@ -196,6 +200,10 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     }
     echo "<select id=\"tyear\" name=\"tyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < $date_array['year'] + 21; $i++) {
+        // Temp bailout to handle 2038 mysql unixtimestamp issue.
+        if ($i > 2037) {
+            break;
+        }
         if ($i == $target_year) {
             echo "<option value=\"$i\" selected>$i</option>\n";
         } else {

@@ -1059,6 +1059,10 @@ if ($split_year !== 0 and $split_year < $startfyear) {
 }
 echo "<optgroup>";
 for ($i = $startfyear; $i < ($startfyear + 21); $i++) {
+    // Temp bailout to handle 2038 mysql unixtimestamp issue.
+    if ($i > 2037) {
+        break;
+    }
     if ($i == $split_year) {
         echo "<option value=\"$i\" selected>$i</option>\n";
     } else {
@@ -1183,6 +1187,10 @@ if ($split_year !== 0 and $split_year < $starttyear) {
 }
 echo "<optgroup>";
 for ($i = $starttyear; $i < ($starttyear + 21); $i++) {
+    // Temp bailout to handle 2038 mysql unixtimestamp issue.
+    if ($i > 2037) {
+        break;
+    }
     if ($i == $split_year) {
         echo "<option value=\"$i\" selected>$i</option>\n";
     } else {
