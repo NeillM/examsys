@@ -28,7 +28,7 @@
 class lti_uon_integration_extended extends lti_integration
 {
 
-    const CS_MODULE_SPACE = '/(?P<module>[A-Z]{4}[F1-5][0-9]{3})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/';
+    const CS_MODULE_SPACE = '/^(?P<module>[A-Z]{3,4}[F1-5][0-9]{3})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/';
     const CS_NON_MODULE_SPACE = '/^((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/';
     const CS_META_MODULE_CHECK = '/^!((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/';
     const CS_COURSE_ID = '/^(?P<id>[0-9]{6})_(?P<offering>[0-9]{1,2})_(?P<term>[0-9]{4})$/';
