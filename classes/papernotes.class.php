@@ -29,6 +29,7 @@ class PaperNotes
      * Creates a list of students who have notes against a particular paper.
      * @param int $paperID    - ID of the paper we wish to look up.
      * @param object $db    - MySQL connection
+     * @return array
      */
     public static function get_all_notes_by_paper($paperID, $db)
     {

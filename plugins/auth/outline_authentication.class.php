@@ -48,13 +48,13 @@ class outline_authentication
     protected $impliments_api_auth_version = 0;
 
     /**
-     * @param $calling_object object its called from
-     * @param $settings array settings options
-     * @param $number int the number this is
-     * @param $name string the name of it
-     * @param $db object a lin kto db
-     * @param $returndata object where data is stored
-     * @param $form object a class with form data in
+     * @param object $calling_object its called from
+     * @param array $settings settings options
+     * @param int $number the number this is
+     * @param string $name the name of it
+     * @param object $db a link to db
+     * @param object $returndata where data is stored
+     * @param object $form a class with form data in
      */
     public function __construct($number, $name, $authapiversion)
     {
@@ -119,7 +119,7 @@ class outline_authentication
     }
 
     /**
-     * @param $debugmessage string the debug message to store
+     * @param string $debugmessage the debug message to store
      */
     public function savetodebug($debugmessage)
     {
@@ -127,7 +127,7 @@ class outline_authentication
     }
 
     /**
-     * @param $section string the section to get the callback from
+     * @param string $section the section to get the callback from
      *
      * @return mixed
      */
@@ -137,7 +137,7 @@ class outline_authentication
     }
 
     /**
-     * @param $objid int the objectid
+     * @param int $objid the objectid
      *
      * @return mixed
      */
@@ -156,7 +156,7 @@ class outline_authentication
     }
 
     /**
-     * @param $objid int the objectid
+     * @param int $objid the objectid
      *
      * @return mixed
      */
@@ -173,11 +173,11 @@ class outline_authentication
     }
 
     /**
-     * @param $callback callback routine
-     * @param $section string section to register callback in
-     * @param $number string the number this object is
-     * @param $name string the name this object is
-     * @param $insert bool to insert rather than append
+     * @param callback $callback routine
+     * @param string $section section to register callback in
+     * @param string $number the number this object is
+     * @param string $name the name this object is
+     * @param bool $insert to insert rather than append
      *
      * @return bool
      */
@@ -188,7 +188,7 @@ class outline_authentication
 
 
     /**
-     *
+     * @return array
      */
     public function register_callback_routines()
     {

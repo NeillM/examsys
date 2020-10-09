@@ -692,15 +692,18 @@ class EnhancedCalc extends Question implements questionInterface
         return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
     }
 
-    /*
+    /**
      * return the passed value or 0 if the value is an empty string
+     *
+     * @param int|float $val
+     * @return int|float
      */
     private function set_blank_to_zero($val)
     {
         return ($val === '' ? 0 : $val);
     }
 
-    /*
+    /**
      * Display the question
      *
      * The Paper handles question numbering this function renders the inner part of the question
