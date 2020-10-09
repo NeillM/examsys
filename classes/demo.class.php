@@ -23,7 +23,6 @@
  */
 class demo
 {
-
     /**
      * Is this a demo login
      * @param \userobject $userObj  logged in user object

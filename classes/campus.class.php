@@ -25,7 +25,6 @@
  */
 class campus
 {
-    
     // DB connection
     private $db;
 
@@ -48,7 +47,7 @@ class campus
     {
         $this->db = $db;
     }
-   
+
     /**
      * Get details for all campus
      * @return array|bool details or false on error
@@ -70,7 +69,7 @@ class campus
         $result->close();
         return false;
     }
-    
+
     /**
      * Get details of campus
      * @param integer $id campus id
@@ -91,7 +90,7 @@ class campus
         $result->close();
         return false;
     }
-    
+
     /**
      * Check is campus name is in use
      * @param string $name name of campus
@@ -111,7 +110,7 @@ class campus
         $result->close();
         return false;
     }
-    
+
     /**
      * Check if the provided campus has labs associated with it
      * @param string $id - id of campus

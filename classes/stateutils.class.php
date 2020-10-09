@@ -25,7 +25,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class StateUtils
 {
     private $db;
@@ -47,7 +46,7 @@ class StateUtils
         $this->db = $db;
         $this->userID = $userID;
     }
-  
+
     /**
      * Obtains all state information for a given page.
      * @param string $page - The page to get the state for. If left blank the current page is used.
@@ -59,7 +58,7 @@ class StateUtils
         if ($page == '') {
             $page = $_SERVER['PHP_SELF'];
         }
-    
+
         $result = $this->db->prepare('SELECT state_name, content FROM state WHERE page = ? AND userID = ?');
         $result->bind_param('si', $page, $this->userID);
         $result->execute();
@@ -68,7 +67,7 @@ class StateUtils
             $state_array[$state_name] = $content;
         }
         $result->close();
-    
+
         return $state_array;
     }
 

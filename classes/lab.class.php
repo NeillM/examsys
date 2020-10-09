@@ -8,11 +8,8 @@
  * @copyright Copyright (c) 2014 string University of Nottingham
  * @package
  */
-
-
 class Lab
 {
-
     private $id;
     private $name;
     private $campus;

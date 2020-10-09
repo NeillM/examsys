@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionINFO extends QuestionEdit
 {
-
     protected $_allow_mapping = false;
     protected $_allow_correction = false;
     protected $_use_bloom = false;

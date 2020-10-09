@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * Handles 'impersonation' whereby a SysAdmin user can log in as someone else.
@@ -30,9 +29,6 @@ require_once 'outline_authentication.class.php';
 
 class impersonation_auth extends outline_authentication
 {
-
-
-
     private $active = false;
     private $demo = false;
     private $newuserid;

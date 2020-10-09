@@ -21,10 +21,8 @@
  * @copyright Copyright (c) 2017 The University of Nottingham
  * @package
  */
-
 class access_denied_logs
 {
-
     private $db;
     private $logs;
 

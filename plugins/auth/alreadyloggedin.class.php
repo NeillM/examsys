@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * The already logged in authentication class
@@ -30,16 +29,12 @@ require_once 'outline_authentication.class.php';
 
 class alreadyloggedin_auth extends outline_authentication
 {
-
-
-
     private $lookupuserobj;
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
     public function register_callback_routines()
     {
-
         if (isset($this->settings['disabled']) and $this->settings['disabled'] === true) {
             return array();
         }

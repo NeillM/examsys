@@ -62,7 +62,6 @@ require './restAPI.class.php';
 
 class webServiceRestAPI extends restAPI
 {
-
     public $db;
     private $qtypes = array(
                     '0' => 'Formative Quiz',
@@ -413,7 +412,6 @@ class webServiceRestAPI extends restAPI
 
         return $papers;
     }
-
 
     public function getAvailableFeedback($username, $moduleID)
     {

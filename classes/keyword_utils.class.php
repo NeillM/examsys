@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class keyword_utils
 {
- 
     /**
      * See if a reference material ID actually exists.
      * @return true or false.
@@ -35,7 +32,7 @@ class keyword_utils
     public static function refmaterials_exist($idMod, $db)
     {
         $row_no = 0;
-  
+
         $result = $db->prepare('SELECT id FROM reference_material WHERE id = ?');
         $result->bind_param('i', $refID);
         $result->execute();
@@ -44,10 +41,10 @@ class keyword_utils
         $result->fetch();
         $row_no = $result->num_rows;
         $result->close();
-    
+
         return $row_no > 0;
     }
-  
+
     public static function name_from_ID($keywordID, $db)
     {
         $result = $db->prepare('SELECT keyword FROM keywords_user WHERE id = ?');
@@ -61,7 +58,7 @@ class keyword_utils
             $result->fetch();
         }
         $result->close();
-    
+
         return $keyword;
     }
 
@@ -86,7 +83,7 @@ class keyword_utils
         $keyword->close();
         return $keywordarray;
     }
-  
+
     /**
      * Function to get the keyword id based on the question id
      * @param integer $q_id question id
@@ -108,7 +105,7 @@ class keyword_utils
         $keyword->close();
         return $keyword_id;
     }
-  
+
     /**
      * Insert keyword/question reference row
      * @param integer $q_id question id
@@ -127,7 +124,7 @@ class keyword_utils
         }
         return true;
     }
-  
+
     /**
      * Delete keyword/question reference row
      * @param integer $q_id question id

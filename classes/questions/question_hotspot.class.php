@@ -28,15 +28,14 @@
 
 class QuestionHOTSPOT extends QuestionEdit
 {
-  
     protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
-      
+
     protected $points1 = '';
     protected $_requires_media = true;
     protected $_requires_correction_intermediate = true;
     protected $_requires_html5 = true;
     public $max_options = 1;
-  
+
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
@@ -48,7 +47,7 @@ class QuestionHOTSPOT extends QuestionEdit
         $this->_fields_change = array('option_correct1', 'option_marks_correct', 'option_marks_incorrect', 'points1');
     }
 
-  
+
     /**
      * Persist the object to the database
      * @return boolean Success or failure of the save operation
@@ -63,9 +62,8 @@ class QuestionHOTSPOT extends QuestionEdit
         return parent::save($clear_checkout);
     }
 
-  
     // ACCESSORS
-  
+
     public function get_points1()
     {
         if (empty($this->points1) and count($this->options) > 0) {
@@ -74,14 +72,14 @@ class QuestionHOTSPOT extends QuestionEdit
         }
         return $this->points1;
     }
-  
+
     public function set_points1($value)
     {
         if ($value != $this->get_points1()) {
             $this->set_modified_field('points1', $this->points1);
             $this->points1 = $value;
         }
-    
+
         $leadin = '';
         $layers = explode('|', $value);
         $i = 0;
@@ -101,7 +99,7 @@ class QuestionHOTSPOT extends QuestionEdit
             $option->set_correct($value);
         }
     }
-  
+
     /**
      * Set the question leadin, stripping any carriage returns
      * @param string $value

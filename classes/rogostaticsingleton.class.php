@@ -24,10 +24,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class RogoStaticSingleton
 {
-  
     /**
      * Create and return the Global instance of parent::$class_name for use in
      * the Local scope.
@@ -77,7 +75,7 @@ class RogoStaticSingleton
         } else {
             $inst = static::$inst;
         }
-    
+
         if (is_callable(array($inst,$name))) {
             return call_user_func_array(array($inst,$name), $args);
         } else {

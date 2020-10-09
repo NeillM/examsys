@@ -21,7 +21,6 @@
  */
 class Option
 {
-
     public $id = -1;
     protected $question_id = null;
     protected $text = '';

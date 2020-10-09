@@ -23,16 +23,14 @@
  * @copyright Copyright (c) 2015 onwards The University of Nottingham
  * @package core
  */
-
 class langpack
 {
-       
     /**
      * Server lang directory type
      * i.e. en
      */
     private $langdir;
-    
+
     /**
      * Constructor
      */
@@ -42,7 +40,7 @@ class langpack
         $cfg_web_root = $configObject->get('cfg_web_root');
         $this->langdir = LangUtils::getLang($cfg_web_root);
     }
-    
+
     /**
      * Get lang filename of component
      * @param array $component lang component name
@@ -57,7 +55,7 @@ class langpack
             . 'lang' . DIRECTORY_SEPARATOR . $this->langdir . DIRECTORY_SEPARATOR . $file . '.lang.php';
         return $filename;
     }
-    
+
     /**
      * Get the string value.
      * @param string $component lang file component name
@@ -70,7 +68,7 @@ class langpack
         include $filename;
         return $string[$name];
     }
-    
+
     /**
      * Get the value of X strings.
      * @param string $component lang file component name
@@ -87,7 +85,7 @@ class langpack
         }
         return $strings;
     }
-    
+
     /**
      * Get the value of all strings for the component.
      * @param string $component lang file component name

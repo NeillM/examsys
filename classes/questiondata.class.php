@@ -741,7 +741,6 @@ abstract class questiondata
      */
     public function set_media($filename, $width, $height, $alt, $border_color, $delay = false, $imageid = -1, $locked = false, $part_id = null)
     {
-
         $mediadirectory = rogo_directory::get_directory('media');
         $fn_parts = pathinfo($filename);
         $mediaedit = false;

@@ -22,11 +22,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class LabFactory
 {
-
     /**
      * @var mysqli $db
      */
@@ -77,7 +74,7 @@ class LabFactory
 
         return $lab_object;
     }
-  
+
     /**
      * Get lab id from ip address
      * @param string $address ip address
@@ -97,7 +94,7 @@ class LabFactory
         }
         $lab_results->close();
     }
-  
+
     /**
      * Get the lab id
      * @param string $name lab name

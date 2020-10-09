@@ -23,8 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
- 
-
 class AJAXUtils
 {
     public static $errors = array('TIMEOUT' => 900, 'PHPERROR' => 901, 'DBERROR' => 902, 'UNKNOWN' => 999);

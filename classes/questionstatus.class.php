@@ -23,7 +23,6 @@
  */
 class QuestionStatus
 {
-
     public $id = -1;
     protected $name = '';
     protected $exclude_marking = false;
@@ -378,7 +377,7 @@ class QuestionStatus
 
         return $statuses;
     }
-    
+
     public static function get_all_statuses($db, $lang_strings, $with_index = false)
     {
         if ($with_index  == true) {
@@ -387,7 +386,7 @@ class QuestionStatus
             return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, '');
         }
     }
-    
+
     public static function get_all_statuses_by_name($db, $lang_strings)
     {
         return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, 'name');
@@ -415,7 +414,7 @@ CSS;
 
         return $css;
     }
-    
+
     /*
     public statis function name_to_id($name) {
 

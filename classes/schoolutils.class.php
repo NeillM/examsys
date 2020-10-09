@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class SchoolUtils
 {
-
     /**
      * Adds a new school to the 'schools' table and returns its new ID.
      * @param int $facultyID    - ID of the faculty to which the new school belongs.
@@ -128,7 +125,7 @@ class SchoolUtils
         $result->close();
         return $id;
     }
-  
+
     /**
      * Get the schools a member of staff with 'Admin' rights has access to.
      * @param int $admin_userid - ID of the member of staff user
@@ -224,7 +221,7 @@ class SchoolUtils
             return false;
         }
     }
-    
+
     /**
      * Get school id by code
      * @param string $code   - Code of the school to check
@@ -286,7 +283,7 @@ class SchoolUtils
         }
         return true;
     }
-      
+
     /**
      * Updates a school
      * @param integer $id  - School id in rogo.
@@ -322,7 +319,7 @@ class SchoolUtils
 
         return true;
     }
-    
+
     /**
      * Get factulty details
      * @param integer $id
@@ -341,7 +338,7 @@ class SchoolUtils
 
         return array('name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
     }
-  
+
     /**
      * Check if school contains modules or courses
      * @param integer $id school id
@@ -362,7 +359,7 @@ class SchoolUtils
         $result->close();
         return false;
     }
-  
+
     /**
      * Generate a school id based on name and faculty.
      * @param string $school - school name
@@ -385,7 +382,7 @@ class SchoolUtils
         }
         return $schoolid;
     }
-  
+
     /**
      * Compare the schools in the external system and rogo
      * @param array $external list of external system schools

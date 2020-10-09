@@ -25,7 +25,6 @@
  */
 class user_notices extends RogoStaticSingleton
 {
-
     /**
      * constructor
      */
@@ -151,6 +150,7 @@ class user_notices extends RogoStaticSingleton
     {
         exit;
     }
+
     /**
      * This function will output an access denied warning and terminate script
      * execution

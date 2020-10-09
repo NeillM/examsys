@@ -21,11 +21,8 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
-
-
 class random_utils
 {
-
     /**
      * Generate a random question id from the random block
      * @param integer $id id of the random block
@@ -64,7 +61,7 @@ class random_utils
         $random->close();
         return $qids;
     }
-  
+
     /**
      * Insert random question reference row
      * @param integer $id parent question id
@@ -83,7 +80,7 @@ class random_utils
         }
         return true;
     }
-  
+
     /**
      * Delete random question references for random block
      * @param integer $id parent question id

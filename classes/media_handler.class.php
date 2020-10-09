@@ -22,7 +22,6 @@
  */
 class media_handler
 {
-
     /**
      * Supported media types.
      * @var array

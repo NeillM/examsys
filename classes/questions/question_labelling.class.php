@@ -23,17 +23,15 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionLABELLING extends QuestionEdit
 {
-  
     protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
-      
+
     protected $points1 = '';
     protected $_requires_media = true;
     protected $_requires_html5 = true;
     public $max_options = 1;
-  
+
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
@@ -43,7 +41,7 @@ class QuestionLABELLING extends QuestionEdit
         $this->_fields_editable[] = 'points1';
         $this->_change_field_map['points1'] = 'points';
     }
-  
+
     /**
      * Persist the object to the database
      * @return boolean Success or failure of the save operation
@@ -57,10 +55,9 @@ class QuestionLABELLING extends QuestionEdit
         }
         return parent::save($clear_checkout);
     }
-  
-  
+
     // ACCESSORS
-  
+
     public function get_points1()
     {
         if (empty($this->points1) and count($this->options) > 0) {
@@ -69,7 +66,7 @@ class QuestionLABELLING extends QuestionEdit
         }
         return $this->points1;
     }
-  
+
     public function set_points1($value)
     {
         // Correct label locations if too far over.
@@ -100,7 +97,7 @@ class QuestionLABELLING extends QuestionEdit
         for ($i = 9; $i < count($first_split); $i++) {
             $tmp_points .= ';' . $first_split[$i];
         }
-    
+
         // Get labels only
         $option_text = '';
         $s_split = explode('|', $first_split[11]);
@@ -112,12 +109,12 @@ class QuestionLABELLING extends QuestionEdit
                 }
             }
         }
-    
+
         if ($tmp_points != $this->get_points1()) {
             $this->set_modified_field('points1', $this->points1);
             $this->points1 = $tmp_points;
         }
-    
+
         if (count($this->options) > 0) {
             $option = reset($this->options);
             $option->set_correct($this->points1);

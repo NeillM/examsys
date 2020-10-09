@@ -29,7 +29,6 @@ require_once __DIR__ . '/../options/option_enhancedcalc.class.php';
 
 class QuestionENHANCEDCALC extends QuestionEdit
 {
-
     protected $units = '';
     protected $dp = null;
     protected $sf = null;
@@ -147,7 +146,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
         if ($this->id == -1) {
             return '0 dp';  // Set up the default if a new question
         }
-        
+
         // If not enforced return blank
         if (!$this->strictdisplay) {
             return '';
@@ -504,11 +503,11 @@ class QuestionENHANCEDCALC extends QuestionEdit
     private function extract_answers()
     {
         $this->answers = array();
-    
+
         $all_ans = array_filter($this->options, function ($var) {
             return ($var->get_formula() != '');
         });
-    
+
         foreach ($all_ans as $option) {
             $formula = $option->get_formula();
             $units = $option->get_units();

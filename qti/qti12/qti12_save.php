@@ -234,7 +234,6 @@ class IE_qti12_Save extends IE_Main
      */
     public function SaveEnhancedCalc(&$question)
     {
-
         if (!isset($configObject)) {
             $configObject = Config::get_instance();
         }

@@ -23,7 +23,6 @@
  */
 class ReviewUtils
 {
-
     public static function is_external_on_paper($externalID, $paperID, $db)
     {
         $on_paper = false;

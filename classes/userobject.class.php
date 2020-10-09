@@ -27,7 +27,6 @@
  */
 class UserObject extends RogoStaticSingleton
 {
-
     protected static $inst = null;
     protected static $class_name = 'UserObject';
     protected static $dont_construct = true;
@@ -328,7 +327,6 @@ class UserObject extends RogoStaticSingleton
      */
     public function get_staff_team_modules()
     {
-
         if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             //this is not a staff user so it cant be on any modules
             return false;
@@ -367,7 +365,6 @@ class UserObject extends RogoStaticSingleton
      */
     public function is_staff_user_on_module($moduleID)
     {
-
         if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             //this is not a staff user so it cant be on any modules
             return false;
@@ -696,7 +693,6 @@ class UserObject extends RogoStaticSingleton
      */
     public function is_student_user_on_module($moduleID, $calendar_year)
     {
-
         if (!$this->has_role('Student')) {
             //this is not a staff user so it cant be on any modules
             return false;

@@ -142,7 +142,6 @@ class Config extends RogoStaticSingleton
 
     protected function __construct()
     {
-
         // Get out of the box config information.
         $file = __DIR__ . '/../config/rogo.xml';
         $this->xmldata = json_encode(simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA));

@@ -30,6 +30,7 @@ class version
      * @var string
      */
     const VERSION_FORMAT = '/^(?P<release>[0-9]{1,3}).(?P<major>[0-9]{1,3}).(?P<minor>[0-9]{1,3})$/';
+
     /**
      * Check if version is higher.
      * @param string $new new version to check
@@ -61,6 +62,7 @@ class version
         // Old version is higher.
         return false;
     }
+
     /**
      * Check version is in correct format.
      * @param string $version to check
@@ -70,6 +72,7 @@ class version
     {
         return preg_match(self::VERSION_FORMAT, $version);
     }
+
     /**
      * Sort list of versions into ascending order
      * @param array list of versions

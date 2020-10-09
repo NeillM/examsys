@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionTEXTBOX extends QuestionEdit
 {
-
     protected $columns = 80;
     protected $rows = 4;
     protected $editor;
@@ -47,11 +45,10 @@ class QuestionTEXTBOX extends QuestionEdit
         // Get default text editor first, allow to be overridden
         $configObject = Config::get_instance();
         $this->editor = $configObject->get_setting('core', 'paper_textbox_editor_default');
-    
+
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     }
-
 
     // ACCESSORS
 

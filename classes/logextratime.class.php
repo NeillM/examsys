@@ -22,10 +22,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class LogExtraTime
 {
-
     /**
      * @var LogLabEndTime $log_lab_end_time
      */

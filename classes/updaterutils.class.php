@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class UpdaterUtils
 {
-
     private $mysqli;
     private $db_name;
 

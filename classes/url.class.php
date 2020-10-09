@@ -25,7 +25,6 @@
  */
 class Url
 {
-
     /**
      * URL part names.
      * @link http://php.net/manual/en/function.parse-url.php

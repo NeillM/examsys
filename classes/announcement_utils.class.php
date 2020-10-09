@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class announcement_utils
 {
- 
     /**
      * See if an announcement ID actually exists.
      * @param int $announcementID - The ID of the announcement to be located.
@@ -38,7 +35,7 @@ class announcement_utils
     public static function announcement_exist($announcementID, $db)
     {
         $row_no = 0;
-  
+
         $result = $db->prepare('SELECT id FROM announcements WHERE id = ?');
         $result->bind_param('i', $announcementID);
         $result->execute();
@@ -47,10 +44,10 @@ class announcement_utils
         $result->fetch();
         $row_no = $result->num_rows;
         $result->close();
-    
+
         return $row_no > 0;
     }
-  
+
     /**
      * Sets a mid-exam announcement to deleted.
      * @param int $announcementID - The ID of the announcement to be deleted.
@@ -63,7 +60,7 @@ class announcement_utils
         $result->execute();
         $result->close();
     }
-  
+
     /**
      * Gets a list of staff announcements that are live.
      * @param object $db  - Database connection
@@ -84,7 +81,7 @@ class announcement_utils
 
         return $announcements;
     }
-  
+
     /**
      * Gets a list of student announcements that are live.
      * @param object $db  - Database connection

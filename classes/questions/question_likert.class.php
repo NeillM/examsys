@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionLIKERT extends QuestionEdit
 {
-
     protected $scale_type = '';
     protected $not_applicable = 'false';
     protected $custom_scales = array();

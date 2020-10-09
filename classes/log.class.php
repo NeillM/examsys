@@ -28,7 +28,6 @@ use users\PaperList;
  */
 abstract class log
 {
-
     /**
      *  DB connection
      * @var mysqli

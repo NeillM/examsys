@@ -25,13 +25,12 @@
  */
 class internalreview
 {
-     
     /*
     * Db connection
     * @var $db
     */
     private $db;
-    
+
     /*
     * Config object
     * @var $config
@@ -58,7 +57,7 @@ class internalreview
         $this->db = $db;
         $this->config = Config::get_instance();
     }
-    
+
     /**
      * Get a list of internal reviews for the current user.
      * @param int $userID  - Question ID of the random question to be loaded.

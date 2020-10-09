@@ -25,7 +25,6 @@
  */
 class questionrender
 {
-
     /**
      * Config object
      * @var object
@@ -92,7 +91,6 @@ class questionrender
      */
     public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers)
     {
-
         $texteditorplugin = \plugins\plugins_texteditor::get_editor();
         $renderpath = $texteditorplugin->get_render_paths();
         $strings = $texteditorplugin->get_strings();

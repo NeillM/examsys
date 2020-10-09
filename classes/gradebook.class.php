@@ -25,30 +25,29 @@
  */
 class gradebook
 {
-    
     /**
      * The db connection
      */
     private $db;
-    
+
     /**
      * External paper - externalid used to referece paper
      * @var string
      */
     const EXTPAPER = 'extpaper';
-    
+
     /**
      * External module - externalid used to referece module
      * @var string
      */
     const EXTMODULE = 'extmodule';
-    
+
     /**
      * Internal paper - rogo id used to referece paper
      * @var string
      */
     const PAPER = 'paper';
-    
+
     /**
      * Internal module - rogo id used to referece module
      * @var string
@@ -75,7 +74,7 @@ class gradebook
     {
         $this->db = $db;
     }
-    
+
     /**
      * Check if the paper has been graded.
      * @param integer $paperid
@@ -95,7 +94,7 @@ class gradebook
             return false;
         }
     }
-    
+
     /**
      * Store grade in gradebook.
      * @param integer $userid
@@ -107,7 +106,7 @@ class gradebook
      */
     public function store_grade($userid, $paperid, $grade, $adjusted, $classification)
     {
-        
+
         $student = \UserUtils::has_user_role($userid, 'Student', $this->db);
         if ($student) {
             $sqluser = $this->db->prepare('INSERT INTO gradebook_user (paperid, userid, raw_grade, adjusted_grade, classification) VALUES (?, ?, ?, ?, ?)');
@@ -122,7 +121,7 @@ class gradebook
             return false;
         }
     }
-    
+
     /**
      * Create a gradebook for the paper
      * @param integer $paperid
@@ -143,7 +142,7 @@ class gradebook
             return false;
         }
     }
-    
+
     /**
      * Get the gradebook for a paper
      * @param string $paperidtype type of id to serach on
@@ -158,7 +157,7 @@ class gradebook
         } else {
             $pid = $paperid;
         }
-        
+
         if ($this->paper_graded($pid)) {
             $sql = $this->db->prepare('SELECT gu.userid, s.student_id, u.username, gu.raw_grade, ROUND(gu.adjusted_grade, 2), gu.classification FROM
                 gradebook_paper p, gradebook_user gu, users u, sid s WHERE p.paperid = gu.paperid AND u.id = gu.userid AND u.id = s.userID AND p.paperid = ?');
@@ -182,7 +181,7 @@ class gradebook
             return false;
         }
     }
-    
+
     /**
      * Get a gradebook for a paper with more user data than the default gradebook
      * @param int $paperid id to search with
@@ -208,7 +207,7 @@ class gradebook
             return false;
         }
     }
-    
+
     /**
      * Get the gradebook for a module
      * @param string $moduleidtype type of id to serach on
@@ -223,7 +222,7 @@ class gradebook
         } else {
             $modid = $moduleid;
         }
-        
+
         $sql = $this->db->prepare('SELECT
             p.paperid, pr.externalid, gu.userid, s.student_id, u.username, gu.raw_grade, ROUND(gu.adjusted_grade, 2), gu.classification
             FROM

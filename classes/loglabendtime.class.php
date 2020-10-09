@@ -22,10 +22,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class LogLabEndTime
 {
-
     /**
      * @var Lab $lab_id
      */
@@ -123,7 +121,6 @@ class LogLabEndTime
      */
     public function save($invigilator_id, $time = null)
     {
-
         $this->msg = '';
 
         $query = 'INSERT INTO log_lab_end_time (labID, invigilatorID, paperID, start_time, end_time) VALUES (?, ?, ?, ?, ?)';
@@ -172,7 +169,6 @@ class LogLabEndTime
 
     public function delete()
     {
-
         $this->msg = '';
 
         $query = 'DELETE FROM log_lab_end_time WHERE labID = ? AND paperID = ?';
@@ -199,7 +195,6 @@ class LogLabEndTime
      */
     private function calculate_end_datetime(DateTime $start_datetime)
     {
-
         $exam_duration_mins = $this->get_paper_exam_duration();
         $exam_duration_secs = $exam_duration_mins * 60;
         $paper_end_datetime = $this->get_paper_end_datetime();

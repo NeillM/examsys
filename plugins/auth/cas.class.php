@@ -35,7 +35,6 @@ require_once dirname(dirname(__DIR__)) . '/CAS/CAS.php'; // or require_once $con
 
 class cas_auth extends outline_authentication
 {
-
     private $lookupuserobj;
 
     public $impliments_api_auth_version = 1;
@@ -61,7 +60,7 @@ class cas_auth extends outline_authentication
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-    
+
         return $callbackarray;
     }
 
@@ -73,7 +72,7 @@ class cas_auth extends outline_authentication
 
         return $postauthfailreturn;
     }
-  
+
     /*
     function loginbutton($displaystdformobj) {
     if (isset($this->settings['cas_button']) and $this->settings['cas_button'] === true) {
@@ -108,7 +107,7 @@ class cas_auth extends outline_authentication
             $result->store_result();
             $result->bind_result($uname, $id);
             $result->fetch();
-            
+
             if ($result->num_rows() == 0) {
                 $this->savetodebug('No Rogo account found for CAS user');
                 $authobj->fail($this->number);
@@ -121,7 +120,7 @@ class cas_auth extends outline_authentication
             $this->savetodebug('failed CAS authentication');
             $authobj->fail($this->number);
         }
-        
+
         return $authobj;
     }
 }

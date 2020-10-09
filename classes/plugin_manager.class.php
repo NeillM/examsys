@@ -80,6 +80,7 @@ class plugin_manager
          }
          return $plugintype;
      }
+
      /**
       * Get all enabled plugins
       * @return array list of enabeld plugins
@@ -94,6 +95,7 @@ class plugin_manager
          }
          return $enabledplugins;
      }
+
      /**
       * Get the enabeld plugin for this type:
       * @param string $type type of plugin
@@ -123,6 +125,7 @@ class plugin_manager
          }
          return $newenabled;
      }
+
      /**
       * Is plugin installed.
       * @param string $plugin name of plugin

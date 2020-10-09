@@ -243,7 +243,7 @@ QUERY;
         if ($limit != 0) {
             $sql .= ' LIMIT ' . $limit;
         }
-    
+
         if ($result = $db->prepare($sql)) {
             array_unshift($params, $types);
             array_unshift($params, $result);

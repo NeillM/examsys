@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class ExamAnnouncements
 {
-
     private $db;
     private $paperID;
     private $string;
@@ -64,7 +62,7 @@ class ExamAnnouncements
         $configObject = Config::get_instance();
 
         $announcements = array();
-  
+
         $result = $this->db->prepare("SELECT q_id, q_number, screen, msg, DATE_FORMAT(created,'" . $configObject->get('cfg_long_date_time') . "') AS created FROM exam_announcements WHERE paperID = ? ORDER BY q_number");
         $result->bind_param('i', $this->paperID);
         $result->execute();
@@ -89,12 +87,12 @@ class ExamAnnouncements
         if ($msg == '') {
             return false;
         }
-  
+
         $result = $this->db->prepare('REPLACE INTO exam_announcements (paperID, q_id, q_number, screen, msg, created) VALUES (?, ?, ?, ?, ?, NOW())');
         $result->bind_param('iiiis', $this->paperID, $q_id, $q_number, $screen, $msg);
         $result->execute();
     }
-  
+
     /**
      * Output HTML for mid-exam announcements for the current paper.
      */
@@ -107,16 +105,16 @@ class ExamAnnouncements
         if (count($exam_announcements) == 0) {
             return '';
         }
-    
+
         $html = '';
-    
+
         $html .= "<table class=\"exam_announcement_box\">\n";
         $html .= '<tr><td rowspan="' . (count($exam_announcements) + 1) . '" class="exam_announce_icon" ><img src="../artwork/comment_48.png" width="48" height="48" /></td><td class="exam_announce_title">' . $this->string['questionclarification'] . "</td></tr>\n";
         foreach ($exam_announcements as $exam_announcement) {
             $html .= '<tr><td><ul><li><strong>' . $this->string['question'] . ' ' . $exam_announcement['q_number'] . '</strong> (' . sprintf($this->string['clarificationscreen'], $exam_announcement['screen'], $maxscreen) . ')<br />' . $exam_announcement['msg'] . "</li></ul></td></tr>\n";
         }
         $html .= '</table>';
-    
+
         return $html;
     }
 }

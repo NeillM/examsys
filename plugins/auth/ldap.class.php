@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * The ldap authentication function.
@@ -33,9 +32,6 @@ include_once $cfg_web_root . "lang/{$language}/include/common.php";
 
 class ldap_auth extends outline_authentication
 {
-
-
-
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
     private $createnewuserassociation = false;
@@ -143,13 +139,13 @@ class ldap_auth extends outline_authentication
             $authobj->message = 'Not valid entry for username or password';
             return $authobj;
         }
-    
+
         if (isset($ldap_port)) {
             $ldap = ldap_connect($ldap_server, $ldap_port);
         } else {
             $ldap = ldap_connect($ldap_server);
         }
-    
+
         ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
         if (isset($ldap_set_option)) {
@@ -196,7 +192,7 @@ class ldap_auth extends outline_authentication
                     return $authobj;
                 }
             }
-      
+
             $configObject = Config::get_instance();
             if (@ldap_bind($ldap, $dn, iconv($configObject->get('cfg_page_charset'), 'UTF-8', $this->form['std']->password))) {
                 $this->savetodebug('Successfully bound to ldap as the user with their password');

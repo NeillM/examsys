@@ -34,9 +34,6 @@ require_once 'lti_util.php';
  */
 class UoN_LTI extends BLTI
 {
-
-
-
     // following 2 static variables & 2 static functions are from rogostaticsingleton but cant extend that as already extending BLTI class
 
     public static $inst;
@@ -57,6 +54,7 @@ class UoN_LTI extends BLTI
         }
         return static::$inst;
     }
+
     /**
      * sets the Mock instance to return. ONLY used for unit testing
      *
@@ -71,8 +69,6 @@ class UoN_LTI extends BLTI
      * @var array|bool
      */
     private $parm = array('dbtype' => 'mysqli', 'table_prefix' => '');
-
-
 
     function __construct()
     {
@@ -693,7 +689,6 @@ class UoN_LTI extends BLTI
 
     public function send_grade($grade)
     {
-
         $oauth_consumer_key = $this->getConsumerKey();
         $oauth_consumer_secret = $this->get_consumer_secret();
         $endpoint = $this->getOutcomeService();

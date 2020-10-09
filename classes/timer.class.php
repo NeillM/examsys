@@ -21,10 +21,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class Timer
 {
-
     /** @var LogMetadata */
     private $log_start_time;
 
@@ -77,7 +75,6 @@ class Timer
      */
     public function calculate_remaining_time()
     {
-
         $exam_duration_mins = $this->exam_duration;
         $exam_duration_secs = $exam_duration_mins * 60;
 
@@ -110,7 +107,6 @@ class Timer
      */
     public function get_start_datetime()
     {
-
         if ($this->start_datetime == null) {
             $this->start_datetime = $this->log_start_time->get_start_datetime();
         }

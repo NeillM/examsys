@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionAREA extends QuestionEdit
 {
-
     protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
 
     protected $points1 = '';

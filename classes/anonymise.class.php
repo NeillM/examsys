@@ -25,10 +25,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class Anonymise
 {
-
     private $db;
     private $male_names;
     private $female_names;

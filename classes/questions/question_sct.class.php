@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionSCT extends QuestionEdit
 {
-
     protected $hypothesis = '';
     protected $new_information = '';
     public $max_options = 5;
@@ -61,7 +59,6 @@ class QuestionSCT extends QuestionEdit
         $this->_fields_unified = array();
         $this->_fields_editable[] = 'correct';
     }
-
 
     // ACCESSORS
 

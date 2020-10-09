@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class search_utils
 {
-
     /**
      * Get a list of personal and group keywords for the current user.
      * @param object $db database connection

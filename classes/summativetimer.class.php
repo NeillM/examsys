@@ -21,10 +21,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class SummativeTimer
 {
-
     /*
     * @var LogExtraTime $log_extra_time
     */

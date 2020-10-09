@@ -29,16 +29,15 @@ require_once 'question_mcq.class.php';
 
 class QuestionMRQ extends QuestionEdit
 {
-
     protected $min_options = 3;
     protected $_fields_force = array('display_method');
-  
+
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
-    
+
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-    
+
         // 'correct' is not a unified field for MRQ
         $this->_fields_editable[] = 'correct';
     }
@@ -52,16 +51,15 @@ class QuestionMRQ extends QuestionEdit
         foreach ($this->options as $option) {
             $option->set_correct($correct_answer);
         }
-    
+
         $this->save();
 
         $q =  new QuestionMCQ($this->_mysqli, $this->_userObj, $this->_lang_strings, $this->id);
         return $q;
     }
 
-
     // ACCESSORS
-  
+
     /**
      * Get the question display method
      * @return string
@@ -70,7 +68,7 @@ class QuestionMRQ extends QuestionEdit
     {
         return $this->display_method;
     }
-  
+
     /**
      * Set the question display method
      * @param string $value
