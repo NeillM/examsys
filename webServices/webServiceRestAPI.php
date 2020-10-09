@@ -64,14 +64,14 @@ class webServiceRestAPI extends restAPI
 {
     public $db;
     private $qtypes = array(
-                    '0' => 'Formative Quiz',
-                    '1' => 'Progress Test',
-                    '2' => 'Summative Exam',
-                    '3' => 'Survey (Questionnaire)',
-                    '4' => 'OSCE Station',
-                    '5' => 'Offline Paper',
-          '6' => 'Peer Review'
-                    );
+        '0' => 'Formative Quiz',
+        '1' => 'Progress Test',
+        '2' => 'Summative Exam',
+        '3' => 'Survey (Questionnaire)',
+        '4' => 'OSCE Station',
+        '5' => 'Offline Paper',
+        '6' => 'Peer Review'
+    );
 
     public function __construct($mysqli)
     {

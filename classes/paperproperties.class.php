@@ -2582,15 +2582,16 @@ class PaperProperties
                           $question['dismiss'] = '';
                     }
                     $question['options'][] = array(
-                    'correct' => $correct,
-                    'option_text' => $option_text,
-                    'o_media' => $omedia['source'],
-                    'o_media_width' => $omedia['width'],
-                    'o_media_height' => $omedia['height'],
-                    'o_media_alt' => $omedia['alt'],
-                    'marks_correct' => $marks_correct,
-                    'marks_incorrect' => $marks_incorrect,
-                    'marks_partial' => $marks_partial);
+                        'correct' => $correct,
+                        'option_text' => $option_text,
+                        'o_media' => $omedia['source'],
+                        'o_media_width' => $omedia['width'],
+                        'o_media_height' => $omedia['height'],
+                        'o_media_alt' => $omedia['alt'],
+                        'marks_correct' => $marks_correct,
+                        'marks_incorrect' => $marks_incorrect,
+                        'marks_partial' => $marks_partial
+                    );
                 }
                 // Overwrite the screen data.
                 $screen_no = count($screen_data);
@@ -2735,15 +2736,16 @@ class PaperProperties
                     $question['dismiss'] = '';
                 }
                 $question['options'][] = array(
-                'correct' => $correct,
-                'option_text' => $option_text,
-                'o_media' => $option_media,
-                'o_media_width' => $option_media_width,
-                'o_media_height' => $option_media_height,
-                'o_media_alt' => $option_media_alt,
-                'marks_correct' => $marks_correct,
-                'marks_incorrect' => $marks_incorrect,
-                'marks_partial' => $marks_partial);
+                    'correct' => $correct,
+                    'option_text' => $option_text,
+                    'o_media' => $option_media,
+                    'o_media_width' => $option_media_width,
+                    'o_media_height' => $option_media_height,
+                    'o_media_alt' => $option_media_alt,
+                    'marks_correct' => $marks_correct,
+                    'marks_incorrect' => $marks_incorrect,
+                    'marks_partial' => $marks_partial
+                );
             }
             $question_data->close();
 
@@ -3032,10 +3034,10 @@ class PaperProperties
     protected function paper_stores_user_answers()
     {
         $stores_user_answers = array(
-        '0' => '0', // Formative.
-        '1' => '1', // Progress test.
-        '2' => '2', // Summative.
-        '3' => '3', // Survey.
+            '0' => '0', // Formative.
+            '1' => '1', // Progress test.
+            '2' => '2', // Summative.
+            '3' => '3', // Survey.
         );
         return isset($stores_user_answers[$this->get_paper_type()]);
     }

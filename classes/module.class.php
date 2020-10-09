@@ -283,24 +283,24 @@ class module
 
         // An array to convert DB fields to lang strings argghhh!!!!
         $lang_mappings = array(
-                        'moduleid' => 'moduleid',
-                        'fullname' => 'name',
-                        'schoolid' => 'school',
-                        'active' => 'active',
-                        'vle_api' => 'objapi',
-                        'checklist' => 'summativechecklist',
-                        'sms' => 'smsapi',
-                        'selfenroll' => 'allowselfenrol',
-                        'neg_marking' => 'negativemarking',
-                        'ebel_grid_template' => 'ebelgrid',
-                        'timed_exams' => 'timedexams',
-                        'exam_q_feedback' => 'questionbasedfeedback',
-                        'add_team_members' => 'addteammembers',
-                        'map_level' => 'maplevel',
-                        'academic_year_start' => 'academicyearstart',
-                        'externalid' => 'externalid',
-                        'syncpreviousyear' => 'syncpreviousyear'
-                        );
+            'moduleid' => 'moduleid',
+            'fullname' => 'name',
+            'schoolid' => 'school',
+            'active' => 'active',
+            'vle_api' => 'objapi',
+            'checklist' => 'summativechecklist',
+            'sms' => 'smsapi',
+            'selfenroll' => 'allowselfenrol',
+            'neg_marking' => 'negativemarking',
+            'ebel_grid_template' => 'ebelgrid',
+            'timed_exams' => 'timedexams',
+            'exam_q_feedback' => 'questionbasedfeedback',
+            'add_team_members' => 'addteammembers',
+            'map_level' => 'maplevel',
+            'academic_year_start' => 'academicyearstart',
+            'externalid' => 'externalid',
+            'syncpreviousyear' => 'syncpreviousyear'
+        );
 
         if ($res === true) {
             // Log any changes
@@ -461,25 +461,27 @@ class module
         }
         $result->close();
 
-        return array( 'idMod' => $idMod,
-                  'moduleid' => $moduleid,
-                  'fullname' => $fullname,
-                  'school' => $school,
-                  'active' => $active,
-                  'vle_api' => $vle_api,
-                  'checklist' => $checklist,
-                  'sms' => $sms,
-                  'selfenroll' => $selfenroll,
-                  'schoolid' => $schoolid,
-                  'neg_marking' => $neg_marking,
-                  'ebel_grid_template' => $ebel_grid_template,
-                  'timed_exams' => $timed_exams,
-                  'exam_q_feedback' => $exam_q_feedback,
-                  'add_team_members' => $add_team_members,
-                  'map_level' => $map_level,
-                  'academic_year_start' => $academic_year_start,
-                  'externalid' => $externalid,
-                  'syncpreviousyear' => $syncpreviousyear);
+        return array(
+            'idMod' => $idMod,
+            'moduleid' => $moduleid,
+            'fullname' => $fullname,
+            'school' => $school,
+            'active' => $active,
+            'vle_api' => $vle_api,
+            'checklist' => $checklist,
+            'sms' => $sms,
+            'selfenroll' => $selfenroll,
+            'schoolid' => $schoolid,
+            'neg_marking' => $neg_marking,
+            'ebel_grid_template' => $ebel_grid_template,
+            'timed_exams' => $timed_exams,
+            'exam_q_feedback' => $exam_q_feedback,
+            'add_team_members' => $add_team_members,
+            'map_level' => $map_level,
+            'academic_year_start' => $academic_year_start,
+            'externalid' => $externalid,
+            'syncpreviousyear' => $syncpreviousyear
+        );
     }
 
     /**
