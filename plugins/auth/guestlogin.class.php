@@ -41,7 +41,6 @@ class guestlogin_auth extends outline_authentication
     {
 
         $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
-        //$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
         return $callbackarray;
     }

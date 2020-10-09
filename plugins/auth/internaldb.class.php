@@ -43,7 +43,6 @@ class internaldb_auth extends outline_authentication
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
-        //$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
         return $callbackarray;
     }
