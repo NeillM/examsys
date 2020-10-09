@@ -153,7 +153,7 @@ class ltilogin_auth extends outline_authentication
             $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = false;
         } else {
             //set session to be needing user lookup later
-                $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = true;
+            $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = true;
         }
 
         // lti valid but no user id associated with it.

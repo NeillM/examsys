@@ -103,9 +103,9 @@ class alreadyloggedin_auth extends outline_authentication
 
         if (is_array(($callbacklist))) {
             foreach ($callbacklist as $number => $callback) {
-                    call_user_func_array($callback, array(&$this->lookupuserobj));
-                    $objid = key($callbackregisterdatalist[$number]);
-                    $new_messages = $this->get_new_debug_messages($objid);
+                call_user_func_array($callback, array(&$this->lookupuserobj));
+                $objid = key($callbackregisterdatalist[$number]);
+                $new_messages = $this->get_new_debug_messages($objid);
                 foreach ($new_messages as $key => $value) {
                     $info1 = $this->get_module_authinfo($objid);
                     $info = key($info1) . ':' . current($info1);

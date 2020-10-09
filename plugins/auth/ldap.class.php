@@ -138,7 +138,7 @@ class ldap_auth extends outline_authentication
         extract($this->settings);
         if (!isset($this->form['std']->username) or !isset($this->form['std']->username) or $this->form['std']->username == '' or $this->form['std']->password == '') {
             //return not sucessfull do not try
-                $this->savetodebug('Check 1 blank entries');
+            $this->savetodebug('Check 1 blank entries');
             $authobj->fail($this->number);
             $authobj->message = 'Not valid entry for username or password';
             return $authobj;
@@ -173,7 +173,7 @@ class ldap_auth extends outline_authentication
                     $ldapconn[] = $ldap;
                 }
             } else {
-                  $ldapconn = $ldap;
+                $ldapconn = $ldap;
             }
             // Build the LDAP query to search for the user.
             $search = $ldap_user_prefix . $this->form['std']->username;

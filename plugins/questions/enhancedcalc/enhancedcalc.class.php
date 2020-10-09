@@ -153,7 +153,7 @@ class EnhancedCalc extends Question implements questionInterface
     public function calculate_user_mark()
     {
 
-            $returnstatus = null;
+        $returnstatus = null;
         if (is_null($this->useranswer)) {
             $this->error = 'No User Answer';
             $this->qmark = 0;
@@ -212,7 +212,7 @@ class EnhancedCalc extends Question implements questionInterface
                 }
             }
         }
-            // Run calculate through the external interface if errors catch exception and indicate its still unmarked.
+        // Run calculate through the external interface if errors catch exception and indicate its still unmarked.
         try {
             /*
              *
@@ -550,7 +550,7 @@ class EnhancedCalc extends Question implements questionInterface
             return $returnstatus;
         }
 
-            return $returnstatus;
+        return $returnstatus;
     }
 
     /**

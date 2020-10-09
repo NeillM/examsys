@@ -804,10 +804,10 @@ abstract class questiondata
                         $filename = $fileinfo->getFilename();
                         $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                         if ($ext === 'obj' and $foundobj === false) {
-                              $width = 640;
-                              $height = 480;
-                              $foundobj = true;
-                              $extra['obj'] = $filename;
+                            $width = 640;
+                            $height = 480;
+                            $foundobj = true;
+                            $extra['obj'] = $filename;
                         } elseif ($ext === 'mtl' and $foundmtl === false) {
                             $extra['mtl'] = $filename;
                             $foundmtl = true;

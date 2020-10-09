@@ -52,7 +52,7 @@ class impersonation_auth extends outline_authentication
     {
         if (isset($this->session['authenticationObj']['impersonation']['newuserid']) and !is_null($this->session['authenticationObj']['impersonation']['newuserid'])) {
             if (!$getauthobj->userObj->has_role('SysAdmin')) {
-                    $this->savetodebug('Cannot change user as not a SysAdmin');
+                $this->savetodebug('Cannot change user as not a SysAdmin');
             }
             $getauthobj->userObj->impersonate($this->session['authenticationObj']['impersonation']['newuserid']);
         }
@@ -88,9 +88,9 @@ class impersonation_auth extends outline_authentication
 
         if ($continue !== true) {
             if (isset($this->session['authenticationObj']['impersonation']['newuserid']) or isset($this->session['authenticationObj']['impersonation']['demo'])) {
-                    $this->savetodebug('Found store data in session for impersonation');
-                    $this->newuserid = $this->session['authenticationObj']['impersonation']['newuserid'];
-                    $this->demo = $this->session['authenticationObj']['impersonation']['demo'];
+                $this->savetodebug('Found store data in session for impersonation');
+                $this->newuserid = $this->session['authenticationObj']['impersonation']['newuserid'];
+                $this->demo = $this->session['authenticationObj']['impersonation']['demo'];
             }
 
             return $preauthobj;
@@ -102,7 +102,7 @@ class impersonation_auth extends outline_authentication
             $this->active = true;
             $this->form['std']->username = $usernameparts[0];
             if (!(isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'demo') == 0)) {
-                    return $preauthobj;
+                return $preauthobj;
             }
         }
         if ((strcasecmp($usernameparts[1], 'staff') == 0) or (isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'staff') == 0)) {
@@ -111,7 +111,7 @@ class impersonation_auth extends outline_authentication
             $this->active = true;
             $this->form['std']->username = $usernameparts[0];
             if (!(isset($usernameparts[2]) and strcasecmp($usernameparts[2], 'staff') == 0)) {
-                    return $preauthobj;
+                return $preauthobj;
             }
         }
         if (!isset($this->lookupuserobj)) {
@@ -129,9 +129,9 @@ class impersonation_auth extends outline_authentication
                 $objid = key($callbackregisterdatalist[$number]);
                 $new_messages = $this->get_new_debug_messages($objid);
                 foreach ($new_messages as $key => $value) {
-                          $info1 = $this->get_module_authinfo($objid);
-                          $info = key($info1) . ':' . current($info1);
-                          $this->savetodebug("Lookup User:authObj($info)[$number:$key]: $value");
+                    $info1 = $this->get_module_authinfo($objid);
+                    $info = key($info1) . ':' . current($info1);
+                    $this->savetodebug("Lookup User:authObj($info)[$number:$key]: $value");
                 }
             }
         }

@@ -51,7 +51,7 @@ class fixedlist_auth extends outline_authentication
         extract($this->settings);
         if (!isset($this->form['std']->username) or !isset($this->form['std']->password) or $this->form['std']->username == '' or $this->form['std']->password == '') {
             //return not sucessfull do not try
-                $this->savetodebug('Check 1 blank entries');
+            $this->savetodebug('Check 1 blank entries');
             $this->retdata->fail($this->number);
             $this->retdata->message = 'Not valid entry for username or password';
             return $authobj;
@@ -81,7 +81,7 @@ class fixedlist_auth extends outline_authentication
             $result->bind_result($id);
             if ($result->num_rows() !== 1) {
                 // return not sucessfull either no user or multiple matches
-                  $this->savetodebug('Check records number not = 1 no user or multiple user found');
+                $this->savetodebug('Check records number not = 1 no user or multiple user found');
                 $this->retdata->fail($this->number);
                 $this->retdata->message = 'Incorrect number of records returned';
                 return $authobj;
@@ -94,7 +94,7 @@ class fixedlist_auth extends outline_authentication
         } elseif (isset($this->settings['lookupuser_list']) and $this->settings['lookupuser_list'] === true) {
             $this->savetodebug('Successfully authenticated and lookedup user via list on this module');
             //sucessfull internaldb authentication
-                $this->retdata->success($this->number, $this->settings['authuserlookup'][$this->form['std']->username]);
+            $this->retdata->success($this->number, $this->settings['authuserlookup'][$this->form['std']->username]);
             $this->retdata->message = 'Fixed List Correctly Authenticated';
         } else {
             $this->savetodebug('Not looking up user just returning -9999 as user');

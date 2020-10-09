@@ -1100,18 +1100,18 @@ for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
         echo '<option value="' . $display_hour . '">' . $display_hour . "</option>\n";
     }
 }
-    echo '</select>';
+echo '</select>';
 
-    echo "</select><select id=\"fminute\" name=\"fminute\" $sum_disabled>\n";
-    // Available from Minute
+echo "</select><select id=\"fminute\" name=\"fminute\" $sum_disabled>\n";
+// Available from Minute
 if ($start_date == '') {
     echo '<option value=""></option>';
 }
 for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
     if ($tmp_minute < 10) {
-              $display_minute = '0' . $tmp_minute;
+        $display_minute = '0' . $tmp_minute;
     } else {
-                      $display_minute = $tmp_minute;
+        $display_minute = $tmp_minute;
     }
     if ($display_minute == $split_minute and $start_date != '') {
         echo '<option value="' . $display_minute . '" selected>' . $display_minute . "</option>\n";
@@ -1119,7 +1119,7 @@ for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
         echo '<option value="' . $display_minute . '">' . $display_minute . "</option>\n";
     }
 }
-    echo "</select>\n</td>\n";
+echo "</select>\n</td>\n";
 
     // Split the end date if available
 if (isset($end_date) and $end_date != '') {
@@ -1132,10 +1132,10 @@ if (isset($end_date) and $end_date != '') {
     $split_year = $split_month = $split_day = $split_hour = $split_minute = 0;
 }
 
-    echo '<td align="right">' . $string['to'] . '&nbsp;</td><td>';
+echo '<td align="right">' . $string['to'] . '&nbsp;</td><td>';
 
-     // Available from Day
-    echo "<select name=\"tday\" id=\"tday\" class=\"datecopy\"$sum_disabled>\n";
+// Available from Day
+echo "<select name=\"tday\" id=\"tday\" class=\"datecopy\"$sum_disabled>\n";
 if ($end_date == '') {
     echo '<option value=""></option>';
 }
@@ -1158,10 +1158,10 @@ for ($i = 1; $i < 32; $i++) {
     }
         echo "$i</option>\n";
 }
-    echo '</select>';
+echo '</select>';
 
-    // Available to Month
-    echo "<select name=\"tmonth\" id=\"tmonth\" class=\"datecopy\"$sum_disabled>\n";
+// Available to Month
+echo "<select name=\"tmonth\" id=\"tmonth\" class=\"datecopy\"$sum_disabled>\n";
 if ($end_date == '') {
     echo '<option value=""></option>';
 }
@@ -1181,9 +1181,9 @@ for ($i = 0; $i < 12; $i++) {
         }
     }
 }
-    echo '</select>';
-    // Available to Year
-    echo "<select name=\"tyear\" id=\"tyear\" class=\"datecopy\"$sum_disabled>\n";
+echo '</select>';
+// Available to Year
+echo "<select name=\"tyear\" id=\"tyear\" class=\"datecopy\"$sum_disabled>\n";
 if ($end_date == '') {
     echo '<option value=""></option>';
 }
@@ -1218,9 +1218,9 @@ if ($start_date == '') {
 }
 for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
     if ($tmp_hour < 10) {
-              $display_hour = '0' . $tmp_hour;
+        $display_hour = '0' . $tmp_hour;
     } else {
-                      $display_hour = $tmp_hour;
+        $display_hour = $tmp_hour;
     }
     if ($display_hour == $split_hour and $start_date != '') {
         echo '<option value="' . $display_hour . '" selected>' . $display_hour . "</option>\n";
@@ -1228,18 +1228,18 @@ for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
         echo '<option value="' . $display_hour . '">' . $display_hour . "</option>\n";
     }
 }
-    echo '</select>';
+echo '</select>';
 
-    echo "</select><select id=\"tminute\" name=\"tminute\" $sum_disabled>\n";
-    // Available from Minute
+echo "</select><select id=\"tminute\" name=\"tminute\" $sum_disabled>\n";
+// Available from Minute
 if ($start_date == '') {
     echo '<option value=""></option>';
 }
 for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
     if ($tmp_minute < 10) {
-              $display_minute = '0' . $tmp_minute;
+        $display_minute = '0' . $tmp_minute;
     } else {
-                      $display_minute = $tmp_minute;
+        $display_minute = $tmp_minute;
     }
     if ($display_minute == $split_minute and $start_date != '') {
         echo '<option value="' . $display_minute . '" selected>' . $display_minute . "</option>\n";
@@ -1247,33 +1247,33 @@ for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
         echo '<option value="' . $display_minute . '">' . $display_minute . "</option>\n";
     }
 }
-    echo '</select>';
-    if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
-        echo '<span id="minavailflag">*</span>';
-    }
-    echo "\n</td></tr>\n</table>\n";
-    if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
-        echo '<div id="minavail">';
-        echo sprintf($string['minavailability'], $minavailability);
-        echo '</div>';
-    }
-    $properties->renderSettings('security');
-    echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
-    echo '<tr><td class="headbar" style="padding:2px; width:400px">&nbsp;' . $string['modules'] . '</td><td class="headbar" style="padding:2px">&nbsp;' . $string['restricttolabs'] . '</td></tr>';
-    echo '<tr><td rowspan="3" style="vertical-align:top">';
+echo '</select>';
+if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
+    echo '<span id="minavailflag">*</span>';
+}
+echo "\n</td></tr>\n</table>\n";
+if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
+    echo '<div id="minavail">';
+    echo sprintf($string['minavailability'], $minavailability);
+    echo '</div>';
+}
+$properties->renderSettings('security');
+echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
+echo '<tr><td class="headbar" style="padding:2px; width:400px">&nbsp;' . $string['modules'] . '</td><td class="headbar" style="padding:2px">&nbsp;' . $string['restricttolabs'] . '</td></tr>';
+echo '<tr><td rowspan="3" style="vertical-align:top">';
 
-    echo '<div id="modules_list" style="display:block; width:400px; height:420px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
+echo '<div id="modules_list" style="display:block; width:400px; height:420px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
 
-        $modules_array = $properties->get_modules();
+$modules_array = $properties->get_modules();
 
-        $total_modules = array_merge($staff_modules, $modules_array);
+$total_modules = array_merge($staff_modules, $modules_array);
 
-    $module_sql = implode("','", $total_modules);
+$module_sql = implode("','", $total_modules);
 if ($module_sql != '') {
     $module_sql = "'$module_sql'";
 }
 
-    $module_no = 0;
+$module_no = 0;
 if ($module_sql != '') {
     $module_array = $userObject->get_staff_accessable_modules();
     $old_school = '';
@@ -1428,46 +1428,65 @@ $properties->renderSettings('rubric');
         ?>
     <tr><td colspan="4" class="headbar">&nbsp;<?php echo $string['answerscreensettings']; ?></td></tr>
     <tr><td colspan="4">&nbsp;</td></tr>
-    <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php if ($properties->get_display_students_response() == '1') {
-        echo ' checked';
-                                                                                               } ?> /><?php echo $string['ticks_crosses'] ?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php if ($properties->get_display_question_mark() == '1') {
-                                                                                               echo ' checked';
-                                                                                               } ?> /><?php echo $string['question_marks'];?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php if ($properties->get_hide_if_unanswered() == '1') {
-                                                                                               echo ' checked';
-                                                                                               } ?> /><?php echo $string['hideallfeedback'] ?></td></tr>
-    <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php if ($properties->get_display_correct_answer() == '1') {
-        echo ' checked';
-                                                                          } ?> /><?php echo $string['correctanswerhighlight'] ?></td><td><input type="checkbox" name="display_feedback" value="1"<?php if ($properties->get_display_feedback() == '1') {
-                                                                          echo ' checked';
-                                                                          } ?> /><?php echo $string['textfeedback'] ?></td></tr>
+    <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"<?php
+if ($properties->get_display_students_response() == '1') {
+    echo ' checked';
+}
+?> /><?php
+    echo $string['ticks_crosses'];
+?></td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"<?php
+if ($properties->get_display_question_mark() == '1') {
+    echo ' checked';
+}
+?> /><?php
+echo $string['question_marks'];
+?></td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"<?php
+if ($properties->get_hide_if_unanswered() == '1') {
+echo ' checked';
+}
+?> /><?php
+echo $string['hideallfeedback'];
+?></td></tr>
+    <tr><td><input type="checkbox" name="display_correct_answer" value="1"<?php
+if ($properties->get_display_correct_answer() == '1') {
+    echo ' checked';
+} ?> /><?php
+echo $string['correctanswerhighlight'] ;
+?></td><td><input type="checkbox" name="display_feedback" value="1"<?php
+if ($properties->get_display_feedback() == '1') {
+echo ' checked';
+}
+?> /><?php
+    echo $string['textfeedback'] ;
+?></td></tr>
         <?php
-    }
-    echo "</table>\n";
+}
+echo "</table>\n";
 
-    echo "</td></tr>\n";
-        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+echo "</td></tr>\n";
+echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
 
-    if (!in_array($properties->get_paper_type(), array('2', '4'))) {
-        echo '<tr><td colspan="2" class="headbar">&nbsp;' . $string['textualfeedback'] . "</td></tr>\n";
-        echo '<tr><td style="text-align:center">' . $string['above'] . '</td><td style="text-align:center">' . $string['message'] . "</td></tr>\n";
-        for ($i = 1; $i <= 10; $i++) {
-            echo "<tr><td><select name=\"feedback_value$i\"><option value=\"\"></option>";
-            for ($percent = 0; $percent <= 100; $percent++) {
-                if (isset($textual_feedback[$i]['boundary']) and  $textual_feedback[$i]['boundary'] == $percent) {
-                    echo "<option value=\"$percent\" selected>$percent%</option>";
-                } else {
-                    echo "<option value=\"$percent\">$percent%</option>";
-                }
+if (!in_array($properties->get_paper_type(), array('2', '4'))) {
+    echo '<tr><td colspan="2" class="headbar">&nbsp;' . $string['textualfeedback'] . "</td></tr>\n";
+    echo '<tr><td style="text-align:center">' . $string['above'] . '</td><td style="text-align:center">' . $string['message'] . "</td></tr>\n";
+    for ($i = 1; $i <= 10; $i++) {
+        echo "<tr><td><select name=\"feedback_value$i\"><option value=\"\"></option>";
+        for ($percent = 0; $percent <= 100; $percent++) {
+            if (isset($textual_feedback[$i]['boundary']) and  $textual_feedback[$i]['boundary'] == $percent) {
+                echo "<option value=\"$percent\" selected>$percent%</option>";
+            } else {
+                echo "<option value=\"$percent\">$percent%</option>";
             }
-            $msg = '';
-            if (isset($textual_feedback[$i]['msg'])) {
-                $msg = $textual_feedback[$i]['msg'];
-            }
-            echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"1\" style=\"width:620px; height:18px;\">$msg</textarea></td></tr>\n";
         }
+        $msg = '';
+        if (isset($textual_feedback[$i]['msg'])) {
+            $msg = $textual_feedback[$i]['msg'];
+        }
+        echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"1\" style=\"width:620px; height:18px;\">$msg</textarea></td></tr>\n";
     }
-    $properties->renderSettings('feedback');
-    ?>
+}
+$properties->renderSettings('feedback');
+?>
 </table>
 
 <table id="reviewers" class="tabsection" style="display: none">
@@ -1504,8 +1523,8 @@ if ($properties->get_internal_review_deadline() == '') {
     $split_day = $internal_review_deadline->format('d');
 }
 
-    // Available to Day
-    echo "<select id=\"int_tday\" name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+// Available to Day
+echo "<select id=\"int_tday\" name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 for ($i = 1; $i < 32; $i++) {
     if ($i < 10) {
         if ($i == $split_day) {
@@ -1525,9 +1544,9 @@ for ($i = 1; $i < 32; $i++) {
     }
         echo "$i</option>\n";
 }
-    echo "</select>\n";
-    // Available to Month
-    echo "<select id=\"int_tmonth\" name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+echo "</select>\n";
+// Available to Month
+echo "<select id=\"int_tmonth\" name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 for ($i = 0; $i < 12; $i++) {
     $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
     if (($split_month - 1) == $i) {
@@ -1544,9 +1563,9 @@ for ($i = 0; $i < 12; $i++) {
         }
     }
 }
-    echo "</select>\n";
-     // Available to Year
-     echo "<select id=\"int_tyear\" name=\"int_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+echo "</select>\n";
+// Available to Year
+echo "<select id=\"int_tyear\" name=\"int_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 if ($split_year < date('Y') and $split_year > 1999) {
     $start_year = $split_year;
 } else {
@@ -1554,7 +1573,7 @@ if ($split_year < date('Y') and $split_year > 1999) {
 }
 for ($i = $start_year; $i < (date('Y') + 2); $i++) {
     if ($i == $split_year) {
-         echo "<option value=\"$i\" selected>$i</option>\n";
+        echo "<option value=\"$i\" selected>$i</option>\n";
     } else {
         echo "<option value=\"$i\">$i</option>\n";
     }
@@ -1577,8 +1596,8 @@ if ($properties->get_external_review_deadline() == '') {
     $split_day = $external_review_deadline->format('d');
 }
 
-    // Available to Day
-    echo "<select id=\"ext_tday\" name=\"ext_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+// Available to Day
+echo "<select id=\"ext_tday\" name=\"ext_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 for ($i = 1; $i < 32; $i++) {
     if ($i < 10) {
         if ($i == $split_day) {
@@ -1596,11 +1615,11 @@ for ($i = 1; $i < 32; $i++) {
     if ($i < 10) {
         echo '0';
     }
-            echo "$i</option>\n";
+    echo "$i</option>\n";
 }
-    echo "</select>\n";
-    // Available to Month
-    echo "<select id=\"ext_tmonth\" name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+echo "</select>\n";
+// Available to Month
+echo "<select id=\"ext_tmonth\" name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 for ($i = 0; $i < 12; $i++) {
     $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
     if (($split_month - 1) == $i) {
@@ -1617,9 +1636,9 @@ for ($i = 0; $i < 12; $i++) {
         }
     }
 }
-    echo "</select>\n";
-    // Available to Year
-    echo "<select id=\"ext_tyear\" name=\"ext_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
+echo "</select>\n";
+// Available to Year
+echo "<select id=\"ext_tyear\" name=\"ext_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 if ($split_year < date('Y') and $split_year > 1999) {
     $start_year = $split_year;
 } else {
@@ -1634,134 +1653,134 @@ for ($i = $start_year; $i < (date('Y') + 2); $i++) {
 }
 ?>
 </td></tr>
-  <?php
-    echo '<tr><td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
+<?php
+echo '<tr><td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
 
-    // Get all users for teams within the schools of the current user
-    // Also get all admin users for those schools
-    $school_sql = '';
-    $admin_school_sql = '';
-    $schools = getSchools($staff_modules, $mysqli);
+// Get all users for teams within the schools of the current user
+// Also get all admin users for those schools
+$school_sql = '';
+$admin_school_sql = '';
+$schools = getSchools($staff_modules, $mysqli);
 
-    if (count($schools) > 0) {
-        $schools_list = implode(',', $schools);
-        if ($userObject->has_role('SysAdmin')) {
-            $school_sql = 'AND user_deleted IS NULL';
-        } else {
-            $school_sql = "AND schoolid IN ($schools_list) AND user_deleted IS NULL";
-        }
-        $admin_school_sql = <<< SQL
+if (count($schools) > 0) {
+    $schools_list = implode(',', $schools);
+    if ($userObject->has_role('SysAdmin')) {
+        $school_sql = 'AND user_deleted IS NULL';
+    } else {
+        $school_sql = "AND schoolid IN ($schools_list) AND user_deleted IS NULL";
+    }
+    $admin_school_sql = <<< SQL
 UNION SELECT DISTINCT users.id, title, initials, surname, first_names
 FROM users, admin_access
 WHERE users.id = admin_access.userID AND admin_access.schools_id IN ($schools_list)
 AND user_deleted IS NULL
 SQL;
-    }
+}
 
-    // Make sure that current reviewers always appear on the list
-    $current_internals = $properties->get_internal_reviewers();
-    $current_internals_sql = '';
-    if (count($properties->get_internal_reviewers()) > 0) {
-        $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', array_keys($current_internals)) . ') AND user_deleted IS NULL';
-    }
-    // Add internal reviewers to list.
-    $internal_reviwers = "
-    UNION SELECT DISTINCT 
-        id, title, initials, surname, first_names 
-    FROM 
-        users 
-    WHERE
-        EXISTS (
-            SELECT 1
-            FROM user_roles ur JOIN roles r ON ur.roleid = r.id
-            WHERE r.name = 'Internal Reviewer' AND users.id = ur.userid
-        )
-        AND user_deleted IS NULL
-    ";
+// Make sure that current reviewers always appear on the list
+$current_internals = $properties->get_internal_reviewers();
+$current_internals_sql = '';
+if (count($properties->get_internal_reviewers()) > 0) {
+    $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', array_keys($current_internals)) . ') AND user_deleted IS NULL';
+}
+// Add internal reviewers to list.
+$internal_reviwers = "
+UNION SELECT DISTINCT 
+    id, title, initials, surname, first_names 
+FROM 
+    users 
+WHERE
+    EXISTS (
+        SELECT 1
+        FROM user_roles ur JOIN roles r ON ur.roleid = r.id
+        WHERE r.name = 'Internal Reviewer' AND users.id = ur.userid
+    )
+    AND user_deleted IS NULL
+";
 
-    // Dynamically choose tables and join based on role.
-    if ($userObject->has_role('SysAdmin')) {
-        $tables = 'users, modules_staff';
-        $join = 'users.id = modules_staff.memberID';
+// Dynamically choose tables and join based on role.
+if ($userObject->has_role('SysAdmin')) {
+    $tables = 'users, modules_staff';
+    $join = 'users.id = modules_staff.memberID';
+} else {
+    $tables = 'users, modules_staff, modules';
+    $join = 'users.id = modules_staff.memberID AND modules.id = modules_staff.idMod';
+}
+
+$query = "
+SELECT DISTINCT 
+    users.id, title, initials, surname, first_names 
+FROM 
+    $tables 
+WHERE
+    NOT EXISTS (
+        SELECT 1
+        FROM user_roles ur JOIN roles r ON ur.roleid = r.id
+        WHERE r.name = 'left' AND users.id = ur.userid
+    )
+    AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers 
+ORDER BY 
+    surname, initials
+";
+$internal_details = $mysqli->prepare($query);
+$internal_details->execute();
+$internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
+$internal_no = 0;
+while ($internal_details->fetch()) {
+    $match = false;
+    foreach ($current_internals as $reviewerID => $reviewer_name) {
+        if ($internal_id == $reviewerID) {
+            $match = true;
+        }
+    }
+    if ($match) {
+        echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
     } else {
-        $tables = 'users, modules_staff, modules';
-        $join = 'users.id = modules_staff.memberID AND modules.id = modules_staff.idMod';
+        echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
     }
+    $internal_no++;
+}
+$internal_details->close();
+echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-    $query = "
-    SELECT DISTINCT 
-        users.id, title, initials, surname, first_names 
-    FROM 
-        $tables 
-    WHERE
-        NOT EXISTS (
-            SELECT 1
-            FROM user_roles ur JOIN roles r ON ur.roleid = r.id
-            WHERE r.name = 'left' AND users.id = ur.userid
-        )
-        AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers 
-    ORDER BY 
-        surname, initials
-    ";
-    $internal_details = $mysqli->prepare($query);
-    $internal_details->execute();
-    $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
-    $internal_no = 0;
-    while ($internal_details->fetch()) {
-        $match = false;
-        foreach ($current_internals as $reviewerID => $reviewer_name) {
-            if ($internal_id == $reviewerID) {
-                $match = true;
-            }
+echo '<td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
+$current_externals = $properties->get_externals();
+$sql = "
+SELECT DISTINCT 
+    id, title, initials, surname, first_names 
+FROM 
+    users 
+WHERE
+    EXISTS (
+        SELECT 1
+        FROM user_roles ur JOIN roles r ON ur.roleid = r.id
+        WHERE r.name = 'External Examiner' AND users.id = ur.userid
+    )
+    AND grade != 'left' AND user_deleted IS NULL 
+ORDER BY 
+    surname, initials
+";
+$external_details = $mysqli->prepare($sql);
+$external_details->execute();
+$external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
+$examiner_no = 0;
+while ($external_details->fetch()) {
+    $match = false;
+    foreach ($current_externals as $reviewerID => $reviewer_name) {
+        if ($external_id == $reviewerID) {
+            $match = true;
         }
-        if ($match) {
-            echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
-        } else {
-            echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
-        }
-        $internal_no++;
     }
-    $internal_details->close();
-    echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
-
-    echo '<td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
-    $current_externals = $properties->get_externals();
-    $sql = "
-    SELECT DISTINCT 
-        id, title, initials, surname, first_names 
-    FROM 
-        users 
-    WHERE
-        EXISTS (
-            SELECT 1
-            FROM user_roles ur JOIN roles r ON ur.roleid = r.id
-            WHERE r.name = 'External Examiner' AND users.id = ur.userid
-        )
-        AND grade != 'left' AND user_deleted IS NULL 
-    ORDER BY 
-        surname, initials
-    ";
-    $external_details = $mysqli->prepare($sql);
-    $external_details->execute();
-    $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
-    $examiner_no = 0;
-    while ($external_details->fetch()) {
-        $match = false;
-        foreach ($current_externals as $reviewerID => $reviewer_name) {
-            if ($external_id == $reviewerID) {
-                $match = true;
-            }
-        }
-        if ($match) {
-            echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
-        } else {
-            echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
-        }
-        $examiner_no++;
+    if ($match) {
+        echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+    } else {
+        echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
     }
-    $external_details->close();
-    echo "<input type=\"hidden\" name=\"examiner_no\" id=\"examiner_no\" value=\"$examiner_no\" /></div></td>\n</tr>\n";
-    ?>
+    $examiner_no++;
+}
+$external_details->close();
+echo "<input type=\"hidden\" name=\"examiner_no\" id=\"examiner_no\" value=\"$examiner_no\" /></div></td>\n</tr>\n";
+?>
 </table>
 </td>
 </tr>
@@ -1900,12 +1919,16 @@ for ($i = 0; $i < $rows; $i++) {
 <tr><td colspan="2" align="right"><input type="submit" class="ok" id="submitpropeties" name="Submit" value="<?php echo $string['ok']; ?>" disabled="disabled"/><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></td></tr>
 </table>
 
-<input type="hidden" id="noadd" name="noadd" value="<?php if (isset($_GET['noadd'])) {
+<input type="hidden" id="noadd" name="noadd" value="<?php
+if (isset($_GET['noadd'])) {
     echo $_GET['noadd'];
-                                                    } ?>" />
-<input type="hidden" name="caller" value="<?php if (isset($_GET['caller'])) {
+}
+?>" />
+<input type="hidden" name="caller" value="<?php
+if (isset($_GET['caller'])) {
     echo $_GET['caller'];
-                                          } ?>" />
+}
+?>" />
 </form>
 <?php
 $dataset['name'] = 'dataset';
