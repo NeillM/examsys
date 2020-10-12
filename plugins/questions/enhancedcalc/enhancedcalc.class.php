@@ -213,11 +213,7 @@ class EnhancedCalc extends Question implements questionInterface
         }
         // Run calculate through the external interface if errors catch exception and indicate its still unmarked.
         try {
-            /*
-             *
-             * CALCULATE REQURED NUMERIC VALUES
-             *
-             */
+            // CALCULATE REQURED NUMERIC VALUES
             $this->useranswer['cans'] = $this->enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
         } catch (Exception $e) {
             //TODO: catch different errors "no connection", "unable to evaluate"
@@ -297,11 +293,7 @@ class EnhancedCalc extends Question implements questionInterface
             return $returnstatus;
         }
 
-            /*
-             *
-             * FORMAT CALCULATED ANS
-             *
-             */
+        // FORMAT CALCULATED ANS
         try {
             if ($this->settings['strictdisplay'] === true and isset($this->settings['dp'])) {
                     $function = 'format_number_dp';
@@ -343,11 +335,7 @@ class EnhancedCalc extends Question implements questionInterface
             return $returnstatus;
         }
 
-            /*
-             *
-             * MARKING
-             *
-             */
+        // MARKING
         if (!isset($this->useranswer['uansnumb']) or (isset($this->useranswer['uansnumb']) and trim($this->useranswer['uansnumb']) == '')) {
             // Not answered
             $this->qmark = 0;
