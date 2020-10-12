@@ -802,15 +802,15 @@ class PaperProperties
 
         // If set overwrite the default colours with the current users' special settings
         if ($userObject->is_special_needs()) {
-            $bgcolor                  = $userObject->get_bgcolor($bgcolor);
-            $fgcolor                  = $userObject->get_fgcolor($fgcolor);
-            $textsize                 = $userObject->get_textsize($textsize);
-            $marks_color          = $userObject->get_marks_color($marks_color);
-            $themecolor               = $userObject->get_themecolor($themecolor);
-            $labelcolor               = $userObject->get_labelcolor($labelcolor);
-            $font                         = $userObject->get_font($font);
+            $bgcolor = $userObject->get_bgcolor($bgcolor);
+            $fgcolor = $userObject->get_fgcolor($fgcolor);
+            $textsize = $userObject->get_textsize($textsize);
+            $marks_color = $userObject->get_marks_color($marks_color);
+            $themecolor = $userObject->get_themecolor($themecolor);
+            $labelcolor = $userObject->get_labelcolor($labelcolor);
+            $font = $userObject->get_font($font);
             $unanswered_color = $userObject->get_unanswered_color($unanswered_color);
-            $dismiss_color        = $userObject->get_dismiss_color($dismiss_color);
+            $dismiss_color = $userObject->get_dismiss_color($dismiss_color);
         }
     }
 
