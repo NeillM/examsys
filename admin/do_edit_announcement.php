@@ -35,8 +35,8 @@ if (!announcement_utils::announcement_exist($announcementid, $mysqli)) {
 }
 
 $news_title = param::required('title', param::TEXT, param::FETCH_POST);
-$staff_msg = param::required('staff_msg', param::TEXT, param::FETCH_POST);
-$student_msg = param::required('student_msg', param::TEXT, param::FETCH_POST);
+$staff_msg = param::optional('staff_msg', '', param::HTML, param::FETCH_POST);
+$student_msg = param::optional('student_msg', '', param::HTML, param::FETCH_POST);
 $fyear = param::required('fyear', param::TEXT, param::FETCH_POST);
 $fmonth = param::required('fmonth', param::TEXT, param::FETCH_POST);
 $fday = param::required('fday', param::TEXT, param::FETCH_POST);
