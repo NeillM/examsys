@@ -422,7 +422,7 @@ abstract class questiondata
     /**
      * Constructor
      */
-    function __construct()
+    public function __construct()
     {
         $this->config = Config::get_instance();
         $this->db = $this->config->db;

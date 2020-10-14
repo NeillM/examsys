@@ -37,7 +37,7 @@ class alreadyloggedin_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
 
         if (isset($this->settings['disabled']) and $this->settings['disabled'] === true) {
@@ -50,7 +50,7 @@ class alreadyloggedin_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function auth($authobj)
+    public function auth($authobj)
     {
         if (isset($this->settings['disabled']) and $this->settings['disabled'] === true) {
             $this->retdata->fail($this->number);
@@ -81,7 +81,7 @@ class alreadyloggedin_auth extends outline_authentication
         return $authobj;
     }
 
-    function store_user($sessionstoreobj)
+    public function store_user($sessionstoreobj)
     {
         $this->savetodebug('session store');
         $this->session['authenticationObj']['loggedin']['userid'] = $this->calling_object->get_userid();
@@ -90,7 +90,7 @@ class alreadyloggedin_auth extends outline_authentication
         return $sessionstoreobj;
     }
 
-    function update_time($postauthsuccessobj = '')
+    public function update_time($postauthsuccessobj = '')
     {
         $this->savetodebug('Updated stored time in session');
         $this->session['authenticationObj']['loggedin']['time'] = time();

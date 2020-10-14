@@ -755,7 +755,7 @@ class PaperUtils
      * @param  array      $screen      The screen number to check
      * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
      */
-    function need_interactiveQ($screen_data, $screen, $db)
+    public function need_interactiveQ($screen_data, $screen, $db)
     {
         $interactive = false;
         $checktypes = array('hotspot', 'labelling', 'area');
@@ -848,7 +848,7 @@ class PaperUtils
      * @param mysqli $db
      * @return bool
      */
-    static function paper_taken($id, $db)
+    public static function paper_taken($id, $db)
     {
         $result = $db->prepare('SELECT NULL FROM log_metadata WHERE paperID = ?
         UNION SELECT NULL FROM log4_overall WHERE q_paper = ?');
@@ -870,7 +870,7 @@ class PaperUtils
      * @param mysqli $db
      * @return bool true if paper available
      */
-    static function paper_available_in_lab_now($lab, $db)
+    public static function paper_available_in_lab_now($lab, $db)
     {
         $results = $db->prepare("SELECT NULL 
       FROM properties 
@@ -896,7 +896,7 @@ class PaperUtils
      * @param mysqli $db
      * @return integer|bool paper type or false on error
      */
-    static function get_paper_type($id, $db)
+    public static function get_paper_type($id, $db)
     {
         $result = $db->prepare('SELECT paper_type FROM properties WHERE property_id = ?');
         $result->bind_param('i', $id);
@@ -952,7 +952,7 @@ class PaperUtils
      * @param mysqli $db
      * @return array|bool array of paper details or false on error
      */
-    static function get_paper_properties($id, $db)
+    public static function get_paper_properties($id, $db)
     {
         $result = $db->prepare('SELECT 
       paper_title,

@@ -31,7 +31,7 @@ class displaystdformobjbutton extends stdClass
     public $value;
     public $style;
 
-    function __construct()
+    public function __construct()
     {
         $this->pretext = '';
         $this->posttext = '';

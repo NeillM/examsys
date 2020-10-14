@@ -31,7 +31,7 @@ class postauthfailreturn extends stdClass
     public $stop;
     public $exit;
 
-    function __construct()
+    public function __construct()
     {
         $this->attempt = $_SESSION['authenticationObj']['attempt'];
         $this->stop = false;

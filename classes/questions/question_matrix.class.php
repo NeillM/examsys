@@ -36,7 +36,7 @@ class QuestionMATRIX extends QuestionEdit
     protected $_fields_editable = array('theme', 'leadin', 'notes', 'correct_fback', 'score_method', 'option_order', 'bloom', 'status');
     protected $_fields_compound = array('stem');
   
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
     

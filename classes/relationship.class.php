@@ -37,7 +37,7 @@ class Relationship
     private $_db;
     private $_db_error;
 
-    function __construct($mysqli, $data = null)
+    public function __construct($mysqli, $data = null)
     {
         $this->_db = $mysqli;
 

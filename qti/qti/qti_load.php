@@ -24,9 +24,9 @@
 
 class IE_qti_Load extends IE_Main
 {
-    var $params;
+    public $params;
 
-    function Load($params)
+    public function Load($params)
     {
         global $string;
 
@@ -164,7 +164,7 @@ class IE_qti_Load extends IE_Main
         return $result;
     }
 
-    function DetectFileType($filename)
+    public function DetectFileType($filename)
     {
         global $string;
 

@@ -149,7 +149,7 @@ class InstallUtils
         $this->db = null;
     }
 
-    static function displayForm()
+    public static function displayForm()
     {
         global $string, $language, $timezone_array;
         $configObject = Config::get_instance();
@@ -178,7 +178,7 @@ class InstallUtils
      *
      * @return bool - True = user exists, False = user does not exist.
      */
-    static function does_user_exist($username)
+    public static function does_user_exist($username)
     {
         $result = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
         $result->bind_param('s', $username);
@@ -198,7 +198,7 @@ class InstallUtils
     /**
      * Load and verify settings file.
      */
-    static function loadSettings()
+    public static function loadSettings()
     {
         self::$settings = json_encode(simplexml_load_file(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'settings.xml', 'SimpleXMLElement', LIBXML_NOCDATA));
     }
@@ -213,7 +213,7 @@ class InstallUtils
      * @param string $grandchild xml grandchild node name
      * @return value of xml node
      */
-    static function getSettings($type, $required, $parent, $child = '', $grandchild = '')
+    public static function getSettings($type, $required, $parent, $child = '', $grandchild = '')
     {
         $setting = $parent . '//' . $child . '//' . $grandchild;
         $xmldata = json_decode(self::$settings);
@@ -269,7 +269,7 @@ class InstallUtils
         return $clean;
     }
 
-    static function processForm($args = array())
+    public static function processForm($args = array())
     {
         global $string, $cfg_encrypt_salt;
         $configObject = Config::get_instance();
@@ -590,7 +590,7 @@ class InstallUtils
      * Load the Help databases
      *
      */
-    static function loadHelp()
+    public static function loadHelp()
     {
         global $string;
         // Set db object in config.
@@ -625,7 +625,7 @@ class InstallUtils
     /**
      * Create constraints to maintain database referential integrity
      */
-    static function createConstraints()
+    public static function createConstraints()
     {
         $alter = array();
         $alter[] = 'ALTER TABLE sms_imports ADD CONSTRAINT sms_imports_fk0 FOREIGN KEY (academic_year) REFERENCES academic_year(calendar_year)';
@@ -676,7 +676,7 @@ class InstallUtils
     /**
      * Load default data needed for rogo to function
      */
-    static function loadData()
+    public static function loadData()
     {
         global $string, $timezone_array;
         // Add 3 academic sessions to the the new user started.
@@ -867,7 +867,7 @@ class InstallUtils
      *
      * This list should not be added to as all new updates should be tied to a release.
      */
-    static function updateSysUpdates()
+    public static function updateSysUpdates()
     {
         $current_datetime = date('Y-m-d H:i:s');
         $updates = array('convert_calc_ans_done',
@@ -959,7 +959,7 @@ class InstallUtils
      * create the database and users if they do not exist
      *
      */
-    static function createDatabase($dbname, $dbcharset, $dbcollation, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM')
+    public static function createDatabase($dbname, $dbcharset, $dbcollation, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM')
     {
         global $string;
         $configObject = Config::get_instance();
@@ -1738,7 +1738,7 @@ class InstallUtils
      * Check that we do not have a config file and display error if we do.
      *
      */
-    static function configFile()
+    public static function configFile()
     {
         global $string;
         $errors = array();
@@ -1752,7 +1752,7 @@ class InstallUtils
      * Does the config file exist.
      * @return boolean
      */
-    static function config_exists()
+    public static function config_exists()
     {
         $rogo_path = dirname(__DIR__);
         if (file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
@@ -1765,7 +1765,7 @@ class InstallUtils
      * Check that  config file is writeable
      *
      */
-    static function configFileIsWriteable()
+    public static function configFileIsWriteable()
     {
         if (is_writable(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
             return true;
@@ -1778,7 +1778,7 @@ class InstallUtils
      * Check that we write to the /config/ dir
      *
      */
-    static function configPathIsWriteable()
+    public static function configPathIsWriteable()
     {
         if (is_writable(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config')) {
             return true;
@@ -1904,7 +1904,7 @@ class InstallUtils
     /**
      * Check Apache can write to the required directories.
      */
-    static function checkDirPermissionsPre()
+    public static function checkDirPermissionsPre()
     {
         global $string;
         $errors = array();
@@ -1924,7 +1924,7 @@ class InstallUtils
      * Check Apache can write to the required directories
      *
      */
-    static function checkDirPermissionsPost()
+    public static function checkDirPermissionsPost()
     {
         global $string;
         $errors = array();
@@ -1942,7 +1942,7 @@ class InstallUtils
         }
     }
 
-    static function checkDBUsers()
+    public static function checkDBUsers()
     {
         $errors = array();
 
@@ -1965,7 +1965,7 @@ class InstallUtils
      * @param boolean $fatal is error fatal
      *
      */
-    static function displayError($error = '', $fatal = true)
+    public static function displayError($error = '', $fatal = true)
     {
         global $string;
         if (is_array($error)) {
@@ -2001,7 +2001,7 @@ class InstallUtils
      * Log warnings with a nice message
      *
      */
-    static function logWarning($warning = '')
+    public static function logWarning($warning = '')
     {
         if (is_array($warning)) {
             foreach ($warning as $key => $val) {
@@ -2014,7 +2014,7 @@ class InstallUtils
      * Display header
      *
      */
-    static function displayHeader()
+    public static function displayHeader()
     {
         global $string;
         $configObject = Config::get_instance();
@@ -2050,7 +2050,7 @@ class InstallUtils
      * Display footer
      *
      */
-    static function displayfooter()
+    public static function displayfooter()
     {
         $configObject = Config::get_instance();
         $render = new render_install($configObject);
@@ -2060,7 +2060,7 @@ class InstallUtils
         $render->render_admin_footer($scripts);
     }
 
-    static function writeConfigFile()
+    public static function writeConfigFile()
     {
         global $cfg_encrypt_salt;
         require_once dirname(__DIR__) . '/include/path_functions.inc.php';

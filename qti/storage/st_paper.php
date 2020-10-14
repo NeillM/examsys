@@ -16,24 +16,24 @@
 
 class ST_Paper
 {
-    var $load_id;
-    var $save_id;
+    public $load_id;
+    public $save_id;
 
-    var $paper_title;
-    var $rubric;
-    var $screens = array(); // array of ST_Paper_Screen key by screen no
+    public $paper_title;
+    public $rubric;
+    public $screens = array(); // array of ST_Paper_Screen key by screen no
 
-    var $nextscreen = 1;
-    var $nextquestion = 1;
+    public $nextscreen = 1;
+    public $nextquestion = 1;
 
-    function GetNextScreenID()
+    public function GetNextScreenID()
     {
         $i = $this->nextscreen;
         $this->nextscreen++;
         return $i;
     }
 
-    function GetNextQuestionID()
+    public function GetNextQuestionID()
     {
         $i = $this->nextquestion;
         $this->nextquestion++;
@@ -43,5 +43,5 @@ class ST_Paper
 
 class ST_Paper_Screen
 {
-    var $question_ids = array(); // array of question ids key by ordering
+    public $question_ids = array(); // array of question ids key by ordering
 }

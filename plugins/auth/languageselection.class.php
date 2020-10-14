@@ -53,7 +53,7 @@ class Languageselection_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function store_data($sessionstoreobj)
+    public function store_data($sessionstoreobj)
     {
         global $string;
         
@@ -69,8 +69,8 @@ class Languageselection_auth extends outline_authentication
 
         return $sessionstoreobj;
     }
-  
-    function add_language_selection($display_std_form_obj)
+
+    public function add_language_selection($display_std_form_obj)
     {
         global $string;
         $this->savetodebug('add_language_selection');

@@ -34,7 +34,7 @@ class question_info
      * @param object $db
      * @return formated HTML for display of question information
      */
-    static function full_question_information($q_id, $db, $userObj, $string, $notice)
+    public static function full_question_information($q_id, $db, $userObj, $string, $notice)
     {
         global  $configObject, $string;
 
@@ -154,7 +154,7 @@ class question_info
      * @param object $db
      * @return array of performance data
      */
-    static function question_performance($q_id, $db)
+    public static function question_performance($q_id, $db)
     {
         global  $configObject, $string;
 
@@ -194,7 +194,7 @@ class question_info
      * @param text $type
      * @return true or false
      */
-    static function multi_part_question($type)
+    public static function multi_part_question($type)
     {
         if ($type == 'blank' or $type == 'dichotomous' or $type == 'extmatch' or $type == 'hotspot' or $type == 'labelling' or $type == 'matrix') {
             return true;
@@ -209,7 +209,7 @@ class question_info
      * @param text $q_type
      * @return formatted HTML
      */
-    static function display_parts($perform_data, $q_type)
+    public static function display_parts($perform_data, $q_type)
     {
         $html = '';
         $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
@@ -228,7 +228,7 @@ class question_info
      * @param text $q_type
      * @return formatted value for P.
      */
-    static function display_p($perform_data, $q_type)
+    public static function display_p($perform_data, $q_type)
     {
         $html = '';
 
@@ -248,7 +248,7 @@ class question_info
      * @param real $value
      * @return the original number or a warning if less than 0.2
      */
-    static function p_warning($value)
+    public static function p_warning($value)
     {
         if ($value < 0.2) {
             return '<span style="color:#C00000">' . $value . '</span>';
@@ -263,7 +263,7 @@ class question_info
      * @param text $q_type
      * @return formatted value for D.
      */
-    static function display_d($perform_data, $q_type)
+    public static function display_d($perform_data, $q_type)
     {
         $html = '';
 
@@ -283,7 +283,7 @@ class question_info
      * @param real $value
      * @return the original number or a warning if less than 0.15
      */
-    static function d_warning($value)
+    public static function d_warning($value)
     {
         if ($value <= 0.15) {
             return '<span style="color:#C00000">' . $value . '</span>';
@@ -298,7 +298,7 @@ class question_info
      * @param object $db
      * @return array with details of the source question.
      */
-    static function check_copies($q_id, $db)
+    public static function check_copies($q_id, $db)
     {
         $row_number = 0;
         $data_no = 0;
@@ -351,7 +351,7 @@ class question_info
      * @param object $db
      * @return array with details of the copied questions.
      */
-    static function check_copied($q_id, $db)
+    public static function check_copied($q_id, $db)
     {
         $data_no = 0;
         $data = array();

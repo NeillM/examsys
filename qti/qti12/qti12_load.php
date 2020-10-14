@@ -24,12 +24,12 @@
 
 class IE_qti12_Load extends IE_Main
 {
-    var $likert_values = array();
-    var $dich_values = array();
-    var $abstainvalues = array();
-    var $result;
+    public $likert_values = array();
+    public $dich_values = array();
+    public $abstainvalues = array();
+    public $result;
 
-    function __construct()
+    public function __construct()
     {
         $this->ll = array();
         for ($i = 1; $i < 27; $i++) {
@@ -42,7 +42,7 @@ class IE_qti12_Load extends IE_Main
         $this->result = new stdClass();
     }
 
-    function BuildMatchArrays()
+    public function BuildMatchArrays()
     {
         global $string;
 
@@ -83,7 +83,7 @@ class IE_qti12_Load extends IE_Main
         ExplodeToArray($this->dich_values, $string['qmpyn']);
     }
 
-    function Load($params)
+    public function Load($params)
     {
         global $string;
 
@@ -132,7 +132,7 @@ class IE_qti12_Load extends IE_Main
         return $this->result;
     }
 
-    function LoadAssessment($xml)
+    public function LoadAssessment($xml)
     {
         $paper = new ST_Paper();
         $paper->load_id = (string) $xml->attributes()->ident;
@@ -163,7 +163,7 @@ class IE_qti12_Load extends IE_Main
         unset($paper->screens[0]);
     }
 
-    function LoadSection($xml)
+    public function LoadSection($xml)
     {
         global $string;
 
@@ -186,7 +186,7 @@ class IE_qti12_Load extends IE_Main
         $paper->screens[$paper->GetNextScreenID()] = $screen;
     }
 
-    function LoadItem($item)
+    public function LoadItem($item)
     {
         global $q_warnings, $q_errors, $string;
 
@@ -325,7 +325,7 @@ class IE_qti12_Load extends IE_Main
         return $question->load_id;
     }
 
-    function LoadQuestion(&$item)
+    public function LoadQuestion(&$item)
     {
         $q = new ST_QTI12_Question($item);
         $q->CountStuff();
@@ -335,7 +335,7 @@ class IE_qti12_Load extends IE_Main
         return $q;
     }
 
-    function DetermineQType(&$question)
+    public function DetermineQType(&$question)
     {
         global $string;
 
@@ -538,7 +538,7 @@ class IE_qti12_Load extends IE_Main
         return 'unknown';
     }
 
-    function IsRankingQuestion(&$response_list)
+    public function IsRankingQuestion(&$response_list)
     {
         if (count($response_list) < 3) {
             return false;
@@ -584,7 +584,7 @@ class IE_qti12_Load extends IE_Main
         return false;
     }
 
-    function GenerateQuestionInfo(&$question, $material, $title, $responsemat = '')
+    public function GenerateQuestionInfo(&$question, $material, $title, $responsemat = '')
     {
         $notes = '';
         foreach ($material->chunks as & $chunk) {
@@ -607,7 +607,7 @@ class IE_qti12_Load extends IE_Main
         $question->leadin = RemoveLoneP($question->leadin);
     }
 
-    function ReplaceTitle(&$title, $scn)
+    public function ReplaceTitle(&$title, $scn)
     {
         $scn = NX_ChangePreSetCharsToRaw($scn);
 
@@ -683,7 +683,7 @@ class IE_qti12_Load extends IE_Main
     // SPECIFIC QUESTION TYPE LOADS //
     //////////////////////////////////
 
-    function LoadBlank(&$source)
+    public function LoadBlank(&$source)
     {
         global $string;
 
@@ -729,7 +729,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function BlankString(&$dest, &$source)
+    public function BlankString(&$dest, &$source)
     {
         global $string;
 
@@ -744,7 +744,7 @@ class IE_qti12_Load extends IE_Main
         $dest->displaymode = 'textboxes';
     }
 
-    function ProcessBlankChild(&$dest, &$source, &$qtext, &$optionid, &$child, $inflow)
+    public function ProcessBlankChild(&$dest, &$source, &$qtext, &$optionid, &$child, $inflow)
     {
         global $string;
 
@@ -881,7 +881,8 @@ class IE_qti12_Load extends IE_Main
             }
         }
     }
-    function BlankDropdowns(&$dest, &$source)
+
+    public function BlankDropdowns(&$dest, &$source)
     {
         global $string;
 
@@ -946,7 +947,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function LoadCalculation(&$source)
+    public function LoadCalculation(&$source)
     {
 
         $dest = new ST_Question_Calculation();
@@ -1073,7 +1074,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadDichotomous(&$source)
+    public function LoadDichotomous(&$source)
     {
         global $string;
 
@@ -1230,7 +1231,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function LoadExtmatch(&$source)
+    public function LoadExtmatch(&$source)
     {
         // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Extmatch();
@@ -1337,7 +1338,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // NEW
-    function LoadHotspot(&$source)
+    public function LoadHotspot(&$source)
     {
         // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Hotspot();
@@ -1396,7 +1397,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function LoadInfo(&$source)
+    public function LoadInfo(&$source)
     {
         // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Info();
@@ -1411,7 +1412,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadLabelling(&$source)
+    public function LoadLabelling(&$source)
     {
         global $string;
 
@@ -1536,7 +1537,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadLikert(&$source)
+    public function LoadLikert(&$source)
     {
         global $string;
 
@@ -1576,7 +1577,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function LoadMatrix(&$source)
+    public function LoadMatrix(&$source)
     {
 
         $dest = new ST_Question_Matrix();
@@ -1644,7 +1645,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadMCQ(&$source)
+    public function LoadMCQ(&$source)
     {
         global $string;
 
@@ -1768,7 +1769,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadTrueFalse(&$source)
+    public function LoadTrueFalse(&$source)
     {
         global $string;
 
@@ -1906,7 +1907,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadMRQ(&$source)
+    public function LoadMRQ(&$source)
     {
         global $string;
 
@@ -1990,7 +1991,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function MRQ_GetCorrect_allnegative(&$dest, &$source)
+    public function MRQ_GetCorrect_allnegative(&$dest, &$source)
     {
         global $string;
 
@@ -2028,7 +2029,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function MRQ_GetCorrect_selectedpositive(&$dest, &$source)
+    public function MRQ_GetCorrect_selectedpositive(&$dest, &$source)
     {
         global $string;
 
@@ -2062,7 +2063,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function MRQ_GetCorrect_allitemscorrect(&$dest, &$source)
+    public function MRQ_GetCorrect_allitemscorrect(&$dest, &$source)
     {
         $dest->score_method = 'AllItemsCorrect';
         $conds = $this->GetRespConditions($source, 1);
@@ -2085,7 +2086,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function LoadRank(&$source)
+    public function LoadRank(&$source)
     {
         // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Rank();
@@ -2169,7 +2170,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // DONE
-    function LoadTextbox(&$source)
+    public function LoadTextbox(&$source)
     {
         global $string;
 
@@ -2220,7 +2221,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadUnknown(&$source)
+    public function LoadUnknown(&$source)
     {
         // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question();
@@ -2234,7 +2235,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-    function LoadError(&$source)
+    public function LoadError(&$source)
     {
         // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question();
@@ -2253,7 +2254,7 @@ class IE_qti12_Load extends IE_Main
     ///////////////////////////////////////////////
 
     // gets a list of the possible responses in the question and returns it as an array
-    function GetResponseLabelList(&$question, $clean = true, &$lablk = array(), &$lablkd = array())
+    public function GetResponseLabelList(&$question, $clean = true, &$lablk = array(), &$lablkd = array())
     {
         $resplist = array();
         $numbb = 1;
@@ -2286,7 +2287,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // gets a list of the possible responses in the question and returns it as an array based on response id
-    function GetResponseLabelListByID(&$question, $rid, $clean = true)
+    public function GetResponseLabelListByID(&$question, $rid, $clean = true)
     {
         $resplist = array();
 
@@ -2311,7 +2312,7 @@ class IE_qti12_Load extends IE_Main
 
     // get counts of each type of response ident
     // return array($positive,$zero,$negative)
-    function GetRespConditionMarkCounts(&$data)
+    public function GetRespConditionMarkCounts(&$data)
     {
         $positive = 0;
         $zero = 0;
@@ -2331,7 +2332,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // 2nd parameter is type of round to apply.  1 for correct marks, 2 for parital marks, 3 for incorrect marks
-    function RoundFunction($number, $type = 1)
+    public function RoundFunction($number, $type = 1)
     {
         if ($type == 1) {
             //correct marks
@@ -2377,7 +2378,7 @@ class IE_qti12_Load extends IE_Main
     //
     //  as an array (min,max)
     //
-    function getMarksFromRespConditions(&$data)
+    public function getMarksFromRespConditions(&$data)
     {
         $max = 0;
         $part = 0;
@@ -2426,7 +2427,7 @@ class IE_qti12_Load extends IE_Main
     // mark = 0 returns all with mark as 0
     // mark = 1 returns all with positive marks
     // mark = -1 return all with negatvie marks
-    function GetRespConditions(&$data, $mark = '', $respident = '')
+    public function GetRespConditions(&$data, $mark = '', $respident = '')
     {
         //echo "<strong>Processing respconditions for $mark and $respident</strong><br>";
         $resps = array();
@@ -2479,7 +2480,7 @@ class IE_qti12_Load extends IE_Main
     // return array of responses based on type
     // type returns conditions with specific type (lid / str / num / xy)
     // render returns conditions with sepecific render type (choice / hotspot / slider / fib )
-    function GetResponses(&$data, $type = '', $render = '')
+    public function GetResponses(&$data, $type = '', $render = '')
     {
         $resps = array();
         foreach ($data->responses as & $response) {
@@ -2499,7 +2500,7 @@ class IE_qti12_Load extends IE_Main
     // respident = id of the input
     // value = value to calculate for
     // match - if 0, then will only match items with <not>
-    function GetFeedbacks(&$source, $respident, $value = '', $match = 1)
+    public function GetFeedbacks(&$source, $respident, $value = '', $match = 1)
     {
         //echo "Getting feedback list for $respident - $value - $match<br>";
 
@@ -2555,7 +2556,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // return array of all used feedbacks
-    function GetAllFeedbacks(&$source)
+    public function GetAllFeedbacks(&$source)
     {
         $feedbacks = array();
 
@@ -2567,7 +2568,7 @@ class IE_qti12_Load extends IE_Main
     }
 
     // returns html feedback based on an array of feedback ids passed in
-    function GetFeedbackFromArray(&$source, &$feedbacks)
+    public function GetFeedbackFromArray(&$source, &$feedbacks)
     {
         $output = array();
         foreach ($feedbacks as $feedback) {

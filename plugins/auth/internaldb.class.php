@@ -37,7 +37,7 @@ class internaldb_auth extends outline_authentication
     public $version = 1.0;
     private $updatable = false;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
@@ -48,7 +48,7 @@ class internaldb_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function failauth($postauthfailreturn)
+    public function failauth($postauthfailreturn)
     {
         $this->savetodebug('Fail function run');
         //default behaviour is to display username/password form
@@ -70,7 +70,7 @@ class internaldb_auth extends outline_authentication
         return $postauthfailreturn;
     }
 
-    function errordisp($displayerrformobj)
+    public function errordisp($displayerrformobj)
     {
         global $string;
         $cfg = Config::get_instance();
@@ -79,7 +79,7 @@ class internaldb_auth extends outline_authentication
         return $displayerrformobj;
     }
 
-    function lookupuser($lookupuserobj)
+    public function lookupuser($lookupuserobj)
     {
 
         if (!isset($lookupuserobj->username)) {
@@ -104,7 +104,7 @@ class internaldb_auth extends outline_authentication
         return $lookupuserobj;
     }
 
-    function auth($authobj)
+    public function auth($authobj)
     {
         $this->retdata =& $authobj;
         $this->savetodebug('Authing');
@@ -164,7 +164,7 @@ class internaldb_auth extends outline_authentication
         return $authobj;
     }
 
-    function update_password($postauthsuccessobj = '')
+    public function update_password($postauthsuccessobj = '')
     {
         $configObj = Config::get_instance();
         $passwordexpire = $configObj->get('core', 'system_password_expire');

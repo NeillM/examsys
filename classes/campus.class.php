@@ -44,7 +44,7 @@ class campus
      * @brief Constuctor
      * @param mysqli $db
      */
-    function __construct($db)
+    public function __construct($db)
     {
         $this->db = $db;
     }

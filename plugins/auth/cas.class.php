@@ -41,7 +41,7 @@ class cas_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
-    function init($object)
+    public function init($object)
     {
         parent::init($object);
         /*
@@ -57,7 +57,7 @@ class cas_auth extends outline_authentication
         */
     }
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
@@ -65,7 +65,7 @@ class cas_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function failauth($postauthfailreturn)
+    public function failauth($postauthfailreturn)
     {
         $this->savetodebug('postauthfail run');
         $postauthfailreturn->form = 'std';
@@ -95,7 +95,7 @@ class cas_auth extends outline_authentication
     }
     */
 
-    function auth($authobj)
+    public function auth($authobj)
     {
         $this->retdata =& $authobj;
         $this->savetodebug('Authing');

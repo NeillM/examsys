@@ -31,20 +31,20 @@ require_once 'st_paper.php';
 
 class ST_Main
 {
-    var $papers;
-    var $questions;
+    public $papers;
+    public $questions;
 }
 
 // class to store exported files
 class ST_File
 {
-    var $filename;
-    var $title;
-    var $path;
-    var $type;
-    var $id;
+    public $filename;
+    public $title;
+    public $path;
+    public $type;
+    public $id;
 
-    function __construct($filename, $title, $path, $type = 'xml', $id = 0)
+    public function __construct($filename, $title, $path, $type = 'xml', $id = 0)
     {
         $this->filename = $filename;
         $this->title = $title;

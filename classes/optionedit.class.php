@@ -82,7 +82,7 @@ class OptionEdit extends RogoObject
      * properties from an associative array
      * @param mixed $data
      */
-    function __construct($mysqli, $user_id, $question, $number, $lang_strings, $data = null)
+    public function __construct($mysqli, $user_id, $question, $number, $lang_strings, $data = null)
     {
         // Store the database connection reference
         $this->_mysqli = $mysqli;

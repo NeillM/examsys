@@ -100,7 +100,7 @@ class assessment
      * @param mysqli $db
      * @param object $configObject
      */
-    function __construct($db, $configObject)
+    public function __construct($db, $configObject)
     {
         $this->db = $db;
         $this->server_timezone = $configObject->get('cfg_timezone');

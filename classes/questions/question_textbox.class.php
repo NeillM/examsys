@@ -42,7 +42,7 @@ class QuestionTEXTBOX extends QuestionEdit
     protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'correct', 'bloom', 'status');
     protected $_fields_settings = array('columns', 'rows', 'editor', 'terms');
 
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         // Get default text editor first, allow to be overridden
         $configObject = Config::get_instance();

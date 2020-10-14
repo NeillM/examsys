@@ -128,7 +128,7 @@ class ClassTotals
         $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
     }
 
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         return error_handling($this);
     }

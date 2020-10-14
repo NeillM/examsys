@@ -27,7 +27,7 @@ class databaseTables
 
     private $tableList = array();
 
-    function __construct($charset, $engine = 'InnoDB', $helpEngine = 'MyISAM')
+    public function __construct($charset, $engine = 'InnoDB', $helpEngine = 'MyISAM')
     {
         $this->tableList['access_log'] = <<<QUERY
       CREATE TABLE `access_log` (
@@ -1771,7 +1771,7 @@ QUERY;
 QUERY;
     }
 
-    function next()
+    public function next()
     {
         if (count($this->tableList) > 0) {
             return array_pop($this->tableList);

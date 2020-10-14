@@ -38,13 +38,13 @@ class cosign_auth extends outline_authentication
     public $version = 0.9;
     protected $cosign;
 
-    function init($object)
+    public function init($object)
     {
         parent::init($object);
         $this->cosign = new cosign($this->settings['cosign_cfg'], $this);
     }
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
@@ -53,7 +53,7 @@ class cosign_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function failauth($postauthfailreturn)
+    public function failauth($postauthfailreturn)
     {
         $this->savetodebug('postauthfail run');
         $postauthfailreturn->form = 'std';
@@ -62,7 +62,7 @@ class cosign_auth extends outline_authentication
         return $postauthfailreturn;
     }
 
-    function loginbutton($displaystdformobj)
+    public function loginbutton($displaystdformobj)
     {
         if (isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === true) {
             $this->savetodebug('Login Button for cosign login enabled');
@@ -82,7 +82,7 @@ class cosign_auth extends outline_authentication
         return $displaystdformobj;
     }
 
-    function auth($authobj)
+    public function auth($authobj)
     {
         $this->retdata =& $authobj;
         $this->savetodebug('Authing');

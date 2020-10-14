@@ -34,7 +34,7 @@ class QuestionTRUE_FALSE extends QuestionEdit
     protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect');
     protected $_allow_change_marking_method = false;
 
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 

@@ -33,7 +33,7 @@ class QuestionMRQ extends QuestionEdit
     protected $min_options = 3;
     protected $_fields_force = array('display_method');
   
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
     

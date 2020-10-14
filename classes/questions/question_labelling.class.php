@@ -34,7 +34,7 @@ class QuestionLABELLING extends QuestionEdit
     protected $_requires_html5 = true;
     public $max_options = 1;
   
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 

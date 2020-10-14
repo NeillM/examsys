@@ -58,7 +58,7 @@ class Lookup extends RogoStaticSingleton
         $this->db = null;
     }
 
-    static function get_instance($config = null, $db = null)
+    public static function get_instance($config = null, $db = null)
     {
         //some objects are global and need parameters these are constructed using
         //a stranded constructor and need parameters passing. if they have not been
@@ -83,7 +83,7 @@ class Lookup extends RogoStaticSingleton
     }
 
     // constructor
-    function __construct(&$configObj, &$db)
+    public function __construct(&$configObj, &$db)
     {
         $this->db = & $db;
         $this->configObj = & $configObj;
@@ -148,7 +148,7 @@ class Lookup extends RogoStaticSingleton
     /**
      * error handling function
      */
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         $context1 = array();
         $context1 = error_handling($this);
@@ -161,7 +161,7 @@ class Lookup extends RogoStaticSingleton
     /**
      * CLoads the config
      */
-    function load_config()
+    public function load_config()
     {
         $notice = UserNotices::get_instance();
 
@@ -179,7 +179,7 @@ class Lookup extends RogoStaticSingleton
      * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
      * @return object             - the data object
      */
-    function modulelookup($data)
+    public function modulelookup($data)
     {
         if (!isset($data->searchorder)) {
             if (isset($this->settings->searchorder)) {
@@ -283,7 +283,7 @@ class Lookup extends RogoStaticSingleton
      * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
      * @return object             - the data object
      */
-    function userlookup($data)
+    public function userlookup($data)
     {
         if (!isset($data->searchorder)) {
             if (isset($this->settings->searchorder)) {
@@ -382,7 +382,7 @@ class Lookup extends RogoStaticSingleton
         return $userlookupobj;
     }
 
-    function register_callback_section($section)
+    public function register_callback_section($section)
     {
         foreach ($section as $addition) {
             if (!in_array($addition, $this->callbacktypes)) {
@@ -399,7 +399,7 @@ class Lookup extends RogoStaticSingleton
      * @param bool $insert optional if set insert at beginning of list
      *    * @return bool             - false if failed
      */
-    function register_callback($callback, $section, $number, $name, $insert = false)
+    public function register_callback($callback, $section, $number, $name, $insert = false)
     {
         if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
             //attempting to register callback to invalid section
@@ -421,12 +421,12 @@ class Lookup extends RogoStaticSingleton
         return true;
     }
 
-    function get_callback($section)
+    public function get_callback($section)
     {
         return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
     }
 
-    function append_lookup_object_debug($number, $desc = '')
+    public function append_lookup_object_debug($number, $desc = '')
     {
         $new_messages = $this->lookupPluginObj[$number]->get_new_debug_messages();
         foreach ($new_messages as $key => $value) {
@@ -436,27 +436,27 @@ class Lookup extends RogoStaticSingleton
         }
     }
 
-    function display_debug()
+    public function display_debug()
     {
         var_dump($this->debug);
     }
 
-    function debug_to_string()
+    public function debug_to_string()
     {
         return implode('<br />', $this->debug);
     }
 
-    function debug_as_array()
+    public function debug_as_array()
     {
         return $this->debug;
     }
 
-    function clear_debug()
+    public function clear_debug()
     {
         $this->debug = array();
     }
 
-    function version_info($formatted = false, $advanced = false)
+    public function version_info($formatted = false, $advanced = false)
     {
         $data = new stdClass();
         $data->plugins = array();

@@ -39,7 +39,7 @@ class QuestionStatus
     private $_db;
     private $_lang_strings;
 
-    function __construct($db, $lang_strings, $data)
+    public function __construct($db, $lang_strings, $data)
     {
         $this->_db = $db;
         $this->_lang_strings = $lang_strings;

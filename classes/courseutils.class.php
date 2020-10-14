@@ -40,7 +40,7 @@ class CourseUtils
      *
      * @return integer new course id
      */
-    static function add_course($schoolid, $name, $description, $externalid, $externalsys, $db)
+    public static function add_course($schoolid, $name, $description, $externalid, $externalsys, $db)
     {
 
         if ($name == '') {
@@ -78,7 +78,7 @@ class CourseUtils
      *
      * @return bool depending on  success
      */
-    static function delete_course($name, $db)
+    public static function delete_course($name, $db)
     {
         if (trim($name) == '') {
             return false;
@@ -103,7 +103,7 @@ class CourseUtils
      *
      * @return bool depending on  success
      */
-    static function delete_course_by_id($id, $db)
+    public static function delete_course_by_id($id, $db)
     {
         $result = $db->prepare('UPDATE courses SET deleted = NOW() where id = ?');
         $result->bind_param('i', $id);
@@ -125,7 +125,7 @@ class CourseUtils
      *
      * @return bool false=course does not exists, true=course exist
      */
-    static function course_exists($name, $db)
+    public static function course_exists($name, $db)
     {
         // Check for unique course
         $exists = true;
@@ -143,7 +143,7 @@ class CourseUtils
         return $exists;
     }
 
-    static function courseid_exists($courseID, $db)
+    public static function courseid_exists($courseID, $db)
     {
         $result = $db->prepare('SELECT id FROM courses WHERE id = ? AND deleted IS NULL');
         $result->bind_param('i', $courseID);
@@ -160,7 +160,7 @@ class CourseUtils
         return $exist;
     }
 
-    static function get_course_details_by_name($name, $db)
+    public static function get_course_details_by_name($name, $db)
     {
         $result = $db->prepare('SELECT description, deleted, schoolid FROM courses WHERE name = ? LIMIT 1');
         $result->bind_param('s', $name);
@@ -184,7 +184,7 @@ class CourseUtils
      * @param object $db        - Link to mysqli
      * @return bool|string      - False if the course does not exist, otherwise returns the name.
      */
-    static function get_course_name_by_id($courseID, $db)
+    public static function get_course_name_by_id($courseID, $db)
     {
         $course_name = false;
 
@@ -206,7 +206,7 @@ class CourseUtils
      * @param mysqli $db
      * @return array details
      */
-    static function get_course_details_by_id($id, $db)
+    public static function get_course_details_by_id($id, $db)
     {
         $result = $db->prepare('SELECT name, description, deleted, schoolid, externalid, externalsys FROM courses WHERE id = ? LIMIT 1');
         $result->bind_param('i', $id);
@@ -230,7 +230,7 @@ class CourseUtils
      * @param mysqli $db
      * @return
      */
-    static function count_users_on_course($name, $db)
+    public static function count_users_on_course($name, $db)
     {
         $result = $db->prepare('SELECT count(*) FROM users WHERE grade = ?');
         $result->bind_param('s', $name);
@@ -254,7 +254,7 @@ class CourseUtils
      *
      * @return bool success response
      */
-    static function update_course($id, $schoolid, $name, $description, $externalid, $externalsys, $db)
+    public static function update_course($id, $schoolid, $name, $description, $externalid, $externalsys, $db)
     {
         // Check if name already in use.
         $courseid = CourseUtils::get_course_id($name, $db);
@@ -281,7 +281,7 @@ class CourseUtils
      *
      * @return int|bool id of course or false
      */
-    static function get_course_id($name, $db)
+    public static function get_course_id($name, $db)
     {
         $result = $db->prepare('SELECT id FROM courses WHERE name = ? AND deleted IS NULL');
         $result->bind_param('s', $name);
@@ -306,7 +306,7 @@ class CourseUtils
      *
      * @return int|bool id of course or false
      */
-    static function get_courseid_from_externalid($externalid, $externalsys, $db)
+    public static function get_courseid_from_externalid($externalid, $externalsys, $db)
     {
         $result = $db->prepare('SELECT id FROM courses WHERE externalid = ? AND externalsys = ? AND deleted IS NULL');
         $result->bind_param('ss', $externalid, $externalsys);
@@ -329,7 +329,7 @@ class CourseUtils
      * @param mysqli $db db connection
      * @return array list of courses in rogo but not in external system
      */
-    static function diff_external_courses_to_internal_courses($external, $sms, $db)
+    public static function diff_external_courses_to_internal_courses($external, $sms, $db)
     {
         $result = $db->prepare('SELECT id, externalid, deleted FROM courses WHERE externalid IS NOT NULL AND externalsys = ?');
         $result->bind_param('s', $sms);
@@ -358,7 +358,7 @@ class CourseUtils
      * @param integer $id rogo id of course
      * @return boolean true on success, false otherwise
      */
-    static function restore_course($db, $id)
+    public static function restore_course($db, $id)
     {
         $result = $db->prepare('UPDATE courses set deleted = NULL where id = ?');
         $result->bind_param('i', $id);

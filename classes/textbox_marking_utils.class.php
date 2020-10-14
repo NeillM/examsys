@@ -35,7 +35,7 @@ class textbox_marking_utils
      * @param $db      - Database connection
      * @return array   - List of users who are set for remarking.
      */
-    static function get_remark_users($paperID, $db)
+    public static function get_remark_users($paperID, $db)
     {
         $remark_array = array();
 
@@ -60,7 +60,7 @@ class textbox_marking_utils
      * @return string
      * @deprecated since 7.2.0
      */
-    static function nicedate($original)
+    public static function nicedate($original)
     {
         return date_utils::rogoToDisplay($original);
     }
@@ -72,7 +72,7 @@ class textbox_marking_utils
      * @param string $answer user answer
      * @return string
      */
-    static function higlightterms($settings, $answer)
+    public static function higlightterms($settings, $answer)
     {
         if (isset($settings['terms'])) {
             $correct_answers = json_decode($settings['terms']);

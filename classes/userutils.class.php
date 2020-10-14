@@ -27,7 +27,7 @@
 class UserUtils
 {
 
-    static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '')
+    public static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '')
     {
         $courseok = CourseUtils::add_course($school, $course, $coursedesc, null, null, $db);
 
@@ -69,7 +69,7 @@ class UserUtils
      * @param bool $guest flag to enable guest account creation
      * @return int|bool The user id or false if the user did not create.
      */
-    static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null, $guest = false)
+    public static function create_user($username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null, $guest = false)
     {
         $username = trim($username);
         $surname = trim($surname);
@@ -141,7 +141,7 @@ class UserUtils
      * @param int $userid
      * @throws Exception
      */
-    static function insert_student_id($db, $studentid, $userid)
+    public static function insert_student_id($db, $studentid, $userid)
     {
         $langcomponent = 'classes/userutils';
         $langpack = new \langpack();
@@ -173,7 +173,7 @@ class UserUtils
      * @param string $initials - user initials
      * @return bool - true on success
      */
-    static function update_user($id, $username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null)
+    public static function update_user($id, $username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null)
     {
 
         $current = self::get_full_details_by_ID($id, $db);
@@ -263,7 +263,7 @@ class UserUtils
         return true;
     }
 
-    static function get_salt()
+    public static function get_salt()
     {
         $configObj = Config::get_instance();
 
@@ -277,7 +277,7 @@ class UserUtils
         return $cfg_encrypt_salt;
     }
 
-    static function update_password($username, $password, $userID, $db)
+    public static function update_password($username, $password, $userID, $db)
     {
         if ($userID == '' or $password == '') {
             return false;
@@ -307,7 +307,7 @@ class UserUtils
      * @return bool true when valid, otherwise false
      *
      */
-    static function username_is_valid($username, $guest = false)
+    public static function username_is_valid($username, $guest = false)
     {
         $is_guest_name = (mb_substr(mb_strtolower($username), 0, 4) == 'user' and is_numeric(mb_substr($username, 4)));
 
@@ -327,7 +327,7 @@ class UserUtils
      * @return mixed user ID if exists, otherwise false
      *
      */
-    static function username_exists($username, $db)
+    public static function username_exists($username, $db)
     {
         if ($username == '') {
             return false;
@@ -352,7 +352,7 @@ class UserUtils
      * @param string $userid   - The ID of the user we are dealing with.
      * @param object $db       - Database connection.
      */
-    static function add_role($new_role, $userid, $db)
+    public static function add_role($new_role, $userid, $db)
     {
         if ($new_role == '') {
             return false;
@@ -377,7 +377,7 @@ class UserUtils
      * @return true if exists else false
      *
      */
-    static function userid_exists($userid, $db)
+    public static function userid_exists($userid, $db)
     {
         $stmt = $db->prepare('SELECT id FROM users WHERE id = ? AND user_deleted IS NULL');
         $stmt->bind_param('i', $userid);
@@ -400,7 +400,7 @@ class UserUtils
      * @return string username of the user
      *
      */
-    static function get_username($userid, $db)
+    public static function get_username($userid, $db)
     {
         $stmt = $db->prepare('SELECT username FROM users WHERE id = ? AND user_deleted IS NULL');
         $stmt->bind_param('i', $userid);
@@ -423,7 +423,7 @@ class UserUtils
      * @return mixed user ID if exists, otherwise false
      *
      */
-    static function studentid_exists($sid, $db)
+    public static function studentid_exists($sid, $db)
     {
         $stmt = $db->prepare('SELECT userID FROM sid WHERE student_id = ?');
         $stmt->bind_param('s', $sid);
@@ -447,7 +447,7 @@ class UserUtils
      * @return bool whether role was found or not
      *
      */
-    static function has_user_role($tmp_userID, $test_role, $db)
+    public static function has_user_role($tmp_userID, $test_role, $db)
     {
         $sql = "SELECT GROUP_CONCAT(r.name  SEPARATOR ',') 
                 FROM users u
@@ -482,7 +482,7 @@ class UserUtils
      *
      * @return mixed - False if not found, otherwise an array with the details.
      */
-    static function get_user_details($userID, $db)
+    public static function get_user_details($userID, $db)
     {
         $sql = "SELECT u.username, u.title, u.surname, u.initials, u.first_names, u.email, GROUP_CONCAT(r.name  SEPARATOR ','), 
                        u.gender, u.grade, u.yearofstudy, u.user_deleted 
@@ -530,7 +530,7 @@ class UserUtils
      * @param object $db          - Database connection.
      * @return bool
      */
-    static function add_staff_to_module($tmp_userID, $idMod, $db)
+    public static function add_staff_to_module($tmp_userID, $idMod, $db)
     {
         if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
             $stmt = $db->prepare('INSERT INTO modules_staff VALUES (NULL, ?, ?, NOW())');
@@ -553,7 +553,7 @@ class UserUtils
      * @param object $db          - Database connection.
      * @return bool true on success, false otherwise
      */
-    static function remove_staff_from_module($tmp_userID, $idMod, $db)
+    public static function remove_staff_from_module($tmp_userID, $idMod, $db)
     {
         if (UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
             $stmt = $db->prepare('DELETE FROM modules_staff WHERE memberID = ? AND idMod = ?');
@@ -575,7 +575,7 @@ class UserUtils
      * @param object $db mysqli database connection
      *
      */
-    static function add_staff_to_module_by_modulecode($tmp_userID, $module_code, $db)
+    public static function add_staff_to_module_by_modulecode($tmp_userID, $module_code, $db)
     {
 
         if (!UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
@@ -594,7 +594,7 @@ class UserUtils
      * @param object $db mysqli database connection
      *
      */
-    static function clear_staff_modules_by_moduleID($idMod, $db)
+    public static function clear_staff_modules_by_moduleID($idMod, $db)
     {
         $stmt = $db->prepare('DELETE FROM modules_staff WHERE idMod = ?');
         $stmt->bind_param('i', $idMod);
@@ -610,7 +610,7 @@ class UserUtils
      * @param object $db mysqli database connection
      *
      */
-    static function list_staff_modules_by_userID($userID, $db)
+    public static function list_staff_modules_by_userID($userID, $db)
     {
         $user_modules = array();
         $result = $db->prepare('SELECT
@@ -638,7 +638,7 @@ class UserUtils
      * @param object $db mysqli database connection
      *
      */
-    static function clear_staff_modules_by_userID($tmp_userID, $db)
+    public static function clear_staff_modules_by_userID($tmp_userID, $db)
     {
         $userObject = UserObject::get_instance();
 
@@ -659,7 +659,7 @@ class UserUtils
      * @param object $db mysqli database connection
      *
      */
-    static function clear_admin_access($tmp_userID, $db)
+    public static function clear_admin_access($tmp_userID, $db)
     {
         $result = $db->prepare('DELETE FROM admin_access WHERE userID = ?');
         $result->bind_param('i', $tmp_userID);
@@ -676,7 +676,7 @@ class UserUtils
      * @return array list of UserIDs for member of the team
      *
      */
-    static function get_staff_modules_list_by_modID($modID, $db)
+    public static function get_staff_modules_list_by_modID($modID, $db)
     {
         $team_members = array();
         $result = $db->prepare('SELECT memberID FROM modules_staff WHERE idMod = ?');
@@ -700,7 +700,7 @@ class UserUtils
      * @return array list of UserIDs for member of the team
      *
      */
-    static function get_staff_modules_list_by_name($team_name, $db)
+    public static function get_staff_modules_list_by_name($team_name, $db)
     {
         $team_members = array();
         $result = $db->prepare('SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ? AND mod_deleted IS NULL');
@@ -725,7 +725,7 @@ class UserUtils
      * @return int|bool enrolement id 0 if already enrolled, false on error
      *
      */
-    static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0)
+    public static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0)
     {
 
         $yearutils = new yearutils($db);
@@ -766,7 +766,7 @@ class UserUtils
      *
      * @return int|bool enrolement id, 0 if already enrolled, false on error
      */
-    static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0)
+    public static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0)
     {
 
         $yearutils = new yearutils($db);
@@ -809,7 +809,7 @@ class UserUtils
      * @param object $db mysqli database connection
      *
      */
-    static function clear_student_modules_by_userID($tmp_userID, $session, $attempt, $db)
+    public static function clear_student_modules_by_userID($tmp_userID, $session, $attempt, $db)
     {
         $userObject = UserObject::get_instance();
 
@@ -834,7 +834,7 @@ class UserUtils
      * @return bool return true if successful.
      *
      */
-    static function is_user_on_module_by_name($tmp_userID, $idMod, $session, $db)
+    public static function is_user_on_module_by_name($tmp_userID, $idMod, $session, $db)
     {
         if (is_array($idMod)) {
             foreach ($idMod as $idmods) {
@@ -861,7 +861,7 @@ class UserUtils
      * @return bool return true if successful.
      *
      */
-    static function is_user_on_module($tmp_userID, $idMod, $session, $db)
+    public static function is_user_on_module($tmp_userID, $idMod, $session, $db)
     {
         if ($idMod !== 0 and empty($idMod)) {
             // Assume false when there is no module passed, it will cause SQL errors otherwise.
@@ -890,7 +890,7 @@ class UserUtils
         return $exists;
     }
 
-    static function fixcase_callback($word)
+    public static function fixcase_callback($word)
     {
         $word = $word[1];
         $word = mb_strtolower($word);
@@ -913,7 +913,7 @@ class UserUtils
         return $word;
     }
 
-    static function my_ucwords($s)
+    public static function my_ucwords($s)
     {
         if (mb_check_encoding($s, 'UTF-8')) {
             //do nothing
@@ -923,7 +923,7 @@ class UserUtils
         return $s;
     }
 
-    static function load_student_modules($userID, $db)
+    public static function load_student_modules($userID, $db)
     {
         $studentModules = array();
 
@@ -950,7 +950,7 @@ class UserUtils
      * @param object $db  - database connection.
      *
      */
-    static function delete_userID($userID, $db)
+    public static function delete_userID($userID, $db)
     {
         $result = $db->prepare("UPDATE users SET username = CONCAT(username, '_', id), user_deleted = NOW() WHERE id = ?");
         $result->bind_param('i', $userID);
@@ -971,7 +971,7 @@ class UserUtils
      *                            the username and extention (file) is has matched.
      *
      */
-    static function student_photo_exist($username)
+    public static function student_photo_exist($username)
     {
         $found = false;
         $photodirectory = rogo_directory::get_directory('user_photo');
@@ -996,7 +996,7 @@ class UserUtils
      * @param mysqli $db
      * @return bool
      */
-    static function user_paper_started($id, $db)
+    public static function user_paper_started($id, $db)
     {
         $result = $db->prepare('SELECT NULL FROM log_metadata WHERE userID = ?
         UNION SELECT NULL FROM log4_overall WHERE userID = ?');
@@ -1017,7 +1017,7 @@ class UserUtils
      * @param mysqli $db
      * @return array user details
      */
-    static function get_full_details_by_ID($id, $db)
+    public static function get_full_details_by_ID($id, $db)
     {
         $sql = "SELECT u.username, u.password, u.title, u.first_names, u.surname, u.email, u.grade, u.gender,
                        u.yearofstudy, GROUP_CONCAT(r.name  SEPARATOR ','), u.initials, s.student_id 
@@ -1073,7 +1073,7 @@ class UserUtils
      * @param mysqli $db
      * @return bool|int false / enrolment id
      */
-    static function remove_student_from_module($userid, $moduleid, $session, $db)
+    public static function remove_student_from_module($userid, $moduleid, $session, $db)
     {
         if ($userid == '' or $moduleid == '' or $session == '') {
             return false;
@@ -1107,7 +1107,7 @@ class UserUtils
      * @param mysqli $db - db connection
      * @return integer|bool - enrolement id, false on error
      */
-    static function get_enrolement_id($userid, $moduleid, $session, $db)
+    public static function get_enrolement_id($userid, $moduleid, $session, $db)
     {
         $result = $db->prepare('SELECT id FROM modules_student WHERE userID = ? AND idMod = ? AND calendar_year = ?');
         $result->bind_param('iii', $userid, $moduleid, $session);
@@ -1132,7 +1132,7 @@ class UserUtils
      * @param integer $auto_update - is enrolement remotely updatable
      * @param mysqli $db - db connection
      */
-    static function update_module_enrolement($id, $attempt, $auto_update, $db)
+    public static function update_module_enrolement($id, $attempt, $auto_update, $db)
     {
         $result = $db->prepare('UPDATE modules_student SET auto_update = ?, attempt = ? WHERE id = ?');
         $result->bind_param('iii', $auto_update, $attempt, $id);

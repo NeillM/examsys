@@ -43,7 +43,7 @@ class render
      * @param string|array $templatedir - path to templates or list of paths to search for template
      * @return void
      */
-    function __construct($configObject, $templatedir = null)
+    public function __construct($configObject, $templatedir = null)
     {
         if (is_null($templatedir)) {
             $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');

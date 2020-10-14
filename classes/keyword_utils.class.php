@@ -32,7 +32,7 @@ class keyword_utils
      * See if a reference material ID actually exists.
      * @return true or false.
      */
-    static function refmaterials_exist($idMod, $db)
+    public static function refmaterials_exist($idMod, $db)
     {
         $row_no = 0;
   
@@ -48,7 +48,7 @@ class keyword_utils
         return $row_no > 0;
     }
   
-    static function name_from_ID($keywordID, $db)
+    public static function name_from_ID($keywordID, $db)
     {
         $result = $db->prepare('SELECT keyword FROM keywords_user WHERE id = ?');
         $result->bind_param('i', $keywordID);
@@ -72,7 +72,7 @@ class keyword_utils
      * @param mysqli $db
      * @return array question identifiers
      */
-    static function get_keyword_questions($kid, $db)
+    public static function get_keyword_questions($kid, $db)
     {
         $keyword = $db->prepare('SELECT q_id FROM keywords_question WHERE keywordID = ?');
         $keyword->bind_param('i', $kid);

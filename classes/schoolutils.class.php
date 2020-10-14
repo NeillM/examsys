@@ -39,7 +39,7 @@ class SchoolUtils
      *
      * @return int              - The ID of the school.
      */
-    static function add_school($facultyID, $school, $db, $code = null, $externalid = null, $externalsys = null)
+    public static function add_school($facultyID, $school, $db, $code = null, $externalid = null, $externalsys = null)
     {
         if ($facultyID === '' or $school === '') {
             return false;
@@ -61,7 +61,7 @@ class SchoolUtils
      *
      * @return array            - An array of schools keyed by ID and holding school name and faculty ID.
      */
-    static function get_school_list_by_id($db)
+    public static function get_school_list_by_id($db)
     {
         $school_list = array();
 
@@ -84,7 +84,7 @@ class SchoolUtils
      *
      * @return int|bool              - ID of the school, or false if non-existant.
      */
-    static function get_school_id_by_name($school_name, $db)
+    public static function get_school_id_by_name($school_name, $db)
     {
         if ($school_name == '') {
             return false;
@@ -113,7 +113,7 @@ class SchoolUtils
      *
      * @return int|bool id of school or false
      */
-    static function get_schoolid_from_externalid($externalid, $externalsys, $db)
+    public static function get_schoolid_from_externalid($externalid, $externalsys, $db)
     {
         $result = $db->prepare('SELECT id FROM schools WHERE externalid = ? AND externalsys = ?  AND deleted IS NULL');
         $result->bind_param('ss', $externalid, $externalsys);
@@ -136,7 +136,7 @@ class SchoolUtils
      *
      * @return array            - List of schools the member of staff has access to.
      */
-    static function get_admin_schools($admin_userid, $db)
+    public static function get_admin_schools($admin_userid, $db)
     {
         $school_list = array();
 
@@ -160,7 +160,7 @@ class SchoolUtils
      *
      * @return bool           - True if school name already exists for the faculty
      */
-    static function school_exists_in_faculty($facultyID, $school, $db)
+    public static function school_exists_in_faculty($facultyID, $school, $db)
     {
         $row_no = 0;
 
@@ -182,7 +182,7 @@ class SchoolUtils
      *
      * @return bool         - True if the school ID is found
      */
-    static function schoolid_exists($schoolID, $db)
+    public static function schoolid_exists($schoolID, $db)
     {
         $row_no = 0;
 
@@ -204,7 +204,7 @@ class SchoolUtils
      *
      * @return bool         - True if the school name is found
      */
-    static function school_name_exists($school, $db)
+    public static function school_name_exists($school, $db)
     {
         $schoolID = 0;
         $row_no = 0;
@@ -232,7 +232,7 @@ class SchoolUtils
      *
      * @return int|bool         - id of school or false if not found
      */
-    static function get_schoolid_by_code($code, $db)
+    public static function get_schoolid_by_code($code, $db)
     {
         $stmt = $db->prepare('SELECT id FROM schools WHERE code = ?');
         $stmt->bind_param('s', $code);
@@ -249,7 +249,7 @@ class SchoolUtils
         return $schoolid;
     }
 
-    static function get_school_faculty($schoolID, $db)
+    public static function get_school_faculty($schoolID, $db)
     {
         $school_name = false;
 
@@ -271,7 +271,7 @@ class SchoolUtils
      *
      * @return bool         - Return false if no schoolID is passed.
      */
-    static function delete_school($schoolID, $db)
+    public static function delete_school($schoolID, $db)
     {
         if ($schoolID == '') {
             return false;
@@ -299,7 +299,7 @@ class SchoolUtils
      *
      * @return bool - true on success
      */
-    static function update_school($id, $facultyID, $school, $code, $externalid, $externalsys, $db)
+    public static function update_school($id, $facultyID, $school, $code, $externalid, $externalsys, $db)
     {
         if ($facultyID === '' or $school === '') {
             return false;
@@ -329,7 +329,7 @@ class SchoolUtils
      * @param mysqli $db
      * @return array details
      */
-    static function get_school_details_by_id($id, $db)
+    public static function get_school_details_by_id($id, $db)
     {
         $result = $db->prepare('SELECT school, code, facultyID, externalid, externalsys FROM schools WHERE id = ?');
         $result->bind_param('i', $id);
@@ -348,7 +348,7 @@ class SchoolUtils
      * @param mysqli $db
      * @return bool true if school is in use
      */
-    static function school_in_use($id, $db)
+    public static function school_in_use($id, $db)
     {
         $result = $db->prepare('SELECT NULL FROM courses WHERE schoolid = ? AND deleted is NULL
         UNION SELECT NULL FROM modules WHERE schoolid = ? AND mod_deleted is NULL');
@@ -370,7 +370,7 @@ class SchoolUtils
      * @param mysqli $db
      * @return integer|bool - new school id or false on error
      */
-    static function generate_school_id($school, $faculty, $db)
+    public static function generate_school_id($school, $faculty, $db)
     {
         $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
         if (!$facultyid) {
@@ -393,7 +393,7 @@ class SchoolUtils
      * @param mysqli $db db connection
      * @return array list of schools in rogo but not in external system
      */
-    static function diff_external_schools_to_internal_schools($external, $sms, $db)
+    public static function diff_external_schools_to_internal_schools($external, $sms, $db)
     {
         $result = $db->prepare('SELECT id, externalid, deleted FROM schools WHERE externalid IS NOT NULL and externalsys = ?');
         $result->bind_param('s', $sms);
@@ -421,7 +421,7 @@ class SchoolUtils
      * @param integer $id rogo id of school
      * @return boolean true on success, false otherwise
      */
-    static function restore_school($db, $id)
+    public static function restore_school($db, $id)
     {
         $result = $db->prepare('UPDATE schools set deleted = NULL where id = ?');
         $result->bind_param('i', $id);

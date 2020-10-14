@@ -19,19 +19,19 @@ require_once '../include/load_config.php';
 // main question object
 class ST_QTI12_Question // <item
 {
-    var $raw_xml;
-    var $title; // <item title=
-    var $load_id; // <item ident=
+    public $raw_xml;
+    public $title; // <item title=
+    public $load_id; // <item ident=
 
 
-    var $wct_questiontype;
+    public $wct_questiontype;
     // itemmetadata stuff
-    var $qmd_itemtype; // <itemmetadata><qmd_itemtype>
-    var $qmd_status = 'Normal'; // <itemmetadata><qmd_status>
-    var $qmd_toolvendor; // <itemmetadata><qmd_toolvendor>
+    public $qmd_itemtype; // <itemmetadata><qmd_itemtype>
+    public $qmd_status = 'Normal'; // <itemmetadata><qmd_status>
+    public $qmd_toolvendor; // <itemmetadata><qmd_toolvendor>
 
     // counted stuff
-    var $counts = array(
+    public $counts = array(
         'lid' => 0,
         'str' => 0,
         'num' => 0,
@@ -47,28 +47,28 @@ class ST_QTI12_Question // <item
     );
 
     // calculate cardinaltiy, if all of lid are ismulti then Multi, if some are ismulti then varies (for extmatch i think)
-    var $cardinality = 'Single';
+    public $cardinality = 'Single';
 
     // label sets - do all sets of labels for each of the responses have the same values in or not??
     // this needs to be 1 for most question type, the only question type that allows multiple sets of answers is blank
-    var $labelsets = 1;
+    public $labelsets = 1;
 
     // <presentation>
     // do we have flow data?
-    var $hasflow = 0;
+    public $hasflow = 0;
 
     // general question material
     // <material>
     // array of QT_QTI12_Material, as some questions have multiple material sections
     // $questionmats - OBSOLETE!!! REPLACED BY $material
-    var $material;
+    public $material;
 
     // <response_lid>
     // array of ST_QTI12_Response
     // key on <response_lid ident=
-    var $responses = array();
+    public $responses = array();
 
-    var $presentation;
+    public $presentation;
     // </presentation>
 
     // <resprocessing>
@@ -76,19 +76,19 @@ class ST_QTI12_Question // <item
     // <respcondition>
     // array of ST_QTI12_RespCondition
     // key by numbe
-    var $respconditions = array();
+    public $respconditions = array();
 
     // <resprocessing>
 
     // <itemfeedback>
     // array of ST_QTI12_Itemfeedback
     // key by <itemfeedback ident=
-    var $itemfeedback = array();
+    public $itemfeedback = array();
 
-    var $comments = array();
-    var $params = array();
+    public $comments = array();
+    public $params = array();
 
-    function __construct($xml)
+    public function __construct($xml)
     {
         $this->params['KEYWORD'] = array();
         $this->params['VARIABLE'] = array();
@@ -231,7 +231,7 @@ class ST_QTI12_Question // <item
         }
     }
 
-    function LoadComments($xml)
+    public function LoadComments($xml)
     {
         foreach ($xml->children() as $child) {
             $name = $child->getName();
@@ -262,7 +262,7 @@ class ST_QTI12_Question // <item
     }
 
     // <presentation> only 1 per <item>
-    function LoadPresentation($xml)
+    public function LoadPresentation($xml)
     {
         if ($xml->flow) {
             $this->hasflow = 1;
@@ -315,7 +315,7 @@ class ST_QTI12_Question // <item
         }
     }
 
-    function CountStuff()
+    public function CountStuff()
     {
         $count_response = count($this->responses);
 
@@ -346,7 +346,7 @@ class ST_QTI12_Question // <item
     }
 
     // verify all sets of lables for each lid are same or not
-    function CompareLabels()
+    public function CompareLabels()
     {
         if ($this->counts['response'] > 1) {
             $allsame = 1;
@@ -400,29 +400,29 @@ class ST_QTI12_Question // <item
 // object to store question parts
 class ST_QTI12_Response // <response_
 {
-    var $id; // <response_lid ident=
+    public $id; // <response_lid ident=
 
     // type of the response_ object
-    var $type = 'lid';
+    public $type = 'lid';
 
-    var $material; // <material>
-    var $ismulti = 0; // <response_lid rcardinality= // "Multiple" for 1
+    public $material; // <material>
+    public $ismulti = 0; // <response_lid rcardinality= // "Multiple" for 1
 
-    var $render = 'choice';
-    var $flow = 0;
+    public $render = 'choice';
+    public $flow = 0;
 
     // attributes for rebder_choice
-    var $shuffle = 0; // <render_choice shuffle="No"
-    var $minnumber = 0; // <render_choice minnumber=
-    var $maxnumber = 0; // <render_choice maxnumber=
+    public $shuffle = 0; // <render_choice shuffle="No"
+    public $minnumber = 0; // <render_choice minnumber=
+    public $maxnumber = 0; // <render_choice maxnumber=
 
     // attributes for render_fib
-    var $fibtype = '';
-    var $prompt = '';
-    var $rows = 0;
-    var $cols = 0;
+    public $fibtype = '';
+    public $prompt = '';
+    public $rows = 0;
+    public $cols = 0;
 
-    var $orderid = 0;
+    public $orderid = 0;
     // attributes for render_slider
 
     // attributes for render_hotspot
@@ -430,9 +430,9 @@ class ST_QTI12_Response // <response_
     // <render_choice><response_label
     // ST_QTI12_Label
     // key by <response_label ident=
-    var $labels = array();
+    public $labels = array();
 
-    function __construct($type, $xml)
+    public function __construct($type, $xml)
     {
 
         $this->id = (string) $xml->attributes()->ident;
@@ -476,7 +476,7 @@ class ST_QTI12_Response // <response_
     }
 
     // load <render_ segment, only ever 1 per <response_
-    function LoadRender($xml) // <render_choice etc
+    public function LoadRender($xml) // <render_choice etc
     {
         if ($xml->material) {
             $this->material->add($xml->material);
@@ -495,7 +495,7 @@ class ST_QTI12_Response // <response_
         }
     }
 
-    function LoadRenderHotspot($xml)
+    public function LoadRenderHotspot($xml)
     {
         if ($xml->material) {
             $this->material->add($xml->material);
@@ -513,7 +513,7 @@ class ST_QTI12_Response // <response_
             }
         }
     }
-    function __toString()
+    public function __toString()
     {
         $labeltxt = array();
         foreach ($this->labels as $label) {
@@ -531,12 +531,12 @@ class ST_QTI12_Response // <response_
 // object to store labels
 class ST_QTI12_Label // <response_label
 {
-    var $id; // <response_label ident=
-    var $material; // <material>
-    var $flow = 0;
-    var $orderid = 0;
+    public $id; // <response_label ident=
+    public $material; // <material>
+    public $flow = 0;
+    public $orderid = 0;
 
-    function __construct($xml)
+    public function __construct($xml)
     {
         $this->id = (string) $xml->attributes()->ident;
         $this->shuffle = mb_strtolower($xml->attributes()->shuffle) == 'no' ? 0 : 1;
@@ -555,7 +555,7 @@ class ST_QTI12_Label // <response_label
             $this->material->add($xml->flow_mat->material);
         }
     }
-    function __toString()
+    public function __toString()
     {
         return $this->id . '=' . $this->material->__toString();
     }
@@ -564,25 +564,25 @@ class ST_QTI12_Label // <response_label
 // store each response processing condition
 class ST_QTI12_RespCondition // <respcondition>
 {
-    var $title; // <respcondition title=
-    var $action = ''; // <setvar action=
-    var $mark = 0; // <setvar>
-    var $feedback = ''; // <displayfeedback linkrefid=
-    var $continue = 0; // should further resp conditions be processed if this one is matched?
-    var $other = 0; // if final match, matching any other tags
-    var $used = 0;
-    var $type = 'and';
+    public $title; // <respcondition title=
+    public $action = ''; // <setvar action=
+    public $mark = 0; // <setvar>
+    public $feedback = ''; // <displayfeedback linkrefid=
+    public $continue = 0; // should further resp conditions be processed if this one is matched?
+    public $other = 0; // if final match, matching any other tags
+    public $used = 0;
+    public $type = 'and';
     // not is in the individual condition as can have an and with some nots in it for mrq type questions
 
     // <conditionvar>
     // ST_QTI12_CondVar
     // no key
-    var $conditions = array();
+    public $conditions = array();
 
-    var $sortedout;
-    var $sortedoutR;
+    public $sortedout;
+    public $sortedoutR;
 
-    function __construct($xml)
+    public function __construct($xml)
     {
         $this->title = (string) $xml->attributes()->title;
 
@@ -623,7 +623,7 @@ class ST_QTI12_RespCondition // <respcondition>
         }
     }
 
-    function LoadConditionVar($xml)
+    public function LoadConditionVar($xml)
     {
         if ($xml->other) {
             $this->type = 'other';
@@ -650,7 +650,7 @@ class ST_QTI12_RespCondition // <respcondition>
         }
     }
 
-    function __toString()
+    public function __toString()
     {
         $conditions = array();
         foreach ($this->conditions as $condition) {
@@ -668,15 +668,15 @@ class ST_QTI12_RespCondition // <respcondition>
 // variable for each response proc condition
 class ST_QTI12_CondVar // <conditionvar>
 {
-    var $not = 0; // <not>
-    var $respident; // <varequal respident=
-    var $value; // <varequal>
-    var $index; // <varequal>
-    var $type = 'varequal';
-    var $areatype = '';
+    public $not = 0; // <not>
+    public $respident; // <varequal respident=
+    public $value; // <varequal>
+    public $index; // <varequal>
+    public $type = 'varequal';
+    public $areatype = '';
 
     // should be passed a varequal
-    function __construct($xml)
+    public function __construct($xml)
     {
         $this->respident = (string) $xml->attributes()->respident;
         $this->index = (string) $xml->attributes()->index;
@@ -684,7 +684,7 @@ class ST_QTI12_CondVar // <conditionvar>
         $this->value = (string) $xml;
         $this->type = $xml->getName();
     }
-    function __toString()
+    public function __toString()
     {
         if ($this->not) {
             return $this->respident . '!=' . $this->value;
@@ -698,10 +698,10 @@ class ST_QTI12_CondVar // <conditionvar>
 class ST_QTI12_Itemfeedback // <itemfeedback>
 {
 
-    var $id; // <itemfeedback ident=
-    var $material; // <material>
+    public $id; // <itemfeedback ident=
+    public $material; // <material>
 
-    function __construct($xml)
+    public function __construct($xml)
     {
         $this->id = (string) $xml->attributes()->ident;
 
@@ -716,7 +716,7 @@ class ST_QTI12_Itemfeedback // <itemfeedback>
             $this->material->add($xml->flow_mat->material);
         }
     }
-    function __toString()
+    public function __toString()
     {
         return '<i>ID</i>: ' . $this->id . ', <i>Text</i>: ' . $this->material->__toString();
     }
@@ -724,17 +724,17 @@ class ST_QTI12_Itemfeedback // <itemfeedback>
 
 class ST_QTI12_Material_Inner
 {
-    var $data = array(); // <material><mattext>
-    var $image = '';
-    var $label = '';
+    public $data = array(); // <material><mattext>
+    public $image = '';
+    public $label = '';
 
-    function GetHTML()
+    public function GetHTML()
     {
         $output = implode('', $this->data);
         return $output;
     }
 
-    function GetText()
+    public function GetText()
     {
         $text = implode('', $this->data) . "\n";
 
@@ -748,20 +748,20 @@ class ST_QTI12_Material_Inner
 
 class ST_QTI12_Material // <material>
 {
-    var $count = 0;
-    var $chunks = array(); // array of ST_QTI12_Material_Inner
-    var $image = '';
-    var $x_scale = 1;
-    var $y_scale = 1;
-    var $media_width = 0;
-    var $media_height = 0;
-    var $media_alt = '';
-    var $orderid = 0;
+    public $count = 0;
+    public $chunks = array(); // array of ST_QTI12_Material_Inner
+    public $image = '';
+    public $x_scale = 1;
+    public $y_scale = 1;
+    public $media_width = 0;
+    public $media_height = 0;
+    public $media_alt = '';
+    public $orderid = 0;
 
-    var $notrim = 0;
+    public $notrim = 0;
 
 
-    function add($xml = '', $order = '')
+    public function add($xml = '', $order = '')
     {
         if ($xml) {
             $this->count++;
@@ -810,7 +810,7 @@ class ST_QTI12_Material // <material>
         }
     }
 
-    function addImage($image, $width = '', $height = '', $imgnam = '', $imglabel = '')
+    public function addImage($image, $width = '', $height = '', $imgnam = '', $imglabel = '')
     {
         global $import_directory;
         global $q_warnings;
@@ -874,7 +874,7 @@ class ST_QTI12_Material // <material>
         }
     }
 
-    function ParseImages($text)
+    public function ParseImages($text)
     {
         global $import_directory;
         global $q_warnings;
@@ -935,12 +935,12 @@ class ST_QTI12_Material // <material>
         return $text;
     }
 
-    function getItemCount()
+    public function getItemCount()
     {
         return count($this->data);
     }
 
-    function GetHTML()
+    public function GetHTML()
     {
         $output = '';
         $usediv = 0;
@@ -972,7 +972,7 @@ class ST_QTI12_Material // <material>
         return $output;
     }
 
-    function GetText($notrim = 0)
+    public function GetText($notrim = 0)
     {
         $text = '';
         foreach ($this->chunks as $chunk) {
@@ -989,7 +989,7 @@ class ST_QTI12_Material // <material>
         }
     }
 
-    function GetLabel()
+    public function GetLabel()
     {
         foreach ($this->chunks as $chunk) {
             $label[] = $chunk->label;
@@ -998,7 +998,7 @@ class ST_QTI12_Material // <material>
         return $labels;
     }
 
-    function __toString()
+    public function __toString()
     {
         $text = $this->GetText();
         if (trim($text)) {

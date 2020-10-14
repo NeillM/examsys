@@ -29,7 +29,7 @@ abstract class Corrector
     protected $_lang_strings;
     protected $_question;
 
-    function __construct($mysqli, $lang_strings, $question)
+    public function __construct($mysqli, $lang_strings, $question)
     {
         $this->_mysqli = $mysqli;
         $this->_lang_strings = $lang_strings;
@@ -41,7 +41,7 @@ abstract class Corrector
      * @param integer $new_correct new correct answer
      * @param integer $paper_id
      */
-    abstract function execute($new_correct, $paper_id, &$changes, $paper_type);
+    abstract public function execute($new_correct, $paper_id, &$changes, $paper_type);
 
     /**
      * Invalidate the cache for the given paper

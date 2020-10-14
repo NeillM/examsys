@@ -32,7 +32,7 @@ class StudentNotes
      * @param object $db    - MySQL connection
      * @return bool|array   - False if no note found, otherwise array containing its details.
      */
-    static function get_note($paperID, $userID, $db)
+    public static function get_note($paperID, $userID, $db)
     {
         $result = $db->prepare("SELECT note_id, note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i') AS note_date, au.title, au.initials, au.surname, su.title, su.initials, su.surname, student_id, su.username FROM (student_notes, users au, users su) LEFT JOIN sid ON su.id = sid.userID WHERE student_notes.note_authorID = au.id AND student_notes.userID = su.id AND paper_id = ? AND student_notes.userID = ?");
         $result->bind_param('ii', $paperID, $userID);
@@ -56,7 +56,7 @@ class StudentNotes
      * @param int $authorID   - User ID of the member of staff/invigilator creating the note.
      * @param object $db    - MySQL connection
      */
-    static function add_note($student_userID, $note, $paperID, $authorID, $db)
+    public static function add_note($student_userID, $note, $paperID, $authorID, $db)
     {
         $result = $db->prepare('INSERT INTO student_notes VALUES (NULL, ?, ?, NOW(), ?, ?)');
         $result->bind_param('isii', $student_userID, $note, $paperID, $authorID);
@@ -70,7 +70,7 @@ class StudentNotes
      * @param int $note_id    - ID of note.
      * @param object $db    - MySQL connection
      */
-    static function update_note($note, $note_id, $db)
+    public static function update_note($note, $note_id, $db)
     {
         $result = $db->prepare('UPDATE student_notes SET note = ? WHERE note_id = ?');
         $result->bind_param('si', $note, $note_id);

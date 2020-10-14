@@ -33,7 +33,7 @@ class QuestionDICHOTOMOUS extends QuestionEdit
     protected $display_method = 'TF_Positive';
     protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect');
 
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 

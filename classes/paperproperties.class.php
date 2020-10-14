@@ -117,7 +117,7 @@ class PaperProperties
     }
 
 
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         return error_handling($this);
     }
@@ -131,7 +131,7 @@ class PaperProperties
     * @param bool $exit_on_false    - If true then exist if the paper does not exist.
     * @return PaperProperties object
     */
-    static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true)
+    public static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true)
     {
         $configObj = Config::get_instance();
         $notice = UserNotices::get_instance();
@@ -159,7 +159,7 @@ class PaperProperties
     * @param bool $exit_on_false    - If true then exist if the paper does not exist.
     * @return PaperProperties object
     */
-    static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true)
+    public static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true)
     {
         $configObj = Config::get_instance();
         $notice = UserNotices::get_instance();

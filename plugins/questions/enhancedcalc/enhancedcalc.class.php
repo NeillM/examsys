@@ -69,7 +69,7 @@ class EnhancedCalc extends Question implements questionInterface
         $this->settings = $data;
     }
 
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         return error_handling($this);
     }
@@ -79,7 +79,7 @@ class EnhancedCalc extends Question implements questionInterface
      * @param string $input User answer
      * @return array Number and unit components of the string
      */
-    function split_numb_from_unit($input)
+    public function split_numb_from_unit($input)
     {
         $input = trim($input);
 
@@ -112,7 +112,7 @@ class EnhancedCalc extends Question implements questionInterface
      * @param array $ans Array of possible answers containing a formula and comma separated list of units
      * @return array Array of formulae indexed by units string
      */
-    function build_formula_by_units($ans)
+    public function build_formula_by_units($ans)
     {
         $formula_by_units = array();
         foreach ($ans as $key => $value) {
@@ -131,7 +131,7 @@ class EnhancedCalc extends Question implements questionInterface
      * @param string $unit Units as entered by the user
      * @return boolean True if the units match any defined in the answers
      */
-    function are_units_correct($unit)
+    public function are_units_correct($unit)
     {
         $this->decode_settings();
         // Create array of units and functions
@@ -625,7 +625,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Is this question excluded
      * @return boolean true if question has been excluded due to poor performance
      */
-    function is_excluded()
+    public function is_excluded()
     {
         return (isset($this->excluded{0}) and $this->excluded{0} == 1);
     }
@@ -634,7 +634,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Is the user's answer correct
      * @return boolean True if answer is correct
      */
-    function is_user_ans_correct()
+    public function is_user_ans_correct()
     {
         return (isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === true);
     }
@@ -643,7 +643,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Is the user's answer within tolerance for full marks
      * @return boolean True if answer is within tolerance for full marks
      */
-    function is_user_ans_within_fullmark_tolerance()
+    public function is_user_ans_within_fullmark_tolerance()
     {
         return (isset($this->useranswer['status']['tolerance_full']) and $this->useranswer['status']['tolerance_full'] === true);
     }
@@ -652,7 +652,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Is the user's answer within tolerance for full marks
      * @return boolean True if answer is within tolerance for partial marks
      */
-    function is_user_ans_within_partial_tolerance()
+    public function is_user_ans_within_partial_tolerance()
     {
         return (isset($this->useranswer['status']['tolerance_partial']) and $this->useranswer['status']['tolerance_partial'] === true);
     }
@@ -661,7 +661,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Did the user enter correct units
      * @return boolean True if units were correct
      */
-    function is_user_ans_units_correct()
+    public function is_user_ans_units_correct()
     {
         return $this->useranswer['status']['units'];
     }
@@ -670,7 +670,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Is the question set to require answers strictly to the defined number of decimal places
      * @return boolean True if using strict decimal places
      */
-    function is_strict_dp_enabled()
+    public function is_strict_dp_enabled()
     {
         return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']));
     }
@@ -679,7 +679,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Does strict decimal places include any trailing zeros
      * @return boolean True if trailing zeros are significant when determining strict decimal places
      */
-    function is_strict_dp_strictzeros_enabled()
+    public function is_strict_dp_strictzeros_enabled()
     {
         return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true);
     }
@@ -688,7 +688,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Is the question set to require answers strictly to the defined number of significant figures
      * @return boolean True if using strict significant figures
      */
-    function is_strict_sf_enabled()
+    public function is_strict_sf_enabled()
     {
         return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
     }

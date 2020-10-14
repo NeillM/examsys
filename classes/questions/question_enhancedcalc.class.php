@@ -63,7 +63,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     private $_variable_map = array();
 
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
         $this->_score_methods = array($this->_lang_strings['allowpartial']);
@@ -405,7 +405,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-    function get_settings()
+    public function get_settings()
     {
         // Extracting answers temporarily populates answers and vars with the option data
         $this->extract_answers();

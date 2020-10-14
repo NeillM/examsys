@@ -34,7 +34,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return string The leadin
      */
-    static function question_exists($q_id, $db)
+    public static function question_exists($q_id, $db)
     {
         $stmt = $db->prepare('SELECT q_id FROM questions WHERE q_id = ? AND deleted IS NULL LIMIT 1');
         $stmt->bind_param('i', $q_id);
@@ -55,7 +55,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return string The leadin
      */
-    static function question_exists_on_paper($q_id, $paperID, $db)
+    public static function question_exists_on_paper($q_id, $paperID, $db)
     {
         $stmt = $db->prepare('SELECT q_id FROM questions, papers WHERE papers.question = questions.q_id AND paper = ? AND q_id = ? LIMIT 1');
         $stmt->bind_param('ii', $paperID, $q_id);
@@ -75,7 +75,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return string The leadin
      */
-    static function get_ownerID($q_id, $db)
+    public static function get_ownerID($q_id, $db)
     {
         $stmt = $db->prepare('SELECT ownerID FROM questions WHERE q_id = ? LIMIT 1');
         $stmt->bind_param('i', $q_id);
@@ -94,7 +94,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return string The leadin
      */
-    static function get_leadin($q_id, $db)
+    public static function get_leadin($q_id, $db)
     {
         $stmt = $db->prepare('SELECT leadin FROM questions WHERE q_id = ? LIMIT 1');
         $stmt->bind_param('i', $q_id);
@@ -114,7 +114,7 @@ class QuestionUtils
      * @param $limit - character limit
      * @return string
      */
-    static function clean_leadin($leadin, $limit = 160)
+    public static function clean_leadin($leadin, $limit = 160)
     {
         $texteditorplugin = \plugins\plugins_texteditor::get_editor();
         // Check if editor has clean rule i.e. for equations.
@@ -137,7 +137,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return array of keywords
      */
-    static function get_keywords($q_id, $db)
+    public static function get_keywords($q_id, $db)
     {
         $keywords = array();
 
@@ -159,7 +159,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return array of modules keyed on q_id
      */
-    static function multi_get_modules($q_ids, $db)
+    public static function multi_get_modules($q_ids, $db)
     {
         $modules = array();
 
@@ -180,7 +180,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return array of modules keyed on idMod
      */
-    static function get_modules($q_id, $db)
+    public static function get_modules($q_id, $db)
     {
         $modules = array();
 
@@ -202,7 +202,7 @@ class QuestionUtils
      * @param resource $db the database connection.
      * @return void
      */
-    static function update_modules_from_papers($q_id, $db)
+    public static function update_modules_from_papers($q_id, $db)
     {
 
         $sql = <<<SQL
@@ -240,7 +240,7 @@ SQL;
      * @param object $userObj the currently authenticated user object.
      * @return void
      */
-    static function update_modules($modules, $q_id, $db, $userObj)
+    public static function update_modules($modules, $q_id, $db, $userObj)
     {
         $user_can_delete = '';
         if (!$userObj->has_role('SysAdmin')) {    // If SysAdmin no restrictions in deleting.
@@ -265,7 +265,7 @@ SQL;
      * @param resource $db the database connection.
      * @return void
      */
-    static function add_modules($modules, $q_id, $db)
+    public static function add_modules($modules, $q_id, $db)
     {
         $update = $db->prepare('INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod');
         foreach ($modules as $idMod => $ModuleID) {
@@ -282,7 +282,7 @@ SQL;
      * @param resource $db the database connection.
      * @return void
      */
-    static function add_keywords($keywords, $q_id, $db)
+    public static function add_keywords($keywords, $q_id, $db)
     {
         $update = $db->prepare('INSERT INTO keywords_question VALUES (?, ?)');
         foreach ($keywords as $keywordID => $keyword) {
@@ -299,7 +299,7 @@ SQL;
      * @param resource $db the database connection.
      * @return void
      */
-    static function remove_modules($modules, $q_id, $db)
+    public static function remove_modules($modules, $q_id, $db)
     {
         $update = $db->prepare('DELETE FROM questions_modules WHERE q_id = ? AND idMod = ?');
         foreach ($modules as $idMod => $ModuleID) {
@@ -317,7 +317,7 @@ SQL;
      * @param resource $db the database connection.
      * @return void
      */
-    static function delete_question($q_id, $db)
+    public static function delete_question($q_id, $db)
     {
         $delete = $db->prepare('UPDATE questions SET deleted = NOW() WHERE q_id = ?');
         $delete->bind_param('i', $q_id);
@@ -330,7 +330,7 @@ SQL;
         $delete_random->close();
     }
 
-    static function lock_question($q_id, $db)
+    public static function lock_question($q_id, $db)
     {
         $lock = $db->prepare('UPDATE questions SET locked = NOW() WHERE q_id = ? AND locked IS NULL');
         $lock->bind_param('i', $q_id);
@@ -343,7 +343,7 @@ SQL;
      * @param integer $q_id question id
      * @param mysqli $db database connection
      */
-    static function unlock_question($q_id, $db)
+    public static function unlock_question($q_id, $db)
     {
         $lock = $db->prepare('UPDATE questions SET locked = NULL WHERE q_id = ?');
         $lock->bind_param('i', $q_id);
@@ -357,7 +357,7 @@ SQL;
      * @param mysqli $db database connection
      * @return bool true if answered, false otherwise
      */
-    static function question_answered_in_summative($q_id, $db)
+    public static function question_answered_in_summative($q_id, $db)
     {
         $result = $db->prepare("SELECT TRUE FROM log2 l, log_metadata m, users u
         WHERE l.metadataID = m.id AND m.userID = u.id AND l.q_id = ? AND 
@@ -381,7 +381,7 @@ SQL;
      * @param  mysqli $db        DB link
      * @return integer           Number of questions assigned to the status
      */
-    static function get_question_count_by_status($status_id, $db)
+    public static function get_question_count_by_status($status_id, $db)
     {
         $query = $db->prepare('SELECT count(q_id) FROM questions WHERE status = ?');
         $query->bind_param('i', $status_id);
@@ -400,7 +400,7 @@ SQL;
      * @param mysqli $db
      * @return array option_text for supplied option
      */
-    static function get_options_text($qid, $db)
+    public static function get_options_text($qid, $db)
     {
         $options = $db->prepare('SELECT option_text FROM options WHERE o_id = ?');
         $options->bind_param('i', $qid);
@@ -422,7 +422,7 @@ SQL;
      * @param mysqli $db
      * @return string question type
      */
-    static function get_question_type($qid, $db)
+    public static function get_question_type($qid, $db)
     {
         $type = $db->prepare('SELECT q_type FROM questions WHERE q_id = ?');
         $type->bind_param('i', $qid);
@@ -440,7 +440,7 @@ SQL;
      * @param string $q_type question type
      * @return array $possible list of possible questions
      */
-    static function get_random_question($q_id, $q_type)
+    public static function get_random_question($q_id, $q_type)
     {
         $configObject = Config::get_instance();
         $possible = array();
@@ -462,7 +462,7 @@ SQL;
      * @param string $q_type question type
      * @return array $possible list of possible questions
      */
-    static function get_keyword_question($q_id, $q_type)
+    public static function get_keyword_question($q_id, $q_type)
     {
         $configObject = Config::get_instance();
         $possible = array();
@@ -484,7 +484,7 @@ SQL;
      * @param mysqli $db
      * @return array the random blocks the question appears in
      */
-    static function is_in_random_block($q_id, $db)
+    public static function is_in_random_block($q_id, $db)
     {
         $questions = array();
         // We are checking the question is on a paper in order to display the list of papers to the end user.
@@ -506,7 +506,7 @@ SQL;
      * @param mysqli $db
      * @return array the keyword blocks the question appears in
      */
-    static function is_in_keyword_block($q_id, $db)
+    public static function is_in_keyword_block($q_id, $db)
     {
         $questions = array();
         // We are checking the question is on a paper in order to display the list of papers to the end user.

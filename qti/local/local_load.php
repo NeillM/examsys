@@ -37,13 +37,13 @@ require_once '../include/load_config.php';
 
 class IE_Local_Load extends IE_Main
 {
-    var $type = '';
-    var $q_ids = array();
-    var $p_ids = array();
-    var $params;
-    var $statuses = array();
+    public $type = '';
+    public $q_ids = array();
+    public $p_ids = array();
+    public $params;
+    public $statuses = array();
 
-    function Load($params)
+    public function Load($params)
     {
         global $string;
 
@@ -87,7 +87,7 @@ class IE_Local_Load extends IE_Main
         return $result;
     }
 
-    function LoadPaper($p_id)
+    public function LoadPaper($p_id)
     {
         $paper_row = array();
         $prop_rows = array();
@@ -127,7 +127,7 @@ class IE_Local_Load extends IE_Main
         return $paper;
     }
 
-    function LoadQuestion($q_id)
+    public function LoadQuestion($q_id)
     {
         global $REPLACEMEuserIDold, $show_debug;
 
@@ -186,7 +186,7 @@ class IE_Local_Load extends IE_Main
         return $store;
     }
 
-    function LoadQuestionBase($store, $q_row, $o_rows)
+    public function LoadQuestionBase($store, $q_row, $o_rows)
     {
         // store id that we loaded as so can be referenced later
         $store->load_id = $q_row['q_id'];
@@ -236,7 +236,7 @@ class IE_Local_Load extends IE_Main
         $store->status = $this->statuses[$q_row['status']];
     }
 
-    function LoadQuestionBlank($store, $q_row, $o_rows)
+    public function LoadQuestionBlank($store, $q_row, $o_rows)
     {
         // basic things
         $store->displaymode = $q_row['score_method'];
@@ -309,7 +309,7 @@ class IE_Local_Load extends IE_Main
         $store->question = $question;
     }
 
-    function LoadQuestionenhancedcalc($store, $q_row, $o_rows)
+    public function LoadQuestionenhancedcalc($store, $q_row, $o_rows)
     {
         // fiarly sure this is ok
         $store->scenario = $q_row['scenario'];
@@ -323,7 +323,8 @@ class IE_Local_Load extends IE_Main
         $store->marks_partial = $settingsdecoded['marks_partial'];
         $store->settings = $q_row['settings'];
     }
-    function LoadQuestionCalculation($store, $q_row, $o_rows)
+
+    public function LoadQuestionCalculation($store, $q_row, $o_rows)
     {
         // fiarly sure this is ok
         $store->scenario = $q_row['scenario'];
@@ -348,7 +349,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionDichotomous($store, $q_row, $o_rows)
+    public function LoadQuestionDichotomous($store, $q_row, $o_rows)
     {
         // basic stuff
         $store->scenario = $q_row['scenario'];
@@ -387,7 +388,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionExtmatch($store, $q_row, $o_rows)
+    public function LoadQuestionExtmatch($store, $q_row, $o_rows)
     {
         // get list of possible answers
         $optno = 1;
@@ -458,7 +459,7 @@ class IE_Local_Load extends IE_Main
     }
 
     // TODO - Does this deal with multi-layered hotspot questions?
-    function LoadQuestionHotspot($store, $q_row, $o_rows)
+    public function LoadQuestionHotspot($store, $q_row, $o_rows)
     {
 
         $store->scenario = $q_row['scenario'];
@@ -497,14 +498,14 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionInfo($store, $q_row, $o_rows)
+    public function LoadQuestionInfo($store, $q_row, $o_rows)
     {
         // Info type question has no notes!
         // main info stored in leadin
     }
 
 
-    function LoadQuestionLabelling($store, $q_row, $o_rows)
+    public function LoadQuestionLabelling($store, $q_row, $o_rows)
     {
         // 1 - 3/4 pt
         // 2 - 1 pt
@@ -593,7 +594,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionLikert($store, $q_row, $o_rows)
+    public function LoadQuestionLikert($store, $q_row, $o_rows)
     {
         $store->scenario = $q_row['scenario'];
 
@@ -615,7 +616,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionMatrix($store, $q_row, $o_rows)
+    public function LoadQuestionMatrix($store, $q_row, $o_rows)
     {
         // get list of correct values for each of the questions
         $correctvalues = explode('|', $o_rows[0]['correct']);
@@ -648,7 +649,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionMcq($store, $q_row, $o_rows)
+    public function LoadQuestionMcq($store, $q_row, $o_rows)
     {
         // basic stuff
         $store->scenario = $q_row['scenario'];
@@ -683,7 +684,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestiontrue_false($store, $q_row, $o_rows)
+    public function LoadQuestiontrue_false($store, $q_row, $o_rows)
     {
         // basic stuff
         $store->scenario = $q_row['scenario'];
@@ -718,7 +719,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionMrq($store, $q_row, $o_rows)
+    public function LoadQuestionMrq($store, $q_row, $o_rows)
     {
         // basic stuff
         $store->scenario = $q_row['scenario'];
@@ -763,7 +764,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionRank($store, $q_row, $o_rows)
+    public function LoadQuestionRank($store, $q_row, $o_rows)
     {
         // basic stuff
         $store->scenario = $q_row['scenario'];
@@ -788,7 +789,7 @@ class IE_Local_Load extends IE_Main
         }
     }
 
-    function LoadQuestionTextbox($store, $q_row, $o_rows)
+    public function LoadQuestionTextbox($store, $q_row, $o_rows)
     {
         // basic stuff
         $store->scenario = $q_row['scenario'];
@@ -808,22 +809,22 @@ class IE_Local_Load extends IE_Main
         $store->terms = explode_no_empty(';', $o_rows[0]['correct']);
     }
 
-    function LoadQuestionRandom($store, $q_row, $o_rows)
+    public function LoadQuestionRandom($store, $q_row, $o_rows)
     {
         return "Error: Random questions can't be exported.";
     }
 
-    function LoadQuestionKeyword_based($store, $q_row, $o_rows)
+    public function LoadQuestionKeyword_based($store, $q_row, $o_rows)
     {
         return "Error: Keyword-based questions can't be exported.";
     }
 
-    function LoadQuestionSct($store, $q_row, $o_rows)
+    public function LoadQuestionSct($store, $q_row, $o_rows)
     {
         return "Error: SCT questions can't be exported.";
     }
 
-    function AddMedia(&$question, $media, $width = 0, $height = 0, $alt = '')
+    public function AddMedia(&$question, $media, $width = 0, $height = 0, $alt = '')
     {
         if ($media == '') {
             return;
@@ -837,7 +838,7 @@ class IE_Local_Load extends IE_Main
         $this->GetMedia($question->media);
     }
 
-    function GetMedia($filename)
+    public function GetMedia($filename)
     {
         $mediadirectory = rogo_directory::get_directory('media');
         $fullpath = $mediadirectory->fullpath($filename);

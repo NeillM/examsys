@@ -41,12 +41,12 @@ class personal_folders
         $this->mysqli = null;
     }
 
-    function __construct($mysqli)
+    public function __construct($mysqli)
     {
         $this->mysqli = $mysqli;
     }
 
-    function loadpersonalfolders($userID)
+    public function loadpersonalfolders($userID)
     {
         // -- Display personal folders --------------------------------------
         if (!isset($teams)) {
@@ -73,7 +73,7 @@ class personal_folders
         $this->folderlst = $folderlst;
     }
 
-    function process()
+    public function process()
     {
         $folderlst = $this->folderlst;
         $parent[0] = 0;
@@ -86,7 +86,7 @@ class personal_folders
         $this->folderlst2 = $folderlst2;
     }
 
-    function dump()
+    public function dump()
     {
         print 'FOLDERLST<pre>';
         print_r($this->folderlst);
@@ -95,7 +95,7 @@ class personal_folders
         print '</pre>';
     }
 
-    function getfolders($folder)
+    public function getfolders($folder)
     {
         $retlst = array();
         foreach ($this->folderlst2 as $v) {
@@ -107,13 +107,13 @@ class personal_folders
         return ($retlst);
     }
 
-    function countfolders($folder)
+    public function countfolders($folder)
     {
         $lst = $this->getfolders($folder);
         return count($lst);
     }
 
-    function gettests($folder)
+    public function gettests($folder)
     {
         $tests = array();
         if ($folder != 0) {
@@ -134,13 +134,13 @@ class personal_folders
     }
 
 
-    function counttests($folder)
+    public function counttests($folder)
     {
         $lst = $this->gettests($folder);
         return count($lst);
     }
 
-    function listtree($folder, $block_id, $plk, $level)
+    public function listtree($folder, $block_id, $plk, $level)
     {
         global $icons;
         $lst = $this->getfolders($folder);

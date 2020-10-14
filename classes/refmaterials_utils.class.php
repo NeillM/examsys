@@ -32,7 +32,7 @@ class refmaterials_utils
      * See if a reference material ID actually exists.
      * @return true or false.
      */
-    static function refmaterials_exist($refID, $db)
+    public static function refmaterials_exist($refID, $db)
     {
         $row_no = 0;
   
@@ -48,7 +48,7 @@ class refmaterials_utils
         return $row_no > 0;
     }
   
-    static function check_access($userObj, $refID, $db)
+    public static function check_access($userObj, $refID, $db)
     {
         $permission_granted = false;
   
@@ -67,7 +67,7 @@ class refmaterials_utils
         return $permission_granted;
     }
   
-    static function delete($refID, $db)
+    public static function delete($refID, $db)
     {
         // Update deleted to NOW in reference_material
         $result = $db->prepare('UPDATE reference_material SET deleted = NOW() WHERE id = ?');

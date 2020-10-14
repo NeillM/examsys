@@ -28,7 +28,7 @@
 class LangUtils
 {
 
-    static function getLang($web_root)
+    public static function getLang($web_root)
     {
         $language = '';
 
@@ -59,7 +59,7 @@ class LangUtils
         return $language;
     }
 
-    static function loadlangfile($file, $str = null)
+    public static function loadlangfile($file, $str = null)
     {
         if (is_null($str)) {
             global $string;
@@ -88,7 +88,7 @@ class LangUtils
      * @param string $lang lang code
      * @return boolean
      */
-    static function supportedLang($lang)
+    public static function supportedLang($lang)
     {
         $file = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'languages.xml';
         if (file_exists($file)) {
@@ -108,7 +108,7 @@ class LangUtils
      * @param string $lang lang code
      * @return boolean
      */
-    static function langPackInstalled($lang)
+    public static function langPackInstalled($lang)
     {
         $configObject = Config::get_instance();
         $web_root = $configObject->get('cfg_web_root');

@@ -27,10 +27,11 @@
 
 class IE_qti12_Save extends IE_Main
 {
-    var $data;
-    var $params;
+    public $data;
+    public $params;
+
     // main save function
-    function Save($params, &$data)
+    public function Save($params, &$data)
     {
         global $string;
 
@@ -105,7 +106,7 @@ class IE_qti12_Save extends IE_Main
         echo '</pre>';
     }
 
-    function OutputQuestion(&$question)
+    public function OutputQuestion(&$question)
     {
         if ($question->media) {
             $this->data->files[] = new ST_File($question->media, $question->media, $this->params->dir, 'image');
@@ -144,7 +145,7 @@ class IE_qti12_Save extends IE_Main
         }
     }
 
-    function MakeQuestionHeader(&$question, $scenario = true, $image = true)
+    public function MakeQuestionHeader(&$question, $scenario = true, $image = true)
     {
         $configObject = Config::get_instance();
         $cfg_web_root = $configObject->get('cfg_web_root');
@@ -201,7 +202,7 @@ class IE_qti12_Save extends IE_Main
         return array($output, $title);
     }
 
-    function SaveBlank(&$question)
+    public function SaveBlank(&$question)
     {
         // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question, false);
@@ -231,7 +232,7 @@ class IE_qti12_Save extends IE_Main
      * @param ST_Question_Calculation $question Reference to the question object
      * @author Adam Clarke, Rob Ingram, Simon Atack
      */
-    function SaveEnhancedCalc(&$question)
+    public function SaveEnhancedCalc(&$question)
     {
 
         if (!isset($configObject)) {
@@ -275,7 +276,7 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-    function SaveDichotomous(&$question)
+    public function SaveDichotomous(&$question)
     {
         // list of score methods:
         /*
@@ -325,7 +326,7 @@ class IE_qti12_Save extends IE_Main
         }
     }
 
-    function SaveExtMatch(&$question)
+    public function SaveExtMatch(&$question)
     {
         // format the text for the question
         $this->AddWarning('QMP Cannot import extended matching questions correctly, it cannot handle the multiple select options', $question->load_id);
@@ -356,7 +357,7 @@ class IE_qti12_Save extends IE_Main
     }
 
     // TODO
-    function SaveHotspot(&$question)
+    public function SaveHotspot(&$question)
     {
         // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question, true, false);
@@ -369,7 +370,7 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-    function SaveInfo(&$question)
+    public function SaveInfo(&$question)
     {
         // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
@@ -383,7 +384,7 @@ class IE_qti12_Save extends IE_Main
     }
 
     // TODO
-    function SaveLabelling(&$question)
+    public function SaveLabelling(&$question)
     {
         // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question, true, false);
@@ -396,7 +397,7 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-    function SaveLikert(&$question)
+    public function SaveLikert(&$question)
     {
         // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
@@ -409,7 +410,7 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-    function SaveMatrix(&$question)
+    public function SaveMatrix(&$question)
     {
         // NO FEEDBACK ON MATRIX!!!
 
@@ -430,7 +431,7 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-    function SaveMcq(&$question)
+    public function SaveMcq(&$question)
     {
         // fairly sure this is exporting correctly, feedback for pos + neg ok,
         // all options listed ok
@@ -452,7 +453,7 @@ class IE_qti12_Save extends IE_Main
         }
     }
 
-    function SaveTrueFalse(&$question)
+    public function SaveTrueFalse(&$question)
     {
         // fairly sure this is exporting correctly, feedback for pos + neg ok,
         // all options listed ok
@@ -474,7 +475,7 @@ class IE_qti12_Save extends IE_Main
         }
     }
 
-    function SaveMrq(&$question)
+    public function SaveMrq(&$question)
     {
         // QMP doesnt pay attention
         // to the maxnumber field in render_choice so allows all options to be checked
@@ -543,7 +544,7 @@ class IE_qti12_Save extends IE_Main
     }
 
     // DONE
-    function SaveRank(&$question)
+    public function SaveRank(&$question)
     {
         // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
@@ -590,7 +591,7 @@ class IE_qti12_Save extends IE_Main
     }
 
     // DONE
-    function SaveTextBox(&$question)
+    public function SaveTextBox(&$question)
     {
         // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
@@ -605,7 +606,7 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-    function GetTDSet($type, $correct, &$question = '')
+    public function GetTDSet($type, $correct, &$question = '')
     {
         $res = new ST_Question_Timedate_set();
         $res->correct = $correct;
@@ -665,7 +666,7 @@ class IE_qti12_Save extends IE_Main
         return $res;
     }
 
-    function DoHeader()
+    public function DoHeader()
     {
         $output = "<?xml version='1.0' standalone='no'?>\n";
         $output .= "<!DOCTYPE questestinterop SYSTEM 'ims_qtiasiv1p2.dtd'>\n\n";

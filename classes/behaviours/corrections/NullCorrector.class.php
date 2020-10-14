@@ -30,7 +30,7 @@ class NullCorrector
     private $_lang_strings;
     private $_question;
 
-    function __construct($mysqli, $lang_strings, $question)
+    public function __construct($mysqli, $lang_strings, $question)
     {
         $this->_mysqli = $mysqli;
         $this->_lang_strings = $lang_strings;

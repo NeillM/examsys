@@ -34,7 +34,7 @@ abstract class SmsUtils
 
     public $errorinfo;
 
-    static function GetSmsUtils()
+    public static function GetSmsUtils()
     {
         $configObject = Config::get_instance();
         $cfg_sms_api = $configObject->get('cfg_sms_api');

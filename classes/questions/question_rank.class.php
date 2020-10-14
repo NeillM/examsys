@@ -31,7 +31,7 @@ class QuestionRANK extends QuestionEdit
     protected $_answer_negative = 0;
     protected $_allow_partial_marks = true;
   
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
     

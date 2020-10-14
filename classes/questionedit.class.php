@@ -154,7 +154,7 @@ class QuestionEdit extends RogoObject
      * properties from an associative array
      * @param mixed $data
      */
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         // Store the database connection reference and current user
         $this->_mysqli = $mysqli;

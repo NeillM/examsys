@@ -44,7 +44,7 @@ class QuestionAREA extends QuestionEdit
     protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'bloom', 'status', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
     protected $_fields_settings = array('correct_full', 'error_full', 'correct_partial', 'error_partial');
 
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 

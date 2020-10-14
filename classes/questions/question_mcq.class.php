@@ -30,7 +30,7 @@ class QuestionMCQ extends QuestionEdit
     protected $min_options = 2;
     protected $_allow_change_marking_method = false;
   
-    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 

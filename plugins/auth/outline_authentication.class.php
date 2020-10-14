@@ -59,7 +59,7 @@ class outline_authentication
      * @param $returndata object where data is stored
      * @param $form object a class with form data in
      */
-    function __construct($number, $name, $authapiversion)
+    public function __construct($number, $name, $authapiversion)
     {
         $this->authapiversion = $authapiversion;
         $this->name = $name;
@@ -70,7 +70,7 @@ class outline_authentication
     * Check the API version of the stack and the plugin are compatible
     * returns true if it is compatible false otherwise
     */
-    function apicheck()
+    public function apicheck()
     {
 
         if ($this->authapiversion != $this->impliments_api_auth_version) {
@@ -82,7 +82,7 @@ class outline_authentication
         return true;
     }
 
-    function set_error($msg)
+    public function set_error($msg)
     {
         if (mb_strlen($this->error) > 0) {
             $this->error .= '<br />';
@@ -90,7 +90,7 @@ class outline_authentication
         $this->error .= $msg;
     }
 
-    function init($object)
+    public function init($object)
     {
         $this->db = new mysqli();
         $this->db = & $object->db;
@@ -101,7 +101,7 @@ class outline_authentication
         $this->request = & $object->calling_object->request;
     }
 
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         $context1 = array();
         if (is_null($context)) {
@@ -118,7 +118,7 @@ class outline_authentication
 
 
     // Fake function used in mocking but if things go wrong have an outline here
-    function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
+    public function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
     {
         return false;
     }
@@ -127,7 +127,7 @@ class outline_authentication
     /**
      * @param $debugmessage string the debug message to store
      */
-    function savetodebug($debugmessage)
+    public function savetodebug($debugmessage)
     {
         $this->debug[] = $debugmessage;
     }
@@ -137,7 +137,7 @@ class outline_authentication
      *
      * @return mixed
      */
-    function get_callback($section)
+    public function get_callback($section)
     {
         return $this->calling_object->get_callback($section);
     }
@@ -147,7 +147,7 @@ class outline_authentication
      *
      * @return mixed
      */
-    function get_new_debug_messages($number = null)
+    public function get_new_debug_messages($number = null)
     {
         if (is_null($number)) {
             $returnarray = array();
@@ -166,13 +166,13 @@ class outline_authentication
      *
      * @return mixed
      */
-    function get_module_authinfo($objid)
+    public function get_module_authinfo($objid)
     {
         return $this->calling_object->authinfo[$objid];
     }
 
 
-    function register_callback_sections()
+    public function register_callback_sections()
     {
         //this is blank so that classes that dont register anything dont break
         return array();
@@ -187,7 +187,7 @@ class outline_authentication
      *
      * @return bool
      */
-    function register_callback($callback, $section, $number, $name, $insert = false)
+    public function register_callback($callback, $section, $number, $name, $insert = false)
     {
         $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
     }
@@ -196,7 +196,7 @@ class outline_authentication
     /**
      *
      */
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         //this is blank so that classes that dont register anything dont break
         return array();
@@ -207,7 +207,7 @@ class outline_authentication
      *
      * @return mixed
      */
-    function get_settings($setting)
+    public function get_settings($setting)
     {
         if (!isset($this->settings[$setting])) {
             return false;
@@ -216,7 +216,7 @@ class outline_authentication
         return $this->settings[$setting];
     }
 
-    function get_info()
+    public function get_info()
     {
         $data = new stdClass();
         $data->name = $this->name;

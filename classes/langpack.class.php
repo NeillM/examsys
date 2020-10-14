@@ -36,7 +36,7 @@ class langpack
     /**
      * Constructor
      */
-    function __construct()
+    public function __construct()
     {
         $configObject = Config::get_instance();
         $cfg_web_root = $configObject->get('cfg_web_root');

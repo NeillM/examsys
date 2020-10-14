@@ -27,37 +27,37 @@ require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'include' . DIREC
 
 class Database
 {
-    var $type = 'SELECT';
-    var $table = '';
-    var $table_alias = '';
+    public $type = 'SELECT';
+    public $table = '';
+    public $table_alias = '';
 
-    var $fields = array(); // only for SELECT
-    var $leftjoins = array(); // only for SELECT
-    var $innerjoins = array(); // only for SELECT
-    var $wheres = array(); // only for SELECT/UPDATE
-    var $orders = array(); // only for SELECT
-    var $values = array(); // only for INSERT/REPLACE
-    var $groups = array(); // only for SELECT
-    var $set = array(); // only for UPDATE
-    var $limit = 0;
-    var $limitoffset = 0;
-    var $rawquery = ''; // only for RAW
+    public $fields = array(); // only for SELECT
+    public $leftjoins = array(); // only for SELECT
+    public $innerjoins = array(); // only for SELECT
+    public $wheres = array(); // only for SELECT/UPDATE
+    public $orders = array(); // only for SELECT
+    public $values = array(); // only for INSERT/REPLACE
+    public $groups = array(); // only for SELECT
+    public $set = array(); // only for UPDATE
+    public $limit = 0;
+    public $limitoffset = 0;
+    public $rawquery = ''; // only for RAW
 
-    var $query;
+    public $query;
 
-    var $blankrows = array();
+    public $blankrows = array();
 
-    function DoError($error)
+    public function DoError($error)
     {
         echo "<font color='red'>$error</font><br />";
     }
 
-    function SetType($type)
+    public function SetType($type)
     {
         $this->type = $type;
     }
 
-    function SetTable($table, $alias = '')
+    public function SetTable($table, $alias = '')
     {
         $this->table = $table;
         $this->table_alias = $alias;
@@ -72,7 +72,7 @@ class Database
         $this->set = array(); // only for UPDATE
     }
 
-    function AddField($fieldname)
+    public function AddField($fieldname)
     {
         if ($this->type != 'SELECT') {
             return $this->DoError('Can only add output field when in SELECT mode');
@@ -87,7 +87,7 @@ class Database
         }
     }
 
-    function AddLeftJoin($table, $alias, $sourcekey, $destkey)
+    public function AddLeftJoin($table, $alias, $sourcekey, $destkey)
     {
         if ($this->type != 'SELECT') {
             return $this->DoError('Can only add LEFT JOIN when in SELECT mode');
@@ -106,7 +106,7 @@ class Database
         $this->leftjoins[] = $join;
     }
 
-    function AddInnerJoin($table, $alias, $sourcekey, $destkey)
+    public function AddInnerJoin($table, $alias, $sourcekey, $destkey)
     {
         if ($this->type != 'SELECT') {
             return $this->DoError('Can only add INNER JOIN when in SELECT mode');
@@ -125,7 +125,7 @@ class Database
         $this->innerjoins[] = $join;
     }
 
-    function AddWhere($field, $value, $type, $wheretype = '=')
+    public function AddWhere($field, $value, $type, $wheretype = '=')
     {
         if ($this->type != 'SELECT' && $this->type != 'UPDATE') {
             return $this->DoError('Can only add WHERE when in SELECT or UPDATE mode');
@@ -140,7 +140,7 @@ class Database
         $this->wheres[] = $where;
     }
 
-    function AddOrder($field, $asc = '')
+    public function AddOrder($field, $asc = '')
     {
         if ($this->type != 'SELECT') {
             return $this->DoError('Can only add ORDER BY when in SELECT mode');
@@ -153,7 +153,7 @@ class Database
         $this->orders[] = $order;
     }
 
-    function AddValue($field, $value, $type)
+    public function AddValue($field, $value, $type)
     {
         if ($this->type != 'INSERT' && $this->type != 'REPLACE') {
             return $this->DoError('Can only add field to set when in INSERT or REPLACE mode');
@@ -167,7 +167,7 @@ class Database
         $this->values[] = $valuea;
     }
 
-    function AddGroup($field)
+    public function AddGroup($field)
     {
         if ($this->type != 'SELECT') {
             return $this->DoError('Can only add GROUP BY when in SELECT mode');
@@ -176,7 +176,7 @@ class Database
         $this->groups[] = $field;
     }
 
-    function AddLimit($limit, $offset = 0)
+    public function AddLimit($limit, $offset = 0)
     {
         if ($this->type != 'SELECT' && $this->type != 'UPDATE') {
             return $this->DoError('Can only add LIMIT when in SELECT or UPDATE mode');
@@ -186,7 +186,7 @@ class Database
         $this->limitoffset = $offset;
     }
 
-    function AddSet($field, $value, $type)
+    public function AddSet($field, $value, $type)
     {
         if ($this->type != 'UPDATE') {
             return $this->DoError('Can only add SET when in UPDATE mode');
@@ -201,7 +201,7 @@ class Database
         $this->sets[] = $set;
     }
 
-    function _BuildQuery()
+    public function _BuildQuery()
     {
         if ($this->type == 'SELECT') {
             $this->_BuildQuerySelect();
@@ -219,7 +219,7 @@ class Database
         //echo "<br>" . $this->query . "<br>";
     }
 
-    function _BuildQuerySelect()
+    public function _BuildQuerySelect()
     {
         $qry = 'SELECT ';
 
@@ -267,7 +267,7 @@ class Database
         $this->query = $qry;
     }
 
-    function _BuildWhere()
+    public function _BuildWhere()
     {
         $qry = '';
 
@@ -294,24 +294,24 @@ class Database
         return $qry;
     }
 
-    function _BuildQueryUpdate()
+    public function _BuildQueryUpdate()
     {
     }
 
-    function _BuildQueryInsert()
+    public function _BuildQueryInsert()
     {
     }
 
-    function _BuildQueryReplace()
+    public function _BuildQueryReplace()
     {
     }
 
-    function SetRawQuery($qry)
+    public function SetRawQuery($qry)
     {
         $this->rawquery = $qry;
     }
 
-    function _BindWhere($stmt)
+    public function _BindWhere($stmt)
     {
         if (count($this->wheres) == 0) {
             return;
@@ -362,19 +362,19 @@ class Database
         @call_user_func_array('mysqli_stmt_bind_param', $params);
     }
 
-    function _BindSet()
+    public function _BindSet()
     {
     }
 
-    function _BindInsert()
+    public function _BindInsert()
     {
     }
 
-    function Execute()
+    public function Execute()
     {
     }
 
-    function GetSingleRow()
+    public function GetSingleRow()
     {
         global $mysqli;
 
@@ -407,7 +407,7 @@ class Database
         }
     }
 
-    function GetMultiRow()
+    public function GetMultiRow()
     {
         global $mysqli;
 
@@ -446,7 +446,7 @@ class Database
         return $results;
     }
 
-    function GetBlankTableRow($table)
+    public function GetBlankTableRow($table)
     {
         return array();
         if (array_key_exists($table, $this->blankrows)) {
@@ -469,7 +469,7 @@ class Database
         return $output;
     }
 
-    function InsertRow($table, $pri_key, &$row)
+    public function InsertRow($table, $pri_key, &$row)
     {
         global $mysqli;
 

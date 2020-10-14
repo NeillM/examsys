@@ -31,7 +31,7 @@ class Logger
      * Create a new logger object
      * @param db_link $mysqli Reference to database connection
      */
-    function __construct($mysqli)
+    public function __construct($mysqli)
     {
         $this->_mysqli = $mysqli;
     }

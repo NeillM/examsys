@@ -29,7 +29,7 @@ class displaystdformobjfield extends stdClass
     public $name;
     public $default;
 
-    function __construct()
+    public function __construct()
     {
         $this->description = '';
         $this->type = '';

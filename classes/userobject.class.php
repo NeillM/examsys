@@ -98,7 +98,7 @@ class UserObject extends RogoStaticSingleton
      *
      * @return none
      */
-    function __construct($configObject, $db)
+    public function __construct($configObject, $db)
     {
         if (is_object(self::$inst)) {
             throw new Exception('Highlander:: there can be only one UserObject');

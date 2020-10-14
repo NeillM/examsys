@@ -39,8 +39,8 @@ class UoN_LTI extends BLTI
 
     // following 2 static variables & 2 static functions are from rogostaticsingleton but cant extend that as already extending BLTI class
 
-    static $inst;
-    static $class_name = 'UoN_LTI';
+    public static $inst;
+    public static $class_name = 'UoN_LTI';
     /** @var string Language component name. */
     protected $langcomponent = 'LTI/error';
     /** @var array language strings */
@@ -80,7 +80,7 @@ class UoN_LTI extends BLTI
         $this->strings = $langpack->get_all_strings($this->langcomponent);
     }
 
-    function init_lti0($db)
+    public function init_lti0($db)
     {
         $this->db = $db;
     }
@@ -363,7 +363,7 @@ class UoN_LTI extends BLTI
         return $return;
     }
 
-    function get_lti_keys($deleted = false)
+    public function get_lti_keys($deleted = false)
     {
         $dataret = array();
         $db = $this->db;
@@ -389,7 +389,7 @@ class UoN_LTI extends BLTI
         return $dataret;
     }
 
-    function lti_key_exists($keyID)
+    public function lti_key_exists($keyID)
     {
         $rows = 0;
         $db = $this->db;
@@ -412,7 +412,7 @@ class UoN_LTI extends BLTI
      * @param string $ltisec secret field of lti key
      * @param string optional lticontext override field of lti key
      */
-    function update_lti_key($ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '')
+    public function update_lti_key($ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '')
     {
         $db = $this->db;
         if ($db->error) {
@@ -428,7 +428,7 @@ class UoN_LTI extends BLTI
      * Function to delete lti key
      * @param int $ltiid the unique id of lti key to delete
      */
-    function delete_lti_key($ltiid)
+    public function delete_lti_key($ltiid)
     {
         $db = $this->db;
         if ($db->error) {
@@ -482,7 +482,7 @@ class UoN_LTI extends BLTI
      * @internal param int $ltiid unique id of lti key
      * @internal param \optional $string lticontext override field of lti key
      */
-    function add_lti_key($ltiname, $ltikey, $ltisec, $lticontext = '')
+    public function add_lti_key($ltiname, $ltikey, $ltisec, $lticontext = '')
     {
         $db = $this->db;
         if ($db->error) {
@@ -499,7 +499,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_user_key optional lti user key
      * @return false if not found else array containing the associated id and last update time
      */
-    function lookup_lti_user($lti_user_key = false)
+    public function lookup_lti_user($lti_user_key = false)
     {
         if ($lti_user_key === false) {
             $lti_user_key = $this->getUserKey();
@@ -527,7 +527,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_user_key optional the lti key to lookup against
      * @return int of insert id
      */
-    function add_lti_user($lti_user_equ, $lti_user_key = false)
+    public function add_lti_user($lti_user_equ, $lti_user_key = false)
     {
         if ($lti_user_key === false) {
             $lti_user_key = $this->getUserKey();
@@ -545,7 +545,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_user_key optional key to update
      * @return
      */
-    function update_lti_user($lti_user_key = false)
+    public function update_lti_user($lti_user_key = false)
     {
         if ($lti_user_key === false) {
             $lti_user_key = $this->getUserKey();
@@ -565,7 +565,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_resource_key optional resource key
      * @return false if missing else array of the internal_id, and the internal type plus when it was updated.
      */
-    function lookup_lti_resource($lti_resource_key = false)
+    public function lookup_lti_resource($lti_resource_key = false)
     {
         if ($lti_resource_key === false) {
             $lti_resource_key = $this->getResourceKey();
@@ -591,7 +591,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_resource_key optional is the lti resource key
      * @return record id
      */
-    function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false)
+    public function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false)
     {
         if ($lti_resource_key === false) {
             $lti_resource_key = $this->getResourceKey();
@@ -611,7 +611,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_resource_key optional is the lti resource key
      * @return false if not found else number of rows
      */
-    function update_lti_resource($internal_id, $internal_type, $lti_resource_key = false)
+    public function update_lti_resource($internal_id, $internal_type, $lti_resource_key = false)
     {
         if ($lti_resource_key === false) {
             $lti_resource_key = $this->getResourceKey();
@@ -633,7 +633,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_context_key optional is the lti context key
      * @return new row id
      */
-    function add_lti_context($c_internal_id, $lti_context_key = false)
+    public function add_lti_context($c_internal_id, $lti_context_key = false)
     {
         if ($lti_context_key === false) {
             $lti_context_key = $this->getCourseKey();
@@ -656,7 +656,7 @@ class UoN_LTI extends BLTI
      * @param bool|string $lti_context_key optional the lti context key
      * @return array|bool if false else array with module shortcode and last lti context updated time
      */
-    function lookup_lti_context($lti_context_key = false)
+    public function lookup_lti_context($lti_context_key = false)
     {
         if ($lti_context_key === false) {
             $lti_context_key = $this->getCourseKey();
@@ -683,7 +683,7 @@ class UoN_LTI extends BLTI
         return (array($moduleid, $updated_on));
     }
 
-    function get_consumer_secret()
+    public function get_consumer_secret()
     {
         if (isset($this->info['oauth_consumer_secret'])) {
             return $this->info['oauth_consumer_secret'];
@@ -691,7 +691,7 @@ class UoN_LTI extends BLTI
         return false;
     }
 
-    function send_grade($grade)
+    public function send_grade($grade)
     {
 
         $oauth_consumer_key = $this->getConsumerKey();

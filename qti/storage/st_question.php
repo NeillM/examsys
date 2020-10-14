@@ -24,43 +24,43 @@
 
 class ST_Question
 {
-    var $type;
-    var $load_id;
-    var $save_id;
+    public $type;
+    public $load_id;
+    public $save_id;
 
-    var $theme = '';
-    var $notes = '';
-    var $leadin = '';
-    var $media = '';
-    var $media_width = 0;
-    var $media_height = 0;
-    var $media_alt = '';
-    var $media_type = '';
+    public $theme = '';
+    public $notes = '';
+    public $leadin = '';
+    public $media = '';
+    public $media_width = 0;
+    public $media_height = 0;
+    public $media_alt = '';
+    public $media_type = '';
 
-    var $status;
-  
-    var $author = '';
-    var $q_group = '';
+    public $status;
 
-    var $bloom = '';
-    var $keywords = array();
-    var $q_option_order = 'display order'; //stem/option randomisation
-  
-    var $display_method = '';
-  
-    var $score_method; //
+    public $author = '';
+    public $q_group = '';
+
+    public $bloom = '';
+    public $keywords = array();
+    public $q_option_order = 'display order'; //stem/option randomisation
+
+    public $display_method = '';
+
+    public $score_method; //
 }
 
 class STQ_Blank_Option
 {
-    var $display = '';
-    var $correct = 0;
-  
-    var $marks_correct;
-    var $marks_incorrect;
-    var $marks_partial;
-  
-    function __toString()
+    public $display = '';
+    public $correct = 0;
+
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+
+    public function __toString()
     {
         return $this->display . '=' . ($this->correct ? 'True' : 'False');
     }
@@ -68,20 +68,20 @@ class STQ_Blank_Option
 
 class ST_Question_Blank extends ST_Question
 {
-    var $displaymode = 0;
-    var $question = '';
-    var $feedback = '';
-    var $options = array(); // array of STQ_Blank_Option, key as blank id in text ($BLANK_1$ etc)
+    public $displaymode = 0;
+    public $question = '';
+    public $feedback = '';
+    public $options = array(); // array of STQ_Blank_Option, key as blank id in text ($BLANK_1$ etc)
 }
 
 class STQ_Calc_Vars
 {
-    var $min = 0;
-    var $max = 0;
-    var $dec = 0;
-    var $inc = 1;
+    public $min = 0;
+    public $max = 0;
+    public $dec = 0;
+    public $inc = 1;
 
-    function __toString()
+    public function __toString()
     {
         return $this->min . ',' . $this->max . ',' . $this->dec . ',' . $this->inc;
     }
@@ -89,14 +89,14 @@ class STQ_Calc_Vars
 
 class ST_Question_Calculation extends ST_Question
 {
-    var $scenario = '';
-    var $variables = array(); // array of STQ_Calc_Vars, key as variable stored as (A-H)
-    var $formula;
-    var $units;
-    var $decimals = 0;
-    var $tolerance = 0;
-    var $feedback;
-    var $settings = array();
+    public $scenario = '';
+    public $variables = array(); // array of STQ_Calc_Vars, key as variable stored as (A-H)
+    public $formula;
+    public $units;
+    public $decimals = 0;
+    public $tolerance = 0;
+    public $feedback;
+    public $settings = array();
 }
 
 class ST_Question_enhancedcalc extends ST_Question_Calculation
@@ -106,21 +106,21 @@ class ST_Question_enhancedcalc extends ST_Question_Calculation
 
 class STQ_Dic_Options
 {
-    var $text;
-    var $iscorrect;
-    var $media;
-    var $media_width;
-    var $media_height;
-    var $media_alt;
-    var $media_type;
-    var $fb_correct;
-    var $fb_incorrect;
-  
-    var $marks_correct;
-    var $marks_incorrect;
-    var $marks_partial;
-  
-    function __toString()
+    public $text;
+    public $iscorrect;
+    public $media;
+    public $media_width;
+    public $media_height;
+    public $media_alt;
+    public $media_type;
+    public $fb_correct;
+    public $fb_incorrect;
+
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+
+    public function __toString()
     {
         return $this->text . '=' . ($this->iscorrect ? 'True' : 'False');
     }
@@ -128,28 +128,28 @@ class STQ_Dic_Options
 
 class ST_Question_Dichotomous extends ST_Question
 {
-    var $scenario = '';
-    var $feedback = '';
-    var $score_method = 0;
-    var $options = array();
+    public $scenario = '';
+    public $feedback = '';
+    public $score_method = 0;
+    public $options = array();
 }
 
 class STQ_Extm_Scenario
 {
-    var $stem = '';
-    var $media;
-    var $media_width;
-    var $media_height;
-    var $media_alt;
-    var $media_type;
-    var $feedback;
-    var $correctans = array(); // array of Keys for correct answers based on optionlist
-  
-    var $marks_correct;
-    var $marks_incorrect;
-    var $marks_partial;
-  
-    function __toString()
+    public $stem = '';
+    public $media;
+    public $media_width;
+    public $media_height;
+    public $media_alt;
+    public $media_type;
+    public $feedback;
+    public $correctans = array(); // array of Keys for correct answers based on optionlist
+
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+
+    public function __toString()
     {
         return $this->stem . '=' . implode('|', $this->correctans);
     }
@@ -157,14 +157,14 @@ class STQ_Extm_Scenario
 
 class STQ_Extm_Option
 {
-    var $option;
-    var $id;
-  
-    var $marks_correct;
-    var $marks_incorrect;
-    var $marks_partial;
-  
-    function __toString()
+    public $option;
+    public $id;
+
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+
+    public function __toString()
     {
         return $this->id . '=' . $this->option;
     }
@@ -172,16 +172,16 @@ class STQ_Extm_Option
 
 class ST_Question_Extmatch extends ST_Question
 {
-    var $optionlist = array(); // string array of STQ_Extm_Option options by Key (A-Z)
-    var $scenarios = array(); // array of STQ_Extm_Scenario, key as scenarion no
+    public $optionlist = array(); // string array of STQ_Extm_Option options by Key (A-Z)
+    public $scenarios = array(); // array of STQ_Extm_Scenario, key as scenarion no
 }
 
 class STQ_Hotspot_Spot
 {
-    var $type;
-    var $coords = array();
+    public $type;
+    public $coords = array();
 
-    function __toString()
+    public function __toString()
     {
         return $this->type . '=' . implode(',', $this->coords);
     }
@@ -189,11 +189,11 @@ class STQ_Hotspot_Spot
 
 class ST_Question_Hotspot extends ST_Question
 {
-    var $scenario = '';
-    var $feedback = '';
-    var $hotspots = array(); // array of STQ_Hotspot_Spot
+    public $scenario = '';
+    public $feedback = '';
+    public $hotspots = array(); // array of STQ_Hotspot_Spot
     // raw labeling option text for rogo->qti->rogo
-    var $raw_option = '';
+    public $raw_option = '';
 }
 
 class ST_Question_Info extends ST_Question
@@ -203,14 +203,14 @@ class ST_Question_Info extends ST_Question
 
 class STQ_Labelling_Label
 {
-    var $tag;
-    var $left;
-    var $top;
-    var $type;
-    var $width;
-    var $height;
+    public $tag;
+    public $left;
+    public $top;
+    public $type;
+    public $width;
+    public $height;
 
-    function __toString()
+    public function __toString()
     {
         return $this->tag . '=' . $this->left . ',' . $this->top . '=' . count($this->matches);
     }
@@ -218,10 +218,10 @@ class STQ_Labelling_Label
 
 class STQ_Labelling_Arrow
 {
-    var $type;
-    var $coords = array();
+    public $type;
+    public $coords = array();
 
-    function __toString()
+    public function __toString()
     {
         return $this->type . '=' . implode(',', $this->coords);
     }
@@ -229,11 +229,11 @@ class STQ_Labelling_Arrow
 
 class ST_Question_Labelling extends ST_Question
 {
-    var $scenario = '';
-    var $feedback = '';
+    public $scenario = '';
+    public $feedback = '';
 
-    var $line_color = '0x000000';
-    var $line_thickness = 0.75;
+    public $line_color = '0x000000';
+    public $line_thickness = 0.75;
     // 1 - 3/4 pt
     // 2 - 1 pt
     // 3 - 1 1/4 pt
@@ -241,34 +241,34 @@ class ST_Question_Labelling extends ST_Question
     // 5 - 3 pt
     // 6 - 4 1/2 pt
     // 7 - 6 pt
-    var $box_color = '0xc6c6c6';
-    var $font_size = 10;
-    var $font_color = '0x000000';
-    var $width = 90;
-    var $height = 35;
-    var $label_type = 'single';
+    public $box_color = '0xc6c6c6';
+    public $font_size = 10;
+    public $font_color = '0x000000';
+    public $width = 90;
+    public $height = 35;
+    public $label_type = 'single';
 
-    var $arrows = array(); // array of STQ_Labelling_Arrow
-    var $labels = array();
+    public $arrows = array(); // array of STQ_Labelling_Arrow
+    public $labels = array();
 
     // raw labeling option text for rogo->qti->rogo
-    var $raw_option = '';
+    public $raw_option = '';
     // STORE LABELING INFO IN HERE!!!!
 }
 
 class ST_Question_Likert extends ST_Question
 {
-    var $scenario = '';
-    var $scale = array(); // string array of poss values
-    var $hasna = 0;
+    public $scenario = '';
+    public $scale = array(); // string array of poss values
+    public $hasna = 0;
 }
 
 class STQ_Matrix_Scenario
 {
-    var $scenario;
-    var $answer;
+    public $scenario;
+    public $answer;
 
-    function __toString()
+    public function __toString()
     {
         return $this->scenario . '=' . $this->answer;
     }
@@ -276,26 +276,26 @@ class STQ_Matrix_Scenario
 
 class ST_Question_Matrix extends ST_Question
 {
-    var $options = array();
+    public $options = array();
     // Store matrix as $matrix[TOP][LEFT] = T/F
-    var $scenarios = array(); // array of STQ_Matrix_Scenario, key as row
+    public $scenarios = array(); // array of STQ_Matrix_Scenario, key as row
 }
 
 class STQ_Mcq_Option
 {
-    var $stem = '';
+    public $stem = '';
 
-    var $media = '';
-    var $media_width = 0;
-    var $media_height = 0;
-    var $media_alt = '';
-    var $media_type;
-  
-    var $marks_correct;
-    var $marks_incorrect;
-    var $marks_partial;
-  
-    function __toString()
+    public $media = '';
+    public $media_width = 0;
+    public $media_height = 0;
+    public $media_alt = '';
+    public $media_type;
+
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+
+    public function __toString()
     {
         return $this->stem;
     }
@@ -303,45 +303,45 @@ class STQ_Mcq_Option
 
 class ST_Question_Mcq extends ST_Question
 {
-    var $scenario = '';
-    var $correct = 0;
+    public $scenario = '';
+    public $correct = 0;
 
-    var $options = array(); // array of STQ_Mcq_Option, key as option no
+    public $options = array(); // array of STQ_Mcq_Option, key as option no
 
-    var $fb_correct;
-    var $fb_incorrect;
-    var $answer;
+    public $fb_correct;
+    public $fb_incorrect;
+    public $answer;
 }
 
 class ST_Question_TrueFalse extends ST_Question
 {
-    var $scenario = '';
-    var $correct = 0;
+    public $scenario = '';
+    public $correct = 0;
 
-    var $options = array(); // array of STQ_Mcq_Option, key as option no
+    public $options = array(); // array of STQ_Mcq_Option, key as option no
 
-    var $fb_correct;
-    var $fb_incorrect;
-    var $answer;
+    public $fb_correct;
+    public $fb_incorrect;
+    public $answer;
 }
 
 class STQ_Mrq_Option
 {
-    var $stem = '';
-    var $is_correct = 0;
-    var $media = '';
-    var $media_width = 0;
-    var $media_height = 0;
-    var $media_alt = '';
-    var $media_type;
-    var $fb_correct;
-    var $fb_incorrect;
-  
-    var $marks_correct;
-    var $marks_incorrect;
-    var $marks_partial;
-  
-    function __toString()
+    public $stem = '';
+    public $is_correct = 0;
+    public $media = '';
+    public $media_width = 0;
+    public $media_height = 0;
+    public $media_alt = '';
+    public $media_type;
+    public $fb_correct;
+    public $fb_incorrect;
+
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+
+    public function __toString()
     {
         return $this->stem . '=' . ($this->is_correct ? 'True' : 'False');
     }
@@ -349,25 +349,25 @@ class STQ_Mrq_Option
 
 class ST_Question_Mrq extends ST_Question
 {
-    var $scenario = '';
-    var $score_method = 0;
-    var $include_other = 0;
-    var $options = array(); // array of STQ_Mrq_Options, key as option no
-    var $feedback;
+    public $scenario = '';
+    public $score_method = 0;
+    public $include_other = 0;
+    public $options = array(); // array of STQ_Mrq_Options, key as option no
+    public $feedback;
 }
 
 class STQ_Rank_Options
 {
-    var $stem = '';
-    var $order = 9990;
-    
-    var $marks_correct;
-    var $marks_incorrect;
-    var $marks_partial;
-  
+    public $stem = '';
+    public $order = 9990;
+
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+
     // order - 1-15, or 0 as blank, and 9990 as N/A
 
-    function __toString()
+    public function __toString()
     {
         return $this->stem . '=' . $this->order;
     }
@@ -375,22 +375,22 @@ class STQ_Rank_Options
 
 class ST_Question_Rank extends ST_Question
 {
-    var $scenario = '';
-    var $score_method = 0;
-    var $options = array(); // array of STQ_Rank_Options, key as option no
-    var $fb_correct;
-    var $fb_incorrect;
+    public $scenario = '';
+    public $score_method = 0;
+    public $options = array(); // array of STQ_Rank_Options, key as option no
+    public $fb_correct;
+    public $fb_incorrect;
 }
 
 class ST_Question_Textbox extends ST_Question
 {
-    var $scenario = '';
-    var $columns = 100;
-    var $rows = 3;
-    var $editor = 'WYSIWYG';
-    var $marks = 1;
-    var $feedback = '';
-    var $terms = array(); // array of strings
+    public $scenario = '';
+    public $columns = 100;
+    public $rows = 3;
+    public $editor = 'WYSIWYG';
+    public $marks = 1;
+    public $feedback = '';
+    public $terms = array(); // array of strings
 }
 
 class ST_Question_Sct extends ST_Question
@@ -410,11 +410,11 @@ class ST_Question_keyword_based extends ST_Question
 
 class ST_Question_true_false extends ST_Question
 {
-    var $scenario = '';
-    var $correct = 0;
+    public $scenario = '';
+    public $correct = 0;
 
-    var $options = array(); // array of STQ_Mcq_Option, key as option no
+    public $options = array(); // array of STQ_Mcq_Option, key as option no
 
-    var $fb_correct;
-    var $fb_incorrect;
+    public $fb_correct;
+    public $fb_incorrect;
 }

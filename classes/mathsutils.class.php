@@ -31,7 +31,7 @@ class MathsUtils
      * @param int $number
      * @return int factorial of the given number
      */
-    static function factorial($number)
+    public static function factorial($number)
     {
         $temp = 1;
         while ($number > 1) {
@@ -48,7 +48,7 @@ class MathsUtils
      * @param int $decimals
      * @return mixed Random number based on input parameters
      */
-    static function gen_random_no($min, $max, $increment, $decimals)
+    public static function gen_random_no($min, $max, $increment, $decimals)
     {
         if ($min === 'ERROR' or $max === 'ERROR') {
             return 'ERROR';
@@ -79,7 +79,7 @@ class MathsUtils
         return $gen_no;
     }
 
-    static function formatNumber($number, $decimals = 2)
+    public static function formatNumber($number, $decimals = 2)
     {
         $number = (string) round($number, $decimals);
 
@@ -105,7 +105,7 @@ class MathsUtils
      * @param array set of numbers you wish to find the median from
      * @return int median of the list
      */
-    static function median($arr)
+    public static function median($arr)
     {
         sort($arr);
         $count = count($arr); //total numbers in array
@@ -121,7 +121,7 @@ class MathsUtils
         return $median;
     }
 
-    static function mean($arr)
+    public static function mean($arr)
     {
         $total = array_sum($arr);
         $no = count($arr);
@@ -137,7 +137,7 @@ class MathsUtils
      * @param float the percentile required
      * @return float the requested percentile
      */
-    static function percentile($data, $percentile)
+    public static function percentile($data, $percentile)
     {
         $count = count($data);
         if ($count == 0) {

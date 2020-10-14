@@ -124,7 +124,7 @@ class Config extends RogoStaticSingleton
      */
     const EMAIL = 'email';
 
-    function __toString()
+    public function __toString()
     {
         return 'ConfigObject!';
     }
@@ -408,13 +408,13 @@ class Config extends RogoStaticSingleton
         $this->db = $db;
     }
 
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         //   print "<br>confobj:errorfuncrun<br>";
         return 'config Object: hidden for security';
     }
 
-    function export_all()
+    public function export_all()
     {
         return $this->data;
     }
@@ -424,7 +424,7 @@ class Config extends RogoStaticSingleton
      * @param string $var The name of the config setting
      * @param string $value
      */
-    function set($var, $value)
+    public function set($var, $value)
     {
         $this->data[$var] = $value;
     }
@@ -538,7 +538,7 @@ class Config extends RogoStaticSingleton
         }
     }
 
-    function append($var, $value)
+    public function append($var, $value)
     {
         $this->settings['core'][$var] .= $value;
     }
@@ -680,7 +680,7 @@ class Config extends RogoStaticSingleton
      * @param string $var
      * @return string||void Return setting as string if found.  Otherwise return null.
      */
-    function get($var)
+    public function get($var)
     {
         if (is_string($var)) {
             if (isset($this->data[$var])) {
@@ -706,7 +706,7 @@ class Config extends RogoStaticSingleton
      * @param string $grandchild xml grandchild node name
      * @return value of xml node
      */
-    function getxml($parent, $child = '', $grandchild = '')
+    public function getxml($parent, $child = '', $grandchild = '')
     {
         $xmldata = json_decode($this->xmldata);
         if (is_string($parent)) {
@@ -750,7 +750,7 @@ class Config extends RogoStaticSingleton
         $this->xmldata = json_encode($xmldata);
     }
 
-    function &getbyref($var)
+    public function &getbyref($var)
     {
         if (is_string($var)) {
             if (isset($this->data[$var])) {

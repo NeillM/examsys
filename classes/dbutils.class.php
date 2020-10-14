@@ -45,7 +45,7 @@ class DBUtils
      *
      * @return object
      */
-    static function get_mysqli_link($host, $user, $passwd, $database, $charset, $notice, $dbclass = 'mysqli', $port = 3306)
+    public static function get_mysqli_link($host, $user, $passwd, $database, $charset, $notice, $dbclass = 'mysqli', $port = 3306)
     {
 
         @$mysqli = new $dbclass($host, $user, $passwd, $database, $port);
@@ -154,7 +154,7 @@ class DBUtils
      * @param mysqli $db db connection
      * @return bool true on success false otherwise
      */
-    static function exec_db_update($table, $table_idx, $params, $id, $db)
+    public static function exec_db_update($table, $table_idx, $params, $id, $db)
     {
         $command = 'UPDATE ' . $table . ' SET ';
         $filter = ' WHERE ' . $table_idx . ' = ?';
@@ -204,7 +204,7 @@ class DBUtils
      * @param mysqli $db db connection
      * @return bool true on success false otherwise
      */
-    static function exec_db_insert($table, $params, $db)
+    public static function exec_db_insert($table, $params, $db)
     {
         $command = 'INSERT INTO ' . $table . ' (';
         // Generate list of selected data to insert.
@@ -254,7 +254,7 @@ class DBUtils
      * @param string $dbpasswd password for user
      * @return bool true on success
      */
-    static function run_sql($file, $dbuser, $dbpasswd)
+    public static function run_sql($file, $dbuser, $dbpasswd)
     {
         $sql = file_get_contents($file);
         // Check charset of sql.

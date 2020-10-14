@@ -69,7 +69,7 @@ class yearutils
      * Constructor
      * @param rogo db $mysqli
      */
-    function __construct($mysqli)
+    public function __construct($mysqli)
     {
         $configObject = Config::get_instance();
 

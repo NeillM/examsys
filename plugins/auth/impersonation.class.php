@@ -40,7 +40,7 @@ class impersonation_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'checkwhattodo'), 'preauth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'changewhoiam'), 'getauthobj', $this->number, $this->name);
@@ -48,7 +48,7 @@ class impersonation_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function changewhoiam($getauthobj)
+    public function changewhoiam($getauthobj)
     {
         if (isset($this->session['authenticationObj']['impersonation']['newuserid']) and !is_null($this->session['authenticationObj']['impersonation']['newuserid'])) {
             if (!$getauthobj->userObj->has_role('SysAdmin')) {
@@ -64,7 +64,7 @@ class impersonation_auth extends outline_authentication
         return $getauthobj;
     }
 
-    function storedata($sessionstoreobj)
+    public function storedata($sessionstoreobj)
     {
         $this->savetodebug('session store');
         $this->session['authenticationObj']['impersonation']['newuserid'] = $this->newuserid;
@@ -72,7 +72,7 @@ class impersonation_auth extends outline_authentication
         return $sessionstoreobj;
     }
 
-    function checkwhattodo($preauthobj)
+    public function checkwhattodo($preauthobj)
     {
         $this->savetodebug('Starting up impersination checking');
         $continue = false;

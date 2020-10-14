@@ -206,7 +206,7 @@ class Authentication
      * Add extra callbacks sections.
      * @param array $section - Array of callback types.
      */
-    function register_callback_section($section)
+    public function register_callback_section($section)
     {
         foreach ($section as $addition) {
             if (!in_array($addition, $this->callbacktypes)) {
@@ -223,7 +223,7 @@ class Authentication
      * @param string $name              - Internal name of the plugin.
      * @param bool $insert              - True  = insert at the top of the list, False = append to the end.
      */
-    function register_callback($callback, $section, $number, $name, $insert = false)
+    public function register_callback($callback, $section, $number, $name, $insert = false)
     {
         global $string;
         if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
@@ -252,7 +252,7 @@ class Authentication
      * Get a list of available callbacks for the section.
      * @param string $section   - Name of the section.
      */
-    function get_callback($section)
+    public function get_callback($section)
     {
         return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
     }
@@ -261,7 +261,7 @@ class Authentication
      * Disply the standard Rogo login form
      * @param string $string    - Language strings.
      */
-    function display_std_form($string)
+    public function display_std_form($string)
     {
         $displaystdformobj = new stdClass();
 
@@ -286,7 +286,7 @@ class Authentication
      * Display the standard Rogo login form
      * @param bool $display - True = display form after failing to log in, False = no form displayed but still runs callback routines.
      */
-    function display_error_form($display = true)
+    public function display_error_form($display = true)
     {
         $override = $this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
 
@@ -318,7 +318,7 @@ class Authentication
      * @param array $context    - Unused.
      * @return array                    - List of the current object's variables.
      */
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         return error_handling($this);
     }
@@ -328,7 +328,7 @@ class Authentication
      * @param string $string    - Language strings.
      * @return bool if authentication was successful
      */
-    function do_authentication($string)
+    public function do_authentication($string)
     {
         $this->success = false;
         $this->debug[] = 'Starting authentication';
@@ -578,7 +578,7 @@ class Authentication
     /**
      * Stores data in the session
      */
-    function store_data_in_session()
+    public function store_data_in_session()
     {
         $this->session['authenticationObj']['loggedin']['userid'] = $this->get_userid();
         $this->session['authenticationObj']['loggedin']['time'] = time();
@@ -588,7 +588,7 @@ class Authentication
     /**
      * Return the user ID.
      */
-    function get_userid()
+    public function get_userid()
     {
         return $this->userid;
     }
@@ -596,7 +596,7 @@ class Authentication
     /**
      * Return the password as entered by the user.
      */
-    function get_password()
+    public function get_password()
     {
         return $this->form['std']->password;
     }
@@ -604,7 +604,7 @@ class Authentication
     /**
      * Return the username as entered by the user.
      */
-    function get_username()
+    public function get_username()
     {
         if (isset($this->username) and $this->username != '') {
             return $this->username;
@@ -617,7 +617,7 @@ class Authentication
      * @param int $number       - Internal plugin identifier.
      * @param string $desc  - Description of the internal plugin.
      */
-    function append_auth_object_debug($number, $desc = '')
+    public function append_auth_object_debug($number, $desc = '')
     {
         $new_messages = $this->authPluginObj[$number]->get_new_debug_messages();
         foreach ($new_messages as $key => $value) {
@@ -630,7 +630,7 @@ class Authentication
     /**
      * Display debugging log.
      */
-    function display_debug()
+    public function display_debug()
     {
         var_dump($this->debug);
     }
@@ -639,7 +639,7 @@ class Authentication
      * Return debugging log.
      * @return string - Debugging log.
      */
-    function debug_to_string()
+    public function debug_to_string()
     {
         return implode('<br />', $this->debug);
     }
@@ -649,7 +649,7 @@ class Authentication
      * @param object $getauth - Normally empty auth_obj but can be used to request a specific user.
      * @return object - User object.
      */
-    function get_auth_obj(&$getauth)
+    public function get_auth_obj(&$getauth)
     {
         global $string;
         if (!is_object($getauth)) {
@@ -702,7 +702,7 @@ class Authentication
     /**
      * Clears the config object.
      */
-    function clear_configObj()
+    public function clear_configObj()
     {
         $this->config = 'Config Object: removed for security';
         $this->configObj = 'Config Object: removed for security';
@@ -711,7 +711,7 @@ class Authentication
     /**
      * Clears the config object.
      */
-    function __Clone()
+    public function __Clone()
     {
         $this->config = 'Config Object: removed for security';
         $this->configObj = 'Config Object: removed for security';
@@ -723,7 +723,7 @@ class Authentication
      * @param bool $advanced    - Not yet written.
      * @return array/string     - Information about the plugins.
      */
-    function version_info($formatted = false, $advanced = false)
+    public function version_info($formatted = false, $advanced = false)
     {
         $data = new stdClass();
         $data->plugins = array();
@@ -778,7 +778,7 @@ class Authentication
      * @param string $type - The class name of the plugin for which to check
      * @return boolean     - True if the plugin is loaded in the current authentication stack
      */
-    function has_plugin_type($type)
+    public function has_plugin_type($type)
     {
         $found = false;
 

@@ -37,14 +37,14 @@ class fixedlist_auth extends outline_authentication
     public $version = 0.9;
     private $updatable = false;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
         return $callbackarray;
     }
 
-    function auth($authobj)
+    public function auth($authobj)
     {
         $this->retdata =& $authobj;
         $this->savetodebug('Authing');
@@ -105,7 +105,7 @@ class fixedlist_auth extends outline_authentication
         return $authobj;
     }
 
-    function failauth($postauthfailreturn)
+    public function failauth($postauthfailreturn)
     {
         $this->savetodebug('Fail function run');
         //default behaviour is to display username/password form

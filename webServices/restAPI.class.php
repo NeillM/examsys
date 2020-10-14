@@ -30,7 +30,7 @@ class restAPI
     public $http_accept;
     public $method;
 
-    function __construct()
+    public function __construct()
     {
         $this->request_vars      = array();
         $this->data              = '';
@@ -189,7 +189,7 @@ class restAPI
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    function __destruct()
+    public function __destruct()
     {
     }
 }

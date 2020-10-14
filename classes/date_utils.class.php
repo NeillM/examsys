@@ -37,7 +37,7 @@ class date_utils
      *
      * @return string - The HTML of the time/date selector.
      */
-    static function timedate_select($prefix, $imput_date, $split_time, $start_year, $end_year, $string)
+    public static function timedate_select($prefix, $imput_date, $split_time, $start_year, $end_year, $string)
     {
         $split_year = mb_substr($imput_date, 0, 4);
         $split_month = mb_substr($imput_date, 4, 2);

@@ -37,7 +37,7 @@ class guestlogin_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
 
         $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
@@ -46,7 +46,7 @@ class guestlogin_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function errordisp($displayerrformobj)
+    public function errordisp($displayerrformobj)
     {
         global $string;
         $configObject = Config::get_instance();
@@ -60,7 +60,7 @@ class guestlogin_auth extends outline_authentication
         return $displayerrformobj;
     }
 
-    function loginbutton($displaystdformobj)
+    public function loginbutton($displaystdformobj)
     {
         global $string;
         $config = Config::get_instance();

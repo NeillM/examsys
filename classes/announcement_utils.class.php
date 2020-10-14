@@ -35,7 +35,7 @@ class announcement_utils
      *
      * @return true or false.
      */
-    static function announcement_exist($announcementID, $db)
+    public static function announcement_exist($announcementID, $db)
     {
         $row_no = 0;
   
@@ -56,7 +56,7 @@ class announcement_utils
      * @param int $announcementID - The ID of the announcement to be deleted.
      * @param object $db          - Link to mysqli
      */
-    static function delete($announcementID, $db)
+    public static function delete($announcementID, $db)
     {
         $result = $db->prepare('UPDATE announcements SET deleted = NOW() WHERE id = ?');
         $result->bind_param('i', $announcementID);
@@ -69,7 +69,7 @@ class announcement_utils
      * @param object $db  - Database connection
      * @return array      - List of announcements
      */
-    static function get_staff_announcements($db)
+    public static function get_staff_announcements($db)
     {
         $announcements = array();
         $icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
@@ -90,7 +90,7 @@ class announcement_utils
      * @param object $db  - Database connection
      * @return array      - List of announcements
      */
-    static function get_student_announcements($db)
+    public static function get_student_announcements($db)
     {
         $announcements = array();
         $icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');

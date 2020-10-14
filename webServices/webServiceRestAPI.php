@@ -63,7 +63,7 @@ require './restAPI.class.php';
 class webServiceRestAPI extends restAPI
 {
 
-    var $db;
+    public $db;
     private $qtypes = array(
                     '0' => 'Formative Quiz',
                     '1' => 'Progress Test',
@@ -87,7 +87,7 @@ class webServiceRestAPI extends restAPI
      * @param array $tmp_tag - Contains the XML tag to be used within the root tag.
      *
      */
-    function write(XMLWriter $xml, $data, $tmp_tag)
+    public function write(XMLWriter $xml, $data, $tmp_tag)
     {
         if (!is_array($data)) {
             return;
@@ -671,7 +671,7 @@ class webServiceRestAPI extends restAPI
         }
     }
 
-    function __destruct()
+    public function __destruct()
     {
         parent::__destruct();
     }

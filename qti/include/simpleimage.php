@@ -21,11 +21,10 @@
 
 class SimpleImage
 {
+    public $image;
+    public $image_type;
 
-    var $image;
-    var $image_type;
-
-    function load($filename)
+    public function load($filename)
     {
         $image_info = getimagesize($filename);
         $this->image_type = $image_info[2];
@@ -37,7 +36,7 @@ class SimpleImage
             $this->image = imagecreatefrompng($filename);
         }
     }
-    function save($filename, $image_type = IMAGETYPE_JPEG, $compression = 75, $permissions = null)
+    public function save($filename, $image_type = IMAGETYPE_JPEG, $compression = 75, $permissions = null)
     {
         if ($image_type == IMAGETYPE_JPEG) {
             imagejpeg($this->image, $filename, $compression);
@@ -50,7 +49,7 @@ class SimpleImage
             chmod($filename, $permissions);
         }
     }
-    function output($image_type = IMAGETYPE_JPEG)
+    public function output($image_type = IMAGETYPE_JPEG)
     {
         if ($image_type == IMAGETYPE_JPEG) {
             imagejpeg($this->image);
@@ -60,33 +59,33 @@ class SimpleImage
             imagepng($this->image);
         }
     }
-    function getWidth()
+    public function getWidth()
     {
         return imagesx($this->image);
     }
-    function getHeight()
+    public function getHeight()
     {
         return imagesy($this->image);
     }
-    function resizeToHeight($height)
+    public function resizeToHeight($height)
     {
         $ratio = $height / $this->getHeight();
         $width = $this->getWidth() * $ratio;
         $this->resize($width, $height);
     }
-    function resizeToWidth($width)
+    public function resizeToWidth($width)
     {
         $ratio = $width / $this->getWidth();
         $height = $this->getheight() * $ratio;
         $this->resize($width, $height);
     }
-    function scale($scale)
+    public function scale($scale)
     {
         $width = $this->getWidth() * $scale / 100;
         $height = $this->getheight() * $scale / 100;
         $this->resize($width, $height);
     }
-    function resize($width, $height)
+    public function resize($width, $height)
     {
         $new_image = imagecreatetruecolor($width, $height);
         imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());

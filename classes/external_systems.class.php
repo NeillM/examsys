@@ -44,7 +44,7 @@ class external_systems
      * Constructor
      * @return void
      */
-    function __construct()
+    public function __construct()
     {
         $configObject = Config::get_instance();
         $this->db = $configObject->db;

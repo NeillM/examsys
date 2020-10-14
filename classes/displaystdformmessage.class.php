@@ -29,7 +29,7 @@ class displaystdformmessage extends stdClass
     public $cssclass;
     public $content;
 
-    function __construct()
+    public function __construct()
     {
         $this->pretext = '';
         $this->posttext = '';

@@ -39,7 +39,7 @@ class ltilogin_auth extends outline_authentication
     public $version = 0.9;
     protected $lti;
 
-    function init($object)
+    public function init($object)
     {
         parent::init($object);
         $this->lti = UoN_LTI::get_instance();
@@ -51,7 +51,7 @@ class ltilogin_auth extends outline_authentication
         }
     }
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'registeruserwithlti'), 'postauthsuccess', $this->number, $this->name);
@@ -60,7 +60,7 @@ class ltilogin_auth extends outline_authentication
     }
 
 
-    function auth($authobj)
+    public function auth($authobj)
     {
         $this->retdata =& $authobj;
         if ($this->lti->valid !== true) {
@@ -162,7 +162,7 @@ class ltilogin_auth extends outline_authentication
         return $authobj;
     }
 
-    function registeruserwithlti($postauthsuccessobj)
+    public function registeruserwithlti($postauthsuccessobj)
     {
 
         if (isset($_SESSION['authenticationobj']['ltilogin']['needsreuserlookup']) and $_SESSION['authenticationobj']['ltilogin']['needsreuserlookup'] === true) {
@@ -181,7 +181,7 @@ class ltilogin_auth extends outline_authentication
         return $postauthsuccessobj;
     }
 
-    function displaystdform($displaystdformobj)
+    public function displaystdform($displaystdformobj)
     {
         global $string;
         if (isset($this->session['authenticationobj']['ltilogin']['needsreuserlookup']) and $this->session['authenticationobj']['ltilogin']['needsreuserlookup'] === true) {

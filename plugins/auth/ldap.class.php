@@ -40,7 +40,7 @@ class ldap_auth extends outline_authentication
     public $version = 0.9;
     private $createnewuserassociation = false;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
@@ -63,7 +63,7 @@ class ldap_auth extends outline_authentication
      * @param stdClass $postauthsuccessobj
      * @return stdClass The object passed, with any modifications.
      */
-    function createnewuserassociation($postauthsuccessobj)
+    public function createnewuserassociation($postauthsuccessobj)
     {
         if ($this->createnewuserassociation !== true) {
             return $postauthsuccessobj;
@@ -84,7 +84,7 @@ class ldap_auth extends outline_authentication
         return $postauthsuccessobj;
     }
 
-    function errordisp($displayerrformobj)
+    public function errordisp($displayerrformobj)
     {
         global $string;
         $this->savetodebug('adding ldap notice to error screen');
@@ -102,7 +102,7 @@ class ldap_auth extends outline_authentication
      * @param stdClass $postauthfailreturn
      * @return stdClass The object passed, with any modifications.
      */
-    function failauth($postauthfailreturn)
+    public function failauth($postauthfailreturn)
     {
         $this->savetodebug('Fail function passed ' . var_export($postauthfailreturn, true));
         //default behaviour is to display username/password form
@@ -130,7 +130,7 @@ class ldap_auth extends outline_authentication
      * @param authobjreturn $authobj
      * @return authobjreturn
      */
-    function auth($authobj)
+    public function auth($authobj)
     {
         global $string;
         $this->retdata =& $authobj;

@@ -73,7 +73,7 @@ class Question
 
     public $std;
 
-    function set_settings($settings)
+    public function set_settings($settings)
     {
         if (!is_array($settings)) {
             $this->settings = json_decode($settings, true);
@@ -82,7 +82,7 @@ class Question
         }
     }
 
-    function set_useranswer($useranswer)
+    public function set_useranswer($useranswer)
     {
         if (!is_array($useranswer)) {
             $this->useranswer = json_decode($useranswer, true);
@@ -91,12 +91,12 @@ class Question
         }
     }
 
-    function add_to_useranswer($key, $value)
+    public function add_to_useranswer($key, $value)
     {
         $this->useranswer[$key] = $value;
     }
 
-    function export_save(&$array)
+    public function export_save(&$array)
     {
         $classvar = get_object_vars($this);
         foreach ($classvar as $key => $value) {
@@ -123,7 +123,7 @@ class Question
         }
     }
 
-    function load($array)
+    public function load($array)
     {
         foreach ($array as $key => $value) {
             if (property_exists($this, $key)) {
@@ -146,7 +146,7 @@ class Question
         }
     }
   
-    function save($db)
+    public function save($db)
     {
         if ($this->id > 0) {
             // Update the database.

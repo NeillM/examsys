@@ -35,7 +35,7 @@ class authobjreturn
     public $username;
     public $postredirect = false;
 
-    function __construct()
+    public function __construct()
     {
         $this->returned     = ROGO_AUTH_OBJ_FAILED;
         $this->returneds    = array();
@@ -50,7 +50,7 @@ class authobjreturn
      * set the authobjreturn objet to fail state
      * @param int $number - Internal ID of the plugin in the stack.
      */
-    function fail($number)
+    public function fail($number)
     {
         $this->returned = ROGO_AUTH_OBJ_FAILED;
         $this->returneds[] = $this->returned;
@@ -63,7 +63,7 @@ class authobjreturn
      * @param int $number - Internal ID of the plugin in the stack.
      * @param int $rogoid - User ID of the successful user.
      */
-    function success($number, $rogoid)
+    public function success($number, $rogoid)
     {
         $this->rogoid = $rogoid;
         $this->rogoids[] = $this->rogoid;
@@ -77,7 +77,7 @@ class authobjreturn
      * @param int $number  - Internal ID of the plugin in the stack.
      * @param object $data - Data for user to be looked up.
      */
-    function lookupmissing($number, $data)
+    public function lookupmissing($number, $data)
     {
         $this->rogoid = 0;
         $this->returned = ROGO_AUTH_OBJ_LOOKUPONLY;

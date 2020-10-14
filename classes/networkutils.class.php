@@ -30,7 +30,7 @@ class NetworkUtils
      * Get the IP address or name of the computer from the server headers
      * @return mixed client ip address
      */
-    static function get_client_address()
+    public static function get_client_address()
     {
         $configObject = Config::get_instance();
         if (PHP_SAPI == 'cli') {
@@ -60,7 +60,7 @@ class NetworkUtils
         return $_SESSION['current_ip'];
     }
 
-    static function get_protocol()
+    public static function get_protocol()
     {
         if (
             (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or
@@ -73,7 +73,7 @@ class NetworkUtils
         }
     }
 
-    static function check_email_domain($output, $domain)
+    public static function check_email_domain($output, $domain)
     {
         global $email;
 
@@ -88,7 +88,7 @@ class NetworkUtils
      *
      * @return string The IP address of the webserver.
      */
-    static function get_server_address()
+    public static function get_server_address()
     {
         if (!empty($_SERVER['SERVER_ADDR'])) {
             // This should work on Apache and most other server.

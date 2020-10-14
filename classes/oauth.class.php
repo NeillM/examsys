@@ -59,7 +59,7 @@ class oauth
      * @param object $configObject - rogo configuration object
      * @return void
      */
-    function __construct($configObject)
+    public function __construct($configObject)
     {
         $this->db = \DBUtils::get_mysqli_link(
             $configObject->get('cfg_db_host'),

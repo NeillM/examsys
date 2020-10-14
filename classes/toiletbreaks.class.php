@@ -25,7 +25,7 @@
 class ToiletBreaks
 {
   
-    static function add_toilet_break($userID, $paperID, $db)
+    public static function add_toilet_break($userID, $paperID, $db)
     {
         $result = $db->prepare('INSERT INTO toilet_breaks VALUES (NULL, ?, ?, NOW())');
         $result->bind_param('ii', $userID, $paperID);
@@ -33,7 +33,7 @@ class ToiletBreaks
         $result->close();
     }
   
-    static function toilet_break_by_id($breakID, $db)
+    public static function toilet_break_by_id($breakID, $db)
     {
         $configObject = Config::get_instance();
         $date_format = $configObject->get('cfg_long_date_time');
@@ -49,7 +49,7 @@ class ToiletBreaks
     }
   
   
-    static function get_all_breaks_by_paper($paperID, $db)
+    public static function get_all_breaks_by_paper($paperID, $db)
     {
         $notes = array();
         // Query any student toilet breaks for the current paper

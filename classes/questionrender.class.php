@@ -48,7 +48,7 @@ class questionrender
      * Constructor
      * @param string $qtype question type
      */
-    function __construct($qtype)
+    public function __construct($qtype)
     {
         $this->config = Config::get_instance();
         $this->questiondata = questiondata::get_datastore($qtype);
@@ -60,7 +60,7 @@ class questionrender
      * @param string $field_name Name of field to override in questiondata class
      * @param mixed $value Value to override
      */
-    function add_override($field_name, $value)
+    public function add_override($field_name, $value)
     {
         $this->override_fields[$field_name] = $value;
     }
@@ -70,7 +70,7 @@ class questionrender
      * @param string $field_name Name of field to remove from overrides
      * @param mixed $value Value to override
      */
-    function remove_override($field_name)
+    public function remove_override($field_name)
     {
         unset($this->override_fields[$field_name]);
     }

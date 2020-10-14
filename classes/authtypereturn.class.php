@@ -24,9 +24,12 @@
  */
 class authtypereturn
 {
-    public $success, $rogoid, $url, $message;
+    public $success;
+    public $rogoid;
+    public $url;
+    public $message;
 
-    function __construct()
+    public function __construct()
     {
         $this->debug = array();
         $this->debugpointer = 0;

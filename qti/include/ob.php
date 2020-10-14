@@ -27,32 +27,32 @@ ob_start();
 
 class OB
 {
-    var $content;
+    public $content;
 
-    function ClearAndSave()
+    public function ClearAndSave()
     {
         $this->content = ob_get_contents();
         ob_clean();
     }
 
-    function Clear()
+    public function Clear()
     {
         $this->content = '';
         ob_clean();
     }
 
-    function GetContent()
+    public function GetContent()
     {
         return ob_get_contents();
     }
 
-    function Restore()
+    public function Restore()
     {
         ob_clean();
         echo $this->content;
     }
 
-    function DoInclude($filename)
+    public function DoInclude($filename)
     {
         $this->ClearAndSave();
         include $filename;

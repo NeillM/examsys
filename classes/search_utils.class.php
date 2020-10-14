@@ -35,7 +35,7 @@ class search_utils
      * @param integer $user_id ID of the current user
      * @return array of keywords
      */
-    static function get_keywords($db, $teams, $user_id)
+    public static function get_keywords($db, $teams, $user_id)
     {
         $keywords = array('team' => array(), 'personal' => array());
 
@@ -67,7 +67,7 @@ class search_utils
      * @param object $db      - database connection
      * @return string HTML of the dropdown menu
      */
-    static function display_staff_modules_dropdown($userObj, $string, $db)
+    public static function display_staff_modules_dropdown($userObj, $string, $db)
     {
         $staff_modules = $userObj->get_staff_accessable_modules();
 
@@ -109,7 +109,7 @@ class search_utils
      * @param object $db database connection
      * @return array of name data
      */
-    static function get_owners($userObj, $db)
+    public static function get_owners($userObj, $db)
     {
         $select = "SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users";
         $order = 'ORDER BY surname, initials';
@@ -152,7 +152,7 @@ class search_utils
      * @param string $font_size - size of font to use.
      * @return string HTML of the dropdown menu
      */
-    static function display_owners_dropdown($userObj, $db, $type, $string, $state, $font_size = 90)
+    public static function display_owners_dropdown($userObj, $db, $type, $string, $state, $font_size = 90)
     {
         $owners = self::get_owners($userObj, $db);
 
@@ -188,7 +188,7 @@ class search_utils
      * @param array $state        - the store state of the interface.
      * @return string HTML of the status dropdown menu
      */
-    static function display_status($status_array, $state)
+    public static function display_status($status_array, $state)
     {
         $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
 
@@ -218,7 +218,7 @@ STATUS;
      * @param array $state    - the store state of the interface.
      * @return string HTML of the Bloom's Taxonomy dropdown menu
      */
-    static function display_blooms_dropdown($string, $state)
+    public static function display_blooms_dropdown($string, $state)
     {
         echo "<select style=\"width:185px\" class=\"statechange\" data-type=\"bloom\" name=\"bloom\">\n";
         echo '<option value="%">' . $string['alllevels'] . "</option>\n";

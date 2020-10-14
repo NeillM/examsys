@@ -37,7 +37,7 @@ class apache_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
@@ -46,7 +46,7 @@ class apache_auth extends outline_authentication
         return $callbackarray;
     }
 
-    function auth($authobj)
+    public function auth($authobj)
     {
         $this->retdata =& $authobj;
         $this->savetodebug('Authing');
@@ -120,7 +120,7 @@ class apache_auth extends outline_authentication
         return $authobj;
     }
 
-    function failauth($postauthfailreturn)
+    public function failauth($postauthfailreturn)
     {
         $this->savetodebug('Fail function run');
         $this->savetodebug('Not sure what sensible default behaviour is -- let other modules choose as in theory this location is impossible if apache auth is on');
@@ -129,7 +129,7 @@ class apache_auth extends outline_authentication
     }
 
 
-    function createnewuserassociation($postauthsuccessobj)
+    public function createnewuserassociation($postauthsuccessobj)
     {
         if ($this->createnewuserassociation !== true) {
             return $postauthsuccessobj;

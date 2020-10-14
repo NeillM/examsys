@@ -30,7 +30,7 @@ class PaperNotes
      * @param int $paperID    - ID of the paper we wish to look up.
      * @param object $db    - MySQL connection
      */
-    static function get_all_notes_by_paper($paperID, $db)
+    public static function get_all_notes_by_paper($paperID, $db)
     {
         $notes = array();
         // Query any student notes for the current paper
@@ -53,7 +53,7 @@ class PaperNotes
      * @param object $db      - MySQL connection
      * @return array          - Array containing the id and text of a paper note.
      */
-    static function get_note($paperID, $address, $db)
+    public static function get_note($paperID, $address, $db)
     {
         $result = $db->prepare('SELECT note_id, note FROM paper_notes WHERE paper_id = ? AND note_workstation = ?');
         $result->bind_param('is', $paperID, $address);
@@ -72,7 +72,7 @@ class PaperNotes
      * @param int $authorID   - User ID of the member of staff/invigilator creating the note.
      * @param object $db      - MySQL connection
      */
-    static function add_note($note, $paperID, $authorID, $db)
+    public static function add_note($note, $paperID, $authorID, $db)
     {
         $current_address = NetworkUtils::get_client_address();
 
@@ -88,7 +88,7 @@ class PaperNotes
      * @param int $note_id    - ID of the paper note.
      * @param object $db      - MySQL connection
      */
-    static function update_note($note, $note_id, $db)
+    public static function update_note($note, $note_id, $db)
     {
         $result = $db->prepare('UPDATE paper_notes SET note = ? WHERE note_id = ?');
         $result->bind_param('si', $note, $note_id);

@@ -24,7 +24,7 @@
 class ReviewUtils
 {
 
-    static function is_external_on_paper($externalID, $paperID, $db)
+    public static function is_external_on_paper($externalID, $paperID, $db)
     {
         $on_paper = false;
 
@@ -43,7 +43,7 @@ class ReviewUtils
         return $on_paper;
     }
 
-    static function get_past_papers($externalID, $db)
+    public static function get_past_papers($externalID, $db)
     {
         $config = Config::get_instance();
         $released_papers = array();
