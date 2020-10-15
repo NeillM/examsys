@@ -195,8 +195,9 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
 
             $missing_answer = false;
             $display_error = false;
-            $stems = 0;
-            $media = 0;
+            $stems = -1;
+            $media = -1;
+
             for ($part_id = 0; $part_id < 10; $part_id++) {
                 $has_stem = (isset($matching_scenarios[$part_id]) and (trim(param::clean($matching_scenarios[$part_id], param::TEXT)) !== ''));
                 $has_media = (isset($matching_media[$part_id]) and ($matching_media[$part_id] !== ''));
