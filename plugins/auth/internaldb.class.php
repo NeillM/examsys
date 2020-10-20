@@ -111,7 +111,7 @@ class internaldb_auth extends outline_authentication
         extract($this->settings);
         if (!isset($this->form['std']->username) or !isset($this->form['std']->password) or $this->form['std']->username == '' or $this->form['std']->password == '') {
             //return not sucessfull do not try
-                $this->savetodebug('Check 1 blank entries');
+            $this->savetodebug('Check 1 blank entries');
             $this->retdata->fail($this->number);
             $this->retdata->message = 'Not valid entry for username or password';
             return $authobj;
@@ -125,7 +125,7 @@ class internaldb_auth extends outline_authentication
         $result->bind_result($uname, $pass, $id, $password_expire);
         if ($result->num_rows() !== 1) {
             // return not sucessfull either no user or multiple matches
-                $this->savetodebug('Check 2 record number not = 1 no user or multiple user found');
+            $this->savetodebug('Check 2 record number not = 1 no user or multiple user found');
             $this->retdata->fail($this->number);
             $this->retdata->message = 'Incorrect number of records returned';
             return $authobj;
@@ -144,7 +144,7 @@ class internaldb_auth extends outline_authentication
         if ($encrypt_password == $pass and (time() < $password_expire or $password_expire == '')) {
             if ($old_encrypt_type == 'MD5') {
                 // Re-encrypt MD5 passwords using SHA-512.
-                  $this->savetodebug('Re Encrypting PW');
+                $this->savetodebug('Re Encrypting PW');
                 $this->update_password();
             }
             $this->updatable = false;

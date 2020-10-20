@@ -152,7 +152,7 @@ class outline_authentication
         if (is_null($number)) {
             $returnarray = array();
             while (isset($this->debug[$this->debugpointer])) {
-                    $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
+                $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
             }
 
             return $returnarray;
