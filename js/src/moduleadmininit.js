@@ -33,6 +33,12 @@ requirejs(['list', 'modulessidebar', 'jquery', 'jquerytablesorter'], function (L
     $(".l").click(function() {
         var externalid = $(this).attr('data-externalid');
         var syncprevious = $(this).attr('data-syncprevious');
+        var session = $(this).attr('data-session');
+        var nextsession = parseInt(session) + 1;
+        var prevsession = parseInt(session) - 1;
+        var currentaccsession = session + '/' + nextsession.toString().substring(2);
+        var nextaccsession = nextsession + '/' + (nextsession + 1).toString().substring(2);
+        var prevacccsession = prevsession + '/' + session.toString().substring(2);
 
         if (externalid == '') {
             $('#syncoptions').hide();
@@ -43,6 +49,12 @@ requirejs(['list', 'modulessidebar', 'jquery', 'jquerytablesorter'], function (L
         $('#sms').attr('data-id', externalid);
         $('#sms2').attr('data-id', externalid);
         $('#sms3').attr('data-id', externalid);
+        $('#sms').attr('data-session', session);
+        $('#sms2').attr('data-session', nextsession);
+        $('#sms3').attr('data-session', prevsession);
+        $('#sms div').html('(' + currentaccsession + ')');
+        $('#sms2 div').html('(' + nextaccsession + ')');
+        $('#sms3 div').html('(' + prevacccsession + ')');
 
         // Display previous year syn if enabled for the module.
         if (syncprevious == '1') {

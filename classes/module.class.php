@@ -992,4 +992,28 @@ class module
         $results->close();
         return $student_object;
     }
+
+    /**
+     * Get the academic year start for a module
+     * @param string $moduleid internal module id
+     * @throws coding_exception
+     * @return string
+     */
+    public static function getAcademicYearStart(string $moduleid): string
+    {
+        $configObject = Config::get_instance();
+        $result = $configObject->db->prepare('SELECT academic_year_start FROM modules WHERE id = ?');
+        $result->bind_param('s', $moduleid);
+        $result->execute();
+        $result->store_result();
+        if ($result->num_rows == 0) {
+            throw new coding_exception('You must provide a valid module');
+        } else {
+            $result->bind_result($start);
+            $result->fetch();
+        }
+        $result->free_result();
+        $result->close();
+        return $start;
+    }
 }

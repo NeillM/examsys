@@ -54,6 +54,16 @@ class moduleutilstest extends unittestdatabase
     private $pid2;
 
     /**
+     * @var integer Storage for module data in tests
+     */
+    private $module3;
+
+    /**
+     * @var integer Storage for module data in tests
+     */
+    private $module4;
+
+    /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
@@ -83,6 +93,23 @@ class moduleutilstest extends unittestdatabase
             'papertype' => '0',
             'duration' => 60,
             'labs' => '1'));
+        $datagenerator = $this->get_datagenerator('modules', 'core');
+        $this->module3 = $datagenerator->create_module(
+            array(
+                'moduleid' => 'TEST',
+                'fullname' => 'Another test module',
+                'schoolID' => $this->school2
+            )
+        );
+        $this->module4 = $datagenerator->create_module(
+            array(
+                'moduleid' => 'TEST2',
+                'fullname' => 'Yet another test module',
+                'schoolID' => $this->school2,
+                'academic_year_start' => '03/01'
+            )
+        );
+
     }
 
     /**
@@ -245,5 +272,26 @@ class moduleutilstest extends unittestdatabase
         $expected[$this->user]['medical'] = null;
         $expected[$this->user]['breaks'] = null;
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test get module year start
+     * @group modules
+     */
+    public function testGetAcademicYearStart(): void
+    {
+        // Default.
+        $this->assertEquals(
+            $this->config->get_setting('core', 'system_academic_year_start'),
+            module_utils::getAcademicYearStart($this->module3['id'])
+        );
+        // Module set.
+        $this->assertEquals(
+            $this->module4['academic_year_start'],
+            module_utils::getAcademicYearStart($this->module4['id'])
+        );
+        // Invalid module.
+        $this->expectExceptionMessage('You must provide a valid module');
+        module_utils::getAcademicYearStart(9999999999);
     }
 }

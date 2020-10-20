@@ -95,7 +95,9 @@ $result->store_result();
                 $class = 'l grey';
             }
             $syncprev = module_utils::check_sync_previous_year($id);
-            echo "<tr data-syncprevious=\"$syncprev\" data-externalid=\"$externalid\" class=\"$class\" id=\"$id\"><td>$moduleid</td><td>$fullname</td><td>$schoolcode $school</td><td>$tmp_active</td></tr>\n";
+            $yearutils = new \yearutils($configObject->db);
+            $session = $yearutils->get_current_session(module_utils::getAcademicYearStart($id));
+            echo "<tr data-session=\"$session\" data-syncprevious=\"$syncprev\" data-externalid=\"$externalid\" class=\"$class\" id=\"$id\"><td>$moduleid</td><td>$fullname</td><td>$schoolcode $school</td><td>$tmp_active</td></tr>\n";
         }
         $result->close();
         $mysqli->close();

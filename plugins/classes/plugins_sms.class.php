@@ -93,9 +93,14 @@ abstract class plugins_sms extends \plugins\plugins
     {
         $configObject = \Config::get_instance();
         $yearutils = new \yearutils($configObject->db);
-        $data['current_session'] = $yearutils->get_current_session();
-        $data['next_session'] = $yearutils->get_next_session();
-        $data['previous_session'] = $yearutils->get_previous_session();
+        if ($moduleid === 0) {
+            $module_year_start = '';
+        } else {
+            $module_year_start = \module_utils::getAcademicYearStart($moduleid);
+        }
+        $data['current_session'] = $yearutils->get_current_session($module_year_start);
+        $data['next_session'] = $yearutils->get_next_session($module_year_start);
+        $data['previous_session'] = $yearutils->get_previous_session($module_year_start);
         $data['academic_year'] = $yearutils->get_academic_session($data['current_session']);
         $data['next_academic_year'] = $yearutils->get_academic_session($data['next_session']);
         $data['prev_academic_year'] = $yearutils->get_academic_session($data['previous_session']);
@@ -158,7 +163,7 @@ abstract class plugins_sms extends \plugins\plugins
      * @params integer $session academic session to sync enrolments with
      * @params integer $externalid external system module id
      */
-    abstract public function get_enrolments($session, $externalid = null);
+    abstract public function get_enrolments($session = null, $externalid = null);
     /**
      * Update module in an academic session
      * Updates module details and enrolments

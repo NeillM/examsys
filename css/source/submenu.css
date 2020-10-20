@@ -285,3 +285,7 @@ div.iefixdiv {
 	background-repeat: no-repeat;
 	background-position: right center;
 }
+
+.syncyear {
+  display: inherit;
+}
