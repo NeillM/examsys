@@ -1063,7 +1063,7 @@ $startfyear = date('Y');
 if ($split_year !== 0 and $split_year < $startfyear) {
     $startfyear = $split_year;
 }
-echo "<optgroup>";
+echo '<optgroup>';
 for ($i = $startfyear; $i < ($startfyear + 21); $i++) {
     // Temp bailout to handle 2038 mysql unixtimestamp issue.
     if ($i > 2037) {
@@ -1075,14 +1075,14 @@ for ($i = $startfyear; $i < ($startfyear + 21); $i++) {
         echo "<option value=\"$i\">$i</option>\n";
     }
 }
-echo "</optgroup><optgroup>";
+echo '</optgroup><optgroup>';
 $diffyears = $startfyear - 2002;
 if ($diffyears > 0) {
     for ($i = 2002; $i < (2002 + $diffyears); $i++) {
         echo "<option value=\"$i\">$i</option>\n";
     }
 }
-echo "</optgroup>";
+echo '</optgroup>';
 echo "</select><select id=\"fhour\" name=\"fhour\" $sum_disabled>\n";
 // Available from Hour
 if ($start_date == '') {
@@ -1191,7 +1191,7 @@ $starttyear = date('Y');
 if ($split_year !== 0 and $split_year < $starttyear) {
     $starttyear = $split_year;
 }
-echo "<optgroup>";
+echo '<optgroup>';
 for ($i = $starttyear; $i < ($starttyear + 21); $i++) {
     // Temp bailout to handle 2038 mysql unixtimestamp issue.
     if ($i > 2037) {
@@ -1203,14 +1203,14 @@ for ($i = $starttyear; $i < ($starttyear + 21); $i++) {
         echo "<option value=\"$i\">$i</option>\n";
     }
 }
-echo "</optgroup><optgroup>";
+echo '</optgroup><optgroup>';
 $diffyears = $starttyear - 2002;
 if ($diffyears > 0) {
     for ($i = 2002; $i < (2002 + $diffyears); $i++) {
         echo "<option value=\"$i\">$i</option>\n";
     }
 }
-echo "</optgroup>";
+echo '</optgroup>';
 echo "</select><select id=\"thour\" name=\"thour\" $sum_disabled>\n";
 // Available from Hour
 if ($start_date == '') {
@@ -1247,7 +1247,7 @@ for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
         echo '<option value="' . $display_minute . '">' . $display_minute . "</option>\n";
     }
 }
-    echo "</select>";
+    echo '</select>';
     if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
         echo '<span id="minavailflag">*</span>';
     }
