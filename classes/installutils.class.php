@@ -765,6 +765,7 @@ class InstallUtils
         $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
         $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
         $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
+        $configObject->set_setting('rpt_fd_show_wordlist', 1, Config::BOOLEAN);
         $configObject->set_setting('stdset_hofstee_pass', array(
         'min_pass' => 0,
         'max_pass' => 'median',
