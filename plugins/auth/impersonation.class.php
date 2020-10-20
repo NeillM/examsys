@@ -120,10 +120,8 @@ class impersonation_auth extends outline_authentication
             $this->lookupuserobj->found = false;
         }
         list($callbacklist, $callbackregisterdatalist) = $this->get_callback('lookupuser');
-        //  if (isset($this->calling_object->callbackregister['lookupuser'])) {
 
         if (is_array(($callbacklist))) {
-            //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
             foreach ($callbacklist as $number => $callback) {
                 call_user_func_array($callback, array($this->lookupuserobj));
                 $objid = key($callbackregisterdatalist[$number]);
