@@ -345,9 +345,9 @@ class XML_lookup extends outline_lookup
                     $filter = '(&';
                     foreach ($orderitem as $item) {
                         if (count(array_keys($ldap_attributes, $item)) > 0) {
-                                //searching item exists in ldap attribute so we can search
-                                    $countcheck++;
-                                //check if we have any data for this item to actually search for
+                            //searching item exists in ldap attribute so we can search
+                            $countcheck++;
+                            //check if we have any data for this item to actually search for
                             if (isset($lookupobj->lookupdata->{$item})) {
                                 $countcheck2++;
                                 $filter .= $this->create_filter($ldap_attributes, $item, $lookupobj->lookupdata->{$item});

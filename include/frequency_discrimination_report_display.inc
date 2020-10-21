@@ -975,35 +975,35 @@ function display_question(render $render, array $question_data, array $string, s
             }
         }
         echo '<tr><td colspan="4">&nbsp;</td></tr>' . "\n";
-          foreach ($question_data['parts'] as $i => $part) {
-              if ($part['t'] == 0) {
-                  echo '<tr><td>t=0%</td>';
-              } else {
-                  echo '<tr><td>t=' . number_format($part['t']) . '%</td>';
-              }
-              if ($part['u'] == 0) {
-                  echo '<td>u=0%</td>';
-              } else {
-                  echo '<td>u=' . number_format($part['u']) . '%</td>';
-              }
-              if ($part['l'] == 0) {
-                  echo '<td>l=0%</td>';
-              } else {
-                  echo '<td>l=' . number_format($part['l']) . '%</td>';
-              }
-              echo '<td></td>';
-              if ($question_data['excluded']) {
+        foreach ($question_data['parts'] as $i => $part) {
+            if ($part['t'] == 0) {
+                echo '<tr><td>t=0%</td>';
+            } else {
+                echo '<tr><td>t=' . number_format($part['t']) . '%</td>';
+            }
+            if ($part['u'] == 0) {
+                echo '<td>u=0%</td>';
+            } else {
+                echo '<td>u=' . number_format($part['u']) . '%</td>';
+            }
+            if ($part['l'] == 0) {
+                echo '<td>l=0%</td>';
+            } else {
+                echo '<td>l=' . number_format($part['l']) . '%</td>';
+            }
+            echo '<td></td>';
+            if ($question_data['excluded']) {
                 echo '<td id="q_' . $question_data['ex_no'] . '_' . $i . '" class="excluded">';
-              } else {
-                  echo '<td id="q_' . $question_data['ex_no'] . '_' . $i . '">';
-              }
-              if ($part['mark'] == 'unmarked') {
-                  echo $string['unmarked'] . "\n" . '</td></tr>' . "\n"; // For localisation
-              } else {
+            } else {
+                echo '<td id="q_' . $question_data['ex_no'] . '_' . $i . '">';
+            }
+            if ($part['mark'] == 'unmarked') {
+                echo $string['unmarked'] . "\n" . '</td></tr>' . "\n"; // For localisation
+            } else {
                 $mark = preg_replace('/^([0-9]+)\.0/', '\1', $part['mark']); // Strip hanging .0s
                 echo $mark . ' ' . (($mark == '1') ? $string['mark'] : $string['marks']) . "\n" . '</td></tr>' . "\n";
-              }
-          }
+            }
+        }
         if ($question_data['unmarked']) {
             echo '<tr><td>p=<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="Warning" /></td>'
             . '<td>d=<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="Warning" /></td><td colspan="2"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="Warning" />&nbsp;' . sprintf($string['unmarkedscripts'], $question_data['unmarked_count']) . '</td></tr>' . "\n";
