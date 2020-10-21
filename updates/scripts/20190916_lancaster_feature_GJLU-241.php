@@ -1,4 +1,5 @@
 <?php
+
 if (!$updater_utils->has_updated('lancaster/feature/GJLU-241')) {
     $configObject->set_setting('stdset_copy_std_setting', false, Config::BOOLEAN);
 

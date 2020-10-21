@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Decrypt the password used here for replacing itself and mcrypt with openssl
  *

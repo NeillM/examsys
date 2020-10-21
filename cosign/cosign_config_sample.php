@@ -1,4 +1,5 @@
 <?php
+
 // Copyright (C) 2010 FIT Brno University of Technology
 // All Rights Reserved. See LICENSE.
 // Petr Lampa <lampa@fit.vutbr.cz>

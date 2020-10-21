@@ -1,4 +1,5 @@
 <?php
+
 if ($updater_utils->check_version('7.0.0')) {
     if (!$updater_utils->has_updated('rogo2356')) {
         // Remove NULL from the neg_marking column. It will only be present in newer installs on the default modules.

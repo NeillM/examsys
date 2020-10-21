@@ -1,4 +1,5 @@
 <?php
+
 if ($updater_utils->check_version('7.1.0')) {
     if (!$updater_utils->has_updated('rogo2599')) {
         $selectsql = $update_mysqli->prepare("SELECT q_id, settings FROM questions where q_type = 'textbox'");

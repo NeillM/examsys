@@ -1,4 +1,5 @@
 <?php
+
 if ($updater_utils->check_version('7.2.0')) {
     if (!$updater_utils->has_updated('rogo_2805')) {
         $search = '$cfg_db_port';

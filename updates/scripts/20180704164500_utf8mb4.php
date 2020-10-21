@@ -1,4 +1,5 @@
 <?php
+
 if ($updater_utils->check_version('7.0.0')) {
     if (!$updater_utils->has_updated('rogo_1813')) {
         $search = '$cfg_db_collation';

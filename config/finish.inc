@@ -1,4 +1,5 @@
 <?php
+
 if (isset($low_bandwidth) and $low_bandwidth == 1) {
     // Lowbandwidth
     
