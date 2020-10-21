@@ -207,7 +207,7 @@ class ST_QTI12_Question // <item
         }
 
         // QMP FIX:
-        // need to validate all id in ST_QTI12_Condpublic against the correct ST_QTI12_Response object,
+        // need to validate all id in ST_QTI12_CondVar against the correct ST_QTI12_Response object,
         // if the id isnt found attempt to look it up from the value
 
         foreach ($this->respconditions as & $respcondition) {
@@ -640,7 +640,7 @@ class ST_QTI12_RespCondition // <respcondition>
         }
 
         // add all NOT stuff
-        // add all public equals
+        // add all var equals
         foreach ($xml->not as $condition) {
             if ($condition->varequal) {
                 $cv = new ST_QTI12_CondVar($condition->varequal);
