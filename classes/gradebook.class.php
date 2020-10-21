@@ -35,25 +35,25 @@ class gradebook
      * External paper - externalid used to referece paper
      * @var string
      */
-    const EXTPAPER = 'extpaper';
+    public const EXTPAPER = 'extpaper';
 
     /**
      * External module - externalid used to referece module
      * @var string
      */
-    const EXTMODULE = 'extmodule';
+    public const EXTMODULE = 'extmodule';
 
     /**
      * Internal paper - rogo id used to referece paper
      * @var string
      */
-    const PAPER = 'paper';
+    public const PAPER = 'paper';
 
     /**
      * Internal module - rogo id used to referece module
      * @var string
      */
-    const MODULE = 'module';
+    public const MODULE = 'module';
 
     /**
      * Called when the object is unserialised.

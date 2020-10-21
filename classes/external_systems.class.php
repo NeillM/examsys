@@ -35,12 +35,12 @@ class external_systems
      * API external system type
      * @var string
      */
-    const API = 'api';
+    public const API = 'api';
     /**
      * Pluin external system type
      * @var string
      */
-    const PLUGIN = 'plugin';
+    public const PLUGIN = 'plugin';
     /**
      * Constructor
      * @return void

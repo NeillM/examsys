@@ -26,7 +26,7 @@ abstract class file_handler
     /**
      * Language pack component.
      */
-    const langcomponent = 'classes/filehandler';
+    public const langcomponent = 'classes/filehandler';
 
     /**
      * The path to the file.

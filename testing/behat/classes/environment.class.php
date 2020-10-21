@@ -31,7 +31,7 @@ use Config;
 class environment
 {
     /** The default values for the website that behat will use for testing. */
-    const DEFAULT_WEBSITE = 'http://localhost:8000';
+    public const DEFAULT_WEBSITE = 'http://localhost:8000';
 
     /**
      * Builds the behat.yml file in testing/behat/config

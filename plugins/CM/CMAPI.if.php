@@ -32,8 +32,8 @@ class UnsupportedMappingLevelException extends Exception
 
 interface iCMAPI
 {
-    const LEVEL_SESSION = 0;
-    const LEVEL_MODULE = 1;
+    public const LEVEL_SESSION = 0;
+    public const LEVEL_MODULE = 1;
 
     /**
      * Return objectives from the remote system

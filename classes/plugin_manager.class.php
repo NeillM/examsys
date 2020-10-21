@@ -33,14 +33,14 @@ class plugin_manager
      * Whitelist of plugin types supported by rogo.
      * @const PLUGINTYPE_WHITELIST
      */
-    const PLUGINTYPE_WHITELIST = array('mapping', 'SMS', 'texteditor');
+    public const PLUGINTYPE_WHITELIST = array('mapping', 'SMS', 'texteditor');
 
     /**
      * Define core plugins.
      * Associate array (plugin namespace, enabled by default flag)
      * @const CORE_PLUGINS
      */
-    const CORE_PLUGINS = array(
+    public const CORE_PLUGINS = array(
         array('namespace' => 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor', 'enabled' => true),
         array('namespace' => 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor', 'enabled' => false)
     );

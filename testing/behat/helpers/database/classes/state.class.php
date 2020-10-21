@@ -41,11 +41,11 @@ class state
     private static $schema;
 
     /** The name of the transaction used for a scenario. */
-    const TRANSACTION_SCENARIO = 'behatscenario';
+    public const TRANSACTION_SCENARIO = 'behatscenario';
     /** The name of the transaction used for the suite. */
-    const TRANSACTION_SUITE = 'behatsuite';
+    public const TRANSACTION_SUITE = 'behatsuite';
     /** The name of the transaction used for the feature. */
-    const TRANSACTION_FEATURE = 'behatfeature';
+    public const TRANSACTION_FEATURE = 'behatfeature';
 
     /**
      * Connects to a Rogo database.

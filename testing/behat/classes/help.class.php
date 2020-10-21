@@ -28,7 +28,7 @@ namespace testing\behat;
 class help
 {
     /** The URL to documentation for behat in Rogo. */
-    const DOCUMENTATION = 'https://rogo-eassessment-docs.atlassian.net/wiki/display/ROGO/Automatic+functional+testing';
+    public const DOCUMENTATION = 'https://rogo-eassessment-docs.atlassian.net/wiki/display/ROGO/Automatic+functional+testing';
 
     /**
      * The location of the behat execution script.

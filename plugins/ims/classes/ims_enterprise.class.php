@@ -41,35 +41,35 @@ use plugins\ims\ims_enterprise_roles;
 class ims_enterprise
 {
     /** The orgname tag */
-    const SOURCE_ORGNAME = 'orgname';
+    public const SOURCE_ORGNAME = 'orgname';
     /** The orgunit tag */
-    const SOURCE_ORGUNIT = 'orgunit';
+    public const SOURCE_ORGUNIT = 'orgunit';
     /** The relationship tag */
-    const SOURCE_RELATIONSHIP = 'relationship';
+    public const SOURCE_RELATIONSHIP = 'relationship';
     /** Active role status */
-    const ROLE_STATUS_ACTIVE = 1;
+    public const ROLE_STATUS_ACTIVE = 1;
     /** Inactive role status */
-    const ROLE_STATUS_INACTIVE = 0;
+    public const ROLE_STATUS_INACTIVE = 0;
     /** Default school ID if none is specified */
-    const DEFAULT_SCHOOLID = 0;
+    public const DEFAULT_SCHOOLID = 0;
     /**  The grouptype value for modules */
-    const GROUP_MODULE = 'CLASSES';
+    public const GROUP_MODULE = 'CLASSES';
     /** The grouptype value for terms */
-    const GROUP_TERM = 'TERM';
+    public const GROUP_TERM = 'TERM';
     /** The grouptype value for courses */
-    const GROUP_PROGRAMME = 'PROGRAMME';
+    public const GROUP_PROGRAMME = 'PROGRAMME';
     /** The grouptype value for faculties */
-    const GROUP_FACULTY = 'FACULTY';
+    public const GROUP_FACULTY = 'FACULTY';
     /** The grouptype value for schools */
-    const GROUP_SCHOOL = 'SCHOOL';
+    public const GROUP_SCHOOL = 'SCHOOL';
     /** The recstatus to delete a record */
-    const RECORD_DELETE = 3;
+    public const RECORD_DELETE = 3;
     /** The recstatus to create a record */
-    const RECORD_CREATE = 1;
+    public const RECORD_CREATE = 1;
     /** The recstatus to update a record */
-    const RECORD_UPDATE = 2;
+    public const RECORD_UPDATE = 2;
     /** The recstatus to update a record */
-    const RECORD_UNDEFINED = -1;
+    public const RECORD_UNDEFINED = -1;
     /** @var bool Whether modulecodes should be trucated or not */
     protected $truncatemodulecodes;
     /** @var bool Whether to create new modules or not */

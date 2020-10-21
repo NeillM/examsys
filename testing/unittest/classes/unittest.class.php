@@ -38,7 +38,7 @@ abstract class UnitTest extends TestCase
     public $default_config;
 
     /** The name of the Rogo data directory in the virtual file system. */
-    const DATA_DIRECTORY = 'data';
+    public const DATA_DIRECTORY = 'data';
 
     /**
      * Set-up config and db connections.

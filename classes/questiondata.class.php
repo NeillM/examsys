@@ -30,43 +30,43 @@ abstract class questiondata
     /**
      * Media type - file
      */
-    const FILE = 1;
+    public const FILE = 1;
     /**
      * Media type - image
      */
-    const IMAGE = 2;
+    public const IMAGE = 2;
     /**
      * Media type - audio
      */
-    const AUDIO = 3;
+    public const AUDIO = 3;
     /**
      * Media type - document
      */
-    const DOC = 4;
+    public const DOC = 4;
     /**
      * Media type - flash
      */
-    const FLASH = 5;
+    public const FLASH = 5;
     /**
      * Media type - html5 audio
      */
-    const HTML5AUDIO = 6;
+    public const HTML5AUDIO = 6;
     /**
      * Media type - movie
      */
-    const MOVIE = 7;
+    public const MOVIE = 7;
     /**
      * Media type - 3d object
      */
-    const THREED = 8;
+    public const THREED = 8;
     /**
      * Media type - archive
      */
-    const ARCHIVE = 9;
+    public const ARCHIVE = 9;
     /**
      * Media type - html5 video
      */
-    const HTML5VIDEO = 10;
+    public const HTML5VIDEO = 10;
     /**
      * DB connection
      * @var mysqli
