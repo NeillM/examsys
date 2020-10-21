@@ -191,7 +191,7 @@ class hotspot_helper extends RogoStaticSingleton
         }
         return implode(self::ANSWER_SEPARATOR, $answer_parts);
     }
-  
+
     /**
      * Test if the answer coordinate is inside the shape.
      *

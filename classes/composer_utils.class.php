@@ -31,12 +31,12 @@ class composer_utils
 
     /** Composer should get the laest versions of the depedencies and update the lock file, skipping dev packages. */
     const UPDATE_NODEV = 4;
-  
+
     /**
      * Language pack component.
      */
     const langcomponent = 'classes/composerutils';
-  
+
     /**
      * Ensures that composer is installed, uptodate and has installed all the projects dependancies.
      *

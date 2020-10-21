@@ -27,7 +27,6 @@
 
 class OptionHOTSPOT extends OptionEdit
 {
-    
     /**
      * Is this option blank?
      * @return boolean
@@ -36,7 +35,7 @@ class OptionHOTSPOT extends OptionEdit
     {
         return ($this->correct == '');
     }
-  
+
     /**
      * Check that the minimum set of fields exist in the given data to create a new option
      * @param array $data

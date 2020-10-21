@@ -33,22 +33,22 @@ class api
      * The slim application.
      */
     private $app;
-    
+
     /**
      * The media type.
      */
     private $mediatype;
-    
+
     /**
      * Language pack component.
      */
     private $langcomponent = 'api/api';
-    
+
     /**
      * The log file.
      */
     private $logfile;
-    
+
     /**
      * API object.
      */
@@ -85,7 +85,7 @@ class api
             $this->logfile = '';
         }
     }
-    
+
     /**
      * Log api request to file
      * @return string unique id for the request
@@ -102,7 +102,7 @@ class api
         }
         return $id;
     }
-    
+
     /**
      * Log api response to file
      * @param string $id unique id linking to the request for this response
@@ -142,7 +142,7 @@ class api
     {
         return $this->request->getHeaderLine('USER_AGENT');
     }
-    
+
     /**
      * Get a parameter of the request.
      * @param $parameter string parameter name
@@ -153,7 +153,7 @@ class api
         $paramlist = $this->request->getQueryParams();
         return ($paramlist[$parameter]);
     }
-    
+
      /**
       * Get the path of the request.
       * @return string - path
@@ -162,8 +162,7 @@ class api
     {
         return $this->request->getUri()->getPath();
     }
-    
-    
+
     /**
      * Get the media type of the request.
      * @return string|bool - media type if valid, false otherwise
@@ -178,7 +177,7 @@ class api
             return false;
         }
     }
-    
+
     /**
      * Process the request
      * @param string $folder - location of validation schema
@@ -201,7 +200,7 @@ class api
             return array('OK', $this->api->getdata());
         }
     }
-    
+
     /**
      * Parse the request and process it.
      * @param object $tasktype task object

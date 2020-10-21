@@ -27,7 +27,6 @@
 
 class OptionSCT extends OptionEdit
 {
-  
     public function save($option_number = 0)
     {
         if ($this->_question->get_max_experts() == 0) {
@@ -35,7 +34,7 @@ class OptionSCT extends OptionEdit
         } else {
             $this->set_marks_correct($this->correct / $this->_question->get_max_experts());
         }
-    
+
         return parent::save($option_number);
     }
 

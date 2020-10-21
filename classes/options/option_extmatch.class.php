@@ -27,12 +27,11 @@
 
 class OptionEXTMATCH extends OptionEdit
 {
-  
     protected $all_corrects = array();
     protected $_fields_compound = array('correct' => 'integer');
-  
+
     // ACCESSORS
-  
+
     /**
      * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
      * answers for each 'question'
@@ -43,7 +42,7 @@ class OptionEXTMATCH extends OptionEdit
         $this->get_correct();
         return $this->all_corrects;
     }
-  
+
     public function set_all_corrects($value)
     {
         $this->all_corrects = $value;
@@ -59,7 +58,7 @@ class OptionEXTMATCH extends OptionEdit
         }
         return $this->correct;
     }
-  
+
     public function set_correct($value)
     {
         $stems = $this->_question->get_all_stems();

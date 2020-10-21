@@ -39,7 +39,7 @@ class OptionKEYWORD_BASED extends OptionEdit
 
         $keywordid = $this->_data[1];
         $this->_data[1] = null;
-          
+
         if ($valid === true) {
             // If $id is -1 we're inserting a new record
             if ($this->id == -1) {

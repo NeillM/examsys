@@ -33,7 +33,7 @@ class npm_utils
      * Language pack component.
      */
     const langcomponent = 'classes/npmutils';
-  
+
     /**
      * Ensures that npm is installed, uptodate and has installed all the projects dependancies.
      *

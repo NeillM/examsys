@@ -24,11 +24,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class folder_utils
 {
-
     /**
      * Returns the name of a folder from an ID
      *

@@ -76,14 +76,14 @@ abstract class lti_integration
     {
         return $this->config->get_setting('core', 'cfg_lti_allow_module_create');
     }
-    
+
     /**
      * Check last time logged in and decide if re-authentication should be done
      * @param string $time last time logged in
      * @return bool true if user require re-authentication
      */
     abstract public function user_time_check($time);
-    
+
     /**
      * Convert VLE module shortcode into Rogo moduleid
      * @param mysqli $mysqli db connection
@@ -92,7 +92,7 @@ abstract class lti_integration
      * @return array rogo module information
      */
     abstract public function module_code_translate($mysqli, $c_internal_id, $course_title = '');
-    
+
     /**
      * Returns the sms url appropriate for the item element
      * @param array $data module data from module_code_translate
