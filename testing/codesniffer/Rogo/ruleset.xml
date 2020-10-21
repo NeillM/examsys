@@ -21,6 +21,13 @@
     <rule ref="PSR12.Properties.ConstantVisibility">
         <type>error</type>
     </rule>
+    <!-- Warn about class and method names, we have lots of existing non-conformity. -->
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <type>warning</type>
+    </rule>
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <type>warning</type>
+    </rule>
     <!-- Only use double quotes if necessary-->
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <!-- Old code has a lot of double quotes containing vars so just warn for now -->
