@@ -717,7 +717,7 @@ class InstallUtils
             'facultymanagement/create',
             'facultymanagement/delete',
            'facultymanagement/update',
-		);
+        );
         foreach ($permissions as $permission) {
             $insert = self::$db->prepare('INSERT INTO permissions (action) VALUES (?)');
             $insert->bind_param('s', $permission);
