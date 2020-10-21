@@ -1838,7 +1838,7 @@ class InstallUtils
     /**
      * Create the default question statuses.
      *
-     * @global type $string Language strings
+     * @global array $string Language strings
      */
     protected static function createQuestionStatuses()
     {
@@ -1984,7 +1984,6 @@ class InstallUtils
      * Display errors with a nice message
      * @param string|array $error error message(s)
      * @param boolean $fatal is error fatal
-     *
      */
     public static function displayError($error = '', $fatal = true)
     {
@@ -2020,7 +2019,6 @@ class InstallUtils
 
     /**
      * Log warnings with a nice message
-     *
      */
     public static function logWarning($warning = '')
     {
@@ -2033,7 +2031,6 @@ class InstallUtils
 
     /**
      * Display header
-     *
      */
     public static function displayHeader()
     {

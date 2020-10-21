@@ -290,6 +290,7 @@ class UpdaterUtils
      *
      * @param string $sql                     - The SQL statement to run.
      * @param bool $update_display    - If true then echo the SQL to the screen.
+     * @return int The id of the inserted row
      */
     public function execute_query($sql, $update_display)
     {

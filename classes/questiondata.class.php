@@ -517,11 +517,12 @@ abstract class questiondata
         return 0;
     }
 
-    /* Render the question to screen
-    * @param object $render twig rendering object
-    * @param array $string language strings
-    * @return void
-    */
+    /**
+     * Render the question to screen
+     * @param object $render twig rendering object
+     * @param array $string language strings
+     * @return void
+     */
     public function render_question($render, $string)
     {
         // Check if the display method has its own template. Otherwise use default template.
