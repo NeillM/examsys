@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class ViewHelper
 {
-  
     /**
      * Render the options for a select box
      * @param array $options options as $value => $text associative array
@@ -37,7 +35,7 @@ class ViewHelper
     public static function render_options($options, $selected = '', $tablevel = 0, $force_assoc = false, $css_class = '', $label_prefix = '', $label_postfix = '')
     {
         $html = '';
-    
+
         // Handle both associative and indexed arrays as $options
         if ($force_assoc or self::is_assoc($options)) {
             $values = array_keys($options);
@@ -45,11 +43,11 @@ class ViewHelper
         } else {
             $values = $texts = $options;
         }
-    
+
         for ($i = 0; $i < count($values); $i++) {
             $value = $values[$i];
             $text = $texts[$i];
-      
+
             $html .= str_repeat("\t", $tablevel);
             if (is_array($selected)) {
                 $sel = in_array($value, $selected) ? ' selected="selected"' : '';
@@ -61,13 +59,13 @@ class ViewHelper
             } else {
                 $class = ($css_class[$i] != '') ? ' class="' . $css_class[$i] . '"' : '';
             }
-      
+
             $html .= "<option value=\"$value\"{$sel}{$class}>{$label_prefix}{$text}{$label_postfix}</option>\n";
         }
-    
+
         return $html;
     }
-  
+
     /**
      * Determine if an array is associative. It does this by camparing array_keys($a) with array_keys(array_keys($a)), which will always be 0,1,2 etc.
      * @param unknown_type $a

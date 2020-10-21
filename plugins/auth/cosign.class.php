@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * The Cosign authentication class
@@ -31,7 +30,6 @@ require_once dirname(dirname(__DIR__)) . '/cosign/cosign.class.php';
 
 class cosign_auth extends outline_authentication
 {
-
     private $lookupuserobj;
 
     public $impliments_api_auth_version = 1;

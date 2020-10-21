@@ -25,7 +25,6 @@
  */
 class PaperUtils
 {
-
     /**
      * Records an access to a paper in recent_papers table.
      *

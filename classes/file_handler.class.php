@@ -22,7 +22,6 @@
  */
 abstract class file_handler
 {
-
     /**
      * Language pack component.
      */

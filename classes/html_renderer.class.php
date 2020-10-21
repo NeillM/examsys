@@ -23,7 +23,6 @@
  */
 class html_renderer
 {
-
     /**
      * Render a select input element
      *
@@ -40,7 +39,6 @@ class html_renderer
      */
     public function select($options, $selectid, $selectname, $selectedid, $label, $default_description, $tooltip = '', $return = false, $intable = false)
     {
-
         if ($intable) {
             $html = '<tr class="formrow">';
             $html .= '<td class="formlabel">';
@@ -176,7 +174,7 @@ class html_renderer
         if (!empty($default)) {
             $checked = ' checked="checked" ';
         }
-    
+
         if ($intable) {
             $input = '<tr class="formrow">';
             $input .= '<td class="formlabel">';
@@ -253,7 +251,6 @@ class html_renderer
      */
     public function tag($tag, $text, $class = '', $attributes = null, $return = false)
     {
-
         $attributes_html = '';
         $class_html = '';
         if (!empty($attributes)) {
@@ -286,7 +283,6 @@ class html_renderer
      */
     public function start_div($class = '', $return = false, $intable = false)
     {
-
         $class_html = '';
 
         if (!empty($class)) {

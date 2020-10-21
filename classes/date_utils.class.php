@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class date_utils
 {
-
     /**
      * Creates HTML dropdown menus to select day, month, year and hour (in half hour increments).
      * @param string $prefix            - Prefix string to make the name of the selector.

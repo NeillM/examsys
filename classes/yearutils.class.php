@@ -22,12 +22,11 @@
  */
 class yearutils
 {
-
     /**
      * A mysqli object.
      */
     private $mysqli;
-    
+
     /**
      * A string mm/dd that states the start of the academic year.
      */
@@ -165,18 +164,17 @@ class yearutils
      */
     public function check_year_start_format($specific_year_start)
     {
-
         // Fisrt check correct format xx/xx
         if (!preg_match('/([0-9]{2})\/([0-9]{2})/', $specific_year_start)) {
             return false;
         }
-        
+
         // Second check date
         $year = date('Y');
         list($month, $day) = explode('/', $specific_year_start);
         return checkdate($month, $day, $year);
     }
-    
+
     /**
      * Get the current academic session
      * @param string - $specific_year_start - Academic year start for the specifc module in the format 'mm/dd'.
@@ -184,7 +182,6 @@ class yearutils
      */
     public function get_current_session($specific_year_start = '')
     {
-
         $date_as_time = strtotime(date('Y/m/d'));
         if ($this->check_year_start_format($specific_year_start)) {
             $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
@@ -208,7 +205,6 @@ class yearutils
      */
     public function get_next_session($specific_year_start = '')
     {
-
         $date_as_time = strtotime(date('Y/m/d'));
         if ($this->check_year_start_format($specific_year_start)) {
             $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
@@ -232,7 +228,6 @@ class yearutils
      */
     public function get_previous_session($specific_year_start = '')
     {
-
         $date_as_time = strtotime(date('Y/m/d'));
         if ($this->check_year_start_format($specific_year_start)) {
             $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
@@ -256,7 +251,6 @@ class yearutils
      */
     public function get_academic_session($calendar_year)
     {
-
         $result = $this->mysqli->prepare('SELECT academic_year FROM academic_year WHERE calendar_year = ?');
         $result->bind_param('i', $calendar_year);
         $result->execute();
@@ -274,7 +268,6 @@ class yearutils
      */
     public function check_calendar_year($calendar_year)
     {
-
         $result = $this->mysqli->prepare('SELECT 1 FROM academic_year WHERE calendar_year = ? LIMIT 1');
         $result->bind_param('i', $calendar_year);
         $result->execute();
@@ -288,14 +281,13 @@ class yearutils
         $result->close();
         return false;
     }
-    
+
     /**
      * Check atleast two academic session exists.
      * @return bool - number of active academic sessions
      */
     public function count_active_academic_session()
     {
-
         $result = $this->mysqli->prepare('SELECT count(calendar_year) FROM academic_year WHERE deleted IS NULL');
         $result->execute();
         $result->bind_result($count);
@@ -328,7 +320,6 @@ class yearutils
      */
     public function check_calendar_year_in_use($calendar_year)
     {
-
         $result = $this->mysqli->prepare('(SELECT calendar_year FROM modules_student WHERE calendar_year = ?) '
             . 'UNION (SELECT calendar_year FROM objectives WHERE calendar_year = ?) '
             . 'UNION (SELECT calendar_year FROM properties WHERE calendar_year = ?) '

@@ -21,10 +21,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class ToiletBreaks
 {
-  
     public static function add_toilet_break($userID, $paperID, $db)
     {
         $result = $db->prepare('INSERT INTO toilet_breaks VALUES (NULL, ?, ?, NOW())');
@@ -32,7 +30,7 @@ class ToiletBreaks
         $result->execute();
         $result->close();
     }
-  
+
     public static function toilet_break_by_id($breakID, $db)
     {
         $configObject = Config::get_instance();
@@ -44,11 +42,10 @@ class ToiletBreaks
         $result->bind_result($break_taken);
         $result->fetch();
         $result->close();
-    
+
         return $break_taken;
     }
-  
-  
+
     public static function get_all_breaks_by_paper($paperID, $db)
     {
         $notes = array();
@@ -61,7 +58,7 @@ class ToiletBreaks
             $notes[$userID][] = $breakID;
         }
         $result->close();
-    
+
         return $notes;
     }
 }

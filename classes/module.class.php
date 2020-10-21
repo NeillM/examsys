@@ -25,7 +25,6 @@
  */
 class module
 {
-
     /** @var string Language component name. */
     protected $langcomponent = 'classes/module';
     /** @var array language strings */

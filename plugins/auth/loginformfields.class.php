@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * Handles extra fields at login
@@ -28,18 +27,13 @@
 
 require_once 'outline_authentication.class.php';
 
-
 class loginformfields_auth extends outline_authentication
 {
-
-
-
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
     public function register_callback_routines()
     {
-
         // maybe need to think of some function that will fail the auth if not received the data in the field?
 
         $callbackarray[] = array(array($this, 'loginformfields'), 'displaystdform', $this->number, $this->name);
@@ -71,7 +65,6 @@ class loginformfields_auth extends outline_authentication
 
         return $sessionstoreobj;
     }
-
 
     public function loginformfields($displaystdformobj)
     {

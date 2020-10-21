@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * The fixedlist authentication function.
@@ -30,9 +29,6 @@ require_once 'outline_authentication.class.php';
 
 class fixedlist_auth extends outline_authentication
 {
-
-
-
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
     private $updatable = false;

@@ -23,7 +23,6 @@
  */
 class Review
 {
-
     private $db;
     private $paperID;
     private $reviewerID;

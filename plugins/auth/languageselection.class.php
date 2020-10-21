@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * handles language selection at login
  * Adds a language selection box to the login form
@@ -40,13 +39,11 @@ require_once 'outline_authentication.class.php';
 
 class Languageselection_auth extends outline_authentication
 {
-
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
     function register_callback_routines()
     {
-
         $callbackarray[] = array(array($this, 'add_language_selection'), 'displaystdform', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'store_data'), 'postauth', $this->number, $this->name);
 
@@ -56,10 +53,10 @@ class Languageselection_auth extends outline_authentication
     public function store_data($sessionstoreobj)
     {
         global $string;
-        
+
         $configObj = Config::get_instance();
         $cfg_web_root = $configObj->get('cfg_web_root');
-        
+
         $this->savetodebug('session store of input data key is ROGO_language');
         if (isset($_REQUEST['ROGO_language'])) {
             $_SESSION['ROGO_language'] = $_REQUEST['ROGO_language'];
@@ -74,7 +71,7 @@ class Languageselection_auth extends outline_authentication
     {
         global $string;
         $this->savetodebug('add_language_selection');
-    
+
         $newfield = new displaystdformobjfield();
         $newfield->type = 'select';
         $newfield->description = '';

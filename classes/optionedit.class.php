@@ -29,7 +29,6 @@ require_once dirname(__DIR__) . '/include/path_functions.inc.php';
 
 class OptionEdit extends RogoObject
 {
-
     public $id = -1;
     protected $question_id = null;
     protected $text = '';

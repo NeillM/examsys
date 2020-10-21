@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class UserUtils
 {
-
     public static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '')
     {
         $courseok = CourseUtils::add_course($school, $course, $coursedesc, null, null, $db);
@@ -175,7 +173,6 @@ class UserUtils
      */
     public static function update_user($id, $username, $password, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $initials = null)
     {
-
         $current = self::get_full_details_by_ID($id, $db);
 
         if (!self::username_is_valid($username) or empty($surname) or empty($role) or empty($current['username'])) {
@@ -577,7 +574,6 @@ class UserUtils
      */
     public static function add_staff_to_module_by_modulecode($tmp_userID, $module_code, $db)
     {
-
         if (!UserUtils::has_user_role($tmp_userID, 'Staff', $db)) {
             return;
         }
@@ -727,7 +723,6 @@ class UserUtils
      */
     public static function add_student_to_module_by_name($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0)
     {
-
         $yearutils = new yearutils($db);
         if (!array_key_exists($session, $yearutils->get_supported_years()) or $idMod == '' or $tmp_userID == '') {
             return false;
@@ -768,7 +763,6 @@ class UserUtils
      */
     public static function add_student_to_module($tmp_userID, $idMod, $attempt, $session, $db, $auto_update = 0)
     {
-
         $yearutils = new yearutils($db);
         if (!array_key_exists($session, $yearutils->get_supported_years()) or $idMod == '' or $tmp_userID == '') {
             return false;

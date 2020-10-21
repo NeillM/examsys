@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class refmaterials_utils
 {
- 
     /**
      * See if a reference material ID actually exists.
      * @return true or false.
@@ -35,7 +32,7 @@ class refmaterials_utils
     public static function refmaterials_exist($refID, $db)
     {
         $row_no = 0;
-  
+
         $result = $db->prepare('SELECT id FROM reference_material WHERE id = ?');
         $result->bind_param('i', $refID);
         $result->execute();
@@ -44,14 +41,14 @@ class refmaterials_utils
         $result->fetch();
         $row_no = $result->num_rows;
         $result->close();
-    
+
         return $row_no > 0;
     }
-  
+
     public static function check_access($userObj, $refID, $db)
     {
         $permission_granted = false;
-  
+
         $result = $db->prepare('SELECT idMod FROM reference_modules WHERE refID = ?');
         $result->bind_param('i', $refID);
         $result->execute();
@@ -63,10 +60,10 @@ class refmaterials_utils
             }
         }
         $result->close();
-    
+
         return $permission_granted;
     }
-  
+
     public static function delete($refID, $db)
     {
         // Update deleted to NOW in reference_material
@@ -74,7 +71,7 @@ class refmaterials_utils
         $result->bind_param('i', $refID);
         $result->execute();
         $result->close();
-    
+
         // Delete any links to the reference material in papers
         $result = $db->prepare('DELETE FROM reference_papers WHERE refID = ?');
         $result->bind_param('i', $refID);

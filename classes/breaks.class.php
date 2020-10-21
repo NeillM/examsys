@@ -23,7 +23,6 @@
  * @version 1.0
  * @copyright Copyright (c) 2020 The University of Nottingham
  */
-
 class Breaks
 {
     /** The accomodation break type. */

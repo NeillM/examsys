@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class FacultyUtils
 {
-
     /**
      * Returns a name for a given faculty ID.
      * @param string $facultyID - The ID of the faculty to be checked
@@ -37,7 +34,7 @@ class FacultyUtils
     public static function faculty_name_by_id($facultyID, $db)
     {
         $faculty_name = false;
-    
+
         $result = $db->prepare('SELECT name FROM faculty WHERE id = ? AND deleted IS NULL');
         $result->bind_param('i', $facultyID);
         $result->execute();
@@ -48,7 +45,7 @@ class FacultyUtils
 
         return $faculty_name;
     }
-  
+
     /**
      * Get the faculty id given external id
      *
@@ -74,7 +71,7 @@ class FacultyUtils
         $result->close();
         return $facultyid;
     }
-  
+
     /**
      * Checks if a faculty name already exists.
      * @param string $facultyname - The ID of the faculty to be checked
@@ -148,7 +145,7 @@ class FacultyUtils
         $result->close();
         return $exist;
     }
-  
+
     /**
      * Creates a new faculty.
      * @param string $faculty - The name of the faculty to be added
@@ -163,7 +160,7 @@ class FacultyUtils
         if (trim($faculty) == '') {
             return false;
         }
-  
+
         $result = $db->prepare('INSERT INTO faculty(name, code, externalid, externalsys) VALUES(?, ?, ?, ?)');
         $result->bind_param('ssss', $faculty, $code, $externalid, $externalsys);
         $result->execute();
@@ -173,7 +170,7 @@ class FacultyUtils
         }
         return $db->insert_id;
     }
-  
+
     /**
      * Deletes a faculty by setting a flag.
      * @param string $facultyID - The ID of the faculty to be deleted
@@ -184,7 +181,7 @@ class FacultyUtils
         if ($facultyID == '') {
             return false;
         }
-  
+
         $result = $db->prepare('UPDATE faculty SET deleted = NOW() WHERE id = ?');
         $result->bind_param('i', $facultyID);
         $result->execute();
@@ -194,7 +191,7 @@ class FacultyUtils
         }
         return true;
     }
-  
+
     /**
      * Update a faculty.
      * @param integer $id     - Faculty id in rogo
@@ -225,7 +222,7 @@ class FacultyUtils
 
         return true;
     }
-  
+
     /**
      * Get factulty details
      * @param integer $id
@@ -244,7 +241,7 @@ class FacultyUtils
 
         return array('name' => $name, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
     }
-  
+
     /**
      * Get the number of schools on a faculty.
      * @param integer $id - id of the faculty
@@ -261,7 +258,7 @@ class FacultyUtils
         $result->close();
         return $count;
     }
-  
+
     /**
      * Compare the faculties in the external system and rogo
      * @param array $external list of external system faculties
@@ -291,7 +288,7 @@ class FacultyUtils
         $result->close();
         return $diff;
     }
-  
+
     /**
      * Restore faculty from recycle bin
      * @param mysqli $db db connection

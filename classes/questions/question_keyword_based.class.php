@@ -23,21 +23,19 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionKEYWORD_BASED extends QuestionEdit
 {
-
     public $max_options = 1;
     protected $_allow_change_marking_method = false;
     protected $_allow_correction = false;
-  
+
     protected $_fields_editable = array('leadin', 'bloom', 'status');
-  
+
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
     }
-  
+
     public function get_user_keywords($teams)
     {
         $keywords = array();

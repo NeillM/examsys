@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * The LTI login authentication function.
@@ -31,10 +30,6 @@ require_once 'outline_authentication.class.php';
 
 class ltilogin_auth extends outline_authentication
 {
-
-
-
-
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
     protected $lti;
@@ -58,7 +53,6 @@ class ltilogin_auth extends outline_authentication
         $callbackarray[] = array(array($this, 'displaystdform'), 'displaystdform', $this->number, $this->name);
         return $callbackarray;
     }
-
 
     public function auth($authobj)
     {
@@ -164,7 +158,6 @@ class ltilogin_auth extends outline_authentication
 
     public function registeruserwithlti($postauthsuccessobj)
     {
-
         if (isset($_SESSION['authenticationobj']['ltilogin']['needsreuserlookup']) and $_SESSION['authenticationobj']['ltilogin']['needsreuserlookup'] === true) {
             $this->lti->update_lti_user();
             $_SESSION['authenticationobj']['ltilogin']['needsreuserlookup'] = false;

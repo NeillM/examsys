@@ -26,18 +26,17 @@
  */
 class oauth
 {
-    
     /**
      * The db connection.
      * @var mysqli
      */
     private $db;
-    
+
     /**
      * The oauth server object.
      */
     private $server;
-    
+
     /**
      * The oauth storage object.
      */
@@ -92,7 +91,7 @@ class oauth
         // Add the "Refresh Token" grant type
         $this->server->addGrantType(new \OAuth2\GrantType\RefreshToken($this->storage, $config));
     }
-    
+
     /**
      * Delete ALL permissions for client.
      * @param string $action
@@ -106,7 +105,7 @@ class oauth
         $result->execute();
         $result->close();
     }
-    
+
     /**
      * Check if client has permission to take an action
      * @param string $action
@@ -127,7 +126,7 @@ class oauth
             return false;
         }
     }
-    
+
     /**
      * Enable/Disable permission for client.
      * @param string $action
@@ -146,7 +145,7 @@ class oauth
         }
         $result->close();
     }
-    
+
     /**
      * Create permission for client.
      * @param string $action
@@ -169,7 +168,7 @@ class oauth
     {
         return $this->storage;
     }
-    
+
     /**
      * Handle a request to a resource and authenticate the access token
      * return string|void - client id if authenticated, void otherwise
@@ -183,7 +182,7 @@ class oauth
         $token = $this->server->getAccessTokenData(\OAuth2\Request::createFromGlobals());
         return $token['client_id'];
     }
-    
+
     /**
      * Handle a request for an OAuth2.0 access token and send the response to the client
      */
@@ -191,7 +190,7 @@ class oauth
     {
         $this->server->handleTokenRequest(\OAuth2\Request::createFromGlobals())->send('xml');
     }
-    
+
     /**
      * Authorise an OAuth2.0 access token
      * @param bool $authorised is the token authorised
@@ -215,7 +214,7 @@ class oauth
         $response->send('xml');
         return array(true, 'OK');
     }
-    
+
      /**
       * Check if the access/refresh token exists
       * @param string $id - access/refresh token
@@ -245,7 +244,7 @@ class oauth
             }
         }
     }
-    
+
     /**
      * Delete the access/refresh token
      * @param string $id - access/refresh token
@@ -266,7 +265,7 @@ class oauth
             $result->close();
         }
     }
-    
+
     /**
      * get the rogo user id of the oauth client
      * @param string $client - oauth client
@@ -287,7 +286,7 @@ class oauth
         $result->close();
         return $userid;
     }
-    
+
     /**
      * Check if client exists
      * @param string $client - oauth client
@@ -307,7 +306,7 @@ class oauth
             return false;
         }
     }
-    
+
     /**
      * Delete the oauth client
      * @param string $client - oauth client

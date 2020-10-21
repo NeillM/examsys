@@ -23,7 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class FormUtils
 {
     /**
@@ -192,6 +191,7 @@ class FormUtils
     }
 
     // Get a unique version of a given file name
+
     /**
      * Get a unique version of a given file name
      * @param string $base Filesystem location of the file within which it must be unique

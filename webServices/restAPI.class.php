@@ -24,7 +24,6 @@
 
 class restAPI
 {
-
     public $request_vars;
     public $data;
     public $http_accept;

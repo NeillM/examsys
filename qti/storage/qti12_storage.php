@@ -684,6 +684,7 @@ class ST_QTI12_CondVar // <conditionvar>
         $this->value = (string) $xml;
         $this->type = $xml->getName();
     }
+
     public function __toString()
     {
         if ($this->not) {
@@ -716,6 +717,7 @@ class ST_QTI12_Itemfeedback // <itemfeedback>
             $this->material->add($xml->flow_mat->material);
         }
     }
+
     public function __toString()
     {
         return '<i>ID</i>: ' . $this->id . ', <i>Text</i>: ' . $this->material->__toString();

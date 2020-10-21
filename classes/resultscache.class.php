@@ -24,7 +24,6 @@
  */
 class ResultsCache
 {
-
     private $db;
 
     /**
@@ -81,7 +80,7 @@ class ResultsCache
 
         return $recache;
     }
-  
+
     /**
      * Loads basic statistics about a paper into an array.
      * @param int $paperID - The ID of the paper you need statistics for.
@@ -91,17 +90,17 @@ class ResultsCache
     public function get_paper_cache($paperID)
     {
         $stats = array();
-    
+
         $result = $this->db->prepare('SELECT max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent FROM cache_paper_stats WHERE paperID = ?');
         $result->bind_param('i', $paperID);
         $result->execute();
         $result->bind_result($stats['max_mark'], $stats['max_percent'], $stats['min_mark'], $stats['min_percent'], $stats['q1'], $stats['q2'], $stats['q3'], $stats['mean_mark'], $stats['mean_percent'], $stats['stdev_mark'], $stats['stdev_percent']);
         $result->fetch();
         $result->close();
-    
+
         return $stats;
     }
-  
+
     /**
      * Loads paper pecentage scores for a given student.
      * @param int $userID - The ID of the user you need statistics for.
@@ -120,10 +119,10 @@ class ResultsCache
             $marks[$paperID] = $percent;
         }
         $result->close();
-    
+
         return $marks;
     }
-  
+
     /**
      * Loads median marks for all questions on a given paper.
      * @param int $paperID - The ID of the paper you need statistics for.
@@ -142,10 +141,10 @@ class ResultsCache
             $marks[$questionID] = $median;
         }
         $result->close();
-    
+
         return $marks;
     }
-  
+
     /**
      * Loads question marks for all questions on a given paper for a specific user.
      * @param int $userID       - The ID of the user you need statistics for.
@@ -157,7 +156,7 @@ class ResultsCache
     public function get_student_question_marks_by_paper($userID, $log_type, $paperID)
     {
         $marks = array();
-    
+
         if ($log_type == '4') {   // OSCE table structure is completely different.
             $result = $this->db->prepare('SELECT q_id, rating FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND userID = ? AND q_paper = ?');
         } else {
@@ -170,10 +169,10 @@ class ResultsCache
             $marks[$q_id] = $adjmark;
         }
         $result->close();
-    
+
         return $marks;
     }
-  
+
     /**
      * Loads user percentage scores for a given paper.
      * @param int $paperID    - The ID of the paper you need statistics for.
@@ -184,7 +183,7 @@ class ResultsCache
     public function get_paper_marks_by_paper($paperID, $sort_data = false)
     {
         $marks = array();
-    
+
         if ($sort_data) {
             $sql = 'SELECT userID, percent FROM cache_student_paper_marks WHERE paperID = ? ORDER BY percent';
         } else {
@@ -199,10 +198,10 @@ class ResultsCache
             $marks[$userID] = $percent;
         }
         $result->close();
-    
+
         return $marks;
     }
-  
+
     /**
      * Saves basic statistics about a paper in the database.
      * @param int $paperID  - The ID of the paper we are dealing with.
@@ -227,14 +226,14 @@ class ResultsCache
         $user_no = count($user_results);
 
         $this->db->autocommit(false);
-   
+
         $result = $this->db->prepare('REPLACE INTO cache_student_paper_marks (paperID, userID, mark, percent) VALUES (?, ?, ?, ?)');
         for ($i = 0; $i < $user_no; $i++) {
             $result->bind_param('iidd', $paperID, $user_results[$i]['userID'], $user_results[$i]['mark'], $user_results[$i]['percent']);
             $result->execute();
         }
         $result->close();
-      
+
         $this->db->commit();
         $this->db->autocommit(true);
     }
@@ -257,7 +256,7 @@ class ResultsCache
             $result->execute();
         }
         $result->close();
-      
+
         $this->db->commit();
         $this->db->autocommit(true);
     }

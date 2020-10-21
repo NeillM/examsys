@@ -34,7 +34,6 @@ require_once dirname(__DIR__) . '/include/calculate_marks.inc';
 
 class ClassTotals
 {
-
     private $db;
     private $demo;
     private $user_results;

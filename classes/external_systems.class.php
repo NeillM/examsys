@@ -85,6 +85,7 @@ class external_systems
         }
         return $info;
     }
+
     /**
      * Get external systems
      * @return array external systems
@@ -101,6 +102,7 @@ class external_systems
         $result->close();
         return $exts;
     }
+
     /**
      * Get external systems details
      * @return array external systems
@@ -117,6 +119,7 @@ class external_systems
         $result->close();
         return $exts;
     }
+
     /**
      * Get API external systems
      * @return array external systems
@@ -135,6 +138,7 @@ class external_systems
         $result->close();
         return $exts;
     }
+
     /**
      * Insert external system mapping for client
      * @param integer $client oauth client id
@@ -152,6 +156,7 @@ class external_systems
         }
         return true;
     }
+
     /**
      * Update external system mapping for client
      * @param integer $client oauth client id
@@ -176,6 +181,7 @@ class external_systems
         }
         return true;
     }
+
     /**
      * Delete external system mapping for client
      * @param integer $client oauth client id
@@ -190,6 +196,7 @@ class external_systems
             $result->close();
         }
     }
+
     /**
      * Insert external system
      * @param string $name name of external system
@@ -210,6 +217,7 @@ class external_systems
         }
         return true;
     }
+
     /**
      * Delete external system
      * @param string $id id of external system
@@ -221,6 +229,7 @@ class external_systems
         $result->execute();
         $result->close();
     }
+
     /**
      * Check if external system exists
      * @param integer $id internal id of external system
@@ -239,6 +248,7 @@ class external_systems
         $result->close();
         return $exists;
     }
+
     /**
      * Check if external system is in use
      * @param integer $id internal id of external system

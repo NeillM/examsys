@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * The internaldb authentication function.
@@ -30,9 +29,6 @@ require_once 'outline_authentication.class.php';
 
 class internaldb_auth extends outline_authentication
 {
-
-
-
     public $impliments_api_auth_version = 1;
     public $version = 1.0;
     private $updatable = false;
@@ -65,7 +61,6 @@ class internaldb_auth extends outline_authentication
             $postauthfailreturn->stop = false;
         }
 
-
         return $postauthfailreturn;
     }
 
@@ -80,7 +75,6 @@ class internaldb_auth extends outline_authentication
 
     public function lookupuser($lookupuserobj)
     {
-
         if (!isset($lookupuserobj->username)) {
             $this->savetodebug('Lookup user has nothing to lookup');
         }

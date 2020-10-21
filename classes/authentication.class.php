@@ -30,7 +30,6 @@
  */
 class Authentication
 {
-
     private $userid;
     private $password;
     private $db, $configObj;
@@ -234,9 +233,9 @@ class Authentication
 
             return false;
         }
-    
+
         $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
-    
+
         if ($insert == true) {
             array_unshift($this->callbackregister[$section], $callback);
             array_unshift($this->callbackregisterdata[$section], array($number => $name));
@@ -658,7 +657,7 @@ class Authentication
             $getauthobj->userObj->load($getauth);
         } else {
             $getauthobj = & $getauth;
-            
+
             if (!isset($getauthobj->userObj)) {
                 // Serious error - we have no user object.
                 $getauthobj->userObj = new UserObject($this->configObj, $this->db);
@@ -716,7 +715,7 @@ class Authentication
         $this->config = 'Config Object: removed for security';
         $this->configObj = 'Config Object: removed for security';
     }
-    
+
     /**
      * Returns information about all the authentication plugins.
      * @param bool $formatted - True = return HTML formated data, False = array of data.

@@ -23,30 +23,27 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionMATRIX extends QuestionEdit
 {
-  
     protected $stems = array();
     protected $_answer_negative = 0;
     public $max_options = 10;
     public $max_stems = 10;
-  
+
     protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
     protected $_fields_editable = array('theme', 'leadin', 'notes', 'correct_fback', 'score_method', 'option_order', 'bloom', 'status');
     protected $_fields_compound = array('stem');
-  
+
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
-    
+
         // 'correct' is not a unified field for Matrix because it is compound
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     }
 
-
     // ACCESSORS
-  
+
     /**
      * Get an array of stems for the compounded scenarios
      * @return multitype:
@@ -56,7 +53,7 @@ class QuestionMATRIX extends QuestionEdit
         $this->get_scenario();
         return $this->stems;
     }
-  
+
     /**
      * Compound the stems into a single string and set as the scenario
      * @return multitype:
@@ -66,7 +63,7 @@ class QuestionMATRIX extends QuestionEdit
         $this->stems = $value;
         $this->set_scenario('dummy');
     }
-  
+
     /**
      * Get the question scenario
      * @return string

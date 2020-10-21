@@ -23,7 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class GeneralUtils
 {
     public function arrays_are_equal($a, $b)

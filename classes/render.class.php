@@ -26,7 +26,6 @@
  */
 class render
 {
-
     /**
      * Twig object
      * @var twig

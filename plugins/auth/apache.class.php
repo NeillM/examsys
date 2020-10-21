@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * The apache module authentication class
@@ -30,7 +29,6 @@ require_once 'outline_authentication.class.php';
 
 class apache_auth extends outline_authentication
 {
-
     private $lookupuserobj;
 
     private $createnewuserassociation = false;
@@ -60,8 +58,6 @@ class apache_auth extends outline_authentication
         }
 
         $username = $_SERVER[$this->settings['usernamefield']];
-
-
 
         $this->savetodebug('Now looking up userid in table from username: ' . $username);
         if (!isset($sql_extra)) {

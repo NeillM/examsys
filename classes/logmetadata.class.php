@@ -21,10 +21,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class LogMetadata
 {
-
     private $id;
     private $paper_id;
     private $userID;
@@ -139,7 +137,7 @@ class LogMetadata
         $this->attempt = $attempt;
         $this->lab_name = $lab_name;
         $this->populate_start_date_time();
-    
+
         $this->save();
 
         return true;
@@ -197,7 +195,7 @@ class LogMetadata
         $result->execute();
         $result->close();
     }
-  
+
     public function set_highest_screen($screen)
     {
         $this->highest_screen = $screen;
@@ -251,7 +249,6 @@ class LogMetadata
      */
     private function save()
     {
-
         // BP Using date() is more reliable when interacting
         // with the front end javascript timer than Mysql server's NOW()
 
@@ -289,11 +286,11 @@ class LogMetadata
             $this->start_datetime = new DateTime();
             $this->session_id = $this->start_datetime->format('YmdHis');
             $this->start_datetime->format('Y-m-d H:i:s');
-      
+
             $this->save();  // Make sure started is updated in the DB.
         }
     }
-  
+
     private function populate_finish_date_time()
     {
         $this->finish_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $this->completed);

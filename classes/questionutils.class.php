@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class QuestionUtils
 {
-
     /**
      * Does a given Question ID exist in the question bank.
      * @param integer $q_id the question ID to be searched for.
@@ -204,7 +201,6 @@ class QuestionUtils
      */
     public static function update_modules_from_papers($q_id, $db)
     {
-
         $sql = <<<SQL
       SELECT DISTINCT idMod
       FROM papers, properties, properties_modules

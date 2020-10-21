@@ -23,7 +23,6 @@
  */
 class Question
 {
-
     public $id = -1;
     protected $excluded = '';
     protected $type = null;
@@ -145,7 +144,7 @@ class Question
             // Convert to objects!
         }
     }
-  
+
     public function save($db)
     {
         if ($this->id > 0) {
@@ -170,14 +169,14 @@ class Question
             WHERE 
                 q_id = ?
             ');
-        
+
             if (is_array($this->settings)) {
                 $settings = json_encode($this->settings);
             } else {
                 $settings = $this->settings;
             }
             $this->last_edited = date('Y-m-d H:i:s');
-            
+
             $query->bind_param(
                 'ssssssssssssisssi',
                 $this->theme,

@@ -25,7 +25,6 @@
  */
 class RAF
 {
-
     private $db;
     private $properties;
     private $configObj;
@@ -357,7 +356,6 @@ class RAF
                 $msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
                 $this->notice->display_notice_and_exit($this->db, $this->string['invalidraf'], $msg, $this->string['invalidraf'], '../artwork/exclamation_48.png', '#C00000', true, true);
             }
-
 
             $this->copy_images($dest_dir, $tmp_path);
 

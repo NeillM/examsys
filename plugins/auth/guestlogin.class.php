@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * Handles Guest account access in Rogo
@@ -28,18 +27,13 @@
 
 require_once 'outline_authentication.class.php';
 
-
 class guestlogin_auth extends outline_authentication
 {
-
-
-
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
     public function register_callback_routines()
     {
-
         $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
 
         return $callbackarray;

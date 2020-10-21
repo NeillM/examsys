@@ -122,7 +122,6 @@ class PaperProperties
         return error_handling($this);
     }
 
-
     /*
     * Load the paper properties by property_id
     * @param int $p_id                      - The ID of the paper to load.
@@ -1843,6 +1842,7 @@ class PaperProperties
     {
         return \encryp::openssl_encrypt_decrypt('encrypt', $password);
     }
+
     /**
      * Decrypt the password.
      *
@@ -1861,6 +1861,7 @@ class PaperProperties
     {
         return $this->recache_marks;
     }
+
     /**
      * @param int recache_marks
      */

@@ -673,6 +673,7 @@ class OnlineHelp
         // Fix path of help file images as may not be in root web dir.
         self::correct_staff_path();
     }
+
     /**
      * Load student help into database
      * @throws exception

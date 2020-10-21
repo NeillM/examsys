@@ -24,7 +24,6 @@
  */
 class auth_obj extends stdClass
 {
-
     function error_handling($context = null)
     {
         return error_handling($this);

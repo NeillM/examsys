@@ -22,10 +22,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class Killer_Question
 {
-
     private $db;
     private $paperID;
     private $questions;
@@ -134,7 +132,6 @@ class Killer_Question
      */
     public function get_questions()
     {
-
         $this->questions = array();
 
         $result = $this->db->prepare('SELECT q_id FROM killer_questions WHERE paperID = ?');

@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class question_info
 {
-
     /**
      * Get the question information
      * @param integer $q_id

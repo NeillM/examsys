@@ -23,15 +23,13 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionRANDOM extends QuestionEdit
 {
-
     public $max_options = 1000;  // Probably irrelevant
     protected $_allow_change_marking_method = false;
     protected $questions = array();
     protected $_allow_correction = false;
-  
+
     protected $_fields_editable = array('leadin', 'status');
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)

@@ -152,7 +152,6 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function calculate_user_mark()
     {
-
         $returnstatus = null;
         if (is_null($this->useranswer)) {
             $this->error = 'No User Answer';
@@ -696,7 +695,6 @@ class EnhancedCalc extends Question implements questionInterface
     /*
      * return the passed value or 0 if the value is an empty string
      */
-
     private function set_blank_to_zero($val)
     {
         return ($val === '' ? 0 : $val);
@@ -708,7 +706,6 @@ class EnhancedCalc extends Question implements questionInterface
      * The Paper handles question numbering this function renders the inner part of the question
      * we need at least 2 renders one for the exam script (start.php) one for formative feedback on (finish.php)
      */
-
     public function render()
     {
     }
@@ -1035,7 +1032,6 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function generate_variables()
     {
-
         if (!isset($this->useranswer['vars']) or !is_array($this->useranswer['vars'])) {
             // Create an empty array to hold the generated variables
             $this->useranswer['vars'] = array();

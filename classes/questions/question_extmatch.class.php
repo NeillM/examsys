@@ -23,7 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionEXTMATCH extends QuestionEdit
 {
     /** @var string[] The stem text for the scenarios. */
@@ -85,7 +84,7 @@ class QuestionEXTMATCH extends QuestionEdit
 
     /** @var string[] The feedback given when answered correctly for the scenarios. */
     protected $all_feedback = array();
-  
+
     /** @var string[] The feedback given when answered incorrectly for the scenarios. */
     protected $_answer_negative = array();
 
@@ -97,21 +96,21 @@ class QuestionEXTMATCH extends QuestionEdit
 
     /** @var int The maximum number of scenarios in the question. */
     public $max_stems = 10;
-  
+
     protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
     protected $_fields_editable = array('theme', 'leadin', 'notes', 'score_method', 'option_order', 'bloom', 'status');
     protected $_fields_compound = array('stem', 'media', 'correct_fback');
-  
+
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
-    
+
         // 'correct' is not a unified field for Extmatch because it is compound
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     }
 
     // ACCESSORS
-  
+
     /**
      * Get an array of stems for the compounded scenarios
      * @return multitype:
@@ -121,7 +120,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->get_scenario();
         return $this->stems;
     }
-  
+
     /**
      * Compound the stems into a single string and set as the scenario
      */
@@ -130,7 +129,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->stems = $value;
         $this->set_scenario('dummy');
     }
-  
+
     /**
      * Get the question media as an array containing filename, width and height
      * @return array
@@ -140,7 +139,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->get_media();
         return array('filenames' => $this->all_media_names, 'widths' => $this->all_media_widths, 'heights' => $this->all_media_heights, 'alts' => $this->all_media_alts, 'owners' => $this->all_media_owners, 'nums' => $this->all_media_nums);
     }
-  
+
     /**
      * Get the question media as an array containing filename, width and height
      * @return array
@@ -154,7 +153,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->set_all_media_owners($value['owners']);
         $this->set_all_media_nums($value['nums']);
     }
-  
+
     /**
      * Get the question media filenames as an array
      * @return array
@@ -164,7 +163,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->get_media();
         return $this->all_media_names;
     }
-  
+
     /**
      * Compound the media filenames into a single string and set as the media
      */
@@ -173,7 +172,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->all_media_names = $value;
         $this->set_media('dummy');
     }
-  
+
     /**
      * Get the question media widths as an array
      * @return array
@@ -183,7 +182,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->get_media();
         return $this->all_media_widths;
     }
-  
+
     /**
      * Compound the media widths into a single string and set as the media
      */
@@ -259,7 +258,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->get_media();
         return $this->all_media_heights;
     }
-  
+
     /**
      * Compound the media heights into a single string and set as the media
      */
@@ -268,7 +267,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->all_media_heights = $value;
         $this->set_media('dummy');
     }
-  
+
     /**
      * Get the question feedbacks as an array
      * @return array
@@ -278,7 +277,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->get_correct_fback();
         return $this->all_feedback;
     }
-    
+
     /**
      * Compound the question feedbacks into a single string and set as the correct feedback
      */
@@ -287,7 +286,7 @@ class QuestionEXTMATCH extends QuestionEdit
         $this->all_feedback = $value;
         $this->set_correct_fback('dummy');
     }
-  
+
     /**
      * Get the question media as an array containing filename, width and height
      * @return array
@@ -314,10 +313,10 @@ class QuestionEXTMATCH extends QuestionEdit
         } else {
             $this->all_media_names = $this->all_media_widths = $this->all_media_heights = $this->all_media_alts = $this->all_media_owners = $this->all_media_nums = array_fill(0, 11, '');
         }
-          
+
         return $this->media_source;
     }
-  
+
     /**
      * Set the question scenario
      * @param string $value
@@ -352,7 +351,7 @@ class QuestionEXTMATCH extends QuestionEdit
     {
         $this->scenario = implode('|', $this->stems);
     }
-  
+
     /**
      * Get the question correct feedback
      * @return string
@@ -364,7 +363,7 @@ class QuestionEXTMATCH extends QuestionEdit
         }
         return $this->correct_fback;
     }
-  
+
     /**
      * Set the question correct feedback
      * @param string $value
@@ -429,7 +428,7 @@ class QuestionEXTMATCH extends QuestionEdit
                 $return .= "<br/>$errorstring";
             }
         }
-    
+
         return $return;
     }
 }

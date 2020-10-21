@@ -29,9 +29,6 @@ require_once(dirname(__DIR__) . '/include/load_config.php');
 
 abstract class SmsUtils
 {
-
-
-
     public $errorinfo;
 
     public static function GetSmsUtils()
@@ -62,7 +59,7 @@ abstract class SmsUtils
     {
         return $this->errorinfo;
     }
-  
+
     abstract protected function getUserData($username);
     abstract protected function getModuleEnrolements($moduleID, $mysqli);
     abstract protected function getStudentSources();

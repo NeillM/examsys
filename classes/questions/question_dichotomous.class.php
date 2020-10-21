@@ -23,10 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class QuestionDICHOTOMOUS extends QuestionEdit
 {
-
     public $max_options = 15;
     protected $_answer_positive = 't';
     protected $_answer_negative = 'f';

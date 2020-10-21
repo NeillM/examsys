@@ -22,10 +22,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class Exclusion
 {
-
     private $db;
     private $paper_id;
 
@@ -109,6 +107,7 @@ class Exclusion
             return $this->excluded[$q_id];
         }
     }
+
     /**
      * Get an exclusion for a specific question ID and part.
      * @param int $q_id - Question ID to look up
@@ -137,6 +136,7 @@ class Exclusion
             return false;
         }
     }
+
     /**
      * Works out if aspecific part of a question is excluded or not.
      * @param int $q_id - Question ID to look up

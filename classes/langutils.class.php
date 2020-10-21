@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class LangUtils
 {
-
     public static function getLang($web_root)
     {
         $language = '';

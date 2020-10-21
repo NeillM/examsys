@@ -36,6 +36,7 @@ class SimpleImage
             $this->image = imagecreatefrompng($filename);
         }
     }
+
     public function save($filename, $image_type = IMAGETYPE_JPEG, $compression = 75, $permissions = null)
     {
         if ($image_type == IMAGETYPE_JPEG) {
@@ -49,6 +50,7 @@ class SimpleImage
             chmod($filename, $permissions);
         }
     }
+
     public function output($image_type = IMAGETYPE_JPEG)
     {
         if ($image_type == IMAGETYPE_JPEG) {
@@ -59,32 +61,38 @@ class SimpleImage
             imagepng($this->image);
         }
     }
+
     public function getWidth()
     {
         return imagesx($this->image);
     }
+
     public function getHeight()
     {
         return imagesy($this->image);
     }
+
     public function resizeToHeight($height)
     {
         $ratio = $height / $this->getHeight();
         $width = $this->getWidth() * $ratio;
         $this->resize($width, $height);
     }
+
     public function resizeToWidth($width)
     {
         $ratio = $width / $this->getWidth();
         $height = $this->getheight() * $ratio;
         $this->resize($width, $height);
     }
+
     public function scale($scale)
     {
         $width = $this->getWidth() * $scale / 100;
         $height = $this->getheight() * $scale / 100;
         $this->resize($width, $height);
     }
+
     public function resize($width, $height)
     {
         $new_image = imagecreatetruecolor($width, $height);

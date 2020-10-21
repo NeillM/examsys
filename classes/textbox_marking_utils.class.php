@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class textbox_marking_utils
 {
-
     /**
      * Returns an array of user IDs who are down for second marking.
      *

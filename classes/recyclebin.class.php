@@ -23,7 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class RecycleBin
 {
     /** @var mysqli The mysqli database object. */

@@ -25,7 +25,6 @@
  */
 class assessment
 {
-
     /**
      * Formative paper type
      */
@@ -148,7 +147,7 @@ class assessment
      */
     public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $externalid = null, $externalsys = null, $remote = 0)
     {
-            
+
         // Check externalid is unique.
         if (!is_null($externalid)) {
             $uniqueexternalid = Paper_utils::get_id_from_externalid($externalid, $externalsys, $this->db);
@@ -156,7 +155,7 @@ class assessment
                 throw new Exception('NON_UNIQUE_EXTID');
             }
         }
-        
+
         // Check title is unique.
         // External system paper title may not be unique.
         $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
@@ -188,12 +187,12 @@ class assessment
         if (count($modules) == 0) {
             throw new Exception('INVALID_NO_MODULES');
         }
-        
+
         // Set up start date and end date based on timezone.
         $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
         $startdate = $datesarray[0];
         $enddate = $datesarray[1];
-        
+
         // Check startdate and enddate
         if ((!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) and $enddate <= $startdate) {
             throw new Exception('INVALID_DATES');
@@ -302,7 +301,6 @@ class assessment
      */
     public function update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid, $externalid = null, $externalsys = null)
     {
-
         $changes = array();
         $params = array();
         $details = Paper_utils::get_paper_properties($id, $this->db);
@@ -343,7 +341,7 @@ class assessment
             $params['calendar_year'] = array('i', $session);
             $changes[] = array('old' => $details['session'], 'new' => $session, 'part' => 'session');
         }
-    
+
         // Set up start date and end date based on timezone.
         $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
         $startdate = $datesarray[0];
@@ -361,7 +359,7 @@ class assessment
             $params['end_date'] = array('s', $enddate);
             $changes[] = array('old' => $details['enddatetime'], 'new' => $enddate, 'part' => 'enddate');
         }
-        
+
         // Verify timezone is supported, revert to server timezone if not.
         if (!array_key_exists($timezone, $this->timezones)) {
             $timezone = $this->server_timezone;
@@ -393,12 +391,12 @@ class assessment
             $params['externalid'] = array('s', $externalid);
             $changes[] = array('old' => $details['externalid'], 'new' => $externalid, 'part' => 'externalid');
         }
-        
+
         if ($externalsys != $details['externalsys']) {
             $params['externalsys'] = array('s', $externalsys);
             $changes[] = array('old' => $details['externalsys'], 'new' => $externalsys, 'part' => 'externalsys');
         }
-        
+
         // Update if changes made.
         if (count($changes) > 0) {
             if (!$this->db_update_assessment($id, $params)) {

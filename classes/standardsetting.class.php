@@ -22,10 +22,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class StandardSetting
 {
-
     private $db;
 
     /**
@@ -56,10 +54,10 @@ class StandardSetting
             $std_set_array[$questionID] = $rating;
         }
         $result->close();
-    
+
         return $std_set_array;
     }
-  
+
     public function get_pass_distinction($std_setID)
     {
         $result = $this->db->prepare('SELECT pass_score, distinction_score FROM std_set WHERE id = ? LIMIT 1');
@@ -68,7 +66,7 @@ class StandardSetting
         $result->bind_result($pass_score, $distinction_score);
         $result->fetch();
         $result->close();
-    
+
         return array('pass_score' => $pass_score, 'distinction_score' => $distinction_score);
     }
 
@@ -189,7 +187,7 @@ class StandardSetting
             self::copy_std_set_ratings_linked($old_std_id, $new_std_id);
         }
     }
-  
+
     /**
      * Copy standard settings from one exam to another with copied questions
      *

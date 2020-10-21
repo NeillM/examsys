@@ -29,9 +29,6 @@ $configObject = Config::get_instance();
 
 class outline_authentication
 {
-
-
-
     protected $name;
     protected $number;
     protected $returndata;
@@ -72,7 +69,6 @@ class outline_authentication
     */
     public function apicheck()
     {
-
         if ($this->authapiversion != $this->impliments_api_auth_version) {
             $this->savetodebug('This auth object is implementing an different version of the api than this plugin does');
             $this->set_error('Wrong API');
@@ -116,13 +112,11 @@ class outline_authentication
         return $context1;
     }
 
-
     // Fake function used in mocking but if things go wrong have an outline here
     public function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
     {
         return false;
     }
-
 
     /**
      * @param $debugmessage string the debug message to store

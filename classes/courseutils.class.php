@@ -23,11 +23,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
-
 class CourseUtils
 {
-
     /**
      * Check for already existing and then add new course data into the database.
      *
@@ -42,7 +39,6 @@ class CourseUtils
      */
     public static function add_course($schoolid, $name, $description, $externalid, $externalsys, $db)
     {
-
         if ($name == '') {
             return false;
         }
@@ -199,7 +195,6 @@ class CourseUtils
         return $course_name;
     }
 
-
     /**
      * Get course details
      * @param integer $id
@@ -321,7 +316,7 @@ class CourseUtils
         $result->close();
         return $id;
     }
-  
+
     /**
      * Compare the courses in the external system and rogo
      * @param array $external list of external system courses
@@ -351,7 +346,7 @@ class CourseUtils
         $result->close();
         return $diff;
     }
-  
+
     /**
      * Restore course from recycle bin
      * @param mysqli $db db connection
