@@ -29,10 +29,10 @@ require '../include/sysadmin_auth.inc';
 
 $title = param::required('title', param::TEXT, param::FETCH_POST);
 $message = param::required('message', param::TEXT, param::FETCH_POST);
-$thedate = param::required('fyear', param::TEXT, param::FETCH_POST) .
-  param::required('fmonth', param::TEXT, param::FETCH_POST) .
-  param::required('fday', param::TEXT, param::FETCH_POST) .
-  param::required('ftime', param::TEXT, param::FETCH_POST);
+$thedate = param::required('fyear', param::TEXT, param::FETCH_POST)
+    . param::required('fmonth', param::TEXT, param::FETCH_POST)
+    . param::required('fday', param::TEXT, param::FETCH_POST)
+    . param::required('ftime', param::TEXT, param::FETCH_POST);
 $duration = param::required('duration', param::INT, param::FETCH_POST);
 $bgcolor = '#' . param::required('color', param::ALPHANUM, param::FETCH_POST);
 
