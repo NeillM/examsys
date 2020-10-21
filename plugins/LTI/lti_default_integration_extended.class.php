@@ -26,7 +26,6 @@
  */
 class lti_default_integration_extended extends lti_integration
 {
-
     /**
      * Check last time logged in and decide if re-authentication should be done
      * @param string $time last time logged in
@@ -47,7 +46,6 @@ class lti_default_integration_extended extends lti_integration
      */
     public function module_code_translate($mysqli, $c_internal_id, $course_title = '')
     {
-
         // This function translates the incoming course code and course title it returns an array (containing possibly multiple records)
         // of an array containing string if Manual or SMS for sms ones,
         // the module code,

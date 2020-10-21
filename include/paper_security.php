@@ -140,21 +140,21 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
 function check_finished($propertyObj, $userObj, $string, $db)
 {
     $notice = UserNotices::get_instance();
-  
+
     if ($propertyObj->get_paper_type() != '2' and $propertyObj->get_paper_type() != '1') {
         return true;
     }
-  
+
     $userID = $userObj->get_user_ID();
     $paperID = $propertyObj->get_property_id();
-  
+
     $stmt = $db->prepare('SELECT UNIX_TIMESTAMP(completed) FROM log_metadata WHERE userID = ? AND paperID = ?');
     $stmt->bind_param('ii', $userID, $paperID);
     $stmt->execute();
     $stmt->bind_result($completed);
     $stmt->fetch();
     $stmt->close();
-  
+
     if ($completed != '') {
         $configObject = Config::get_instance();
         $format = $configObject->get('cfg_short_datetime_php');
@@ -168,9 +168,9 @@ function check_staff_modules($moduleID, $userObject)
 {
     $on_module = false;
     $modIDs = array_keys($moduleID);
-  
+
     $staff_mods = $userObject->get_staff_accessable_modules();
-    
+
     foreach ($modIDs as $modID) {
         if (isset($staff_mods[$modID])) {
             $on_module = true;

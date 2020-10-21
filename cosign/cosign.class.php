@@ -40,7 +40,6 @@ Czech Republic
 
 class cosign
 {
-
     private $cosign_cfg;
     private $cosign_log;
 
@@ -69,8 +68,6 @@ class cosign
     // configuration is merged from global cosign_config.php, .cosign.php
     public function cosign_auth($cfg = array(), $obstart = true)
     {
-
-
         if ($obstart) {
             ob_start();
         }
@@ -622,8 +619,6 @@ class cosign
 
     public function cosign_set_cookie_and_redirect($url = '')
     {
-
-
         if ($url) {
             $this->cosign_debug("CosignFilter: REKEY failed, retry $url");
             // check POST request expiration

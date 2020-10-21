@@ -26,15 +26,15 @@ $cfg_web_root = $configObject->get('cfg_web_root');
             <qmd_score_method><?php echo $question->score_method ?></qmd_score_method>
             <qmd_toolvendor>Rogo <?php echo $configObject->get_setting('core', 'rogo_version'); ?></qmd_toolvendor>
         </itemmetadata>
-        
+
         <presentation>
 
 <?php if ($question->author) : ?>
             <qticomment>Author:<?php echo $question->author ?></qticomment>
-<?php endif; ?> 
+<?php endif; ?>
 <?php if ($question->q_group) : ?>
             <qticomment>Module:<?php echo $question->q_group ?></qticomment>
-<?php endif; ?> 
+<?php endif; ?>
 <?php if ($question->bloom) : ?>
             <qticomment>Blooms:<?php echo $question->bloom ?></qticomment>
 <?php endif; ?>

@@ -31,7 +31,7 @@
 function get_existing_years($db, $idMod)
 {
     $years = array();
-    
+
     $result = $db->prepare('SELECT DISTINCT calendar_year FROM objectives WHERE idMod = ? ORDER BY calendar_year DESC');
     $result->bind_param('s', $idMod);
     $result->execute();
@@ -63,7 +63,7 @@ function get_existing_years($db, $idMod)
     // Should never be a case where we don't have a source year but check anyway
 if (count($source_years) > 0) {
     $dest_years = array($session, $nextsession);
-    
+
     if (!is_numeric($session)) {
         $message = $string['msg3'];
     }

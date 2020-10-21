@@ -63,7 +63,7 @@ function get_taken_papers($userID, $db)
     $papers = array();
 
     $i = 0;
-  
+
     // Query for Summative and Offline papers
     $result = $db->prepare("SELECT DISTINCT log_metadata.id, paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
     $result->bind_param('i', $userID);
@@ -87,7 +87,7 @@ function get_taken_papers($userID, $db)
         $i++;
     }
     $result->close();
-  
+
     // Query for OSCE stations
     $result = $db->prepare("SELECT DISTINCT log4_overall.id, q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
     $result->bind_param('i', $userID);
@@ -111,7 +111,7 @@ function get_taken_papers($userID, $db)
         $i++;
     }
     $result->close();
-  
+
     $sortby = 'calendar_year';
     $ordering = 'desc';
     $papers = \sort::array_csort($papers, $sortby, $ordering);
@@ -183,22 +183,22 @@ if (!$userObject->has_role('Student')) {  // Do not create popup menu if student
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['examscript'] ?></div>
   </div>
-  
+
   <div class="popup_row" id="item2">
     <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['objectives'] ?></div>
   </div>
-  
+
   <div class="popup_row" id="item3">
     <div class="popup_icon"><img src="../artwork/personal_cohort.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['personalcohortperformance'] ?></div>
   </div>
-  
+
   <div class="popup_divider_row">
     <div class="popup_icon"></div>
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
- 
+
   <div class="popup_row" id="item4">
     <div class="popup_icon"></div>
     <div class="popup_title"><?php echo $string['jumptopaper'] ?></div>
@@ -226,7 +226,7 @@ $col = 0;
 echo '<table>';
 foreach ($papers as $paper) {
     $display_paper = true;
-  
+
     if ($paper['stats']['max_mark'] == '') {
         $display_paper = false;
     }
@@ -240,12 +240,12 @@ foreach ($papers as $paper) {
             echo '<a name="' . $paper['calendar_year'] . '"></a><div class="subsect_table"><div class="subsect_title"><nobr>' . $paper['calendar_year'] . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
             $col = 0;
         }
-  
+
         if ($col == 8) {                // Put in line break after 8 box/whisker plots.
             echo '<br />';
             $col = 0;
         }
-  
+
         $q1 = $paper['stats']['q1'];
         $q2 = $paper['stats']['q2'];
         $q3 = $paper['stats']['q3'];
@@ -254,13 +254,13 @@ foreach ($papers as $paper) {
         $pass_mark = $paper['pass_mark'];
         $mark = (isset($marks[$paper['paperID']])) ? $marks[$paper['paperID']] : '';
         $exam = $paper['paper_title'];
-  
+
         if ($userObject->has_role('Student')) {
             $onclick = '';
         } else {
             $onclick = 'data-userid="' . $userID . '" data-papertype="' . $paper['paper_type'] . '" data-cryptname="' . $paper['crypt_name'] . '"data-paperid="' . $paper['paperID'] . '" data-metadataid="' . $paper['metadataID'] . '"';
         }
-    
+
         if ($mark != '') {  // Do not plot if there is no student mark.
             echo '<tr id="res' . $col . '"' . $onclick . '><td>';
             if ($col == 0) {

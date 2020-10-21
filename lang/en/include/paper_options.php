@@ -137,7 +137,7 @@ $string['completedatasets'] = 'Show complete datasets only';
 $string['anyyear'] = 'Any Year';
 $string['tooltip_studentattempts'] = 'Uncheck to display staff and student attempts in Class Totals.';
 $string['tooltip_daterange'] = 'Use dates to control the reporting window.';
- 
+
 $string['copyname'] = 'Copy Name';
 $string['paperonly'] = 'Paper Only';
 $string['paperandquestions'] = 'Paper and Questions';

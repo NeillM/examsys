@@ -18,7 +18,7 @@
 require('header.php');
 
 echo $headertext;
-?>          
+?>
 <?php foreach ($question->scenarios as $respid => $scn) : ?>
     <?php $c = '';
     if (count($scn->correctans) > 1) {
@@ -32,7 +32,7 @@ echo $headertext;
                     <matimage imagtype="<?php echo $scn->media_type ?>" uri="<?php echo $scn->media ?>" label="<?php echo $scn->media_alt ?>"/>
     <?php endif; ?>
                 </material>
-                
+
                 <render_choice shuffle="No">
     <?php foreach ($question->optionlist as $oid => $option) : ?>
                     <response_label ident="<?php echo $this->ll[$oid] ?>">
@@ -45,7 +45,7 @@ echo $headertext;
             </response_lid>
 <?php endforeach; ?>
         </presentation>
-    
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -90,12 +90,12 @@ echo $headertext;
             </respcondition>
 <?php endforeach; ?>
         </resprocessing>
-    
+
 <?php foreach ($question->scenarios as $respid => $scn) : ?>
         <itemfeedback ident="Feedback <?php echo $respid ?>" view="Candidate">
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $scn->feedback ?>]]></mattext>
-            </material>      
+            </material>
         </itemfeedback>
 <?php endforeach; ?>
     </item>

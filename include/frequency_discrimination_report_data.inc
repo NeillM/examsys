@@ -1842,7 +1842,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
             $question_data['parts'][$i]['x_stats'] = xStats($q_type, $q_id, $freq_log, $user_total, $i);
         }
     }
-    
+
     $question_data['legacy_correct'] = $options[array_key_last($options)]['correct'] ?? ''; // Emulate the old behaviour for the data-qcorrect field
     return $question_data;
 }

@@ -21,7 +21,7 @@ require('header.php');
 
             <?php echo $headertext ?>
             <response_xy ident="IMAGE" rcardinality="Single" rtiming="No">
-                <render_hotspot> 
+                <render_hotspot>
                     <material>
                         <matimage imagtype="image/gif" uri="<?php echo $question->media ?>" x0="0" width="<?php echo $question->media_width ?>" y0="0" height="<?php echo $question->media_height ?>"/>
                     </material>
@@ -46,7 +46,7 @@ require('header.php');
             <outcomes>
                 <decvar/>
             </outcomes>
-   
+
             <!-- force general feedback to output -->
             <respcondition title="General Feedback"  continue="Yes">
                 <conditionvar>

@@ -29,9 +29,6 @@ $configObject = Config::get_instance();
 
 class outline_lookup
 {
-
-
-
     protected $name;
     protected $number;
     protected $form;
@@ -106,7 +103,6 @@ class outline_lookup
         $this->request = & $object->calling_object->request;
     }
 
-
     public function error_handling($context = null)
     {
 
@@ -123,13 +119,11 @@ class outline_lookup
         return $context1;
     }
 
-
     //fake function used in mocking but if things go wrong have an outline here
     public function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
     {
         return false;
     }
-
 
     /**
      * @param $debugmessage string the debug message to store

@@ -62,7 +62,7 @@ if (count($keywords) > 0) :
                   </optgroup>
                 <?php
             endif;
-      
+
             ?>
                   <optgroup label="<?php echo $keyword[0] ?>">
             <?php
@@ -92,4 +92,3 @@ endif;
                     </tbody>
                 </table>
         <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
-                

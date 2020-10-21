@@ -31,7 +31,7 @@ function draw_toprightmenu($helpID = 1)
     $userObject       = UserObject::get_instance();
     $rootpath = $configObject->get('cfg_root_path');
     $html = '';
-    
+
     if ($userObject->is_impersonated()) {
         $impersonated_name = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
         $html .= '<div id="toprightmenu" style="width:250px">';
@@ -52,6 +52,6 @@ function draw_toprightmenu($helpID = 1)
     $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get_setting('core', 'rogo_version')) . '</div>';
 
     $html .= '</div>';
-    
+
     return $html;
 }

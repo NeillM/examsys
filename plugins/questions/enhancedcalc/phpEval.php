@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * PHP based maths functions for calculation questions.
@@ -25,10 +24,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class EnhancedCalc_phpEval
 {
-
     protected $impliments_api_calc_version = 1;
     protected static $cnx = false;
 
@@ -88,7 +85,6 @@ class EnhancedCalc_phpEval
 
     public function calculate_correct_ans($vars, $formula)
     {
-
         $formula_vars_subed = EnhancedCalc::substitute_vars($vars, $formula);
         $correctanswer = eval('return (' . $formula_vars_subed . ');');
 
@@ -206,7 +202,6 @@ class EnhancedCalc_phpEval
 
     public function is_useranswer_correct_decimal_places($useranswer, $dp)
     {
-
         if ($useranswer == '') {
             return false;
         }
@@ -220,7 +215,6 @@ class EnhancedCalc_phpEval
 
     public function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp)
     {
-
         if ($useranswer == '') {
             return false;
         }
@@ -259,7 +253,6 @@ class EnhancedCalc_phpEval
 
     public function calc_sf($num)
     {
-
         $epos = mb_strpos($num, 'e');
         if ($epos === false) {
             $epos = mb_strlen($num);

@@ -46,7 +46,7 @@ function getLabs($labs, $mysqlidb)
     } else {
         $html = '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" /> <span style="color:#C00000">' . $string['nolabsset'] . '</span>';
     }
-  
+
     return $html;
 }
 ?>
@@ -56,7 +56,7 @@ function getLabs($labs, $mysqlidb)
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title('Rog&#333;: ' . $string['summativescheduling']); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -72,11 +72,11 @@ function getLabs($labs, $mysqlidb)
 <?php
   require '../include/scheduling_options.inc';
 require '../include/toprightmenu.inc';
-  
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
-  
+
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div>
@@ -116,7 +116,7 @@ foreach ($papers as $property_id => $paper_details) {
     } else {
         $display_month = '&lt;unknown&gt;';
     }
-    
+
     echo "<tr class=\"l\" id=\"$property_id\">";
     echo '<td style="padding-left:24px">' . $paper_details['paper_title'] . "</td><td>$display_month</td><td>" . $paper_details['campus'] . '</td><td>';
     $html = '';

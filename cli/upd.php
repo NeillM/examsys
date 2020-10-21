@@ -21,7 +21,7 @@
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2017 The University of Nottingham
  */
- 
+
 // Only run from the command line!
 if (PHP_SAPI != 'cli') {
     die("Please run this script from the CLI!\n");

@@ -69,7 +69,7 @@ function render_head(render $render, array $string)
     $headerdata['texteditor'] = $texteditorplugin->get_header_file();
     $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
     $headerdata['editor'] = $editor[0];
-    
+
     $render->render($headerdata, $lang, 'header.html');
 
     require '../include/toprightmenu.inc';
@@ -91,8 +91,7 @@ function render_summary(render $render, array $string, array $pstats, array $dst
   <br />
 
   <div class="subsect_table"><div class="subsect_title"><?php echo $string['summary'] ?></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>
-  
-  
+
   <table cellpadding="0" cellspacing="0" style="width:650px; margin-left:40px">
   <tr><td colspan="2" style="padding-left:4px"><?php echo $string['msg']; ?></td></tr>
   <tr>
@@ -354,7 +353,7 @@ function display_question(render $render, array $question_data, array $string, s
         echo '<tr><td colspan="2"><h1 style="color:' . $question_data['theme_color'] . '">' . $question_data['theme'] . '</h1></td></tr>' . "\n";
     }
     echo "<tr>\n";
-  
+
     if (!in_array($question_data['type'], array('extmatch', 'matrix', 'textbox'))) {
         if ($question_data['type'] == 'info') {
             echo '<td colspan="2" style="padding-left:15px">' . $question_data['leadin'] . "\n";
@@ -373,7 +372,7 @@ function display_question(render $render, array $question_data, array $string, s
             if (!in_array($question_data['type'], array('hotspot', 'enhancedcalc', 'flash', 'area'))) {
                 echo $question_data['leadin'] . '</div>' . "\n";
             }
-  
+
             if (isset($question_data['media']) and !in_array($question_data['type'], array('hotspot', 'labelling', 'flash', 'area'))) {
                 echo '<div class="mediadiv">';
                 $question->set_media(...$question_data['media']);
@@ -384,7 +383,7 @@ function display_question(render $render, array $question_data, array $string, s
                 echo '<p>' . "\n" . '<table cellpadding="4" cellspacing="0" border="0">' . "\n";
             }
         }
-  
+
         switch ($question_data['type']) {
             case 'random':
                 echo '<div class="q_warning">' . $string['randomwarning'] . '</div>' . "\n";
@@ -445,7 +444,7 @@ function display_question(render $render, array $question_data, array $string, s
                         $formatted_replacements[] = ' <strong>' . chr($i + 64) . '.</strong> <input type="text" size="20" value="' . $part['answers'][0] . '" />';
                     }
                 }
-                
+
                 vprintf($question_data['formatted_string'], $formatted_replacements);
 
                 echo '<table cellspacing="0" cellpadding="4" border="0" style="margin-left:20px">' . "\n";
@@ -742,7 +741,7 @@ function display_question(render $render, array $question_data, array $string, s
                     . '<td>l=' . number_format($part['p_bottom'] * 100, 0) . '%</td>'
                     . '<td>' . format_xStats($part['x_stats']) . '</td>'
                     . '<td><span class="std">' . $part['std'] . '</span></td>';
-  
+
                     if ($question_data['score_method'] == 'Mark per Option') {
                         if ($question_data['excluded'] and $part['exclusions'] == '1') {
                             echo '<td id="q_' . $part['ex_no'] . '_1" class="excluded">';
@@ -921,7 +920,7 @@ function display_question(render $render, array $question_data, array $string, s
                     . '<td>u=' . number_format($part['u']) . '%</td>'
                     . '<td>l=' . number_format($part['l']) . '%</td>'
                     . '<td></td>';
-  
+
                     if ($question_data['excluded']) {
                         echo '<td id="q_' . $question_data['ex_no'] . '_' . $i . '" class="excluded">';
                     } else {
@@ -948,7 +947,7 @@ function display_question(render $render, array $question_data, array $string, s
         }
         echo '&nbsp;' . $question_data['leadin'] . '</div>'
         . '<table cellpadding="4" cellspacing="0" border="0">';
-  
+
         if ($configObject->get_setting('core', 'rpt_fd_show_wordlist')) {
             echo '<tr><td colspan="2"><strong>' . $string['TopGroup'] . ':</strong></td>'
             . '<td colspan="2"><strong>' . $string['BottomGroup'] . ':</strong></td></tr>' . "\n"
@@ -1015,7 +1014,7 @@ function display_question(render $render, array $question_data, array $string, s
         echo '</table></td></tr>' . "\n";
     } elseif ($question_data['type'] == 'matrix') {
         echo '<tr><td class="q_no">' . $question_data['no'] . '.&nbsp;</td><td>';
-  
+
         if ($question_data['score_method'] == 'Mark per Question') {
             if ($question_data['excluded']) {
                 echo '<div id="q_' . $question_data['ex_no'] . '_1" class="excluded">' . $question_data['leadin'] . '</div>';
@@ -1030,7 +1029,7 @@ function display_question(render $render, array $question_data, array $string, s
         } else {
             echo '<div>' . $question_data['leadin'] . '</div>';
         }
-         
+
         echo '<p>' . "\n"
         . '<table cellpadding="2" cellspacing="0" border="1" class="matrix">' . "\n"
         . '<tr><td colspan="' . $question_data['cols'] . '">&nbsp;</td><td>&nbsp;</td>';
@@ -1038,7 +1037,7 @@ function display_question(render $render, array $question_data, array $string, s
             echo '<td>' . $question_data['options'][$i] . '</td>';
         }
         echo '</tr>' . "\n";
-  
+
         foreach ($question_data['parts'] as $i => $part) {
             echo '<tr>' . "\n";
             foreach ($question_data['options'] as $option_no => $option) {
@@ -1050,7 +1049,7 @@ function display_question(render $render, array $question_data, array $string, s
                             echo '<td>' .  excludeButton($part['ex_no'], $question_data['id'], '', 1, 1) . '</td>';
                         }
                     }
-  
+
                     echo '<td>' . chr($i + 64) . '.</td>'
                     . '<td style="font-weight:bold">' . format_pStats($part['p_stats'], $string) . '</td>'
                     . '<td style="font-weight:bold">' . format_dStats($part['d_stats'], $string) . '</td>'
@@ -1058,11 +1057,11 @@ function display_question(render $render, array $question_data, array $string, s
                     . '<td style="font-weight:bold">u=' . number_format($part['p_top'] * 100, 0) . '%</td>'
                     . '<td style="font-weight:bold">l=' . number_format($part['p_bottom'] * 100, 0) . '%</td>'
                     . '<td style="font-weight:bold">' . format_xStats($part['x_stats']) . '</td>';
-  
+
                     if (isset($part['std'])) {
                         echo '<td class="std"><strong>' . $part['std'] . '</strong></td>';
                     }
-  
+
                     if ($question_data['score_method'] == 'Mark per Option') {
                         if ($part['excluded']) {
                             echo '<td class="excluded" id="q_' . $part['ex_no'] . '_1">';
@@ -1074,7 +1073,7 @@ function display_question(render $render, array $question_data, array $string, s
                     }
                     echo $part['scenario'] . '</td>';
                 }
-  
+
                 if ($part['correct'] == $option_no) {
                     echo '<td style="text-align:center; background-color:#C0FFC0"><input type="radio" name="q' . $question_data['id'] . '_' . $i . '" checked /></td>';
                 } else {
@@ -1176,4 +1175,3 @@ function display_question(render $render, array $question_data, array $string, s
     echo "</td></tr>\n"
     . '<tr><td colspan="2">&nbsp;</td></tr>' . "\n";
 }
-  

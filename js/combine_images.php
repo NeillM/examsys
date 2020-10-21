@@ -24,7 +24,7 @@ foreach ($paths as $path) {
     while (false !== ($file = readdir($dh))) {
         $filename = "images/$path/$file";
         $name = "$path/$file";
-        
+
         if ($file == '.' || $file == '..') {
             continue;
         }
@@ -39,14 +39,14 @@ foreach ($paths as $path) {
         $res = imagecreatefrompng($filename);
         list($widthx, $height, $type, $attr) = getimagesize($filename);
         ob_flush();
-        
+
         $img = array();
         $img['im'] = $res;
         $img['width'] = $widthx;
         $img['height'] = $height;
         $img['filename'] = $filename;
         $img['name'] = $name;
-        
+
         $images[] = $img;
     }
 }
@@ -64,11 +64,11 @@ foreach ($images as &$img) {
         $top += $rowheight;
         $rowheight = 0;
     }
-    
+
     $rowheight = max($rowheight, $img['height']);
     $img['left'] = $left;
     $img['top'] = $top;
-    
+
     $left += $img['width'];
 }
 unset($img);

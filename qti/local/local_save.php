@@ -406,7 +406,6 @@ class IE_Local_Save extends IE_Main
         $this->q_row['score_method'] = $question->score_method;
     }
 
-
     public function SaveDichotomous($question)
     {
         $this->q_row['scenario'] = $question->scenario;
@@ -694,7 +693,6 @@ class IE_Local_Save extends IE_Main
         }
     }
 
-
     public function SaveTrueFalse($question)
     {
         $this->q_row['scenario'] = $question->scenario;
@@ -734,7 +732,6 @@ class IE_Local_Save extends IE_Main
             $i++;
         }
     }
-
 
     public function SaveMrq($question)
     {

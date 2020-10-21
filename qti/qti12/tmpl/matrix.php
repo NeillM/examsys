@@ -16,15 +16,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require('header.php');
-?>  
-        
+?>
+
             <?php echo $headertext ?>
 
 <?php foreach ($question->scenarios as $scid => $scenario) : ?>
             <response_lid ident="<?php echo $scid ?>">
                 <material>
                     <mattext texttype="text/html"><![CDATA[<?php echo $scenario->scenario ?>]]></mattext>
-                </material> 
+                </material>
                 <render_choice shuffle="No">
     <?php foreach ($question->options as $oid => $option) : ?>
                     <response_label ident="<?php echo $this->ll[$oid] ?>">
@@ -32,16 +32,16 @@ require('header.php');
                             <mattext texttype="text/html"><![CDATA[<?php echo $option->stem ?>]]></mattext>
                         </material>
                     </response_label>
-    <?php endforeach; ?>    
+    <?php endforeach; ?>
                 </render_choice>
             </response_lid>
-<?php endforeach; ?>        
+<?php endforeach; ?>
         </presentation>
         <resprocessing>
             <outcomes>
                 <decvar/>
             </outcomes>
-            
+
 <?php foreach ($question->scenarios as $scid => $scenario) : ?>
             <respcondition title="<?php echo $scid ?>" continue="Yes">
                 <conditionvar>
@@ -58,6 +58,6 @@ require('header.php');
                 <setvar action="Add"><?php echo $option->marks_incorrect; ?></setvar>
             </respcondition>
 <?php endforeach; ?>
-            
+
         </resprocessing>
     </item>

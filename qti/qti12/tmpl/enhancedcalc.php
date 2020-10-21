@@ -1,58 +1,5 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -88,12 +35,12 @@ $settingsdecoded = json_decode($question->settings, true);
 <?php endforeach; ?>
 
             <?php echo $headertext ?>
-            
+
             <response_num ident="1" rcardinality="Single">
                 <render_fib fibtype="Decimal" prompt="Box" rows="1" columns="10" maxchars="10"/>
             </response_num>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -105,7 +52,7 @@ $settingsdecoded = json_decode($question->settings, true);
                 <setvar action="Set"><?php echo $settingsdecoded['marks_correct'] ?></setvar>
                 <displayfeedback linkrefid="general"/>
             </respcondition>
-            
+
 <?php if ($question->marks_partial != 0) : ?>
             <respcondition title="Within range" >
                 <conditionvar>
@@ -135,7 +82,7 @@ $settingsdecoded = json_decode($question->settings, true);
                 <setvar action="Set"><?php echo $settingsdecoded['marks_incorrect'] ?></setvar>
                 <displayfeedback linkrefid="general"/>
             </respcondition>
-      
+
             <!-- force general feedback to output -->
             <respcondition title="General Feedback">
                 <conditionvar>
@@ -150,7 +97,7 @@ $settingsdecoded = json_decode($question->settings, true);
                 <displayfeedback linkrefid="general"/>
             </respcondition>
         </resprocessing>
-        
+
         <itemfeedback ident="general" view="Candidate">
             <material>
                 <mattext texttype="text/html"><![CDATA[<?php echo $question->feedback ?>]]></mattext>

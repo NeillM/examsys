@@ -31,16 +31,19 @@ class external_systems
      * @var mysqli
      */
     private $db;
+
     /**
      * API external system type
      * @var string
      */
     public const API = 'api';
+
     /**
      * Pluin external system type
      * @var string
      */
     public const PLUGIN = 'plugin';
+
     /**
      * Constructor
      * @return void

@@ -65,6 +65,6 @@ function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mod
         $storeerror->execute();
     }
     $result->close();
-    
+
     return $status;
 }

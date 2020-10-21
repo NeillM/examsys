@@ -645,5 +645,4 @@ class paperutilstest extends unittestdatabase
         $this->assertEquals($this->pid1['id'], Paper_utils::getPaperId($this->pid1['papertitle']));
         $this->assertNull(Paper_utils::getPaperId('Paper 3'));
     }
-
 }

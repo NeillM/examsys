@@ -17,7 +17,7 @@
 
 require('header.php');
 ?>
-    
+
             <?php echo $headertext ?>
 
             <response_lid ident="1">
@@ -28,7 +28,7 @@ require('header.php');
                             <mattext texttype="text/html"><![CDATA[<?php echo $scale ?>]]></mattext>
                         </material>
                     </response_label>
-<?php endforeach; ?>    
+<?php endforeach; ?>
 <?php if ($question->hasna) : ?>
                     <response_label ident="Not Applicable">
                         <material>
@@ -39,12 +39,12 @@ require('header.php');
                 </render_choice>
             </response_lid>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
             </outcomes>
-            
+
 <?php foreach ($question->scale as $oid => $scale) : ?>
             <respcondition title="<?php echo $oid ?> <?php echo(for_id($scale)) ?>" >
                 <conditionvar>
@@ -52,8 +52,8 @@ require('header.php');
                 </conditionvar>
                 <setvar action="Set"><?php echo $oid ?></setvar>
             </respcondition>
-<?php endforeach; ?>    
-            
+<?php endforeach; ?>
+
         </resprocessing>
     </item>
 

@@ -45,7 +45,7 @@ require  '../../../../../../../../include/staff_auth.inc';
 if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
     $helpdirectory = rogo_directory::get_directory('help_staff');
-   
+
     $filename = $_FILES['FileName']['tmp_name'];
 
     //make the dirs

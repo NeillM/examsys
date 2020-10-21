@@ -29,12 +29,8 @@ require_once 'outline_lookup.class.php';
 $cfg_web_root = $configObject->get('cfg_web_root');
 include_once $configObject->get('cfg_web_root') . 'lang/en/include/common.php';
 
-
 class UoNSaturnTranslation_lookup extends outline_lookup
 {
-
-
-
     public $impliments_api_lookup_version = 1;
     public $version = 0.9;
 
@@ -44,9 +40,9 @@ class UoNSaturnTranslation_lookup extends outline_lookup
         $callbackarray[] = array(array($this, 'moduletranslatelookup'), 'moduletranslatelookup', $this->number, $this->name);
         return $callbackarray;
     }
+
     public function moduletranslatelookup($modulelookupobj)
     {
-
         $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
         // this is on the search data (also used for 1 record lookup)
         if (isset($modulelookupobj->lookupdata)) {
@@ -65,7 +61,6 @@ class UoNSaturnTranslation_lookup extends outline_lookup
 
     public function moduletranslate($datapart)
     {
-
         if (isset($datapart->rawschools)) {
             //detect raw xml school info
 
@@ -108,10 +103,8 @@ class UoNSaturnTranslation_lookup extends outline_lookup
         return $datapart;
     }
 
-
     public function usertranslatelookup($userlookupobj)
     {
-
         $this->savetodebug('Running user translate lookup in UoN Saturn Translate');
         // this is on the search data (also used for 1 record lookup)
         $userlookupobj->lookupdata = $this->usertranslate($userlookupobj->lookupdata);
@@ -127,7 +120,6 @@ class UoNSaturnTranslation_lookup extends outline_lookup
 
     public function usertranslate($datapart)
     {
-
         if (isset($datapart->role) and $this->orsearchlist($datapart->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
             $this->savetodebug('Detected Student, correcting role');
             $datapart->role = 'Student';
