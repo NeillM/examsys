@@ -27,10 +27,11 @@ use testing\unittest\unittestdatabase;
  */
 class campustest extends unittestdatabase
 {
-    /**
-     * @var array Storage for campus data in tests
-     */
-    private $campus, $campus2;
+    /** @var array Storage for campus data in tests. */
+    private $campus;
+
+    /** @var array Storage for campus data in tests. */
+    private $campus2;
 
     /**
      * Generate data for test.

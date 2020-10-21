@@ -27,15 +27,26 @@ use testing\unittest\unittestdatabase;
  */
 class externalsystemstest extends unittestdatabase
 {
-    /**
-     * @var array Storage for external system data in tests
-     */
-    private $ext1, $ext2, $ext3, $ext4;
+    /** @var array Storage for external system data in tests. */
+    private $ext1;
 
-    /**
-     * @var array Storage for client data in tests
-     */
-    private $client1, $client2, $client3;
+    /** @var array Storage for external system data in tests. */
+    private $ext2;
+
+    /** @var array Storage for external system data in tests. */
+    private $ext3;
+
+    /** @var array Storage for external system data in tests. */
+    private $ext4;
+
+    /** @var array Storage for client data in tests. */
+    private $client1;
+
+    /** @var array Storage for client data in tests. */
+    private $client2;
+
+    /** @var array Storage for client data in tests. */
+    private $client3;
 
     /**
      * Generate data for test.

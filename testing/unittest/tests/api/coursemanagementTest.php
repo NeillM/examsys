@@ -27,11 +27,11 @@ use testing\unittest\unittestdatabase;
  */
 class coursemanagementtest extends unittestdatabase
 {
+    /** @var integer Storage for course id in tests. */
+    private $cid1;
 
-    /**
-     * @var integer Storage for course id in tests
-     */
-    private $cid1, $cid2;
+    /** @var integer Storage for course id in tests. */
+    private $cid2;
 
     /**
      * Generate data for test.

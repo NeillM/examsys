@@ -27,11 +27,11 @@ use testing\unittest\unittestdatabase;
  */
 class usermanagementtest extends unittestdatabase
 {
+    /** @var integer Storage for user id in tests. */
+    private $user;
 
-    /**
-     * @var integer Storage for user id in tests
-     */
-    private $user, $user2;
+    /** @var integer Storage for user id in tests. */
+    private $user2;
 
     /**
      * @var integer Storage for module id in tests

@@ -24,22 +24,20 @@
  */
 class PaperPropertiesGetUsersTest extends testing\unittest\unittestdatabase
 {
-    /**
-     * The students used in each test.
-     *
-     * @var array $student1
-     * @var array $student2
-     * @var array $student3
-     */
-    protected $student1, $student2, $student3;
+    /** @var array A student used the each test. */
+    protected $student1;
 
-    /**
-     * The modules used in tests.
-     *
-     * @var array $module1
-     * @var array $module2
-     */
-    protected $module1, $module2;
+    /** @var array A student used the each test. */
+    protected $student2;
+
+    /** @var array A student used the each test. */
+    protected $student3;
+
+    /** @var array A modules used in tests. */
+    protected $module1;
+
+    /** @var array A modules used in tests. */
+    protected $module2;
 
     /**
      * The current academic session

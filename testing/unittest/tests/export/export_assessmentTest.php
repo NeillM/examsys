@@ -28,17 +28,62 @@ use testing\unittest\unittestdatabase;
  */
 class export_assessmentTest extends unittestdatabase
 {
+    /** @var array Storage for paper data in tests. */
+    private $pid1;
 
-    /**
-     * @var array Storage for paper data in tests
-     */
-    private $pid1, $pid2;
+    /** @var array Storage for paper data in tests. */
+    private $pid2;
 
-    /**
-     * @var array Storage for question data in tests
-     */
-    private $question1, $question2, $question3 , $question4, $question5, $question6, $question7, $question8, $question9,
-        $question10, $question11, $question12, $question13, $question14, $question15, $question16, $question17;
+    /** @var array Storage for an extended matching question data in tests. */
+    private $question1;
+
+    /** @var array Storage for a dichotomous question data in tests. */
+    private $question2;
+
+    /** @var array Storage for a ranking question data in tests. */
+    private $question3;
+
+    /** @var array Storage for a MCQ question data in tests. */
+    private $question4;
+
+    /** @var array Storage for a true/false question data in tests. */
+    private $question5;
+
+    /** @var array Storage for an enhanced calculation question data in tests. */
+    private $question6;
+
+    /** @var array Storage for a linked enhanced calculation question data in tests. */
+    private $question7;
+
+    /** @var array Storage for an area question data in tests. */
+    private $question8;
+
+    /** @var array Storage for a hotspot question data in tests. */
+    private $question9;
+
+    /** @var array Storage for a labelling question data in tests. */
+    private $question10;
+
+    /** @var array Storage for a sct question data in tests. */
+    private $question11;
+
+    /** @var array Storage for a textbox question data in tests. */
+    private $question12;
+
+    /** @var array Storage for a mrq question data in tests. */
+    private $question13;
+
+    /** @var array Storage for a fill in the blank question data in tests. */
+    private $question14;
+
+    /** @var array Storage for a matrix question data in tests. */
+    private $question15;
+
+    /** @var array Storage for a likert question data in tests. */
+    private $question16;
+
+    /** @var array Storage for a random question data in tests. */
+    private $question17;
 
     /**
      * Generate data for test.

@@ -33,7 +33,8 @@ class Authentication
 {
     private $userid;
     private $password;
-    private $db, $configObj;
+    private $db;
+    private $configObj;
     private $config;
     public $returndata;
     public $debug;
@@ -57,7 +58,17 @@ class Authentication
 
     public $callbacktypes = array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore');
 
-    public $initobj, $lookupuserobj, $preauthobj, $authobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
+    public $initobj;
+    public $lookupuserobj;
+    public $preauthobj;
+    public $authobj;
+    public $postauthobj;
+    public $postauthsuccesobj;
+    public $postauthfailobj;
+    public $displaystdformobj;
+    public $displayerrformobj;
+    public $getauthobj;
+    public $sessionstoreobj;
 
     /**
      * Called when the object is unserialised.

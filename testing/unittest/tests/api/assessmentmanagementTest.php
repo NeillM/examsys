@@ -27,20 +27,28 @@ use testing\unittest\unittestdatabase;
  */
 class assessmentmanagementtest extends unittestdatabase
 {
-    /**
-     * @var array Storage for paper data in tests
-     */
-    private $pid1, $pid2, $pid3, $pid4;
+    /**  @var array Storage for paper data in tests. */
+    private $pid1;
+
+    /** @var array Storage for paper data in tests. */
+    private $pid2;
+
+    /** @var array Storage for paper data in tests. */
+    private $pid3;
+
+    /** @var array Storage for paper data in tests. */
+    private $pid4;
 
     /**
      * @var integer Storage for module id in tests
      */
     private $module2;
 
-    /**
-     * @var integer Storage for lab id in tests
-     */
-    private $labid1, $labid2;
+    /** @var integer Storage for lab id in tests. */
+    private $labid1;
+
+    /** @var integer Storage for lab id in tests. */
+    private $labid2;
 
     /**
      * Generate data for test.
