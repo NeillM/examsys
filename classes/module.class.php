@@ -808,7 +808,7 @@ class module
      *
      * @return int|bool id of school or false
      */
-    static function get_id_from_externalid($externalid, $externalsys, $db)
+    public static function get_id_from_externalid($externalid, $externalsys, $db)
     {
         $result = $db->prepare('SELECT id FROM modules WHERE externalid = ? AND sms = ? AND mod_deleted IS NULL');
         $result->bind_param('ss', $externalid, $externalsys);
@@ -832,7 +832,7 @@ class module
      * @param mysqli $db db connection
      * @return array list of modules in rogo but not in external system
      */
-    static function diff_external_modules_to_internal_modules($external, $sms, $db)
+    public static function diff_external_modules_to_internal_modules($external, $sms, $db)
     {
         $result = $db->prepare('SELECT id, externalid, mod_deleted FROM modules WHERE externalid IS NOT NULL AND sms = ?');
         $result->bind_param('s', $sms);
@@ -867,7 +867,7 @@ class module
      * @param integer $session acedemic year import is related to
      * @param mysqli $db db connection
      */
-    static function log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $db)
+    public static function log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $db)
     {
         $result = $db->prepare('INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)');
         $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);
@@ -881,7 +881,7 @@ class module
      * @param integer $id rogo id of module
      * @return boolean true on success, false otherwise
      */
-    static function restore_module($db, $id)
+    public static function restore_module($db, $id)
     {
         $result = $db->prepare('UPDATE modules set mod_deleted = NULL where id = ?');
         $result->bind_param('i', $id);

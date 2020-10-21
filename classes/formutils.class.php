@@ -175,7 +175,7 @@ class FormUtils
      * @param string $email
      * @return boolean
      */
-    function is_email_in_cfg_institutional_domains($email)
+    public function is_email_in_cfg_institutional_domains($email)
     {
         $cfg = Config::get_instance();
         $domains  = $cfg->get('cfg_institutional_domains');

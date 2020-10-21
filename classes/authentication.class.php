@@ -77,7 +77,7 @@ class Authentication
      * @param array $session    - $_SESSION data passed in
      *
      */
-    function __construct(&$configObj, &$db, &$request, &$session)
+    public function __construct(&$configObj, &$db, &$request, &$session)
     {
 
         $this->db = & $db;

@@ -53,7 +53,7 @@ class internalreview
      * Constuctor
      * @param mysqli $db
      */
-    function __construct($db)
+    public function __construct($db)
     {
         $this->db = $db;
         $this->config = Config::get_instance();

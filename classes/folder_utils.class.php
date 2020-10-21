@@ -33,7 +33,7 @@ class folder_utils
      * @param object $db     - MySQL object
      * @return string the name of the folder.
      */
-    static function get_folder_name($folderID, $db)
+    public static function get_folder_name($folderID, $db)
     {
         $result = $db->prepare('SELECT name FROM folders WHERE id = ? LIMIT 1');
         $result->bind_param('i', $folderID);
@@ -45,7 +45,7 @@ class folder_utils
         return $name;
     }
 
-    static function has_permission($folderID, $userObj, $db)
+    public static function has_permission($folderID, $userObj, $db)
     {
         $permission = false;
 
@@ -77,7 +77,7 @@ class folder_utils
      * @param object $db           - MySQL object
      * @return string the name of the folder.
      */
-    static function create_folder($folder_name, $userObj, $db)
+    public static function create_folder($folder_name, $userObj, $db)
     {
         if ($folder_query = $db->prepare("INSERT INTO folders VALUES (NULL, ?, ?, NOW(), 'yellow', NULL)")) {
             $folder_query->bind_param('is', $userObj->get_user_ID(), $folder_name);
@@ -97,7 +97,7 @@ class folder_utils
      * @param $db                  - Mysqli object
      * @return bool                - True = folder exists, False = it does not exist.
      */
-    static function folder_exists($folder_name, $userObj, $db)
+    public static function folder_exists($folder_name, $userObj, $db)
     {
         $result = $db->prepare('SELECT name FROM folders WHERE ownerID = ? AND name = ?');
         $result->bind_param('is', $userObj->get_user_ID(), $folder_name);
@@ -119,7 +119,7 @@ class folder_utils
      * @param object $db       - MySQL object
      * @return array   - Array of folders keyed by the ID of the folder in the database.
      */
-    static function get_all_folders($db)
+    public static function get_all_folders($db)
     {
         $folders = array();
 
@@ -141,7 +141,7 @@ class folder_utils
      * @param object $db       - MySQL object
      * @return int - ID of the paper owner (false if folder does not exist).
      */
-    static function get_ownerID($folderID, $db)
+    public static function get_ownerID($folderID, $db)
     {
         $result = $db->prepare('SELECT ownerID FROM folders WHERE id = ? LIMIT 1');
         $result->bind_param('i', $folderID);
@@ -166,7 +166,7 @@ class folder_utils
      * @param object $db               - MySQL object
      * @return array   - Array of parents of the current folder.
      */
-    static function get_parent_list($orig_folder_name, $userObj, $db)
+    public static function get_parent_list($orig_folder_name, $userObj, $db)
     {
         $parent_list = array();
         if (mb_substr_count($orig_folder_name, ';') > 0) {

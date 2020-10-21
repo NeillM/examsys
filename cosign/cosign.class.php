@@ -44,7 +44,7 @@ class cosign
     private $cosign_cfg;
     private $cosign_log;
 
-    function __construct($cosign_cfg, &$parent)
+    public function __construct($cosign_cfg, &$parent)
     {
         $this->cosign_cfg = $cosign_cfg;
         if (!is_null($parent)) {
@@ -52,7 +52,7 @@ class cosign
         }
     }
 
-    function cosign_debug($str)
+    public function cosign_debug($str)
     {
         if (isset($this->parent)) {
             $this->parent->savetodebug('Co-Sign Class;; ' . $str);
@@ -67,7 +67,7 @@ class cosign
     }
 
     // configuration is merged from global cosign_config.php, .cosign.php
-    function cosign_auth($cfg = array(), $obstart = true)
+    public function cosign_auth($cfg = array(), $obstart = true)
     {
 
 
@@ -620,7 +620,7 @@ class cosign
         return true;
     }
 
-    function cosign_set_cookie_and_redirect($url = '')
+    public function cosign_set_cookie_and_redirect($url = '')
     {
 
 
@@ -684,7 +684,7 @@ class cosign
         exit();
     }
 
-    function cosign_check_factors($fa, $suffix = false)
+    public function cosign_check_factors($fa, $suffix = false)
     {
         $req_fac = explode(' ', $this->cosign_cfg['CosignRequireFactor']);
         $sc_fac = explode(' ', $fa);
