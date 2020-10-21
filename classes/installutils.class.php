@@ -693,28 +693,30 @@ class InstallUtils
         $insert->execute();
         $insert->close();
         // Add user psermissions.
-        $permissions = array('assessmentmanagement/create',
-        'assessmentmanagement/update',
-        'assessmentmanagement/delete',
-        'assessmentmanagement/schedule',
-        'gradebook',
-        'modulemanagement/create',
-        'modulemanagement/update',
-        'modulemanagement/delete',
-        'modulemanagement/enrol',
-        'modulemanagement/unenrol',
-        'usermanagement/create',
-        'usermanagement/update',
-        'usermanagement/delete',
-        'coursemanagement/create',
-        'coursemanagement/delete',
-        'coursemanagement/update',
-        'schoolmanagement/create',
-        'schoolmanagement/delete',
-        'schoolmanagement/update',
-        'facultymanagement/create',
-        'facultymanagement/delete',
-        'facultymanagement/update');
+        $permissions = array(
+            'assessmentmanagement/create',
+            'assessmentmanagement/update',
+            'assessmentmanagement/delete',
+            'assessmentmanagement/schedule',
+            'gradebook',
+            'modulemanagement/create',
+            'modulemanagement/update',
+            'modulemanagement/delete',
+            'modulemanagement/enrol',
+            'modulemanagement/unenrol',
+            'usermanagement/create',
+            'usermanagement/update',
+            'usermanagement/delete',
+            'coursemanagement/create',
+            'coursemanagement/delete',
+            'coursemanagement/update',
+            'schoolmanagement/create',
+            'schoolmanagement/delete',
+            'schoolmanagement/update',
+            'facultymanagement/create',
+            'facultymanagement/delete',
+           'facultymanagement/update',
+		);
         foreach ($permissions as $permission) {
             $insert = self::$db->prepare('INSERT INTO permissions (action) VALUES (?)');
             $insert->bind_param('s', $permission);
@@ -765,18 +767,26 @@ class InstallUtils
         $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
         $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
         $configObject->set_setting('rpt_fd_show_wordlist', 1, Config::BOOLEAN);
-        $configObject->set_setting('stdset_hofstee_pass', array(
-        'min_pass' => 0,
-        'max_pass' => 'median',
-        'min_fail' => 0,
-        'max_fail' => 100
-        ), Config::ASSOC);
-        $configObject->set_setting('stdset_hofstee_distinction', array(
-        'min_pass' => 'median',
-        'max_pass' => 100,
-        'min_fail' => 0,
-        'max_fail' => 100
-        ), Config::ASSOC);
+        $configObject->set_setting(
+            'stdset_hofstee_pass',
+            array(
+                'min_pass' => 0,
+                'max_pass' => 'median',
+                'min_fail' => 0,
+                'max_fail' => 100,
+            ),
+            Config::ASSOC
+        );
+        $configObject->set_setting(
+            'stdset_hofstee_distinction',
+            array(
+                'min_pass' => 'median',
+                'max_pass' => 100,
+                'min_fail' => 0,
+                'max_fail' => 100,
+            ),
+            Config::ASSOC
+        );
         $configObject->set_setting('stdset_hofstee_whole_numbers', true, Config::BOOLEAN);
         $configObject->set_setting('stdset_copy_std_setting', false, Config::BOOLEAN);
         $configObject->set_setting('summative_hour_warning', 10, Config::INTEGER);
@@ -785,18 +795,26 @@ class InstallUtils
         $contact_count = 0;
         foreach (self::$emergency_support_numbers as $name => $number) {
             $contact_count++;
-            $configObject->set_setting('emergency_support_contact' . $contact_count, array(
-            'name' => $name,
-            'number' => $number
-            ), Config::ASSOC);
+            $configObject->set_setting(
+                'emergency_support_contact' . $contact_count,
+                array(
+                    'name' => $name,
+                    'number' => $number
+                ),
+                Config::ASSOC
+            );
         }
         $i = $contact_count;
         while ($i < 3) {
             $i++;
-            $configObject->set_setting('emergency_support_contact' . $i, array(
-            'name' => '',
-            'number' => ''
-            ), Config::ASSOC);
+            $configObject->set_setting(
+                'emergency_support_contact' . $i,
+                array(
+                    'name' => '',
+                    'number' => ''
+                ),
+                Config::ASSOC
+            );
         }
         $configObject->set_setting('support_contact_email', array(self::$cfg_support_email), Config::EMAIL);
         $configObject->set_setting('api_oauth_access_lifetime', 1209600, Config::INTEGER);
@@ -871,21 +889,23 @@ class InstallUtils
     public static function updateSysUpdates()
     {
         $current_datetime = date('Y-m-d H:i:s');
-        $updates = array('convert_calc_ans_done',
-        'sct_fix',
-        'textbox_fix',
-        'textbox_update',
-        'labelling_search',
-        'ext_match_graphics_fix',
-        'status_fix',
-        'keyword_loop',
-        'errorstate_signed_log0',
-        'errorstate_signed_log0_deleted',
-        'errorstate_signed_log1',
-        'errorstate_signed_log1_deleted',
-        'errorstate_signed_log2',
-        'errorstate_signed_log3',
-        'errorstate_signed_log_late');
+        $updates = array(
+            'convert_calc_ans_done',
+            'sct_fix',
+            'textbox_fix',
+            'textbox_update',
+            'labelling_search',
+            'ext_match_graphics_fix',
+            'status_fix',
+            'keyword_loop',
+            'errorstate_signed_log0',
+            'errorstate_signed_log0_deleted',
+            'errorstate_signed_log1',
+            'errorstate_signed_log1_deleted',
+            'errorstate_signed_log2',
+            'errorstate_signed_log3',
+            'errorstate_signed_log_late',
+        );
         foreach ($updates as $update) {
             $insert = self::$db->prepare('INSERT INTO sys_updates VALUES (?, ?)');
             $insert->bind_param('ss', $update, $current_datetime);
@@ -1826,11 +1846,11 @@ class InstallUtils
 
         // Create default question statuses
         $statuses = array(
-        array('name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
-        array('name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
-        array('name' => 'Incomplete', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2),
-        array('name' => 'Experimental', 'exclude_marking' => true, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3),
-        array('name' => 'Beta', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4)
+            array('name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
+            array('name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
+            array('name' => 'Incomplete', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2),
+            array('name' => 'Experimental', 'exclude_marking' => true, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3),
+            array('name' => 'Beta', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4)
         );
 
         foreach ($statuses as $data) {
@@ -1974,10 +1994,10 @@ class InstallUtils
                 foreach ($error as $errCode => $message) {
                     $filter = FILTER_SANITIZE_STRING;
                     $options = array(
-                    'options' => array(
-                    'default' => null,
-                    ),
-                    'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
+                        'options' => array(
+                            'default' => null,
+                        ),
+                        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
                     );
                     cli_utils::prompt($string['errors13'] . "$errCode: " . filter_var($message, $filter, $options));
                 }
@@ -2021,15 +2041,15 @@ class InstallUtils
         $configObject = Config::get_instance();
         $render = new render_install($configObject);
         $headerdata = array(
-        'css' => array(
-        '/css/rogo_logo.css',
-        '/css/header.css',
-        '/css/install.css',
-        ),
-        'scripts' => array(
-        '/js/require.js',
-        '/js/main.min.js',
-        ),
+            'css' => array(
+                '/css/rogo_logo.css',
+                '/css/header.css',
+                '/css/install.css',
+            ),
+            'scripts' => array(
+                '/js/require.js',
+                '/js/main.min.js',
+            ),
         );
         $lang['title'] = $string['install'];
         $lang['blurb'] = $string['systeminstallation'];
@@ -2056,7 +2076,7 @@ class InstallUtils
         $configObject = Config::get_instance();
         $render = new render_install($configObject);
         $scripts = [
-        '/js/installinit.min.js',
+            '/js/installinit.min.js',
         ];
         $render->render_admin_footer($scripts);
     }

@@ -1042,18 +1042,19 @@ class UserUtils
         $sql->close();
 
         $details = array(
-        'username' => $username,
-        'password' => $password,
-        'title' => $title,
-        'forename' => $first_names,
-        'surname' => $surname,
-        'email' => $email,
-        'course' => $grade,
-        'gender' => $gender,
-        'year' => $yearofstudy,
-        'role' => $roles,
-        'studentid' => $student_id,
-        'initials' => $initials);
+            'username' => $username,
+            'password' => $password,
+            'title' => $title,
+            'forename' => $first_names,
+            'surname' => $surname,
+            'email' => $email,
+            'course' => $grade,
+            'gender' => $gender,
+            'year' => $yearofstudy,
+            'role' => $roles,
+            'studentid' => $student_id,
+            'initials' => $initials
+        );
 
         return $details;
     }

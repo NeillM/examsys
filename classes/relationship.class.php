@@ -253,14 +253,15 @@ QUERY;
             $result->bind_result($id, $idMod, $paper_id, $question_id, $objective_id, $calendar_year, $vle_api, $map_level);
             while ($result->fetch()) {
                 $data = array(
-                'id' => $id,
-                'idMod' => $idMod,
-                'paper_id' => $paper_id,
-                'question_id' => $question_id,
-                'objective_id' => $objective_id,
-                'calendar_year' => $calendar_year,
-                'vle_api' => $vle_api,
-                'map_level' => $map_level);
+                    'id' => $id,
+                    'idMod' => $idMod,
+                    'paper_id' => $paper_id,
+                    'question_id' => $question_id,
+                    'objective_id' => $objective_id,
+                    'calendar_year' => $calendar_year,
+                    'vle_api' => $vle_api,
+                    'map_level' => $map_level
+                );
                 $relationships[] = new Relationship($db, $data);
             }
             $result->close();

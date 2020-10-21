@@ -831,20 +831,20 @@ abstract class questiondata
         if (!is_null($part_id)) {
             $option = $this->get_opt($part_id);
             $option['optionmedia'] = array(
-            'mediaid' => $imageid,
-            'mediafile' => $filename,
-            'mediawidth' => $width,
-            'mediaheight' => $height,
-            'mediaalt' => $alt,
-            'mediaurl' => $url,
-            'mediadelete' => $mediadelete,
-            'mediaedit' => $mediaedit,
-            'mediatype' => $mediatype,
-            'mediaborder' => $mediaborder,
-            'mediabordercolour' => $border_color,
-            'mediaext' => $ext,
-            'mediadelay' => $delay,
-            'mediaextra' => $extra,
+                'mediaid' => $imageid,
+                'mediafile' => $filename,
+                'mediawidth' => $width,
+                'mediaheight' => $height,
+                'mediaalt' => $alt,
+                'mediaurl' => $url,
+                'mediadelete' => $mediadelete,
+                'mediaedit' => $mediaedit,
+                'mediatype' => $mediatype,
+                'mediaborder' => $mediaborder,
+                'mediabordercolour' => $border_color,
+                'mediaext' => $ext,
+                'mediadelay' => $delay,
+                'mediaextra' => $extra,
             );
             $this->set_opt($part_id, $option);
         } else {
