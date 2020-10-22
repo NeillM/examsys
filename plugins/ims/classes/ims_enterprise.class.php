@@ -612,8 +612,8 @@ class ims_enterprise
             case self::GROUP_SCHOOL:
                 $this->process_group_school($node);
                 break;
-            default;
-            continue;
+            default:
+                continue;
         }
     }
 
