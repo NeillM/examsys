@@ -7,8 +7,9 @@
     <exclude-pattern>*/plugins/texteditor/plugin_tinymce3_texteditor/mee/mee/tools/include/*</exclude-pattern>
     <exclude-pattern>*/plugins/questions/enhancedcalc/rserve/*</exclude-pattern>
     <exclude-pattern>*/LTI/classes/*</exclude-pattern>
-    <!-- Skip config file-->
-    <exclude-pattern>config/config.inc.php</exclude-pattern>
+    <exclude-pattern>*/LTI/ims-lti/lti_util.php</exclude-pattern>
+    <!-- Skip config file and it's backups created during upgrades -->
+    <exclude-pattern>config/config.*.php</exclude-pattern>
     <!-- Only look at php files -->
     <arg name="extensions" value="php,inc" />
     <!-- Rules.
@@ -63,5 +64,9 @@
     </rule>
     <rule ref="Rogo.PHP.Param">
         <type>warning</type>
+    </rule>
+    <rule ref="Rogo.Classes.AutoloadFilename">
+        <!-- Exclude specific testing directories that are not really autoloading locations. -->
+        <exclude-pattern>*/testing/unittest/tests/classes/*</exclude-pattern>
     </rule>
 </ruleset>
