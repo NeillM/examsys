@@ -216,7 +216,6 @@ class XML_lookup extends outline_lookup
             return $lookupobj;
         }
 
-        //    $this->savetodebug('Received data:' . var_export($lookupobj, true));
         if (isset($this->settings['userlookup']['mandatoryurlfields'])) {
             // mandatory fields required!
             foreach ($this->settings['userlookup']['mandatoryurlfields'] as $index) {
@@ -263,7 +262,6 @@ class XML_lookup extends outline_lookup
         }
         if (isset($this->settings['userlookup']['urlfields'])) {
             foreach ($this->settings['userlookup']['urlfields'] as $urlparam => $index) {
-                    //$this->savetodebug('appending url ' . 'urlparam' . ' :: ' . $index);
                 if (isset($lookupobj->lookupdata->$index)) {
                     //a field that can be supplied as argument
                     $url .= '&' . $urlparam . '=' . $lookupobj->lookupdata->$index;
@@ -295,7 +293,6 @@ class XML_lookup extends outline_lookup
         //  run this when needing to store auth data to session
 
         if (is_array(($callbacklist))) {
-            //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
             foreach ($callbacklist as $number => $callback) {
                 $xml = call_user_func_array($callback, array($xml));
                 $objid = key($callbackregisterdatalist[$number]);
@@ -492,7 +489,6 @@ class XML_lookup extends outline_lookup
         $datablockstore = array();
         foreach ($datablock as $key => $value) {
             if (!is_int($key)) {
-                //
                 if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
                     $key = mb_strtolower($key);
                 }
