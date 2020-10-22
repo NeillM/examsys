@@ -17,7 +17,7 @@
 
 namespace testing\behat\steps\frontend;
 
-use \Behat\Mink\Element\NodeElement;
+use Behat\Mink\Element\NodeElement;
 
 /**
  * Step definitions for interacting with web forms.
