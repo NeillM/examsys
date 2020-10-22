@@ -66,14 +66,14 @@ class outline_lookup
      * @param $returndata object where data is stored
      * @param $form object a class with form data in
      */
-    function __construct($number, $name, $lookupapiversion)
+    public function __construct($number, $name, $lookupapiversion)
     {
         $this->lookupapiversion = $lookupapiversion;
         $this->name = $name;
         $this->number = $number;
     }
 
-    function apicheck()
+    public function apicheck()
     {
 
         if ($this->lookupapiversion != $this->impliments_api_lookup_version) {
@@ -85,7 +85,7 @@ class outline_lookup
         return false;
     }
 
-    function set_error($msg)
+    public function set_error($msg)
     {
         if (mb_strlen($this->error) > 0) {
             $this->error .= '<br>';
@@ -93,7 +93,7 @@ class outline_lookup
         $this->error .= $msg;
     }
 
-    function init($object)
+    public function init($object)
     {
         $this->db = new mysqli();
         $this->db = & $object->db;
@@ -107,7 +107,7 @@ class outline_lookup
     }
 
 
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
 
         $context1 = array();
@@ -125,7 +125,7 @@ class outline_lookup
 
 
     //fake function used in mocking but if things go wrong have an outline here
-    function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
+    public function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
     {
         return false;
     }
@@ -134,7 +134,7 @@ class outline_lookup
     /**
      * @param $debugmessage string the debug message to store
      */
-    function savetodebug($debugmessage)
+    public function savetodebug($debugmessage)
     {
         $this->debug[] = $debugmessage;
     }
@@ -144,12 +144,12 @@ class outline_lookup
      *
      * @return mixed
      */
-    function get_callback($section)
+    public function get_callback($section)
     {
         return $this->calling_object->get_callback($section);
     }
 
-    function get_new_debug_messages($number = null)
+    public function get_new_debug_messages($number = null)
     {
         if (is_null($number)) {
             $returnarray = array();
@@ -168,13 +168,13 @@ class outline_lookup
      *
      * @return mixed
      */
-    function get_module_lookupinfo($objid)
+    public function get_module_lookupinfo($objid)
     {
         return $this->calling_object->lookupinfo[$objid];
     }
 
 
-    function register_callback_sections()
+    public function register_callback_sections()
     {
         //this is blank so that classes that dont register anything dont break
         return array();
@@ -189,7 +189,7 @@ class outline_lookup
      *
      * @return bool
      */
-    function register_callback($callback, $section, $number, $name, $insert = false)
+    public function register_callback($callback, $section, $number, $name, $insert = false)
     {
         //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
         $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
@@ -199,7 +199,7 @@ class outline_lookup
     /**
      *
      */
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         //this is blank so that classes that dont register anything dont break
         return array();
@@ -210,7 +210,7 @@ class outline_lookup
      *
      * @return mixed
      */
-    function get_settings($setting)
+    public function get_settings($setting)
     {
         if (!isset($this->settings[$setting])) {
             return false;
@@ -219,7 +219,7 @@ class outline_lookup
         return $this->settings[$setting];
     }
 
-    function get_info()
+    public function get_info()
     {
         $data = new stdClass();
         $data->name = $this->name;

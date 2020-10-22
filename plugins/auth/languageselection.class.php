@@ -42,7 +42,7 @@ class Languageselection_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'add_language_selection'), 'displaystdform', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'store_data'), 'postauth', $this->number, $this->name);

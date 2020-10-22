@@ -38,13 +38,13 @@ class UoNSaturnTranslation_lookup extends outline_lookup
     public $impliments_api_lookup_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'usertranslatelookup'), 'usertranslatelookup', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'moduletranslatelookup'), 'moduletranslatelookup', $this->number, $this->name);
         return $callbackarray;
     }
-    function moduletranslatelookup($modulelookupobj)
+    public function moduletranslatelookup($modulelookupobj)
     {
 
         $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
@@ -63,7 +63,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup
         return $modulelookupobj;
     }
 
-    function moduletranslate($datapart)
+    public function moduletranslate($datapart)
     {
 
         if (isset($datapart->rawschools)) {
@@ -109,7 +109,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup
     }
 
 
-    function usertranslatelookup($userlookupobj)
+    public function usertranslatelookup($userlookupobj)
     {
 
         $this->savetodebug('Running user translate lookup in UoN Saturn Translate');
@@ -125,7 +125,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup
         return $userlookupobj;
     }
 
-    function usertranslate($datapart)
+    public function usertranslate($datapart)
     {
 
         if (isset($datapart->role) and $this->orsearchlist($datapart->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
@@ -181,7 +181,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup
         return $datapart;
     }
 
-    function orsearchlist($field, $text)
+    public function orsearchlist($field, $text)
     {
         $found = false;
         foreach ($text as $value) {

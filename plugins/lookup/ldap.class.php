@@ -34,7 +34,7 @@ class ldap_lookup extends outline_lookup
     public $impliments_api_lookup_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'userlookup'), 'userlookup', $this->number, $this->name);
         return $callbackarray;
@@ -46,7 +46,7 @@ class ldap_lookup extends outline_lookup
      * @param stdClass $lookupobj The lookup object.
      * @return stdClass The lookup object with any results attached to it.
      */
-    function userlookup($lookupobj)
+    public function userlookup($lookupobj)
     {
         $overrideallset = false;
         $overrideset = false;
@@ -178,7 +178,7 @@ class ldap_lookup extends outline_lookup
      * @param stdClass $lookupobj The lookup object
      * @return stdClass The modified lookup object.
      */
-    function store_in_data($datablock, $ldap_attributes, $lookupobj)
+    public function store_in_data($datablock, $ldap_attributes, $lookupobj)
     {
         $prepend = '';
         if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
@@ -260,7 +260,7 @@ class ldap_lookup extends outline_lookup
      * @param string $value The value we want to search for in the field
      * @return string
      */
-    function create_filter($ldap_attributes, $reverse_attribute, $value)
+    public function create_filter($ldap_attributes, $reverse_attribute, $value)
     {
         $filtergen = array_keys($ldap_attributes, $reverse_attribute);
         $filter = '';

@@ -847,7 +847,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Load the answers for all users
      * @param array $all_user_answers all users input
      */
-    function load_all_user_answers(&$all_user_answers)
+    public function load_all_user_answers(&$all_user_answers)
     {
         $this->alluseranswers = $all_user_answers;
     }
@@ -858,7 +858,7 @@ class EnhancedCalc extends Question implements questionInterface
      * @param array $user_answers a users input
      * @return string
      */
-    function variable_substitution($inputVal, $user_answers)
+    public function variable_substitution($inputVal, $user_answers)
     {
 
         //Question reference

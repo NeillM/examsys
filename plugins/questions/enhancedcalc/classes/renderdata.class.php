@@ -33,7 +33,7 @@ class renderdata extends \questiondata
     /**
      * Constructor
      */
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $this->questiontype = 'enhancedcalc';
