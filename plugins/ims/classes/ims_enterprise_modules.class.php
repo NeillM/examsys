@@ -1,6 +1,6 @@
 <?php
 
-// This file is part of Rogō - http://Rogō.org/ using code original part of Moodle - http://moodle.org
+// This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ namespace plugins\ims;
 
 /**
  * Mapping between Rogō module attributes and IMS enterprise group description tags
+ *
+ * Based on code originally part of Moodle - http://moodle.org
  *
  * @package   plugin_enrol
  * @copyright 2011 Aaron C Spike

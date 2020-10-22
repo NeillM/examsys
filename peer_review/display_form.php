@@ -1,19 +1,19 @@
 <?php
 
-// This file is part of Rogo
+// This file is part of Rogō
 //
-// Rogo is free software: you can redistribute it and/or modify
+// Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogo is distributed in the hope that it will be useful,
+// Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  *
@@ -157,7 +157,7 @@ if (trim($paper_prologue) != '') {
     echo '<tr><td colspan="' . (count($questions) + 2) . '">' . $paper_prologue . "</td></tr>\n";
     echo '<tr><td colspan="' . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
 }
-  
+
 // Get the other users in the same group.
 if ($review_type == '1') {
     $result = $mysqli->prepare('SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID = users.id AND users_metadata.idMod IN (' . implode(',', array_keys($modules)) . ') AND calendar_year = ? AND type = ? AND value = ? AND userID != ? ORDER BY surname, initials');
@@ -179,7 +179,7 @@ echo '<table border="0" cellpadding="2" cellspacing="0" style="width:100%"><tr><
 echo '<input type="button" name="close" value="' . $string['close'] . '" style="width:100px" onclick="window.close();" />';
 echo "</td></tr>\n";
 echo "</table>\n</form>\n";
-  
+
 ?>
 </html>
 </body>
