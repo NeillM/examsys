@@ -161,7 +161,8 @@ trait Question
      * Wait for the add question ajax to finish loading on the page
      * @Given I wait for questions to load
      */
-    public function iWaitForQuestionsToLoad() {
+    public function iWaitForQuestionsToLoad()
+    {
         $this->iWaitForTheAjaxToLoad('#link_1');
     }
 
