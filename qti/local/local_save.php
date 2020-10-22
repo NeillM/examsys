@@ -34,12 +34,12 @@ function xml2array($xmlObject, $out = array())
 
 class IE_Local_Save extends IE_Main
 {
-    var $q_row = array();
-    var $o_rows = array();
-    var $o_row = array();
-    var $m_row = array();
-    var $db;
-    var $statuses = array();
+    public $q_row = array();
+    public $o_rows = array();
+    public $o_row = array();
+    public $m_row = array();
+    public $db;
+    public $statuses = array();
 
     // Rogo save parameters:
     // for saving questions

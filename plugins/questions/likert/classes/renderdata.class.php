@@ -70,7 +70,7 @@ class renderdata extends \questiondata
      * Number of options in the scale.
      * @var integer
      */
-    var $scale_size;
+    public $scale_size;
 
     /**
      * Constructor
