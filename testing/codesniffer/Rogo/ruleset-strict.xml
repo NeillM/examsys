@@ -22,13 +22,6 @@
     <rule ref="PSR12.Properties.ConstantVisibility">
         <type>error</type>
     </rule>
-    <!-- Warn about class and method names, we have lots of existing non-conformity. -->
-    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
-        <type>warning</type>
-    </rule>
-    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
-        <type>warning</type>
-    </rule>
     <!-- Only use double quotes if necessary-->
     <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
     <!-- Old code has a lot of double quotes containing vars so just warn for now -->
@@ -38,17 +31,11 @@
     <!-- Perl style comments not allowed -->
     <rule ref="PEAR.Commenting.InlineComment"/>
     <!-- Warning if php doc missing from class -->
-    <rule ref="PEAR.Commenting.ClassComment.Missing">
-        <type>warning</type>
-    </rule>
+    <rule ref="PEAR.Commenting.ClassComment.Missing"/>
     <!-- Warning if php doc missing from function -->
-    <rule ref="PEAR.Commenting.FunctionComment.Missing">
-        <type>warning</type>
-    </rule>
+    <rule ref="PEAR.Commenting.FunctionComment.Missing"/>
     <!-- Warning if php doc missing from file -->
-    <rule ref="PEAR.Commenting.FileComment.Missing">
-        <type>warning</type>
-    </rule>
+    <rule ref="PEAR.Commenting.FileComment.Missing"/>
     <!-- Warning if commented out code detected - set by default at 35% valid code-->
     <rule ref="Squiz.PHP.CommentedOutCode"/>
     <!-- Warning if php file contains HTML-->
@@ -56,15 +43,6 @@
         <type>warning</type>
     </rule>
     <!-- Rogo specific coding standards warning for now as lots to fix -->
-    <rule ref="Rogo.Operators.ValidBooleanOperators">
-        <type>warning</type>
-    </rule>
-    <rule ref="Rogo.File.Boilerplate">
-        <type>warning</type>
-    </rule>
-    <rule ref="Rogo.PHP.Param">
-        <type>warning</type>
-    </rule>
     <rule ref="Rogo.Classes.AutoloadFilename">
         <!-- Exclude specific testing directories that are not really autoloading locations. -->
         <exclude-pattern>*/testing/unittest/tests/classes/*</exclude-pattern>
