@@ -21,21 +21,21 @@
 class composer_utils
 {
     /** Composer should install dependancies respecting the lock file. */
-    const INSTALL = 1;
+    public const INSTALL = 1;
 
     /** Composer should get the laest versions of the depedencies and update the lock file. */
-    const UPDATE = 2;
+    public const UPDATE = 2;
 
     /** Composer should install dependancies respecting the lock file, skipping dev packages. */
-    const INSTALL_NODEV = 3;
+    public const INSTALL_NODEV = 3;
 
     /** Composer should get the laest versions of the depedencies and update the lock file, skipping dev packages. */
-    const UPDATE_NODEV = 4;
+    public const UPDATE_NODEV = 4;
 
     /**
      * Language pack component.
      */
-    const langcomponent = 'classes/composerutils';
+    public const langcomponent = 'classes/composerutils';
 
     /**
      * Ensures that composer is installed, uptodate and has installed all the projects dependancies.

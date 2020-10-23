@@ -21,18 +21,18 @@
 class npm_utils
 {
     /** Npm should install dependancies respecting the package.json file. */
-    const INSTALL = 1;
+    public const INSTALL = 1;
 
     /** Npm should get the laest versions of the depedencies. */
-    const UPDATE = 2;
+    public const UPDATE = 2;
 
     /** Npm should install dependancies respecting the package.json, skipping dev packages. */
-    const INSTALL_NODEV = 3;
+    public const INSTALL_NODEV = 3;
 
     /**
      * Language pack component.
      */
-    const langcomponent = 'classes/npmutils';
+    public const langcomponent = 'classes/npmutils';
 
     /**
      * Ensures that npm is installed, uptodate and has installed all the projects dependancies.

@@ -30,7 +30,7 @@ class version
      * Rogo version format
      * @var string
      */
-    const VERSION_FORMAT = '/^(?P<release>[0-9]{1,3}).(?P<major>[0-9]{1,3}).(?P<minor>[0-9]{1,3})$/';
+    public const VERSION_FORMAT = '/^(?P<release>[0-9]{1,3}).(?P<major>[0-9]{1,3}).(?P<minor>[0-9]{1,3})$/';
 
     /**
      * Check if version is higher.

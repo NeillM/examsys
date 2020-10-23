@@ -34,91 +34,91 @@ abstract class plugins_texteditor extends \plugins\plugins
      * Type of the editor.
      * @var string
      */
-    const TYPE_STANDARD_UANS = 'standarduans';
+    public const TYPE_STANDARD_UANS = 'standarduans';
 
     /**
      * Type of the editor.
      * @var string
      */
-    const TYPE_STANDARD = 'standard';
+    public const TYPE_STANDARD = 'standard';
 
     /**
      * Type of the editor.
      * @var string
      */
-    const TYPE_SIMPLE = 'simple';
+    public const TYPE_SIMPLE = 'simple';
 
     /**
      * Type of the editor.
      * @var string
      */
-    const TYPE_BASIC = 'basic';
+    public const TYPE_BASIC = 'basic';
 
     /**
      * Type of the editor.
      * @var string
      */
-    const TYPE_MATHJAX = 'mathjax';
+    public const TYPE_MATHJAX = 'mathjax';
 
     /**
      * Editor for general screens
      * @var string
      */
-    const CONFIG = 'config';
+    public const CONFIG = 'config';
 
     /**
      * Editor for staff help screens
      * @var string
      */
-    const HELP_STAFF = 'config_help_staff';
+    public const HELP_STAFF = 'config_help_staff';
 
     /**
      * Editor for student help screens
      * @var string
      */
-    const HELP_STUDENT = 'config_help_student';
+    public const HELP_STUDENT = 'config_help_student';
 
     /**
      * Editor for announements screens
      * @var string
      */
-    const ANNOUNCEMENTS = 'config_announcements';
+    public const ANNOUNCEMENTS = 'config_announcements';
 
     /**
      * Editor for paper properties screen
      * @var string
      */
-    const PROPERTIES = 'config_properties';
+    public const PROPERTIES = 'config_properties';
 
     /**
      * Editor for unanswered questions
      * @var string
      */
-    const UNANSWERED = 'config_unanswered';
+    public const UNANSWERED = 'config_unanswered';
 
     /**
      * Editor for answered questions
      * @var string
      */
-    const ANSWERED = 'config_answered';
+    public const ANSWERED = 'config_answered';
 
     /**
      * Editor for external email screens
      * @var string
      */
-    const EXTERNAL = 'config_externals_email';
+    public const EXTERNAL = 'config_externals_email';
 
     /**
      * Editor for email screens
      * @var string
      */
-    const EMAIL = 'config_email';
+    public const EMAIL = 'config_email';
 
     /**
      * Editor for question editing screens
      * @var string
      */
-    const QUESTION = 'config_question_editor';
+    public const QUESTION = 'config_question_editor';
 
     /**
      * Type of the plugin.

@@ -29,31 +29,31 @@ class assessment
     /**
      * Formative paper type
      */
-    const TYPE_FORMATIVE = 0;
+    public const TYPE_FORMATIVE = 0;
     /**
      * Progress paper type
      */
-    const TYPE_PROGRESS = 1;
+    public const TYPE_PROGRESS = 1;
     /**
      * Summative paper type
      */
-    const TYPE_SUMMATIVE = 2;
+    public const TYPE_SUMMATIVE = 2;
     /**
      * Survety paper type
      */
-    const TYPE_SURVEY = 3;
+    public const TYPE_SURVEY = 3;
     /**
      * OSCE paper type
      */
-    const TYPE_OSCE = 4;
+    public const TYPE_OSCE = 4;
     /**
      * Offline paper type
      */
-    const TYPE_OFFLINE = 5;
+    public const TYPE_OFFLINE = 5;
     /**
      * Peer revoew paper type
      */
-    const TYPE_PEERREVIEW = 6;
+    public const TYPE_PEERREVIEW = 6;
 
     // DB connection
     private $db;

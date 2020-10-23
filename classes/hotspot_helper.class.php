@@ -25,16 +25,16 @@
 class hotspot_helper extends RogoStaticSingleton
 {
     /** The character that separates layers in the correct answer. */
-    const LAYER_SEPARATOR = '|';
+    public const LAYER_SEPARATOR = '|';
 
     /** The character that separates information in the correct answer. */
-    const CORRECT_SEPARATOR = '~';
+    public const CORRECT_SEPARATOR = '~';
 
     /** The character that separates information in the user anser. */
-    const ANSWER_SEPARATOR = ',';
+    public const ANSWER_SEPARATOR = ',';
 
     /** An unaswered question */
-    const UNSWERED_QUESTION = array('u');
+    public const UNSWERED_QUESTION = array('u');
 
     /**
      * The active instance of this class.

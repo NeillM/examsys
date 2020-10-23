@@ -34,12 +34,12 @@ class renderdata extends \questiondata
      * Display true/false options if enabled. Y/N by default.
      * @var boolean
      */
-    var $displayTF;
+    public $displayTF;
     /**
      * Display Abstain options if enabled.
      * @var boolean
      */
-    var $displayAbstain;
+    public $displayAbstain;
 
     /**
      * Constructor

@@ -31,7 +31,7 @@ class export_assessment extends exporter
      * Required fields
      * @var array
      */
-    const DEFAULT = array(
+    public const DEFAULT = array(
     'Gender',
     'Title',
     'Surname',

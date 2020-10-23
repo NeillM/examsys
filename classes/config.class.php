@@ -54,76 +54,76 @@ class Config extends RogoStaticSingleton
     protected $phpunitsetup = false;
 
     /** The path to the behat config file relative to the root Rogo directory. */
-    const BEHAT_CONFIG_FILE = '/config/behat.xml';
+    public const BEHAT_CONFIG_FILE = '/config/behat.xml';
 
     /** The path to the phpunit config file relative to the root Rogo directory. */
-    const PHP_UNIT_CONFIG_FILE = '/config/phpunit.xml';
+    public const PHP_UNIT_CONFIG_FILE = '/config/phpunit.xml';
 
     /**
      * Config setting password type identifier
      * @var string
      */
-    const PASSWORD = 'password';
+    public const PASSWORD = 'password';
     /**
      * Config setting json type identifier
      * @var string
      */
-    const JSON = 'json';
+    public const JSON = 'json';
     /**
      * Config setting json encoded csv type identifier
      * @var string
      */
-    const CSV = 'csv';
+    public const CSV = 'csv';
     /**
      * Config setting timezones type identifier
      * @var string
      */
-    const TIMEZONES = 'timezones';
+    public const TIMEZONES = 'timezones';
     /**
      * Config setting editor type identifier
      * @var string
      */
-    const EDITOR = 'editor';
+    public const EDITOR = 'editor';
     /**
      * Config setting string type identifier
      * @var string
      */
-    const STRING = 'string';
+    public const STRING = 'string';
     /**
      * Config setting integer type identifier
      * @var string
      */
-    const INTEGER = 'integer';
+    public const INTEGER = 'integer';
     /**
      * Config setting boolean type identifier
      * @var string
      */
-    const BOOLEAN = 'boolean';
+    public const BOOLEAN = 'boolean';
     /**
      * Config setting url type identifier
      * @var string
      */
-    const URL = 'url';
+    public const URL = 'url';
     /**
      * Config setting version type identifier
      * @var string
      */
-    const VERSION = 'version';
+    public const VERSION = 'version';
     /**
      * Config setting associative array type identifier
      * @var string
      */
-    const ASSOC = 'assoc';
+    public const ASSOC = 'assoc';
     /**
      * Config setting double type identifier
      * @var string
      */
-    const DOUBLE = 'double';
+    public const DOUBLE = 'double';
     /**
      * Config setting email type identifier
      * @var string
      */
-    const EMAIL = 'email';
+    public const EMAIL = 'email';
 
     public function __toString()
     {

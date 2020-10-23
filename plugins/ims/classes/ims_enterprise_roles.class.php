@@ -31,21 +31,21 @@ class ims_enterprise_roles
     /** @var imscode => ims role name. Role name mapping. */
     private $imsroles;
     /** $var The code for the Learner role as defined by the IMS Enterprise specification */
-    const ROLE_LEARNER = '01';
+    public const ROLE_LEARNER = '01';
     /** $var The code for the Instructor role as defined by the IMS Enterprise specification */
-    const ROLE_INSTRUCTOR = '02';
+    public const ROLE_INSTRUCTOR = '02';
     /** $var The code for the Content Developer role as defined by the IMS Enterprise specification */
-    const ROLE_CONTENT_DEVELOPER = '03';
+    public const ROLE_CONTENT_DEVELOPER = '03';
     /** $var The code for the Member role as defined by the IMS Enterprise specification */
-    const ROLE_MEMBER = '04';
+    public const ROLE_MEMBER = '04';
     /** $var The code for the Manager role as defined by the IMS Enterprise specification */
-    const ROLE_MANAGER = '05';
+    public const ROLE_MANAGER = '05';
     /** $var The code for the Mentor role as defined by the IMS Enterprise specification */
-    const ROLE_MENTOR = '06';
+    public const ROLE_MENTOR = '06';
     /** $var The code for the Administrator role as defined by the IMS Enterprise specification */
-    const ROLE_ADMINISTRATOR = '07';
+    public const ROLE_ADMINISTRATOR = '07';
     /** $var The code for the TeachingAssistant role as defined by the IMS Enterprise specification */
-    const ROLE_TEACHINGASSISTANT = '08';
+    public const ROLE_TEACHINGASSISTANT = '08';
 
     /**
      * Constructor.

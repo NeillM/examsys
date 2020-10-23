@@ -41,13 +41,13 @@ abstract class unittestdatabase extends TestCase
     }
 
     /** The state of the userobject - default mode */
-    const USEROBJECT_DEEFAULT = 1;
+    public const USEROBJECT_DEEFAULT = 1;
 
     /** The state of the userobject - demo mode */
-    const USEROBJECT_DEMO = 2;
+    public const USEROBJECT_DEMO = 2;
 
     /** The state of the userojbect - impersonate mode */
-    const USEROBJECT_IMPERSONATE = 3;
+    public const USEROBJECT_IMPERSONATE = 3;
 
     /**
      * @var object $default_config config object used during test.
@@ -96,7 +96,7 @@ abstract class unittestdatabase extends TestCase
     public $faculty;
 
     /** The name of the Rogo data directory in the virtual file system. */
-    const DATA_DIRECTORY = 'data';
+    public const DATA_DIRECTORY = 'data';
 
     /**
      * @var array $table_names table names

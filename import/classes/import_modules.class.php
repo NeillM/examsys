@@ -50,7 +50,7 @@ class import_modules extends importer
      * Required fields
      * @var array
      */
-    const REQUIRED = array(
+    public const REQUIRED = array(
     'moduleid',
     'fullname',
     'school',
@@ -60,7 +60,7 @@ class import_modules extends importer
      * Optional feilds
      * @var array
      */
-    const OPTIONAL = array(
+    public const OPTIONAL = array(
     'schoolcode',
     'smsapi',
     'objectiveapi',

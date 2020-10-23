@@ -70,7 +70,7 @@ class UoN_LTI extends BLTI
      */
     private $parm = array('dbtype' => 'mysqli', 'table_prefix' => '');
 
-    function __construct()
+    public function __construct()
     {
         $langpack = new \langpack();
         $this->strings = $langpack->get_all_strings($this->langcomponent);

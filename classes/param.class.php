@@ -27,62 +27,62 @@
 class param
 {
     /** A string consiting only of letters. */
-    const ALPHA = 1;
+    public const ALPHA = 1;
 
     /** A string consiting only of letters and numbers. */
-    const ALPHANUM = 2;
+    public const ALPHANUM = 2;
 
     /**
      * A boolean value, "1", "true", "on" and "yes" are treated as true,
      * "0", "false", "off", "no", and "", and null are treated as false.
      * All other values are invalid.
      */
-    const BOOLEAN = 3;
+    public const BOOLEAN = 3;
 
     /** An e-mail address. */
-    const EMAIL = 4;
+    public const EMAIL = 4;
 
     /** Floating point number, i.e. 2.5 */
-    const FLOAT = 5;
+    public const FLOAT = 5;
 
     /** HTML. */
-    const HTML = 6;
+    public const HTML = 6;
 
     /** An octal, decimal or hexidecimal integer, i.e. 017, 14, 0xFF. */
-    const INT = 7;
+    public const INT = 7;
 
     /** A IPv4 or IPv6 address. */
-    const IP_ADDRESS = 8;
+    public const IP_ADDRESS = 8;
 
     /** A url for the current Rogo site. */
-    const LOCAL_URL = 6;
+    public const LOCAL_URL = 6;
 
     /** Any input is valid. */
-    const RAW = 10;
+    public const RAW = 10;
 
     /** Plain text. HTML will be stripped. */
-    const TEXT = 11;
+    public const TEXT = 11;
 
     /** A RFC-2396 URL. */
-    const URL = 12;
+    public const URL = 12;
 
     /** A regular expression. */
-    const REGEXP = 13;
+    public const REGEXP = 13;
 
     /** A special datatime format, yyyymmddhhmmss. */
-    const SQLDATETIME = 14;
+    public const SQLDATETIME = 14;
 
     /** A safe file name */
-    const FILENAME = 15;
+    public const FILENAME = 15;
 
     /** Find the named variable in the Get array. */
-    const FETCH_GET = '_GET';
+    public const FETCH_GET = '_GET';
 
     /** Find the named variable in the Post array. */
-    const FETCH_POST = '_POST';
+    public const FETCH_POST = '_POST';
 
     /** Find the named variable in the Request array. */
-    const FETCH_REQUEST = '_REQUEST';
+    public const FETCH_REQUEST = '_REQUEST';
 
     /**
      * Ensures that the value is of the correct type.
