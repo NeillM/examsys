@@ -168,19 +168,19 @@ class UON_SATURN extends SmsUtils
     public function getStudentSources()
     {
         $configObject = Config::get_instance();
-        return array('&lt;No lookup&gt;' => '', 'UK' => $configObject->get_setting('core', 'cfg_sms_url') .
-        '/touchstonestudent.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url') .
-        '/touchstonestudent.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url') .
-        '/touchstonestudent.ashx?campus=china');
+        return array('&lt;No lookup&gt;' => '', 'UK' => $configObject->get_setting('core', 'cfg_sms_url')
+            . '/touchstonestudent.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url')
+            . '/touchstonestudent.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url')
+            . '/touchstonestudent.ashx?campus=china');
     }
 
     public function getModuleSources()
     {
         $configObject = Config::get_instance();
-        return array('UK' => $configObject->get_setting('core', 'cfg_sms_url') .
-        '/touchstone.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url') .
-        '/touchstone.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url') .
-        '/touchstone.ashx?campus=china');
+        return array('UK' => $configObject->get_setting('core', 'cfg_sms_url')
+            . '/touchstone.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url')
+            . '/touchstone.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url')
+            . '/touchstone.ashx?campus=china');
     }
 
 

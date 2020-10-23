@@ -129,16 +129,16 @@ $groupby = ' GROUP BY properties.calendar_year, properties.paper_title, properti
     properties.exam_duration, properties.password, users.title, users.initials';
 $orderby = ' ORDER BY properties.calendar_year DESC, properties.paper_title';
 if ($_GET['module'] != '0') {
-    $sql = $select .
-    ' FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id = papers.paper
-    WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND properties.paper_type = ? AND properties.paper_ownerID = users.id 
-    AND properties.deleted IS NULL' . $groupby . $orderby;
+    $sql = $select
+        . ' FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id = papers.paper
+            WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND properties.paper_type = ? AND properties.paper_ownerID = users.id 
+            AND properties.deleted IS NULL' . $groupby . $orderby;
     $results = $mysqli->prepare($sql);
     $results->bind_param('is', $module, $type);
 } else {
-    $sql = $select .
-    ' FROM (properties, users) LEFT JOIN properties_modules ON properties.property_id = properties_modules.property_id LEFT JOIN papers ON properties.property_id = papers.paper
-  WHERE properties_modules.idMod IS NULL AND properties.paper_type = ? AND properties.paper_ownerID = users.id AND paper_ownerID = ? AND properties.deleted IS NULL' . $groupby . $orderby;
+    $sql = $select
+        . ' FROM (properties, users) LEFT JOIN properties_modules ON properties.property_id = properties_modules.property_id LEFT JOIN papers ON properties.property_id = papers.paper
+            WHERE properties_modules.idMod IS NULL AND properties.paper_type = ? AND properties.paper_ownerID = users.id AND paper_ownerID = ? AND properties.deleted IS NULL' . $groupby . $orderby;
     $results = $mysqli->prepare($sql);
     $results->bind_param('si', $type, $userObject->get_user_ID());
 }

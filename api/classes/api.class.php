@@ -94,10 +94,10 @@ class api
     {
         $id = uniqid('', true);
         if ($this->logfile != '') {
-            $updatelog = "\n\n" . '--' . date('YmdHis') . "--\n\nApi Log Id: " . $id .
-            "\nUser Agent: " . $this->get_user_agent() .
-            "\nAccess Token: " . $this->get_parameter('access_token') .
-            "\nResource Path: " . $this->get_path() . "\n\n" . $this->get_body();
+            $updatelog = "\n\n" . '--' . date('YmdHis') . "--\n\nApi Log Id: " . $id
+                . "\nUser Agent: " . $this->get_user_agent()
+                . "\nAccess Token: " . $this->get_parameter('access_token')
+                . "\nResource Path: " . $this->get_path() . "\n\n" . $this->get_body();
             file_put_contents($this->logfile, $updatelog, FILE_APPEND);
         }
         return $id;
@@ -111,8 +111,7 @@ class api
     public function log_response($id, $xml)
     {
         if ($this->logfile != '') {
-            $updatelog = "\n\n" . '--' . date('YmdHis') . "--\n\nApi Log Id: " . $id .
-            "\n\n" . $xml;
+            $updatelog = "\n\n" . '--' . date('YmdHis') . "--\n\nApi Log Id: " . $id . "\n\n" . $xml;
             file_put_contents($this->logfile, $updatelog, FILE_APPEND);
         }
     }

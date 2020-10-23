@@ -158,8 +158,8 @@ class state
             return;
         }
         // Put the stored data back into the the table.
-        $repopulatesql = 'INSERT INTO ' . $originalstate['name'] .
-        ' SELECT * FROM ' . self::$temptables[$statename][$originalstate['name']];
+        $repopulatesql = 'INSERT INTO ' . $originalstate['name']
+            . ' SELECT * FROM ' . self::$temptables[$statename][$originalstate['name']];
         self::$db->query($repopulatesql);
         self::exception_if_query_error();
         self::reset_autoincrement($originalstate['name'], $originalstate['auto_increment'], $newstate['auto_increment']);
