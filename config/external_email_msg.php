@@ -1,4 +1,5 @@
 <?php
+
 $url = 'https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
 $themedirectory = rogo_directory::get_directory('theme');
 $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_email'));

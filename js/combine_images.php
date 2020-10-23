@@ -1,4 +1,5 @@
 <?php
+
 ob_start();
 echo '<h2>Combining Images for HTML5 activities</h2>';
 $paths = array();

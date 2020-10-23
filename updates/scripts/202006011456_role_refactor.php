@@ -1,4 +1,5 @@
 <?php
+
 if ($updater_utils->check_version('7.2.0')) {
     // Create the new tables.
     if (!$updater_utils->has_updated('rogo_2691-newtables')) {

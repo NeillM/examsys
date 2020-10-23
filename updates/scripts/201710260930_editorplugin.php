@@ -1,4 +1,5 @@
 <?php
+
 if ($updater_utils->check_version('7.0.0')) {
     if (!$updater_utils->has_updated('rogo2263')) {
         // Latex column no longer required.

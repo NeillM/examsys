@@ -1,4 +1,5 @@
 <?php
+
 if ($updater_utils->check_version('7.2.0')) {
     if (!$updater_utils->has_updated('rogo2673')) {
         $mediatypes = $configObject->get_setting('core', 'system_mediatypes');
