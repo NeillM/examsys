@@ -28,10 +28,10 @@ class RogoObject
 {
     protected $_fields_editable = array();
     protected $_modified_fields = array();
-  
+
     // 'Compound' fields are concatenated within a question
     protected $_fields_compound = array();
-  
+
     /**
      * Record the value of a modified field so that it can be used for change tracking
      * @param string $name
@@ -44,7 +44,7 @@ class RogoObject
             $this->_modified_fields[$name]['message'] = $message;
         }
     }
-  
+
     /**
      * The the array of fields (properties) for this class
      * MUST be implemented by sub-classes
@@ -54,7 +54,7 @@ class RogoObject
     {
         throw new MethodNotImplementedException("Method 'get_editable_fields' not implemented.");
     }
-  
+
     /**
      * The the array of compound fields (properties) for this class
      * @return multitype:string

@@ -27,7 +27,6 @@
 
 class OptionTRUE_FALSE extends OptionEdit
 {
-  
     /**
      * Is this option blank?
      * @return boolean

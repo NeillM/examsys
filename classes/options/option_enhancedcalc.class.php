@@ -426,7 +426,7 @@ class OptionENHANCEDCALC extends OptionEdit
 
         return $option;
     }
-  
+
     /*
     * Get post parameters for option_max field
     * @param integer $option_no option number
@@ -451,7 +451,7 @@ class OptionENHANCEDCALC extends OptionEdit
         );
         return $option;
     }
-  
+
     /*
     * Get post parameters for option_decimals field
     * @param integer $option_no option number
@@ -468,7 +468,7 @@ class OptionENHANCEDCALC extends OptionEdit
         );
         return $option;
     }
-  
+
     /*
     * Get post parameters for option_increment field
     * @param integer $option_no option number
@@ -479,7 +479,7 @@ class OptionENHANCEDCALC extends OptionEdit
         $option['option_increment' . $option_no] = param::optional('option_increment' . $option_no, null, param::FLOAT, param::FETCH_POST);
         return $option;
     }
-  
+
     /*
     * Get post parameters for option_formula field
     * @param integer $option_no option number
@@ -490,7 +490,7 @@ class OptionENHANCEDCALC extends OptionEdit
         $option['option_formula' . $option_no] = param::optional('option_formula' . $option_no, null, param::TEXT, param::FETCH_POST);
         return $option;
     }
-  
+
     /*
     * Get post parameters for option_units field
     * @param integer $option_no option number

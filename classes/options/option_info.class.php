@@ -37,7 +37,7 @@ class OptionINFO extends OptionEdit
     {
         return false;
     }
-  
+
     /**
      * Check that the minimum set of fields exist in the given data to create a new option
      * @param array $data

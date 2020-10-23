@@ -26,7 +26,6 @@
  */
 class QuestionBank
 {
-  
     private $db;
     private $idMod;
     private $module_id;
@@ -55,21 +54,21 @@ class QuestionBank
         $this->notice = $notice;
         $this->yearutils = new yearutils($this->db);
     }
-  
+
     public function get_categories($type)
     {
         if ($this->bank_types == null) {
             $this->load_categories($type);
         }
-    
+
         return $this->bank_types;
     }
-  
+
     public function get_stats($type)
     {
         return $this->stats;
     }
-  
+
     private function get_keywords()
     {
         $keywords_array = array();
@@ -163,14 +162,14 @@ class QuestionBank
                 break;
         }
     }
-  
+
     private function load_performance_stats()
     {
         $this->stats = array('veryeasy' => 0, 'easy' => 0, 'moderate' => 0, 'hard' => 0, 'veryhard' => 0, 'highest' => 0, 'high' => 0, 'intermediate' => 0, 'low' => 0);
-    
+
         $status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
         $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
-    
+
         $sql = 'SELECT DISTINCT p, d, questions.q_id FROM questions, questions_modules, performance_main, performance_details WHERE questions.q_id = questions_modules.q_id AND questions.q_id = performance_main.q_id AND performance_main.id = performance_details.perform_id AND idMod = ? AND deleted IS NULL AND status NOT IN (' . $retired_in . ')';
         $result = $this->db->prepare($sql);
         $result->bind_param('i', $this->idMod);
@@ -201,7 +200,7 @@ class QuestionBank
         }
         $result->close();
     }
-  
+
     private function load_stats($type)
     {
         $this->stats = array();
@@ -251,7 +250,7 @@ class QuestionBank
                 $vle_api_data = MappingUtils::get_vle_api($this->idMod, $this->yearutils->get_current_session(), $vle_api_cache, $this->db);
                 $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
                 $all_years = implode("','", $all_years);
-        
+
                 $sql = 'SELECT COUNT(questions.q_id), relationships.obj_id'
                     . ' FROM (questions, relationships) LEFT JOIN questions_modules'
                     . ' ON questions.q_id = questions_modules.q_id'
@@ -261,7 +260,7 @@ class QuestionBank
                     . ' AND deleted IS NULL AND status != -1 GROUP BY relationships.obj_id';
                 break;
         }
-    
+
         $result = $this->db->prepare($sql);
         $result->execute();
         $result->bind_result($number, $type);

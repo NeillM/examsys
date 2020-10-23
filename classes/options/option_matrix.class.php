@@ -27,12 +27,11 @@
 
 class OptionMATRIX extends OptionEdit
 {
-  
     protected $all_corrects = array();
     protected $_fields_compound = array('correct' => 'raw');
-  
+
     // ACCESSORS
-  
+
     /**
      * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
      * answers for each 'question'
@@ -43,7 +42,7 @@ class OptionMATRIX extends OptionEdit
         $this->get_correct();
         return $this->all_corrects;
     }
-  
+
     public function set_all_corrects($value)
     {
         $stems = $this->_question->get_all_stems();
@@ -60,7 +59,7 @@ class OptionMATRIX extends OptionEdit
         $this->all_corrects = ($this->correct != '') ? explode('|', $this->correct) : array();
         return $this->correct;
     }
-  
+
     public function set_correct($value)
     {
         $this->correct = implode('|', $this->all_corrects);
