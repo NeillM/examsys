@@ -8,6 +8,8 @@
     <exclude-pattern>*/plugins/questions/enhancedcalc/rserve/*</exclude-pattern>
     <exclude-pattern>*/LTI/classes/*</exclude-pattern>
     <exclude-pattern>*/LTI/ims-lti/lti_util.php</exclude-pattern>
+    <exclude-pattern>*/qti/include/simpleimage.php</exclude-pattern>
+    <exclude-pattern>*/cosign/*</exclude-pattern>
     <!-- Skip config file and it's backups created during upgrades -->
     <exclude-pattern>config/config.*.php</exclude-pattern>
     <!-- Only look at php files -->
