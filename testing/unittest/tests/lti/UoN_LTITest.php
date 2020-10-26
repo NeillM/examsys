@@ -30,26 +30,29 @@ require_once 'LTI/ims-lti/UoN_LTI.php';
  */
 class uonltitest extends unittestdatabase
 {
+    /** @var array Storage for context in tests. */
+    private $context;
 
-    /**
-     * @var array Storage for context in tests
-     */
-    private $context, $context2;
+    /** @var array Storage for context in tests. */
+    private $context2;
 
-    /**
-     * @var array Storage for user data in tests
-     */
-    private $user, $user2;
+    /** @var array Storage for user data in tests. */
+    private $user;
 
-    /**
-     * @var array Storage for consumer data in tests
-     */
-    private $key, $key2;
+    /** @var array Storage for user data in tests. */
+    private $user2;
 
-    /**
-     * @var array Storage for resource data in tests
-     */
-    private $resource, $resource2;
+    /** @var array Storage for consumer data in tests. */
+    private $key;
+
+    /** @var array Storage for consumer data in tests. */
+    private $key2;
+
+    /** @var array Storage for resource data in tests. */
+    private $resource;
+
+    /** @var array Storage for resource data in tests. */
+    private $resource2;
 
     /**
      * Generate data for test.

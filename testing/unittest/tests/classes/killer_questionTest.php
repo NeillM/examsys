@@ -27,15 +27,17 @@ use testing\unittest\unittestdatabase;
  */
 class Killer_Questiontest extends unittestdatabase
 {
-    /**
-     * @var array Storage for paper data in tests
-     */
-    private $pid, $pid2;
+    /** @var array Storage for paper data in tests. */
+    private $pid;
 
-    /*
-     * @var array Storage for question data in tests
-     */
-    private $question, $question2;
+    /** @var array Storage for paper data in tests. */
+    private $pid2;
+
+    /* @var array Storage for question data in tests. */
+    private $question;
+
+    /* @var array Storage for question data in tests. */
+    private $question2;
 
     /**
      * Generate data for test.

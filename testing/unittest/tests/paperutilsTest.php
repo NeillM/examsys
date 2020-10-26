@@ -27,15 +27,17 @@ use testing\unittest\unittestdatabase;
  */
 class paperutilstest extends unittestdatabase
 {
-    /**
-     * @var array Storage for paper data in tests
-     */
-    private $pid1, $pid2;
+    /** @var array Storage for paper data in tests. */
+    private $pid1;
 
-    /**
-     * @var array Storage for user data in tests
-     */
-    private $user1, $user2;
+    /** @var array Storage for paper data in tests. */
+    private $pid2;
+
+    /** @var array Storage for user data in tests. */
+    private $user1;
+
+    /** @var array Storage for user data in tests. */
+    private $user2;
 
     /**
      * Generate data for test.

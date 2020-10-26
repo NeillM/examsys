@@ -27,10 +27,11 @@ use testing\unittest\unittestdatabase;
  */
 class access_denied_logsTest extends unittestdatabase
 {
-    /*
-     * @var array Storage for denied log data in tests
-     */
-    private $denied1, $denied2;
+    /* @var array Storage for denied log data in tests. */
+    private $denied1;
+
+    /* @var array Storage for denied log data in tests. */
+    private $denied2;
 
     /**
      * Generate data for test.

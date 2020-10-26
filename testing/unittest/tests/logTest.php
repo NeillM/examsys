@@ -38,25 +38,83 @@ class logtest extends unittestdatabase
      */
     private $user2;
 
-    /**
-     * @var array Storage for paper data in tests
-     */
-    private $pid, $pid2, $pid3;
+    /** @var array Storage for paper data in tests. */
+    private $pid;
 
-    /**
-     * @var array Storage for question data in tests
-     */
-    private $question, $question2;
+    /** @var array Storage for paper data in tests. */
+    private $pid2;
 
-    /**
-     * @var array Storage for meta log data in tests
-     */
-    private $meta, $meta2, $meta3, $meta4, $meta5, $meta6, $meta7, $meta8;
+    /** @var array Storage for paper data in tests. */
+    private $pid3;
 
-    /**
-     * @var array Storage for meta log data in tests
-     */
-    private $log1, $log2, $log3, $log4, $log5, $log6, $log7, $log8, $log9, $log10, $log11, $log12, $log13;
+    /** @var array Storage for question data in tests. */
+    private $question;
+
+    /** @var array Storage for question data in tests. */
+    private $question2;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta2;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta3;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta4;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta5;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta6;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta7;
+
+    /** @var array Storage for meta log data in tests. */
+    private $meta8;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log1;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log2;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log3;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log4;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log5;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log6;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log7;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log8;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log9;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log10;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log11;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log12;
+
+    /** @var array Storage for meta log data in tests. */
+    private $log13;
 
     /**
      * Generate data for test.

@@ -30,7 +30,8 @@ class Lookup extends RogoStaticSingleton
     public static $inst = null;
     public static $class_name = 'Lookup';
 
-    private $db, $configObj;
+    private $db;
+    private $configObj;
     private $config;
     public $returndata;
     public $debug;
@@ -46,7 +47,17 @@ class Lookup extends RogoStaticSingleton
     public $callbacktypes = array( 'init', 'preuserlookup', 'userlookup', 'userlookup', 'postuserlookup', 'usertranslatelookup', 'premodulelookup', 'modulelookup', 'modulelookup', 'postmodulelookup', 'moduletranslatelookup' );
 
 
-    public $initobj, $lookupuserobj, $preauthobj, $userlookupobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
+    public $initobj;
+    public $lookupuserobj;
+    public $preauthobj;
+    public $userlookupobj;
+    public $postauthobj;
+    public $postauthsuccesobj;
+    public $postauthfailobj;
+    public $displaystdformobj;
+    public $displayerrformobj;
+    public $getauthobj;
+    public $sessionstoreobj;
 
     /**
      * Called when the object is unserialised.
