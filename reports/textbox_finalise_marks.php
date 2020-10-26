@@ -62,7 +62,7 @@ function load_question_mark($q_id, $db)
 
 function displayMarks($id, $marks, $override, $user_mark)
 {
-    $html = '<select name="override' . $id . '" id="override' . $id . '"><option value="NULL"></option>';
+    $html = '<select name="override-dropdown' . $id . '" id="override' . $id . '"><option value="NULL"></option>';
     $inc = 0.5;
     for ($i = 0.0; $i <= $marks; $i += $inc) { // ensure $i is a double for === below
         $display_i = $i;
@@ -154,10 +154,11 @@ if (isset($_POST['submit'])) {
     $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/no_sidebar.html');
     $render->render_admin_content($breadcrumb->getData($render), $lang);
 
-    echo '<form action="' . $_SERVER['PHP_SELF'] . '?paperID=' . $paperID . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&repcourse=' . $_GET['repcourse'] . "\" method=\"post\" autocomplete=\"off\">\n";
-
+    echo '<form action="' . $_SERVER['PHP_SELF'] . '?paperID=' . $paperID . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&repcourse=' . $_GET['repcourse'] . '" method="post" autocomplete="off">' . "\n";
     echo '<table class="header"><tr><th colspan="2"><div class="page_title"><span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">' . $string['first'] . '</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">' . $string['second'] . '</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">' . $string['override'] . '</div></th></tr>';
     echo '<tr><td colspan="4"><img src="../artwork/tooltip_icon.gif" />' . $string['comments'] . '</td></tr>';
+    echo '<tr class="selectboxes-top"><td align="right" colspan="2"><label for="selectallmatching-top">' . $string['selectallmatching'] . '</label>&nbsp;<input type="checkbox" id="selectallmatching-top" class="selectallmatching" value="" /></td><td colspan="3" style="text-align: right"><label for="selectallprimary-top">' . $string['selectallprimary'] . '</label>&nbsp;<input type="checkbox" class="selectallprimary" id="selectallprimary-top" value="" /></td></tr>';
+
     $student_no = 0;
 
     $time_int = \log::getStartInterval($paper_type);
@@ -225,13 +226,13 @@ SQL;
             $override = true;
         }
         if (trim((string) $user_answer) != '') {
-            echo "<tr class=\"l\"><td class=\"studentno\">$student_no</td><td class=\"ans\">" . nl2br((string) $user_answer) . '<br />&nbsp;</td>';
+            echo '<tr class="l"><td class="studentno">' . $student_no . '</td><td class="ans">' . nl2br((string) $user_answer) . '<br />&nbsp;</td>';
 
             if (isset($secondary_marks[$log_id]['mark']) and isset($primary_marks[$log_id]['mark']) and abs($primary_marks[$log_id]['mark'] - $secondary_marks[$log_id]['mark']) > 1) {
-                echo '<td class="primary noans">' . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id]['mark'] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
+                echo '<td class="primary noans">' . $primary_marks[$log_id]['mark'] . '<input class="primarychk" type="radio" name="mark' . $student_no . '" id="mark' . $student_no . '-p" value="' . $primary_marks[$log_id]['mark'] . '" ' . $primary_checked . ' /></td><td class="secondary noans">"' . $secondary_marks[$log_id]['mark'] . '<input type="radio" name="mark' . $student_no . '" id="mark' . $student_no . '-s" value="' . $secondary_marks[$log_id]['mark'] . '" ' . $secondary_checked . ' /><input type="hidden" name="log_id' . $student_no . '" value="' . $log_id . '" /></td><td class="override noans">' . displayMarks($student_no, $marks_correct, $override, $user_mark);
             } else {
                 if (isset($primary_marks[$log_id]['mark'])) {
-                    echo '<td class="primary">' . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked />";
+                    echo '<td class="primary">' . $primary_marks[$log_id]['mark'] . '<input class="primarychk" type="radio" name="mark' . $student_no . '" id="mark' . $student_no . '-p" value="' . $primary_marks[$log_id]['mark'] . '" ' . $primary_checked . ' />';
                     if (isset($secondary_marks[$log_id]['mark'])) {
                         echo '<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . htmlspecialchars((string) $primary_marks[$log_id]['comment']) . '" />';
                     }
@@ -240,7 +241,7 @@ SQL;
                     echo '<td class="unmarked">' . $string['unmarked'] . '</td>';
                 }
                 if (isset($secondary_marks[$log_id]['mark'])) {
-                    echo '<td class="secondary">' . $secondary_marks[$log_id]['mark'] . "<input class=\"secondarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked />";
+                    echo '<td class="secondary">' . $secondary_marks[$log_id]['mark'] . '<input class="secondarychk" type="radio" name="mark' . $student_no . '" id="mark' . $student_no . '-s" value="' . $secondary_marks[$log_id]['mark'] . '" ' . $secondary_checked . ' />';
                     if (isset($primary_marks[$log_id]['mark'])) {
                         echo '<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . htmlspecialchars((string) $secondary_marks[$log_id]['comment']) . '" />';
                     }
@@ -252,25 +253,25 @@ SQL;
             }
         } else {
             // User answer is blank.
-            echo "<tr class=\"l\"><td class=\"studentno\">$student_no</td><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . '<br />&nbsp;</td>';
+            echo '<tr class="l"><td class="studentno">' . $student_no . '</td><td class="ans" style="color: #C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;' . $string['noanswer'] . '<br />&nbsp;</td>';
             if (isset($primary_marks[$log_id]['mark'])) {
-                echo '<td class="primary noans">' . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked/></td>";
+                echo '<td class="primary noans">' . $primary_marks[$log_id]['mark'] . '<input class="primarychk" type="radio" name="mark' . $student_no . '" id="mark' . $student_no . '-p" value="' . $primary_marks[$log_id]['mark'] . '" ' . $primary_checked . ' /></td>';
             } else {
                 echo '<td class="unmarked">' . $string['unmarked'] . '</td>';
             }
             if (isset($secondary_marks[$log_id]['mark'])) {
-                echo '<td class="secondary noans"">' . $secondary_marks[$log_id]['mark'] . "<input class=\"secondarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked/>
-            <input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td>";
+                echo '<td class="secondary noans">' . $secondary_marks[$log_id]['mark'] . '<input class="secondarychk" type="radio" name="mark' . $student_no . '" id="mark' . $student_no . '-s" value="' . $secondary_marks[$log_id]['mark'] . '" ' . $secondary_checked . ' />
+                    <input type="hidden" name="log_id' . $student_no . '" value="' . $log_id . '" /></td>';
             } else {
                 echo '<td class="secondary noans missing">&nbsp;</td>';
             }
             echo '<td class="override noans">' . displayMarks($student_no, $marks_correct, $override, $user_mark);
         }
-        echo "<input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /><input type=\"hidden\" name=\"logtype$student_no\" value=\"$logtype\" /></td></tr>\n";
+        echo '<input type="hidden" name="log_id' . $student_no . '" value="' . $log_id . '" /><input type="hidden" name="logtype' . $student_no . '" value="' . $logtype . '" /></td></tr>' . "\n";
     }
     $result->close();
     ?>
-<tr><td></td><td align="right"><label for="selectallprimary"><?php echo $string['selectallprimary'] ?></label>&nbsp;<input type="checkbox" id="selectallprimary" name="selectallprimary" value="" /> </td><td></td><td></td></tr>
+    <tr class="selectboxes-bottom"><td align="right" colspan="2"><label for="selectallmatching"><?php echo $string['selectallmatching'] ?></label>&nbsp;<input type="checkbox" id="selectallmatching" class="selectallmatching" value="" /></td><td colspan="3" style="text-align: right"><label for="selectallprimary"><?php echo $string['selectallprimary'] ?></label>&nbsp;<input type="checkbox" class="selectallprimary" id="selectallprimary" name="selectallprimary" value="" /></td></tr>
 </table>
 <br />
 <div style="text-align:center">

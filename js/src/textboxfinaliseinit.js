@@ -24,44 +24,80 @@ requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
     textbox.selectall();
 
     $("input:radio").click(function() {
-        var str = $(this).attr('id');
+        var str = $(this).attr('name');
         var dropdownID = str.replace('mark', 'override');
-        $("#" + dropdownID).val('NULL');
+        $("#" + dropdownID).val('NULL').change();
     });
 
     // Override selected.
     $("select").click(function() {
-        var str = $(this).attr('id');
+        var str = $(this).attr('name');
         var radioID = str.replace('override', 'mark');
         $('input:radio[name=' + radioID + ']').removeAttr('checked');
-        $("#selectallprimary").prop("checked", false);
+        $(".selectallprimary").prop("checked", false);
     });
 
     // Select all primary marks radio buttons.
-    $("#selectallprimary").change(function() {
-        if ($("#selectallprimary").is(':checked')) {
-            $(".primarychk").prop("checked", true);
-            $('select[id^="override"]').each(function() {
-                $(this).val('NULL');
+    $(".selectallprimary").change(function() {
+        if ($(this).is(':checked')) {
+            $(".primarychk").each(function() {
+                $(this).click(); // Forces removal of override
             });
+            $(".selectallprimary").prop("checked", true);
+            $(".selectallmatching").prop("checked", false);
         } else {
-            $(".primarychk").prop("checked", false);
+            $(".primarychk").each(function() {
+                $(this).prop("checked", false).change();
+            });
+            $(".selectallprimary").prop("checked", false);
+        }
+    });
+    // Select primary mark where primary and secondary marks agree
+    $(".selectallmatching").change(function() {
+        if ($(this).is(':checked')) {
+            $(".selectallprimary").prop("checked", false);
+            $(".primarychk").each(function() {
+                // Clear existing if selected
+                $(this).prop("checked", false).parent().removeClass('marked');
+                // Check against secondary
+                var primaryVal = $(this).val();
+                var secondaryVal = $('#' + $(this).attr('name') + '-s').val();
+                if (secondaryVal == null || primaryVal == secondaryVal) {
+                    $(this).click();
+                }
+            });
+            $(".selectallmatching").prop("checked", true);
+        } else {
+            $(".primarychk").each(function() {
+                $(this).prop("checked", false).change();
+            });
+            $(".selectallmatching").prop("checked", false);
+            if ($(".selectallprimary").first().prop("checked") == true) {
+                $(".selectallprimary").change();
+            }
         }
     });
     // Check select all button if all primary mark radio buttons selected.
     $(".primarychk").click(function() {
         textbox.selectall();
     });
-    // Uncheck select all button if a secondary mark has been selected.
+    // Uncheck select all/select matching button if a secondary or override mark has been selected.
     $(".secondarychk").click(function() {
-        $("#selectallprimary").prop("checked", false);
+        $(".selectallprimary").prop("checked", false);
+        $(".selectallmatching").prop("checked", false);
+    });
+    $(".override-dropdown").change(function() {
+        if (this.value != 'NULL') {
+            $(".selectallprimary").prop("checked", false);
+            $(".selectallmatching").prop("checked", false);
+        }
     });
 
     // Highlight which mark is being used.
     $('td>input[type="radio"]:checked').parent().addClass('marked');
 
     $('td>select').each(function() {
-        if($(this).val() && $(this).val() != 'NULL') {
+        if ($(this).val() && $(this).val() != 'NULL') {
             $(this).parent().addClass('marked');
         }
     });
@@ -81,7 +117,7 @@ requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
                 $(this).parent().removeClass('marked');
             }
         });
-        $('td>input[type="checkbox"]', $(this).parents('tr')).each(function() {
+        $('.selectallprimary', $(this).parents('tr')).each(function() {
             if ($(this).prop('checked')) {
                 $(".primary").addClass('marked');
                 $(".override").removeClass('marked');

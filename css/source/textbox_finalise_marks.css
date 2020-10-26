@@ -49,3 +49,11 @@ input[type='radio'] {
   vertical-align:top;
   border-bottom:1px solid silver;
 }
+
+tr.selectboxes-top>td {
+  padding-bottom: 10px;
+}
+
+tr.selectboxes-bottom>td {
+  padding-top: 10px;
+}

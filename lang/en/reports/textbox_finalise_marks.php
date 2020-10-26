@@ -22,5 +22,6 @@ $string['second'] = '2nd';
 $string['override'] = 'Override';
 $string['unmarked'] = 'unmarked';
 $string['question'] = 'Question';
-$string['selectallprimary']  = 'Select All?';
+$string['selectallprimary']  = 'Select all primary marks';
+$string['selectallmatching']  = 'Select all matching (or single) marks';
 $string['comments'] = 'Hover over the information icon to view marker comments.';
