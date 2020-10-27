@@ -3,17 +3,9 @@
 ob_start();
 echo '<h2>Combining Images for HTML5 activities</h2>';
 $paths = array();
-//$paths[] = "tbicons";
 $paths[] = 'toolbar';
-//$paths[] = "toolbar/sizes";
 
 $exclude = array();
-//$exclude["popupmenu.png"] = 1;
-//$exclude["popup-bottom.png"] = 1;
-//$exclude["background.png"] = 1;
-//$exclude["tab_hover.png"] = 1;
-//$exclude["tab_active.png"] = 1;
-
 
 function sortimages($a, $b)
 {
@@ -42,13 +34,10 @@ foreach ($paths as $path) {
         if (!is_file($filename)) {
             continue;
         }
-        
-        //echo "Loading image $filename ... ";
-        
+
         ob_flush();
         $res = imagecreatefrompng($filename);
         list($widthx, $height, $type, $attr) = getimagesize($filename);
-        //echo "done<br />";
         ob_flush();
         
         $img = array();
@@ -64,7 +53,6 @@ foreach ($paths as $path) {
 
 usort($images, 'sortimages');
 
-//$width = 500;
 $left = 0;
 $top = 0;
 $rowheight = 0;
@@ -96,13 +84,10 @@ imagefilledrectangle($resim, 0, 0, $width, $totalheight, $transparent);
 $output = "var menuImages = {\n";
 
 foreach ($images as $img) {
-    //imagealphablending( $img['im'], true );
     imagecopy($resim, $img['im'], $img['left'], $img['top'], 0, 0, $img['width'], $img['height']);
     $output .= "\t'{$img['name']}': { left: {$img['left']}, top: {$img['top']}, width: {$img['width']}, height: {$img['height']} },\n";
 }
 $output .= "'zzz': 'zzz' };\n";
-
-//imagealphablending( $resim, false );
 
 $target = 'images/combined.png';
 echo "Saving as $target<br />";
@@ -112,6 +97,3 @@ imagepng($resim, $target);
 $target = 'html5.images.min.js';
 echo "Saving js data as $target<br />";
 file_put_contents($target, $output);
-/*echo "<pre>";
-print_r($images);
-echo "</pre>";*/

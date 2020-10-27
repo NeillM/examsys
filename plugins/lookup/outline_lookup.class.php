@@ -149,14 +149,6 @@ class outline_lookup
         return $this->calling_object->get_callback($section);
     }
 
-    /**
-     * @param $objid int the objectid
-     *
-     * @return mixed
-     */
-    /*  function get_new_debug_messages($objid) {
-      return $this->returndata[$objid]->get_new_debug_messages();
-    }*/
     function get_new_debug_messages($number = null)
     {
         if (is_null($number)) {
