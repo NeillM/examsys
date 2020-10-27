@@ -1397,7 +1397,7 @@ class EnhancedCalc extends Question implements questionInterface
     public function get_answer_distance()
     {
 
-        if (!isset($this->useranswer['cans_dist'])) {
+        if (!isset($this->useranswer['cans_dist']) and isset($this->useranswer['cans'])) {
             if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
                 $this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
             } else {

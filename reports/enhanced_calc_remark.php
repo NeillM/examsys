@@ -108,7 +108,7 @@ if ($paper_type == '0') {
 $result->execute();
 $result->bind_result($type, $id, $mark, $user_answer, $user_id);
 while ($result->fetch()) {
-    if ($mark !== '') {
+    if ($mark !== '' and !is_null($mark)) {
         $answer_obj = new enhancedcalc($configObject);
         $answer_obj->set_useranswer($user_answer);
         $answer_obj->set_settings($settings);
