@@ -36,7 +36,7 @@ class XML_lookup extends outline_lookup
     public $impliments_api_lookup_version = 1;
     public $version = 0.9;
 
-    function register_callback_routines()
+    public function register_callback_routines()
     {
         $callbackarray[] = array(array($this, 'userlookup'), 'userlookup', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'modulelookup'), 'modulelookup', $this->number, $this->name);
@@ -44,16 +44,14 @@ class XML_lookup extends outline_lookup
     }
 
     //need function to register the extracallback
-    function register_callback_sections()
+    public function register_callback_sections()
     {
         //this is blank so that classes that dont register anything dont break
         return array('userlookupxmltranslate','modulelookupxmltranslate');
     }
 
-    function modulelookup($lookupobj)
+    public function modulelookup($lookupobj)
     {
-
-
         $this->savetodebug('The XML modulelookup function has been called');
         if (!isset($this->settings['modulelookup'])) {
             $this->savetodebug('There is no config for module lookup');
@@ -206,7 +204,7 @@ class XML_lookup extends outline_lookup
         return $lookupobj;
     }
 
-    function userlookup($lookupobj)
+    public function userlookup($lookupobj)
     {
         $searchsuccess = false;
         $usefile = false;
@@ -329,7 +327,7 @@ class XML_lookup extends outline_lookup
         return $lookupobj;
     }
 
-    function xmlsearch($xml, $lookupobj, $section)
+    public function xmlsearch($xml, $lookupobj, $section)
     {
         $searchsuccess = false;
         $oneitemreturned = false;
@@ -456,7 +454,7 @@ class XML_lookup extends outline_lookup
         }
     }
 
-    function store_in_data($datablock, $attributes, $lookupobj, $section, $raw = false)
+    public function store_in_data($datablock, $attributes, $lookupobj, $section, $raw = false)
     {
         $prepend = '';
         if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == true)) {
@@ -533,7 +531,7 @@ class XML_lookup extends outline_lookup
         return $lookupobj;
     }
 
-    function get_setting($item, $section)
+    public function get_setting($item, $section)
     {
         unset($data);
         if (isset($this->settings[$section][$item])) {

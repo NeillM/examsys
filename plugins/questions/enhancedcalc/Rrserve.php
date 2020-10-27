@@ -41,7 +41,7 @@ class EnhancedCalc_Rrserve
     public $error = false;
     public $error_msg = '';
 
-    function __construct($config)
+    public function __construct($config)
     {
         $this->config = $config;
         $this->toStrDefined = false;
@@ -49,12 +49,12 @@ class EnhancedCalc_Rrserve
     }
 
 
-    function error_handling($context = null)
+    public function error_handling($context = null)
     {
         return error_handling($this);
     }
 
-    function connect()
+    public function connect()
     {
 
         $this->reset_error();
@@ -88,7 +88,7 @@ class EnhancedCalc_Rrserve
         }
     }
 
-    function setup_R()
+    public function setup_R()
     {
         self::$cnx->evalString('options(digits=15); 1==1;');
         self::$cnx->evalString('toStr <- function(V) { return(paste(capture.output(print(V)),collapse=\'\n\')) }');
@@ -97,7 +97,7 @@ class EnhancedCalc_Rrserve
         self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
     }
 
-    function calculate_correct_ans($vars, $formula)
+    public function calculate_correct_ans($vars, $formula)
     {
 
         if (!$this->connect()) {
@@ -116,7 +116,7 @@ class EnhancedCalc_Rrserve
         return $correctanswer;
     }
 
-    function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision)
+    public function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision)
     {
 
         if ($useranswer == '') {
@@ -143,7 +143,7 @@ class EnhancedCalc_Rrserve
         }
     }
 
-    function distance_from_correct_answer($useranswer, $correctanswer)
+    public function distance_from_correct_answer($useranswer, $correctanswer)
     {
 
         if ($useranswer == '') {
@@ -160,7 +160,7 @@ class EnhancedCalc_Rrserve
         return $res;
     }
 
-    function calculate_tolerance_percent($correctanswer, $percentage)
+    public function calculate_tolerance_percent($correctanswer, $percentage)
     {
         $cmd[] = "$correctanswer * (" . $percentage . '/100)';
         $cmd[] = "$correctanswer * (1 + (" . $percentage . '/100))';
@@ -182,7 +182,7 @@ class EnhancedCalc_Rrserve
         return $res;
     }
 
-    function calculate_tolerance_absolute($correctanswer, $value)
+    public function calculate_tolerance_absolute($correctanswer, $value)
     {
 
         $cmd[] = "$correctanswer + $value";
@@ -197,7 +197,7 @@ class EnhancedCalc_Rrserve
         return $res;
     }
 
-    function is_useranswer_within_tolerance($useranswer, $min, $max)
+    public function is_useranswer_within_tolerance($useranswer, $min, $max)
     {
 
         if ($useranswer == '') {
@@ -220,7 +220,7 @@ class EnhancedCalc_Rrserve
         }
     }
 
-    function is_useranswer_within_significant_figures($useranswer, $sf)
+    public function is_useranswer_within_significant_figures($useranswer, $sf)
     {
 
         if ($useranswer == '') {
@@ -236,7 +236,7 @@ class EnhancedCalc_Rrserve
         }
     }
 
-    function is_useranswer_correct_decimal_places($useranswer, $dp)
+    public function is_useranswer_correct_decimal_places($useranswer, $dp)
     {
 
         if ($useranswer == '') {
@@ -251,7 +251,7 @@ class EnhancedCalc_Rrserve
         }
     }
 
-    function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp)
+    public function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp)
     {
 
         if ($useranswer == '') {
@@ -273,7 +273,7 @@ class EnhancedCalc_Rrserve
         }
     }
 
-    function calc_dp($num)
+    public function calc_dp($num)
     {
         $dotpos = mb_strpos($num, '.');
         if ($dotpos === false) {
@@ -290,7 +290,7 @@ class EnhancedCalc_Rrserve
         return $end - ($dotpos + 1);
     }
 
-    function calc_sf($num)
+    public function calc_sf($num)
     {
 
         $epos = mb_strpos($num, 'e');
@@ -307,7 +307,7 @@ class EnhancedCalc_Rrserve
         return $epos;
     }
 
-    function is_engineering_format($num)
+    public function is_engineering_format($num)
     {
         $epos = stripos($num, 'e');
         if ($epos !== false) {
@@ -316,22 +316,22 @@ class EnhancedCalc_Rrserve
         return false;
     }
 
-    function format_number_dp($num, $dp)
+    public function format_number_dp($num, $dp)
     {
         return $this->eval_string('excel_round(' . $num . ',' . $dp . ')');
     }
 
-    function format_number_dp_strict_zeros($num, $dp)
+    public function format_number_dp_strict_zeros($num, $dp)
     {
         return $this->eval_string('format(excel_round(' . $num . ',' . $dp . '), nsmall = ' . $dp . ')');
     }
 
-    function format_number_sf($num, $sf)
+    public function format_number_sf($num, $sf)
     {
         return $this->eval_string('signif(' . $num . ',' . $sf . ')');
     }
 
-    function format_number_to_precision_of_other_number($roundme, $likethisone)
+    public function format_number_to_precision_of_other_number($roundme, $likethisone)
     {
         if ($this->is_engineering_format($likethisone)) {
             $precision = $this->calc_sf($likethisone);

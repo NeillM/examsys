@@ -49,7 +49,7 @@ class IE_Local_Save extends IE_Main
     // bloom
 
     // main save function
-    function Save($params, &$data)
+    public function Save($params, &$data)
     {
         global $mysqli, $string;
 
@@ -353,7 +353,7 @@ class IE_Local_Save extends IE_Main
         }
     }
 
-    function SaveBlank($question)
+    public function SaveBlank($question)
     {
         $this->q_row['correct_fback'] = $question->feedback;
         $this->q_row['display_method'] = $question->displaymode;
@@ -398,7 +398,7 @@ class IE_Local_Save extends IE_Main
         $this->o_rows[] = $o_row;
     }
 
-    function SaveCalculation($question)
+    public function SaveCalculation($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = $question->feedback;
@@ -407,7 +407,7 @@ class IE_Local_Save extends IE_Main
     }
 
 
-    function SaveDichotomous($question)
+    public function SaveDichotomous($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = $question->feedback;
@@ -444,7 +444,7 @@ class IE_Local_Save extends IE_Main
         }
     }
 
-    function SaveExtMatch($question)
+    public function SaveExtMatch($question)
     {
         $scenario_text = '';
         $feedback = '';
@@ -499,7 +499,7 @@ class IE_Local_Save extends IE_Main
         }
     }
 
-    function SaveHotspot($question)
+    public function SaveHotspot($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = $question->feedback;
@@ -531,12 +531,12 @@ class IE_Local_Save extends IE_Main
         $this->o_rows[] = $o_row;
     }
 
-    function SaveInfo($question)
+    public function SaveInfo($question)
     {
         $this->q_row['leadin'] = $question->leadin;
     }
 
-    function SaveLabelling($question)
+    public function SaveLabelling($question)
     {
         // 1 - 3/4 pt
         // 2 - 1 pt
@@ -619,7 +619,7 @@ class IE_Local_Save extends IE_Main
         $this->o_rows[] = $o_row;
     }
 
-    function SaveLikert($question)
+    public function SaveLikert($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['score_method'] = 'Mark per Option';
@@ -631,7 +631,7 @@ class IE_Local_Save extends IE_Main
         }
     }
 
-    function SaveMatrix($question)
+    public function SaveMatrix($question)
     {
         $scenario_text = '';
         $answer_text = '';
@@ -658,7 +658,7 @@ class IE_Local_Save extends IE_Main
         }
     }
 
-    function SaveMcq($question)
+    public function SaveMcq($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = (!empty($question->feedback)) ? $question->feedback : '';
@@ -695,7 +695,7 @@ class IE_Local_Save extends IE_Main
     }
 
 
-    function SaveTrueFalse($question)
+    public function SaveTrueFalse($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = (!empty($question->feedback)) ? $question->feedback : '';
@@ -736,7 +736,7 @@ class IE_Local_Save extends IE_Main
     }
 
 
-    function SaveMrq($question)
+    public function SaveMrq($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = $question->feedback;
@@ -772,7 +772,7 @@ class IE_Local_Save extends IE_Main
         }
     }
 
-    function SaveRank($question)
+    public function SaveRank($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = $question->fb_correct;
@@ -793,7 +793,7 @@ class IE_Local_Save extends IE_Main
         //$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
     }
 
-    function SaveTextBox($question)
+    public function SaveTextBox($question)
     {
         $this->q_row['scenario'] = $question->scenario;
         $this->q_row['correct_fback'] = $question->feedback;
@@ -810,7 +810,7 @@ class IE_Local_Save extends IE_Main
         $this->o_rows[] = $o_row;
     }
 
-    function GetExistingKeywords($module_id)
+    public function GetExistingKeywords($module_id)
     {
         // We'll keep the keywords cached in an array and build it up as we add new keywords
         $user_keywords = array();
@@ -840,7 +840,7 @@ class IE_Local_Save extends IE_Main
      * @param int $userID
      * @param array $user_keywords
      */
-    function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = null)
+    public function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = null)
     {
         $new_keywords = array();
         echo 'savekeywrds<br />';
