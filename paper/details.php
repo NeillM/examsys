@@ -152,6 +152,7 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
     $question_marks = $temp_array[$row_no]['original_marks'];
     $status                 = $temp_array[$row_no]['status'];
     $score_method   = $temp_array[$row_no]['score_method'];
+    $correct_marks = $temp_array[$row_no]['marks_correct'];
 
     if ($tmp_excluded == '0000000000000000000000000000000000000000' and $status_array[$status]->get_validate()) {
         if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
@@ -159,8 +160,12 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
                 $temp_array[$row_no]['warnings'][] = $string['toomanycorrect'];
             }
         } elseif ($q_type == 'dichotomous') {
-            if ($score_method == 'Mark per Option' and $question_marks < count($option_text)) {
-                $temp_array[$row_no]['warnings'][] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
+            if ($score_method == 'Mark per Option' and $question_marks < (count($option_text) * $correct_marks)) {
+                $temp_array[$row_no]['warnings'][] = sprintf(
+                    $string['dichotomouswarning'],
+                    ($question_marks / $correct_marks),
+                    count($option_text)
+                );
             }
         } elseif ($q_type == 'mcq' and $correct_array[0] == '') {
             $temp_array[$row_no]['warnings'][] = $string['nocorrect'];
@@ -555,6 +560,7 @@ if ($properties->get_deleted() != '') {
           }
           $options = 0;
           $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
+          $temp_array[$row_no2]['marks_correct'] = $marks_correct;
           if ($old_q_type == 'random') {
               $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
               if ($do_marking) {
@@ -670,6 +676,7 @@ if ($properties->get_deleted() != '') {
       // Check for status that's excluded from marking
       $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
 
+      $temp_array[$row_no2]['marks_correct'] = $marks_correct;
       if ($old_q_type == 'random') {
           $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
           if ($do_marking) {
