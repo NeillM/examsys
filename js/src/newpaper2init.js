@@ -68,4 +68,14 @@ requirejs(['datecopy', 'form', 'newpaperform', 'jquery'], function (DATECOPY, FO
             }
         });
     }
+
+    // Listen for changes to the remote summative checkbox.
+    // If it is turned off change the date so that the end day matches the start day.
+    $('#remote_summative').change(function() {
+        if (!$('#remote_summative').is(':checked')) {
+            date.dateCopy($('#fday'));
+            date.dateCopy($('#fmonth'));
+            date.dateCopy($('#fyear'));
+        }
+    });
 });
