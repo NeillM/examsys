@@ -522,7 +522,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             }
 
             // Implement t/u/l for textbox questions. Indexes cast to strings to avoid bad PHP auto-conversion for numbers to integers on arrays
-            $mark_for_distrib = is_null($mark) ? 'unmarked' : number_format($mark,1);
+            $mark_for_distrib = is_null($mark) ? 'unmarked' : number_format($mark, 1);
             if (isset($log_array[$qID][1][(string)$mark_for_distrib])) {
                 $log_array[$qID][1][(string)$mark_for_distrib]++;
             } else {

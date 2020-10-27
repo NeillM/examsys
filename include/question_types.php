@@ -77,7 +77,7 @@ function fullQuestionType($abreviation, $string)
         case 'random':
             $fullname = $string['random_short'];
             break;
-        case 'sct';
+        case 'sct':
             $fullname = $string['sct_short'];
             break;
         case 'textbox':

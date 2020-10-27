@@ -31,9 +31,9 @@ CREATE TABLE `paper_metadata` (
 )
 EOF;
     $updater_utils->execute_query($sql, false);
-    $updater_utils->execute_query("GRANT SELECT ON " . $configObject->get('cfg_db_database') . ".paper_metadata TO '". $configObject->get('cfg_db_username') . "'@'". $configObject->get('cfg_web_host') . "'", false);
-    $updater_utils->execute_query("GRANT SELECT ON " . $configObject->get('cfg_db_database') . ".paper_metadata TO '". $configObject->get('cfg_db_student_user') . "'@'". $configObject->get('cfg_web_host') . "'", false);
-    $updater_utils->execute_query("GRANT DELETE,INSERT,SELECT,UPDATE ON " . $configObject->get('cfg_db_database') . ".paper_metadata TO '". $configObject->get('cfg_db_staff_user') . "'@'". $configObject->get('cfg_web_host') . "'", false);
+    $updater_utils->execute_query('GRANT SELECT ON ' . $configObject->get('cfg_db_database') . ".paper_metadata TO '" . $configObject->get('cfg_db_username') . "'@'" . $configObject->get('cfg_web_host') . "'", false);
+    $updater_utils->execute_query('GRANT SELECT ON ' . $configObject->get('cfg_db_database') . ".paper_metadata TO '" . $configObject->get('cfg_db_student_user') . "'@'" . $configObject->get('cfg_web_host') . "'", false);
+    $updater_utils->execute_query('GRANT DELETE,INSERT,SELECT,UPDATE ON ' . $configObject->get('cfg_db_database') . ".paper_metadata TO '" . $configObject->get('cfg_db_staff_user') . "'@'" . $configObject->get('cfg_web_host') . "'", false);
 
     // Install setting category
     $categories = array('seb');

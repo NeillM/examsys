@@ -32,14 +32,14 @@ class export_assessment extends exporter
      * @var array
      */
     public const DEFAULT = array(
-    'Gender',
-    'Title',
-    'Surname',
-    'First Names',
-    'Student ID',
-    'Course',
-    'Year',
-    'Started',
+        'Gender',
+        'Title',
+        'Surname',
+        'First Names',
+        'Student ID',
+        'Course',
+        'Year',
+        'Started',
     );
 
     /**

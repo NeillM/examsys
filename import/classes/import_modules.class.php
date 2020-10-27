@@ -51,9 +51,9 @@ class import_modules extends importer
      * @var array
      */
     public const REQUIRED = array(
-    'moduleid',
-    'fullname',
-    'school',
+        'moduleid',
+        'fullname',
+        'school',
     );
 
     /**
@@ -61,21 +61,21 @@ class import_modules extends importer
      * @var array
      */
     public const OPTIONAL = array(
-    'schoolcode',
-    'smsapi',
-    'objectiveapi',
-    'peerreview',
-    'externalexaminers',
-    'stdset',
-    'mapping',
-    'active',
-    'selfenrol',
-    'negmarking',
-    'timedexams',
-    'questionbasedfb',
-    'addteammember',
-    'yearstart',
-    'externalid',
+        'schoolcode',
+        'smsapi',
+        'objectiveapi',
+        'peerreview',
+        'externalexaminers',
+        'stdset',
+        'mapping',
+        'active',
+        'selfenrol',
+        'negmarking',
+        'timedexams',
+        'questionbasedfb',
+        'addteammember',
+        'yearstart',
+        'externalid',
     );
 
     /**
