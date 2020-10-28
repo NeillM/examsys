@@ -1,6 +1,6 @@
 <?php
 
-// This file is part of Rogō - http://Rogō.org/ based on code originally part of Moodle - http://moodle.org
+// This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,9 @@
  * This plugin lets the user specify an IMS Enterprise file to be processed.
  * The IMS Enterprise file is mainly parsed on a regular cron,
  * but can also be imported via the UI (Admin Settings).
+ *
+ * Based on code originally part of Moodle - http://moodle.org
+ *
  * @package    plugins_IMS
  * @copyright  2010 Eugene Venter
  * @copyright  2015 onwards, University of Nottingham

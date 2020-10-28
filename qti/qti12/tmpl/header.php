@@ -1,6 +1,5 @@
 <?php
-require_once '../include/load_config.php';
-$deb32434 = 1;
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,6 +14,9 @@ $deb32434 = 1;
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+require_once '../include/load_config.php';
+$deb32434 = 1;
 
 $configObject = Config::get_instance();
 $cfg_web_root = $configObject->get('cfg_web_root');

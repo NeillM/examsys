@@ -1,6 +1,6 @@
 <?php
 
-// This file is part of Rogō - http://Rogō.org/
+// This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
