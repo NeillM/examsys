@@ -16,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require('header.php');
-?>  
+?>
 
             <?php echo $headertext ?>
 
@@ -38,12 +38,12 @@ require('header.php');
                             <mattext texttype="text/plain"><?php echo $option ?></mattext>
                         </material>
                     </response_label>
-    <?php endforeach; ?>    
+    <?php endforeach; ?>
                 </render_choice>
             </response_lid>
-<?php endforeach; ?>    
+<?php endforeach; ?>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -55,12 +55,12 @@ require('header.php');
         continue;
     } ?>
                     <varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>
-<?php endforeach; ?>    
+<?php endforeach; ?>
                 </conditionvar>
                 <setvar action="Set"><?php echo $option->marks_correct; ?></setvar>
                 <displayfeedback linkrefid="right"/>
             </respcondition>
-            
+
             <respcondition title="wrong" >
                     <conditionvar>
                         <other/>
@@ -69,7 +69,7 @@ require('header.php');
                 <displayfeedback linkrefid="wrong"/>
             </respcondition>
             </resprocessing>
-    
+
         <itemfeedback ident="right" view="Candidate">
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $question->fb_correct ?>]]></mattext>

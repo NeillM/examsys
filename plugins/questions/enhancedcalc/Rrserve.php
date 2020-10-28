@@ -15,7 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  *
  * R based maths functions for Calculation questions
@@ -30,7 +29,6 @@ require_once('rserve/Connection.php');
 
 class EnhancedCalc_Rrserve
 {
-
     protected $impliments_api_calc_version = 1;
     protected static $cnx = false;
 
@@ -56,7 +54,6 @@ class EnhancedCalc_Rrserve
 
     public function connect()
     {
-
         $this->reset_error();
 
         if (is_null(self::$cnx)) {
@@ -99,7 +96,6 @@ class EnhancedCalc_Rrserve
 
     public function calculate_correct_ans($vars, $formula)
     {
-
         if (!$this->connect()) {
             throw new Exception('Cannot Connect');
             return false;
@@ -118,7 +114,6 @@ class EnhancedCalc_Rrserve
 
     public function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision)
     {
-
         if ($useranswer == '') {
             return false;
         }
@@ -145,7 +140,6 @@ class EnhancedCalc_Rrserve
 
     public function distance_from_correct_answer($useranswer, $correctanswer)
     {
-
         if ($useranswer == '') {
             return 'ERROR';
         }
@@ -184,7 +178,6 @@ class EnhancedCalc_Rrserve
 
     public function calculate_tolerance_absolute($correctanswer, $value)
     {
-
         $cmd[] = "$correctanswer + $value";
         $cmd[] = "$correctanswer - $value";
 
@@ -199,7 +192,6 @@ class EnhancedCalc_Rrserve
 
     public function is_useranswer_within_tolerance($useranswer, $min, $max)
     {
-
         if ($useranswer == '') {
             return false;
         }
@@ -211,7 +203,6 @@ class EnhancedCalc_Rrserve
             return false;
         }
 
-
         if ($status === true) {
             // Correct
             return true;
@@ -222,7 +213,6 @@ class EnhancedCalc_Rrserve
 
     public function is_useranswer_within_significant_figures($useranswer, $sf)
     {
-
         if ($useranswer == '') {
             return false;
         }
@@ -238,7 +228,6 @@ class EnhancedCalc_Rrserve
 
     public function is_useranswer_correct_decimal_places($useranswer, $dp)
     {
-
         if ($useranswer == '') {
             return false;
         }
@@ -253,7 +242,6 @@ class EnhancedCalc_Rrserve
 
     public function is_useranswer_correct_decimal_places_strictzeros($useranswer, $dp)
     {
-
         if ($useranswer == '') {
             return false;
         }
@@ -292,7 +280,6 @@ class EnhancedCalc_Rrserve
 
     public function calc_sf($num)
     {
-
         $epos = mb_strpos($num, 'e');
         if ($epos === false) {
             $epos = mb_strlen($num);
@@ -366,7 +353,6 @@ class EnhancedCalc_Rrserve
 
     private function extract_value($R_rreturn)
     {
-
         if (!is_array($R_rreturn)) {
             $R_rreturn = explode("\n", $R_rreturn);
         }

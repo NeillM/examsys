@@ -37,18 +37,22 @@ class yearutils
      * Constant for all academic years.
      */
     public const ALL = 'ALL';
+
     /**
      * Constant for academic years viewable in the calendar.
      */
     public const CAL = 'CAL';
+
     /**
      * Constant for academic years viewable in statistics.
      */
     public const STAT = 'STAT';
+
     /**
      * Constant for academic years visible in both the calendar and statisics.
      */
     public const BOTH = 'BOTH';
+
     /**
      * Constant for academic years visible in user searches
      */

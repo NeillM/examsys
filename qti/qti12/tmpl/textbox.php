@@ -16,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require('header.php');
-?>  
+?>
         <qticomment>Editor:<?php echo $question->editor ?></qticomment>
 
             <?php echo $headertext ?>
@@ -50,13 +50,13 @@ require('header.php');
                 <displayfeedback linkrefid="Scored"/>
             </respcondition>
         </resprocessing>
-        
+
         <itemfeedback ident="Unscored" view="Candidate">
             <material>
                 <mattext texttype="text/html"><![CDATA[<?php echo $question->feedback ?>]]></mattext>
             </material>
         </itemfeedback>
-        
+
         <itemfeedback ident="Scored" view="Candidate">
         </itemfeedback>
     </item>

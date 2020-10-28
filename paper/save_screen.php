@@ -115,7 +115,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
     if ($papertype == '2') {
         check_ipmismatch($propertyObj->get_property_id(), $current_address, $string, $userObject, $mysqli, $papertype);
     }
-  
+
     $summative_exam_session_started = false;
 }
 

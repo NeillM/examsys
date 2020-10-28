@@ -84,7 +84,7 @@ $results->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title('Rog&#333;: ' . $string['summativeexamdetails']); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -104,7 +104,7 @@ $results->close();
 <?php
   require '../include/scheduling_detail_options.inc';
 require '../include/toprightmenu.inc';
-   
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
@@ -128,13 +128,13 @@ if ($period == '') {
 } else {
     $display_period = $string[$months[$period]];
 }
-  
+
 if ($cohort_size == '<whole cohort>') {
     $cohort_size = 0;
     foreach ($module_sizes as $tmp_moduleID => $module_size) {
         $cohort_size += $module_size;
     }
-    
+
     if (count($extra_time_list) > 0) {
         foreach ($extra_time_list as $extra_time => $number) {
             $cohort_size .= '<br />' . $extra_time . '% x' . $number;

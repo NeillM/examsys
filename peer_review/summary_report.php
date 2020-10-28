@@ -69,7 +69,7 @@ require_once 'summary_report.inc';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="menudiv" class="popupmenu">
@@ -77,7 +77,7 @@ require_once 'summary_report.inc';
     <div class="popup_icon"><img src="../artwork/peer_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['Review Form'] ?></div>
   </div>
-  
+
   <div class="popup_row" id="item2">
     <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['Student Profile']; ?></div>
@@ -124,7 +124,7 @@ if (isset($_GET['meta1'])) {
 } else {
     $meta1 = '';
 }
-    
+
   // Write out headings
   $query_string = "percent=$percent&paperID=$paperID&startdate=$startdate&enddate=$enddate&repmodule=" . $_GET['repmodule'] . '&repcourse=' . $_GET['repcourse'] . "&meta1=$meta1";
 $heading = array('title' => $string['title'], 'surname' => $string['surname'], 'first_names' => $string['firstnames'], 'student_id' => $string['studentid'], 'have_review' => $string['reviewed'], 'group' => $type);
@@ -152,7 +152,7 @@ foreach ($heading as $k => $h) {
   echo "<th class=\"num\">&nbsp;</th></tr>\n";
 ?>
   </thead>
-  
+
   <tbody>
 <?php
   // Take the arrays and form one master array which can be sorted for on-screen display.
@@ -226,7 +226,7 @@ foreach ($user_data as $student_userID => $student) {
 
   // Sort the data.
   $master_array = \sort::array_csort($master_array, $sortby, $ordering);
-  
+
 for (
     $i = 0; $i < $user_number; $i++
 ) {

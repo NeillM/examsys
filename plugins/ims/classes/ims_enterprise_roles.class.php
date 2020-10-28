@@ -27,7 +27,6 @@ namespace plugins\ims;
  */
 class ims_enterprise_roles
 {
-
     /** @var imscode => ims role name. Role name mapping. */
     private $imsroles;
     /** $var The code for the Learner role as defined by the IMS Enterprise specification */

@@ -24,7 +24,6 @@
  */
 class EnhancedCalc extends Question implements questionInterface
 {
-
     protected $configObj;
     protected $db;
     public $alluseranswers;
@@ -860,7 +859,6 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function variable_substitution($inputVal, $user_answers)
     {
-
         //Question reference
         if ($this->is_linked_ans($inputVal)) {
             $uansarray = array();
@@ -1055,7 +1053,6 @@ class EnhancedCalc extends Question implements questionInterface
 
     public function replace_leadin($reviewers = false)
     {
-
         if ($reviewers === false) {
             $leadin = $this->replace_vars($this->leadin);
         } else {

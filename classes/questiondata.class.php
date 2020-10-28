@@ -31,42 +31,52 @@ abstract class questiondata
      * Media type - file
      */
     public const FILE = 1;
+
     /**
      * Media type - image
      */
     public const IMAGE = 2;
+
     /**
      * Media type - audio
      */
     public const AUDIO = 3;
+
     /**
      * Media type - document
      */
     public const DOC = 4;
+
     /**
      * Media type - flash
      */
     public const FLASH = 5;
+
     /**
      * Media type - html5 audio
      */
     public const HTML5AUDIO = 6;
+
     /**
      * Media type - movie
      */
     public const MOVIE = 7;
+
     /**
      * Media type - 3d object
      */
     public const THREED = 8;
+
     /**
      * Media type - archive
      */
     public const ARCHIVE = 9;
+
     /**
      * Media type - html5 video
      */
     public const HTML5VIDEO = 10;
+
     /**
      * DB connection
      * @var mysqli

@@ -27,12 +27,12 @@ require('header.php');
 <?php endforeach; ?>
 
             <?php echo $headertext ?>
-            
+
             <response_num ident="1" rcardinality="Single">
                 <render_fib fibtype="Decimal" prompt="Box" rows="1" columns="10" maxchars="10"/>
             </response_num>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -44,7 +44,7 @@ require('header.php');
                 <setvar action="Set"><?php echo $question->marks_correct ?></setvar>
                 <displayfeedback linkrefid="general"/>
             </respcondition>
-            
+
 <?php if ($question->marks_partial != 0) : ?>
             <respcondition title="Within range" >
                 <conditionvar>
@@ -74,7 +74,7 @@ require('header.php');
                 <setvar action="Set"><?php echo $question->marks_incorrect ?></setvar>
                 <displayfeedback linkrefid="general"/>
             </respcondition>
-      
+
             <!-- force general feedback to output -->
             <respcondition title="General Feedback">
                 <conditionvar>
@@ -89,7 +89,7 @@ require('header.php');
                 <displayfeedback linkrefid="general"/>
             </respcondition>
         </resprocessing>
-        
+
         <itemfeedback ident="general" view="Candidate">
             <material>
                 <mattext texttype="text/html"><![CDATA[<?php echo $question->feedback ?>]]></mattext>

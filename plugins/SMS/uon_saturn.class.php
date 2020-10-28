@@ -24,7 +24,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class UON_SATURN extends SmsUtils
 {
     private $enrolement_no;

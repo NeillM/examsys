@@ -90,7 +90,6 @@ class Authentication
      */
     public function __construct(&$configObj, &$db, &$request, &$session)
     {
-
         $this->db = & $db;
         $this->configObj = & $configObj;
 

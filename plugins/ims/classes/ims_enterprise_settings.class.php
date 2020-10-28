@@ -148,7 +148,7 @@ class ims_enterprise_settings
         $cron['prevtime'] = $prevtime;
         $cron['prevpath'] = $prevpath;
         $cron['prevmd5'] = $prevmd5;
-      
+
         // Edit IMS Settings.
         $result = $mysqli->prepare("UPDATE ims_settings SET
         prevtime = ?,

@@ -32,7 +32,6 @@ if (!isset($cfg_web_root)) {
 //updated interface to saturn using the new lookup class plugins
 class GENERIC_SMS extends SmsUtils
 {
-
     public $campus;
     public $url;
 

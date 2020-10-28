@@ -25,7 +25,6 @@ namespace plugins\questions\labelling;
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
-
 class renderdata extends \questiondata
 {
     use \defaultgetmarks;

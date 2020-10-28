@@ -16,8 +16,8 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require('header.php');
-?>  
-        
+?>
+
             <?php echo $headertext ?>
 
             <response_lid ident='1' rcardinality='Multiple'>
@@ -31,16 +31,16 @@ require('header.php');
     <?php endif; ?>
                         </material>
                     </response_label>
-<?php endforeach; ?>    
+<?php endforeach; ?>
                 </render_choice>
             </response_lid>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
             </outcomes>
-            
+
             <!-- force general feedback to output -->
             <respcondition title="general checked" continue="Yes">
                 <conditionvar>
@@ -58,8 +58,8 @@ require('header.php');
                 <setvar action='Add'>0</setvar>
                 <displayfeedback linkrefid="general"/>
             </respcondition>
-            
-            
+
+
             <!-- outcomes for each item -->
 <?php foreach ($question->options as $oid => $option) : ?>
     <?php if (!$option->is_correct) {
@@ -90,10 +90,10 @@ require('header.php');
                 <setvar action='Add'><?php echo $score ?></setvar>
                 <displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->stem)) ?> unchecked"/>
             </respcondition>
-<?php endforeach; ?>    
+<?php endforeach; ?>
 
-        </resprocessing>        
-        
+        </resprocessing>
+
         <!-- feedback items for each item -->
 <?php foreach ($question->options as $oid => $option) : ?>
     <?php if ($option->is_correct) {
@@ -106,7 +106,7 @@ require('header.php');
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
             </material>
-        </itemfeedback>         
+        </itemfeedback>
     <?php if (!$option->is_correct) {
         $fb = $option->fb_correct;
     } else {
@@ -117,8 +117,8 @@ require('header.php');
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
             </material>
-        </itemfeedback>         
-<?php endforeach; ?>    
+        </itemfeedback>
+<?php endforeach; ?>
 
         <!-- general feedback -->
         <itemfeedback ident='general' view='Candidate'>

@@ -26,7 +26,7 @@
 function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj)
 {
     global $folder, $module, $string;
-  
+
     if ($retired != '') {
         echo '<div class="file retired">';
     } else {

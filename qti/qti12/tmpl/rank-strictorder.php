@@ -14,8 +14,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
 require('header.php');
-?>  
+?>
 
             <?php echo $headertext ?>
 
@@ -37,12 +38,12 @@ require('header.php');
                             <mattext texttype="text/plain"><?php echo $option ?></mattext>
                         </material>
                     </response_label>
-    <?php endforeach; ?>    
+    <?php endforeach; ?>
                 </render_choice>
             </response_lid>
-<?php endforeach; ?>    
+<?php endforeach; ?>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -57,7 +58,7 @@ require('header.php');
                 </conditionvar>
                 <setvar action="Add"><?php echo $option->marks_correct; ?></setvar>
             </respcondition>
-<?php endforeach; ?>    
+<?php endforeach; ?>
 
             <respcondition title="right" continue="Yes" >
                 <conditionvar>
@@ -66,7 +67,7 @@ require('header.php');
         continue;
     } ?>
                     <varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>
-<?php endforeach; ?>    
+<?php endforeach; ?>
                 </conditionvar>
                 <setvar action="Add"><?php echo $option->marks_correct; ?></setvar>
                 <displayfeedback linkrefid="right"/>
@@ -82,7 +83,7 @@ require('header.php');
                         <not>
                             <varequal respident="<?php echo $oid ?>" case="No"><?php echo($question->optlist[$option->order]) ?></varequal>
                         </not>
-<?php endforeach; ?>    
+<?php endforeach; ?>
                     </or>
                 </conditionvar>
                 <setvar action="Add"><?php echo $option->marks_incorrect; ?></setvar>
@@ -90,7 +91,7 @@ require('header.php');
             </respcondition>
 
         </resprocessing>
-    
+
         <itemfeedback ident="right" view="Candidate">
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $question->fb_correct ?>]]></mattext>

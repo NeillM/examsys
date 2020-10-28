@@ -1,6 +1,6 @@
 <?php require('header.php'); ?>
             <qticomment>Marking:<?php echo $question->score_method ?></qticomment>
-        
+
             <?php echo $headertext ?>
 
 <?php foreach ($question->options as $oid => $option) : ?>
@@ -10,25 +10,25 @@
     <?php if ($option->media) : ?>
                     <matimage imagtype="<?php echo $option->media_type ?>" uri="<?php echo $option->media ?>" label="<?php echo $option->media_alt ?>"/>
     <?php endif; ?>
-                </material> 
+                </material>
                 <render_choice shuffle="No">
                     <response_label ident="A">
                         <material>
                             <mattext><?php echo $true ?></mattext>
                         </material>
-                    </response_label>   
+                    </response_label>
                     <response_label ident="B">
                         <material>
                             <mattext><?php echo $false ?></mattext>
                         </material>
-                    </response_label>   
+                    </response_label>
                 </render_choice>
             </response_lid>
-<?php endforeach; ?>        
+<?php endforeach; ?>
         </presentation>
-        
-        
-        
+
+
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -51,51 +51,51 @@
                 <setvar action='Add'>0</setvar>
                 <displayfeedback linkrefid="general"/>
             </respcondition>
-            
+
             <!-- response conditions. 2 per option with checked and unchecked -->
 <?php foreach ($question->options as $oid => $option) : ?>
       <?php //echo "\n\n\n|" . $option->iscorrect . "|\n\n\n"; ?>
-            
-      
+
+
       <?php if ($option->iscorrect) : ?>
       <respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True" continue="Yes">
                 <conditionvar>
                     <varequal respident="<?php echo $oid ?>">A</varequal>
                 </conditionvar>
-        <setvar action='Set'><?php echo $option->marks_correct;?></setvar>  
+        <setvar action='Set'><?php echo $option->marks_correct;?></setvar>
                 <displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True"/>
             </respcondition>
-      
+
             <respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False" continue="NO">
                 <conditionvar>
                     <varequal respident="<?php echo $oid ?>">B</varequal>
                 </conditionvar>
-        <setvar action='Set'><?php echo $option->marks_incorrect;?></setvar>  
+        <setvar action='Set'><?php echo $option->marks_incorrect;?></setvar>
                 <displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False"/>
             </respcondition>
-      
+
       <?php else : ?>
       <respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True" continue="NO">
                 <conditionvar>
                     <varequal respident="<?php echo $oid ?>">A</varequal>
                 </conditionvar>
-        <setvar action='Set'><?php echo $option->marks_incorrect;?></setvar>  
+        <setvar action='Set'><?php echo $option->marks_incorrect;?></setvar>
                 <displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> True"/>
             </respcondition>
-      
+
             <respcondition title="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False" continue="Yes">
                 <conditionvar>
                     <varequal respident="<?php echo $oid ?>">B</varequal>
                 </conditionvar>
-        <setvar action='Set'><?php echo $option->marks_correct;?></setvar>  
+        <setvar action='Set'><?php echo $option->marks_correct;?></setvar>
                 <displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> False"/>
             </respcondition>
-      
+
       <?php endif ?>
-       
+
 <?php endforeach; ?>
         </resprocessing>
-    
+
         <!-- feedback items for each item, pick right feedback based on correct or incorrect -->
 
 <?php foreach ($question->options as $oid => $option) : ?>
@@ -109,7 +109,7 @@
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
             </material>
-        </itemfeedback>         
+        </itemfeedback>
     <?php if (!$option->iscorrect) {
         $fb = $option->fb_correct;
     } else {
@@ -120,8 +120,8 @@
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
             </material>
-        </itemfeedback> 
-                
+        </itemfeedback>
+
 <?php endforeach; ?>
 
         <!-- general feedback -->

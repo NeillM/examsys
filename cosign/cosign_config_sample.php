@@ -5,7 +5,6 @@
 // Petr Lampa <lampa@fit.vutbr.cz>
 // $Id: cosign_config.php,v 1.1 2010/03/01 10:32:16 lampa Exp $
 
-
 // Enable Cosign Authentication
 $cosign_cfg['CosignProtected'] = true;
 

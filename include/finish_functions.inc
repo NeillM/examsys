@@ -2838,7 +2838,7 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
     if (mb_strpos($module_details['checklist'], 'mapping') !== false) {
         $display_objectives = 1;
     }
-    
+
     if ($display_objectives == 1 and $q_type != 'info' and $q_type != 'likert') {
         $objByModule = getObjectivesByMapping($moduleID, $calendar_year, $paperID, $q_id, $db);
         if (count($objByModule) > 0) {

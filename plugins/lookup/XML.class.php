@@ -28,11 +28,8 @@
 require_once 'outline_lookup.class.php';
 include_once $configObject->get('cfg_web_root') . 'lang/en/include/common.php';
 
-
 class XML_lookup extends outline_lookup
 {
-
-
     public $impliments_api_lookup_version = 1;
     public $version = 0.9;
 
@@ -220,8 +217,6 @@ class XML_lookup extends outline_lookup
         }
 
         //    $this->savetodebug('Received data:' . var_export($lookupobj, true));
-
-
         if (isset($this->settings['userlookup']['mandatoryurlfields'])) {
             // mandatory fields required!
             foreach ($this->settings['userlookup']['mandatoryurlfields'] as $index) {
@@ -233,7 +228,6 @@ class XML_lookup extends outline_lookup
                 }
             }
         }
-
 
         // if the lookup doesnt have these set and the default for the module configuration exist use them
         if (!isset($lookupobj->settings->override)) {
@@ -322,7 +316,6 @@ class XML_lookup extends outline_lookup
         if (isset($overrideset) and $overrideset == true) {
             unset($lookupobj->settings->override);
         }
-
 
         return $lookupobj;
     }
@@ -500,8 +493,6 @@ class XML_lookup extends outline_lookup
         foreach ($datablock as $key => $value) {
             if (!is_int($key)) {
                 //
-
-
                 if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
                     $key = mb_strtolower($key);
                 }
@@ -509,7 +500,6 @@ class XML_lookup extends outline_lookup
                 if ((isset($attributes[$key]))) {
                     $gdgdfgdsgds = 1;
                 }
-
 
                 if (((isset($lookupobj->datablockstore[$prepend . $key])) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true)))) or (!isset($lookupobj->datablockstore[$prepend . $key]))) {
                     // store data to datablock store if not set or if set and ( overrideall or override value set)

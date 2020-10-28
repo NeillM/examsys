@@ -18,7 +18,7 @@
 require('header.php');
 ?>
             <qticomment>Marking:<?php echo $question->score_method ?></qticomment>
-        
+
             <?php echo $headertext ?>
 
 <?php foreach ($question->options as $oid => $option) : ?>
@@ -28,39 +28,39 @@ require('header.php');
     <?php if ($option->media) : ?>
                     <matimage imagtype="<?php echo $option->media_type ?>" uri="<?php echo $option->media ?>" label="<?php echo $option->media_alt ?>"/>
     <?php endif; ?>
-                </material> 
+                </material>
                 <render_choice shuffle="No">
                     <response_label ident="A">
                         <material>
                             <mattext><?php echo $true ?></mattext>
                         </material>
-                    </response_label>   
+                    </response_label>
                     <response_label ident="B">
                         <material>
                             <mattext><?php echo $false ?></mattext>
                         </material>
-                    </response_label>   
-    <?php if ($hasab) : ?>                  
+                    </response_label>
+    <?php if ($hasab) : ?>
                     <response_label ident="C">
                         <material>
                             <mattext>Abstain</mattext>
                         </material>
-                    </response_label>   
+                    </response_label>
     <?php endif; ?>
                 </render_choice>
             </response_lid>
-<?php endforeach; ?>        
+<?php endforeach; ?>
         </presentation>
-        
-        
-        
+
+
+
         <resprocessing>
             <outcomes>
                 <decvar/>
             </outcomes>
-            
 
-            <!-- force general feedback to output --> 
+
+            <!-- force general feedback to output -->
             <respcondition title="general checked" continue="Yes">
                 <conditionvar>
                     <varequal respident="1">A</varequal>
@@ -77,7 +77,7 @@ require('header.php');
                 <setvar action='Add'>0</setvar>
                 <displayfeedback linkrefid="general"/>
             </respcondition>
-            
+
             <!-- response conditions. 2 per option with checked and unchecked -->
 <?php foreach ($question->options as $oid => $option) : ?>
     <?php if ($option->iscorrect) {
@@ -114,9 +114,9 @@ require('header.php');
                 <displayfeedback linkrefid="<?php echo $oid ?> <?php echo(for_id($option->text)) ?> Abstain"/>
             </respcondition>
 <?php endforeach; ?>
-        
+
         </resprocessing>
-    
+
         <!-- feedback items for each item, pick right feedback based on correct or incorrect -->
 
 <?php foreach ($question->options as $oid => $option) : ?>
@@ -130,7 +130,7 @@ require('header.php');
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
             </material>
-        </itemfeedback>         
+        </itemfeedback>
     <?php if (!$option->iscorrect) {
         $fb = $option->fb_correct;
     } else {
@@ -141,13 +141,13 @@ require('header.php');
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $fb ?>]]></mattext>
             </material>
-        </itemfeedback> 
-                
+        </itemfeedback>
+
         <itemfeedback ident='<?php echo $oid ?> <?php echo(for_id($option->text)) ?> Abstain' view='Candidate'>
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $option->fb_incorrect ?>]]></mattext>
             </material>
-        </itemfeedback>         
+        </itemfeedback>
 <?php endforeach; ?>
 
         <!-- general feedback -->

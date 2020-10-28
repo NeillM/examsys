@@ -16,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require('header.php');
-?>  
+?>
         <qticomment>Display:<?php echo $question->q_option_order ?></qticomment>
         <qticomment>Marking:<?php echo $question->score_method ?></qticomment>
             <?php echo $headertext ?>
@@ -36,7 +36,7 @@ require('header.php');
                 </render_choice>
             </response_lid>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -57,13 +57,13 @@ require('header.php');
                 <displayfeedback linkrefid='incorrect'/>
             </respcondition>
         </resprocessing>
-        
+
         <itemfeedback ident='correct' view='Candidate'>
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $question->fb_correct ?>]]></mattext>
             </material>
         </itemfeedback>
-        
+
         <itemfeedback ident='incorrect' view='Candidate'>
             <material>
                 <mattext texttype='text/html'><![CDATA[<?php echo $question->fb_incorrect ?>]]></mattext>
