@@ -15,6 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
+if (!isset($cfg_web_root)) {
+    $cfg_web_root = $configObject->get('cfg_web_root');
+}
+
 /**
  *
  * Utility class for user related functions
@@ -24,12 +28,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-if (!isset($cfg_web_root)) {
-    $cfg_web_root = $configObject->get('cfg_web_root');
-}
-
-
-//updated interface to saturn using the new lookup class plugins
 class GENERIC_SMS extends SmsUtils
 {
     public $campus;
