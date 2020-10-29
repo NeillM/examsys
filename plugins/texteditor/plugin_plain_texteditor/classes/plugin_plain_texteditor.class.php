@@ -60,12 +60,14 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
 
     /**
      * Get text editor javascript
-     * @param array $configfile config file
+     * @param string $type The editor type.
      */
-    public function get_javascript_config($configfile = '')
+    public function get_javascript_config($type = '')
     {
         $render = new \render($this->config, $this->get_render_paths());
-        $plaindata['file'] = 'plain_' . $configfile;
+        $plaindata = [
+            'file' => 'plain_' . $type,
+        ];
         if ($plaindata['file'] != 'plain_') {
             $render->render($plaindata, null, 'plain_config.html');
         }

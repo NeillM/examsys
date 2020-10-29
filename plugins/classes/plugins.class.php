@@ -38,7 +38,7 @@ abstract class plugins
     protected $db;
     /**
      * The config object.
-     * @var object
+     * @var \Config
      */
     protected $config;
     /**
