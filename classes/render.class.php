@@ -70,8 +70,13 @@ class render
         if (isset($lang['title'])) {
             $lang['title'] = page::title($lang['title']);
         }
-        $data = array('data' => $data, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'), 'charset' => $this->config->get('cfg_page_charset'),
-        'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss);
+        $data = array(
+            'data' => $data,
+            'lang' => $lang,
+            'path' => $this->config->get('cfg_root_path'),
+            'charset' => $this->config->get('cfg_page_charset'),
+            'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss,
+        );
         echo $this->twig->render($template, $data);
     }
 
