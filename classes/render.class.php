@@ -32,11 +32,13 @@ class render
      * @var twig
      */
     protected $twig;
+
     /**
      * Config object
      * @var config
      */
     protected $config;
+
     /**
      * Constructor
      * @param object $configObject - rogo configuration object
