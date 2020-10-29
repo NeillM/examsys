@@ -998,7 +998,7 @@ class export_assessmentTest extends unittestdatabase
             . $this->question3['question']['expected4']['numeric'] . ','
             . $this->question3['question']['expected5']['numeric'] . ','
             . $this->question3['question']['expected6']['numeric'] . ','
-            . $this->question3['question']['expected7']['numeric';
+            . $this->question3['question']['expected7']['numeric'];
         $expected = array(
             0 => array(
                 $string['correctanswers'],
