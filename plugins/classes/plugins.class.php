@@ -38,7 +38,7 @@ abstract class plugins
     protected $db;
     /**
      * The config object.
-     * @var object
+     * @var \Config
      */
     protected $config;
     /**
@@ -107,7 +107,7 @@ abstract class plugins
         // By defult do nothing unless overridden.
         return true;
     }
-    
+
     /**
      * Get install path of plugin
      * @return string path
