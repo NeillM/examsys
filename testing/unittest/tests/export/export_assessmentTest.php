@@ -241,7 +241,7 @@ class export_assessmentTest extends unittestdatabase
         $this->question3['question'] = $datagenerator->create_question(
             array(
                 'user' => 'admin',
-                't`ype' => 'rank',
+                'type' => 'rank',
                 'leadin' => "<p>2&nbsp;mark per correctly selected option</p>\r\n<p>Please rank the following&nbsp;numbers that start with the letter T starting with the&nbsp;highest first</p>",
                 'score_method' => 'Mark per Option',
                 'q_option_order' => 'display order',
