@@ -126,7 +126,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 
     if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
         if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {
-            echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
+            echo '<tr class="question-' . $question['q_type'] . '"><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
             if ($calculator == 1) {
                 echo '<br /><img src="../artwork/calc.png" class="sciCalculator" alt="' . $string['calculator'] . '" />';
             }
@@ -139,7 +139,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
         if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area') {
             if ($li_set == 0) {
-                echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
+                echo '<tr class="question-' . $question['q_type'] . '"><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
                 if ($calculator == 1) {
                     echo '<br /><img src="../artwork/calc.png" class="sciCalculator" alt="' . $string['calculator'] . '" />';
                 }
@@ -153,7 +153,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
         if ($question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
             if ($li_set == 0) {
-                echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
+                echo '<tr class="question-' . $question['q_type'] . '"><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
                 if ($calculator == 1) {
                     echo '<br /><img src="../artwork/calc.png" class="sciCalculator" alt="' . $string['calculator'] . '" />';
                 }
@@ -171,7 +171,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     if ($question['q_type'] == 'info') {
         // Special processing of Information Blocks.
         if ($li_set == 0) {
-            echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
+            echo '<tr class="question-' . $question['q_type'] . '"><td colspan="2" style="padding-left:10px; padding-right:10px">';
         }
         if ($question['q_media'] != '') {
             echo '<div class="mediadiv">';
@@ -217,7 +217,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         case 'mcq':
             echo '<blockquote>';
             if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-                echo '<table cellpadding="2" cellspacing="0" border="0">';
+                echo '<table class="vertical" cellpadding="2" cellspacing="0" border="0">';
             } elseif ($question['display_method'] == 'dropdown') {
                 echo '<div class="option">';
                 if (isset($std_parts[0])) {
@@ -490,13 +490,13 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             case 'mcq':
                 if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
                     if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
-                        echo '<tr><td>';
+                        echo '<tr class="option"><td>';
                         if (isset($std_parts[0])) {
                             echo display_std($std_parts[0]);
                         }
                         echo '</td><td><input type="radio" name="q' . $question_no . "\" value=\"$part_id\" checked /></td><td>";
                     } else {
-                        echo '<tr><td>';
+                        echo '<tr class="option"><td>';
                         echo '</td><td><input type="radio" name="q' . $question_no . "\" value=\"$part_id\" /></td><td>";
                     }
                     if ($display_option['option_text'] != '') {
@@ -543,19 +543,19 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 $tmp_part_id = $question['option_order'][$part_id - 1] + 1;
                 if ($paper_type == 3) {
                     if ($question['options'][$part_id - 1]['correct'] == 'y') {
-                        echo '<tr><td><input type="checkbox" name="q' . $question_no . '_' . $tmp_part_id . '" id="q' . $question_no . '_' . $part_id . '" value="y" checked /></td><td>';
+                        echo '<tr class="option"><td><input type="checkbox" name="q' . $question_no . '_' . $tmp_part_id . '" id="q' . $question_no . '_' . $part_id . '" value="y" checked /></td><td>';
                     } else {
-                        echo '<tr><td><input type="checkbox" name="q' . $question_no . '_' . $tmp_part_id . '" id="q' . $question_no . '_' . $part_id . '" value="y" /></td><td>';
+                        echo '<tr class="option"><td><input type="checkbox" name="q' . $question_no . '_' . $tmp_part_id . '" id="q' . $question_no . '_' . $part_id . '" value="y" /></td><td>';
                     }
                 } else {
                     if ($question['options'][$part_id - 1]['correct'] == 'y') {
-                        echo '<tr><td>';
+                        echo '<tr class="option"><td>';
                         if (isset($std_parts[$question['option_order'][$part_id - 1]])) {
                             echo display_std($std_parts[$question['option_order'][$part_id - 1]]);
                         }
                         echo "</td><td><input type=\"checkbox\" class=\"online\" data-qno=\"$question_no\" data-pos=\"$part_id\" data-ono=\"$option_no\" data-allowed=\"$mrq_correct\" name=\"q" . $question_no . '_' . $part_id . '" id="q' . $question_no . '_' . $part_id . '" value="y" checked /></td><td>';
                     } else {
-                        echo '<tr><td>';
+                        echo '<tr class="option"><td>';
                         if (isset($std_parts[$question['option_order'][$part_id - 1]])) {
                             echo display_std($std_parts[$question['option_order'][$part_id - 1]]);
                         }

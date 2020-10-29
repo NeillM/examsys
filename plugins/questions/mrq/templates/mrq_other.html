@@ -43,7 +43,7 @@ data.other - text user entered into other textbox
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
 <table cellpadding="2" cellspacing="0" border="0">
 {% for i,p in data.options %}
-    <tr>
+    <tr class="option">
         <td>
             <input type="checkbox" {% if data.papertype != 3 %} class="online" data-qno="{{data.questionno}}" data-pos="{{p.position}}" data-ono="{{data.optionnumber}}" data-allowed="{{data.allowedresponses}}" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </td>
@@ -57,11 +57,11 @@ data.other - text user entered into other textbox
         </td>
     </tr>
 {% endfor %}
-    <tr>
+    <tr class="option">
         <td>
             <input type="checkbox" name="q{{data.questionno}}_{{data.partid}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
         </td>
-        <td>{{lang.other}} 
+        <td>{{lang.other}}
             <input type="text" onkeypress="document.questions.q{{data.questionno}}_{{data.partid}}.checked=true" name="q{{data.questionno}}_other" value="{{data.other}}" />
         </td>
     </tr>

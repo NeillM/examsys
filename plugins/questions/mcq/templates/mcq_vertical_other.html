@@ -46,9 +46,9 @@ lang.abstain - abstain
 lang.other - other
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-    <table cellpadding="2" cellspacing="0" border="0">
+    <table class="vertical" cellpadding="2" cellspacing="0" border="0">
 {% for i,p in data.options %}
-        <tr>
+        <tr class="option">
             <td>
                 <input type="radio" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %}/>
             </td>
@@ -63,17 +63,17 @@ lang.other - other
         </tr>
 {% endfor %}
 {% if data.papertype == 3 %}
-        <tr>
+        <tr class="option">
             <td>
                 <input type="radio" name="q{{data.questionno}}" value="other" {% if data.otherselected %} checked="checked" {% endif %}/>
             </td>
-            <td>{{lang.other}} 
+            <td>{{lang.other}}
                 <input type="text" onkeypress="document.questions.q{{data.questionno}}[{{data.partid}}].checked=true" name="q{{data.questionno}}_other" {% if data.otherselected %} value="{{data.other}}" {% endif %} />
             </td>
         </tr>
 {% endif %}
 {% if data.negativemarking %}
-        <tr>
+        <tr class="option">
             <td>
                 <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %}/>
             </td>

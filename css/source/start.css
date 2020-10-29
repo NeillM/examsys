@@ -469,3 +469,8 @@ div.error {
   padding-left: 25px;
   color: white;
 }
+
+.question-mcq .vertical .option:hover,
+.question-mrq .option:hover {
+  background-color: #fcf6cf;
+}
