@@ -1421,34 +1421,34 @@ class ClassTotals
             }
 
             $this->user_results[$metadataID] = array(
-                                                'metadataID' => $metadataID,
-                                                'userID' => $userID,
-                                                'username' => $username,
-                                                'roles' => $roles,
-                                                'year' => $year,
-                                                'title' => $title,
-                                                'surname' => $surname,
-                                                'initials' => $initials,
-                                                'first_names' => $first_names,
-                                                'name' => $tmp_name,
-                                                'email' => $email,
-                                                'gender' => $gender,
-                                                'ipaddress' => $ipaddress,
-                                                'room' => $room,
-                                                'student_id' => $student_id,
-                                                'attempt' => $attempt,
-                                                'visible' => false, // We must assume the user should not be displayed.
-                                                'display_started' => $display_started,
-                                                'started' => $started,
-                                                'student_grade' => $student_grade,
-                                                'mark' => 0,
-                                                'percent' => 0,
-                                                'questions' => 0,
-                                                'duration' => 0,
-                                                'marking_complete' => true,
-                                                'module' => $module,
-                                                'paper_type' => $this->paper_type
-                                               );
+                'metadataID' => $metadataID,
+                'userID' => $userID,
+                'username' => $username,
+                'roles' => $roles,
+                'year' => $year,
+                'title' => $title,
+                'surname' => $surname,
+                'initials' => $initials,
+                'first_names' => $first_names,
+                'name' => $tmp_name,
+                'email' => $email,
+                'gender' => $gender,
+                'ipaddress' => $ipaddress,
+                'room' => $room,
+                'student_id' => $student_id,
+                'attempt' => $attempt,
+                'visible' => false, // We must assume the user should not be displayed.
+                'display_started' => $display_started,
+                'started' => $started,
+                'student_grade' => $student_grade,
+                'mark' => 0,
+                'percent' => 0,
+                'questions' => 0,
+                'duration' => 0,
+                'marking_complete' => true,
+                'module' => $module,
+                'paper_type' => $this->paper_type
+            );
             $metadataids[] = $metadataID;
         }
         $result->close();

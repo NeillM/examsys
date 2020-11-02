@@ -492,19 +492,19 @@ for ($i = 0; $i < $user_no; $i++) {
                 }
             }
             // Rank column
-                echo "<td class=\"$class r $role_css\">" . $user_results[$i]['rank'] . '</td>';
+            echo "<td class=\"$class r $role_css\">" . $user_results[$i]['rank'] . '</td>';
             // Decile column
-                echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . '</td>';
+            echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . '</td>';
             // Start Time column
-                echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . '</td>';
+            echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . '</td>';
             // Duration column
-                echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
+            echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
             if ($late_submissions == 'y') {
                 echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" title="' . $string['markingnotcomplete'] . '" alt="' . $string['markingnotcomplete'] . '"  width="12" height="11" />';
             }
-                echo '</td>';
+            echo '</td>';
 
-                echo "<td class=\"$class $role_css\">" . $user_results[$i]['ipaddress'] . '</td>';
+            echo "<td class=\"$class $role_css\">" . $user_results[$i]['ipaddress'] . '</td>';
             if ($paper_type == 2) {
                 echo "<td class=\"$class $role_css\">" . $user_results[$i]['room'] . '</td>';
             }
