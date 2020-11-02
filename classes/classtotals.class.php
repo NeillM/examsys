@@ -628,10 +628,6 @@ class ClassTotals
             }
             $i++;
         }
-
-        if (isset($this->student_cohort)) {
-            $this->check_and_clear_cohort($this->user_results[$user_number]['username']);
-        }
     }
 
     private function find_random_question($q_id, &$tmp_q)
@@ -1437,7 +1433,8 @@ class ClassTotals
                 'room' => $room,
                 'student_id' => $student_id,
                 'attempt' => $attempt,
-                'visible' => false, // We must assume the user should not be displayed.
+                'visible' => !empty($this->absent), // We must assume the user should not be displayed, unless absent students should be displayed.
+                'has_results' => false, // We must assume the user does not have results.
                 'display_started' => $display_started,
                 'started' => $started,
                 'student_grade' => $student_grade,
@@ -1449,6 +1446,12 @@ class ClassTotals
                 'module' => $module,
                 'paper_type' => $this->paper_type
             );
+
+            if (isset($this->student_cohort)) {
+                // Remove the user from the absent list.
+                $this->check_and_clear_cohort($this->user_results[$metadataID]['username']);
+            }
+
             $metadataids[] = $metadataID;
         }
         $result->close();
@@ -1482,8 +1485,9 @@ class ClassTotals
 
         while ($result->fetch()) {
             $userID = $this->user_results[$metadataID]['userID'];
-            // We have passed the check this students should be displayed.
+            // We have passed the check this students should be displayed with results.
             $this->user_results[$metadataID]['visible'] =  true;
+            $this->user_results[$metadataID]['has_results'] =  true;
 
             if ($old_screen != $screen or $old_metadataID != $metadataID) {
                 $user_duration += $old_duration;
@@ -1648,6 +1652,7 @@ class ClassTotals
                 $this->user_results[$user_no]['paper_type']       = '';
                 $this->user_results[$user_no]['room']             = '';
                 $this->user_results[$user_no]['visible']          = true;    // Default to visible unless switched off below.
+                $this->user_results[$user_no]['has_results']      =  false;
                 $this->user_results[$user_no]['roles']            = 'Student';
                 $this->user_results[$user_no]['late']             = true;
                 $this->user_results[$user_no]['rank']             = 99999999999;
