@@ -141,11 +141,11 @@ trait Question
 
     /**
      * Check questions are displayed in paper list.
-     *
+     * @param TableNode $table table of question leadins
      * @Then /^I should see questions:$/
      * @throws Exception
      */
-    public function iSeeQuestions(TableNode $table)
+    public function iSeeQuestions(TableNode $table): void
     {
         $rows = $table->getRows();
         foreach ($rows as $row) {
@@ -161,9 +161,9 @@ trait Question
      * Wait for the add question ajax to finish loading on the page
      * @Given I wait for questions to load
      */
-    public function iWaitForQuestionsToLoad()
+    public function iWaitForQuestionsToLoad(): void
     {
-        $this->iWaitForTheAjaxToLoad('#link_1');
+        $this->iWaitForElement('id', 'link_1');
     }
 
     /**

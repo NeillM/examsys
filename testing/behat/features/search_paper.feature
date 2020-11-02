@@ -22,10 +22,10 @@ Feature: Searching Papers,People and their related Academic Sessions
          | 2017 | 2017/18 |
          | 2018 | 2018/19 |
       And the following "papers" exist:
-         | papertitle | papertype | paperowner | modulename |
-         | paper1 | 2 | myteacher3 | m1 |
-         | paper2 | 2 | myteacher3 | m2 |
-         | paper3 | 2 | myteacher3 | m3 |
+         | type | papertitle | paperowner | modulename |
+         | summative | paper1 | myteacher3 | m1 |
+         | summative | paper2 | myteacher3 | m2 |
+         | summative | paper3 | myteacher3 | m3 |
       And the following "module team members" exist:
          | moduleid | username |
          | m1 | myteacher1 |

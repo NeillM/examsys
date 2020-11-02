@@ -15,13 +15,13 @@ Feature: Paper setup
       | moduleid | username |
       | TEST1001 | teacher |
     And the following "papers" exist:
-      | papertitle | papertype | paperowner | modulename |
-      | a formative paper | 0 | teacher | Test module |
+      | type | papertitle | paperowner | modulename |
+      | formative | a formative paper | teacher | Test module |
     And the following "questions" exist:
-      | user | type | leadin | scenario | options |
-      | teacher | true_false | tf 1 leadin | tf 1 scenario | {"correct":"t","marks_correct":"1","marks_incorrect":"0","marks_partial":"0"} |
-      | teacher | true_false | tf 2 leadin | tf 2 scenario | {"correct":"f","marks_correct":"1","marks_incorrect":"0","marks_partial":"0"} |
-      | teacher | true_false | tf 3 leadin | tf 3 scenario | {"correct":"t","marks_correct":"1","marks_incorrect":"0","marks_partial":"0"} |
+      | user | type | leadin | scenario | correct | marks_correct | marks_incorrect |
+      | teacher | true_false | tf 1 leadin | tf 1 scenario | true | 1 | 0 |
+      | teacher | true_false | tf 2 leadin | tf 2 scenario | false | 1 | 0 |
+      | teacher | true_false | tf 3 leadin | tf 3 scenario | true | 1 | 0 |
 
   @paper_question_create_blank
   Scenario: Create a blank question on the paper

@@ -38,22 +38,383 @@ trait datageneration
      * the first value is the name of the data generator,
      * the second value should be the data generator's component,
      * the third value is the function that should be called to create the data.
+     * the forth value is the pre process function run before the data generation
      *
      * @var array
      */
     protected $datagenerator_map = array(
-    'users' => array('users', 'core', 'create_user'),
-    'papers' => array('papers', 'core', 'create_paper'),
-    'questions' => array('questions', 'core', 'create_question'),
-    'modules' => array('modules', 'core', 'create_module'),
-    'academic year' => array('academic_year', 'core', 'create_academic_year'),
-    'module team members' => array('modules', 'core', 'create_module_team'),
-    'config' => array('config', 'core', 'change_setting'),
-    'campuses' => array('labs', 'core', 'create_campus'),
-    'labs' => array('labs', 'core', 'create_lab'),
-    'exam pcs' => array('labs', 'core', 'create_exam_pc'),
-    'module keywords' => array('modules', 'core', 'createModuleKeywords'),
+    'users' => array('users', 'core', 'create_user', null),
+    'papers' => array('papers', 'core', 'create_paper', 'preProcessPaper'),
+    'questions' => array('questions', 'core', 'create_question', 'preProcessQuestion'),
+    'modules' => array('modules', 'core', 'create_module', null),
+    'academic year' => array('academic_year', 'core', 'create_academic_year', null),
+    'module team members' => array('modules', 'core', 'create_module_team', null),
+    'config' => array('config', 'core', 'change_setting', null),
+    'campuses' => array('labs', 'core', 'create_campus', null),
+    'labs' => array('labs', 'core', 'create_lab', null),
+    'exam pcs' => array('labs', 'core', 'create_exam_pc', null),
+    'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
     );
+
+    /**
+     * Generate a blank option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getBlankOptions(array $row): string
+    {
+        return '{"option_text":"' . $row['blanks']
+            . '","marks_correct":"' . $row['marks_correct']
+            . '","marks_incorrect":"' . $row['marks_incorrect']
+            . '","marks_partial":"' . $row['marks_partial'] . '"}';
+    }
+
+    /**
+     * Generate a textbox option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getTextBoxOptions(array $row): string
+    {
+        return '{"correct":"' . $row['correct']
+            . '","marks_correct":"' . $row['marks_correct']
+            . '","marks_incorrect":"' . $row['marks_incorrect']
+            . '","marks_partial":"' . $row['marks_partial'] . '"}';
+    }
+
+    /**
+     * Generate a true_false option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getTrueFalseOptions(array $row): string
+    {
+        if ($row['correct'] == 'false') {
+            $row['correct'] = 'f';
+        } else {
+            $row['correct'] = 't';
+        }
+        return '{"correct":"' . $row['correct']
+            . '","marks_correct":"' . $row['marks_correct']
+            . '","marks_incorrect":"' . $row['marks_incorrect']
+            . '","marks_partial":"' . $row['marks_partial'] . '"}';
+    }
+
+    /**
+     * Generate a mcq option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getMCQOptions(array $row): string
+    {
+        $row['options'] = '[';
+        for ($i = 0; $i < $row['num_options']; $i++) {
+            $needle = $i + 1;
+            $row['options'] .= '{"option_text":"option ' . $needle
+                . '","correct":"' . $row['correct']
+                . '","marks_correct":"' . $row['marks_correct']
+                . '","marks_incorrect":"' . $row['marks_incorrect']
+                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+        }
+        return rtrim($row['options'], ',') . ']';
+    }
+
+    /**
+     * Generate a mrq / dichotomous option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getMRQOptions(array $row): string
+    {
+        $row['options'] = '[';
+        for ($i = 0; $i < $row['num_options']; $i++) {
+            $correct = 'n';
+            if ($row['type'] === 'dichotomous') {
+                $correct = 'f';
+            }
+            $needle = $i + 1;
+            if (array_search($needle, explode(',', $row['correct_options'])) !== false) {
+                $correct = 'y';
+                if ($row['type'] === 'dichotomous') {
+                    $correct = 't';
+                }
+            }
+            $row['options'] .= '{"option_text":"option ' . $needle
+                . '","correct":"' . $correct
+                . '","marks_correct":"' . $row['marks_correct']
+                . '","marks_incorrect":"' . $row['marks_incorrect']
+                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+        }
+        return rtrim($row['options'], ',') . ']';
+    }
+
+    /**
+     * Generate a rank option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getRankOptions(array $row): string
+    {
+        $row['options'] = '[';
+        $correct = explode(',', $row['correct_order']);
+        for ($i = 0; $i < $row['num_options']; $i++) {
+            $needle = $i + 1;
+            $row['options'] .= '{"option_text":"option ' . $needle
+                . '","correct":"' . $correct[$i]
+                . '","marks_correct":"' . $row['marks_correct']
+                . '","marks_incorrect":"' . $row['marks_incorrect']
+                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+        }
+        return rtrim($row['options'], ',') . ']';
+    }
+
+    /**
+     * Generate a sct option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getSCTOptions(array $row): string
+    {
+        $row['options'] = '[';
+        for ($i = 0; $i < 5; $i++) {
+            $correct = explode(',', $row['experts']);
+            $text = array(
+                'very unlikely',
+                'unlikely',
+                'neither likely nor unlikely',
+                'more likely',
+                'very likely'
+            );
+            $row['options'] .= '{"option_text":"' . $text[$i]
+                . '","correct":"' . $correct[$i]
+                . '","marks_correct":"' . $row['marks_correct']
+                . '","marks_incorrect":"' . $row['marks_incorrect']
+                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+        }
+        return rtrim($row['options'], ',') . ']';
+    }
+
+    /**
+     * Generate a extmatch/matrix option string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getExtMatchOptions(array $row): string
+    {
+        $row['options'] = '[';
+        $correct = str_replace(',', '|', $row['correct_options']) . '|';
+        for ($i = 0; $i < $row['num_options']; $i++) {
+            $needle = $i + 1;
+            $row['options'] .= '{"option_text":"option ' . $needle
+                . '","correct":"' . $correct
+                . '","marks_correct":"' . $row['marks_correct']
+                . '","marks_incorrect":"' . $row['marks_incorrect']
+                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+        }
+        return rtrim($row['options'], ',') . ']';
+    }
+
+    /**
+     * Generate a calc settings string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getCalcSettings(array $row): string
+    {
+        if (empty($row['tolerance_full'])) {
+            $row['tolerance_full'] = 0;
+        }
+        if (empty($row['tolerance_partial'])) {
+            $row['tolerance_partial'] = 0;
+        }
+        if (empty($row['variables'])) {
+            $row['variables'] = '{}';
+        }
+        if (empty($row['dp'])) {
+            $row['dp'] = 0;
+        }
+        if (empty($row['strictdisplay'])) {
+            $row['strictdisplay'] = 'true';
+        }
+        if (empty($row['strictzeros'])) {
+            $row['strictzeros'] = 'false';
+        }
+        if (empty($row['fulltoltyp'])) {
+            $row['fulltoltyp'] = '#';
+        }
+        if (empty($row['parttoltyp'])) {
+            $row['parttoltyp'] = '#';
+        }
+        if (empty($row['marks_unit'])) {
+            $row['marks_unit'] = 0;
+        }
+        if (empty($row['show_units'])) {
+            $row['show_units'] = 'true';
+        }
+        if (empty($row['formula'])) {
+            $row['formula'] = '';
+        }
+        if (empty($row['formula_units'])) {
+            $row['formula_units'] = '""';
+        }
+        return '{"tolerance_full":"' . $row['tolerance_full']
+            . '","tolerance_partial":"' . $row['tolerance_partial']
+            . '","vars":' . $row['variables']
+            . ',"marks_correct":' . $row['marks_correct']
+            . ',"marks_incorrect":' . $row['marks_incorrect']
+            . ',"marks_partial":' . $row['marks_partial']
+            . ',"dp":"' . $row['dp']
+            . '","strictdisplay":' . $row['strictdisplay']
+            . ',"strictzeros":' . $row['strictzeros']
+            . ',"fulltoltyp":"' . $row['fulltoltyp']
+            . '","parttoltyp":"' . $row['parttoltyp']
+            . '","marks_unit":' . $row['marks_unit']
+            . ',"show_units":' . $row['show_units']
+            . ',"answers":[{"formula":"' . $row['formula']
+            . '","units":' . $row['formula_units'] . '}]}';
+    }
+
+    /**
+     * Generate a textbox settings string
+     * @param array $row the question data
+     * @return string
+     */
+    private function getTextBoxSettings(array $row): string
+    {
+        if (empty($row['columns'])) {
+            $row['columns'] = 80;
+        }
+        if (empty($row['rows'])) {
+            $row['rows'] = 4;
+        }
+        if (empty($row['editor'])) {
+            $row['editor'] = 'Plain Text';
+        }
+        if (empty($row['terms'])) {
+            $row['terms'] = '[]';
+        }
+        return '{"columns":"' . $row['columns']
+            . '","rows":"' . $row['rows']
+            . '","editor":"' . $row['editor']
+            . '","terms":"' . $row['terms'] . '"}';
+    }
+
+    /**
+     * Preprocess question data
+     * @param array $row question data row
+     * @return array
+     */
+    private function preProcessQuestion(array $row): array
+    {
+        // Defaults.
+        if (empty($row['marks_correct'])) {
+            $row['marks_correct'] = 1;
+        }
+        if (empty($row['marks_incorrect'])) {
+            $row['marks_incorrect'] = 0;
+        }
+        if (empty($row['marks_partial'])) {
+            $row['marks_partial'] = 0;
+        }
+        // Force display method for sct.
+        if ($row['type'] === 'sct') {
+            $rows['display_method'] = 1;
+        }
+        // Generate option json.
+        switch ($row['type']) {
+            case 'blank':
+                $row['options'] = $this->getBlankOptions($row);
+                break;
+            case 'textbox':
+                $row['options'] = $this->getTextBoxOptions($row);
+                break;
+            case 'true_false':
+                $row['options'] = $this->getTrueFalseOptions($row);
+                break;
+            case 'mcq':
+                $row['options'] = $this->getMCQOptions($row);
+                break;
+            case 'dichotomous':
+            case 'mrq':
+                $row['options'] = $this->getMRQOptions($row);
+                break;
+            case 'rank':
+                $row['options'] = $this->getRankOptions($row);
+                break;
+            case 'sct':
+                $row['options'] = $this->getSCTOptions($row);
+                break;
+            case 'matrix':
+            case 'extmatch':
+                $row['options'] = $this->getExtMatchOptions($row);
+                break;
+            default:
+                break;
+        }
+        // Generate scenario.
+        if ($row['type'] === 'extmatch' or $row['type'] === 'matrix') {
+            $row['scenario'] = '';
+            for ($i = 0; $i < $row['num_stems']; $i++) {
+                $needle = $i + 1;
+                $row['scenario'] .= 'stem ' . $needle . '|';
+            }
+        }
+        // Generate settings json.
+        switch ($row['type']) {
+            case 'textbox':
+                $row['settings'] = $this->getTextBoxSettings($row);
+                break;
+            case 'enhancedcalc':
+                $row['settings'] = $this->getCalcSettings($row);
+                break;
+            default:
+                break;
+        }
+        // Generate paper json if assigned to a paper.
+        if (isset($row['paper'])) {
+            $row['paper'] = '{"paper":"' . $row['paper'] . '","screen":"' . $row['screen'] . '","displaypos":"' . $row['position'] . '"}';
+
+        }
+        return $row;
+    }
+
+    /**
+     * Preprocess paper data
+     * @param array $row paper data row
+     * @return array
+     */
+    private function preProcessPaper(array $row): array
+    {
+        // Get paper type.
+        $types = \PaperUtils::getTypeList();
+        $row['papertype'] = $types[$row['type']];
+        // Generate settings json.
+        $row['settings'] = '';
+        if ($row['type'] === 'osce') {
+            switch ($row['marking']) {
+                case 'Pass | Fail':
+                    $marking = 7;
+                    break;
+                case 'Clear FAIL | BORDERLINE | Clear PASS | Honours PASS':
+                    $marking = 6;
+                    break;
+                case 'N/A':
+                    $marking = 5;
+                    break;
+                case 'Fail | Borderline fail | Borderline pass | Pass | Good pass':
+                    $marking = 4;
+                    break;
+                case 'Clear Fail | Borderline | Clear Pass':
+                    $marking = 3;
+                    break;
+                default:
+                    $marking = 5;
+                    break;
+            }
+            $row['settings'] = '{"marking":"' . $marking . '"}';
+        }
+        return $row;
+    }
 
     /**
      * Adds records to the database using an appropriate data generator.
@@ -80,8 +441,14 @@ trait datageneration
                 . "{$generatorcomponent}_{$generatorname} data generator";
             throw new PendingException($message);
         }
+        // Get the preprocess function.
+        $preprocess = $this->datagenerator_map[$type][3];
         // Convert the data into a form that the data generator can use.
         foreach ($data->getHash() as $row) {
+            // Preprocess each row.
+            if (!is_null($preprocess)) {
+                $row = $this->$preprocess($row);
+            }
             // Pass each row into the generator.
             $datagenerator->$createmethod($row);
         }
