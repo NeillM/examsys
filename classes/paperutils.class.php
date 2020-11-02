@@ -548,7 +548,7 @@ class PaperUtils
      * @param string $title the paper title
      * @return ?int
      */
-    public function getPaperId(string $title): ?int
+    public static function getPaperId(string $title): ?int
     {
         $configObject = Config::get_instance();
         $result = $configObject->db->prepare('SELECT property_id FROM properties WHERE paper_title = ? LIMIT 1');
