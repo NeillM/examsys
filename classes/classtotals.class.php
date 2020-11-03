@@ -82,6 +82,12 @@ class ClassTotals
     private $unmarked_textbox = false;
     private $gradebook_enabled;
 
+    /** @var string The direction of the search results, i.e. asc or desc */
+    private $ordering;
+
+    /** @var string The order user results should be returned in, should be the name of one of the user_result array keys. */
+    private $sortby;
+
     /**
      * Called when the object is unserialised.
      */
