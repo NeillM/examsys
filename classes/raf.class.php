@@ -413,8 +413,10 @@ class RAF
                 $i++;
             }
 
-            foreach ($item['media'] as $media) {
-                $this->writeMedia($media, $q_id);
+            if (isset($item['media'])) {
+                foreach ($item['media'] as $media) {
+                    $this->writeMedia($media, $q_id);
+                }
             }
 
             if (is_object($this->properties)) {
@@ -568,7 +570,7 @@ class RAF
             $media['width'],
             $media['height'],
             $media['alt'],
-            $media['ownerid']
+            $this->userID
         );
         if ($mediaid !== -1) {
             \media_handler::linkQuestionToMedia($mediaid, $qid, $media['num']);
@@ -587,7 +589,7 @@ class RAF
             $media['width'],
             $media['height'],
             $media['alt'],
-            $media['ownerid']
+            $this->userID
         );
         if ($mediaid !== -1) {
             \media_handler::linkOptionToMedia($mediaid, $oid);
