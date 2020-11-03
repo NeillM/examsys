@@ -290,7 +290,7 @@ class log extends generator
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    private function create_exam($type, $parameters)
+    public function create_exam($type, $parameters)
     {
         if (!isset($type)) {
             throw new data_error('type must be provided');
