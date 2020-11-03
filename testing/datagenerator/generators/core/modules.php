@@ -73,7 +73,7 @@ class modules extends generator
      *
      * @param array
      *  string $modulename
-     *  string $username
+     *  string $username The username of the user.
      * @throws data_error If passed parameter is invalid
      */
     public function create_module_team($parameters)
@@ -96,8 +96,8 @@ class modules extends generator
      * Create a new module enrolment
      *
      * @param array parameters
-     *  string parameters[moduleid]
-     *  string parameters[userid]
+     *  int parameters[moduleid] The database id of the module
+     *  int parameters[userid] The database id of the user
      * @throws data_error If passed parameter is invalid
      */
     public function create_enrolment($parameters)
@@ -111,7 +111,10 @@ class modules extends generator
         $moduleid = $parameters['moduleid'];
         $userid = $parameters['userid'];
         $defaults = array(
-            'attempt' => 1, 'calendar_year' => null, 'auto_update' => 0);
+            'attempt' => 1,
+            'calendar_year' => null,
+            'auto_update' => 0,
+        );
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         if (is_null($settings['calendar_year'])) {
             $yearutils = new yearutils($this->db);
