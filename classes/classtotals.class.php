@@ -1289,6 +1289,18 @@ class ClassTotals
             $this->user_modules[$userID]['idMod'] = $idMod;
         }
         $mod_query->close();
+
+        if (!$this->studentsonly) {
+            // We need to include module staff.
+            $mod_query = $this->db->prepare("SELECT s.idMod, memberID, moduleID FROM modules_staff s, modules WHERE s.idMod = modules.id AND idMod IN ($tmp_moduleID_in)");
+            $mod_query->execute();
+            $mod_query->bind_result($idMod, $userID, $tmp_moduleid);
+            $mod_query->store_result();
+            while ($mod_query->fetch()) {
+                $this->user_modules[$userID]['idMod'] = $idMod;
+            }
+            $mod_query->close();
+        }
     }
 
     /**
