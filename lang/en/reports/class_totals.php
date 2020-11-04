@@ -97,6 +97,7 @@ $string['noattempts'] = 'This paper has not been attempted by any students betwe
 $string['marks'] = 'Marks';
 $string['studentssubmitted'] = 'Students Submitted';
 $string['noattendance'] = 'No Attendance';
+$string['noresults'] = 'No questions answered';
 $string['alternativearrangements'] = 'Alternative Arrangements';
 $string['displayexamscript'] = 'Display exam script';
 $string['displaysurvey'] = 'Display survey for';

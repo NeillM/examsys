@@ -44,9 +44,20 @@ class log extends generator
         if (empty($parameters['paperID'])) {
             throw new data_error('paperID must be provided');
         }
-        $defaults = array('started' => null, 'ipaddress' => null, 'student_grade' => null,
-            'year' => null, 'attempt' => null, 'completed' => null, 'lab_name' => null, 'highest_screen' => null,
-            'userID' => $parameters['userID'], 'paperID' => $parameters['paperID']);
+
+        $user = \UserUtils::get_full_details_by_ID($parameters['userID'], \Config::get_instance()->db);
+        $defaults = array(
+            'started' => null,
+            'ipaddress' => null,
+            'student_grade' => $user['course'],
+            'year' => null,
+            'attempt' => null,
+            'completed' => null,
+            'lab_name' => null,
+            'highest_screen' => null,
+            'userID' => $parameters['userID'],
+            'paperID' => $parameters['paperID']
+        );
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $sql->bind_param(
@@ -279,7 +290,7 @@ class log extends generator
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    private function create_exam($type, $parameters)
+    public function create_exam($type, $parameters)
     {
         if (!isset($type)) {
             throw new data_error('type must be provided');
@@ -290,9 +301,18 @@ class log extends generator
         if (empty($parameters['q_id'])) {
             throw new data_error('q_id must be provided');
         }
-        $defaults = array('mark' => null, 'adjmark' => null, 'totalpos' => null, 'user_answer' => null,
-            'errorstate' => 0, 'screen' => null, 'duration' => null, 'updated' => null, 'dismiss' => null,
-            'option_order' => null);
+        $defaults = array(
+            'mark' => null,
+            'adjmark' => null,
+            'totalpos' => null,
+            'user_answer' => null,
+            'errorstate' => 0,
+            'screen' => null,
+            'duration' => null,
+            'updated' => null,
+            'dismiss' => null,
+            'option_order' => null
+        );
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
         $sql = $this->db->prepare('INSERT INTO log' . $type . ' VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');

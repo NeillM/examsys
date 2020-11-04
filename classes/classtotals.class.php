@@ -82,6 +82,12 @@ class ClassTotals
     private $unmarked_textbox = false;
     private $gradebook_enabled;
 
+    /** @var string The direction of the search results, i.e. asc or desc */
+    private $ordering;
+
+    /** @var string The order user results should be returned in, should be the name of one of the user_result array keys. */
+    private $sortby;
+
     /**
      * Called when the object is unserialised.
      */
@@ -627,10 +633,6 @@ class ClassTotals
                 }
             }
             $i++;
-        }
-
-        if (isset($this->student_cohort)) {
-            $this->check_and_clear_cohort($this->user_results[$user_number]['username']);
         }
     }
 
@@ -1293,6 +1295,18 @@ class ClassTotals
             $this->user_modules[$userID]['idMod'] = $idMod;
         }
         $mod_query->close();
+
+        if (!$this->studentsonly) {
+            // We need to include module staff.
+            $mod_query = $this->db->prepare("SELECT s.idMod, memberID, moduleID FROM modules_staff s, modules WHERE s.idMod = modules.id AND idMod IN ($tmp_moduleID_in)");
+            $mod_query->execute();
+            $mod_query->bind_result($idMod, $userID, $tmp_moduleid);
+            $mod_query->store_result();
+            while ($mod_query->fetch()) {
+                $this->user_modules[$userID]['idMod'] = $idMod;
+            }
+            $mod_query->close();
+        }
     }
 
     /**
@@ -1421,34 +1435,41 @@ class ClassTotals
             }
 
             $this->user_results[$metadataID] = array(
-                                                'metadataID' => $metadataID,
-                                                'userID' => $userID,
-                                                'username' => $username,
-                                                'roles' => $roles,
-                                                'year' => $year,
-                                                'title' => $title,
-                                                'surname' => $surname,
-                                                'initials' => $initials,
-                                                'first_names' => $first_names,
-                                                'name' => $tmp_name,
-                                                'email' => $email,
-                                                'gender' => $gender,
-                                                'ipaddress' => $ipaddress,
-                                                'room' => $room,
-                                                'student_id' => $student_id,
-                                                'attempt' => $attempt,
-                                                'visible' => false, // We must assume the user should not be displayed.
-                                                'display_started' => $display_started,
-                                                'started' => $started,
-                                                'student_grade' => $student_grade,
-                                                'mark' => 0,
-                                                'percent' => 0,
-                                                'questions' => 0,
-                                                'duration' => 0,
-                                                'marking_complete' => true,
-                                                'module' => $module,
-                                                'paper_type' => $this->paper_type
-                                               );
+                'metadataID' => $metadataID,
+                'userID' => $userID,
+                'username' => $username,
+                'roles' => $roles,
+                'year' => $year,
+                'title' => $title,
+                'surname' => $surname,
+                'initials' => $initials,
+                'first_names' => $first_names,
+                'name' => $tmp_name,
+                'email' => $email,
+                'gender' => $gender,
+                'ipaddress' => $ipaddress,
+                'room' => $room,
+                'student_id' => $student_id,
+                'attempt' => $attempt,
+                'visible' => !empty($this->absent), // We must assume the user should not be displayed, unless absent students should be displayed.
+                'has_results' => false, // We must assume the user does not have results.
+                'display_started' => $display_started,
+                'started' => $started,
+                'student_grade' => $student_grade,
+                'mark' => 0,
+                'percent' => 0,
+                'questions' => 0,
+                'duration' => 0,
+                'marking_complete' => true,
+                'module' => $module,
+                'paper_type' => $this->paper_type
+            );
+
+            if (isset($this->student_cohort)) {
+                // Remove the user from the absent list.
+                $this->check_and_clear_cohort($this->user_results[$metadataID]['username']);
+            }
+
             $metadataids[] = $metadataID;
         }
         $result->close();
@@ -1482,8 +1503,9 @@ class ClassTotals
 
         while ($result->fetch()) {
             $userID = $this->user_results[$metadataID]['userID'];
-            // We have passed the check this students should be displayed.
+            // We have passed the check this students should be displayed with results.
             $this->user_results[$metadataID]['visible'] =  true;
+            $this->user_results[$metadataID]['has_results'] =  true;
 
             if ($old_screen != $screen or $old_metadataID != $metadataID) {
                 $user_duration += $old_duration;
@@ -1648,6 +1670,7 @@ class ClassTotals
                 $this->user_results[$user_no]['paper_type']       = '';
                 $this->user_results[$user_no]['room']             = '';
                 $this->user_results[$user_no]['visible']          = true;    // Default to visible unless switched off below.
+                $this->user_results[$user_no]['has_results']      =  false;
                 $this->user_results[$user_no]['roles']            = 'Student';
                 $this->user_results[$user_no]['late']             = true;
                 $this->user_results[$user_no]['rank']             = 99999999999;

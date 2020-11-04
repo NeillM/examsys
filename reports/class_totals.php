@@ -221,18 +221,10 @@ echo draw_toprightmenu(30);
     <div class="popup_icon"><img src="../artwork/guest_account_16.png" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['reassigntouser']; ?></div>
   </div>
-  <?php
-    // Only allow reset of timer for Progress tests and Remote Summative exams.
-    $remote = $propertyObj->getSetting('remote_summative');
-    if ($paper_type == '1' or ($paper_type == '2' and $remote)) {
-        $class = 'popup_row';
-    } else {
-        $class = 'popup_row_disabled';
-    }
-    ?>
-  <div class="<?php echo $class ?>">
+
+  <div class="popup_row" id="item6">
       <div class="popup_icon"><img src="../artwork/clock_16.png" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item6"><?php echo $string['resettimer']; ?></div>
+    <div class="popup_title"><?php echo $string['resettimer']; ?></div>
   </div>
 
   <div class="popup_row" id="item7">
@@ -360,7 +352,11 @@ for ($i = 0; $i < $user_no; $i++) {
             $class = '';
             $user_results[$i]['attempt'] = 0;
             ?>
-<tr class="nonattend" id="res<?php echo $i + 1 ?>" data-metadataid="" data-paperid="<?php echo $paperID ?>" data-cryptname="<?php echo $propertyObj->get_crypt_name() ?>" data-userid="<?php echo $userID; ?>" data-papertype="<?php echo $paper_type; ?>" data-reassign="<?php echo $reassign ?>" data-late="<?php echo $late_submissions ?>" data-percent="<?php echo $percent; ?>"><td>&nbsp;</td>
+<tr class="nonattend" id="res<?php echo $i + 1 ?>" data-metadataid="" data-paperid="<?php echo $paperID ?>"
+    data-cryptname="<?php echo $propertyObj->get_crypt_name() ?>" data-userid="<?php echo $userID; ?>"
+    data-papertype="<?php echo $paper_type; ?>" data-reassign="<?php echo $reassign ?>" data-late="<?php echo $late_submissions ?>"
+    data-percent="<?php echo $percent; ?>" data-results="0"
+><td>&nbsp;</td>
             <?php
         } else {
             // Setup the row for a user who took the exam.
@@ -409,7 +405,13 @@ for ($i = 0; $i < $user_no; $i++) {
                 $icon = 'offline_16.gif';
                 $alt = $string['displaypaper'];
             }
-            echo ' style="cursor:default" data-metadataid="' . $user_results[$i]['metadataID'] . '" data-paperid="' . $paperID . '" data-cryptname="' . $propertyObj->get_crypt_name() . '" data-userid="' . $user_results[$i]['userID'] . '" data-papertype="' . $user_results[$i]['paper_type'] . '" data-reassign="' . $reassign . '" data-late="' . $late_submissions . '" data-percent="' . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . '"';
+            $has_result = ($user_results[$i]['has_results']) ? '1' : '0';
+            echo ' style="cursor:default" data-metadataid="' . $user_results[$i]['metadataID']
+                . '" data-paperid="' . $paperID . '" data-cryptname="' . $propertyObj->get_crypt_name()
+                . '" data-userid="' . $user_results[$i]['userID'] . '" data-papertype="' . $user_results[$i]['paper_type']
+                . '" data-reassign="' . $reassign . '" data-late="' . $late_submissions
+                . '" data-percent="' . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals)
+                . '" data-results="' . $has_result . '"';
             echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" title=\"$alt\" alt=\"$alt\" class=\"picon\" /></td>";
         }
 
@@ -464,6 +466,10 @@ for ($i = 0; $i < $user_no; $i++) {
         if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
             echo '<td colspan="' . (9 + count($metadata_cols)) . '" style="text-align:center">&lt;' . $string['noattendance'] . "&gt;</td></tr>\n";
             $absent_no++;
+        } elseif (!$user_results[$i]['has_results']) {
+            // The student has started, but has not yet had any screens save.
+            echo '<td class="' . $class . ' ' . $role_css . '" colspan="' . (9 + count($metadata_cols)) . '" style="text-align:center">'
+                . '&lt;' . $string['noresults'] . "&gt;</td></tr>\n";
         } else {
             //$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
 
@@ -492,19 +498,19 @@ for ($i = 0; $i < $user_no; $i++) {
                 }
             }
             // Rank column
-                echo "<td class=\"$class r $role_css\">" . $user_results[$i]['rank'] . '</td>';
+            echo "<td class=\"$class r $role_css\">" . $user_results[$i]['rank'] . '</td>';
             // Decile column
-                echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . '</td>';
+            echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . '</td>';
             // Start Time column
-                echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . '</td>';
+            echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . '</td>';
             // Duration column
-                echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
+            echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
             if ($late_submissions == 'y') {
                 echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" title="' . $string['markingnotcomplete'] . '" alt="' . $string['markingnotcomplete'] . '"  width="12" height="11" />';
             }
-                echo '</td>';
+            echo '</td>';
 
-                echo "<td class=\"$class $role_css\">" . $user_results[$i]['ipaddress'] . '</td>';
+            echo "<td class=\"$class $role_css\">" . $user_results[$i]['ipaddress'] . '</td>';
             if ($paper_type == 2) {
                 echo "<td class=\"$class $role_css\">" . $user_results[$i]['room'] . '</td>';
             }

@@ -68,7 +68,7 @@ abstract class unittestdatabase extends TestCase
     public $db;
 
     /**
-     * @var integer Storage for admin user id in tests
+     * @var array Storage for admin user id in tests
      */
     public $admin;
 

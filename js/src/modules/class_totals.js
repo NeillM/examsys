@@ -103,6 +103,7 @@ define(['jquery', 'helplauncher', 'rogoconfig'], function($, HELPLAUNCHER, CONFI
 
             $("tr[id^=res]").click(function() {
                 scope.metadataid = $(this).data("metadataid");
+                scope.results = $(this).data("results");
                 scope.userid = $(this).data("userid");
                 scope.papertype = $(this).data("papertype");
                 scope.reassign = $(this).data("reassign");
@@ -111,7 +112,7 @@ define(['jquery', 'helplauncher', 'rogoconfig'], function($, HELPLAUNCHER, CONFI
                 scope.cryptname = $(this).data("cryptname");
                 scope.logtype = $(this).data("logtype");
                 scope.paperid = $(this).data("paperid");
-                if (scope.metadataid == '') {
+                if (scope.results == '') {
                     $('#item1').removeClass('popup_row');
                     $('#item1').addClass('popup_row_disabled');
                     $('#item2').removeClass('popup_row');
@@ -135,6 +136,15 @@ define(['jquery', 'helplauncher', 'rogoconfig'], function($, HELPLAUNCHER, CONFI
 
                     $('#item5').removeClass('popup_row');
                     $('#item5').addClass('popup_row_disabled');
+                }
+
+                // Set the Reset link to be displayed correctly.
+                if (scope.metadataid && scope.canResetTimer()) {
+                    $('#item6').addClass('popup_row');
+                    $('#item6').removeClass('popup_row_disabled');
+                } else {
+                    $('#item6').removeClass('popup_row');
+                    $('#item6').addClass('popup_row_disabled');
                 }
 
                 if (scope.late == 'y') {
@@ -285,7 +295,7 @@ define(['jquery', 'helplauncher', 'rogoconfig'], function($, HELPLAUNCHER, CONFI
          */
         this.resetTimer = function() {
             // Only allow reset of timer for Progress tests and Remote Summative exams.
-            if (this.papertype == '1' || (this.papertype == '2' && $('#dataset').attr('data-remotesummative') == 1)) {
+            if (this.canResetTimer()) {
                 $('#menudiv').hide();
                 var reassign = window.open(CONFIG.cfgrootpath + "/reports/check_reset_timer.php?userID=" + this.userid + "&paperID=" + this.paperid + "&metadataID=" + this.metadataid + "", "reassign", "width=550,height=200,left=" + (screen.width / 2 - 275) + ",top=" + (screen.height / 2 - 100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
                 if (window.focus) {
@@ -293,6 +303,15 @@ define(['jquery', 'helplauncher', 'rogoconfig'], function($, HELPLAUNCHER, CONFI
                 }
             }
         };
+
+        /**
+         * Checks if the timer can be reset.
+         *
+         * @returns {boolean}
+         */
+        this.canResetTimer = function() {
+            return (this.papertype == '1' || (this.papertype == '2' && $('#dataset').attr('data-remotesummative') == 1));
+        }
 
         /**
          * Open log late assignment window.
