@@ -43,17 +43,17 @@ trait datageneration
      * @var array
      */
     protected $datagenerator_map = array(
-    'users' => array('users', 'core', 'create_user', null),
-    'papers' => array('papers', 'core', 'create_paper', 'preProcessPaper'),
-    'questions' => array('questions', 'core', 'create_question', 'preProcessQuestion'),
-    'modules' => array('modules', 'core', 'create_module', null),
-    'academic year' => array('academic_year', 'core', 'create_academic_year', null),
-    'module team members' => array('modules', 'core', 'create_module_team', null),
-    'config' => array('config', 'core', 'change_setting', null),
-    'campuses' => array('labs', 'core', 'create_campus', null),
-    'labs' => array('labs', 'core', 'create_lab', null),
-    'exam pcs' => array('labs', 'core', 'create_exam_pc', null),
-    'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
+        'users' => array('users', 'core', 'create_user', null),
+        'papers' => array('papers', 'core', 'create_paper', 'preProcessPaper'),
+        'questions' => array('questions', 'core', 'create_question', 'preProcessQuestion'),
+        'modules' => array('modules', 'core', 'create_module', null),
+        'academic year' => array('academic_year', 'core', 'create_academic_year', null),
+        'module team members' => array('modules', 'core', 'create_module_team', null),
+        'config' => array('config', 'core', 'change_setting', null),
+        'campuses' => array('labs', 'core', 'create_campus', null),
+        'labs' => array('labs', 'core', 'create_lab', null),
+        'exam pcs' => array('labs', 'core', 'create_exam_pc', null),
+        'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
     );
 
     /**
