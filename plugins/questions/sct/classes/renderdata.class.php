@@ -109,15 +109,17 @@ class renderdata extends \questiondata
             $this->displaymedia = true;
         }
         $sct_parts = explode('~', $this->leadin);
-        $sct_titles = array(1 => $this->strings['hypothesis'],
-        2 => $this->strings['investigation'],
-        3 => $this->strings['prescription'],
-        4 => $this->strings['intervention'],
-        5 => $this->strings['treatment']);
+        $sct_titles = array(
+            1 => $this->strings['hypothesis'],
+            2 => $this->strings['investigation'],
+            3 => $this->strings['prescription'],
+            4 => $this->strings['intervention'],
+            5 => $this->strings['treatment'],
+        );
         $this->scttitle = $sct_titles[$this->displaymethod];
         $this->scthyp = $sct_parts[0];
         $this->sctinfo = $sct_parts[1];
-        $this->scttitlelower = sprintf($this->strings['scttitle'], mb_strtolower($sct_titles[$this->displaymethod], 'UTF-8'));
+        $this->scttitlelower = sprintf($this->strings['scttitle'], mb_strtolower($this->scttitle, 'UTF-8'));
 
         if ($useranswer == '0' and $screen_pre_submitted == 1) {
             $this->unanswered = true;
