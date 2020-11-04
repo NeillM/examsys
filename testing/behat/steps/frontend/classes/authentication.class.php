@@ -41,6 +41,7 @@ trait authentication
     {
         // Goto the base Rogo path.
         $this->getSession()->visit($this->locatePath('/'));
+        $this->lookForErrors();
         $this->i_set_field('ROGO_USER', $username);
         $this->i_set_field('ROGO_PW', $username);
         $this->i_click('rogo-login-form-std', 'button');
@@ -52,7 +53,7 @@ trait authentication
             throw new \Exception("Login failed for $username");
         }
     }
-  
+
     /**
      * Log out Rogo.
      *

@@ -224,6 +224,7 @@ trait forms
             throw new \Exception('Saving is disabled.');
         }
         $submit->press();
+        $this->lookForErrors();
     }
 
     /**
