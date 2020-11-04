@@ -107,6 +107,7 @@ trait pages
                 throw new PendingException("A handler for the '$page' page has not been implemented.");
                 break;
         }
+        $this->lookForErrors();
     }
 
     /**

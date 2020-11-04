@@ -51,7 +51,7 @@ class campus
 
     /**
      * Get details for all campus
-     * @return array|bool details or false on error
+     * @return array details
      */
     public function get_all_campus_details()
     {
@@ -60,15 +60,11 @@ class campus
         $result->store_result();
         $result->bind_result($campusid, $campusname, $isdefault);
         $campuses = array();
-        if ($result->num_rows > 0) {
-            while ($result->fetch()) {
-                $campuses[$campusid] = array('campusname' => $campusname, 'isdefault' => $isdefault);
-            }
-            $result->close();
-            return $campuses;
+        while ($result->fetch()) {
+            $campuses[$campusid] = array('campusname' => $campusname, 'isdefault' => $isdefault);
         }
         $result->close();
-        return false;
+        return $campuses;
     }
 
     /**

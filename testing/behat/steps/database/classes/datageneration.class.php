@@ -318,7 +318,18 @@ trait datageneration
         }
         // Force display method for sct.
         if ($row['type'] === 'sct') {
-            $rows['display_method'] = 1;
+            $row['display_method'] = 1;
+
+            // Optional new information needs to be added to the leadin.
+            if (isset($row['newinfo'])) {
+                $row['leadin'] .= '~' . $row['newinfo'];
+            }
+
+            // The SCT leadin is special. and contains multiple pices of information separated by a ~
+            // The second part is for new information.
+            if (strpos($row['leadin'], '~') === false) {
+                $row['leadin'] .= '~';
+            }
         }
         // Generate option json.
         switch ($row['type']) {

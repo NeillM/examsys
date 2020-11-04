@@ -182,6 +182,35 @@ class rogo_test extends MinkContext
     }
 
     /**
+     * Detects errors, notices and warnings on a page.
+     *
+     * @throws \Exception
+     * @throws \Behat\Mink\Exception\DriverException
+     */
+    public function lookForErrors(): void
+    {
+        // Regular expressions for detecting errors, notices and the like.
+        $error = "//*[contains(., 'Error: ') and contains(., ' on line ')]";
+        $warning = "//*[contains(., 'Warning: ') and contains(., ' on line ')]";
+        $notice = "//*[contains(., 'Notice: ') and contains(., ' on line ')]";
+        try {
+            if ($this->getSession()->getDriver()->find($error)) {
+                throw new Exception('Error found on page.');
+            }
+            if ($this->getSession()->getDriver()->find($warning)) {
+                throw new Exception('Warning found on page.');
+            }
+            if ($this->getSession()->getDriver()->find($notice)) {
+                throw new Exception('Notice found on page.');
+            }
+        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+            // Nothing we can do about this.
+        } catch (\WebDriver\Exception\NoSuchWindow $e) {
+            // The action caused the window to close so we cannot see any errors.
+        }
+    }
+
+    /**
      * Waits for an action to be true.
      *
      * @param function $lambda

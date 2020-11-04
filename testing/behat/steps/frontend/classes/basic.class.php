@@ -89,6 +89,7 @@ trait basic
             throw new \Exception("The \"$selector\" with the value of \"$name\" could not be found");
         }
         $element->click();
+        $this->lookForErrors();
     }
 
     /**
@@ -160,6 +161,7 @@ trait basic
             $session->switchToWindow($window);
             $title = $session->getDriver()->getWebDriverSession()->title();
             if (trim($title) === trim($name)) {
+                $this->lookForErrors();
                 return;
             }
         }
@@ -178,6 +180,7 @@ trait basic
             throw new Exception('Main window not set');
         }
         $session->switchToWindow($this->mainwindow);
+        $this->lookForErrors();
     }
 
     /**
@@ -197,6 +200,7 @@ trait basic
                 $session->switchToWindow($window);
                 $name = $session->getDriver()->getWebDriverSession()->title();
                 if (trim($title) === trim($name)) {
+                    $this->lookForErrors();
                     return true;
                 }
             }
@@ -366,6 +370,7 @@ trait basic
     {
         $elements = $this->find_all('xpath', "//div[@class='container' and contains(text(), '$name')]");
         $elements[0]->click();
+        $this->lookForErrors();
     }
 
     /**
@@ -384,6 +389,7 @@ return document.readyState === 'complete'
 JS;
                 if ($session->evaluateScript($js)) {
                     // The status code indicates the page is fully loaded.
+                    $this->lookForErrors();
                     return true;
                 }
             } catch (UnsupportedDriverActionException $ex) {
@@ -392,11 +398,13 @@ JS;
                     // Try testing for a response code of 200 (Any other code is not loaded)
                     if ($session->getStatusCode() === 200) {
                         // The status code indicates the page returned content successfully.
+                        $this->lookForErrors();
                         return true;
                     }
                 } catch (UnsupportedDriverActionException $ex) {
                     // All methods of determining if the page is fully loaded are not supported,
                     //  so we must assume it is and hope for the best.
+                    $this->lookForErrors();
                     return true;
                 }
             }
@@ -633,6 +641,7 @@ JS;
     public function iFocusOnIframe($name): void
     {
         $this->getSession()->getDriver()->switchToIFrame($name);
+        $this->lookForErrors();
     }
 
     /**
@@ -647,6 +656,7 @@ JS;
                 function (rogo_test $context) use ($selector, $content) {
                     $element = $this->find($selector, $content);
                     if (!is_null($element) and $element->isVisible()) {
+                        $this->lookForErrors();
                         return true;
                     }
                     return false;
@@ -668,6 +678,7 @@ JS;
                 function (rogo_test $context) use ($current_screen) {
                     $screen = $this->find('id_or_name', 'current_screen');
                     if ($screen->getValue() !== $current_screen) {
+                        $this->lookForErrors();
                         return true;
                     }
                     return false;

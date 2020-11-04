@@ -59,7 +59,7 @@ class campustest extends unittestdatabase
         $this->assertEquals($campusarray, $campus->get_all_campus_details());
         // Test details not found error.
         $this->teardown_dataset();
-        $this->assertFalse($campus->get_all_campus_details());
+        $this->assertEmpty($campus->get_all_campus_details());
     }
 
     /**

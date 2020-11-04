@@ -177,6 +177,11 @@ config:
     value: '{"formative":1,"progress":1,"summative":1,"survey":1,"osce":1,"offline":1,"peer_review":1}'
     type: 'assoc'
   -
+    component: 'core'
+    setting: 'paper_breaktime_scale'
+    value: '[5,10,25,33,50,100,200,300]'
+    type: 'csv'
+  -
     component: "core"
     setting: "rpt_percent_decimals"
     value: "2"

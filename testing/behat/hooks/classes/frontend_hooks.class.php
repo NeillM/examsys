@@ -170,26 +170,35 @@ trait frontend_hooks
     {
         if ($event->getTestResult()->getResultCode() == TestResult::FAILED) {
             // The step failed.
-            $faildir = self::$default_config->get('cfg_behat_faildump');
-            if (!empty($faildir) and is_dir($faildir)) {
-                $faildir .= '/' . self::$starttime;
-                if (!is_dir($faildir)) {
-                    mkdir($faildir);
-                }
-                $feature = basename($event->getFeature()->getFile(), '.feature');
-                $line = $event->getStep()->getLine();
-                $filename = "$feature-$line";
+            $this->takeScreenshot($event);
+        }
+    }
 
-                // Dump the page.
-                $page = $this->getSession()->getPage();
-                file_put_contents("$faildir/$filename.html", $page->getContent());
+    /**
+     * Takes a screenshot of a failed page.
+     *
+     * @param \Behat\Behat\Hook\Scope\AfterStepScope $event
+     */
+    protected function takeScreenshot(AfterStepScope $event) {
+        $faildir = self::$default_config->get('cfg_behat_faildump');
+        if (!empty($faildir) and is_dir($faildir)) {
+            $faildir .= '/' . self::$starttime;
+            if (!is_dir($faildir)) {
+                mkdir($faildir);
+            }
+            $feature = basename($event->getFeature()->getFile(), '.feature');
+            $line = $event->getStep()->getLine();
+            $filename = "$feature-$line";
 
-                try {
-                    // Screenshot the failure.
-                    $this->saveScreenshot("$filename.png", $faildir);
-                } catch (DriverException $e) {
-                    // Screenshots are not supported for this step.
-                }
+            // Dump the page.
+            $page = $this->getSession()->getPage();
+            file_put_contents("$faildir/$filename.html", $page->getContent());
+
+            try {
+                // Screenshot the failure.
+                $this->saveScreenshot("$filename.png", $faildir);
+            } catch (DriverException $e) {
+                // Screenshots are not supported for this step.
             }
         }
     }
