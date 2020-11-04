@@ -264,12 +264,12 @@ class PaperSettings
         $declarations = self::getSettingDeclartions($papertype);
         $data = array();
         if (count($declarations) > 0) {
-            if ($category != '') {
-                // Category specifc settings.
-                $data[$category] = $declarations[$category];
-            } else {
+            if ($category === '') {
                 // All settings.
                 $data = $declarations;
+            } elseif (isset($declarations[$category])) {
+                // Category specifc settings.
+                $data[$category] = $declarations[$category];
             }
         }
         $render = new render(Config::get_instance());
