@@ -129,30 +129,36 @@ trait frontend_hooks
         self::special_config();
         state::save_database_state(state::TRANSACTION_SCENARIO);
 
-        $session = $this->getSession();
-        $session->start();
-
         try {
-            $session->maximizeWindow();
-        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
-            // The current driver does not support maximising the window.
-            // We have to hope for the best.
-        }
+            $session = $this->getSession();
+            $session->start();
 
-        try {
-            $windows = $session->getWindowNames();
-            $this->mainwindow = $windows[0];
-        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
-            // The current driver does not support window switching.
-            $this->mainwindow = null;
-        }
+            try {
+                $session->maximizeWindow();
+            } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+                // The current driver does not support maximising the window.
+                // We have to hope for the best.
+            }
 
-        if (self::is_first_scenario()) {
-            selectors::register_rogo_selectors($session);
-        }
+            try {
+                $windows = $session->getWindowNames();
+                $this->mainwindow = $windows[0];
+            } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+                // The current driver does not support window switching.
+                $this->mainwindow = null;
+            }
 
-        // Reset the session.
-        $session->reset();
+            if (self::is_first_scenario()) {
+                selectors::register_rogo_selectors($session);
+            }
+
+            // Reset the session.
+            $session->reset();
+        } catch (Exception $e) {
+            // If starting the session fails we should ensure that everything is reset, before letting the exception bubble.
+            $this->resetScenario();
+            throw $e;
+        }
 
         if (self::is_first_scenario()) {
             // This should be the last thing done in this method.
@@ -228,6 +234,16 @@ trait frontend_hooks
             // The current driver does not support window switching.
         }
         $session->stop();
+        $this->resetScenario();
+    }
+
+    /**
+     * Resets the values created during Scenario setup.
+     *
+     * @throws \testing\invalid_rogosingleton_object
+     */
+    protected function resetScenario()
+    {
         $this->mainwindow = null;
         // Reset the config object.
         RogoConfig::set_mock_instance(clone(self::$rogo_config));
