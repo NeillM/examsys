@@ -43,18 +43,32 @@ trait datageneration
      * @var array
      */
     protected $datagenerator_map = array(
-    'users' => array('users', 'core', 'create_user', null),
-    'papers' => array('papers', 'core', 'create_paper', 'preProcessPaper'),
-    'questions' => array('questions', 'core', 'create_question', 'preProcessQuestion'),
-    'modules' => array('modules', 'core', 'create_module', null),
-    'academic year' => array('academic_year', 'core', 'create_academic_year', null),
-    'module team members' => array('modules', 'core', 'create_module_team', null),
-    'config' => array('config', 'core', 'change_setting', null),
-    'campuses' => array('labs', 'core', 'create_campus', null),
-    'labs' => array('labs', 'core', 'create_lab', null),
-    'exam pcs' => array('labs', 'core', 'create_exam_pc', null),
-    'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
+        'users' => array('users', 'core', 'create_user', null),
+        'papers' => array('papers', 'core', 'create_paper', 'preProcessPaper'),
+        'questions' => array('questions', 'core', 'create_question', 'preProcessQuestion'),
+        'modules' => array('modules', 'core', 'create_module', null),
+        'academic year' => array('academic_year', 'core', 'create_academic_year', null),
+        'module team members' => array('modules', 'core', 'create_module_team', null),
+        'config' => array('config', 'core', 'change_setting', null),
+        'campuses' => array('labs', 'core', 'create_campus', null),
+        'labs' => array('labs', 'core', 'create_lab', null),
+        'exam pcs' => array('labs', 'core', 'create_exam_pc', null),
+        'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
     );
+
+    /**
+     * Will return an array that contains only the indicies from $defaults,
+     * using the values from $paramterts if they are set.
+     *
+     * @param array $defaults Contains all the indicies that should be returned along their their default values.
+     * @param array $parameters The values that should over write the defaults.
+     * @return array
+     */
+    protected function set_defaults_and_clean(array $defaults, array $parameters)
+    {
+        $return = array_merge($defaults, $parameters);
+        return array_intersect_key($return, $defaults);
+    }
 
     /**
      * Generate a blank option string
@@ -63,6 +77,14 @@ trait datageneration
      */
     private function getBlankOptions(array $row): string
     {
+        $defaults = [
+            'blanks' => '',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         return '{"option_text":"' . $row['blanks']
             . '","marks_correct":"' . $row['marks_correct']
             . '","marks_incorrect":"' . $row['marks_incorrect']
@@ -76,6 +98,14 @@ trait datageneration
      */
     private function getTextBoxOptions(array $row): string
     {
+        $defaults = [
+            'correct' => 'placeholder',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         return '{"correct":"' . $row['correct']
             . '","marks_correct":"' . $row['marks_correct']
             . '","marks_incorrect":"' . $row['marks_incorrect']
@@ -94,6 +124,15 @@ trait datageneration
         } else {
             $row['correct'] = 't';
         }
+
+        $defaults = [
+            'correct' => 't',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         return '{"correct":"' . $row['correct']
             . '","marks_correct":"' . $row['marks_correct']
             . '","marks_incorrect":"' . $row['marks_incorrect']
@@ -107,6 +146,15 @@ trait datageneration
      */
     private function getMCQOptions(array $row): string
     {
+        $defaults = [
+            'num_options' => 2,
+            'correct' => 1,
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         $row['options'] = '[';
         for ($i = 0; $i < $row['num_options']; $i++) {
             $needle = $i + 1;
@@ -126,6 +174,16 @@ trait datageneration
      */
     private function getMRQOptions(array $row): string
     {
+        $defaults = [
+            'num_options' => 2,
+            'type' => 'dichotomous',
+            'correct_options' => '1',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         $row['options'] = '[';
         for ($i = 0; $i < $row['num_options']; $i++) {
             $correct = 'n';
@@ -155,6 +213,15 @@ trait datageneration
      */
     private function getRankOptions(array $row): string
     {
+        $defaults = [
+            'num_options' => 3,
+            'correct_order' => '1,2,3',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         $row['options'] = '[';
         $correct = explode(',', $row['correct_order']);
         for ($i = 0; $i < $row['num_options']; $i++) {
@@ -175,6 +242,14 @@ trait datageneration
      */
     private function getSCTOptions(array $row): string
     {
+        $defaults = [
+            'experts' => '1,2,10,3,1',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         $row['options'] = '[';
         for ($i = 0; $i < 5; $i++) {
             $correct = explode(',', $row['experts']);
@@ -201,6 +276,15 @@ trait datageneration
      */
     private function getExtMatchOptions(array $row): string
     {
+        $defaults = [
+            'num_options' => 3,
+            'correct_options' => '3,1,2',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         $row['options'] = '[';
         $correct = str_replace(',', '|', $row['correct_options']) . '|';
         for ($i = 0; $i < $row['num_options']; $i++) {
@@ -221,42 +305,25 @@ trait datageneration
      */
     private function getCalcSettings(array $row): string
     {
-        if (empty($row['tolerance_full'])) {
-            $row['tolerance_full'] = 0;
-        }
-        if (empty($row['tolerance_partial'])) {
-            $row['tolerance_partial'] = 0;
-        }
-        if (empty($row['variables'])) {
-            $row['variables'] = '{}';
-        }
-        if (empty($row['dp'])) {
-            $row['dp'] = 0;
-        }
-        if (empty($row['strictdisplay'])) {
-            $row['strictdisplay'] = 'true';
-        }
-        if (empty($row['strictzeros'])) {
-            $row['strictzeros'] = 'false';
-        }
-        if (empty($row['fulltoltyp'])) {
-            $row['fulltoltyp'] = '#';
-        }
-        if (empty($row['parttoltyp'])) {
-            $row['parttoltyp'] = '#';
-        }
-        if (empty($row['marks_unit'])) {
-            $row['marks_unit'] = 0;
-        }
-        if (empty($row['show_units'])) {
-            $row['show_units'] = 'true';
-        }
-        if (empty($row['formula'])) {
-            $row['formula'] = '';
-        }
-        if (empty($row['formula_units'])) {
-            $row['formula_units'] = '""';
-        }
+        $defaults = [
+            'tolerance_full' => 0,
+            'tolerance_partial' => 0,
+            'variables' => '{}',
+            'dp' => 0,
+            'strictdisplay' => 'true',
+            'strictzeros' => 'false',
+            'fulltoltyp' => '#',
+            'parttoltyp' => '#',
+            'marks_unit' => 0,
+            'show_units' => 'true',
+            'formula' => '',
+            'formula_units' => '""',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         return '{"tolerance_full":"' . $row['tolerance_full']
             . '","tolerance_partial":"' . $row['tolerance_partial']
             . '","vars":' . $row['variables']
@@ -281,18 +348,14 @@ trait datageneration
      */
     private function getTextBoxSettings(array $row): string
     {
-        if (empty($row['columns'])) {
-            $row['columns'] = 80;
-        }
-        if (empty($row['rows'])) {
-            $row['rows'] = 4;
-        }
-        if (empty($row['editor'])) {
-            $row['editor'] = 'Plain Text';
-        }
-        if (empty($row['terms'])) {
-            $row['terms'] = '[]';
-        }
+        $defaults = [
+            'columns' => 80,
+            'rows' => 4,
+            'editor' => 'Plain Text',
+            'terms' => '[]',
+        ];
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
         return '{"columns":"' . $row['columns']
             . '","rows":"' . $row['rows']
             . '","editor":"' . $row['editor']
