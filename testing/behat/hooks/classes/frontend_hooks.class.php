@@ -179,7 +179,8 @@ trait frontend_hooks
      *
      * @param \Behat\Behat\Hook\Scope\AfterStepScope $event
      */
-    protected function takeScreenshot(AfterStepScope $event) {
+    protected function takeScreenshot(AfterStepScope $event)
+    {
         $faildir = self::$default_config->get('cfg_behat_faildump');
         if (!empty($faildir) and is_dir($faildir)) {
             $faildir .= '/' . self::$starttime;

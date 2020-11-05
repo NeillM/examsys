@@ -27,7 +27,6 @@ use testing\unittest\unittestdatabase;
  */
 class moduleutilstest extends unittestdatabase
 {
-
     /**
      * @var integer Storage for user id in tests
      */
@@ -109,7 +108,6 @@ class moduleutilstest extends unittestdatabase
                 'academic_year_start' => '03/01'
             )
         );
-
     }
 
     /**

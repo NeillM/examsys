@@ -447,7 +447,6 @@ trait datageneration
         // Generate paper json if assigned to a paper.
         if (isset($row['paper'])) {
             $row['paper'] = '{"paper":"' . $row['paper'] . '","screen":"' . $row['screen'] . '","displaypos":"' . $row['position'] . '"}';
-
         }
         return $row;
     }
