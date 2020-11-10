@@ -1687,25 +1687,23 @@ if (count($properties->get_internal_reviewers()) > 0) {
 // Add internal reviewers to list.
 $internal_reviwers = "
 UNION SELECT DISTINCT 
-    id, title, initials, surname, first_names 
+    users.id, title, initials, surname, first_names 
 FROM 
-    users 
+    users, user_roles ur, roles r  
 WHERE
-    EXISTS (
-        SELECT 1
-        FROM user_roles ur JOIN roles r ON ur.roleid = r.id
-        WHERE r.name = 'Internal Reviewer' AND users.id = ur.userid
-    )
+    ur.roleid = r.id
+    AND r.name = 'Internal Reviewer'
+    AND users.id = ur.userid
     AND user_deleted IS NULL
 ";
 
 // Dynamically choose tables and join based on role.
 if ($userObject->has_role('SysAdmin')) {
-    $tables = 'users, modules_staff';
-    $join = 'users.id = modules_staff.memberID';
+    $tables = 'users, modules_staff, user_roles ur, roles r';
+    $join = 'users.id = modules_staff.memberID AND ur.roleid = r.id AND users.id = ur.userid';
 } else {
-    $tables = 'users, modules_staff, modules';
-    $join = 'users.id = modules_staff.memberID AND modules.id = modules_staff.idMod';
+    $tables = 'users, modules_staff, modules, user_roles ur, roles r';
+    $join = 'users.id = modules_staff.memberID AND modules.id = modules_staff.idMod AND ur.roleid = r.id AND users.id = ur.userid';
 }
 
 $query = "
@@ -1713,12 +1711,8 @@ SELECT DISTINCT
     users.id, title, initials, surname, first_names 
 FROM 
     $tables 
-WHERE
-    NOT EXISTS (
-        SELECT 1
-        FROM user_roles ur JOIN roles r ON ur.roleid = r.id
-        WHERE r.name = 'left' AND users.id = ur.userid
-    )
+WHERE 
+    r.name != 'left'
     AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers 
 ORDER BY 
     surname, initials
@@ -1748,15 +1742,13 @@ echo '<td><div style="width:350px; height:468px; overflow-y:scroll; border:1px s
 $current_externals = $properties->get_externals();
 $sql = "
 SELECT DISTINCT 
-    id, title, initials, surname, first_names 
+    users.id, title, initials, surname, first_names 
 FROM 
-    users 
+    users, user_roles ur, roles r  
 WHERE
-    EXISTS (
-        SELECT 1
-        FROM user_roles ur JOIN roles r ON ur.roleid = r.id
-        WHERE r.name = 'External Examiner' AND users.id = ur.userid
-    )
+    ur.roleid = r.id
+    AND r.name = 'External Examiner'
+    AND users.id = ur.userid
     AND grade != 'left' AND user_deleted IS NULL 
 ORDER BY 
     surname, initials
