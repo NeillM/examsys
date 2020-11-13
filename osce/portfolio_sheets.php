@@ -90,18 +90,15 @@ SELECT log4_overall.userID, students.title, students.surname, students.first_nam
  rating, q_parts, REPLACE(leadin,'&amp;','&') AS leadin, REPLACE(theme,'&amp;','&') AS THEME,
  DATE_FORMAT(log4_overall.started,"%d/%m/%Y %H:%i") AS started,
  REPLACE(feedback,'&amp;','&') AS feedback, examiners.title, examiners.surname
-FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners)
+FROM (log4, log4_overall, papers, questions, users AS students, users AS examiners),
+user_roles ur JOIN roles r ON ur.roleid = r.id
 WHERE log4.log4_overallID = log4_overall.id
  AND log4_overall.userID = students.id AND log4_overall.examinerID = examiners.id
  AND papers.question = questions.q_id AND papers.paper = ? AND log4_overall.q_paper = ?
  AND log4.q_id = questions.q_id AND log4_overall.started >= ?
  AND log4_overall.started <= ? 
- AND EXISTS (
-    SELECT 1 
-    FROM user_roles ur
-    JOIN roles r ON ur.roleid = r.id
-    WHERE students.id = ur.userid AND r.name IN ('Student', 'graduate')
-)
+ AND students.id = ur.userid
+ AND r.name IN ('Student', 'graduate')
  AND log4_overall.student_grade LIKE ?
 ORDER BY students.surname, students.initials, log4_overall.userID, display_pos
 SQL;

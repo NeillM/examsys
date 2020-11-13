@@ -109,15 +109,10 @@ class search_utils
      */
     public static function get_owners($userObj, $db)
     {
-        $select = "SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users";
+        $select = "SELECT DISTINCT u.id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users u,"
+            . 'user_roles ur JOIN roles r ON r.id = ur.roleid ';
         $order = 'ORDER BY surname, initials';
-        $roles = "
-        EXISTS (
-            SELECT 1 
-            FROM user_roles ur JOIN roles r ON r.id = ur.roleid 
-            WHERE r.name IN ('Staff', 'Inactive Staff') AND users.id = ur.userid
-        )
-        ";
+        $roles = "u.id = ur.userid AND r.name IN ('Staff', 'Inactive Staff')";
         if ($userObj->has_role(array('SysAdmin','Admin'))) {
             $stmt = $db->prepare("$select WHERE $roles $order");
         } else {

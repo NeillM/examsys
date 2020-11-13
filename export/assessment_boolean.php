@@ -156,32 +156,24 @@ if ($student_no > 0) {
                     username, lm.userID, title, surname, first_names, grade, gender, year, started, 
                     l.q_id, user_answer, q_type, screen, settings 
                 FROM 
-                    (log0 l, log_metadata lm, questions q, users u) 
+                    log0 l, log_metadata lm, questions q, users u, user_roles ur JOIN roles r ON ur.roleid = r.id 
                 WHERE 
                     l.metadataID = lm.id AND l.q_id = q.q_id AND lm.userID IN ($student_list) 
                     AND paperID = ? AND u.id = lm.userID 
-                    AND EXISTS (
-                        SELECT 1 
-                        FROM user_roles ur
-                        JOIN roles r ON ur.roleid = r.id
-                        WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-                    )
+                    AND u.id = ur.userid
+                    AND r.name IN ('Student', 'graduate')
                     AND grade LIKE ? AND started >= ? AND started <= ?
             ) UNION ALL (
                  SELECT DISTINCT 
                     username, lm.userID, title, surname, first_names, grade, gender, year, started, 
                     l.q_id, user_answer, q_type, screen, settings 
                 FROM 
-                    (log1 l, log_metadata lm, questions q, users u) 
+                    log1 l, log_metadata lm, questions q, users u, user_roles ur JOIN roles r ON ur.roleid = r.id
                 WHERE 
                     l.metadataID = lm.id AND log1.q_id = q.q_id AND lm.userID IN ($student_list) 
                     AND paperID = ? AND u.id = lm.userID 
-                    AND EXISTS (
-                        SELECT 1 
-                        FROM user_roles ur
-                        JOIN roles r ON ur.roleid = r.id
-                        WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-                    ) 
+                    AND u.id = ur.userid
+                    AND r.name IN ('Student', 'graduate')
                     AND grade LIKE ? AND started >= ? AND started <= ?
             ) ORDER BY 
                 surname, first_names, started, userID
@@ -194,16 +186,12 @@ if ($student_no > 0) {
                 username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, l.q_id, 
                 user_answer, q_type, screen, settings 
             FROM 
-                (log$paper_type l, log_metadata lm, questions q, users u) 
+                log$paper_type l, log_metadata lm, questions q, users u, user_roles ur JOIN roles r ON ur.roleid = r.id
             WHERE 
                 l.metadataID = lm.id AND l.q_id = q.q_id 
                 AND lm.userID IN ($student_list) AND paperID = ? AND u.id = lm.userID 
-                AND EXISTS (
-                    SELECT 1 
-                    FROM user_roles ur
-                    JOIN roles r ON ur.roleid = r.id
-                    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-                )
+                AND u.id = ur.userid
+                AND r.name IN ('Student', 'graduate')
                 AND grade LIKE ? 
                 AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? 
             ORDER BY

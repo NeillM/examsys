@@ -356,9 +356,10 @@ SQL;
      */
     public static function question_answered_in_summative($q_id, $db)
     {
-        $result = $db->prepare("SELECT TRUE FROM log2 l, log_metadata m, users u
+        $result = $db->prepare("SELECT TRUE FROM log2 l, log_metadata m, users u,
+        user_roles ur JOIN roles r ON ur.roleid = r.id
         WHERE l.metadataID = m.id AND m.userID = u.id AND l.q_id = ? AND 
-        EXISTS (SELECT 1 FROM user_roles ur JOIN roles r ON ur.roleid = r.id WHERE r.name = 'Student' AND u.id = ur.userid)
+        r.name = 'Student' AND u.id = ur.userid
         LIMIT 1");
         $result->bind_param('i', $q_id);
         $result->execute();

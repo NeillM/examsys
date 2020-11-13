@@ -161,15 +161,11 @@ while ($result->fetch()) {
             SELECT 
                 mark 
             FROM 
-                log$paper_type, log_metadata, users 
+                log$paper_type, log_metadata, users, user_roles ur JOIN roles r ON ur.roleid = r.id
             WHERE 
                 log$paper_type.metadataID = log_metadata.id AND log_metadata.userID = users.id 
-                AND EXISTS (
-                    SELECT 1 
-                    FROM user_roles ur
-                    JOIN roles r ON ur.roleid = r.id
-                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
-                )
+                AND users.id = ur.userid
+                AND r.name IN ('Student', 'graduate')
                 AND paperID = ? AND q_id = ?
             ";
             $marked = $mysqli->prepare($sql);

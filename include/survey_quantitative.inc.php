@@ -71,14 +71,11 @@ function get_quantitative_log_data($paper_id, $course, $start_date, $end_date, $
 SELECT DISTINCT lm.userID, l.q_id, l.user_answer, q.q_type, l.screen, q.score_method
 FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
 INNER JOIN questions q ON l.q_id = q.q_id
-INNER JOIN users u on lm.userID = u.id
+INNER JOIN users u on lm.userID = u.id,
+user_roles ur JOIN roles r ON ur.roleid = r.id
 WHERE lm.paperID = ?
-AND EXISTS (
-    SELECT 1 
-    FROM user_roles ur
-    JOIN roles r ON ur.roleid = r.id
-    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-)
+AND u.id = ur.userid
+AND r.name IN ('Student', 'graduate')
 $excluded
 AND u.grade LIKE ?
 AND lm.started >= ? AND lm.started <= ?

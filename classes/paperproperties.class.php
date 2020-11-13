@@ -2025,15 +2025,13 @@ class PaperProperties
             $skiperrorstates = array(-5);
 
             if ($studentsonly) {
-                $rolesql = "AND EXISTS (SELECT 1 
-                                        FROM user_roles ur
-                                        JOIN roles r ON ur.roleid = r.id
-                                        WHERE users.ID = ur.userid AND r.name IN ('Student', 'graduate'))";
+                $rolesql = "AND r.name IN ('Student', 'graduate')";
             } else {
                 $rolesql = '';
             }
-            $result = $this->db->prepare("SELECT distinct log$paperType.q_id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
-                . 'AND users.id = log_metadata.userID AND q_id IN (' . implode(',', $enhancedcalc_ids) . ') AND paperID = ? AND mark IS NULL and errorstate not in ('
+            $result = $this->db->prepare("SELECT distinct log$paperType.q_id FROM log$paperType, log_metadata, users, "
+                . "user_roles ur JOIN roles r ON ur.roleid = r.id WHERE log$paperType.metadataID = log_metadata.id "
+                . 'AND users.id = log_metadata.userID AND users.ID = ur.userid AND q_id IN (' . implode(',', $enhancedcalc_ids) . ') AND paperID = ? AND mark IS NULL and errorstate not in ('
                 . implode(',', $skiperrorstates) . ") $rolesql ORDER BY 1");
             $result->bind_param('i', $paperID);
             $result->execute();
@@ -2161,15 +2159,13 @@ class PaperProperties
         // Find unmarked questions.
         if (count($textbox_ids) > 0) {
             if ($studentsonly) {
-                $rolesql = "AND EXISTS (SELECT 1 
-                                        FROM user_roles ur
-                                        JOIN roles r ON ur.roleid = r.id
-                                        WHERE users.ID = ur.userid AND r.name IN ('Student', 'graduate'))";
+                $rolesql = "AND r.name IN ('Student', 'graduate')";
             } else {
                 $rolesql = '';
             }
-            $result = $this->db->prepare("SELECT log$paperType.id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
-                . 'AND users.id = log_metadata.userID AND q_id IN (' . implode(',', $textbox_ids) . ") AND paperID = ? AND mark IS NULL $rolesql LIMIT 1");
+            $result = $this->db->prepare("SELECT log$paperType.id FROM log$paperType, log_metadata, users, "
+                . "user_roles ur JOIN roles r ON ur.roleid = r.id WHERE log$paperType.metadataID = log_metadata.id "
+                . 'AND users.id = log_metadata.userID AND users.ID = ur.userid AND q_id IN (' . implode(',', $textbox_ids) . ") AND paperID = ? AND mark IS NULL $rolesql LIMIT 1");
             $result->bind_param('i', $paperID);
             $result->execute();
             $result->store_result();

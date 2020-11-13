@@ -43,7 +43,6 @@ $options = 'ha:lrt::';
 $longoptions = array(
     'help',
     'account:',
-    'ldap',
     'archive',
     'target::',
 );
@@ -52,7 +51,6 @@ $optionslist = getopt($options, $longoptions);
 $help = 'Rogo archive script options. Archives all graduated and left accounts, unless the target param is specified'
     . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
     . PHP_EOL . PHP_EOL . "-a, --account, \t\tRogo account to log process against [Required]"
-    . PHP_EOL . PHP_EOL . "-l, --ldap, \t\tRogo is using ldap accounts [Optional]"
     . PHP_EOL . PHP_EOL . "-r, --archive, \t\tArchive data to a seperate database [Optional]"
     . PHP_EOL . PHP_EOL . "-t, --target, \t\tTarget a single user account [Optional]";
 
@@ -66,12 +64,6 @@ if (isset($optionslist['a'])) {
     $account = $optionslist['a'];
 } elseif (isset($optionslist['account'])) {
     $account = $optionslist['account'];
-}
-
-if (isset($optionslist['l']) or isset($optionslist['ldap'])) {
-    $ldap = 1;
-} else {
-    $ldap = 0;
 }
 
 if (isset($optionslist['r']) or isset($optionslist['archive'])) {
@@ -150,20 +142,22 @@ $log1_deleted_overall = 0;
 $lti_user_deleted_overall = 0;
 
 // Archive all left and graduate accounts.
-$sql = "SELECT id FROM $cfg_db_database.users WHERE ";
 if ($target == 0) {
-    $condition = "
-    EXISTS (
-        SELECT 1 
-        FROM user_roles ur JOIN roles r ON ur.roleid = r.id 
-        WHERE r.name IN ('graduate', 'left') AND users.id = ur.userid
-    )
-    ";
-    $stmt = $mysqli->prepare("$sql $condition");
+    $sql = 'SELECT u.id FROM '
+        . $cfg_db_database . '.users u, '
+        . $cfg_db_database . '.user_roles ur, '
+        . $cfg_db_database . '.roles r
+    WHERE
+        ur.roleid = r.id 
+    AND u.id = ur.userid
+    AND r.name IN ("graduate", "left")';
 } else {
-    $stmt = $mysqli->prepare("$sql username = '$targetted_user'");
+    $sql = 'SELECT id FROM '
+        . $cfg_db_database . '.users u
+    WHERE
+        u.username = "' . $targetted_user . '"';
 }
-
+$stmt = $mysqli->prepare($sql);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($user_to_delete);
@@ -293,29 +287,27 @@ $lm_check0->close();
 $lm_check1->close();
 
 // Reset passwords
-if ($ldap) {
-    cli_utils::prompt('LDAP enabled - Resetting passwords');
-    $condition = "
-    EXISTS (
-        SELECT 1 
-        FROM user_roles ur JOIN roles r ON ur.roleid = r.id 
-        WHERE r.name IN ('Student', 'graduate', 'left') AND users.id = ur.userid
-    )
-    ";
-    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE $condition");
-    $roles_string = 'Student, graduate and left';
+if ($target == 0) {
+    $sql = 'UPDATE '
+        . $cfg_db_database . '.users u, '
+        . $cfg_db_database . '.user_roles ur, '
+        . $cfg_db_database . '.roles r 
+    SET u.password = "" 
+    WHERE
+        ur.roleid = r.id 
+    AND u.id = ur.userid
+    AND r.name IN ("graduate", "left")';
 } else {
-    cli_utils::prompt('LDAP disabled - Resetting passwords');
-    $condition = "
-    EXISTS (
-        SELECT 1 
-        FROM user_roles ur JOIN roles r ON ur.roleid = r.id 
-        WHERE r.name IN ('graduate', 'left') AND users.id = ur.userid
-    )
-    ";
-    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE $condition");
-    $roles_string = 'graduate and left';
+    $sql = 'UPDATE '
+        . $cfg_db_database . '.users u, 
+    SET u.password = "" 
+    WHERE
+        u.username = "' . $targetted_user . '"';
 }
+cli_utils::prompt('Resetting passwords');
+$updatequery = $mysqli->prepare($sql);
+$roles_string = 'graduate and left';
+
 $updatequery->execute();
 if ($updatequery->affected_rows > 0) {
     $logger->track_change('Reset passwords for roles ' . $roles_string, $account, $account, 1, 0, 'Clear old logs');

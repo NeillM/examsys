@@ -44,16 +44,13 @@ $user_no = 0;
 $sql = <<<SQL
 SELECT DISTINCT sid.student_id, student.username, student.title, student.surname, student.initials, examiner.title, examiner.surname, examiner.initials, student.grade, student.gender,
  started, log4.q_id, rating, year, feedback, numeric_score
-FROM (log4, log4_overall, questions, users student, users examiner) LEFT JOIN sid ON student.id = sid.userID
+FROM (log4, log4_overall, questions, users student, users examiner) LEFT JOIN sid ON student.id = sid.userID,
+user_roles ur JOIN roles r ON ur.roleid = r.id
 WHERE log4.log4_overallID = log4_overall.id AND log4.q_id = questions.q_id AND q_paper = ?
  AND student.id = log4_overall.userID
  AND examiner.id = log4_overall.examinerID
- AND EXISTS (
-    SELECT 1 
-    FROM user_roles ur
-    JOIN roles r ON ur.roleid = r.id
-    WHERE student.id = ur.userid AND r.name IN ('Student', 'graduate')
-)
+ AND student.id = ur.userid
+ AND r.name IN ('Student', 'graduate')
  AND student.grade LIKE ?
  AND started >= ? AND started <= ?
 SQL;

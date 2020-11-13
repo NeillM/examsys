@@ -125,17 +125,14 @@ if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
         lm.userID
     FROM
         log_metadata lm
-        INNER JOIN users u ON lm.userID = u.id
+        INNER JOIN users u ON lm.userID = u.id,
+        user_roles ur JOIN roles r ON ur.roleid = r.id
     WHERE 
         lm.paperID = ?
         AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
         AND lm.started <= ?
-        AND EXISTS (
-            SELECT 1
-            FROM user_roles ur
-            JOIN roles r ON ur.roleid = r.id
-            WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-        )
+        AND u.id = ur.userid
+        AND r.name IN ('Student', 'graduate')
     ";
     $result = $mysqli->prepare($sql);
     $result->bind_param('iss', $paperID, $startdate, $enddate);
@@ -163,32 +160,24 @@ if ($phase == 2) {
 if ($paper_type == '0') {
     $sql = <<< SQL
 SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
-  FROM (log0 l, log_metadata lm, users u)
+  FROM log0 l, log_metadata lm, users u, user_roles ur JOIN roles r ON ur.roleid = r.id
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND EXISTS (
-    SELECT 1 
-    FROM user_roles ur
-    JOIN roles r ON ur.roleid = r.id
-    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-  )
+  AND u.id = ur.userid
+  AND r.name IN ('Student', 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
   AND lm.started <= ? $marked $studentstr
 UNION ALL
 SELECT 1 AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
-  FROM (log1 l, log_metadata lm, users u)
+  FROM log1 l, log_metadata lm, users u, user_roles ur JOIN roles r ON ur.roleid = r.id
   LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
   WHERE lm.paperID = ?
   AND l.metadataID = lm.id
-  AND EXISTS (
-    SELECT 1 
-    FROM user_roles ur
-    JOIN roles r ON ur.roleid = r.id
-    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-  )
+  AND u.id = ur.userid
+  AND r.name IN ('Student', 'graduate')
   AND u.id = lm.userID
   AND l.q_id = ?
   AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
@@ -200,16 +189,12 @@ SQL;
 } else {
     $sql = <<< SQL
 SELECT $paper_type AS logtype, l.id, lm.userID, l.user_answer, t.mark, l.q_id, comments, reminders
-FROM (log{$paper_type} l, log_metadata lm, users u)
+FROM log{$paper_type} l, log_metadata lm, users u, user_roles ur JOIN roles r ON ur.roleid = r.id
 LEFT JOIN textbox_marking t ON l.id = t.answer_id AND lm.paperID = t.paperID AND t.phase = ?
 WHERE lm.paperID = ?
 AND l.metadataID = lm.id
-AND EXISTS (
-    SELECT 1 
-    FROM user_roles ur
-    JOIN roles r ON ur.roleid = r.id
-    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-)
+AND u.id = ur.userid
+AND r.name IN ('Student', 'graduate')
 AND u.id = lm.userID
 AND l.q_id = ?
 AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ?
