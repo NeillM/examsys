@@ -130,35 +130,27 @@ if (isset($_POST['submit'])) {
     if ($paper_type == '0') {
         $sql = <<< SQL
 			SELECT SUM(adjmark) AS adjmark_total, log_metadata.userID, users.username
-				FROM log0, log_metadata, questions, users
+				FROM log0, log_metadata, questions, users, user_roles ur JOIN roles r ON ur.roleid = r.id
 				WHERE log0.metadataID = log_metadata.id
 				AND paperID = ?
 				AND log0.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND EXISTS (
-                    SELECT 1 
-                    FROM user_roles ur
-                    JOIN roles r ON ur.roleid = r.id
-                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
-                )
+				AND users.id = ur.userid
+				AND r.name IN ('Student', 'graduate')
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 			GROUP BY log_metadata.userID, users.username
 			UNION ALL
 			SELECT SUM(adjmark) AS adjmark_total, log_metadata.userID, users.username
-				FROM log1, log_metadata, questions, users
+				FROM log1, log_metadata, questions, users, user_roles ur JOIN roles r ON ur.roleid = r.id
 				WHERE log1.metadataID = log_metadata.id
 				AND paperID = ?
 				AND log1.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND EXISTS (
-                    SELECT 1 
-                    FROM user_roles ur
-                    JOIN roles r ON ur.roleid = r.id
-                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
-                )
+				AND users.id = ur.userid
+				AND r.name IN ('Student', 'graduate')
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 			GROUP BY log_metadata.userID, users.username
@@ -168,18 +160,14 @@ SQL;
     } else {
         $sql = <<< SQL
 			SELECT SUM(adjmark) AS adjmark_total, log_metadata.userID, users.username
-				FROM log$paper_type, log_metadata, questions, users
+				FROM log$paper_type, log_metadata, questions, users, user_roles ur JOIN roles r ON ur.roleid = r.id
 				WHERE log$paper_type.metadataID = log_metadata.id
 				AND paperID = ?
 				AND log$paper_type.q_id = questions.q_id
 				AND q_type NOT IN ('textbox','info')
 				AND log_metadata.userID = users.id
-				AND EXISTS (
-                    SELECT 1 
-                    FROM user_roles ur
-                    JOIN roles r ON ur.roleid = r.id
-                    WHERE users.id = ur.userid AND r.name IN ('Student', 'graduate')
-                )
+				AND users.id = ur.userid
+				AND r.name IN ('Student', 'graduate')
 				AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ?
 				AND started <= ?
 				GROUP BY log_metadata.userID, users.username

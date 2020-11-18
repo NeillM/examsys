@@ -107,14 +107,10 @@ $sql = <<< SQL
 SELECT l.q_id, u.grade, DATE_FORMAT(lm.started,"%d/%m/%Y %T") AS started, lm.year, u.surname,
 u.initials, u.title, REPLACE(l.user_answer,'"',"'") AS user_answer, lm.userID
 FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
-INNER JOIN users u ON lm.userID = u.id
+INNER JOIN users u ON lm.userID = u.id,
+user_roles ur JOIN roles r ON ur.roleid = r.id
 WHERE lm.paperID = ? $repyear_sql $repcourse_sql 
-AND EXISTS (
-    SELECT 1 
-    FROM user_roles ur
-    JOIN roles r ON ur.roleid = r.id
-    WHERE u.id = ur.userid AND r.name IN ('Student', 'graduate')
-)
+AND u.id = ur.userid AND r.name IN ('Student', 'graduate')
 $exclude
 AND lm.started>= ? AND lm.started<= ? ORDER BY u.surname, u.initials
 SQL;

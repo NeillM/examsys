@@ -192,17 +192,17 @@ abstract class log
         $user_list = array();
         if ($studentonly) {
             $rolefilter = self::get_student_only();
+            $from = 'log' . $this->papertype . ', users, log_metadata, user_roles ur JOIN roles r ON ur.roleid = r.id';
         } else {
             $rolefilter = '';
+            $from = 'log' . $this->papertype . ', log_metadata, users';
         }
         $userfilter = self::get_user_filter($userlist);
         $sql = "SELECT
             log_metadata.userID,
             SUM(mark) AS total_mark 
           FROM
-            log$this->papertype,
-            log_metadata,
-            users
+            $from
           WHERE
             log$this->papertype.metadataID = log_metadata.id AND
             paperID = ? AND
@@ -246,8 +246,10 @@ abstract class log
         $data = array();
         if ($studentonly) {
             $rolefilter = self::get_student_only();
+            $from = 'log' . $this->papertype . ', log_metadata, questions, users, user_roles ur JOIN roles r ON ur.roleid = r.id';
         } else {
             $rolefilter = '';
+            $from = 'log' . $this->papertype . ', log_metadata, questions, users';
         }
         $sql = "SELECT DISTINCT
         username,
@@ -264,10 +266,7 @@ abstract class log
         screen,
         log_metadata.id as metaid
       FROM 
-        log$this->papertype,
-        log_metadata,
-        questions,
-        users
+        $from
       WHERE
         log$this->papertype.metadataID = log_metadata.id AND
         log$this->papertype.q_id = questions.q_id AND
@@ -363,10 +362,7 @@ abstract class log
      */
     public static function get_student_only()
     {
-        return " AND EXISTS (SELECT 1 
-                    FROM user_roles ur
-                    JOIN roles r ON ur.roleid = r.id
-                    WHERE users.ID = ur.userid AND r.name IN ('Student', 'graduate'))";
+        return "AND users.id = ur.userid AND r.name IN ('Student', 'graduate')";
     }
 
     /**
@@ -379,12 +375,12 @@ abstract class log
         if (!is_array($userlist)) {
             $userfilter = '';
         } elseif (count($userlist) === 1) {
-            $userfilter = 'AND userID = ' . $userlist[0];
+            $userfilter = 'AND log_metadata.userID = ' . $userlist[0];
         } elseif (count($userlist) > 0) {
-            $userfilter = 'AND userID IN (' . implode(',', $userlist) . ')';
+            $userfilter = 'AND log_metadata.userID IN (' . implode(',', $userlist) . ')';
         } else {
             // No users found? So ensure query returns 0 rows.
-            $userfilter = 'AND userID = 0';
+            $userfilter = 'AND log_metadata.userID = 0';
         }
         return $userfilter;
     }

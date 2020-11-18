@@ -87,17 +87,19 @@ class log extends \log
         $user_list = array();
         if ($studentonly) {
             $rolefilter = self::get_student_only();
+            $from = 'log0, users, log_metadata, user_roles ur JOIN roles r ON ur.roleid = r.id';
+            $from1 = 'log1, users, log_metadata, user_roles ur JOIN roles r ON ur.roleid = r.id';
         } else {
             $rolefilter = '';
+            $from = 'log0, log_metadata, users';
+            $from1 = 'log1, log_metadata, users';
         }
         $userfilter = self::get_user_filter($userlist);
         $sql = "SELECT
               log_metadata.userID,
               SUM(mark) AS total_mark
             FROM
-              log0,
-              log_metadata,
-              users
+              $from
             WHERE
               log0.metadataID = log_metadata.id AND
               log_metadata.userID = users.id
@@ -113,9 +115,7 @@ class log extends \log
               log_metadata.userID,
               sum(mark) AS total_mark
             FROM
-              log1,
-              log_metadata,
-              users
+              $from1
             WHERE
               log1.metadataID = log_metadata.id AND
               log_metadata.userID = users.id AND
@@ -159,8 +159,12 @@ class log extends \log
         $data = array();
         if ($studentonly) {
             $rolefilter = self::get_student_only();
+            $from = 'log0, users, questions, log_metadata, user_roles ur JOIN roles r ON ur.roleid = r.id';
+            $from1 = 'log1, users, questions, log_metadata, user_roles ur JOIN roles r ON ur.roleid = r.id';
         } else {
             $rolefilter = '';
+            $from = 'log0, log_metadata, questions,users';
+            $from1 = 'log1, log_metadata, questions, users';
         }
         $sql = "SELECT DISTINCT 
               username, 
@@ -177,7 +181,7 @@ class log extends \log
               screen,
               log_metadata.id as metaid
             FROM 
-              (log0, log_metadata, questions, users) 
+              $from
             WHERE 
               log0.metadataID = log_metadata.id AND 
               log0.q_id = questions.q_id AND 
@@ -204,7 +208,7 @@ class log extends \log
                 screen,
                 log_metadata.id as metaid
              FROM 
-                (log1, log_metadata, questions, users) 
+                $from1
              WHERE log1.metadataID = log_metadata.id AND 
                 log1.q_id = questions.q_id AND 
                 log_metadata.userID IN ($userlist) AND 
