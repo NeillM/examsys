@@ -326,13 +326,13 @@ class media_handler
     /**
      * Insert media into database
      * @param string $source the file
-     * @param int $width width of media
-     * @param int $height height of media
+     * @param ?int $width width of media
+     * @param ?int $height height of media
      * @param ?string $alt alternate text for media
      * @param int $owner owner of the media
      * @return int
      */
-    public static function insertMedia(string $source, int $width, int $height, ?string $alt, int $owner): int
+    public static function insertMedia(string $source, ?int $width, ?int $height, ?string $alt, int $owner): int
     {
         $alt = self::cleanAltText($alt);
         $db = Config::get_instance()->db;

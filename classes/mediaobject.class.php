@@ -50,13 +50,13 @@ class MediaObject
      *
      * @param int $id Database id of the media object.
      * @param string $source The file name of the media object.
-     * @param int $width The width of the media object.
-     * @param int $height The height of the media object.
+     * @param ?int $width The width of the media object.
+     * @param ?int $height The height of the media object.
      * @param ?string $alt The alt of the media object.
      * @param int $owner The owner of the media object.
      * @param int $num The display number the media object.
      */
-    public function __construct(int $id, string $source, int $width, int $height, ?string $alt, int $owner, int $num)
+    public function __construct(int $id, string $source, ?int $width, ?int $height, ?string $alt, int $owner, int $num)
     {
         $this->id = $id;
         $this->source = $source;
