@@ -460,7 +460,11 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
             }
       
             if ($q_type != 'enhancedcalc') {  // Calculation questions have no options.
-                $addOption = $mysqli->prepare('INSERT INTO options VALUES(?, ?, ?, ?, ?, NULL, ?, ?, ?)');
+                $addOption = $mysqli->prepare('INSERT INTO options
+                        (o_id, option_text, feedback_right, feedback_wrong, correct, id_num, marks_correct,
+                        marks_incorrect, marks_partial)
+                    VALUES
+                        (?, ?, ?, ?, ?, NULL, ?, ?, ?)');
                 $addOption->bind_param('issssidd', $question_id, $option_text, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
                 $addOption->execute();
                 $addOption->close();

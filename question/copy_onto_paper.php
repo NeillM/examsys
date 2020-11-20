@@ -127,7 +127,14 @@ if (!isset($_POST['submit'])) {
     for ($i = 1; $i < count($q_IDs); $i++) {
         $map_guid = array();
 
-        $result = $mysqli->prepare('SELECT * FROM questions WHERE q_id = ?');
+        $result = $mysqli->prepare('SELECT
+                q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback,
+                display_method, notes, ownerid, creation_date, last_edited, bloom,
+                scenario_plain, leadin_plain, checkout_time, checkout_authorid, deleted,
+                locked, std, status, q_option_order, score_method, settings, guid
+            FROM
+                questions
+            WHERE q_id = ?');
         $result->bind_param('i', $q_IDs[$i]);
         $result->execute();
         $result->store_result();
@@ -209,7 +216,13 @@ if (!isset($_POST['submit'])) {
                 $score_method = 'Mark per Option';
             }
 
-            $addQuestion = $mysqli->prepare('INSERT INTO questions VALUES(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
+            $addQuestion = $mysqli->prepare('INSERT INTO questions
+                    (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method,
+                    notes, ownerID, creation_date, last_edited, bloom, scenario_plain, leadin_plain,
+                    checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order,
+                    score_method, settings, guid)
+                VALUES
+                    (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
             $addQuestion->bind_param('ssssssssissssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
             $res = $addQuestion->execute();
             if ($res === false) {
@@ -266,7 +279,11 @@ if (!isset($_POST['submit'])) {
             }
 
             while ($save_ok and $o_result->fetch()) {
-                $addOption = $mysqli->prepare('INSERT INTO options VALUES(?, ?, ?, ?, ?, NULL, ?, ?, ?)');
+                $addOption = $mysqli->prepare('INSERT INTO options
+                        (o_id, option_text, feedback_right, feedback_wrong, correct, id_num, marks_correct,
+                        marks_incorrect, marks_partial)
+                    VALUES
+                        (?, ?, ?, ?, ?, NULL, ?, ?, ?)');
                 $addOption->bind_param('issssddd', $question_id, $option_text, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
                 $res = $addOption->execute();
                 if ($res === false) {

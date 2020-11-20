@@ -495,7 +495,13 @@ class RAF
             }
         }
 
-        $result = $this->db->prepare('INSERT INTO questions VALUE (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
+        $result = $this->db->prepare('INSERT INTO questions
+                (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback,
+                display_method, notes, ownerID, creation_date, last_edited, bloom, scenario_plain,
+                leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order,
+                score_method, settings, guid)
+            VALUE
+                (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
         $result->bind_param('ssssssssissssissss', $q['q_type'], $q['theme'], $q['scenario'], $q['leadin'], $q['correct_fback'], $q['incorrect_fback'], $q['display_method'], $q['notes'], $this->userID, $q['bloom'], $q['scenario_plain'], $q['leadin_plain'], $q['std'], $q['status'], $q['q_option_order'], $q['score_method'], $q['settings'], $guid);
         $result->execute();
         $q_id =  $this->db->insert_id;
@@ -632,7 +638,11 @@ class RAF
      */
     private function write_option($o, $q_id)
     {
-        $result = $this->db->prepare('INSERT INTO options VALUE (?, ?, ?, ?, ?, NULL, ?, ?, ?)');
+        $result = $this->db->prepare('INSERT INTO options
+                (o_id, option_text, feedback_right, feedback_wrong, correct, id_num, marks_correct,
+                marks_incorrect, marks_partial)
+            VALUE
+                (?, ?, ?, ?, ?, NULL, ?, ?, ?)');
         $result->bind_param('issssddd', $q_id, $o['option_text'], $o['feedback_right'], $o['feedback_wrong'], $o['correct'], $o['marks_correct'], $o['marks_incorrect'], $o['marks_partial']);
         $result->execute();
         $result->close();
