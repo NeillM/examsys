@@ -400,7 +400,7 @@ class QuestionEdit extends RogoObject
                 $this->last_edited = date('Y-m-d H:i:s');
                 $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
                 $this->guid = $server_ipaddress . uniqid('', true);
-                $params = array_merge(array('sssssssssssssiisisssssss'), $this->_qdata);
+                $params = array_merge(array('ssssssssssssssisisssssss'), $this->_qdata);
                 $query = <<< QUERY
 INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
 display_method, q_option_order, std, bloom, ownerID, checkout_time, checkout_authorID,
@@ -409,7 +409,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
                 // Otherwise we're updating an existing one
-                $params = array_merge(array('sssssssssssssiisisssssssi'), $this->_qdata, array(&$this->id));
+                $params = array_merge(array('ssssssssssssssisisssssssi'), $this->_qdata, array(&$this->id));
                 $this->last_edited = date('Y-m-d H:i:s');
                 $query = <<< QUERY
 UPDATE questions
