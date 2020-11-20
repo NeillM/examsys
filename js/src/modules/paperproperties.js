@@ -138,18 +138,18 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
                 }
 
                 // Check from time has been set.
-                if ($('#fhour').val() === '' || $('#fminute').val() === '') {
+                if (!$('#fhour').is(':disabled') && $('#fhour').val() === '' || !$('#fminute').is(':disabled') && $('#fminute').val() === '') {
                     alert.notification('missingfromtime');
                     return false;
                 }
 
                 // Check to time has been set.
-                if ($('#thour').val() === '' || $('#tminute').val() === '') {
+                if (!$('#thour').is(':disabled') && $('#thour').val() === '' || !$('#tminute').is(':disabled') && $('#tminute').val() === '') {
                     alert.notification('missingtotime');
                     return false;
                 }
 
-                if ($('#session').val() == '') {
+                if (!$('#session').is(':disabled') && $('#session').val() == '') {
                     alert.notification('msg4');
                     return false;
                 }
