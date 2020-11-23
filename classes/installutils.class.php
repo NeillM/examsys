@@ -1081,7 +1081,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".paper_settings_category TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".paper_settings_setting TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".roles TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
-        $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".user_roles TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".user_roles TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
 
