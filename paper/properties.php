@@ -1909,7 +1909,7 @@ for ($i = 0; $i < $rows; $i++) {
 
 </td>
 </tr>
-<tr><td colspan="2" align="right"><input type="submit" class="ok" id="submitpropeties" name="Submit" value="<?php echo $string['ok']; ?>" disabled="disabled"/><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></td></tr>
+<tr><td colspan="2" align="right"><input type="submit" class="ok" id="submitpropeties" name="Submit" value="<?php echo $string['ok']; ?>" disabled="disabled"/><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" /></td></tr>
 </table>
 
 <input type="hidden" id="noadd" name="noadd" value="<?php
