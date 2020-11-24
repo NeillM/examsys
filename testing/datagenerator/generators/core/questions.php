@@ -83,6 +83,8 @@ class questions extends generator
             'keywords' => '',
             'options' => '',
             'paper' => '',
+            'correct_fback' => '',
+            'incorrect_fback' => '',
         );
         $qdata = $this->set_defaults_and_clean($defaults, $data);
         $now = date('Y-m-d H:i:s');

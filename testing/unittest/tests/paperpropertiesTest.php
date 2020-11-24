@@ -395,6 +395,7 @@ class PaperPropertiesTest extends unittestdatabase
                 'q_media_num' => $this->question2['q_media_num'],
                 'q_option_order' => $this->question2['q_option_order'],
                 'dismiss' => '',
+                'correct_fback' => $this->question2['correct_fback'],
                 'options' => array(0 => array(
                     'correct' => null,
                     'option_text' => null,
@@ -428,6 +429,7 @@ class PaperPropertiesTest extends unittestdatabase
                 'q_media_num' => $this->question6['q_media_num'],
                 'q_option_order' => $this->question6['q_option_order'],
                 'dismiss' => '',
+                'correct_fback' => $this->question6['correct_fback'],
                 'options' => array(0 => array(
                     'correct' => $this->options['correct'],
                     'option_text' => $this->options['option_text'],
@@ -494,6 +496,7 @@ class PaperPropertiesTest extends unittestdatabase
             'q_media_num' => $this->question2['q_media_num'],
             'q_option_order' => $this->question2['q_option_order'],
             'dismiss' => '',
+            'correct_fback' => $this->question2['correct_fback'],
             'options' => array(0 => array(
                 'correct' => null,
                 'option_text' => null,

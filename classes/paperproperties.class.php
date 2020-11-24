@@ -2353,6 +2353,7 @@ class PaperProperties
                           scenario,
                           leadin,
                           correct,
+                          correct_fback,
                           REPLACE(option_text,'\t','') AS option_text,
                           source,
                           width,
@@ -2410,6 +2411,7 @@ class PaperProperties
             $scenario,
             $leadin,
             $correct,
+            $correct_fback,
             $option_text,
             $option_media,
             $option_media_width,
@@ -2455,6 +2457,7 @@ class PaperProperties
                 $tmp_questions_array[$q_no]['settings'] = $settings;
                 $tmp_questions_array[$q_no]['q_option_order'] = $q_option_order;
                 $tmp_questions_array[$q_no]['dismiss'] = '';
+                $tmp_questions_array[$q_no]['correct_fback'] = $correct_fback;
                 $used_questions[$q_id] = 1;
             }
             $tmp_questions_array[$q_no]['options'][] = array(

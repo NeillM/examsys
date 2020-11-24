@@ -291,12 +291,14 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             $matching_num = explode('|', $question['q_media_num']);
             $matching_media = array();
             for ($i = 0; $i < count($matching_source); $i++) {
-                $matching_media[$matching_num[$i]] = array(
-                    'source' => $matching_source[$i],
-                    'width' => $matching_width[$i],
-                    'height' => $matching_height[$i],
-                    'alt' => $matching_alt[$i],
-                );
+                if ($matching_num[$i] != '') {
+                    $matching_media[$matching_num[$i]] = array(
+                        'source' => $matching_source[$i],
+                        'width' => $matching_width[$i],
+                        'height' => $matching_height[$i],
+                        'alt' => $matching_alt[$i],
+                    );
+                }
             }
             $matching_options = array();
             $matching_answers = explode('|', $question['options'][0]['correct']);
@@ -489,7 +491,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 break;
             case 'mcq':
                 if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-                    if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
+                    if ($question['option_order'][$part_id - 1] == (int)$question['options'][0]['correct'] - 1) {
                         echo '<tr class="option"><td>';
                         if (isset($std_parts[0])) {
                             echo display_std($std_parts[0]);
@@ -511,7 +513,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     }
                     echo "</td></tr>\n";
                 } elseif ($question['display_method'] == 'horizontal') {
-                    if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
+                    if ($question['option_order'][$part_id - 1] == (int)$question['options'][0]['correct'] - 1) {
                         if (isset($std_parts[0])) {
                             echo display_std($std_parts[0], 0);
                         }
@@ -529,13 +531,13 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     }
                     echo '&nbsp;&nbsp;';
                 } else {
-                    if ($question['option_order'][$part_id - 1] == $question['options'][0]['correct'] - 1) {
+                    if ($question['option_order'][$part_id - 1] == (int)$question['options'][0]['correct'] - 1) {
                         echo '<option value="' . $part_id . '" selected>' . $display_option['option_text'] . "</option>\n";
                     } else {
                         echo '<option value="' . $part_id . '">' . $display_option['option_text'] . "</option>\n";
                     }
                 }
-                if ($question['option_order'][$part_id - 1] == $display_option['correct'] - 1) {
+                if ($question['option_order'][$part_id - 1] == (int)$display_option['correct'] - 1) {
                     $marks = $display_option['marks_correct'];
                 }
                 break;
@@ -1024,7 +1026,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     } elseif ($question['q_type'] == 'extmatch') {
         $matching_answers = explode('|', $question['options'][0]['correct']);
 
-        if ($matching_media[0]['source'] != '') {
+        if (isset($matching_media[0]) and $matching_media[0]['source'] != '') {
             echo '<div class="mediadiv">';
             $questiondata->set_media(
                 $matching_media[0]['source'],
@@ -1142,7 +1144,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
     } elseif ($question['q_type'] == 'matrix') {
         $part_id = 1;
-        if ($matching_media[0]['source'] != '') {
+        if (isset($matching_media[0]) and $matching_media[0]['source'] != '') {
             echo '<div class="mediadiv">';
             $questiondata->set_media(
                 $matching_media[0]['source'],
