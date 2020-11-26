@@ -27,7 +27,7 @@ $show_incorrect = (isset($show_incorrect)) ? $show_incorrect : false;
 $mandatory_editor = false;
 $field_editor = (isset($field_correct)) ? $field_correct : 'correct_fback';
 $label_editor = (isset($label_correct)) ? $label_correct : '<label for="' . $field_editor . '">' . $string['generalfeedback'] . '</label>';
-$value_editor =  $question->get_correct_fback();
+$value_editor = $question->get_correct_fback() ?? '';
 ?>
 <table id="q-feedback" class="form">
   <tbody>
@@ -37,7 +37,7 @@ $value_editor =  $question->get_correct_fback();
 if ($show_incorrect) {
     $field_editor = (isset($field_incorrect)) ? $field_incorrect : 'incorrect_fback';
     $label_editor = (isset($label_incorrect)) ? $label_incorrect : '<label for="' . $field_editor . '">' . $string['fbincorrect'] . '</label><br /><span class="note">' . $string['fbincorrectmsg'] . '</span>';
-    $value_editor = $question->get_incorrect_fback();
+    $value_editor = $question->get_incorrect_fback() ?? '';
     require 'details_editor.php';
 }
 ?>
