@@ -1929,6 +1929,7 @@ $dataset['attributes']['rootpath'] = $cfg_root_path;
 $dataset['attributes']['type'] = $properties->get_paper_type();
 $dataset['attributes']['id'] = $paperID;
 $dataset['attributes']['minavail'] = $minavailability;
+$dataset['attributes']['summativemanagment'] = ($sum_disabled === '');
 $render->render($dataset, array(), 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';

@@ -156,4 +156,9 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
             $('#seb_keys_text').prop("disabled", true);
         }
     });
+
+    // Check if user has permissions.
+    if (!$('#dataset').attr('data-summativemanagment')) {
+        $('#remote_summative').prop("disabled", true);
+    }
 });
