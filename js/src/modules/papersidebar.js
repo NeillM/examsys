@@ -104,7 +104,9 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
             });
 
             $('#add_break').click(function() {
-                scope.incScreen();
+                if (!$(this).hasClass('greymenuitem')) {
+                    scope.incScreen();
+                }
             });
 
             $('#direction').change(function() {

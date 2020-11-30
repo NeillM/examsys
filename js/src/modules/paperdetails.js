@@ -56,7 +56,6 @@ define(['sidebar', 'jsxls', 'jquery', 'jqueryui'], function(SIDEBAR, jsxls, $) {
       $('.breakline').removeClass('line-selected');
       element.addClass('greymenuitem');
       element.removeClass('menuitem');
-      element.unbind('click');
       element.children('a').css('cursor', 'text');
     };
 
@@ -77,7 +76,6 @@ define(['sidebar', 'jsxls', 'jquery', 'jqueryui'], function(SIDEBAR, jsxls, $) {
     this.deActivateAddBreak = function(element) {
       element.addClass('greymenuitem');
       element.removeClass('menuitem');
-      element.unbind('click');
       element.children('a').css('cursor', 'text');
     };
 
