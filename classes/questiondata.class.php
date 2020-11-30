@@ -781,6 +781,10 @@ abstract class questiondata
 
             // Additional display logic.
             switch ($mediatype) {
+                // Documents are always a 100% width on container.
+                case self::DOC:
+                    $width = '100%';
+                    break;
                 case self::IMAGE:
                     if ($border_color == '') {
                         $mediaborder = false;

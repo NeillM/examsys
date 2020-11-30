@@ -163,7 +163,7 @@ class media_handler
         // File type checks.
         switch ($filetype) {
             case questiondata::DOC:
-                $file_width = '100%';
+                $file_width = '100';
                 $file_height = '350';
                 break;
             case questiondata::IMAGE:
