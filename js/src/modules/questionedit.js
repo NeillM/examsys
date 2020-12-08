@@ -52,8 +52,8 @@ define(['jsxls', 'jquery'], function(jsxls, $) {
 
       var elClass = 'option';
 
-      if (typeof $(this).data('target') != 'undefined') {
-        elClass = $(this).data('target');
+      if (typeof $(el).data('target') != 'undefined') {
+        elClass = $(el).data('target');
       }
 
       var hiddenOptions = $('.' + elClass + '.hide');
