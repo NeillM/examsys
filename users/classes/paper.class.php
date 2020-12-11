@@ -40,6 +40,9 @@ class Paper
     /** @var string The paper type. */
     public $paper_type;
 
+    /** @var string The original paper type. Used by Progress tests converted to formatives so exam script can be displayed */
+    public $original_paper_type;
+
     /** @var string The human readble version of $log_started. */
     public $human_log_started;
 

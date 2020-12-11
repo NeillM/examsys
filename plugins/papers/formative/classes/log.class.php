@@ -264,14 +264,14 @@ class log extends \log
 
         // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
         $result = $this->db->prepare('SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark,'
-            . ' DATE_FORMAT(lm.started,"%Y%m%d%H%i%s") AS started, 0 AS paper_type,'
+            . ' DATE_FORMAT(lm.started,"%Y%m%d%H%i%s") AS started, 0 AS paper_type, 1 AS original_paper_type,'
             . ' DATE_FORMAT(lm.started,"%d/%m/%Y %H:%i") AS temp_date'
             . ' FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id'
             . ' WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? AND screen IS NOT NULL'
             . ' GROUP BY started, lm.id ORDER BY lm.id');
         $result->bind_param('ii', $paperID, $userID);
         $result->execute();
-        $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+        $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_orignial_paper_type, $log_temp_date);
         while ($result->fetch()) {
             if ($log_max_screen > 0) {
                 $paper = new \users\Paper();
@@ -280,6 +280,7 @@ class log extends \log
                 $paper->max_screen = $log_max_screen;
                 $paper->max_mark = $log_mark;
                 $paper->paper_type = $log_paper_type;
+                $paper->original_paper_type  = $log_orignial_paper_type;
                 $paper->human_log_started = $log_temp_date;
 
                 if ($total_marks > 0) {

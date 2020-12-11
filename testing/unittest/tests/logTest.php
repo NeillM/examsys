@@ -554,7 +554,7 @@ class logtest extends unittestdatabase
         $paper->metadataID = $this->meta2['id'];
         $paper->max_screen = $this->log5['screen'];
         $paper->max_mark = round($this->log4['mark'] + $this->log5['mark'], 1);
-        $paper->paper_type = $this->pid2['papertype'];
+        $paper->original_paper_type = $paper->paper_type = $this->pid2['papertype'];
         $paper->human_log_started = date_format($date, 'd/m/Y H:i');
         $paper->percent = '';
         $paperlist->add($paper);
@@ -602,6 +602,7 @@ class logtest extends unittestdatabase
         $paper->max_mark = round($this->log9['mark'], 1);
         // Progress turned formative.
         $paper->paper_type = 0;
+        $paper->original_paper_type = 1;
         $paper->human_log_started = date_format($date, 'd/m/Y H:i');
         $paper->percent = number_format(
             ($this->log9['mark'] / 10) * 100,
@@ -637,7 +638,7 @@ class logtest extends unittestdatabase
         $paper->metadataID = $this->meta4['id'];
         $paper->max_screen = $this->log12['screen'];
         $paper->max_mark = round($this->log12['mark'], 1);
-        $paper->paper_type = $this->pid3['papertype'];
+        $paper->original_paper_type = $paper->paper_type = $this->pid3['papertype'];
         $paper->human_log_started = date_format($date, 'd/m/Y H:i');
         $adjusted = number_format(
             (($this->log12['mark'] - 5 ) / 5) * 100,
@@ -658,6 +659,7 @@ class logtest extends unittestdatabase
         $paper->max_mark = round($this->log9['mark'], 1);
         // Progress turned formative.
         $paper->paper_type = 0;
+        $paper->original_paper_type = 1;
         $paper->human_log_started = date_format($date, 'd/m/Y H:i');
         $adjusted = number_format(
             (($this->log9['mark'] - 5 ) / 5) * 100,

@@ -43,7 +43,7 @@ lang.nottakenpaper - Blurb for no attempts
         </thead>
         <tbody>
         {% for id, paper in data %}
-        <tr class='l{% if paper.paper_type == 0 %} previous{% endif %}' data-metaid='{{paper.metadataID}}' data-type='{{paper.paper_type}}'>
+        <tr class='l{% if paper.paper_type == 0 %} previous{% endif %}' data-metaid='{{paper.metadataID}}' data-type='{{paper.original_paper_type}}'>
             <td>{{paper.human_log_started}}</td>
             {% if paper.paper_type == 0 %}
                 <td>{{paper.percent}}</td>

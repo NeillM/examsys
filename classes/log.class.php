@@ -437,6 +437,7 @@ abstract class log
             $paper->max_screen = $log_max_screen;
             $paper->max_mark = $log_mark;
             $paper->paper_type = $log_paper_type;
+            $paper->original_paper_type  = $log_paper_type;
             $paper->human_log_started = $log_temp_date;
             if ($log_paper_type == '0') {
                 if ($total_marks > 0) {
