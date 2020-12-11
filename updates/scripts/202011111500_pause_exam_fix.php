@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.2.2')) {
+if ($updater_utils->check_version('7.2.3')) {
     if (!$updater_utils->has_updated('ROGO-2881')) {
         // log_break_time grant for staff.
         $sql = 'GRANT DELETE ON ' . $configObject->get('cfg_db_database') . ".log_break_time TO '"
