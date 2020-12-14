@@ -520,10 +520,13 @@ foreach ($questions_array as &$question) {
         $unanswered = true;
     }
     $q_displayed++;
-    if ($question['q_type'] === 'textbox') {
-        // Set editor config file.
-        $textconfigfile = $questionrender->questiondata->file;
-        $textconfigfiletemplate = $questionrender->questiondata->editorconfig;
+    // If a WYSIWIG editor is on the scereen load the config file.
+    if ($question['q_type'] === 'textbox' and $textconfigfile === '' and $textconfigfiletemplate === '') {
+        $settings = json_decode($question['settings'], true);
+        if ($settings['editor'] === 'WYSIWYG') {
+            $textconfigfile = $questionrender->questiondata->file;
+            $textconfigfiletemplate = $questionrender->questiondata->editorconfig;
+        }
     }
 }
 
