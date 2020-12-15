@@ -28,6 +28,10 @@ $mandatory_editor = false;
 $field_editor = (isset($field_correct)) ? $field_correct : 'correct_fback';
 $label_editor = (isset($label_correct)) ? $label_correct : '<label for="' . $field_editor . '">' . $string['generalfeedback'] . '</label>';
 $value_editor = $question->get_correct_fback() ?? '';
+// Feedback is never disabled so force enabled here.
+$temp_dis_class = $dis_class;
+$dis_class = '';
+
 ?>
 <table id="q-feedback" class="form">
   <tbody>
@@ -40,6 +44,8 @@ if ($show_incorrect) {
     $value_editor = $question->get_incorrect_fback() ?? '';
     require 'details_editor.php';
 }
+// Set disabled class back to original.
+$dis_class = $temp_dis_class;
 ?>
   </tbody>
 </table>
