@@ -50,7 +50,7 @@ trait User
         $this->fillField('note', $note);
         $element = $this->find('button', 'Save');
         $element->click();
+        $this->only_main_window();
         $this->i_focus_main_window();
-        $this->i_wait_for_page_to_load();
     }
 }

@@ -174,6 +174,7 @@ trait frontend_hooks
      */
     public function after_step(AfterStepScope $event)
     {
+        $this->i_wait_for_page_to_load();
         if ($event->getTestResult()->getResultCode() == TestResult::FAILED) {
             // The step failed.
             $this->takeScreenshot($event);

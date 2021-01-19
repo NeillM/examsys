@@ -43,6 +43,5 @@ trait Keyword
         $this->fillField('new_keyword', $keyword);
         $this->i_click('OK', 'button');
         $this->i_focus_main_window();
-        $this->i_wait_for_page_to_load();
     }
 }

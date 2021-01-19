@@ -210,7 +210,6 @@ trait Paper
         $this->i_click('Finish', 'button');
         $this->only_main_window();
         $this->i_focus_main_window();
-        $this->i_wait_for_page_to_load();
     }
 
     /**

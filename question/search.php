@@ -28,7 +28,9 @@
 require '../include/staff_auth.inc';
 set_time_limit(0);
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
-$_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
+if (isset($_SERVER['QUERY_STRING'])) {
+    $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
+}
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 <!DOCTYPE html>
