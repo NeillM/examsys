@@ -31,7 +31,7 @@ options.position - option position
 data.dismiss - record of which options have been dismissed by the user
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-    <div class="option">
+    <div class="question-container">
         <select {%if data.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}" size="1">
             <option value=""></option>
 {% for i,p in data.options %}

@@ -38,36 +38,32 @@ lang.calculator - calculator
 lang.note - note
 #}
 {% if data.unansweredkey %}
-    <tr style="display:none" id="unansweredkey">
-        <td colspan="2">
-            <span class="unans">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            {{lang.unansweredquestion}}
-        </td>
-    </tr>
+    <div style="display:none" id="unansweredkey">
+        <span class="unans">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        {{lang.unansweredquestion}}
+    </div>
 {% endif %}
 {% if data.displayprologue %}
-    <tr>
-        <td colspan="2" style="padding:20px; text-align:justify">
-            {{data.prologue|raw}}
-        </td>
-    </tr>
+    <div class="prologue">
+        {{data.prologue|raw}}
+    </div>
 {% endif %}
 {% if data.displaytheme %}
-    <tr>
-        <td colspan="2" class="theme">
+    <div>
+        <div class="theme">
             {{data.theme}}
-        </td>
-    </tr>
+        </div>
+    </div>
 {% endif %}
 {% if data.displaydefault %}
-    <tr class="question-{{data.questiontype}}">
-        <td class="q_no">{{data.assignednumber}}.&nbsp;
+    <div class="question-{{data.questiontype}} question-parent">
+        <div class="q_no">{{data.assignednumber}}.&nbsp;
         {% if data.displaycalc %}
             <br />
             <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />
         {% endif %}
-        </td>
-        <td>
+        </div>
+        <div class="questionblock">
         {% if data.displaynotes %}
         <p class="note">
             <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />

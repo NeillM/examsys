@@ -41,45 +41,42 @@ Required localised text -
 lang.note - note
 lang.na - not applicable
 #}
-<tr><td colspan="2">
-<table cellpadding="4" cellspacing="0" border="0">
+<div class="question-{{data.questiontype}} question-parent">
+    <div class="q_no">{{data.assignednumber}}.&nbsp;</div>
 {% if data.displaylikertnotes %}
-    <tr>
-        <td></td>
-        <td colspan="{{data.likertnotescolspan}}" class="note">
+    <div>
+        <div class="note">
             <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="Note" />
             &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
-        </td>
-    </tr>
+        </div>
+    </div>
 {% endif %}
+    <div class="likert question-container">
 {% if data.displaylikertscenario %}
-    <tr>
-        <td colspan="{{data.likertscenariocolspan}}">
-            {{data.scenario|raw}}
-        </td>
-    </tr>
+        <div>
+            <div colspan="{{data.likertscenariocolspan}}">
+                {{data.scenario|raw}}
+            </div>
+        </div>
 {% endif %}
-    <tr>
-        <td></td>
-        <td></td>
+        <div class="question-header">
+            <div class="question-cell"></div>
 {% if data.displayna %}
-        <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
-            {{lang.na}}
-        </td>
+            <div class="question-cell" style="color:{{data.labelcolour}}; font-size:80%">
+                {{lang.na}}
+            </div>
 {% endif %}
 {% for i in data.scale %}
-        <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
-            {{i|raw}}
-        </td>
+            <div class="question-cell" style="color:{{data.labelcolour}}; font-size:80%">
+                {{i|raw}}
+            </div>
 {% endfor %}
-    </tr>
-    <tr {% if data.unanswered %} class="unans" {% endif %}>
-        <td class="q_no">{{data.assignednumber}}.&nbsp;</td><td>{{data.leadin|raw}}</td>
+        </div>
+        <div class="question-row {% if data.unanswered %} unans {% endif %}">
+            <div class="question-cell">{{data.leadin|raw}}</div>
 {% for i,selected in data.scaleopt %}
-        <td class="likert_button">
-            <input type="radio" name="q{{data.id}}" value="{{i}}" {% if selected %} checked=\"checked\" {% endif %}/>
-        </td>
+            <div class="question-cell likert_button">
+                <input type="radio" name="q{{data.id}}" value="{{i}}" {% if selected %} checked=\"checked\" {% endif %}/>
+            </div>
 {% endfor %}
-    </tr>
-</table>
-</tr></td>
+        </div>

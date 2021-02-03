@@ -35,10 +35,10 @@ Required localised text -
 lang.na - not applicable
 #}
 <blockquote>
-    <table cellpadding="2" cellspacing="0" border="0">
+    <div class="rank">
 {% for i,p in data.options %}
-        <tr {% if p.unans %} class="unans" {% endif %}>
-            <td class="option">
+        <div class="question-container {% if p.unans %} unans{% endif %}">
+            <div class="option">
                 <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q{{data.questionno}}">
                     <option value="u"></option>
     {# Display each rank option with computed ordinal #}
@@ -52,13 +52,13 @@ lang.na - not applicable
                     </option>
     {% endfor %}
                 </select>
-            </td>
-            <td>
+            </div>
+            <div>
                 <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}">{{p.optiontext}}</span>
-            </td>
-        </tr>
+            </div>
+        </div>
 {% endfor %}
-    </table>
+    </div>
     <div>
         <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
     </div>

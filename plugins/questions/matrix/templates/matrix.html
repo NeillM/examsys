@@ -32,24 +32,25 @@ matchscenarios.value - scenario value
 matchscenarios.unanswered - flag to indicate if option has previously been answered
 data.questionno - question number
 #}
-<table cellpadding="2" cellspacing="0" border="1" class="matrix">
-    <tr>
-        <td colspan="2">&nbsp;</td>
+<div class="matrix question-container">
+    <div class="question-header">
+        <div class="question-cell"></div>
+        <div class="question-cell"></div>
 {% for m in data.matchoptions %}
-        <td>{{m.option}}</td>
+        <div class="question-cell matrixborder">{{m.option}}</div>
 {% endfor %}
-    </tr>
+    </div>
 {% for i,s in data.matchscenarios %}
-    <tr {% if s.unanswered %} class="unans" {% endif %}>
-        <td align="right">{{s.id}}.</td>
-        <td>{{s.value}}</td>
+    <div class="question-row matrixborder {% if s.unanswered %} unans {% endif %}">
+        <div class="question-cell matrixborder" align="right">{{s.id}}.</div>
+        <div class="question-cell matrixborder">{{s.value}}</div>
     {% for m in data.matchoptions %}
-        <td>
+        <div class="question-cell matrixborder">
             <div align="center">
                 <input type="radio" name="q{{data.questionno}}_{{i+1}}" value="{{m.value}}" {% if m.selected[i+1] %} checked="checked" {% endif %}/>
             </div>
-        </td>
+        </div>
     {% endfor %}
-    </tr>
+    </div>
 {% endfor %}
-</table>
+</div>

@@ -34,51 +34,50 @@ options.optionmedia - the option media
 data.partid - the question part id
 #}
 <blockquote>
-    <table cellpadding="2" cellspacing="0" border="0">
-        <tr>
-            <td align="center" width="40" style="color:{{data.labelcolour}}; font-size:90%">
+    <div class="question-container">
+        <div class="question-header">
+            <div class="question-cell" style="color:{{data.labelcolour}}; font-size:90%">
 {% if data.displayTF %}
                 {{lang.true}}
 {% else %}
                 {{lang.yes}}
 {% endif %}
-            </td>
-            <td width="40" align="center" style="color:{{data.labelcolour}};font-size:90%">
+            </div>
+            <div class="question-cell" style="color:{{data.labelcolour}};font-size:90%">
 {% if data.displayTF %}
                 {{lang.false}}
 {% else %}
                 {{lang.no}}
 {% endif %}
-            </td>
+            </div>
 {% if data.displayAbstain %}
-            <td width="40" align="center" style="color:{{data.labelcolour}}; font-size:90%">
+            <div class="question-cell" style="color:{{data.labelcolour}}; font-size:90%">
                 {{lang.abstain}}
-            </td>
-            <td>&nbsp;</td>
+            </div>
 {% endif %}
-        </tr>
+        </div>
 {% for i,p in data.options %}
-        <tr id="q{{p.question_no}}_opt{{data.partid}}" {% if p.unanswered %} class="unans"{% endif %}>
-            <td align="center">
+        <div id="q{{p.question_no}}_opt{{data.partid}}" class="question-row {% if p.unanswered %} unans{% endif %}">
+            <div class="question-cell">
                 <input type="radio" name="{{p.optionno}}" value="t" {% if p.useranswer == 't' %} checked="checked" {% endif %}/>
-            </td>
-            <td align="center">
+            </div>
+            <div class="question-cell">
                 <input type="radio" name="{{p.optionno}}" value="f" {% if p.useranswer == 'f' %} checked="checked" {% endif %}/>
-            </td>
+            </div>
     {% if p.abstain %}
-            <td align="center">
+            <div class="question-cell">
                 <input type="radio" name="{{p.optionno}}" value="a" {% if p.useranswer == 'a' %} checked="checked" {% endif %}/>
-            </td>
+            </div>
     {% endif %}
-            <td>
+            <div>
     {% if p.optiontext != '' %}
                 {{p.optiontext}}<br />
     {% endif %}
     {% if p.displayoptionmedia %}
                 {% include 'paper/media.html' with {'data': p.optionmedia} %}
     {% endif %}
-            </td>
-        </tr>
+            </div>
+        </div>
 {% endfor %}
-    </table>
+    </div>
 </blockquote>

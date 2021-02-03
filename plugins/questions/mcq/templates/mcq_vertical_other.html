@@ -46,41 +46,41 @@ lang.abstain - abstain
 lang.other - other
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-    <table class="vertical" cellpadding="2" cellspacing="0" border="0">
+    <div class="vertical">
 {% for i,p in data.options %}
-        <tr class="option">
-            <td>
+        <div class="question-container">
+            <div>
                 <input type="radio" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %}/>
-            </td>
-            <td>
+            </div>
+            <div>
             {% if p.optiontextdisplay %}
             <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}"> {{p.optiontext|raw}}</span></br>
             {% endif %}
             {% if p.displayoptionmedia %}
                 {% include 'paper/media.html' with {'data': p.optionmedia} %}
             {% endif %}
-            </td>
-        </tr>
+            </div>
+        </div>
 {% endfor %}
 {% if data.papertype == 3 %}
-        <tr class="option">
-            <td>
+        <div class="question-container">
+            <div>
                 <input type="radio" name="q{{data.questionno}}" value="other" {% if data.otherselected %} checked="checked" {% endif %}/>
-            </td>
-            <td>{{lang.other}}
+            </div>
+            <div>{{lang.other}}
                 <input type="text" onkeypress="document.questions.q{{data.questionno}}[{{data.partid}}].checked=true" name="q{{data.questionno}}_other" {% if data.otherselected %} value="{{data.other}}" {% endif %} />
-            </td>
-        </tr>
+            </div>
+        </div>
 {% endif %}
 {% if data.negativemarking %}
-        <tr class="option">
-            <td>
+        <div class="question-container">
+            <div>
                 <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %}/>
-            </td>
-            <td style="color:{{data.labelcolour}}">{{lang.abstain}}</td>
-        </tr>
+            </div>
+            <div style="color:{{data.labelcolour}}">{{lang.abstain}}</div>
+        </div>
 {% endif %}
-    </table>
+    </div>
 <div>
     <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
 </div>

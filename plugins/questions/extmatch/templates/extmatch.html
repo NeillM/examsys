@@ -47,23 +47,21 @@ lang.holddownctrlkey - user instructions on how to multi select options.
 </p>
 {% endif %}
 {# Display options table #}
-<table class="extmatch_opt_table">
-    <tr>
-        <td>
+<div class="extmatch_opt_table">
+    <div>
             <ol>
 {% for o in data.matchoptions %}
                 <li>{{o}}</li>
     {% if loop.index0 == data.split %}
             </ol>
-        </td>
-        <td style="vertical-align:top">
+    </div>
+    <div>
             <ol start="{{loop.index0 + 2}}">
     {% endif %}
 {% endfor %}
             </ol>
-        </td>
-    </tr>
-</table>
+    </div>
+</div>
 {# Display question stems #}
 <ol class="extmatch">
 {% for m in data.matchstem %}
@@ -87,7 +85,9 @@ lang.holddownctrlkey - user instructions on how to multi select options.
     {% if m.answerno > 1 %}
         <div class="mk">{{lang.holddownctrlkey}}</div>
     {% endif %}
+    {% if m.answerno != 1 %}
     </div>
+    {% endif %}
 </li>
 {% endfor %}
 </ol>

@@ -41,7 +41,7 @@ lang.abstain - abstain
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
 {% for i,p in data.options %}
-    <div style="float:left; margin-right:15px; margin-bottom:15px">
+    <div class="question-container horizontal">
         <input type="radio" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %} />
     {% if p.optiontextdisplay %}
             &nbsp;{{p.optiontext|raw}}
