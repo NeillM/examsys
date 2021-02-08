@@ -33,6 +33,11 @@ data.areauseranswer - the region drawn previously by the user
 data.areafulluseranswer - the full answer the user provided
 #}
 <br />
+{% if data.print %}
+<div align="left">
+{% include 'paper/media.html' %}
+</div>
+{% else %}
 <div align="left" {% if data.unanswered %} class="unans" style="padding:2px"{% endif %}>
     <canvas class="area" id="canvas{{data.questionno}}"
             data-qno="{{data.questionno}}"
@@ -45,3 +50,4 @@ data.areafulluseranswer - the full answer the user provided
     <div style="width:100%;text-align: left;" id="canvasbox"></div>
 </div>
 <input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" value="{{data.areafulluseranswer}}"/>
+{% endif %}

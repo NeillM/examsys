@@ -55,14 +55,14 @@ lang.newinformation - new information
         {% endif %}
     </div>
     <div class="questionblock">
-        <div class="sctbanner">
-            {{lang.clinicalvignette}}
-        </div>
         {% if data.displaynotes %}
         <p class="note">
             <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />&nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
         </p>
         {% endif %}
+        <div class="sctbanner">
+            {{lang.clinicalvignette}}
+        </div>
         {{data.scenario|raw}}<br /><br />
 {% endif %}
 {% if data.displaymedia %}
@@ -90,7 +90,7 @@ lang.newinformation - new information
                     <div>
                         <input type="radio" id="{{p.optionno}}" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %} />
                     </div>
-                    <div>
+                    <div class="optiontext">
                         {% if p.optiontextdisplay %}
                         <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{i}}">{{p.optiontext}}</span>
                     </div>

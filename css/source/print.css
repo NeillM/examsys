@@ -121,6 +121,15 @@ body {
   color-adjust: exact;
 }
 
+.question-sct .optiontext {
+  background-image: url('../artwork/print_box_circle.png');
+  background-repeat: no-repeat;
+  height: 32px;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+  padding-left: 30px;
+}
+
 .question-mcq select {
   background-image: url('../artwork/print_box_a.png');
   background-repeat: no-repeat;
@@ -129,6 +138,7 @@ body {
   color-adjust: exact;
 }
 
+.question-sct input,
 .extmatch select,
 .question-likert input,
 .question-true_false input,
@@ -166,4 +176,23 @@ body {
 
 .headerbar {
   background-color: #FFFFFF;
+}
+
+.hotspot ol,
+.label ol {
+  list-style-type: upper-alpha;
+}
+
+.labelimage{
+  background-image: url('../artwork/print_box_a.png');
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  -webkit-print-color-adjust: exact !important;
+  color-adjust: exact !important;
+}
+
+.labellingcontainer {
+  position: relative;
 }

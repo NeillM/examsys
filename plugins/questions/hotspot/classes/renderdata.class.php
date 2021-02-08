@@ -54,6 +54,12 @@ class renderdata extends \questiondata
     public $cssclasses = '';
 
     /**
+     * The labels for the hotspot
+     * @var array
+     */
+    public $labels = array();
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -112,7 +118,10 @@ class renderdata extends \questiondata
         if ($tmp_height < (($hotspot_no * 36) + 25)) {
             $tmp_height = (($hotspot_no * 36) + 25);
         }
-        $this->tmpcorrect = \hotspot_helper::get_instance()->correct_to_answer_mode(trim($option['correct']));
+        $this->tmpcorrect = \hotspot_helper::get_instance()->correct_to_answer_mode(trim($option['correct']), $this->print);
+        if ($this->print) {
+            $this->labels = explode(\hotspot_helper::LAYER_SEPARATOR, $this->tmpcorrect);
+        }
         $this->mediaheight = $tmp_height - 29;
         $mediadirectory = \rogo_directory::get_directory('media');
         $this->mediafile = $mediadirectory->url($this->mediafile);

@@ -34,6 +34,34 @@ data.marksincorrect - marks for an incorrect answer
 data.scoremethod - the scoremethod
 data.marks - the total marks available
 #}
+
+{% if data.print %}
+<div class="label question-parent">
+    <ol>
+        {% for l in data.labels %}
+        <li>
+            {% if l.type == 'media' %}
+            <img src="{{l.value}}" />
+            {% else %}
+            {{l.value}}
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+    <div class="labellingcontainer">
+        {% for l in data.labels %}
+        {% if l.correct %}
+            {% if l.type == 'media' %}
+            <div class="labelimage" style="top:{{l.ypos}}px;left:{{l.xpos - 190}}px;"></div>
+            {% else %}
+            <div class="labelimage" style="top:{{l.ypos - 30}}px;left:{{l.xpos - 190}}px;"></div>
+            {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% include 'paper/media.html' %}
+    </div>
+</div>
+{% else %}
 <div align="left">
     <canvas class="labelling" id="canvas{{data.questionno}}"
             data-qno="{{data.questionno}}"
@@ -47,3 +75,4 @@ data.marks - the total marks available
     <br /><div id="canvasbox"></div>
 </div>
 <input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" {% if data.unanswered %} value="0{{data.marks}}" {% else %} value="{{data.useranswer}}" {% endif %}/>
+{% endif %}

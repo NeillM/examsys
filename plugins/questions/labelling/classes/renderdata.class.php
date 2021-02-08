@@ -17,6 +17,8 @@
 
 namespace plugins\questions\labelling;
 
+use rogo_directory;
+
 /**
  *
  * Class for labelling rendering
@@ -52,6 +54,12 @@ class renderdata extends \questiondata
      * @var flost
      */
     public $marksincorrect;
+
+    /**
+     * The labels for the hotspot
+     * @var array
+     */
+    public $labels = array();
 
     /**
      * Constructor
@@ -107,14 +115,40 @@ class renderdata extends \questiondata
         $label_width = $tmp_first_split[5];
         $label_height = $tmp_first_split[6];
         $hyphen = false;
+        $mediadirectory = rogo_directory::get_directory('media');
         foreach ($tmp_second_split as $ind_label) {
+            $correct = false;
             $label_parts = explode('$', $ind_label);
             if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
+                if ($label_parts[2] > 219) {
+                    $correct = true;
+                }
+                if ($this->print) {
+                    if (strstr($label_parts[4], '~')) {
+                        $this->labels[] = array(
+                            'type' => 'media',
+                            'value' => $mediadirectory->url(
+                                strstr($label_parts[4], '~', true)
+                            ),
+                            'xpos' => $label_parts[2],
+                            'ypos' => $label_parts[3],
+                            'correct' => $correct,
+                        );
+                    } else {
+                        $this->labels[] = array(
+                            'type' => 'text',
+                            'value' => $label_parts[4],
+                            'xpos' => $label_parts[2],
+                            'ypos' => $label_parts[3],
+                            'correct' => $correct,
+                        );
+                    }
+                }
                 if (mb_strstr($label_parts[4], '-') !== false) {
                     $hyphen = true;
                 }
                 $tmp_labels++;
-                if ($label_parts[2] > 219) {
+                if ($correct) {
                     $marks += $option['markscorrect'];
                 }
                 if ($label_parts[0] < 10) {

@@ -597,6 +597,7 @@ abstract class questiondata
             $this->pagebreak = $question['pagebreak'];
         } else {
             $this->pagebreak = false;
+            $question['pagebreak'] = false;
         }
         $q_id = $question['q_id'];
         $option_no = count($question['options']);

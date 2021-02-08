@@ -54,15 +54,37 @@ class hotspot_helper extends RogoStaticSingleton
      * Change the correct answer into a form that is sutiable for the hotspot answer mode.
      *
      * @param string $correct The correct answer stored in the database.
+     * @param boolean $print Flag to indcate formating for printing
      * @return string
      */
-    public function correct_to_answer_mode($correct)
+    public function correct_to_answer_mode($correct, $print = false)
     {
         $layers = explode(self::LAYER_SEPARATOR, $correct);
         foreach ($layers as $key => $layer) {
-            $layers[$key] = $this->remove_layer_coordinates($layer);
+            if ($print) {
+                $layers[$key] = $this->removeLayerAnswer($this->remove_layer_coordinates($layer));
+            } else {
+                $layers[$key] = $this->remove_layer_coordinates($layer);
+            }
         }
         return implode(self::LAYER_SEPARATOR, $layers);
+    }
+
+    /**
+     * Get the parts of the correct answer that are of interest to a question in print mode.
+     *
+     * @param string $layer
+     * @return string
+     */
+    protected function removeLayerAnswer($layer)
+    {
+        $parts = explode(self::CORRECT_SEPARATOR, $layer);
+        $return = array();
+        if (count($parts) > 1) {
+            // Get the name.
+            $return[] = array_shift($parts);
+        }
+        return implode(self::LAYER_SEPARATOR, $return);
     }
 
     /**

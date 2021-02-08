@@ -32,19 +32,31 @@ data.useranswer - the users answer
 data.screensubmitted - flag to indicate if question previously answered
 data.cssclasses - extra CSS classes to apply to question
 #}
-<div align="left">
-            <div 
-              id="question{{data.questionno}}"
-              class="html5 hotspot answer{{data.cssclasses}}"
-              data-number="{{data.questionno}}"
-              data-type="hotspot"
-              data-mode="answer"
-              data-image="{{data.mediafile}}"
-              data-image-width="{{data.mediawidth}}"
-              data-image-height="{{data.mediaheight}}"
-              data-setup="{{data.tmpcorrect}}"
-              data-answer="{{data.useranswer}}"
-              ></div>
-	
+{% if data.print %}
+<div class="hotspot question-parent">
+    <ol>
+{% for l in data.labels %}
+        <li>{{l}}</li>
+{% endfor %}
+    </ol>
+    <div>
+    {% include 'paper/media.html' %}
+    </div>
 </div>
+{% else %}
+<div align="left">
+    <div
+      id="question{{data.questionno}}"
+      class="html5 hotspot answer{{data.cssclasses}}"
+      data-number="{{data.questionno}}"
+      data-type="hotspot"
+      data-mode="answer"
+      data-image="{{data.mediafile}}"
+      data-image-width="{{data.mediawidth}}"
+      data-image-height="{{data.mediaheight}}"
+      data-setup="{{data.tmpcorrect}}"
+      data-answer="{{data.useranswer}}"
+      ></div>
+    </div>
 <input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" {% if data.unanswered %} value="u" {% else %} value="{{data.useranswer}}" {% endif %}/>
+{% endif %}
