@@ -75,7 +75,7 @@ lang.holddownctrlkey - user instructions on how to multi select options.
         <option value="u"></option>
     {% else %}
     <br />
-    <div class="option">
+    <div class="question-container">
         <select {% if m.unanswered %} class="unans multicheck" {% else %} class="multicheck" {% endif %} data-qno="q{{data.questionno}}_{{loop.index}}" data-opt="{{m.matchingoptions}}" data-sub="{{m.subanswers}}" name="q{{data.questionno}}_{{loop.index}}[]" id="q{{data.questionno}}_{{loop.index}}" multiple="multiple" size="{{m.listsize}}">
     {% endif %}
     {% for o in m.matchingoption %}

@@ -1502,4 +1502,16 @@ class PaperUtils
             'peer_review' => assessment::TYPE_PEERREVIEW
         );
     }
+
+    /**
+     * Check if on paper print screen.
+     * @return bool
+     */
+    public static function onPrintScreen(): bool
+    {
+        if (Url::fromGlobals()->getPath() === '/paper/print.php') {
+            return true;
+        }
+        return false;
+    }
 }

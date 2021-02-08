@@ -44,6 +44,7 @@ data.numonscreen - the question number
 data.assignednumber - question number
 data.showstdset - flag to indicate if the standard settings scale should be displayed
 data.stdset - the standard settings scale html
+data.pagebreak - flag to indicate if page break should be inserted (for printing papers)
 
 Required localised text -
 lang.answer_to - answer to
@@ -138,3 +139,7 @@ lang.significant_figures - significant figues
     </div>
 </div>
 {% endif %}
+{% if data.pagebreak %}
+<div class='page_break'></div>
+{% endif %}
+

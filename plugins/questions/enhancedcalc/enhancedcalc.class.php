@@ -867,7 +867,7 @@ class EnhancedCalc extends Question implements questionInterface
             // 1. List answer and associated question
             $find_qid = $this->parse_linked_ans($inputVal);
             // 2. Error if user answers not set.
-            if (!is_array($user_answers)) {
+            if (!is_array($user_answers) or empty($user_answers)) {
                 $user_answers = array();
                 $inputVal = 'ERROR';
             }
@@ -902,7 +902,7 @@ class EnhancedCalc extends Question implements questionInterface
             // 1. Get variable and associated question.
             list($find_var, $find_qid) = $this->parse_linked_question_var($inputVal);
             // 2. Error if user answers not set.
-            if (!is_array($user_answers)) {
+            if (!is_array($user_answers) or empty($user_answers)) {
                 $user_answers = array();
                 $inputVal = 'ERROR';
             }
@@ -1269,6 +1269,7 @@ class EnhancedCalc extends Question implements questionInterface
             $questiondata['stdset'] = $extra['stdset'];
             $questiondata['showstdset'] = true;
         }
+        $questiondata['pagebreak'] = $extra['current_question']['pagebreak'];
         $render->render($questiondata, $string, 'enhancedcalc.html');
     }
 

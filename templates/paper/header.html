@@ -26,41 +26,54 @@ data.previewmode - are we in question preview mode
 data.papertitle - paper title
 data.screen - screen display info
 data.logopath - path to site logo
+data.print - flag to indicate if the question is being printed
 #}
 <div id="maincontent">
     <div class="questions">
+{% if data.print == 0 %}
         <form method="post" id="qForm" name="questions" action="{{data.action}}" autocomplete="off">
-{% for number,id in data.hidden %}
+    {% for number,id in data.hidden %}
             <input type="hidden" name="q{{number}}_randomID" value="{{id}}" />
-{% endfor %}
+    {% endfor %}
             <div>
-{# Not all information shown on question preview #}
-{% if data.previewmode %}
+    {# Not all information shown on question preview #}
+    {% if data.previewmode %}
                 <div>
-{% else %}
+    {% else %}
                     <div>
                         <div class="headerbar">
 
                                     <div>
                                     <div class="paper">{{data.papertitle}}</div>
 
-{% for s in data.screen %}
+        {% for s in data.screen %}
                                     <div class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
                                         {{s.pageno}}
                                     </div>
-{% endfor %}
+        {% endfor %}
                                     <div style="clear:both"></div>
-{% for s in data.screen %}
+        {% for s in data.screen %}
                                     <div class="{{s.screentype2}}"></div>
-{% endfor %}
+        {% endfor %}
                                     </div>
 
                                 <div>
                                     <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
                                 </div>
                         </div>
+    {% endif %}
+    {{data.examclarification|raw}}
+{% else %}
+        <div>
+            <div>
+                <div class="headerbar">
+                    <div>
+                        <div class="paper">{{data.papertitle}}</div>
+                        <div style="clear:both"></div>
+                    </div>
+                    <div>
+                        <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                    </div>
+                </div>
 {% endif %}
-
-{{data.examclarification|raw}}
-
-                        <div class="questionarea">
+                <div class="questionarea">

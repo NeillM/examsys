@@ -36,6 +36,7 @@ data.bonus - flag to indicate if bonus marks should be displayed
 data.negativemarking  - flag to indicate if negative marking should be displayed
 data.optionorder - the order of options in a question
 data.questiontype - the question type
+data.pagebreak - flag to indicate if page break should be inserted (for printing papers)
 
 Required localised strings -
 lang.mark - mark
@@ -80,3 +81,6 @@ lang.negmarking - negative marking
     <input type="hidden" name="order{{data.questionno}}" value="{{data.optionorder}}" />
 {% endif %}
 </div>
+{% if data.pagebreak %}
+<div class='page_break'></div>
+{% endif %}

@@ -36,11 +36,32 @@ lang.false - false
 lang.abstain - abstain
 #}
 <blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
-    <input type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />&nbsp;{{lang.true}}
-    &nbsp;&nbsp;&nbsp;
-    <input type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />&nbsp;{{lang.false}}
-    &nbsp;&nbsp;&nbsp;
-    {% if data.negativemarking %}
-    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
-    {% endif %}
+    <div class="horizontal">
+        <div class="question-container">
+            <div>
+                <input type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />
+            </div>
+            <div class="optiontext">
+                {{lang.true}}
+            </div>
+        </div>
+        <div class="question-container">
+            <div>
+                <input type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />
+            </div>
+            <div class="optiontext">
+                {{lang.false}}
+            </div>
+        </div>
+        {% if data.negativemarking %}
+        <div class="question-container">
+            <div>
+                <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />
+            </div>
+            <div class="optiontext">
+                <span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
+            </div>
+        </div>
+        {% endif %}
+    </div>
 </blockquote>

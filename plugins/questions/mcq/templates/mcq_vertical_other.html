@@ -52,13 +52,13 @@ lang.other - other
             <div>
                 <input type="radio" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %}/>
             </div>
-            <div>
-            {% if p.optiontextdisplay %}
-            <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}"> {{p.optiontext|raw}}</span></br>
-            {% endif %}
-            {% if p.displayoptionmedia %}
+            <div class="optiontext">
+                {% if p.optiontextdisplay %}
+                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}"> {{p.optiontext|raw}}</span></br>
+                {% endif %}
+                {% if p.displayoptionmedia %}
                 {% include 'paper/media.html' with {'data': p.optionmedia} %}
-            {% endif %}
+                {% endif %}
             </div>
         </div>
 {% endfor %}
@@ -67,7 +67,8 @@ lang.other - other
             <div>
                 <input type="radio" name="q{{data.questionno}}" value="other" {% if data.otherselected %} checked="checked" {% endif %}/>
             </div>
-            <div>{{lang.other}}
+            <div class="optiontext">
+                {{lang.other}}
                 <input type="text" onkeypress="document.questions.q{{data.questionno}}[{{data.partid}}].checked=true" name="q{{data.questionno}}_other" {% if data.otherselected %} value="{{data.other}}" {% endif %} />
             </div>
         </div>
@@ -77,7 +78,9 @@ lang.other - other
             <div>
                 <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %}/>
             </div>
-            <div style="color:{{data.labelcolour}}">{{lang.abstain}}</div>
+            <div class="optiontext" style="color:{{data.labelcolour}}">
+                {{lang.abstain}}
+            </div>
         </div>
 {% endif %}
     </div>

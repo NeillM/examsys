@@ -21,9 +21,6 @@ li {
   margin-right: 15px;
   font-size: 100%;
 }
-table {
-  table-layout: fixed;
-}
 p {
   margin-top: 0;
   padding-top: 0;
@@ -129,7 +126,6 @@ pre {
 }
 .extmatch li {
   padding-bottom: 14px;
-  vertical-align: text-bottom;
   list-style-type: lower-roman;
 }
 .extmatch_opt_table {
@@ -396,12 +392,6 @@ div.error {
   color: grey;
 }
 
-#qForm table > tbody > tr > td > span > div, #qForm table > tbody > tr > td > span > p  {
-	display: inline-block;
-	margin: 0;
-	text-decoration: inherit;
-}
-
 .enhancedcalc {
   padding-bottom:10px;
 }
@@ -517,13 +507,14 @@ div.error {
   padding: 2px;
 }
 
+.question-true_false .question-container,
 .question-mrq .question-container,
 .question-mcq .question-container,
 .sct .question-cell {
   display: flex;
+  margin-left: 10px;
 }
 
-.rank .question-container,
 .question-sct .question-container {
   display: flex;
   width: 100%;
@@ -564,4 +555,35 @@ div.error {
   float: left;
   margin-right: 15px;
   margin-bottom: 15px
+}
+
+.blank .question-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.horizontal {
+  display: flex;
+  flex-flow: row;
+}
+
+.vertical {
+  display: flex;
+  flex-flow: column;
+}
+
+.question-empty-cell {
+  background-image: none;
+  display: table-cell;
+  text-align: center;
+  padding: 2px;
+}
+
+.question-placeholder-cell {
+  vertical-align: middle;
+  padding-left: 2px;
+  padding-right: 2px;
+  display: table-cell;
+  text-align: center;
+  padding: 2px;
 }

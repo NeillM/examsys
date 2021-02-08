@@ -28,25 +28,13 @@
  */
 
 require '../include/staff_auth.inc';
-require '../include/print_functions.inc';
 require '../config/index.inc';
 require_once '../include/errors.php';
 
-//HTML5 part
-require_once '../lang/' . $language . '/question/edit/hotspot_correct.php';
-require_once '../lang/' . $language . '/question/edit/area.php';
-require_once '../lang/' . $language . '/paper/hotspot_answer.php';
-require_once '../lang/' . $language . '/paper/hotspot_question.php';
-require_once '../lang/' . $language . '/paper/label_answer.php';
-
 $id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
 
-if (isset($_POST['sessionid'])) {
-    require '../include/marking_functions.inc';
-}
-
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
-
+$papertype = $propertyObj->get_paper_type();
 // Get how many screens make up the question paper.
 $screen_data = array();
 $row_no = 0;
@@ -77,117 +65,115 @@ $stmt->free_result();
 $stmt->close();
 
 $current_screen = 1;
-?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">
-<html>
-<head>
-  <?php
-    if ($paper_type == '3') {
-        echo '<title>' . $string['survey'] . "</title>\n";
-    } else {
-        echo '<title>' . $string['assessment'] . "</title>\n";
-    }
-    ?>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="imagetoolbar" content="no">
-  <meta http-equiv="imagetoolbar" content="false">
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <meta http-equiv="pragma" content="no-cache" />
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/print.css" />
-  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
-  <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
+$texteditorplugin = \plugins\plugins_texteditor::get_editor();
+$renderpath = $texteditorplugin->get_render_paths();
+$renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
+$render = new render($configObject, $renderpath);
+$headerdata = array(
+    'css' => array(
+        '/css/print.css',
+        '/css/html5.css',
+        '/node_modules/mediaelement/build/mediaelementplayer.min.css',
+    ),
+    'scripts' => array(
+        '/js/printinit.min.js',
+    ),
+    'metadata' => array(
+        'pragma' => 'no-cache',
+    ),
+);
+if ($papertype == '3') {
+    $lang['title'] = $string['survey'];
+} else {
+    $lang['title'] = $string['assessment'];
+}
 
-    <script id="rogoconfig"
-            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
-            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
-            data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
-    </script>
-    <script src='../js/require.js'></script>
-    <script src='../js/main.min.js'></script>
-    <script src='../js/printinit.min.js'></script>
-<?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-  // Check if any 3d file types are enabled and render js.
-  threed_handler::render_js($string);
-?>
-</head>
-<body>
+$headerdata['mathjax'] = false;
+if ($configObject->get_setting('core', 'paper_mathjax')) {
+    $headerdata['mathjax'] = true;
+}
 
-  <table cellpadding="0" cellspacing="0" border="0" width="100%">
-  <tr><td valign="top">
-<?php
-  echo '<tr><td><div class="paper">' . $paper_title . '</div>';
-  echo '</td><td align="right" width="167">' . $logo_html . '</td></tr></table>';
+// Check if 3d file types are enabled and load js.
+$headerdata['three'] = false;
+if ($configObject->get_setting('core', 'paper_threejs')) {
+    $headerdata['three'] = true;
+    $headerdata['scripts'] = array_merge($headerdata['scripts'], threed_handler::get_js());
+    $headerdata['css'] = array_merge($headerdata['css'], threed_handler::get_css());
+}
+$headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
+$headerdata['texteditor'] = $texteditorplugin->get_header_file();
+$editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+$headerdata['editor'] = $editor[0];
+$render->render($headerdata, $lang, 'header.html');
+$themedirectory = rogo_directory::get_directory('theme');
+$logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
+$contentdata['logopath'] = $logo_path;
+$contentdata['papertitle'] = $propertyObj->get_paper_title();
+$contentdata['print'] = Paper_utils::onPrintScreen();
+$render->render($contentdata, $string, 'paper/header.html');
 
-  $user_answers = array();
-  $previous_duration = 0;
-
-  $old_leadin = '';
-  $old_q_type = '';
-  $old_q_id = 0;
-  $question_no = 0;
-  $q_displayed = 0;
-  $marks = 0;
-  $old_theme = '';
-  $previous_q_type = '';
-  $hide_notes = param::optional('hidenotes', false, param::BOOLEAN, param::FETCH_GET);
-  $tmp_questions_array = $propertyObj->build_paper(false, null, null, $hide_notes);
-  //look for braching and random questions and overwrite as needed
-  $questions_array = array();
-  $tmp_q_no = 0;
+$user_answers = array();
+$question_no = 0;
+$q_displayed = 0;
+$marks = 0;
+$hide_notes = param::optional('hidenotes', false, param::BOOLEAN, param::FETCH_GET);
+$tmp_questions_array = $propertyObj->build_paper(false, null, null, $hide_notes);
+//look for braching and random questions and overwrite as needed
+$questions_array = array();
+$tmp_q_no = 0;
 foreach ($tmp_questions_array as &$question) {
     if ($question['q_type'] != 'info') {
         $tmp_q_no++;
     }
     if ($question['q_type'] == 'random') {
-        $questions_array[] = $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
+        $question = $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
     } elseif ($question['q_type'] == 'keyword_based') {
-        $questions_array[] = $propertyObj->keywordQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
-    } else {
-        $questions_array[] = $question;
+        $question = $propertyObj->keywordQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
     }
+    if ($question['q_type'] == 'enhancedcalc') {
+        require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
+        if (!isset($configObj)) {
+            $configObj = Config::get_instance();
+        }
+        $question['object'] = new EnhancedCalc($configObj);
+        $question['object']->load($question);
+    }
+    $questions_array[] = $question;
 }
-  unset($tmp_questions_array);
+unset($tmp_questions_array);
 
-  //display the questions
-  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\" class=\"qtable\">\n";
-  echo "<col width=\"40\"><col>\n";
+//display the questions
+$paperID = $propertyObj->get_property_id();
+// Get linked question parents.
 foreach ($questions_array as &$question) {
-    if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') {
-        echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
+    $questionrender = new questionrender($question['q_type']);
+    // Check if last scenario is the same as this one, and on the same screen,
+    // for skipping repeat scenario display if turned on
+    if ($configObject->get_setting('core', 'paper_hide_repeat_scenario')) {
+        if (QuestionUtils::is_scenario_similar($question['scenario'], $last_scenario)) {
+            $questionrender->add_override('displayscenario', false);
+        }
+        $last_scenario = $question['scenario'];
     }
-    if ($q_displayed == 0 and $question['theme'] == '') {
-        echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    }
-    display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset, $user_answers);
-    $previous_q_type = $question['q_type'];
-    $q_displayed++;
     if (param::optional('break', false, param::BOOLEAN, param::FETCH_GET)) {
-        echo "<tr class='page_break'></tr>";
+        $question['pagebreak'] = true;
     }
+    $questionrender->display_question(0, $q_displayed, $string, $question, $paperID, $current_screen, $question_no, $user_answers);
+    $q_displayed++;
 }
-  echo "</table>\n";
 
-  $mysqli->close();
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['language'] = $language;
+$miscdataset['attributes']['rootpath'] = $cfg_root_path;
+$render->render($miscdataset, array(), 'dataset.html');
 
-?>
-<?php
-  // JS utils dataset.
-  $jsdataset['name'] = 'jsutils';
-  $jsdataset['attributes']['xls'] = json_encode($string);
-  $render = new render($configObject);
-  $render->render($jsdataset, array(), 'dataset.html');
-  // Dataset.
-  $miscdataset['name'] = 'dataset';
-  $miscdataset['attributes']['language'] = $language;
-  $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-  $render->render($miscdataset, array(), 'dataset.html');
+$mysqli->close();
 
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-?>
-</body>
-</html>
+$render->render(array(), array(), 'footer.html');

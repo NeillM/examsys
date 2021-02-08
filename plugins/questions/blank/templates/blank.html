@@ -30,18 +30,49 @@ blankoptions.itemvalue - blurb text or blank option
 itemvalue.answer - option
 itemvalue.selected - flag indicating if option was previously seleced
 data.questionno - the question number
+data.print - flag to indicate if the question is being printed
 #}
-<p>
-{% for i,p in data.blankoptions %}
-    {% if p.itemtype == 'blurb' %}
-    {{p.itemvalue|raw}}
-    {% else %}
-    <select name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% endif %}>
-                    <option value="u"></option>
-       {% for a in p.itemvalue %}
-                    <option value="{{a.answer|raw}}" {% if a.selected %} selected {% endif %}>{{a.answer|raw}}</option>
-       {% endfor %}
-    </select>
-    {% endif %}
-{% endfor %}
-</p>
+<div class="blank vertical">
+{# Display options table #}
+{% if data.print %}
+    <div class="extmatch_opt_table">
+
+        {% set num = 0 %}
+        {% for i,o in data.blankoptions %}
+            {% if o.itemtype != 'blurb' %}
+                {% set num = num + 1 %}
+        <div>
+            <strong>{{num}}.</strong>
+            <ol>
+                {% for a in o.itemvalue %}
+                <li>{{a.answer|raw}}</li>
+            {% endfor %}
+            </ol>
+        </div>
+                {% endif %}
+        {% endfor %}
+
+    </div>
+{% endif %}
+    <div class="question-container">
+    {% set num = 0 %}
+    {% for i,p in data.blankoptions %}
+        {% if p.itemtype == 'blurb' %}
+        {{p.itemvalue|raw}}
+        {% else %}
+        {% set num = num + 1 %}
+        {% if data.print %}
+        <strong>&nbsp;{{num}}.</strong>
+        {% endif %}
+        <div class="question-cell">
+            <select name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% endif %}>
+                <option value="u"></option>
+                {% for a in p.itemvalue %}
+                <option value="{{a.answer|raw}}" {% if a.selected %} selected {% endif %}>{{a.answer|raw}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>

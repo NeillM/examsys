@@ -34,16 +34,16 @@ data.questionno - question number
 #}
 <div class="matrix question-container">
     <div class="question-header">
-        <div class="question-cell"></div>
-        <div class="question-cell"></div>
+        <div class="question-empty-cell"></div>
+        <div class="question-empty-cell"></div>
 {% for m in data.matchoptions %}
-        <div class="question-cell matrixborder">{{m.option}}</div>
+        <div class="question-empty-cell matrixborder">{{m.option}}</div>
 {% endfor %}
     </div>
 {% for i,s in data.matchscenarios %}
     <div class="question-row matrixborder {% if s.unanswered %} unans {% endif %}">
-        <div class="question-cell matrixborder" align="right">{{s.id}}.</div>
-        <div class="question-cell matrixborder">{{s.value}}</div>
+        <div class="question-placeholder-cell question-emptycell matrixborder" align="right">{{s.id}}.</div>
+        <div class="question-placeholder-cell question-emptycell matrixborder">{{s.value}}</div>
     {% for m in data.matchoptions %}
         <div class="question-cell matrixborder">
             <div align="center">

@@ -41,13 +41,13 @@ data.otherselected - flag to indicate if other option has previously been select
 data.other - text user entered into other textbox
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-<div>
+<div class="mrq question-parent vertical">
 {% for i,p in data.options %}
     <div class="question-container">
         <div>
             <input type="checkbox" {% if data.papertype != 3 %} class="online" data-qno="{{data.questionno}}" data-pos="{{p.position}}" data-ono="{{data.optionnumber}}" data-allowed="{{data.allowedresponses}}" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </div>
-        <div>
+        <div class="optiontext">
             {% if p.optiontextdisplay %}
             <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}"> {{p.optiontext|raw}}</span></br>
             {% endif %}
@@ -61,7 +61,7 @@ data.other - text user entered into other textbox
         <div>
             <input type="checkbox" name="q{{data.questionno}}_{{data.partid}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
         </div>
-        <div>{{lang.other}}
+        <div class="optiontext">{{lang.other}}
             <input type="text" onkeypress="document.questions.q{{data.questionno}}_{{data.partid}}.checked=true" name="q{{data.questionno}}_other" value="{{data.other}}" />
         </div>
     </div>

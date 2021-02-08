@@ -37,8 +37,8 @@ lang.na - not applicable
 <blockquote>
     <div class="rank">
 {% for i,p in data.options %}
-        <div class="question-container {% if p.unans %} unans{% endif %}">
-            <div class="option">
+        <div class="question-parent {% if p.unans %} unans{% endif %}">
+            <div class="question-container">
                 <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q{{data.questionno}}">
                     <option value="u"></option>
     {# Display each rank option with computed ordinal #}
@@ -53,7 +53,7 @@ lang.na - not applicable
     {% endfor %}
                 </select>
             </div>
-            <div>
+            <div class="optiontext">
                 <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}">{{p.optiontext}}</span>
             </div>
         </div>

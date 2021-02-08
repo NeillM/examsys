@@ -420,6 +420,18 @@ abstract class questiondata
     public $useranswers;
 
     /**
+     * Flag to indicate we are printing the question.
+     * @var boolean
+     */
+    public $print;
+
+    /**
+     * Flag to indicate a page break is required
+     * @var boolean
+     */
+    public $pagebreak;
+
+    /**
      * Called when the object is unserialised.
      */
     public function __wakeup()
@@ -450,6 +462,7 @@ abstract class questiondata
         $this->negativemarking = false;
         $this->displaymethod = '';
         $this->displayoptionmedia = false;
+        $this->print = Paper_utils::onPrintScreen();
     }
 
     /**
@@ -580,6 +593,11 @@ abstract class questiondata
             $this->displayprologue = true;
         }
 
+        if (isset($question['pagebreak'])) {
+            $this->pagebreak = $question['pagebreak'];
+        } else {
+            $this->pagebreak = false;
+        }
         $q_id = $question['q_id'];
         $option_no = count($question['options']);
         $this->optionnumber = $option_no;

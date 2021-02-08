@@ -109,17 +109,17 @@ class renderdata extends \questiondata
         $question = $this->question;
         // no options for enhanced calc now stored in settings
         $extra = array(
-        'num_on_screen' => $this->questionno,
-        'current_question' => $question,
-        'assignednumber' => $this->assignednumber,
-        'mediaid' => $this->mediaid,
-        'mediatype' => $this->mediatype,
-        'mediawidth' => $this->mediawidth,
-        'mediaheight' => $this->mediaheight,
-        'mediaborder' => $this->mediaborder,
-        'mediabordercolour' => $this->mediabordercolour,
-        'mediaurl' => $this->mediaurl,
-        'mediafile' => $this->mediafile
+            'num_on_screen' => $this->questionno,
+            'current_question' => $question,
+            'assignednumber' => $this->assignednumber,
+            'mediaid' => $this->mediaid,
+            'mediatype' => $this->mediatype,
+            'mediawidth' => $this->mediawidth,
+            'mediaheight' => $this->mediaheight,
+            'mediaborder' => $this->mediaborder,
+            'mediabordercolour' => $this->mediabordercolour,
+            'mediaurl' => $this->mediaurl,
+            'mediafile' => $this->mediafile,
         );
         $question['object']->render_paper($extra);
     }

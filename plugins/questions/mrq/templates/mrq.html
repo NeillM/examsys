@@ -43,13 +43,13 @@ Required localised text -
 lang.abstain - abstain
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-<div>
+<div class="mrq question-parent vertical">
 {% for i,p in data.options %}
     <div class="question-container">
         <div>
             <input type="checkbox" {% if data.papertype != 3 %} class="online" data-qno="{{data.questionno}}" data-pos="{{p.position}}" data-ono="{{data.optionnumber}}" data-allowed="{{data.allowedresponses}}" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </div>
-        <div>
+        <div class="optiontext">
             {% if p.optiontextdisplay %}
             <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}"> {{p.optiontext|raw}}</span></br>
             {% endif %}

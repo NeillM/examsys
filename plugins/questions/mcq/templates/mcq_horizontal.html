@@ -40,21 +40,34 @@ Required localised text -
 lang.abstain - abstain
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-{% for i,p in data.options %}
-    <div class="question-container horizontal">
-        <input type="radio" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %} />
-    {% if p.optiontextdisplay %}
-            &nbsp;{{p.optiontext|raw}}
-    {% endif %}
-    {% if p.displayoptionmedia %}
-        {% include 'paper/media.html' with {'data': p.optionmedia} %}
-    {% endif %}
+    <div class="horizontal">
+        {% for i,p in data.options %}
+            <div class="question-container">
+                <div>
+                    <input type="radio" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %} />
+                </div>
+                <div class="optiontext">
+                    {% if p.optiontextdisplay %}
+                    {{p.optiontext|raw}}
+                    {% endif %}
+                    {% if p.displayoptionmedia %}
+                    {% include 'paper/media.html' with {'data': p.optionmedia} %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+        {% if data.negativemarking %}
+            <div class="question-container">
+                <div>
+                    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />
+                </div>
+                <div class="optiontext">
+                    <span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
+                </div>
+            </div>
+        {% endif %}
+        <div>
+            <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
+        </div>
     </div>
-{% endfor %}
-{% if data.negativemarking %}
-    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} /><span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
-{% endif %}
-<div>
-    <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
-</div>
 </blockquote>
