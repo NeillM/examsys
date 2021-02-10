@@ -26,13 +26,13 @@ data.displaymedia - flag to indicate if there is media to display
 data.displayleadin - flag to indicate if there is a leadin to display
 data.leadin - the leadin
 #}
-<div>
-    <div class="infoblock">
+<div class="question-info">
 {% if data.displaymedia %}
-        <div class="mediadiv">
+    <div class="mediadiv">
 {% include 'paper/media.html' %}
-        </div>
+    </div>
 {% endif %}
 {% if data.displayleadin %}
-        {{data.leadin|raw}}
+    {{data.leadin|raw}}
 {% endif %}
+</div>

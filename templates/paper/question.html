@@ -58,10 +58,7 @@ lang.negmarking - negative marking
 {% include data.questiontemplate %}
 {# If not a survey paper #}
 {% if data.papertype != 3 %}
-    {% if data.finalmarks == 0 %}
-        </div>
-    </div>
-    {% else %}
+    {% if data.finalmarks != 0 %}
         <div id="q{{data.questionno}}_mk" class="mk">({{data.finalmarks}} {% if data.finalmarks == 1 %} {{lang.mark}} {% else %} {{lang.marks}} {% endif %}
         {% if data.scoremethod == 'bonus' %}
     {{data.bonus}}
@@ -71,16 +68,15 @@ lang.negmarking - negative marking
         {% endif %}
     )
         </div>
-    </div>
     {% endif %}
-{% else %}
-        </div>
-    </div>
 {% endif %}
 {% if data.questiontype != 'info' %}
     <input type="hidden" name="order{{data.questionno}}" value="{{data.optionorder}}" />
-{% endif %}
+{# close questionblock div #}
+    </div>
+{# close question-type div #}
 </div>
+{% endif %}
 {% if data.pagebreak %}
 <div class='page_break'></div>
 {% endif %}

@@ -122,23 +122,19 @@ lang.significant_figures - significant figues
 {% endif %}
 {# If not a survey paper #}
 {% if data.papertype != 3 %}
-{% if data.finalmarks == 0 %}
-    </div>
-</div>
-{% else %}
+    {% if data.finalmarks != 0 %}
 <div id="q{{data.assignednumber}}_mk" class="mk">({{data.finalmarks}} {% if data.finalmarks == 1 %} {{lang.mark}} {% else %} {{lang.marks}} {% endif %}
     {% if data.negativemarking %}
     , {{lang.negmarking}}
     {% endif %}
     )
 </div>
-    </div>
-</div>
+    {% endif %}
 {% endif %}
-{% else %}
+{# close questionblock div #}
     </div>
+{# close question-enhancedcalc div #}
 </div>
-{% endif %}
 {% if data.pagebreak %}
 <div class='page_break'></div>
 {% endif %}
