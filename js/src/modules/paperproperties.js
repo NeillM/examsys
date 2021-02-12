@@ -29,7 +29,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
             var module_no = $('#module_no').val();
 
             for (var i = 0; i < module_no; i++) {
-                if ($('#mod' + i).attr('checked')) {
+                if ($('#mod' + i).is(':checked')) {
                     if (mod_codes == '') {
                         mod_codes = $('#mod' + i).val();
                     } else {
@@ -114,7 +114,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
             var moduleList = '';
             for (var i = 0; i < module_no; i++) {
                 var objectID = 'mod' + i;
-                if ($('#' + objectID).attr('checked')) {
+                if ($('#' + objectID).is(':checked')) {
                     if (moduleList == '') {
                         moduleList = $('#' + objectID).val();
                     } else {
@@ -201,7 +201,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
                 moduleList = '';
                 for (var l = 0; l < module_no; l++) {
                     var osceobjectID = 'mod' + l;
-                    if ($('#' + osceobjectID).attr('checked')) {
+                    if ($('#' + osceobjectID).is(':checked')) {
                         if (moduleList == '') {
                             moduleList = $('#' + osceobjectID).val();
                         } else {
@@ -223,7 +223,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
             var external_set = false;
             for (var j = 0; j < $('#examiner_no').val(); j++) {
                 var examobjectID = 'examiner' + j;
-                if ($('#' + examobjectID).attr('checked')) {
+                if ($('#' + examobjectID).is(':checked')) {
                     external_set = true;
                 }
             }
@@ -243,7 +243,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
             var internal_set = false;
             for (var k = 0; k < $('#internal_no').val(); k++) {
                 var internalobjectID = 'internal' + k;
-                if ($('#' + internalobjectID).attr('checked')) {
+                if ($('#' + internalobjectID).is(':checked')) {
                     internal_set = true;
                 }
             }

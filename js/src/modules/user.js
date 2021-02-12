@@ -124,25 +124,25 @@ define(['jquery'], function($) {
             }
             $('#demo_paper_background').css('font-family', font);
 
-            if ($("#bg_radio_on").attr('checked')) {
+            if ($("#bg_radio_on").is(':checked')) {
                 $('#demo_paper_background').css('background-color', $('#span_background').css('background-color'));
             } else {
                 $('#demo_paper_background').css('background-color', '#FFFFFF');
             }
 
-            if ($("#fg_radio_on").attr('checked')) {
+            if ($("#fg_radio_on").is(':checked')) {
                 $('#demo_paper_background').css('color', $('#span_foreground').css('background-color'));
             } else {
                 $('#demo_paper_background').css('color', '#000000');
             }
 
-            if ($("#theme_radio_on").attr('checked')) {
+            if ($("#theme_radio_on").is(':checked')) {
                 $('#demo_theme').css('color', $('#span_themecolor').css('background-color'));
             } else {
                 $('#demo_theme').css('color', '#316AC5');
             }
 
-            if ($("#labels_radio_on").attr('checked')) {
+            if ($("#labels_radio_on").is(':checked')) {
                 $('#demo_true_label').css('color', $('#span_labelcolor').css('background-color'));
                 $('#demo_false_label').css('color', $('#span_labelcolor').css('background-color'));
             } else {
@@ -150,13 +150,13 @@ define(['jquery'], function($) {
                 $('#demo_false_label').css('color', '#C00000');
             }
 
-            if ($("#unanswered_radio_on").attr('checked')) {
+            if ($("#unanswered_radio_on").is(':checked')) {
                 $('#demo_unanswered').css('background-color', $('#span_unansweredcolor').css('background-color'));
             } else {
                 $('#demo_unanswered').css('background-color', '#FFC0C0');
             }
 
-            if ($("#marks_radio_on").attr('checked')) {
+            if ($("#marks_radio_on").is(':checked')) {
                 $('#demo_marks').css('color', $('#span_marks_color').css('background-color'));
             } else {
                 $('#demo_marks').css('color', '#808080');
