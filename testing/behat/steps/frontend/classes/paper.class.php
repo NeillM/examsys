@@ -494,19 +494,19 @@ trait Paper
                     break;
                 case 'mrq':
                     foreach (json_decode($answer) as $ans) {
-                        $select = $this->find('xpath', '//td/span[contains(text(),"' . $ans . '")]/preceding::td[1]/input[contains(@data-qno, "' . $position . '")]');
+                        $select = $this->find('xpath', '//div[contains(@class, "optiontext") and contains(normalize-space(.), "' . $ans . '")]/preceding::div[1]/input[contains(@name, "q' . $position . '")]');
                         $select->click();
                     }
                     break;
                 case 'sct':
                 case 'mcq':
-                    $select = $this->find('xpath', '//td/span[contains(text(),"' . $answer . '")]/preceding::td[1]/input[contains(@name, "q' . $position . '")]');
+                    $select = $this->find('xpath', '//div[contains(@class, "optiontext") and contains(normalize-space(.), "' . $answer . '")]/preceding::div[1]/input[contains(@name, "q' . $position . '")]');
                     $select->click();
                     break;
                 case 'matrix':
                     foreach (json_decode($answer, true) as $idx => $ans) {
                         $opt = substr($ans, 6);
-                        $select = $this->find('xpath', '//td[contains(text(),"' . $idx . '")]/following::td[' . $opt . ']/div/input[contains(@name, "q' . $position . '")]');
+                        $select = $this->find('xpath', '//div[contains(text(),"' . $idx . '")]/following-sibling::div[' . $opt . ']/div/input[contains(@name, "q' . $position . '")]');
                         $select->click();
                     }
                     break;
@@ -550,7 +550,7 @@ trait Paper
                     break;
                 default:
                     foreach (json_decode($answer, true) as $idx => $ans) {
-                        $select = $this->find('xpath', '//td/span[contains(text(),"' . $idx . '")]/preceding::td[1]/select[contains(@class, "q' . $position . '")]');
+                        $select = $this->find('xpath', '//div/span[contains(text(),"' . $idx . '")]/preceding::div[1]/select[contains(@class, "q' . $position . '")]');
                         $select->selectOption($ans, true);
                     }
                     break;
