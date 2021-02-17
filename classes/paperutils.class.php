@@ -1509,7 +1509,7 @@ class PaperUtils
      */
     public static function onPrintScreen(): bool
     {
-        if (Url::fromGlobals()->getPath() === '/paper/print.php') {
+        if ($_SERVER['PHP_SELF'] === '/paper/print.php') {
             return true;
         }
         return false;
