@@ -38,15 +38,15 @@ lang.previewmathjax - preview
 {% if data.editormathjax == true %}
 <p>{{lang.mathjaxinstructions|raw}}</p>
     {% if data.style == '' %}
-    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
+    <textarea aria-label="{{lang.enteranswer}}" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
 {% else %}
-    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
+    <textarea aria-label="{{lang.enteranswer}}" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
     {% endif %}
 {% else %}
     {% if data.style == '' %}
-    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
+    <textarea aria-label="{{lang.enteranswer}}" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
     {% else %}
-    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
+    <textarea aria-label="{{lang.enteranswer}}" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
     {% endif %}
 {% endif %}
 {% if data.editormathjax %}

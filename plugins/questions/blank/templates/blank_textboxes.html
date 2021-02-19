@@ -35,7 +35,7 @@ blankoptions.size - length of textbox
     {% if p.itemtype == 'blurb' %}
     {{p.itemvalue|raw}}
     {% else %}
-    <input type="text" name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% else %} value="{{p.encoded_ans|raw}}" {% endif %} size="{{p.size}}" />
+    <input aria-label="{{lang.answerblank}}" type="text" name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% else %} value="{{p.encoded_ans|raw}}" {% endif %} size="{{p.size}}" />
     {% endif %}
 {% endfor %}
 </p>

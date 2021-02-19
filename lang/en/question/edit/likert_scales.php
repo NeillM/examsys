@@ -17,12 +17,12 @@
 
 // Likert Scales data - this is how the settings are saved, separate columns with vertical bars (<br /> tages can be used for break lines)
 $string['failpass3'] = 'Fail|Borderline|Pass';
-$string['lowhigh3'] = 'Low||High';
-$string['lowhigh4'] = 'Low|||High';
-$string['lowhigh5'] = 'Low||||High';
-$string['neveralways3'] = 'Never||Always';
-$string['neveralways4'] = 'Never|||Always';
-$string['neveralways5'] = 'Never||||Always';
+$string['lowhigh3'] = 'Low|Medium|High';
+$string['lowhigh4'] = 'Low|Tending Low|Tending High|High';
+$string['lowhigh5'] = 'Low|Tending Low|Medium|Tending High|High';
+$string['neveralways3'] = 'Never|Sometimes|Always';
+$string['neveralways4'] = 'Never|Hardly|Sometimes|Always';
+$string['neveralways5'] = 'Never|Hardly|Occasionally|Sometimes|Always';
 $string['disagre3'] = 'Disagree|Neutral|Agree';
 $string['disagre4'] = 'Strongly<br />Disagree|Disagree|Agree|Strongly<br />Agree';
 $string['disagre5a'] = 'Strongly<br />Disagree|Disagree|Neither Disagree<br />nor Agree|Agree|Strongly<br />Agree';

@@ -543,6 +543,8 @@ div.error {
   display: table;
   table-layout: fixed;
 }
+
+.rank .question-cell,
 .matrix .question-cell {
   text-align: left;
 }
@@ -586,4 +588,9 @@ div.error {
   display: table-cell;
   text-align: center;
   padding: 2px;
+}
+
+.matrixtable {
+  border: 1px solid #808080;
+  border-collapse: collapse;
 }

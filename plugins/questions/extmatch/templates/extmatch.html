@@ -71,12 +71,12 @@ lang.holddownctrlkey - user instructions on how to multi select options.
     <div>{% include 'paper/media.html' with {'data': m.media} %}</div><br />
     {% endif %}
     {% if m.answerno == 1 %}
-    <select {% if m.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}_{{loop.index}}" size="1">
+    <select aria-label="{{lang.selectoption}}" {% if m.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}_{{loop.index}}" size="1">
         <option value="u"></option>
     {% else %}
     <br />
     <div class="question-container">
-        <select {% if m.unanswered %} class="unans multicheck" {% else %} class="multicheck" {% endif %} data-qno="q{{data.questionno}}_{{loop.index}}" data-opt="{{m.matchingoptions}}" data-sub="{{m.subanswers}}" name="q{{data.questionno}}_{{loop.index}}[]" id="q{{data.questionno}}_{{loop.index}}" multiple="multiple" size="{{m.listsize}}">
+        <select aria-label="{{lang.selectoptions}}" {% if m.unanswered %} class="unans multicheck" {% else %} class="multicheck" {% endif %} data-qno="q{{data.questionno}}_{{loop.index}}" data-opt="{{m.matchingoptions}}" data-sub="{{m.subanswers}}" name="q{{data.questionno}}_{{loop.index}}[]" id="q{{data.questionno}}_{{loop.index}}" multiple="multiple" size="{{m.listsize}}">
     {% endif %}
     {% for o in m.matchingoption %}
             <option value="{{o.value}}" {% if o.selected %} selected {% endif %}>{{o.option}}</option>

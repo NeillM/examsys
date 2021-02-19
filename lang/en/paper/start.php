@@ -37,7 +37,7 @@ $string['true'] = 'True';
 $string['false'] = 'False';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
-$string['abstain'] = '<Abstain>';
+$string['abstain'] = 'Abstain';
 $string['na'] = 'N/A';
 $string['other'] = 'Other';
 $string['unanswered'] = 'Unanswered';
@@ -58,7 +58,7 @@ $string['error_random_closing'] = 'Unable to find unique question for random que
 $string['error_keywords'] = '<strong>ERROR:</strong> Unable to find unique question for supplied keywords.';
 $string['error_paper'] = 'The requested paper cannot be found.';
 $string['error_qtype'] = 'No question type defined.';
-$string['holddownctrlkey'] = '(Hold down <CTRL> key (or <CMD> if you are using a mac), then click to toggle options on/off)';
+$string['holddownctrlkey'] = '(Hold down CTRL key (or CMD if you are using a mac), then click to toggle options on or off)';
 $string['msgselectable1'] = 'Too many options selected!\n\nOnly';
 $string['msgselectable2'] = 'items can be selected in this question.';
 $string['msgselectable3'] = 'You have already selected';
@@ -104,3 +104,17 @@ $string['paperpaused'] = 'The paper is paused. Click OK to resume.';
 $string['pause'] = 'Pause';
 $string['resume'] = 'Resume';
 $string['breakremaining'] = 'Break time remaining:';
+// Fill in the blank questions.
+$string['answerblank'] = 'Blank';
+// Calculation questions.
+$string['selectunit'] = 'Select a unit';
+// Extmatch/TF questions
+$string['selectoption'] = 'Select an option';
+$string['selectoptions'] = 'Select options';
+// Matrix.
+$string['matrixanswer'] = 'Select this answer';
+// MCQ/MRQ/Textbox.
+$string['otheranswer'] = 'Other (enter answer in text field)';
+$string['enteranswer'] = 'Enter answer';
+// MCQ dropdown.
+$string['selectanswer'] = 'Select an answer';

@@ -51,7 +51,7 @@ data.print - flag to indicate if the question is being printed
 {% endif %}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
     <div class="question-container">
-        <select {%if data.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}" size="1">
+        <select aria-label="{{lang.selectanswer}}" {%if data.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}" size="1">
             <option value=""></option>
 {% for i,p in data.options %}
             <option value="{{p.position}}" {% if p.selected %} selected {% endif %}>{{p.optiontext|raw}}</option>

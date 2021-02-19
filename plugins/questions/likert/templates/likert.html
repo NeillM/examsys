@@ -59,7 +59,7 @@ lang.na - not applicable
             </div>
         </div>
 {% endif %}
-        <div class="question-header">
+        <div aria-hidden="true" class="question-header">
             <div class="question-cell"></div>
 {% if data.displayna %}
             <div class="question-cell" style="color:{{data.labelcolour}}; font-size:80%">
@@ -72,11 +72,16 @@ lang.na - not applicable
             </div>
 {% endfor %}
         </div>
-        <div class="question-row {% if data.unanswered %} unans {% endif %}">
-            <div class="question-cell">{{data.leadin|raw}}</div>
+        <ul class="question-row {% if data.unanswered %} unans {% endif %}">
+            <li class="question-cell">{{data.leadin|raw}}</li>
 {% for i,selected in data.scaleopt %}
-            <div class="question-cell likert_button">
-                <input type="radio" name="q{{data.id}}" value="{{i}}" {% if selected %} checked=\"checked\" {% endif %}/>
-            </div>
+            <li class="question-cell likert_button">
+                <input {% if i == 0 %}
+                    aria-label="{{lang.na}}"
+                    {% else %}
+                    aria-label="{{attribute(data.scale, i - 1)}}"
+                    {% endif %} type="radio" name="q{{data.id}}" value="{{i}}"
+                    {% if selected %} checked=\"checked\" {% endif %}/>
+            </li>
 {% endfor %}
-        </div>
+        </ul>

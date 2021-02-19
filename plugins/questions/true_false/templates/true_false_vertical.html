@@ -36,32 +36,32 @@ lang.false - false
 lang.abstain - abstain
 #}
 <blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
-    <div class="vertical">
-        <div class="question-container">
+    <ul class="vertical">
+        <li class="question-container">
             <div>
-                <input type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />
+                <input aria-labelledby="q{{data.questionno}}true" type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />
             </div>
-            <div class="optiontext">
-                {{lang.true}}
+            <div id="q{{data.questionno}}true" aria-hidden="true" class="optiontext">
+                <span>{{lang.true}}</span>
             </div>
-        </div>
-        <div class="question-container">
+        </li>
+        <li class="question-container">
             <div>
-                <input type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />
+                <input aria-labelledby="q{{data.questionno}}false" type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />
             </div>
-            <div class="optiontext">
-                {{lang.false}}
+            <div id="q{{data.questionno}}false" aria-hidden="true" class="optiontext">
+                <span>{{lang.false}}</span>
             </div>
-        </div>
+        </li>
         {% if data.negativemarking %}
-        <div class="question-container">
+        <li class="question-container">
             <div>
-                <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />
+                <input aria-labelledby="abstain{{data.questionno}}" type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />
             </div>
-            <div class="optiontext">
+            <div aria-hidden="true" id="abstain{{data.questionno}}" class="optiontext">
                 <span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
             </div>
-        </div>
+        </li>
         {% endif %}
-    </div>
+    </ul>
 </blockquote>

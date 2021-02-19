@@ -65,7 +65,7 @@ data.print - flag to indicate if the question is being printed
         <strong>&nbsp;{{num}}.</strong>
         {% endif %}
         <div class="question-cell">
-            <select name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% endif %}>
+            <select aria-label="{{lang.answerblank}}" name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% endif %}>
                 <option value="u"></option>
                 {% for a in p.itemvalue %}
                 <option value="{{a.answer|raw}}" {% if a.selected %} selected {% endif %}>{{a.answer|raw}}</option>

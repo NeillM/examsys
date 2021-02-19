@@ -62,7 +62,7 @@ lang.significant_figures - significant figues
 {{data.leadin|raw}}
 {% if data.error %}
 <p>
-    <input type="text" style="text-align:right" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" value="" disabled="disabled" />
+    <input aria-labelledby="answerto{{data.assignednumber}}" type="text" style="text-align:right" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" value="" disabled="disabled" />
     &nbsp;&nbsp;
     {% if data.showunits %}
         {% if data.numunitoptions > 1 %}
@@ -76,9 +76,11 @@ lang.significant_figures - significant figues
         {% endif %}
     {% endif %}
     {% if data.feedbackprecision == 'dp' %}
-    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.decimal_places}})</span>
+    <span aria-hidden="true" id="answerto{{data.assignednumber}}" class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.decimal_places}})</span>
     {% elseif data.feedbackprecision == 'sf' %}
-    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.significant_figures}}</span>
+    <span aria-hidden="true" id="answerto{{data.assignednumber}}" class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.significant_figures}}</span>
+    {% else %}
+    <span aria-hidden="true" id="answerto{{data.assignednumber}}" class="calc_fb hidden">({{lang.answerquestion}})</span>
     {% endif %}
 </p>
 <p>
@@ -89,17 +91,17 @@ lang.significant_figures - significant figues
 <div class="enhancedcalc">
     {# not attempted #}
     {% if data.useranswered == 0%}
-    <input type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" class="unans ecalc-answer" />
+    <input aria-labelledby="answerto{{data.assignednumber}}" type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" class="unans ecalc-answer" />
     {# answered #}
     {% elseif data.useranswered == 1 %}
-    <input type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" value="{{data.answer}}" class="ecalc-answer" />
+    <input aria-labelledby="answerto{{data.assignednumber}}" type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" value="{{data.answer}}" class="ecalc-answer" />
     {# unanswered #}
     {% elseif data.useranswered == 2 %}
-    <input type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" value="" class="ecalc-answer"/>
+    <input aria-labelledby="answerto{{data.assignednumber}}" type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-assignednum="{{data.assignednumber}}" data-linkparent="{{data.linkparent}}" data-screen="{{data.screen}}" size="10" value="" class="ecalc-answer"/>
     {% endif %}
     {% if data.showunits %}
         {% if data.numunitoptions > 1 %}
-    <select name='qid[{{data.id}}][uansunit]'>
+    <select aria-label="{{lang.selectunit}}" name='qid[{{data.id}}][uansunit]'>
             {% for key,selected in data.options %}
         <option value='{{key}}' {% if selected %} selected {% endif %}>{{key}}</option>
             {% endfor %}
@@ -109,9 +111,11 @@ lang.significant_figures - significant figues
         {% endif %}
     {% endif %}
     {% if data.feedbackprecision == 'dp' %}
-    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.decimal_places}})</span>
+    <span aria-hidden="true" id="answerto{{data.assignednumber}}" class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.decimal_places}})</span>
     {% elseif data.feedbackprecision == 'sf' %}
-    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.significant_figures}})</span>
+    <span aria-hidden="true" id="answerto{{data.assignednumber}}" class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.significant_figures}})</span>
+    {% else %}
+    <span aria-hidden="true" id="answerto{{data.assignednumber}}" class="calc_fb hidden">({{lang.answerquestion}})</span>
     {% endif %}
 </div>
 {% if data.showstdset %}

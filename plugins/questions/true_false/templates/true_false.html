@@ -37,7 +37,7 @@ lang.false - false
 {% else %}
 <blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
     <div>
-        <select name="q{{data.questionno}}">
+        <select aria-label="{{lang.selectoption}}" name="q{{data.questionno}}">
             <option value=""></option>
             <option value="t" {% if data.trueselected %} selected {% endif %}>{{lang.true}}</option>
             <option value="f" {% if data.falseselected%} selected {% endif %}>{{lang.false}}</option>

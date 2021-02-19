@@ -41,31 +41,36 @@ data.otherselected - flag to indicate if other option has previously been select
 data.other - text user entered into other textbox
 #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-<div class="mrq question-parent vertical">
+<ul class="mrq question-parent vertical">
 {% for i,p in data.options %}
-    <div class="question-container">
+    <li class="question-container">
         <div>
-            <input type="checkbox" {% if data.papertype != 3 %} class="online" data-qno="{{data.questionno}}" data-pos="{{p.position}}" data-ono="{{data.optionnumber}}" data-allowed="{{data.allowedresponses}}" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
+            <input {% if p.optiontextdisplay %}
+                   aria-labelledby="{{data.questionno}}_{{p.position}}"
+                   {% elseif p.displayoptionmedia %}
+                   aria-label="{{p.optionmedia.mediaalt}}"
+                   {% endif %} type="checkbox" {% if data.papertype != 3 %} class="online" data-qno="{{data.questionno}}" data-pos="{{p.position}}" data-ono="{{data.optionnumber}}" data-allowed="{{data.allowedresponses}}" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </div>
         <div class="optiontext">
             {% if p.optiontextdisplay %}
-            <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}"> {{p.optiontext|raw}}</span></br>
+            <span aria-hidden="true" {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}"> {{p.optiontext|raw}}</span></br>
             {% endif %}
             {% if p.displayoptionmedia %}
                 {% include 'paper/media.html' with {'data': p.optionmedia} %}
             {% endif %}
         </div>
-    </div>
+    </li>
 {% endfor %}
-    <div class="question-container">
+    <li class="question-container">
         <div>
-            <input type="checkbox" name="q{{data.questionno}}_{{data.partid}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
+            <input aria-label="{{lang.otheranswer}}" type="checkbox" name="q{{data.questionno}}_{{data.partid}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
         </div>
-        <div class="optiontext">{{lang.other}}
-            <input type="text" onkeypress="document.questions.q{{data.questionno}}_{{data.partid}}.checked=true" name="q{{data.questionno}}_other" value="{{data.other}}" />
+        <div class="optiontext">
+            <span aria-hidden="true">{{lang.other}}</span>
+            <input aria-label="{{lang.enteranswer}}" type="text" onkeypress="document.questions.q{{data.questionno}}_{{data.partid}}.checked=true" name="q{{data.questionno}}_other" value="{{data.other}}" />
         </div>
-    </div>
-</div>
+    </li>
+</ul>
 <div>
     <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
 </div>
