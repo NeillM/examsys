@@ -36,6 +36,7 @@ lang.iframes - iframe support message
 lang.datafile - datafile
 lang.delete - delete
 lang.deleteimage - delete image
+lang.flashendoflife - flash end of life message
 #}
 {# Display unknown media #}
 {% if data.mediaid != -1 %}
@@ -57,10 +58,7 @@ lang.deleteimage - delete image
     <iframe src="{{data.mediaurl}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}" align="center">{{lang.iframes}}</iframe>
 {# Display flash #}
 {% elseif data.mediatype == 5 %}
-    <object type="application/x-shockwave-flash" data="{{path}}/paper/player_flv_maxi.swf" width="{{data.mediawidth}}" height="{{data.mediaheight}}>
-        <param name="movie" value="{{path}}/paper/player_flv_maxi.swf" />
-        <param name="FlashVars" value="flv={{data.mediaurl}}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
-    </object>
+    <div class="error">{{lang.flashendoflife}}</div>
 {# Display HTML5 audio #}
 {% elseif data.mediatype == 6 %}
     <audio src="{{data.mediaurl}}" controls>

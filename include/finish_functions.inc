@@ -2777,22 +2777,21 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                         $movie = $paper[$question]['q_media'];
                     }
                 }
-                ?>
-  <div align="center">
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" align="middle">
-        <param name="allowScriptAccess" value="sameDomain" />
-        <param name="movie" value="<?php echo $mediadirectory->url($movie); ?>" />
-        <param name="quality" value="high" />
-        <param name="bgcolor" value="<?php echo $bgcolor; ?>" />
-        <param name="FlashVars" value="dataIn=<?php if (isset($paper[$question]['user_answer'])) {
-            echo $paper[$question]['user_answer'];
-                                              } ?>" />
-        <embed src="<?php echo $mediadirectory->url($movie) ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) {
-            echo $paper[$question]['user_answer'];
-                    } ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />
-    </object>
-  </div>
-                <?php
+                $flashrender = new render(
+                    $configObject,
+                    dirname(__DIR__)
+                    . DIRECTORY_SEPARATOR . 'plugins'
+                    . DIRECTORY_SEPARATOR . 'questions'
+                    . DIRECTORY_SEPARATOR . $q_type
+                    . DIRECTORY_SEPARATOR . 'templates'
+                );
+                $flashdata['questionno'] = $question_no;
+                $flashdata['displayscenario'] = false;
+                if ($scenario != '') {
+                    $flashdata['displayscenario'] = true;
+                }
+                $flashdata['scenario'] = $scenario;
+                $flashrender->render($flashdata, $string, 'flash.html');
                 break;
             case 'random_failed':
                 echo '<p>' . $paper[$question]['leadin'] . '</p>';

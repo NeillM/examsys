@@ -688,22 +688,21 @@ function display_question(render $render, array $question_data, array $string, s
                     echo excludeButton($question_data['ex_no'], $question_data['id'], 0, 1, 1);
                 }
                 echo $question_data['leadin'];
-                echo '                  <div style="text-align:center">
-                <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash' . $question_data['no'] . '" width="' . $question_data['media'][1] . '" height="' . $question_data['media'][2] . '" align="middle">
-                    <param name="allowScriptAccess" value="sameDomain" />
-                    <param name="movie" value="' . $mediadirectory->url($question_data['media'][0]) . ' />
-                    <param name="quality" value="high" />
-                    <param name="bgcolor" value="#ffffff" />' . "\n";
+                $flashrender = new render(
+                    $configObject,
+                    dirname(__DIR__)
+                    . DIRECTORY_SEPARATOR . 'plugins'
+                    . DIRECTORY_SEPARATOR . 'questions'
+                    . DIRECTORY_SEPARATOR . $question_data['type']
+                    . DIRECTORY_SEPARATOR . 'templates'
+                );
+                $flashdata['questionno'] = $question_data['no'];
+                $flashdata['displayscenario'] = false;
                 if ($question_data['scenario'] != '') {
-                    echo '                        <param name="FlashVars" value="' . $question_data['scenario'] . '">';
+                    $flashdata['displayscenario'] = true;
                 }
-                echo '                        <embed src="' . $mediadirectory->url($question_data['media'][0]) . '"';
-                if ($question_data['scenario'] != '') {
-                    echo ' FlashVars="' . $question_data['scenario'] . '"';
-                }
-                echo ' quality="high" bgcolor="#ffffff" width="' . $question_data['media'][1] . '" height="' . $question_data['media'][2] . '" swLiveConnect=true id="flash' . $question_data['no'] . '" name="flash' . $question_data['no'] . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />'
-                    . '                </object>' . "\n"
-                    . '            </div>' . "\n";
+                $flashdata['scenario'] = $question_data['scenario'];
+                $flashrender->render($flashdata, $string, 'flash.html');
                 break;
             case 'hotspot':
                 if ($question_data['score_method'] == 'Mark per Question') {

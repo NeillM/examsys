@@ -1205,33 +1205,21 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 break;
             case 'flash':
-                ?>
-  <script>
-      function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
-          $('#q<?php echo $question_no; ?>').val(args);
-      }
-  </script>
-  <div align="center">
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">
-    <param name="wmode" value="opaque" />
-    <param name="allowScriptAccess" value="sameDomain" />
-    <param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />
-    <param name="quality" value="high" />
-    <param name="bgcolor" value="<?php echo $bgcolor; ?>" />
-                <?php
+                $flashrender = new render(
+                    $configObject,
+                    dirname(__DIR__)
+                    . DIRECTORY_SEPARATOR . 'plugins'
+                    . DIRECTORY_SEPARATOR . 'questions'
+                    . DIRECTORY_SEPARATOR . $question['q_type']
+                    . DIRECTORY_SEPARATOR . 'templates'
+                );
+                $flashdata['questionno'] = $question_no;
+                $flashdata['displayscenario'] = false;
                 if ($question['scenario'] != '') {
-                      echo '<param name="FlashVars" value="' . $question['scenario'] . '">';
+                    $flashdata['displayscenario'] = true;
                 }
-                echo '<embed style="z-index:0;" src="' . $mediadirectory->url($question['q_media']) . '"';
-                if ($question['scenario'] != '') {
-                    echo ' FlashVars="' . $question['scenario'] . '"';
-                }
-                echo ' wmode="opaque" quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />';
-                ?>
-    </object>
-  </div>
-                <?php
-                echo '<input type="hidden" id="q' . $question_no . '" name="q' . $question_no . "\" value=\"0,0\" />\n";
+                $flashdata['scenario'] = $question['scenario'];
+                $flashrender->render($flashdata, $string, 'flash.html');
                 $marks += $display_option['marks_correct'];
                 break;
         }                  // End switch

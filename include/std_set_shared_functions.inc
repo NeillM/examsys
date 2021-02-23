@@ -881,34 +881,21 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             echo '<input type="hidden" name="q' . $question_no . '" value="0$' . $marks . ";\" />\n";
             break;
         case 'flash':
-            ?>
-
-  <script>
-    function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
-        $('#q<?php echo $question_no; ?>').val(args);
-    }
-  </script>
-
-  <div align="center">
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $display_option['q_media_width']; ?>" height="<?php echo $display_option['q_media_height']; ?>" align="middle">
-    <param name="allowScriptAccess" value="sameDomain" />
-    <param name="movie" value="<?php echo $mediadirectory->url($display_option['q_media']); ?>" />
-    <param name="quality" value="high" />
-    <param name="bgcolor" value="<?php echo $bgcolor; ?>" />
-            <?php
+            $flashrender = new render(
+                $configObject,
+                dirname(__DIR__)
+                . DIRECTORY_SEPARATOR . 'plugins'
+                . DIRECTORY_SEPARATOR . 'questions'
+                . DIRECTORY_SEPARATOR . $firstoption['q_type']
+                . DIRECTORY_SEPARATOR . 'templates'
+            );
+            $flashdata['questionno'] = $question_no;
+            $flashdata['displayscenario'] = false;
             if ($display_option['scenario'] != '') {
-                echo '<param name="FlashVars" value="' . $display_option['scenario'] . '">';
+                $flashdata['displayscenario'] = true;
             }
-            echo '<embed src="' . $mediadirectory->url($display_option['q_media']) . '"';
-            if ($display_option['scenario'] != '') {
-                echo ' FlashVars="' . $display_option['scenario'] . '"';
-            }
-            echo ' quality="high" bgcolor="' . $bgcolor . '" width="' . $display_option['q_media_width'] . '" height="' . $display_option['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />';
-            ?>
-    </object>
-  </div>
-
-            <?php
+            $flashdata['scenario'] = $display_option['scenario'];
+            $flashrender->render($flashdata, $string, 'flash.html');
             echo '<div>';
             echo reviewScale($question_no, '', $display_option['marks_correct'], $std_method, $qn_excluded, $review_val, $stdID, $std_excluded, $is_group);
             echo "</div>\n";

@@ -88,6 +88,7 @@ $string['audiofile'] = 'Audio File';
 $string['datafile'] = 'Data File';
 $string['delete'] = 'Delete';
 $string['deleteimage'] = 'Delete image';
+$string['flashendoflife'] = 'Flash is no longer supported as such flash media can no longer be viewed.';
 $string['audioclip'] = 'Audio Clip';
 $string['questionmark'] = '?';
 $string['cancel'] = 'Cancel';

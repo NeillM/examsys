@@ -791,7 +791,7 @@ abstract class questiondata
                 // Supported types.
                 $mediatype = \media_handler::SUPPORTED[$ext];
             } elseif ($ext == 'flv') {
-                // Deprecated type that can no longer be added but can be displayed.
+                // Deprecated type that can no longer be added or displayed.
                 $mediatype = self::FLASH;
             } elseif ($ext == 'wmv') {
                 // Deprecated type that can no longer be added but can be displayed.
@@ -814,13 +814,6 @@ abstract class questiondata
                     if (mb_strpos(Url::fromGlobals(), '/edit/') !== false or mb_strpos(Url::fromGlobals(), '/add/') !== false) {
                         $mediaedit = true;
                     }
-                    break;
-                case self::FLASH:
-                    if ($width == 0 or $height == 0) {
-                        $width = 320;
-                        $height = 260;
-                    }
-                    $url = $mediadirectory->url($filename, false, false, true);
                     break;
                 case self::THREED:
                     $width = 640;
