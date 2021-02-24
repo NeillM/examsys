@@ -80,3 +80,4 @@ $string['started'] = 'Started';
 $string['finished'] = 'Finished';
 $string['comments'] = 'Comments:';
 $string['logissue'] = 'Log an issue you had during the exam';
+$string['previewmathjax'] = 'Preview';

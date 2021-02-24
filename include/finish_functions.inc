@@ -2327,8 +2327,29 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                     $tmp_answer = textbox_marking_utils::higlightterms($settings, $tmp_answer);
                 }
 
-                echo "<textarea class=\"raw_textarea\" id=\"textarea$question\" cols=\"" . $settings['columns'] . '" rows="' . $settings['rows'] . "\"></textarea>\n";
-                echo "<div class=\"textbox_answer\" id=\"div_textarea$question\">" . $tmp_answer . "</div>\n<br />\n";
+                if ($settings['editor'] === 'WYSIWYG') {
+                    echo "<div class='textbox_answer'
+                    id='q" . $question_no . "'>"
+                        . $tmp_answer
+                        . '</div>';
+                } else {
+                    echo "<textarea readonly='true'
+                    class='raw_textarea textbox_answer'
+                    id='q" . $question_no . "'>"
+                        . $tmp_answer
+                        . '</textarea>';
+                    if ($settings['editor'] === 'mathjax') {
+                        echo '<p>' . $string['previewmathjax'] . '</p>';
+                        echo '<div id="MathPreview' . $question_no . '" class="mathbuffer"></div>
+                            <div id="MathBuffer' . $question_no . '" class="mathpreview" style="visibility:hidden;"></div>';
+                        echo '<script>
+                            requirejs(["mathjaxpreview"], function(MathJaxPreview) {
+                                var Preview = new MathJaxPreview("' . $question_no . '");
+                                Preview.Init();
+                                Preview.Update();
+                            });</script>';
+                    }
+                }
 
                 if ($tmp_answer == '') {
                     reset_feedback($hide_if_unanswered);

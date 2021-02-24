@@ -33,14 +33,10 @@ requirejs(['rogoconfig', 'media', 'helplauncher', 'html5', 'qarea', 'qlabelling'
         }
     });
 
-    $('.raw_textarea').each(function() {
-        var boxWidth = $(this).width();
-        var boxHeight = $(this).height();
-
-        var targetID = 'div_' + $(this).attr('id');
-
-        $('#' + targetID).width(boxWidth);
-        $('#' + targetID).height(boxHeight);
+    $('.textbox_answer').each(function() {
+        // Resize the textarea so the content fits.
+        $(this).height($(this).prop('scrollHeight'));
+        $(this).width($(this).prop('scrollWidth'));
     });
 
     $('#close').click(function() {

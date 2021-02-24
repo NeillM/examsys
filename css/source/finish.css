@@ -93,7 +93,7 @@ input.exclude, select.exclude {
   border-top: 2px solid #C00000;
 }
 .raw_textarea {
-  display: none;
+  resize: none;
 }
 .textbox_answer {
   margin-top: 26px;
@@ -101,7 +101,6 @@ input.exclude, select.exclude {
   border: 1px solid #909090;
   padding: 2px;
   text-align: justify;
-  overflow: scroll;
 }
 .thankyou {
   font-size: 450%;
@@ -117,4 +116,21 @@ input.exclude, select.exclude {
 .logoutandclose {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.mathpreview {
+  border: 1px solid;
+  padding: 3px;
+  width: 50%;
+  margin-top: 5px;
+}
+
+.mathbuffer {
+  border: 1 px solid;
+  padding: 3px;
+  width: 50%;
+  margin-top: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
