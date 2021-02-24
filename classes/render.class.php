@@ -78,6 +78,7 @@ class render
             'path' => $this->config->get('cfg_root_path'),
             'charset' => $this->config->get('cfg_page_charset'),
             'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss,
+            'language' => LangUtils::getLang($this->config->get('cfg_web_root')),
         );
         echo $this->twig->render($template, $data);
     }

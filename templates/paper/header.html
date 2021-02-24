@@ -41,39 +41,55 @@ data.print - flag to indicate if the question is being printed
                 <div>
     {% else %}
                     <div>
-                        <div class="headerbar">
+                        <header class="headerbar">
 
-                                    <div>
-                                    <div class="paper">{{data.papertitle}}</div>
-
-        {% for s in data.screen %}
-                                    <div class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
+                            <div>
+                                <h1 class="paper">{{data.papertitle}}</h1>
+                                {% for s in data.screen %}
+                                    {% if s.screentype == 'scr_cur' %}
+                                    {% set current = s.pageno %}
+                                <div aria-describedby="progress2" aria-labelledby="progress" role="progressbar" aria-valuenow="{{current}}" aria-valuetext="{{current}}" aria-valuemin="1" aria-valuemax="{{data.screen|length - 1}}">
+                                    <p id="progress" class="hidden">
+                                        {{lang.youronscreen}}
+                                    </p>
+                                    <p id="progress2" class="hidden">
+                                        {{lang.screenof | format(data.screen|length)}}
+                                    </p>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for s in data.screen %}
+                                    <div aria-hidden="true" class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
                                         {{s.pageno}}
                                     </div>
-        {% endfor %}
-                                    <div style="clear:both"></div>
-        {% for s in data.screen %}
-                                    <div class="{{s.screentype2}}"></div>
-        {% endfor %}
-                                    </div>
-
-                                <div>
-                                    <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                                {% endfor %}
                                 </div>
-                        </div>
+                                <div style="clear:both"></div>
+                                {% for s in data.screen %}
+                                <div class="{{s.screentype2}}"></div>
+                                {% endfor %}
+                                </div>
+
+                            <div>
+                                <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                            </div>
+                        </header>
     {% endif %}
-    {{data.examclarification|raw}}
+    {% if data.examclarification != '' %}
+                        <aside aria-label="{{lang.questionclarification}}">
+                            {{data.examclarification|raw}}
+                        </aside>
+    {% endif %}
 {% else %}
         <div>
             <div>
-                <div class="headerbar">
+                <header class="headerbar">
                     <div>
-                        <div class="paper">{{data.papertitle}}</div>
+                        <h1 class="paper">{{data.papertitle}}</h1>
                         <div style="clear:both"></div>
                     </div>
                     <div>
                         <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
                     </div>
-                </div>
+                </header>
 {% endif %}
-                <div class="questionarea">
+                <main class="questionarea">

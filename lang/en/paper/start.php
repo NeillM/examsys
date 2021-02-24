@@ -95,8 +95,8 @@ $string['cancel'] = 'Cancel';
 $string['ok'] = 'OK';
 $string['goback'] = 'Go back';
 $string['pass'] = 'Pass';
-$string['previousscreen'] = '< Screen %s';
-$string['nextscreen'] = 'Screen %s >';
+$string['previousscreen'] = 'Previous';
+$string['nextscreen'] = 'Next';
 $string['threeinfo'] = 'Hold the left mouse button to rotate the object, hold the right button to pan, and use the mouse wheel to zoom in/out.';
 $string['threereset'] = 'Reset';
 $string['threeload'] = 'Load';
@@ -119,3 +119,12 @@ $string['otheranswer'] = 'Other (enter answer in text field)';
 $string['enteranswer'] = 'Enter answer';
 // MCQ dropdown.
 $string['selectanswer'] = 'Select an answer';
+// Footer.
+$string['jumpscreen'] = 'Jump to screen';
+// Header.
+$string['youronscreen'] = 'You are on screen';
+$string['screenof'] = 'of %s';
+// Prologue.
+$string['prologue'] = 'Paper prologue';
+// Question header.
+$string['questionheader'] = 'Question %s';

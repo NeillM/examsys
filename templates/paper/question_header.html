@@ -36,23 +36,24 @@ Required localised strings -
 lang.unansweredquestion - unanswered questions blurb
 lang.calculator - calculator
 lang.note - note
+lang.prologue - the question prologue label
+lang.questionheader - the question landmark region name
 #}
 {% if data.unansweredkey %}
-    <div style="display:none" id="unansweredkey">
+    <div aria-hidden="true" style="display:none" id="unansweredkey">
         <span class="unans">&nbsp;&nbsp;&nbsp;&nbsp;</span>
         {{lang.unansweredquestion}}
     </div>
 {% endif %}
 {% if data.displayprologue %}
-    <div class="prologue">
+    <section aria-label="{{lang.prologue}}" class="prologue">
         {{data.prologue|raw}}
-    </div>
+    </section>
 {% endif %}
+<section aria-label="{{lang.questionheader | format(data.assignednumber)}}">
 {% if data.displaytheme %}
-    <div>
-        <div class="theme">
-            {{data.theme}}
-        </div>
+    <div class="theme">
+        {{data.theme}}
     </div>
 {% endif %}
 {% if data.displaydefault %}

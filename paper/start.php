@@ -533,7 +533,6 @@ foreach ($questions_array as &$question) {
   $current_screen++;
 
   $footer_data['current_screen'] = $current_screen;
-  $footer_data['nextbutton'] = sprintf($string['nextscreen'], $footer_data['current_screen']);
   $footer_data['page_start'] = date('YmdHis', time());
   $footer_data['old_screen'] = $current_screen - 1;
   $footer_data['previous_duration'] = $previous_duration;
@@ -607,8 +606,6 @@ if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_
         $footer_data['bidirectional'] = true;
         if ($current_screen > 2) {
             $footer_data['previous'] = true;
-            $footer_data['previousscreen'] = $current_screen - 2;
-            $footer_data['previousbutton'] = sprintf($string['previousscreen'], $footer_data['previousscreen']);
         } else {
             $footer_data['previous'] = false;
         }

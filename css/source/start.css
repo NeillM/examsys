@@ -30,11 +30,10 @@ pre {
   font-size: 100%;
 }
 .paper {
-  margin-left: 5px;
   font-size: 180%;
   color: white;
   font-weight: bold;
-  margin-top: 5px;
+  margin: 5px;
 }
 .screens {
   margin-left: 5px;
@@ -593,4 +592,8 @@ div.error {
 .matrixtable {
   border: 1px solid #808080;
   border-collapse: collapse;
+}
+
+.hidden {
+  display: none;
 }

@@ -45,19 +45,19 @@ trait Paper
         $selector = 'button';
         switch ($type) {
             case 'Previous':
-                $content = '<';
+                $content = 'previous';
                 break;
             case 'Finish':
-                $content = 'Finish';
+                $content = 'finish';
                 break;
             default:
-                $content = '>';
+                $content = 'next';
         }
         $screen = $this->find('id_or_name', 'current_screen');
         $this->iWaitForElement($selector, $content);
         $element = $this->find($selector, $content);
         $element->click();
-        if ($content === 'Finish') {
+        if ($content === 'finish') {
             $this->i_click('OK', 'button');
         } else {
             $this->iWaitForScreen($screen->getValue());
@@ -475,7 +475,7 @@ trait Paper
     {
         $this->i_click($type, 'paper_type');
         $this->fillField('paper_name', $name);
-        $this->i_click('Next >', 'button');
+        $this->i_click('Next', 'button');
     }
 
     /**
