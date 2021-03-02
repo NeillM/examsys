@@ -1,0 +1,287 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the paper start screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables -
+data.toprightmenu - the top right menu html
+data.papericon - the url to the paper icon
+data.papertitle - the paper title
+data.papertype - the type of paper
+data.availability - the papers availability
+data.warnavail - flag to indicate if to warn about availability
+data.timezone - timezone paper is being taken in if not Europe/London
+data.startdate - the paper state date
+data.candidates - list of candidate modules
+data.metadata - array of metadata [type, value, warn if missing]
+data.screens - the number of screens in the exam
+data.navigation - the navigation type of the exam (uni/bi directional)
+data.navigationtooltip - the tooltip for the navigation item
+data.marks - the marks available on the exam
+data.adjustedmarks - adjusted marks calculation
+data.currentuser - the logged in user
+data.duration - the length of the exam
+data.displaytimeremaining - flag to indcate display of time remaining
+data.notime - flag to indicate no time remaining
+data.sounddemo - path to sound demo audio file
+data.sebrequired - flag to incdicate seb is required
+data.papernotavailable - flag to incdicate paper no available
+data.metadatasecurity - the metadata security warning
+data.waitforpassword - flag to indicate password required
+data.donotstart - flag to indicate wait for permission to start
+data.switch - flag to indicate user can switch to another paper
+data.oktostart - flag to indicate the paper can be started
+data.link - issue link url
+data.previousattemptlink - previous attempts link url
+data.version - rogo version
+data.photourl - user image url
+data.photodimensions - user image dimensions
+
+Required localised language strings -
+lang.menu
+lang.photoid
+lang.rubric
+lang.availability
+lang.candidates
+lang.screens
+lang.navigation
+lang.marks
+lang.tooltip_adjustmark
+lang.currentuser
+lang.duration
+lang.timeremaining
+lang.tooltip_testclip
+lang.sebrequired
+lang.papernotavailable
+lang.timeexpired
+lang.waitforpassword
+lang.donotstart
+lang.switchpapers
+lang.start
+lang.logissue
+lang.nottakenpaper
+lang.previouscompletions
+lang.questionmark
+lang.ok
+#}
+<nav class="navmenu">
+    <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" alt="{{lang.menu}}"/>
+</nav>
+{{data.toprightmenu|raw}}
+<div class="headerlinebreak"></div>
+<form name="theform" autocomplete="off">
+    <main class="contenttable content">
+        <div class="contentrow">
+            <div class="startheader">
+                <div>
+                    <img src="{{data.papericon}}" class="papericon" alt="" />
+                </div>
+                <div>
+                    <h1 class="paper_title">{{data.papertitle}}</h1>
+                </div>
+            </div>
+        </div>
+        <div class="contentrow">
+            <div class="contenttable details">
+                {% if data.papertype == 2 and data.photourl != '' %}
+                <div class="contentrow">
+                    <div class="contentcell"></div>
+                    <div class="contentcell userphoto">
+                        <div class="photoid">{{lang.photoid}}</div>
+                        <img class="photo" src="{{data.photourl}}" {{data.photodimensions}} alt="" />
+                    </div>
+                </div>
+                {% endif %}
+                {% if data.rubric != '' %}
+                <div class="contentrow">
+                    <div class="contentcell f rubric">
+                        {{lang.rubric}}
+                    </div>
+                    <div class="contentcell rubricdetail">
+                        {{data.rubric|raw}}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="contentrow">
+                {% if data.papertype != 2 %}
+                    <div class="contentcell f">
+                        {{lang.availability}}
+                    </div>
+                    <div class="contentcell {% if data.warnavail %}warn{% endif %}">
+                        {{data.availability}} {{data.timezone}}
+                        <input type="hidden" name="startdate" value="{{data.startdate}}" />
+                        <input type="hidden" name="testtype" value="{{data.papertype}}" />
+                    </div>
+                {% endif %}
+                </div>
+                <div class="contentrow">
+                    <div class="contentcell f">
+                        {{lang.candidates}}
+                    </div>
+                    <div class="contentcell">
+                        {{data.candidates}}
+                    </div>
+                </div>
+                <div class="contentrow">
+                    <div class="contentcell f">
+                        {{lang.metadata}}
+                    </div>
+                    <div class="contentcell">
+                        <div class="multicolumn metadata">
+                            {% for m in data.metadata %}
+                            <div class="header">
+                                {{m.type}}
+                            </div>
+                            <div class="{% if m.warn %}warn{% endif %}">
+                                {{m.value}}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="contentrow">
+                    <div class="contentcell f">
+                        {{lang.screens}}
+                    </div>
+                    <div class="contentcell">
+                        <div class="multicolumn">
+                            <div class="header">
+                                {{data.screens}}
+                            </div>
+                            <div class="secondary">
+                                {{lang.navigation}}
+                            </div>
+                            <div>
+                                {{data.navigation}} <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{data.navigationtooltip}}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if data.papertype < 3 %}
+                <div class="contentrow">
+                    <div class="contentcell f">
+                        {{lang.marks}}
+                    </div>
+                    <div class="contentcell">
+                        {{data.marks}} {{data.adjustedmarks}}
+                        {% if data.adjustedmarks != '' %}
+                        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{lang.tooltip_adjustmark}}" />
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="contentrow">
+                    <div class="contentcell f">
+                        {{lang.currentuser}}
+                    </div>
+                    <div class="contentcell">
+                        <div class="multicolumn">
+                            <div class="header">
+                                {{data.currentuser}}
+                            </div>
+                            {% if data.duration != '' %}
+                            <div class="secondary">
+                                {{lang.duration}}
+                            </div>
+                            <div>
+                                {{data.duration}}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if data.displaytimeremaining %}
+                <div class="contentrow">
+                    <div class="contentcell f">
+                        {{lang.timeremaining}}
+                    </div>
+                    <div class="contentcell {% if data.notime %}notime{% endif %}">
+                        {{data.timeremaining}}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="details misc">
+                <div>
+                    {% if data.sounddemo != '' %}
+                    <div>
+                        <div>
+                            <audio src="{{data.sounddemo}}" controls></audio>
+                            <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{lang.tooltip_testclip}}"/>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="w">
+                    {% if data.sebrequired %}
+                        {{lang.sebrequired}}
+                    {% elseif data.papernotavailable %}
+                        {{lang.papernotavailable}}
+                    {% elseif data.timeexpired %}
+                        {{lang.timeexpired}}
+                    {% elseif data.metadatasecurity != '' %}
+                        {{data.metadatasecurity}}
+                    {% elseif data.waitforpassword %}
+                        {{lang.waitforpassword}}
+                    {% elseif data.donotstart %}
+                        {{lang.donotstart}}
+                    {% endif %}
+                    </div>
+                    {% if data.switch %}
+                    <input class="ok" type="button" value="{{lang.switchpapers}}" name="switch" onclick="window.location='index.php'" />
+                    {% endif %}
+                    {% if data.oktostart %}
+                    <input type="button" class="ok" value="{{lang.start}}" name="start" id="start" />
+                    {% else %}
+                    <input type="button" class="notok" value="{{lang.start}}" name="start" disabled />
+                    {% endif %}
+                    {% if data.issuelink != '' %}
+                    <div class="logissue">
+                        <img src="../artwork/logissue.png" alt=""/>
+                        <a href="{{data.issuelink}}" target="_blank">{{lang.logissue}}</a>
+                    </div>
+                    {% endif %}
+                    <div class="previous">
+                        {% if data.previousattemptlink != '' %}
+                        <hr /><a href="{{data.previousattemptlink}}" target="_blank">{{lang.previouscompletions}}</a>
+                        {% else %}
+                        <hr />{{lang.nottakenpaper}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</form>
+<footer>
+    <div class="powered"><i>powered by</i> Rog&#333; {{data.version}}</div>
+</footer>
+
+<div id="info_overlay">
+    <div id="info_submit_dialog">
+        <div id="info_submit_dialog_icon">
+            <img src="../artwork/question_mark_64.png" width="64" height="64" alt="" />
+        </div>
+        <p id="info_submit_dialog_title"></p>
+        <p id="info_submit_dialog_msg"></p>
+        <div id="info_submit_dialog_buttons">
+            <input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="{{lang.ok}}" />
+        </div>
+    </div>
+</div>

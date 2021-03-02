@@ -28,6 +28,7 @@
 require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.php';
 require_once '../include/paper_security.php';
+require_once '../include/toprightmenu.inc';
 
 
 // Redirect Invigilators to their own areas.
@@ -264,182 +265,131 @@ if ($exam_duration !== null) {
     $remaining_seconds = (int) ($remaining_time % 60);
 }
 
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+$render = new render($configObject);
+$headerdata = array(
+    'css' => array(
+        '/css/user_index.css',
+        '/css/html5.css',
+        '/node_modules/mediaelement/build/mediaelementplayer.min.css',
+    ),
+    'scripts' => array(
+        '/js/userindexinit.min.js',
+    ),
+);
 
-  <title><?php echo $string['startscreen']; ?></title>
+$lang['title'] = $string['startscreen'];
+$render->render($headerdata, $lang, 'header.html');
+$icon_types = array('formative', 'progress', 'summative', 'survey');
+$contentdata = array(
+    'toprightmenu' => draw_toprightmenu(14),
+    'papericon' => '../artwork/' . $icon_types[$test_type] . '.png',
+    'papertitle' => $paper_title,
+    'papertype' => $test_type,
+    'rubric' => $rubric,
+    'screens' => $paper_screens,
+    'currentuser' => $person,
+    'sounddemo' => '',
+    'switch' => false,
+    'issuelink' => '',
+    'version' => $configObject->get_setting('core', 'rogo_version'),
+    'photourl' => '',
+);
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/user_index.css" />
-  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
-  <style type="text/css">
-    <?php
-    if (isset($_SESSION['_lti_context'])) {
-        echo "  body {background-color:transparent !important;font-size:$textsize%; font-family:$font}\n";
-    } else {
-        echo "  body {font-size:$textsize%; font-family:$font}\n";
-    }
-    ?>
-  </style>
-  <script id="rogoconfig"
-            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
-            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
-  </script>
-  <script src="../js/require.js"></script>
-  <script src="../js/main.min.js"></script>
-  <script src="../js/userindexinit.min.js"></script>
-<?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-?>
-</head>
-<body>
-<div style="text-align:right; padding-right:2px;"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-<?php
-  require '../include/toprightmenu.inc';
-    echo draw_toprightmenu(14);
-?>
-<br clear="all" />
-<form name="theform" autocomplete="off">
-<?php
-if ($textsize > 120) {
-    $table_width = 90;
-    $button_width = 160;
-} else {
-    $table_width = 80;
-    $button_width = 125;
-}
-?>
-<table cellpadding="0" cellspacing="0" border="0" style="margin-left:auto; margin-right:auto; margin-top:40px; font-size:100%; border-top:1px solid #95AEC8;border-left:1px solid #95AEC8; border-right:1px solid #95AEC8; background-color:white; width:<?php echo $table_width; ?>%">
-<tr>
-<?php
-  $icon_types = array('formative', 'progress', 'summative', 'survey');
-  echo '<td colspan="2"><table cellspacing="4" cellpadding="0" border="0" style="width:100%"><tr><td style="width:52px"><img src="../artwork/' . $icon_types[$test_type] . '.png" style="width:48px; height:48px; padding-left:4px" alt="Icon" />';
-  echo "</td><td><span class=\"paper_title\">$paper_title</span></td>\n</tr></table></td></tr>";
-  echo "<tr>\n</table>\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-size:95%; margin-left:auto; margin-right:auto;border:1px solid #95AEC8;background-color:#F1F5FB\" width=\"$table_width%\">\n";
-  echo '<tr><td colspan="4">&nbsp;</td>';
+// Display user photo if summative exam.
 if ($test_type == 2) {
     $student_photo = UserUtils::student_photo_exist($userObject->get_username());
     $photodirectory = rogo_directory::get_directory('user_photo');
     if ($student_photo !== false) {
         $photo_size = getimagesize($photodirectory->fullpath($student_photo));
-        echo '<td rowspan="';
-        if ($sound_demo == '1') {
-            echo '8';
-        } else {
-            echo '7';
-        }
-        echo '" style="vertical-align:top; padding:8px"><div class="photoid">' . $string['photoid']
-          . '</div><img src="' . $photodirectory->url($student_photo) . '" ' . $photo_size[3]
-          . ' alt="Photo" style="border: 10px solid white" /></td>';
+        $contentdata['photodimensions'] = $photo_size[3];
+        $contentdata['photourl'] = $photodirectory->url($student_photo);
     }
-}
-  echo '</tr>';
-if ($rubric != '') {
-    echo '<tr><td class="f" style="vertical-align:top"><nobr>' . $string['rubric'] . '</nobr></td><td colspan="3" style="text-align:justify; line-height:140%; padding-right:20px; padding-bottom:15px">' . $rubric . '</td></tr>';
 }
 
 if ($test_type != '2') {
-    $html = '';
+    $contentdata['warn'] = false;
     if ((time() < $paper_start or time() > $paper_end) and !$userObject->has_role('External Examiner')) {
-        $html = ' class="warn"';
+        $contentdata['warnavail'] = true;
     }
     if (empty($paper_start) or empty($paper_end)) {
         // The start / end date has not been set yet so display Availability: Not set to the user.
-        echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $string['notset'];
+        $contentdata['availability'] = $string['notset'];
     } else {
-        echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' ' . $string['to'] . ' ' . $display_end_date;
+        $contentdata['availability'] = $display_start_date . ' ' . $string['to'] . ' ' . $display_end_date;
     }
+    $contentdata['timezone'] = '';
     if ($timezone != 'Europe/London') {
-        echo ' (' . str_replace('_', ' ', $timezone) . ')';
+        $contentdata['timezone'] = ' (' . str_replace('_', ' ', $timezone) . ')';
     }
 }
-  echo '<input type="hidden" name="startdate" value="' . $display_start_date . '" /><input type="hidden" name="testtype" value="' . $test_type . "\" /></td></tr>\n";
-  echo '<tr><td class="f"><nobr>' . $string['candidates'] . '</nobr></td><td colspan="3">';
-  $html = '';
+$contentdata['startdate'] = $display_start_date;
+
+
+$contentdata['candidates']  = '';
 foreach ($modIDs as $modID) {
     $mod_details = module_utils::get_full_details_by_ID($modID, $mysqli);
-    if ($html == '') {
-        $html = $mod_details['moduleid'];
+    if ($contentdata['candidates']  == '') {
+        $contentdata['candidates']  = $mod_details['moduleid'];
     } else {
-        $html .= ', ' . $mod_details['moduleid'];
+        $contentdata['candidates']  .= ', ' . $mod_details['moduleid'];
     }
 }
-  echo $html . '</td></tr>';
 
-  // Display any metadata
-  $metadata_security = true;
-  $metadata_msg = '';
-  $metadata = Paper_utils::get_security_metadata($property_id, $mysqli);
+// Display any metadata
+$metadata_security = true;
+$metadata_msg = '';
+$metadata = Paper_utils::get_security_metadata($property_id, $mysqli);
 if (!$userObject->is_temporary_account()) {         // Do not check metadata security if temporary account
+    $i = 0;
     foreach ($metadata as $security_type => $security_value) {
-        $html = '';
+        $contentdata['metadata'][$i]['warn'] = false;
+        $contentdata['metadata'][$i]['type'] = $security_type;
+        $contentdata['metadata'][$i]['value'] = $security_value;
         if (!$userObject->has_metadata($modIDs, $security_type, $security_value)) {
             $metadata_security = false;
             $metadata_msg = sprintf($string['metadata_msg'], $security_type, $security_value);
-            $html = ' class="warn"';
+            $contentdata['metadata'][$i]['warn'] = true;
         }
-        echo "<tr><td class=\"f\">$security_type</td><td$html>$security_value</td><td></td><td></td></tr>\n";
+        $i++;
     }
 }
 
-  echo '<tr><td class="f"><nobr>' . $string['screens'] . '</nobr></td><td>' . $paper_screens . '</td>';
-  echo '<td class="f">' . $string['navigation'] . '</td><td>';
 if ($navigation == 1) {
-    echo $string['bidirectional'] . ' <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_bidirectional'] . '" />';
+    $contentdata['navigation'] = $string['bidirectional'];
+    $contentdata['navigationtooltip'] = $string['tooltip_bidirectional'];
 } else {
-    echo $string['unidirectional'] . ' <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_unidirectional'] . '" />';
+    $contentdata['navigation'] = $string['unidirectional'];
+    $contentdata['navigationtooltip'] = $string['tooltip_unidirectional'];
 }
-  echo '</td></tr>';
+
 if ($test_type < 3) {
-    echo '<tr><td class="f">' . $string['marks'] . '</td>';
-    echo '<td colspan="3">' . $total_marks;
+    $contentdata['marks'] = $total_marks;
+    $contentdata['adjustedmarks'] = '';
     if ($marking == 1) {
-        echo ' (' . $string['adjusted'] . ' ' . number_format($total_random_mark, 2, '.', ',') . ')';
-      
-        echo ' <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_adjustmark'] . '" />';
+        $contentdata['adjustedmarks'] = '(' . $string['adjusted'] . ' ' . number_format($total_random_mark, 2, '.', ',') . ')';
     }
-    echo '</td></tr>';
 }
-  echo '<tr><td class="f"><nobr>&nbsp;' . $string['currentuser'] . "</nobr></td><td>$person</td>";
+
 if ($exam_duration) {
     $duration_mins = calculate_duration($exam_duration, $extra_time_mins, $special_needs_percentage);
-    echo '<td class="f">' . $string['duration'] . '</td><td>' . StringUtils::nice_duration($duration_mins, $string) . '</td>';
+    $contentdata['duration'] = StringUtils::nice_duration($duration_mins, $string);
 } else {
-    echo '<td></td><td></td>';
+    $contentdata['duration'] = '';
 }
-  echo '</tr>';
 
+$contentdata['displaytimeremaining'] = $display_remaining_time;
 if ($display_remaining_time === true) {
-    ?>
-    <tr>
-       <td></td>
-       <td></td>
-       <td class="f"><?php echo $string['timeremaining'] ?></td>
-     <?php
-        if ($remaining_time == 0) {
-            echo '<td><span style="background-color:#C00000; color:white">&nbsp;' . $remaining_minutes . ' ' . $string['mins'] . ' ' . $remaining_seconds  . ' ' . $string['secs'] . '&nbsp;</span></td>';
-        } else {
-            echo '<td>' . $remaining_minutes . ' ' . $string['mins'] . ' ' . $remaining_seconds  . ' ' . $string['secs'] . '</td>';
-        }
-        ?>
-    </tr>
-
-    <?php
+    $contentdata['timeremaining'] = $remaining_minutes . ' ' . $string['mins'] . ' ' . $remaining_seconds . ' ' . $string['secs'];
+    $contentdata['notime'] = false;
+    if ($remaining_time == 0) {
+        $contentdata['notime'] = true;
+    }
 }
 
 if ($sound_demo == '1') {
-    echo '<tr><td colspan="4" style="text-align:center">';
-    echo "<audio src=\"{$configObject->get('cfg_root_path')}/paper/sound_demo.mp3\" controls>\n";
-    echo '</audio> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_testclip'] . "\" />\n";
-    echo "</td></tr>\n";
+    $contentdata['sounddemo'] = $configObject->get('cfg_root_path') . '/paper/sound_demo.mp3';
 }
 
-$start_label = $string['start'];
 if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
     $start_available      = true;
     $remaining_available  = true;
@@ -467,23 +417,25 @@ if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner
             break;
     }
 }
-
-echo '<tr><td style="text-align:center" colspan="4"><br />';
-
+$contentdata['sebrequired'] = false;
+$contentdata['papernotavailable'] = false;
+$contentdata['metadatasecurity'] = '';
+$contentdata['waitforpassword'] = false;
+$contentdata['donotstart'] = false;
 if (!check_seb_headers($propertyObj->get_property_id(), $userObject, $string, $mysqli, false)) {
-    echo '<div style="color:#C00000; font-size:90%">' . $string['sebrequired'] . '</div>' . "\n";
+    $contentdata['sebrequired'] = true;
     $start_available = false;
 } elseif ($start_available === false) {
-    echo '<div style="color:#C00000;font-size:90%">' . $string['papernotavailable'] . "</div>\n";
+    $contentdata['papernotavailable'] = true;
 } elseif ($remaining_available === false) {
-    echo '<div style="color:#C00000;font-size:90%">' . $string['timeexpired'] . "</div>\n";
+    $contentdata['timeexpired'] = true;
 } elseif ($metadata_security === false) {
-    echo "<div style=\"color:#C00000;font-size:90%\">$metadata_msg</div>\n";
+    $contentdata['metadatasecurity'] = $metadata_msg;
 } elseif ($test_type == '2' and !$userObject->has_role('External Examiner')) {
     if ($remote) {
-        echo '<div style="color:#C00000;font-size:90%">' . $string['waitforpassword'] . "</div>\n";
+        $contentdata['waitforpassword'] = true;
     } else {
-        echo '<div style="color:#C00000;font-size:90%">' . $string['donotstart'] . "</div>\n";
+        $contentdata['donotstart'] = true;
     }
 }
 
@@ -492,49 +444,35 @@ if ($test_type == 2) {
     $paper_display = array();
     $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli, $property_id);
     if ($paper_no > 0) {
-        echo '<input class="ok" type="button" style="margin-right:20px; width:' . $button_width . 'px" value="' . $string['switchpapers'] . "\" name=\"switch\" onclick=\"window.location='index.php'\" />";
+        $contentdata['switch'] = true;
     }
 }
 
 $display_date = '';
-
+$contentdata['oktostart'] = false;
 if ($start_available and $remaining_available and $metadata_security) {
-    echo '<input type="button" class="ok" style="width:' . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" />\n";
-} else {
-    echo '<input type="button" class="notok" style="width:' . $button_width . 'px" value="' . $string['start'] . "\" name=\"start\" disabled />\n";
+    $contentdata['oktostart'] = true;
 }
 
-echo '<br />&nbsp;';
 // Display a link for issue reporting for remote summative exams.
 if ($test_type == '2' and $remote) {
     $link = $configObject->get_setting('core', 'summative_issuelink');
     if (!empty($link)) {
-        echo '<div class="logissue"><img src="../artwork/logissue.png"/>'
-        . '<a href="' . $link . '" target="_blank">' . $string['logissue'] . '</a></div>';
+        $contentdata['issuelink'] = $link;
     }
 }
 
 if ($test_type != '2') {
     // Display previous attempts
     if (log::hasPreviousAttempts($property_id, $userObject->get_user_ID())) {
-        echo '<hr /><a href="' . $configObject->get('cfg_root_path') . '/users/previous.php?id=' . $id . '" target="_blank">' . $string['previouscompletions'] . '</a></br>';
+        $contentdata['previousattemptlink'] = $configObject->get('cfg_root_path') . '/users/previous.php?id=' . $id;
     } else {
-        echo '<hr />' . $string['nottakenpaper'] . '</p><br />';
+        $contentdata['previousattemptlink'] = '';
     }
 }
-?></td></tr></table>
-</form>
-<div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
 
-<div id="info_overlay">
-    <div id="info_submit_dialog">
-        <div id="info_submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="<?php echo $string['questionmark'] ?>" /></div>
-        <p id="info_submit_dialog_title"></p>
-        <p id="info_submit_dialog_msg"></p>
-        <div id="info_submit_dialog_buttons"><input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="<?php echo $string['ok'] ?>" /></div>
-    </div>
-</div>
-<?php
+$render->render($contentdata, $string, 'paper/start.html');
+
 // JS utils dataset.
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
@@ -548,6 +486,5 @@ $dataset['attributes']['fullscreen'] = $fullscreen;
 $dataset['attributes']['remotesummative'] = $remote;
 $render->render($dataset, array(), 'dataset.html');
 $mysqli->close();
-?>
-</body>
-</html>
+
+$render->render(array(), array(), 'footer.html');

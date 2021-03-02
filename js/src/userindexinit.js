@@ -21,6 +21,13 @@
 requirejs(['userindex', 'jsxls', 'jquery'], function (USER, jsxls, $) {
     var user = new USER();
 
+    if ($('#dataset').attr('data-lticontext')) {
+        $('body').css('background-color', 'transparent !important');
+    }
+
+    $('body').css('font-size', $('#dataset').attr('data-textsize') + '%');
+    $('body').css('font-family', $('#dataset').attr('data-font') );
+
     $("#overlay").hide();
 
     $("#info_dialog_ok").click(function() {

@@ -48,13 +48,7 @@ data.print - flag to indicate if the question is being printed
                                 {% for s in data.screen %}
                                     {% if s.screentype == 'scr_cur' %}
                                     {% set current = s.pageno %}
-                                <div aria-describedby="progress2" aria-labelledby="progress" role="progressbar" aria-valuenow="{{current}}" aria-valuetext="{{current}}" aria-valuemin="1" aria-valuemax="{{data.screen|length - 1}}">
-                                    <p id="progress" class="hidden">
-                                        {{lang.youronscreen}}
-                                    </p>
-                                    <p id="progress2" class="hidden">
-                                        {{lang.screenof | format(data.screen|length)}}
-                                    </p>
+                                <div aria-label="{{lang.examprogress}}" role="progressbar" aria-valuenow="{{current}}" aria-valuetext="{{lang.youronscreen}} {{current}} {{lang.screenof | format(data.screen|length)}}" aria-valuemin="1" aria-valuemax="{{data.screen|length - 1}}">
                                     {% endif %}
                                 {% endfor %}
                                 {% for s in data.screen %}

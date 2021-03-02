@@ -10,9 +10,6 @@ body {
 input {
   font-size: 90%;
 }
-td {
-  text-align: left;
-}
 p {
   margin: 2px 0 8px 0;
 }
@@ -40,6 +37,7 @@ form {
   text-align: right;
   line-height: 180%;
   padding-right: 0.3em;
+  width: 20%;
 }
 .w {
   font-size: 90%;
@@ -68,10 +66,8 @@ a.logout {
   font-family: Arial,sans-serif;
   color: #295AAD;
   font-size: 75%;
-  bottom: 0;
-  right: 30px;
   padding: 10px;
-  position: absolute;
+  text-align: right;
 }
 .bullet {
   width: 16px;
@@ -135,8 +131,129 @@ input[type=button].notok:hover {
   padding-bottom: 5px;
 }
 .logissue {
-  float: right;
   padding: 5px;
   display: flex;
   align-items: center;
+  justify-content: end;
+}
+
+.navmenu {
+  text-align: right;
+  padding-right: 2px;
+}
+
+.headerlinebreak {
+  clear: both;
+}
+
+.content {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 40px;
+  font-size: 100%;
+  border-top: 1px solid #95AEC8;
+  border-left: 1px solid #95AEC8;
+  border-right: 1px solid #95AEC8;
+  background-color: white;
+  width: 80%;
+}
+
+.contenttable {
+  display: table;
+}
+
+.contentrow {
+  display: table-row;
+}
+
+.contentcell {
+  display: table-cell;
+}
+
+.papericon {
+  width: 48px;
+  height: 48px;
+  padding-left: 4px;
+}
+
+.details {
+  font-size: 95%;
+  border-top: 1px solid #95AEC8;
+  background-color: #F1F5FB;
+  width: 100%;
+}
+
+.userphoto {
+  vertical-align: top;
+  padding: 8px;
+}
+
+.photo {
+  border: 10px solid white;
+}
+
+.rubric {
+  vertical-align: top;
+}
+
+.rubricdetail {
+  text-align: justify;
+  line-height: 140%;
+  padding-right: 20px;
+  padding-bottom: 15px;
+}
+
+.notime {
+  background-color: #C00000;
+  color: white;
+}
+
+.center {
+  text-align: center;
+}
+
+.ok {
+  margin-right: 20px;
+}
+
+#start {
+  font-weight: bold;
+}
+
+.startheader {
+  display: flex;
+  align-items: center;
+}
+
+.misc {
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  border-top: unset;
+  border-bottom: 1px solid #95AEC8;
+}
+
+input[type=button] {
+  width: 10em;
+}
+
+.previous {
+  padding-bottom: 1em;
+}
+
+.multicolumn {
+  display: flex;
+}
+
+.header {
+  width: 60%;
+}
+
+.secondary {
+  padding-right: 0.3em;
+}
+
+.metadata {
+  flex-flow: wrap;
+  width: 40%;
 }

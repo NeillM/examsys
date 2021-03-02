@@ -124,6 +124,7 @@ $string['jumpscreen'] = 'Jump to screen';
 // Header.
 $string['youronscreen'] = 'You are on screen';
 $string['screenof'] = 'of %s';
+$string['examprogress'] = 'Exam progress';
 // Prologue.
 $string['prologue'] = 'Paper prologue';
 // Question header.

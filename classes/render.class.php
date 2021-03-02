@@ -118,8 +118,13 @@ class render
     public function render_admin_header($lang, $additionaljs, $additionalcss)
     {
         $lang['title'] = page::title($lang['title']);
-        $data = array('lang' => $lang, 'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss,
-        'charset' => $this->config->get('cfg_page_charset'), 'path' => $this->config->get('cfg_root_path'));
+        $data = array(
+            'lang' => $lang, 'additionaljs' => $additionaljs,
+            'additionalcss' => $additionalcss,
+            'charset' => $this->config->get('cfg_page_charset'),
+            'path' => $this->config->get('cfg_root_path'),
+            'language' => LangUtils::getLang($this->config->get('cfg_web_root')),
+        );
         echo $this->twig->render('admin/header.html', $data);
     }
 
