@@ -108,6 +108,7 @@ $string['feedbackmsg'] = '(model answer for assessments)';
 $string['metadata'] = 'Metadata';
 $string['keywords'] = 'Keywords';
 $string['teams'] = 'Teams';
+$string['externalref'] = 'External Reference';
 $string['answer'] = 'Answer';
 $string['created'] = 'Created:';
 $string['modified'] = 'Modified:';

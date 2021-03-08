@@ -115,6 +115,8 @@ class RAF
 
             $this->data['items'][$item_no]['keywords'] = $this->get_keywords($question['q_id']);
 
+            $this->data['items'][$item_no]['questionsmetadata'] = $this->getQuestionsMetadata($question['q_id']);
+
             $item_no++;
         }
     }
@@ -224,6 +226,26 @@ class RAF
         $result->fetch();
         $result->close();
         return $idnums;
+    }
+
+    /**
+     * EXPORT: Retrieve metadata associated with a question for export.
+     * @param int $q_id question id
+     * @return array
+     */
+    private function getQuestionsMetadata(int $q_id): array
+    {
+        $metadata = array();
+        $result = $this->db->prepare('SELECT id, questionID, type, value FROM questions_metadata WHERE questionID = ?');
+        $result->bind_param('i', $q_id);
+        $result->execute();
+        $result->bind_result($id, $qid, $type, $value);
+        while ($result->fetch()) {
+            $metadata[$id] = array('type' => $type, 'questionID' => $qid, 'value' => $value);
+        }
+        $result->close();
+
+        return $metadata;
     }
 
     /**
@@ -403,6 +425,7 @@ class RAF
             $q_id = $this->write_question($item['question']);
 
             $this->write_keywords($item['keywords'], $q_id);
+            $this->writeMetadata($item['questionsmetadata'], $q_id);
 
             $i = 0;
             foreach ($item['options'] as $options) {
@@ -538,6 +561,18 @@ class RAF
         $result->close();
 
         return $q_id;
+    }
+
+    /**
+     * IMPORT: Insert question metadata
+     * @param array $metadata the metadata
+     * @param int $q_id the id of the new question
+     */
+    private function writeMetadata(array $metadata, int $q_id): void
+    {
+        foreach ($metadata as $data) {
+            QuestionsMetadata::set($data['type'], $q_id, $data['value']);
+        }
     }
 
     /**

@@ -28,10 +28,15 @@ function render_metadata($db, $question, $bloom_on, $module, $disabled, &$string
     global $staff_modules, $faculty;
 
     $configObject = Config::get_instance();
+    $externalref = QuestionsMetadata::get('externalref', $question->id);
 
     $html = <<< META
           <table id="q-metadata-basic" class="form" summary="{$string['qmetasummary']}">
             <tbody>
+              <tr>
+                <th><label for="externalref">{$string['externalref']}</label></th>
+                <td><input type="text" id="externalref" name="externalref" maxlength="25" value="{$externalref}"></td>
+              </tr>
               <tr>
                 <th>{$string['status']}</th>
                 <td>

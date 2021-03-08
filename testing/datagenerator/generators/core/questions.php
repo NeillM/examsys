@@ -86,6 +86,7 @@ class questions extends generator
             'correct_fback' => '',
             'incorrect_fback' => '',
             'modules' => '',
+            'externalref' => '',
         );
         $qdata = $this->set_defaults_and_clean($defaults, $data);
         $now = date('Y-m-d H:i:s');
@@ -183,6 +184,10 @@ class questions extends generator
                 }
                 $moduleparams['question'] = $qdata['id'];
                 $this->add_to_module($moduleparams);
+            }
+            // External reference.
+            if (!empty($qdata['externalref'])) {
+                \QuestionsMetadata::set('externalref', $qdata['id'], $qdata['externalref']);
             }
             return $qdata;
         } catch (Exception $e) {

@@ -143,6 +143,9 @@ class QuestionEdit extends RogoObject
     /** @var array language strings */
     protected $langstrings;
 
+    /** @var string question external reference */
+    protected $externalref = '';
+
     /**
      * Text editor
      * @var object
@@ -591,6 +594,8 @@ QUERY;
             if ($success) {
                 // Updates the teams/question modules
                 QuestionUtils::update_modules($this->teams, $this->id, $this->_mysqli, $this->_userObj);
+                // Update external ref.
+                QuestionsMetadata::set('externalref', $this->id, $this->externalref);
             }
 
             if ($success) {
@@ -1280,6 +1285,27 @@ QUERY;
     }
 
     /**
+     * Get the questions external ref
+     * @return string $value
+     */
+    public function get_externalref(): string
+    {
+        return $this->externalref;
+    }
+
+    /**
+     * Set the questions external ref
+     * @param string $value
+     */
+    public function set_externalref(string $value): void
+    {
+        if ($value !== $this->externalref) {
+            $this->set_modified_field('externalref', $this->externalref);
+            $this->externalref = $value;
+        }
+    }
+
+    /**
      * Get the question owner ID
      * @return integer
      */
@@ -1809,6 +1835,9 @@ QUERY;
             foreach ($opt_fields as $field) {
                 $params[] = &$opt_data[$field];
             }
+
+            // Get the external reference.
+            $this->externalref = QuestionsMetadata::get('externalref', $this->id);
 
             // Get the options
             $o_query = <<< QUERY

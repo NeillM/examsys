@@ -178,6 +178,17 @@ trait Question
     }
 
     /**
+     * Adds external reference to a question:
+     * @Given I add external reference :reference
+     * @param string $reference the reference
+     */
+    public function iAddExternalReference(string $reference): void
+    {
+        $this->scrollToElement('#externalref');
+        $this->fillField('externalref', $reference);
+    }
+
+    /**
      * Creates a area question.
      *
      * @param TableNode $data

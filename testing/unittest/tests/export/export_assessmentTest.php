@@ -127,7 +127,8 @@ class export_assessmentTest extends unittestdatabase
                 'scenario' => "<div>It is now known as;</div>|<div>It's football team is called</div>|<div>It's most famous landmark is the</div>|||||||",
                 'score_method' => 'Mark per Option',
                 'q_option_order' => 'random',
-                'settings' => '[]'
+                'settings' => '[]',
+                'externalref' => '123456',
             )
         );
         $logdatagenerator->create_summative(array('q_id' => $this->question1['question']['id'], 'metadataID' => $meta['id'], 'screen' => 1, 'user_answer' => '1|3|2', 'mark' => 3, 'adjmark' => 3));
@@ -337,7 +338,8 @@ class export_assessmentTest extends unittestdatabase
                 'leadin' => '<p>25 December is usually known as Christmas Day in the United Kingdom.</p>',
                 'score_method' => 'Mark per Option',
                 'q_option_order' => 'random',
-                'settings' => '[]'
+                'settings' => '[]',
+                'externalref' => 'abcdef',
             )
         );
         $logdatagenerator->create_summative(array('q_id' => $this->question4['question']['id'], 'metadataID' => $meta['id'], 'screen' => 4, 'user_answer' => '1', 'mark' => 1, 'adjmark' => 1));
@@ -859,9 +861,9 @@ class export_assessmentTest extends unittestdatabase
         $export->create_dynamic_header($paper_buffer, $exclusions);
         $expected = array(
             // Q1.
-            'Q1i',
-            'Q1ii',
-            'Q1iii',
+            'Q1i [' . $this->question1['question']['externalref'] . ']',
+            'Q1ii [' . $this->question1['question']['externalref'] . ']',
+            'Q1iii [' . $this->question1['question']['externalref'] . ']',
             // Q2.
             'Q2A',
             'Q2B',
@@ -875,7 +877,7 @@ class export_assessmentTest extends unittestdatabase
             'Q3F',
             'Q3G',
             // Q4.
-            'Q4',
+            'Q4 [' . $this->question4['question']['externalref'] . ']',
             // Q5.
             'Q5A',
             // Q6.

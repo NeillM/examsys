@@ -336,7 +336,7 @@ if ($critical_error == '') {
             }
             $question->set_teams($question_teams);
             // Save metadata
-            $part_names = array('bloom', 'status', 'correct_fback', 'incorrect_fback');
+            $part_names = array('bloom', 'status', 'correct_fback', 'incorrect_fback', 'externalref');
             if (!isset($_POST['teams'])) {
                 $_POST['teams'] = array();
             }
@@ -385,6 +385,9 @@ if ($critical_error == '') {
                 }
             }
             $question->set_teams($question_teams);
+            if (isset($_POST['externalref'])) {
+                $question->set_externalref($_POST['externalref']);
+            }
             $critical_error = save_options($update_options_media, $question, $userObject, $mysqli);
             if ($critical_error !== '') {
                 $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);

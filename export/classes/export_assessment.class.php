@@ -146,6 +146,10 @@ class export_assessment extends exporter
         $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
         for ($i = 0; $i < count($paper); $i++) {
             $tmp_question_ID = $paper[$i]['ID'];
+            $externalref = \QuestionsMetadata::get('externalref', $tmp_question_ID);
+            if ($externalref != '') {
+                $externalref = ' [' . $externalref . ']';
+            }
             $tmp_exclude = $exclusions->get_exclusions_by_qid($tmp_question_ID);
             // If a random question, get the first of the associated questions from the block. If none exist, output nothing
             $question = $paper[$i];
@@ -165,7 +169,7 @@ class export_assessment extends exporter
                     case 'blank':
                         for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
                             if (mb_substr($tmp_exclude, $sec - 1, 1) == '0') {
-                                $col1 = 'Q' . ($i + 1) . chr($sec + 64);
+                                $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                 self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                             }
                         }
@@ -176,15 +180,15 @@ class export_assessment extends exporter
                         for ($sec = 1; $sec < count($correct_parts); $sec++) {
                             if ($correct_parts[$sec] != '' and mb_substr($tmp_exclude, $partID, 1) == '0') {
                                 if (mb_strpos($correct_parts[$sec], '$') === false) {
-                                    $col1 = 'Q' . ($i + 1) . $numerals[$sec - 1];
+                                    $col1 = 'Q' . ($i + 1) . $numerals[$sec - 1] . $externalref;
                                     self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                                 } else {
                                     $num_ix = 0;
                                     $correct_subparts = explode('$', $correct_parts[$sec]);
                                     foreach ($correct_subparts as $subpart) {
-                                                    $col1 = 'Q' . ($i + 1) . $numerals[$sec - 1] . chr($num_ix + 65);
-                                                    self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random, $numerals[$num_ix]);
-                                                    $num_ix++;
+                                        $col1 = 'Q' . ($i + 1) . $numerals[$sec - 1] . chr($num_ix + 65) . $externalref;
+                                        self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random, $numerals[$num_ix]);
+                                        $num_ix++;
                                     }
                                 }
                             }
@@ -195,7 +199,7 @@ class export_assessment extends exporter
                         $correct_parts = explode('|', $question['correct']);
                         for ($sec = 0; $sec < count($correct_parts); $sec++) {
                             if (mb_substr($tmp_exclude, $sec, 1) == '0') {
-                                  $col1 = 'Q' . ($i + 1) . chr($sec + 65);
+                                  $col1 = 'Q' . ($i + 1) . chr($sec + 65) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                             }
                         }
@@ -207,7 +211,7 @@ class export_assessment extends exporter
                         for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
                             if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
                                 if (mb_substr($tmp_exclude, $sec - 1, 1) == '0') {
-                                    $col1 = 'Q' . ($i + 1) . chr($sec + 64);
+                                    $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                     self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                                 }
                                   $sec++;
@@ -218,7 +222,7 @@ class export_assessment extends exporter
                         $correct_parts = explode(',', $question['correct']);
                         for ($sec = 1; $sec < count($correct_parts); $sec++) {
                             if (mb_substr($tmp_exclude, $sec - 1, 1) == '0' and $correct_parts[$sec] != '') {
-                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64);
+                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                             }
                         }
@@ -226,7 +230,7 @@ class export_assessment extends exporter
                     case 'rank':
                         if ($tmp_exclude{0} == '0') {
                             for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
-                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64);
+                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                             }
                         }
@@ -235,7 +239,7 @@ class export_assessment extends exporter
                     case 'dichotomous':
                         for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
                             if (mb_substr($tmp_exclude, $sec - 1, 1) == '0') {
-                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64);
+                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                             }
                         }
@@ -243,7 +247,7 @@ class export_assessment extends exporter
                     case 'mrq':
                         for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
                             if (!$exclusions->is_question_excluded($tmp_question_ID)) {
-                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64);
+                                  $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                             }
                         }
@@ -253,7 +257,7 @@ class export_assessment extends exporter
                         break;
                     case 'enhancedcalc':
                         if (!$exclusions->is_question_excluded($tmp_question_ID)) {
-                            $csvdata[] = 'Q' . ($i + 1) . ':user';
+                            $csvdata[] = 'Q' . ($i + 1) . ':user' . $externalref;
                             $csvdata[] = 'Q' . ($i + 1) . ':correct';
                             if (!$is_random) {
                                   $csvdata[] = 'Q' . ($i + 1) . ':variables';
@@ -263,10 +267,10 @@ class export_assessment extends exporter
                     default:
                         if (!$exclusions->is_question_excluded($tmp_question_ID)) {
                             if ($is_random) {
-                                  $csvdata[] = 'Q' . ($i + 1) . ':user';
+                                  $csvdata[] = 'Q' . ($i + 1) . ':user' . $externalref;
                                   $csvdata[] = 'Q' . ($i + 1) . ':correct';
                             } else {
-                                $csvdata[] = 'Q' . ($i + 1);
+                                $csvdata[] = 'Q' . ($i + 1) . $externalref;
                             }
                         }
                         break;
