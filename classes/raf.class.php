@@ -425,7 +425,9 @@ class RAF
             $q_id = $this->write_question($item['question']);
 
             $this->write_keywords($item['keywords'], $q_id);
-            $this->writeMetadata($item['questionsmetadata'], $q_id);
+            if (array_key_exists('questionsmetadata', $item)) {
+                $this->writeMetadata($item['questionsmetadata'], $q_id);
+            }
 
             $i = 0;
             foreach ($item['options'] as $options) {
