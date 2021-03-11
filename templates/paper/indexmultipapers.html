@@ -1,0 +1,65 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the paper index screen content when multiple papers are available.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables -
+data - array of availale exams
+
+Required localised language strings -
+lang.multipleExams
+lang.selectOne
+lang.screen
+lang.screens
+#}
+<main class="multiple">
+    <h1>{{lang.multipleExams}}</h1>
+    <p>{{lang.selectOne}}</p>
+    <ul class="exams">
+        {% for i,exam in data %}
+        <li class="examsrow">
+            <div class="examscell icon">
+                <a tabindex="-1" aria-hidden="true" href="user_index.php?id={{exam.cryptname}}">
+                    <img src="../artwork/summative.png" width="48" height="48" alt="" border="0"/>
+                </a>
+            </div>
+            <div class="examscell">
+                <a href="user_index.php?id={{exam.cryptname}}">{{exam.title}}</a>
+                <img src="../artwork/key.png" width="16" height="16" alt="{{lang.passwordrequired}}" />
+                {% if exam.password %}
+                <span class="password">{{lang.passwordRequired}}</span>
+                {% endif %}
+                {% if exam.completed %}
+                <br />
+                <span class="finished">{{lang.finished}}</span>
+                {% else %}
+                <br />
+                <span class="details">({{exam.maxscreen}}
+                    {% if exam.maxscreen > 1 %}
+                     {{lang.screens}}
+                    {% else %}
+                     {{lang.screen}}
+                    {% endif %}, {{exam.direction}})</span>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</main>

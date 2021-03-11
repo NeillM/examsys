@@ -1,72 +1,48 @@
 body {
-	color: #575757;
+  color: #575757;
 }
 
 h1 {
-	font-weight: normal;
-	font-size: 140%
+  font-weight: normal;
+  font-size: 140%
 }
 
 #summ_test {
-	margin: 36px 0 0 90px;
+  margin: 36px 0 0 90px;
 }
 
 #summ_test  a {
-	text-decoration: none
+  text-decoration: none
 }
 
 .file {
-	float: left;
-	width: 375px;
-	height: 74px;
-	padding-left: 12px
+  float: left;
+  width: 375px;
+  height: 74px;
+  padding-left: 12px
 }
 
 a.blacklink:link {
-	color: #000000
+  color: #000000
 }
 
 a.blacklink:visited {
-	color: #000000
+  color: #000000
 }
 
 #summ_test a.blacklink:hover {
-	color: #000000;
-	text-decoration: underline
-}
-
-#summ_test, .file td, .mod-header td {
-	font-size: 90%;
+  color: #000000;
+  text-decoration: underline
 }
 
 #summ_test h2 {
-	font-weight: normal;
-	font-size: 140%;
+  font-weight: normal;
+  font-size: 140%;
 }
 
 #summ_test p {
-	font-size: 100%;
-	color: black;
-}
-
-table.mod-header {
-	border: 0;
-	padding: 6px 0 2px 0;
-	width: 100%;
-	color: #1E3287;
-	margin-bottom: 8px;
-}
-
-table.map-session td {
-	white-space: nowrap;
-}
-
-hr.head-line {
-	border: 0;
-	height: 1px;
-	color: #E5E5E5;
-	background-color: #E5E5E5;
-	width: 100%
+  font-size: 100%;
+  color: black;
 }
 
 .hr_line {
@@ -77,29 +53,29 @@ hr.head-line {
 }
 
 .subtext {
-	color: #808080;
-	line-height: 18px;
+  color: #808080;
+  line-height: 18px;
 }
 
 .warning-img {
-	vertical-align: text-top;
-	margin-top: -2px;
-	width: 12px;
-	height: 11px;
-	padding-right: 5px;
+  vertical-align: text-top;
+  margin-top: -2px;
+  width: 12px;
+  height: 11px;
+  padding-right: 5px;
 }
 
 .warning {
-	color: #C55A11;
+  color: #C55A11;
 }
 
 .labs {
-	color: #ff6300;
+  color: #ff6300;
 }
 
 .labs .current {
-	color: #fff;
-	background-color: #ff6300;
+  color: #fff;
+  background-color: #ff6300;
 }
 
 .finished {
@@ -110,4 +86,115 @@ hr.head-line {
   padding-right: 8px;
   padding-top: 2px;
   padding-bottom: 2px;
+}
+
+.header {
+  font-size: 100%;
+  display: table;
+  width: 100%;
+}
+
+.headerrow {
+  display: table-row;
+  background-color: #EEF4FF;
+  font-weight: normal;
+  text-align: left;
+  padding: 0;
+}
+
+.headercell {
+  display: table-cell;
+  padding-left: 16px;
+  padding-top: 5px
+}
+
+.menu {
+  text-align: right;
+  vertical-align: top;
+  padding-top: unset;
+}
+
+.exams {
+  display: table;
+}
+
+.examsrow {
+  display: table-row;
+}
+
+.examscell {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.icon {
+  width: 66px;
+  text-align: right;
+}
+
+.multiple {
+  margin: 16px;
+}
+
+.password {
+  color: #C88607;
+  font-weight: bold;
+  font-size: 80%
+}
+
+.details {
+  color: #808080;
+  font-size: 80%;
+}
+
+.multiple {
+  margin: 16px;
+}
+
+.nopapers {
+  font-size: 90%;
+  padding-top: 20px;
+}
+
+.nopapers .imgcontainer {
+  float: left;
+  padding-left: 16px;
+  padding-top: 16px;
+}
+
+.nopapers h1 {
+  margin-left:90px;
+  color:#C00000;
+  font-weight:bold;
+}
+
+.nopapers .staffmsg {
+  margin-left: 90px;
+  color: #C00000;
+}
+
+.nopapers .blurb {
+  margin-left: 90px;
+}
+
+.nopapers .list {
+  margin-left: 80px;
+}
+
+.warntext {
+  color: #C00000;
+}
+
+.largewarntext {
+  background-color: #C00000;
+  color: white
+}
+
+.nopapers .year {
+  padding-left: 1em;
+  font-weight: bold;
+}
+
+.nopapers .module {
+  padding-left: 3em;
 }

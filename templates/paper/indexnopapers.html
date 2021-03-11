@@ -1,0 +1,156 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the paper index screen content when no papers are available.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables -
+data.staff - is a staff member logged in
+data.issues - array of common list names and descriptions
+data.summativeissuelink - url to issue form
+data.futurepapers - number of papers available in the near future
+data.future - the paper detials
+
+Required localised language strings -
+lang.noexamsfound
+lang.note1
+lang.staffmangscreens
+lang.mostLikely
+lang.noyear
+lang.nomodules
+lang.try
+lang.f5
+lang.RaiseYourHand
+lang.notinalab
+lang.via
+lang.logissue
+lang.summativetesting
+lang.summativetestmsg
+#}
+
+<main class="nopapers">
+    <div class="imgcontainer">
+        <img src="{{path}}/artwork/exclamation_48.png" width="48" height="48" alt="" />
+    </div>
+    <h1>{{lang.noexamsfound}}</h1>
+    {% if data.staff %}
+    <p class="staffmsg">
+        {{lang.note1|raw}}
+        <img src="{{path}}/artwork/small_link.png" width="11" height="11" alt=""/>
+        <a href="../index.php">
+            <strong>{{lang.staffmangscreens}}</strong>
+        </a>?
+    </p>
+    {% endif %}
+    <div class="hr_line"></div>
+    <p class="blurb">
+        {{lang.mostLikely}}
+    </p>
+    <ul class="list">
+    {% for i,issue in data.issues %}
+        <li>
+        {% if i == 'year' and issue.desc == 0 %}
+            {{issue.name}} - <span class="warntext">{{lang.noyear}}</span>
+        {% elseif i == 'modules' and issue.desc == 0 %}
+            {{issue.name}} - <span class="largewarntext">{{lang.nomodules}}</span>
+        {% elseif i == 'modules' %}
+            {{issue.name}} -
+            {% for year,mods in issue.desc %}
+            <div class="year">{{year}}:</div><div class="module">{{mods}}</div>
+            {% endfor %}
+        {% elseif i == 'user' %}
+            {{issue.name}} -
+            {% for idx,value in issue.desc %}
+                {% if idx != 'Student' %}
+                    <span class="warntext">{{value}}</span>
+                {% else %}
+                    {{value}}
+                {% endif %}
+            {% endfor %}
+        {% else %}
+        {{issue.name}} - {{issue.desc}}
+        {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+    <p class="blurb">{{lang.try}}</p>
+    <ul class="list">
+        <li>{{lang.f5}}</li>
+        <li>{{lang.RaiseYourHand}}</li>
+    </ul>
+    <div class="hr_line"></div>
+    <p class="blurb">
+        {{lang.notinalab}}
+        {% if data.summativeissuelink != '' %}
+        {{lang.via}} <a href="{{data.summativeissuelink}}" target="_blank">{{lang.logissue}}</a>
+        {% endif %}
+    </p>
+    {% if data.staff and data.futurepapers > 0 %}
+    <div id="summ_test">
+        <h2 class="dkblue_header">{{lang.summativetesting}}</h2>
+        <p>{{lang.summativetestmsg|raw}}</p>
+        {% for mod,paper in data.future %}
+        <section aria-label="{{lang.modulepapers | format(mod)}}" class='exams'>
+            <div aria-hidden="true" class='examsrow'>
+                <div class='examscell hr_line'>
+                    <nobr>{{mod}}</nobr>
+                </div>
+            </div>
+            {% for name,details in paper %}
+            <div class="file">
+                <ul class="exams">
+                    <li class="examsrow">
+                        <div class="examscell icon">
+                            <a tabindex="-1" aria-hidden="true" class="blacklink" href="user_index.php?id={{name}}&mode=preview" rel="{{details.fullscreen}}">
+                                <img src="../artwork/summative.png" width="48" height="48" alt="" border="0"/>
+                            </a>
+                        </div>
+                        <div class="examscell">
+                            <a href="user_index.php?id={{name}}&mode=preview" class="blacklink" rel="{{details.fullscreen}}">
+                                {{details.title}}
+                            </a><br />
+                            <span class="subtext">
+                                {{details.screen}}<br />
+                                {{details.date}}, {{details.duration}}
+                            </span>,
+                            <span class="labs">
+                            {% for lab in details.labs %}
+                                {% if lab == details.currentlab %}
+                                <span class="current">{{lab}}</span>
+                                {% else %}
+                                {{lab}}
+                                {% endif %}
+                            {% endfor %}
+                            </span>
+                            {% for warning in details.warnings %}
+                            <div class="warning">
+                                <img class="warning-img" alt="" src="../artwork/small_yellow_warning_icon.gif" />
+                                {{warning}}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+                {% endfor %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</main>
