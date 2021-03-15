@@ -1,0 +1,82 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the paper feedback screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables -
+data.papertype - paper type of exam
+data.remote - flag to indicate if it is a remote exam
+data.fullscreen - falg to indicate if we are in fullscreen mode
+data.displayfeedback - flag to indicate if question feedback should be displayed
+data.issuelink - url to issue recorder
+data.thankyou - thankyou message
+data.postscript - the paper postscript
+
+Required localised language strings -
+lang.msg2remote
+lang.msg2
+lang.msg2short
+lang.logissue
+lang.thankyou
+lang.closewindow
+#}
+
+{% if data.displayfeedback %}
+{# we are currenly using the old render functions here (finish_functions.inc - display_feedback) #}
+    {{data.feedback|raw}}
+{% else %}
+    {% if data.papertype == '2' %}
+        {% if data.remote and data.issuelink != '' %}
+            <div class="logissue">
+                <img src="../artwork/logissue.png" alt=""/>
+                <a href="{{data.issuelink}}" target="_blank">{{lang.logissue}}</a>
+            </div>
+        {% endif %}
+    {% endif %}
+    <blockquote>
+        <div class="thankyou">{{lang.thankyou}}</div>
+        <p>{{data.thankyou|raw}}</p>
+        <br />
+        {% if data.postscript != '' %}
+        <section aria-label="{{lang.postscript}}">{{data.postscript|raw}}</section>
+        {% endif %}
+    </blockquote>
+    {% if data.papertype == '2' %}
+        <br />
+        <section aria-label="{{lang.closeexam}}" class="key" style="text-align:center">
+        {% if data.remote %}
+            <div class="logoutandclose">{{lang.msg2remote|raw}}</div>
+        {% elseif data.fullscreen %}
+            {{lang.msg2}}
+        {% else %}
+            {{lang.msg2short}}
+        {% endif %}
+        {% if data.remote == 0 %}
+            <br /><br />
+            <button name="close" id="close" class="ok">{{lang.closewindow}}</button>
+        {% endif %}
+        </section>
+    {% else %}
+        <br />
+        <section aria-label="{{lang.closeexam}}"  align="center">
+            <button name="close" id="close" class="ok">{{lang.closewindow}}</button>
+        </section>
+    {% endif %}
+{% endif %}

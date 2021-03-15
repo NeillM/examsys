@@ -38,8 +38,6 @@ require_once '../lang/' . $language . '/paper/finish.php';
 
 check_var('id', 'GET', true, false, false);
 
-ob_start();
-
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
 
@@ -105,31 +103,52 @@ if ($userObject->has_role('Student')) {
     $logger->record_access($userObject->get_user_ID(), 'Question-based feedback report', '/students/question_feedback.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
 }
 
-require '../config/finish.inc';
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <meta http-equiv="imagetoolbar" content="no">
-  <meta http-equiv="imagetoolbar" content="false">
-  <title><?php echo page::title('Rog&#333;: ' . $string['examscript']); ?></title>
+if (isset($low_bandwidth) and $low_bandwidth == 1) {
+    // Low bandwidth enable compression
+    ob_start('ob_gzhandler');
+}
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/start.css" />
-  <link rel="stylesheet" type="text/css" href="../css/finish.css" />
-  <link rel="stylesheet" type="text/css" href="../css/key.css" />
-  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
-  <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
-<?php
-  $css = '';
-if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
+$texteditorplugin = \plugins\plugins_texteditor::get_editor();
+$renderpath = $texteditorplugin->get_render_paths();
+$renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
+$render = new render($configObject, $renderpath);
+$headerdata = array(
+    'css' => array(
+        '/css/start.css',
+        '/css/finish.css',
+        '/css/key.css',
+        '/css/html5.css',
+        '/node_modules/mediaelement/build/mediaelementplayer.min.css',
+    ),
+    'scripts' => array(
+        '/js/questionfeedback.min.js',
+    ),
+);
+$lang['title'] = $string['examscript'];
+$headerdata['mathjax'] = false;
+if ($configObject->get_setting('core', 'paper_mathjax')) {
+    $headerdata['mathjax'] = true;
+}
+// Check if 3d file types are enabled and load js.
+$headerdata['three'] = false;
+if ($configObject->get_setting('core', 'paper_threejs')) {
+    $headerdata['three'] = true;
+    $headerdata['scripts'] = array_merge($headerdata['scripts'], threed_handler::get_js());
+    $headerdata['css'] = array_merge($headerdata['css'], threed_handler::get_css());
+}
+$headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
+$headerdata['texteditor'] = $texteditorplugin->get_header_file();
+$editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+$headerdata['editor'] = $editor[0];
+
+$css = '';
+if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
     $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
+    $css .= ".key{background-color:$bgcolor}\n";
 }
 if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
     $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
-    $css .= ".staffview {\nbackground: -moz-linear-gradient(top, #FF8282, $bgcolor);\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);\nbackground-image: -ms-linear-gradient(top, #FF8282 0%, $bgcolor 100%);\nfilter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='$bgcolor');\n}\n";
+    $css .= ".staffview {\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);}\n";
 }
 if ($font != 'Arial') {
     if (mb_strpos($font, ' ') === false) {
@@ -148,25 +167,21 @@ if ($labelcolor != '#316AC5') {
     $css .= ".fback {color:$labelcolor}\n";
     $css .= ".label {color:$labelcolor}\n";
 }
+
 if ($css != '') {
-    echo "<style type=\"text/css\">\n$css\n</style>\n";
+    $css = '<style type="text/css">' . $css . '</style>';
 }
-?>
-  <script id="rogoconfig"
-            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
-            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
-  </script>
-  <script src='../js/require.js'></script>
-  <script src='../js/main.min.js'></script>
-  <script src="../js/questionfeedbackinit.min.js"></script>
-  <?php
-    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-    $texteditorplugin->display_header();
-    ?>
-</head>
-<body>
-<?php
-  $current_screen = 1;
+$render->render($headerdata, $lang, 'header.html', '', $css);
+
+$themedirectory = rogo_directory::get_directory('theme');
+$logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
+$contentdata['logopath'] = $logo_path;
+$contentdata['examclarification'] = '';
+$contentdata['papertitle'] = $propertyObj->get_paper_title();
+$contentdata['screen'] = array();
+$contentdata['hidden'] = array();
+$render->render($contentdata, $string, 'paper/header.html');
+$current_screen = 1;
 
 if (isset($_GET['userID'])) {
     if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
@@ -185,41 +200,33 @@ if (isset($_GET['userID'])) {
     $userID = $userObject->get_user_ID();
 }
 
-  $old_q_id = 0;
-  $old_screen = 0;
-
-  echo $top_table_html;
-  echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div></td>';
-  echo $logo_html;
-  echo '</table>';
-
-  // Get any marking override for the paper
-  $overrides = array();
-  $sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
-          FROM marking_override m INNER JOIN users u ON m.marker_id = u.id
-          INNER JOIN log{$log_type} l ON m.log_id = l.id
-          WHERE user_id = ? AND paper_id = ?";
-  $result = $mysqli->prepare($sql);
-  $result->bind_param('ii', $userID, $paperID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($o_q_id, $o_title, $o_surname, $o_date_marked, $o_new_mark_type, $o_adjmark);
+$old_q_id = 0;
+$old_screen = 0;
+// Get any marking override for the paper
+$overrides = array();
+$sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
+      FROM marking_override m INNER JOIN users u ON m.marker_id = u.id
+      INNER JOIN log{$log_type} l ON m.log_id = l.id
+      WHERE user_id = ? AND paper_id = ?";
+$result = $mysqli->prepare($sql);
+$result->bind_param('ii', $userID, $paperID);
+$result->execute();
+$result->store_result();
+$result->bind_result($o_q_id, $o_title, $o_surname, $o_date_marked, $o_new_mark_type, $o_adjmark);
 while ($result->fetch()) {
     $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
 }
-  $result->close();
+$result->close();
 
-  $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-  display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
+$status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
+display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 
-  // Dataset.
-  $miscdataset['name'] = 'dataset';
-  $miscdataset['attributes']['language'] = $language;
-  $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-  $render = new render($configObject);
-  $render->render($miscdataset, array(), 'dataset.html');
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-  echo "</body>\n</html>";
-  $mysqli->close();
-  ob_end_flush();
-?>
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['language'] = $language;
+$miscdataset['attributes']['rootpath'] = $cfg_root_path;
+$render = new render($configObject);
+$render->render($miscdataset, array(), 'dataset.html');
+$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$mysqli->close();
+$render->render(array(), array(), 'footer.html');

@@ -18,3 +18,13 @@ hr {
 p {
   margin-left: 70px;
 }
+
+.icon {
+  float: left;
+  padding-left: 10px;
+  width: 60px;
+}
+
+.msgline {
+  width: 300px;
+}

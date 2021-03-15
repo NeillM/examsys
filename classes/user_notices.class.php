@@ -70,31 +70,36 @@ class user_notices extends RogoStaticSingleton
         $configObject = Config::get_instance();
         $root = str_replace('/classes', '/', str_replace('\\', '/', dirname(__FILE__)));
 
-        if (file_exists($root . 'config/config.inc.php')) {
-            $rp = $configObject->get('cfg_root_path');
-            $cs = $configObject->get('cfg_page_charset');
-        } else {          // If we have not installed there is no config.inc.php file.
+        if (!file_exists($root . 'config/config.inc.php')) {
+            // If we have not installed there is no config.inc.php file.
             $rp = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
-            $cs = 'utf-8';
+            $headerdata = array(
+                'css' => array(
+                    '/css/notice.css',
+                ),
+                'path' => $rp,
+                'charset' => 'utf-8',
+                'language' => 'en',
+            );
+            $noticedata['path'] = $rp;
+        } else {
+            $headerdata = array(
+                'css' => array(
+                    '/css/notice.css',
+                ),
+            );
         }
-
+        $render = new render($configObject);
         if ($output_header == true) {
-            echo "<html>\n";
-            echo "<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n";
-            echo "<meta http-equiv=\"content-type\" content=\"text/html;charset={$cs}\" />\n";
-            echo "<title>$title</title>\n";
-            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/body.css\" />\n";
-            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$rp}/css/notice.css\" />\n";
-            echo "</head>\n<body>\n";
+            $lang['title'] = $title;
+            $render->render($headerdata, $lang, 'header.html');
+            $noticedata['titlecolour'] = $title_color;
+            $noticedata['msg'] = $msg;
+            $noticedata['icon'] = $icon;
+            $render->render($noticedata, $lang, 'notice.html');
         }
-        echo '<div class="notice">';
-        echo "<div style=\"float:left; padding-left:10px;width:60px\"><img src=\"$rp" . $icon . "\" width=\"48\" height=\"48\" /></div>\n";
-        echo "<div><h1 style=\"color:$title_color\">$title</h1>\n";
-        echo "<hr style=\"width:300px\"/>\n<p>$msg</p></div>";
-        echo '</div>';
-
         if ($output_footer == true) {
-            echo "\n</body>\n</html>";
+            $render->render(array(), array(), 'footer.html');
         }
     }
 

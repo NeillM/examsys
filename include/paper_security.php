@@ -88,10 +88,7 @@ function check_paper_password($paperID, $password, $string, $db, $show_form = fa
                 if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $decrypt_password) {
                     $_SESSION['paperpwd'] = $password;
                 } else {
-                    $notice = UserNotices::get_instance();
-                    $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/fingerprint_48.png', '#C00000', true, true);
-                    echo render_password_form($string);
-                    $notice->exit_php();
+                   renderPasswordForm($string);
                 }
             } else {
                 $notice = UserNotices::get_instance();
@@ -125,7 +122,7 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
         $configObject = Config::get_instance();
         $format = $configObject->get('cfg_short_datetime_php');
         $msg = sprintf($string['error_time'], date($format, $start_date), date($format, $end_date));
-        $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
+        $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" id="close" class="cancel ok" />';
         $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/summative_scheduling.png', '#C00000', true, true);
     }
 }
@@ -159,7 +156,7 @@ function check_finished($propertyObj, $userObj, $string, $db)
         $configObject = Config::get_instance();
         $format = $configObject->get('cfg_short_datetime_php');
         $msg = sprintf($string['alreadycompleted'], date($format, $completed));
-        $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
+        $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" id="close" class="cancel ok" />';
         $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/square_exclamation_48.png', '#C00000', true, true);
     }
 }
@@ -324,21 +321,28 @@ function check_ipmismatch($paperid, $current_address, $string, $userObj, $db, $p
     }
 }
 
-function render_password_form($string)
+/**
+ * Render the paper password screen.
+ * @param array $string langauge array
+ */
+function renderPasswordForm(array $string): void
 {
-    $url = $_SERVER['PHP_SELF'];
+    $notice = UserNotices::get_instance();
+    $notice->display_notice(
+        $string['passwordrequired'],
+        $string['enterpw'],
+        '/artwork/fingerprint_48.png',
+        '#C00000',
+        true,
+        true
+    );
+    $configObject = Config::get_instance();
+    $render = new render($configObject);
+    $data['url'] = $_SERVER['PHP_SELF'];
     if ($_SERVER['QUERY_STRING'] != '') {
-        $url .= '?' . $_SERVER['QUERY_STRING'];
+        $data['url'] .= '?' . $_SERVER['QUERY_STRING'];
     }
-
-    $html = "<form action=\"$url\" method=\"post\" autocomplete=\"off\">";
-    $html .= '<p style="margin-left:70px">';
-    $html .= '      <input type="password" name="paperpwd" id="paperpwd" /><br />';
-    $html .= "      <input type=\"submit\" value=\"{$string['ok']}\" class=\"ok\" style=\"width:100px\" />";
-    $html .= '    </p>';
-    $html .= '  </form>';
-    $html .= '</body>';
-    $html .= '</html>';
-
-    return $html;
+    $render->render($data, $string, 'paper/password.html');
+    $render->render(array(), array(), 'footer.html');
+    $notice->exit_php();
 }

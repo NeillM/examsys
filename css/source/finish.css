@@ -134,3 +134,10 @@ input.exclude, select.exclude {
   top: 0;
   left: 0;
 }
+
+.student {
+  margin-left: 5px;
+  font-size: 90%;
+  color: white;
+  font-weight: bold;
+}

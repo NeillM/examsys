@@ -27,63 +27,78 @@ data.papertitle - paper title
 data.screen - screen display info
 data.logopath - path to site logo
 data.print - flag to indicate if the question is being printed
+data.student - the student for the student this is feedback for
+
+Required localised language strings -
+lang.student
+lang.answersscreen
 #}
 <div id="maincontent">
     <div class="questions">
 {% if data.print == 0 %}
+    {% if data.screen|length > 0 %}
         <form method="post" id="qForm" name="questions" action="{{data.action}}" autocomplete="off">
+    {% endif %}
     {% for number,id in data.hidden %}
-            <input type="hidden" name="q{{number}}_randomID" value="{{id}}" />
+        <input type="hidden" name="q{{number}}_randomID" value="{{id}}" />
     {% endfor %}
-            <div>
+    <div>
     {# Not all information shown on question preview #}
     {% if data.previewmode %}
-                <div>
+        <div>
     {% else %}
-                    <div>
-                        <header class="headerbar">
-
-                            <div>
-                                <h1 class="paper">{{data.papertitle}}</h1>
-                                {% for s in data.screen %}
-                                    {% if s.screentype == 'scr_cur' %}
-                                    {% set current = s.pageno %}
+        <div>
+            <header class="headerbar">
+                <div>
+                    <h1 class="paper">{{data.papertitle}}</h1>
+                    {% if data.student|length > 0 %}
+                        {% if data.student['name'] != '' %}
+                            <span class="student">{{lang.answersscreen}} {{data.student['name']}} ({{data.student['id']}})</span>
+                        {% elseif data.student['id'] != null %}
+                            <span class="student">{{lang.student}} {{data.student['id']}}</span>
+                        {% endif %}
+                    {% endif %}
+                    {% if data.screen|length > 0 %}
+                        {% for s in data.screen %}
+                            {% if s.screentype == 'scr_cur' %}
+                                {% set current = s.pageno %}
                                 <div aria-label="{{lang.examprogress}}" role="progressbar" aria-valuenow="{{current}}" aria-valuetext="{{lang.youronscreen}} {{current}} {{lang.screenof | format(data.screen|length)}}" aria-valuemin="1" aria-valuemax="{{data.screen|length - 1}}">
-                                    {% endif %}
-                                {% endfor %}
-                                {% for s in data.screen %}
-                                    <div aria-hidden="true" class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
-                                        {{s.pageno}}
-                                    </div>
-                                {% endfor %}
-                                </div>
-                                <div style="clear:both"></div>
-                                {% for s in data.screen %}
-                                <div class="{{s.screentype2}}"></div>
-                                {% endfor %}
-                                </div>
-
-                            <div>
-                                <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                            {% endif %}
+                        {% endfor %}
+                        {% for s in data.screen %}
+                            <div aria-hidden="true" class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
+                                {{s.pageno}}
                             </div>
-                        </header>
+                        {% endfor %}
+                    </div>
+                    <div style="clear:both"></div>
+                        {% for s in data.screen %}
+                            <div class="{{s.screentype2}}"></div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div>
+                    <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                </div>
+            </header>
     {% endif %}
     {% if data.examclarification != '' %}
-                        <aside aria-label="{{lang.questionclarification}}">
-                            {{data.examclarification|raw}}
-                        </aside>
+        <aside aria-label="{{lang.questionclarification}}">
+            {{data.examclarification|raw}}
+        </aside>
     {% endif %}
 {% else %}
+    <div>
         <div>
-            <div>
-                <header class="headerbar">
-                    <div>
-                        <h1 class="paper">{{data.papertitle}}</h1>
-                        <div style="clear:both"></div>
-                    </div>
-                    <div>
-                        <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
-                    </div>
-                </header>
+            <header class="headerbar">
+                <div>
+                    <h1 class="paper">{{data.papertitle}}</h1>
+                    <div style="clear:both"></div>
+                </div>
+                <div>
+                    <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                </div>
+            </header>
 {% endif %}
-                <main class="questionarea">
+<main class="questionarea">

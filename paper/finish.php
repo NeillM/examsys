@@ -207,42 +207,52 @@ if ($userObject->has_role('Student') and !$userObject->has_role('Staff')) {
     }
 }
 
-require '../config/finish.inc';
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<meta http-equiv="imagetoolbar" content="no">
-<meta http-equiv="imagetoolbar" content="false">
-<title><?php echo page::title('Rog&#333;: ' . $string['examscript']); ?></title>
+if (isset($low_bandwidth) and $low_bandwidth == 1) {
+    // Low bandwidth enable compression
+    ob_start('ob_gzhandler');
+}
 
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/start.css" />
-<link rel="stylesheet" type="text/css" href="../css/finish.css" />
-<link rel="stylesheet" type="text/css" href="../css/key.css" />
-<link rel="stylesheet" type="text/css" href="../css/html5.css" />
-<link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
-<script id="rogoconfig"
-        data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
-        data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
-        data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
-</script>
-<script src='../js/require.js'></script>
-<script src='../js/main.min.js'></script>
-<script src='../js/finishinit.min.js'></script>
-<?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-  $css = '';
+$texteditorplugin = \plugins\plugins_texteditor::get_editor();
+$renderpath = $texteditorplugin->get_render_paths();
+$renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
+$render = new render($configObject, $renderpath);
+$headerdata = array(
+    'css' => array(
+        '/css/start.css',
+        '/css/finish.css',
+        '/css/key.css',
+        '/css/html5.css',
+        '/node_modules/mediaelement/build/mediaelementplayer.min.css',
+    ),
+    'scripts' => array(
+        '/js/finishinit.min.js',
+    ),
+);
+$lang['title'] = $string['examscript'];
+$headerdata['mathjax'] = false;
+if ($configObject->get_setting('core', 'paper_mathjax')) {
+    $headerdata['mathjax'] = true;
+}
+// Check if 3d file types are enabled and load js.
+$headerdata['three'] = false;
+if ($configObject->get_setting('core', 'paper_threejs')) {
+    $headerdata['three'] = true;
+    $headerdata['scripts'] = array_merge($headerdata['scripts'], threed_handler::get_js());
+    $headerdata['css'] = array_merge($headerdata['css'], threed_handler::get_css());
+}
+$headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
+$headerdata['texteditor'] = $texteditorplugin->get_header_file();
+$editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+$headerdata['editor'] = $editor[0];
+
+$css = '';
 if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
     $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
     $css .= ".key{background-color:$bgcolor}\n";
 }
 if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
     $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
-    $css .= ".staffview {\nbackground: -moz-linear-gradient(top, #FF8282, $bgcolor);\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);\nbackground-image: -ms-linear-gradient(top, #FF8282 0%, $bgcolor 100%);\nfilter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='$bgcolor');\n}\n";
+    $css .= ".staffview {\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);}\n";
 }
 if ($font != 'Arial') {
     if (mb_strpos($font, ' ') === false) {
@@ -261,23 +271,21 @@ if ($labelcolor != '#316AC5') {
     $css .= ".fback {color:$labelcolor}\n";
     $css .= ".label {color:$labelcolor}\n";
 }
+
 if ($css != '') {
-    echo "<style type=\"text/css\">\n$css</style>\n";
+    $css = '<style type="text/css">' . $css . '</style>';
 }
+$render->render($headerdata, $lang, 'header.html', '', $css);
 
-  // Check if any 3d file types are enabled and render js.
-  threed_handler::render_js($string);
-?>
-</head>
-<body>
-<?php
-  $preview_q_id = (!is_null($q_id)) ? $q_id : null;
+$themedirectory = rogo_directory::get_directory('theme');
+$logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
+$contentdata['logopath'] = $logo_path;
+$contentdata['examclarification'] = '';
+$contentdata['papertitle'] = $paper_title;
+$contentdata['screen'] = array();
+$contentdata['hidden'] = array();
+$contentdata['previewmode'] = $is_question_preview_mode;
 
-  $current_screen = param::optional('current_screen', 1, param::INT, param::FETCH_POST);
-if ($current_screen > 1 and !$do_not_record) {
-    // Record answers from the previous screen.
-    record_marks($paperID, $mysqli, $paper_type, $metadataid, $preview_q_id);
-}
 
 if (isset($getuser)) {
     $temp_userID = $getuser;
@@ -295,29 +303,37 @@ if (isset($getuser)) {
     $tmp_surname    = $userObject->get_surname();
     $tmp_student_id = '';
 }
-  $old_q_id = 0;
-  $old_screen = 0;
 
 if (is_null($q_id)) {
-    echo $top_table_html;
-    echo '<tr><td><div class="paper">' . $paper_title . '</div>';
     if ($userObject->has_role('External Examiner')) {
-        echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['student'] . ' ' . $tmp_student_id . '</span>';
+        $contentdata['student']['id'] = $tmp_student_id;
     } elseif ($paper_type < 2 or $userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
-        echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
-        $tmp_student_name = $tmp_title . ' ' . \demo::demo_replace($tmp_surname, $demo) . ', ' . \demo::demo_replace($tmp_initials, $demo);
-        $tmp_student_id = \demo::demo_replace_number($tmp_student_id, $demo);
-        echo ' ' . $tmp_student_name;
-        if ($tmp_student_id != '') {
-            echo " ($tmp_student_id)";
-        }
-        echo '</span>';
+        $contentdata['student']['id'] = \demo::demo_replace_number($tmp_student_id, $demo);
+        $contentdata['student']['name'] = $tmp_title . ' ' . \demo::demo_replace(
+            $tmp_surname,
+            $demo
+        ) . ', ' . \demo::demo_replace($tmp_initials, $demo);
     }
-    echo '</td>';
-    echo $logo_html;
-    echo '</table>';
+}
+$render->render($contentdata, $string, 'paper/header.html');
+
+$properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$papertype = $properties->get_paper_type();
+$feedbackdata['remote'] = $properties->getSetting('remote_summative');
+$feedbackdata['papertype'] = $papertype;
+$feedbackdata['fullscreen'] = $properties->get_fullscreen();
+$feedbackdata['displayfeedback'] = $show_feedback;
+
+$preview_q_id = (!is_null($q_id)) ? $q_id : null;
+
+$current_screen = param::optional('current_screen', 1, param::INT, param::FETCH_POST);
+if ($current_screen > 1 and !$do_not_record) {
+    // Record answers from the previous screen.
+    record_marks($paperID, $mysqli, $paper_type, $metadataid, $preview_q_id);
 }
 
+$old_q_id = 0;
+$old_screen = 0;
 // Get any marking override for the paper
 $paper_utils = Paper_utils::get_instance();
 $overrides = $paper_utils->get_marking_overrides($log_type, $temp_userID, $paperID);
@@ -325,7 +341,7 @@ $overrides = $paper_utils->get_marking_overrides($log_type, $temp_userID, $paper
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 $remote = $propertyObj->getSetting('remote_summative');
 if ($show_feedback) {
-    display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
+    $feedbackdata['feedback'] = display_feedback($propertyObj, $temp_userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 
     // Record the fact that the script has been viewed.
     $logger = new Logger($mysqli);
@@ -336,42 +352,27 @@ if ($show_feedback) {
     }
 } else {
     if ($paper_type == '2' and $remote) {
-        $link = $configObject->get_setting('core', 'summative_issuelink2');
-        if (!empty($link)) {
-            echo '<div class="logissue"><img src="../artwork/logissue.png"/>'
-                . '<a href="' . $link . '" target="_blank">' . $string['logissue'] . '</a></div>';
-        }
+        $feedbackdata['issuelink'] = $configObject->get_setting('core', 'summative_issuelink2');
     }
-    echo '<blockquote>';
-    echo '<div class="thankyou">' . $string['thankyou'] . '</div>';
-    echo '<p>' . sprintf($string['msg1'], $paper_title) . '</p><br />';
-    if ($paper_postscript != '') {
-        echo "<p>$paper_postscript</p>\n";
-    }
-    echo '</blockquote>';
-    if ($paper_type == '2') {
-        echo '<br /><div class="key" style="text-align:center">' . $leaving_rules;
-        if (!$remote) {
-            echo '<br /><br /><input type="button" name="close" id="close" value="' . $string['closewindow'] . '" class="ok" />';
-        }
-        echo '</div>';
-    } else {
-        echo '<br /><div align="center"><input type="button" name="close" id="close" value="' . $string['closewindow'] . '" class="ok" /></div>';
-    }
+    $feedbackdata['papertitle'] = sprintf($string['msg1'], $paper_title);
+    $feedbackdata['postscript'] = $paper_postscript;
 }
-  // JS utils dataset.
-  $jsdataset['name'] = 'jsutils';
-  $jsdataset['attributes']['xls'] = json_encode($string);
-  $render = new render($configObject);
-  $render->render($jsdataset, array(), 'dataset.html');
-  // Dataset.
-  $miscdataset['name'] = 'dataset';
-  $miscdataset['attributes']['language'] = $language;
-  $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-  $miscdataset['attributes']['papertype'] = $paper_type;
-  $miscdataset['attributes']['remotesummative'] = $remote;
-  $render->render($miscdataset, array(), 'dataset.html');
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-  echo "</body>\n</html>";
-  $mysqli->close();
-?>
+
+$render->render($feedbackdata, $string, 'paper/feedback.html');
+
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['language'] = $language;
+$miscdataset['attributes']['rootpath'] = $cfg_root_path;
+$miscdataset['attributes']['papertype'] = $paper_type;
+$miscdataset['attributes']['remotesummative'] = $remote;
+$render->render($miscdataset, array(), 'dataset.html');
+
+$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render(array(), array(), 'footer.html');
+$mysqli->close();

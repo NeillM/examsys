@@ -66,19 +66,40 @@ class render
      * @param string $template The template filename
      * @param string $additionaljs additional javascript required
      * @param string $additionalcss additional css required
+     * @param string $path rogo root path
+     * @param string $charset rogo display charset
+     * @param string $language rogo display language
      */
-    public function render($data, $lang, $template, $additionaljs = '', $additionalcss = '')
-    {
+    public function render(
+        $data,
+        $lang,
+        $template,
+        $additionaljs = '',
+        $additionalcss = '',
+        $path = null,
+        $charset = null,
+        $language = null
+    ) {
         if (isset($lang['title'])) {
             $lang['title'] = page::title($lang['title']);
+        }
+        if (is_null($path)) {
+            $path = $this->config->get('cfg_root_path');
+        }
+        if (is_null($charset)) {
+            $charset = $this->config->get('cfg_page_charset');
+        }
+        if (is_null($language)) {
+            $language = LangUtils::getLang($this->config->get('cfg_web_root'));
         }
         $data = array(
             'data' => $data,
             'lang' => $lang,
-            'path' => $this->config->get('cfg_root_path'),
-            'charset' => $this->config->get('cfg_page_charset'),
-            'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss,
-            'language' => LangUtils::getLang($this->config->get('cfg_web_root')),
+            'path' => $path,
+            'charset' => $charset,
+            'additionaljs' => $additionaljs,
+            'additionalcss' => $additionalcss,
+            'language' => $language,
         );
         echo $this->twig->render($template, $data);
     }
