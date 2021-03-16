@@ -25,43 +25,41 @@
 
 $configObject = Config::get_instance();
 $cfg_root_path = $configObject->get('cfg_root_path');
+
+$render = new render($configObject);
+$headerdata = array(
+    'css' => array(
+        '/css/rogo_logo.css',
+        '/css/login_form.css',
+    ),
+    'scripts' => array(
+        '/js/logininit.min.js',
+    ),
+);
+
+$js = '';
+if (isset($displaystdformobj->scripts)) {
+    foreach ($displaystdformobj->scripts as $script) {
+        $js = '<script src="' . $cfg_root_path . '/plugins/auth/js/' . $script . '"/></script>';
+    }
+}
+
+$css = '';
+if (isset($_SESSION['_lti_context'])) {
+    // Make the LTI screen blend in more.
+    $css = "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n";
+}
+
+$lang['title'] = 'Rogō - ' . $string['signin'];
+$render->render($headerdata, $lang, 'header.html', $js, $css);
 ?>
-<!DOCTYPE html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $this->configObj->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333; - <?php echo $string['signin'] ?></title>
-
-  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/body.css" />
-  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/rogo_logo.css" />
-  <link rel="stylesheet" type="text/css" href="<?php echo $cfg_root_path ?>/css/login_form.css" />
-  <?php
-    if (isset($_SESSION['_lti_context'])) {
-        echo "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n"; // Make the LTI screen blend in more.
-    }
-    ?>
-    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
-    <script src='<?php echo $cfg_root_path ?>/js/require.js'></script>
-    <script src='<?php echo $cfg_root_path ?>/js/main.min.js'></script>
-    <script src="<?php echo $cfg_root_path ?>/js/logininit.min.js"></script>
-  <?php
-    if (isset($displaystdformobj->scripts)) {
-        foreach ($displaystdformobj->scripts as $script) {
-            echo '<script src="' . $cfg_root_path . '/plugins/auth/js/' . $script . '"/></script>';
-        }
-    }
-    ?>
-</head>
-
-<body>
 <div class="html5warn"><?php echo $string['html5warn'] ?></div>
 <form method="post" id="theform" autocomplete="off">
-    <div class="mainbox">
+    <main class="mainbox">
 
         <img src="<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
 
-        <div class="logo_lrg_txt">Rog&#333;</div>
+        <h1 class="logo_lrg_txt">Rogō</h1>
         <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
 
         <br/>
@@ -91,14 +89,14 @@ HTML;
         <div style="margin-left:65px">
           <table>
               <tr>
-                  <td><?php echo $string['username']; ?></td>
+                  <td><label for="username"><?php echo $string['username']; ?></label></td>
                   <td><input type="text" name="ROGO_USER" id="username" maxlength="60" value="<?php if (isset($_GET['guest_username'])) {
                         echo $_GET['guest_username'];
                                                                                               } ?>" class="field" autocomplete="off" <?php echo $required; ?> /></td>
               </tr>
               <tr>
-                  <td><?php echo $string['password']; ?></td>
-                  <td><input type="password" name="ROGO_PW" maxlength="60" value="<?php if (isset($_GET['guest_password'])) {
+                  <td><label for="ROGO_PW"><?php echo $string['password']; ?></label></td>
+                  <td><input type="password" name="ROGO_PW" id="ROGO_PW" maxlength="60" value="<?php if (isset($_GET['guest_password'])) {
                         echo $_GET['guest_password'];
                                                                                   } ?>" class="field" autocomplete="off" <?php echo $required; ?> /></td>
               </tr>
@@ -168,9 +166,9 @@ HTML;
         }
         ?>
 
-        <div class="versionno">Rog&#333; <?php echo $this->configObj->get_setting('core', 'rogo_version') ?></div>
+        <div class="versionno">Rogō <?php echo $this->configObj->get_setting('core', 'rogo_version') ?></div>
 
-    </div>
+    </main>
 </form>
 
 <?php
