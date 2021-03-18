@@ -121,9 +121,9 @@ $string['enteranswer'] = 'Enter answer';
 $string['selectanswer'] = 'Select an answer';
 // Footer.
 $string['jumpscreen'] = 'Jump to screen';
+$string['changescreen'] = 'Change screen';
 // Header.
-$string['youronscreen'] = 'You are on screen';
-$string['screenof'] = 'of %s';
+$string['youronscreen'] = 'You are on screen %s of %s';
 $string['examprogress'] = 'Exam progress';
 // Prologue.
 $string['prologue'] = 'Paper prologue';

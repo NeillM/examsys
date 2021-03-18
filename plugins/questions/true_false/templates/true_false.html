@@ -35,7 +35,7 @@ lang.false - false
 {% if data.print %}
 {% include 'true_false_horizontal.html' %}
 {% else %}
-<blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
+<div style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
     <div>
         <select aria-label="{{lang.selectoption}}" name="q{{data.questionno}}">
             <option value=""></option>
@@ -43,5 +43,5 @@ lang.false - false
             <option value="f" {% if data.falseselected%} selected {% endif %}>{{lang.false}}</option>
         </select>
     <div>
-</blockquote>
+</div>
 {% endif %}

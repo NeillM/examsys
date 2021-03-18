@@ -494,13 +494,13 @@ trait Paper
                     break;
                 case 'mrq':
                     foreach (json_decode($answer) as $ans) {
-                        $select = $this->find('xpath', '//div[contains(@class, "optiontext") and contains(normalize-space(.), "' . $ans . '")]/preceding::div[1]/input[contains(@name, "q' . $position . '")]');
+                        $select = $this->find('xpath', '//label[contains(@class, "optiontext") and contains(normalize-space(.), "' . $ans . '")]');
                         $select->click();
                     }
                     break;
                 case 'sct':
                 case 'mcq':
-                    $select = $this->find('xpath', '//div[contains(@class, "optiontext") and contains(normalize-space(.), "' . $answer . '")]/preceding::div[1]/input[contains(@name, "q' . $position . '")]');
+                    $select = $this->find('xpath', '//label[contains(@class, "optiontext") and contains(normalize-space(.), "' . $answer . '")]');
                     $select->click();
                     break;
                 case 'matrix':

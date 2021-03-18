@@ -83,17 +83,15 @@ lang.newinformation - new information
                 {{data.scttitlelower}}
             </strong>
         </p>
-        <blockquote {% if data.unanswered %} class="unans" {% endif %}>
+        <div {% if data.unanswered %} class="unans" {% endif %}>
             <ul>
                 {% for i,p in data.options %}
                 <li class="question-cell">
-                    <div>
-                        <input aria-labelledby="{{data.questionno}}_{{i}}" type="radio" id="{{p.optionno}}" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %} />
-                    </div>
                     {% if p.optiontextdisplay %}
-                    <div class="optiontext">
-                        <span aria-hidden="true" {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{i}}">{{p.optiontext}}</span>
-                    </div>
+                    <label class="optiontext">
+                        <input type="radio" id="{{p.optionno}}" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %} />
+                        <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{i}}">{{p.optiontext}}</span>
+                    </label>
                     {% endif %}
                 </li>
                 {% endfor %}
@@ -101,7 +99,7 @@ lang.newinformation - new information
             <div>
                 <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
             </div>
-        </blockquote>
+        </div>
     </div>
     <div class="sctspacer">&nbsp;</div>
     <div class="sctinfo">

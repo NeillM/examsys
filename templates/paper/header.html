@@ -32,6 +32,7 @@ data.student - the student for the student this is feedback for
 Required localised language strings -
 lang.student
 lang.answersscreen
+lang.examprogress
 #}
 <div id="maincontent">
     <div class="questions">
@@ -58,30 +59,33 @@ lang.answersscreen
                             <span class="student">{{lang.student}} {{data.student['id']}}</span>
                         {% endif %}
                     {% endif %}
-                    {% if data.screen|length > 0 %}
-                        {% for s in data.screen %}
-                            {% if s.screentype == 'scr_cur' %}
-                                {% set current = s.pageno %}
-                                <div aria-label="{{lang.examprogress}}" role="progressbar" aria-valuenow="{{current}}" aria-valuetext="{{lang.youronscreen}} {{current}} {{lang.screenof | format(data.screen|length)}}" aria-valuemin="1" aria-valuemax="{{data.screen|length - 1}}">
-                            {% endif %}
-                        {% endfor %}
-                        {% for s in data.screen %}
-                            <div aria-hidden="true" class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
-                                {{s.pageno}}
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <div style="clear:both"></div>
-                        {% for s in data.screen %}
-                            <div class="{{s.screentype2}}"></div>
-                        {% endfor %}
-                    {% endif %}
                 </div>
 
                 <div>
-                    <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                    <img src="{{data.logopath}}" width="160" height="67" alt="" />
                 </div>
             </header>
+            {% if data.screen|length > 0 %}
+                {% for s in data.screen %}
+                    {% if s.screentype == 'scr_cur' %}
+                        {% set current = s.pageno %}
+                        <nav aria-label="{{lang.examprogress}}" class="scr_blurb">
+                            {{lang.youronscreen | format(current, data.screen|length)}}
+                            <div>
+                    {% endif %}
+                {% endfor %}
+                {% for s in data.screen %}
+                    <div aria-hidden="true" class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
+                        {{s.pageno}}
+                    </div>
+                {% endfor %}
+                </div>
+                <div style="clear:both"></div>
+                {% for s in data.screen %}
+                    <div class="{{s.screentype2}}"></div>
+                {% endfor %}
+                </nav>
+            {% endif %}
     {% endif %}
     {% if data.examclarification != '' %}
         <aside aria-label="{{lang.questionclarification}}">

@@ -35,33 +35,27 @@ lang.true - true
 lang.false - false
 lang.abstain - abstain
 #}
-<blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
+<div style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
     <ul class="vertical">
         <li class="question-container">
-            <div>
-                <input aria-labelledby="q{{data.questionno}}true" type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />
-            </div>
-            <div id="q{{data.questionno}}true" aria-hidden="true" class="optiontext">
+            <label id="q{{data.questionno}}true" class="optiontext">
+                <input type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />
                 <span>{{lang.true}}</span>
-            </div>
+            </label>
         </li>
         <li class="question-container">
-            <div>
-                <input aria-labelledby="q{{data.questionno}}false" type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />
-            </div>
-            <div id="q{{data.questionno}}false" aria-hidden="true" class="optiontext">
+            <label id="q{{data.questionno}}false" class="optiontext">
+                <input type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />
                 <span>{{lang.false}}</span>
-            </div>
+            </label>
         </li>
         {% if data.negativemarking %}
         <li class="question-container">
-            <div>
-                <input aria-labelledby="abstain{{data.questionno}}" type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />
-            </div>
-            <div aria-hidden="true" id="abstain{{data.questionno}}" class="optiontext">
+            <label id="abstain{{data.questionno}}" class="optiontext">
+                <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />
                 <span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
-            </div>
+            </label>
         </li>
         {% endif %}
     </ul>
-</blockquote>
+</div>

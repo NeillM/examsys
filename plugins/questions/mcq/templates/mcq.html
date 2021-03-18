@@ -49,7 +49,7 @@ data.print - flag to indicate if the question is being printed
     </div>
 </div>
 {% endif %}
-<blockquote {% if data.unanswered %} class="unans" {% endif %}>
+<div {% if data.unanswered %} class="unans" {% endif %}>
     <div class="question-container">
         <select aria-label="{{lang.selectanswer}}" {%if data.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}" size="1">
             <option value=""></option>
@@ -61,4 +61,4 @@ data.print - flag to indicate if the question is being printed
     <div>
         <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
     </div>
-</blockquote>
+</div>

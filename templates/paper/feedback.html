@@ -50,14 +50,12 @@ lang.closewindow
             </div>
         {% endif %}
     {% endif %}
-    <blockquote>
-        <div class="thankyou">{{lang.thankyou}}</div>
-        <p>{{data.thankyou|raw}}</p>
-        <br />
-        {% if data.postscript != '' %}
-        <section aria-label="{{lang.postscript}}">{{data.postscript|raw}}</section>
-        {% endif %}
-    </blockquote>
+    <div class="thankyou">{{lang.thankyou}}</div>
+    <p>{{data.thankyou|raw}}</p>
+    <br />
+    {% if data.postscript != '' %}
+    <section aria-label="{{lang.postscript}}">{{data.postscript|raw}}</section>
+    {% endif %}
     {% if data.papertype == '2' %}
         <br />
         <section aria-label="{{lang.closeexam}}" class="key" style="text-align:center">

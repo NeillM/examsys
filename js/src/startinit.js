@@ -73,12 +73,24 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
             $('#button_pressed').val('finish');
         });
 
-        $('.act').click(function() {
-            start.onoff($(this).attr('id'));
+        $('.act').mousedown(function(event) {
+            if (event.which == 3) {
+                document.oncontextmenu = function(event){
+                    event.preventDefault();
+                    return false;
+                }
+                start.onoff($(this).attr('id'));
+            }
         });
 
-        $('.inact').click(function() {
-            start.onoff($(this).attr('id'));
+        $('.inact').mousedown(function(event) {
+            if (event.which == 3) {
+                document.oncontextmenu = function(event){
+                    event.preventDefault();
+                    return false;
+                }
+                start.onoff($(this).attr('id'));
+            }
         });
 
         $('#jumpscreen').change(function (event) {

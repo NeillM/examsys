@@ -2,9 +2,6 @@ html {
   overflow: auto;
   height: 100%;
 }
-blockquote {
-  font-size: 100%;
-}
 .ok {
   font-size: 100%;
   color: black !important;

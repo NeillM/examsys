@@ -25,6 +25,21 @@ define(['rogoconfig', 'jquery'], function(config, $) {
          */
         this.init = function () {
             var scope = this;
+
+            // Add keyboard event listeners.
+            var menubutton = document.getElementById('toprightmenu_icon');
+            if (menubutton != null) {
+                menubutton.addEventListener('keydown', function (event) {
+                    if (event.keyCode && event.keyCode == 13) {
+                        if ($('#toprightmenu').is(':visible')) {
+                            $('#toprightmenu').fadeOut();
+                        } else {
+                            $('#toprightmenu').fadeIn();
+                        }
+                    }
+                });
+            }
+
             $(document).click(function () {
                 $('#toprightmenu').fadeOut();
             });

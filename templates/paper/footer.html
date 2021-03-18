@@ -45,6 +45,7 @@ lang.finish
 lang.screen
 lang.previousscreen
 lang.nextscreen
+lang.changescreen
 #}
 </main>
 <footer>
@@ -103,7 +104,7 @@ lang.nextscreen
         <div class="controls">
             <span id="savemsg"></span>
             {# Display additional controls for bidirectional papers #}
-            <nav>
+            <nav aria-label="{{lang.changescreen}}">
                 {% if data.bidirectional %}
                 {% if data.previous %}
                 <input id="previous" type="button" value="{{lang.previousscreen}}" />

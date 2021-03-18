@@ -34,12 +34,12 @@ data.dismiss - record of which options have been dismissed by the user
 Required localised text -
 lang.na - not applicable
 #}
-<blockquote>
+<div>
     <ul class="rank question-container">
 {% for i,p in data.options %}
         <li class="question-row {% if p.unans %} unans{% endif %}">
             <div class="question-cell">
-                <span aria-hidden="true" {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}">{{p.optiontext}}</span>
+                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{p.position}}">{{p.optiontext}}</span>
             </div>
             <div class="question-cell">
                 <select aria-labelledby="{{data.questionno}}_{{p.position}}" name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q{{data.questionno}}">
@@ -62,4 +62,4 @@ lang.na - not applicable
     <div>
         <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
     </div>
-</blockquote>
+</div>

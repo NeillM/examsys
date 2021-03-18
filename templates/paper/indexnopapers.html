@@ -84,7 +84,7 @@ lang.summativetestmsg
                 {% endif %}
             {% endfor %}
         {% else %}
-        {{issue.name}} - {{issue.desc}}
+        {{issue.name}} - {{issue.desc|raw}}
         {% endif %}
         </li>
     {% endfor %}

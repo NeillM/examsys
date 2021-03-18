@@ -33,7 +33,7 @@ options.displayoptionmedia - flag to indicate if media can be displayed for the 
 options.optionmedia - the option media
 data.partid - the question part id
 #}
-<blockquote>
+<div>
     <div class="question-container">
         <div class="question-header">
             <div class="question-cell"></div>
@@ -52,7 +52,7 @@ data.partid - the question part id
 {% endif %}
             </div>
 {% if data.displayAbstain %}
-            <div aria-hidden="true" id="q{{data.questionno}}abstain" class="question-cell" style="color:{{data.labelcolour}}; font-size:90%">
+            <div id="q{{data.questionno}}abstain" class="question-cell" style="color:{{data.labelcolour}}; font-size:90%">
                 {{lang.abstain}}
             </div>
 {% endif %}
@@ -81,4 +81,4 @@ data.partid - the question part id
         </ul>
 {% endfor %}
     </div>
-</blockquote>
+</div>
