@@ -37,9 +37,7 @@ lang.examprogress
 <div id="maincontent">
     <div class="questions">
 {% if data.print == 0 %}
-    {% if data.screen|length > 0 %}
-        <form method="post" id="qForm" name="questions" action="{{data.action}}" autocomplete="off">
-    {% endif %}
+    <form method="post" id="qForm" name="questions" action="{{data.action}}" autocomplete="off">
     {% for number,id in data.hidden %}
         <input type="hidden" name="q{{number}}_randomID" value="{{id}}" />
     {% endfor %}
