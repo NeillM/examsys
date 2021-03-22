@@ -95,7 +95,6 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
 
         $('#jumpscreen').change(function (event) {
             $('#button_pressed').val('jumpscreen');
-            $('#qForm').attr('action',"start.php?id=" + el.dataset.pid + "&dont_record=true");
             return start.checkSubmit(event);
         });
 
@@ -130,7 +129,7 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
         $('#fire_exit').click(function() {
             if ($('#dataset').attr('data-remotesummative') == 0) {
                 $('#button_pressed').val('fire_exit');
-                $('#qForm').attr('action', "fire_evacuation.php?id=" + el.dataset.pid + "&dont_record=true");
+                $('#qForm').attr('action', "fire_evacuation.php?id=" + el.dataset.pid + "&dont_record=true&page=" + el.dataset.page);
                 start.ajaxSave(1, 'userSubmit');
             }
         });

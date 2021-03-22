@@ -51,6 +51,7 @@ if ($userObject->has_role('Internal Reviewer')) {
 $mode = param::optional('mode', '', param::ALPHA);
 $getmode = param::optional('mode', '', param::ALPHA, param::FETCH_GET);
 $post_screen = param::optional('current_screen', null, param::INT, param::FETCH_POST);
+$page = param::optional('page', 1, param::INT, param::FETCH_GET);
 $get_qid = param::optional('q_id', null, param::INT, param::FETCH_GET);
 $q_number = param::optional('qNo', null, param::INT, param::FETCH_GET);
 $do_not_record = param::optional('dont_record', false, param::BOOLEAN, param::FETCH_GET);
@@ -280,17 +281,17 @@ $renderpath = $texteditorplugin->get_render_paths();
 $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
 $render = new render($configObject, $renderpath);
 $headerdata = array(
-  'css' => array(
-    '/css/start.css',
-    '/css/html5.css',
-    '/node_modules/mediaelement/build/mediaelementplayer.min.css',
-  ),
-  'scripts' => array(
-    '/js/startinit.min.js',
-  ),
-  'metadata' => array(
-    'pragma' => 'no-cache',
-  ),
+    'css' => array(
+        '/css/start.css',
+        '/css/html5.css',
+        '/node_modules/mediaelement/build/mediaelementplayer.min.css',
+    ),
+    'scripts' => array(
+        '/js/startinit.min.js',
+    ),
+    'metadata' => array(
+        'pragma' => 'no-cache',
+    ),
 );
 if ($papertype == '3') {
     $lang['title'] = $string['survey'];
@@ -329,17 +330,17 @@ $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 $headerdata['editor'] = $editor[0];
 $render->render($headerdata, $lang, 'header.html');
 
-  /*
-  *
-  * Build the paper structure
-  *
-  */
-  $question_no = 0;
-  $q_displayed = 0;
+/*
+*
+* Build the paper structure
+*
+*/
+$question_no = 0;
+$q_displayed = 0;
 
-  // Look for random questions and overwrite as needed
-  $questions_array = array();
-  $hidden = array();
+// Look for random questions and overwrite as needed
+$questions_array = array();
+$hidden = array();
 foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
         $question = $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
@@ -362,15 +363,15 @@ foreach ($tmp_questions_array as $question) {
     }
     $questions_array[] = $question;
 }
-  unset($tmp_questions_array);
+unset($tmp_questions_array);
 
-  $incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $paperID, $mysqli);
+$incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $paperID, $mysqli);
 
-  // BP If the duration is set then show timer
-  $timer_label = '';
-  $timed = false;
-  $special_needs_percentage = $userObject->get_special_needs_percentage();
-  $remaining_time = null;
+// BP If the duration is set then show timer
+$timer_label = '';
+$timed = false;
+$special_needs_percentage = $userObject->get_special_needs_percentage();
+$remaining_time = null;
 if ($allow_timing and $propertyObj->get_exam_duration() != null) {
     $timed = true;
     // Summative type. Time is only active in live.
@@ -407,8 +408,8 @@ if ($current_screen < $no_screens) {
 } else {
     $contentdata['action'] = '/finish.php?id=' . $id . $url_mod;
 }
-  $contentdata['hidden'] = $hidden;
-  $contentdata['previewmode'] = $is_question_preview_mode;
+$contentdata['hidden'] = $hidden;
+$contentdata['previewmode'] = $is_question_preview_mode;
 
 if (!$is_question_preview_mode) {
     $contentdata['papertitle'] = $propertyObj->get_paper_title();
@@ -455,11 +456,11 @@ if (!$is_question_preview_mode) {
     }
 }
 
-  $themedirectory = rogo_directory::get_directory('theme');
-  $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
-  $contentdata['logopath'] = $logo_path;
+$themedirectory = rogo_directory::get_directory('theme');
+$logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
+$contentdata['logopath'] = $logo_path;
 
-  $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
+$midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
 
 if ($papertype === '3') {
     $calculator = 0;
@@ -472,16 +473,16 @@ if (in_array('students', $midexam_clarification)) {
     $contentdata['examclarification'] = $exam_announcementObj->display_student_announcements();
 }
 
-  $render->render($contentdata, $string, 'paper/header.html');
+$render->render($contentdata, $string, 'paper/header.html');
 
-  // Get linked question parents.
-  $linked = PaperUtils::get_linked_question_parents($questions_array);
+// Get linked question parents.
+$linked = PaperUtils::get_linked_question_parents($questions_array);
 
-  // Display each question
-  $unanswered = false;
+// Display each question
+$unanswered = false;
 
-  // Initialise for scenario filtering
-  $last_scenario = '';
+// Initialise for scenario filtering
+$last_scenario = '';
 
 // Initialise textbox editor config file.
 $textconfigfile = '';
@@ -530,15 +531,15 @@ foreach ($questions_array as &$question) {
     }
 }
 
-  $current_screen++;
+$current_screen++;
 
-  $footer_data['current_screen'] = $current_screen;
-  $footer_data['page_start'] = date('YmdHis', time());
-  $footer_data['old_screen'] = $current_screen - 1;
-  $footer_data['previous_duration'] = $previous_duration;
-  $footer_data['refpane'] = $refpane;
-  $footer_data['file'] = $textconfigfile;
-  $footer_data['editorconfig'] = $textconfigfiletemplate;
+$footer_data['current_screen'] = $current_screen;
+$footer_data['page_start'] = date('YmdHis', time());
+$footer_data['old_screen'] = $current_screen - 1;
+$footer_data['previous_duration'] = $previous_duration;
+$footer_data['refpane'] = $refpane;
+$footer_data['file'] = $textconfigfile;
+$footer_data['editorconfig'] = $textconfigfiletemplate;
 
 if ($is_question_preview_mode === true) {
     $submitype = 'preview';
@@ -640,6 +641,7 @@ $dataset['attributes']['urlmod'] = html_entity_decode($url_mod);
 $dataset['attributes']['submittype'] = $submitype;
 $dataset['attributes']['refcount'] = count($reference_materials);
 $dataset['attributes']['savefreq'] = (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5, 5)) * 1000);
+$dataset['attributes']['page'] = $page;
 // Set the time out of one requst to be the maximum total time plus 5s for network latency
 // PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
 // weird happens.

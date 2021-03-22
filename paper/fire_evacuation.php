@@ -42,8 +42,8 @@ $q_id = param::optional('q_id', null, param::INT, param::FETCH_GET);
 $do_not_record = param::optional('dont_record', false, param::BOOLEAN, param::FETCH_GET);
 $old_screen = param::optional('old_screen', '', param::INT, param::FETCH_POST);
 $post_screen = param::optional('current_screen', 0, param::INT, param::FETCH_POST);
+$page = check_var('page', 'GET', true, false, true, param::INT);
 $previous_duration = param::optional('previous_duration', 0, param::INT, param::FETCH_POST);
-
 $userObject = UserObject::get_instance();
 
 // Get the paper properties
@@ -156,7 +156,7 @@ if ($is_question_preview_mode == false) {
   </style>
 </head>
 <body>
-  <form method="post" name="questions" action="start.php?id=<?php echo $id ?>&dont_record=true" autocomplete="off">
+  <form method="post" name="questions" action="start.php?id=<?php echo $id ?>&dont_record=true&page=<?php echo $page; ?>" autocomplete="off">
 
   <p style="font-size:200%; color:#008000"><?php echo $string['top_msg'] ?></p>
   <p class="norun"><?php echo $string['donotrun'] ?></p>

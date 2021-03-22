@@ -433,7 +433,15 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             if ($('#button_pressed').val() === 'finish') {
                 $('#qForm').attr('action',"finish.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true");
             } else {
-                $('#qForm').attr('action',"start.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true");
+                var page = parseInt(el.dataset.page);
+                if ($('#button_pressed').val() === 'jumpscreen') {
+                    page = $('#jumpscreen').val();
+                } else if ($('#button_pressed').val() === 'previous') {
+                    page -= 1;
+                } else {
+                    page += 1;
+                }
+                $('#qForm').attr('action',"start.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true&page=" + page);
             }
             scope.ajaxSave(1, 'userSubmit');
         };

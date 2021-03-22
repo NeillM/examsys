@@ -24,7 +24,7 @@ define(['rogoconfig', 'jquery'], function(config, $) {
          * Start the paper.
          */
         this.startPaper = function() {
-            var paperURL = "../paper/start.php?id=" + $('#dataset').attr('data-id');
+            var paperURL = "../paper/start.php?id=" + $('#dataset').attr('data-id') + "&page=1";
 
             if ($('#dataset').attr('data-mode') == 'preview') {
                 paperURL += '&mode=preview';
