@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0c1b7672eb24de4077f1dce1b4fc56a2",
+    "content-hash": "b964d6c6c71f03d17e87f01d25ad67d0",
     "packages": [
         {
             "name": "bshaffer/oauth2-server-php",
@@ -1568,6 +1568,97 @@
                 }
             ],
             "time": "2020-05-29T17:27:14+00:00"
+        },
+        {
+            "name": "dvdoug/behat-code-coverage",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dvdoug/behat-code-coverage.git",
+                "reference": "dd8ea4afc538642ebb1d0e0b343352e228aea6d4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dvdoug/behat-code-coverage/zipball/dd8ea4afc538642ebb1d0e0b343352e228aea6d4",
+                "reference": "dd8ea4afc538642ebb1d0e0b343352e228aea6d4",
+                "shasum": ""
+            },
+            "require": {
+                "behat/behat": "^3.5",
+                "php": "^7.1 || ^8.0",
+                "phpunit/php-code-coverage": "^6.0.1||^7.0.2||^8.0||^9.0",
+                "symfony/config": "^3.4||^4.0||^5.0",
+                "symfony/console": "^3.4||^4.0||^5.0",
+                "symfony/dependency-injection": "^3.4||^4.0||^5.0",
+                "symfony/event-dispatcher": "^3.4||^4.0||^5.0"
+            },
+            "replace": {
+                "leanphp/behat-code-coverage": "*"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16.3",
+                "phpunit/phpunit": "^7.0||^8.0||^9.0",
+                "symfony/filesystem": "^3.4||^4.0||^5.0"
+            },
+            "suggest": {
+                "ext-pcov": "PCOV allows you to collect line coverage only, but is faster than Xdebug",
+                "ext-xdebug": "Xdebug allows you to collect line, branch and path coverage"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DVDoug\\Behat\\CodeCoverage\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Doug Wright",
+                    "role": "Developer"
+                },
+                {
+                    "name": "ek9",
+                    "email": "dev@ek9.co",
+                    "homepage": "https://ek9.co"
+                },
+                {
+                    "name": "Anthon Pang",
+                    "email": "apang@softwaredevelopment.ca"
+                }
+            ],
+            "description": "Generate Code Coverage reports for Behat tests",
+            "homepage": "https://github.com/dvdoug/behat-code-coverage",
+            "keywords": [
+                "BDD",
+                "Behat",
+                "build",
+                "clover",
+                "code",
+                "code-coverage",
+                "coverage",
+                "generate",
+                "generation",
+                "report",
+                "reports",
+                "scenario",
+                "test",
+                "tests"
+            ],
+            "funding": [
+                {
+                    "url": "https://github.com/dvdoug",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-08-07T11:58:27+00:00"
         },
         {
             "name": "fabpot/goutte",

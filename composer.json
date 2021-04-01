@@ -25,7 +25,8 @@
         "mikey179/vfsstream": "^1.6",
         "symfony/var-dumper": "^4.0",
         "symfony/yaml": "^4.3",
-        "squizlabs/php_codesniffer": "*"
+        "squizlabs/php_codesniffer": "*",
+        "dvdoug/behat-code-coverage": "^5.0"
     },
     "minimum-stability": "stable"
 }
