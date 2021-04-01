@@ -36,15 +36,15 @@ data.partid - the question part id
 <div>
     <div class="question-container">
         <div class="question-header">
-            <div class="question-cell"></div>
-            <div aria-hidden="true" id="q{{data.questionno}}yes" class="question-cell" style="color:{{data.labelcolour}}; font-size:90%">
+            <div class="question-cell question-label"></div>
+            <div aria-hidden="true" id="q{{data.questionno}}yes" class="question-cell question-label" style="color:{{data.labelcolour}}; font-size:90%">
 {% if data.displayTF %}
                 {{lang.true}}
 {% else %}
                 {{lang.yes}}
 {% endif %}
             </div>
-            <div aria-hidden="true" id="q{{data.questionno}}no" class="question-cell" style="color:{{data.labelcolour}};font-size:90%">
+            <div aria-hidden="true" id="q{{data.questionno}}no" class="question-cell question-label" style="color:{{data.labelcolour}};font-size:90%">
 {% if data.displayTF %}
                 {{lang.false}}
 {% else %}
@@ -52,14 +52,14 @@ data.partid - the question part id
 {% endif %}
             </div>
 {% if data.displayAbstain %}
-            <div id="q{{data.questionno}}abstain" class="question-cell" style="color:{{data.labelcolour}}; font-size:90%">
+            <div id="q{{data.questionno}}abstain" class="question-cell question-label" style="color:{{data.labelcolour}}; font-size:90%">
                 {{lang.abstain}}
             </div>
 {% endif %}
         </div>
 {% for i,p in data.options %}
         <ul id="q{{p.question_no}}_opt{{p.optionno}}" class="question-row {% if p.unanswered %} unans{% endif %}">
-            <li class="question-cell">
+            <li class="question-cell question-label">
             {% if p.optiontext != '' %}
                 {{p.optiontext}}<br />
             {% endif %}

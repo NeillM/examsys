@@ -113,6 +113,9 @@ $contentdata['papertitle'] = $propertyObj->get_paper_title();
 $contentdata['print'] = Paper_utils::onPrintScreen();
 $render->render($contentdata, $string, 'paper/header.html');
 
+// Initialise for scenario filtering
+$last_scenario = '';
+
 $user_answers = array();
 $question_no = 0;
 $q_displayed = 0;

@@ -83,7 +83,7 @@ body {
   color-adjust: exact;
 }
 
-.question-dichotomous .question-header .question-cell {
+.question-dichotomous .question-label {
   background-image: none;
 }
 
@@ -160,7 +160,7 @@ body {
   margin-top: 4px;
 }
 
-.question-rank .question-container {
+.question-rank .question-label {
   background-image: url('../artwork/print_box_1.png');
   background-repeat: no-repeat;
   height: 40px;
@@ -169,9 +169,9 @@ body {
   color-adjust: exact;
 }
 
-.question-rank .optiontext {
-  margin-left: 10px;
-  margin-top: 4px;
+.question-rank .question-label span {
+  margin-left: 3em;
+  vertical-align: baseline;
 }
 
 .headerbar {
