@@ -55,7 +55,7 @@ $render->render($headerdata, $lang, 'header.html', $js, $css);
 ?>
 <div class="html5warn"><?php echo $string['html5warn'] ?></div>
 <form method="post" id="theform" autocomplete="off">
-    <main class="mainbox">
+    <div role="main" class="mainbox">
 
         <img src="<?php echo $this->configObj->get('cfg_root_path') ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
 
@@ -168,7 +168,7 @@ HTML;
 
         <div class="versionno">Rogō <?php echo $this->configObj->get_setting('core', 'rogo_version') ?></div>
 
-    </main>
+    </div>
 </form>
 
 <?php
