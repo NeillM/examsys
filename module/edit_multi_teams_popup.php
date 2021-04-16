@@ -54,14 +54,7 @@ $userID = check_var('userID', 'REQUEST', true, false, true);
 
 <?php
   $user_teams = array();
-  $result = $mysqli->prepare('SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ?');
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->bind_result($moduleID, $idMod);
-while ($result->fetch()) {
-    $user_modules[$idMod] = $moduleID;
-}
-  $result->close();
+  $user_modules = UserUtils::getStaffModules($userID);
 
   $old_school = '';
   $mod_no = 0;

@@ -1,0 +1,7 @@
+## Data for the retention table.
+---
+retention:
+  -
+    table: 'audit_log'
+    days: 90
+    lastrun: null

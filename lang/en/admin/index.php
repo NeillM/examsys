@@ -47,3 +47,4 @@ $string['plugins'] = 'Plugins';
 $string['config'] = 'Configuration';
 $string['externalsystems'] = 'External Systems';
 $string['admin'] = 'Admin';
+$string['audit'] = 'Access Audit';

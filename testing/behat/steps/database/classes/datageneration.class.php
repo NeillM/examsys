@@ -62,6 +62,7 @@ trait datageneration
         'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
         'module enrolment' => array('modules', 'core', 'create_enrolment', 'preProcessmoduleEnrolment'),
         'paper note' => array('users', 'core', 'addPaperNote', 'preProcessPaperNote'),
+        'access audit' => array('audit', 'core', 'create', null),
     );
 
     /**

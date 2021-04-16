@@ -1,0 +1,73 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the audit screen contents.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables:
+
+path - root path for rogo
+breadcrumb - the navigation breadcrumb data
+from - the index of the first search result on screen
+to - the index of the last search result on screen
+total - the total number of search results
+pageinfo - search result page info
+
+Required localised language strings -
+lang.title
+lang.titlefromto
+lang.pagecount
+#}
+<div id="content">
+    <header class="head_title">
+        <div><img src="{{path}}/artwork/toprightmenu.gif" id="toprightmenu_icon" alt="" /></div>
+        <nav class="breadcrumb" aria-label="{{lang.breadcrumb}}">
+            <ol>
+                {% for id,item in breadcrumb %}
+                <li class="navigation">
+                    {% if loop.index0 != 0 %}
+                    <img src="{{path}}/artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/>
+                    {% endif %}
+                    <a href="{{item}}">{{id}}</a>
+                </li>
+                {% endfor %}
+            </ol>
+        </nav>
+        <h1 class="page_title">
+            {% if total %}
+                {{lang.titlefromto | format(from, to, total)}}
+            {% else %}
+                {{lang.title}}
+            {% endif %}
+        </h1>
+        <nav class="pagecount" aria-label="{{lang.pagecount}}">
+            <ol>
+            {% for idx,info in pageinfo %}
+                {% if info.selected %}
+                    <li aria-current="true" class="navigation pageselected">
+                        {{idx}}
+                {% else %}
+                    <li class="navigation">
+                        <a href="{{info.url}}">{{idx}}</a>
+                {% endif %}
+                <p class="tab">|</p></li>
+            {% endfor %}
+            </ol>
+        </nav>
+    </header>

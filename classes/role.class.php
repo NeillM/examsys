@@ -59,6 +59,32 @@ class Role
     }
 
     /**
+     * Gets the role name
+     *
+     * @param int $roleid the role
+     * @return string
+     * @throws InvalidRole
+     */
+    public static function getRoleName(int $roleid): string
+    {
+        $sql = 'SELECT name FROM roles WHERE id = ?';
+        $query = Config::get_instance()->db->prepare($sql);
+        $query->bind_param('i', $roleid);
+        $query->execute();
+        $query->store_result();
+        $query->bind_result($name);
+        $rows = $query->num_rows;
+        $query->fetch();
+        if ($rows !== 1) {
+            // There is a coding error.
+            throw new InvalidRole("'$roleid' is an invalid role id");
+        }
+        $query->close();
+
+        return $name;
+    }
+
+    /**
      * Gets all the roles for an api.
      *
      * @return array
@@ -212,6 +238,11 @@ class Role
             call_user_func_array(array($newquery, 'bind_param'), array_merge($newtypes, $arguments));
             $newquery->execute();
             $newquery->close();
+            // Record role additions.
+            for ($i = 0; $i < count($arguments); $i++) {
+                Audit::insertEvent(Audit::ADDROLE, $arguments[$i], self::getRoleName($arguments[$i + 1]));
+                $i++;
+            }
         }
 
         // Remove any roles not in the list.
@@ -247,6 +278,11 @@ class Role
             call_user_func_array(array($removequery, 'bind_param'), array_merge($removetypes, $arguments));
             $removequery->execute();
             $removequery->close();
+            // Record role removals.
+            for ($i = 0; $i < count($arguments); $i++) {
+                Audit::insertEvent(Audit::REMOVEROLE, $arguments[$i], self::getRoleName($arguments[$i + 1]));
+                $i++;
+            }
         }
 
         // Clean up other data related to the user role changes.
@@ -256,6 +292,26 @@ class Role
 
         if ($clear_admin_access) {
             UserUtils::clear_admin_access($user, Config::get_instance()->db);
+        }
+    }
+
+    /**
+     * Add a role to a user.
+     * @param string $role the role
+     * @param int $user the user
+     * @throws \InvalidRole
+     */
+    public static function addRole($role, $user): void
+    {
+        // Get the users current roles.
+        $existing = static::getUsersRoles($user);
+        if (array_search($role, $existing) === false) {
+            $roleid = static::validateRole($role);
+            $stmt = Config::get_instance()->db->prepare('INSERT user_roles (userID, roleID) VALUES (?, ?)');
+            $stmt->bind_param('ii', $user, $roleid);
+            $stmt->execute();
+            $stmt->close();
+            Audit::insertEvent(Audit::ADDROLE, $user, $roleid);
         }
     }
 

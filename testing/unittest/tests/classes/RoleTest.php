@@ -234,4 +234,40 @@ class RoleTest extends \testing\unittest\unittestdatabase
         $expected = array( 'graduate', 'Inactive Staff', 'left', 'Locked', 'Staff', 'Student', 'Suspended');
         self::assertEquals($expected, Role::getApiRoles());
     }
+
+    /**
+     * Tests that a user's role is added
+     *
+     * @param string $initial The starting role of the user.
+     * @param array $roles The roles that should be defined.
+     *
+     * @dataProvider dataAddRoles
+     */
+    public function testAddRole(string $initial, array $roles): void
+    {
+        $usergen = $this->get_datagenerator('users', 'core');
+        $user = $usergen->create_user(['roles' => $initial, 'sid' => '12345']);
+
+        Role::AddRole('Staff', $user['id']);
+
+        // Test that the user roles are correct.
+        $details = Role::getUsersRoles($user['id']);
+        self::assertCount(count($roles), $details);
+        foreach ($roles as $role) {
+            self::assertContains($role, $details, 'Missing role: ' . $role);
+        }
+    }
+
+    /**
+     * Data for testAddRoles.
+     *
+     * @return array
+     */
+    public function dataAddRoles(): array
+    {
+        return [
+            'new role' => ['Student', ['Staff', 'Student']],
+            'existing role' => ['Staff,SysAdmin', ['Staff', 'SysAdmin']],
+        ];
+    }
 }

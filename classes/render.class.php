@@ -153,12 +153,30 @@ class render
      * Render admin page content.
      * @param array $breadcrumb breadcrumb navigation
      * @param array $lang translations used in header
+     * @param string $template - the content html template
+     * @param array $searchdata - search data
      * @return void
      */
-    public function render_admin_content($breadcrumb, $lang)
+    public function render_admin_content($breadcrumb, $lang, $template = 'admin/content.html', $searchdata = array())
     {
-        $data = array('breadcrumb' => $breadcrumb, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'));
-        echo $this->twig->render('admin/content.html', $data);
+        if (empty($searchdata)) {
+            $data = array(
+                'breadcrumb' => $breadcrumb,
+                'lang' => $lang,
+                'path' => $this->config->get('cfg_root_path'),
+            );
+        } else {
+            $data = array(
+                'breadcrumb' => $breadcrumb,
+                'lang' => $lang,
+                'path' => $this->config->get('cfg_root_path'),
+                'from' => $searchdata['from'],
+                'to' => $searchdata['to'],
+                'total' => $searchdata['total'],
+                'pageinfo' => $searchdata['pageinfo'],
+            );
+        }
+        echo $this->twig->render($template, $data);
     }
 
     /**

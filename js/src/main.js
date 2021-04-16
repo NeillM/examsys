@@ -219,6 +219,7 @@ requirejs.config({
         media: "js/modules/media.min",
         polyfill: "js/modules/polyfill.min",
         rolelist: "js/modules/rolelist.min",
+        audit: "admin/audit/js/audit.min",
     },
     shim: {
         // Mathjax configration.

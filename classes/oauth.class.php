@@ -289,6 +289,27 @@ class oauth
     }
 
     /**
+     * get the rogo user id from the access token.
+     * @param string $access - the accesstoken
+     * @return int|bool - user id if one exists, false otherwise
+     */
+    public function getClientFromAccess($access)
+    {
+        $result = $this->db->prepare('SELECT user_id FROM oauth_access_tokens WHERE access_token = ?');
+        $result->bind_param('s', $access);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($userid);
+        $result->fetch();
+        if ($result->num_rows == 0) {
+            $result->close();
+            return false;
+        }
+        $result->close();
+        return $userid;
+    }
+
+    /**
      * Check if client exists
      * @param string $client - oauth client
      * @return  bool

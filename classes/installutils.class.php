@@ -665,6 +665,7 @@ class InstallUtils
         $alter[] = 'ALTER TABLE options_media ADD CONSTRAINT options_media_fk0 FOREIGN KEY (oid) REFERENCES options(id_num)';
         $alter[] = 'ALTER TABLE options_media ADD CONSTRAINT options_media_fk1 FOREIGN KEY (mediaid) REFERENCES media(id)';
         $alter[] = 'ALTER TABLE questions_metadata ADD CONSTRAINT questions_metadata_fk0 FOREIGN KEY (questionID) REFERENCES questions(q_id)';
+        $alter[] = 'ALTER TABLE audit_log ADD CONSTRAINT `audit_log_fk0` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)';
         foreach ($alter as $a) {
             $res = self::$db->prepare($a);
             $res->execute();
@@ -873,6 +874,9 @@ class InstallUtils
         $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
         $insert->execute();
         $insert->close();
+        self::$db->commit();
+        // Add retention policy.
+        self::createRetention();
         self::createUserRoles();
         self::createDefaultUsers();
         self::createDefaultFacultiesSchoolsModules();
@@ -1180,6 +1184,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".options_media TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE ON ' . $dbname . ".log_break_time TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".breaks TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".audit_log TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
 
@@ -1431,6 +1436,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".options_media TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, UPDATE ON ' . $dbname . ".breaks TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT DELETE ON ' . $dbname . ".log_break_time TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".audit_log TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
@@ -1563,6 +1569,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".paper_settings_category TO '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".paper_settings_setting TO '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".user_roles TO '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".audit_log TO '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "'";
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
@@ -1834,6 +1841,17 @@ class InstallUtils
             'boolean',
             '{"formative": 0, "progress": 1, "summative": 1, "survey": 0, "osce": 0, "offline": 0, "peer_review": 0}'
         );
+    }
+
+    /**
+     * Create definitions system retention.
+     */
+    protected static function createRetention()
+    {
+        $insert = self::$db->prepare("INSERT INTO retention (`table`, `days`) VALUES ('audit_log', 90)");
+        $insert->execute();
+        $insert->close();
+        self::$db->commit();
     }
 
     /**

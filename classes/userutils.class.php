@@ -349,21 +349,11 @@ class UserUtils
      * @param string $new_role - The role to be added.
      * @param string $userid   - The ID of the user we are dealing with.
      * @param object $db       - Database connection.
+     * @deprecated use Role::addRole instead
      */
     public static function add_role($new_role, $userid, $db)
     {
-        if ($new_role == '') {
-            return false;
-        }
-
-        $has_role = UserUtils::has_user_role($userid, $new_role, $db);
-
-        if (!$has_role) {    // If new roles does not exist, add.
-            $stmt = $db->prepare("UPDATE users SET roles = CONCAT(roles, ',', '$new_role') WHERE id = ?");
-            $stmt->bind_param('i', $userid);
-            $stmt->execute();
-            $stmt->close();
-        }
+        Role::addRole($new_role, $userid);
     }
 
     /**
@@ -538,6 +528,7 @@ class UserUtils
             if ($db->errno != 0) {
                 return false;
             }
+            Audit::insertEvent(Audit::ADDTEAMMEMBER, $tmp_userID, module_utils::get_moduleid_from_id($idMod, $db));
             return true;
         }
         return false;
@@ -561,6 +552,11 @@ class UserUtils
             if ($db->errno != 0) {
                 return false;
             }
+            Audit::insertEvent(
+                Audit::REMOVETEAMMEMBER,
+                $tmp_userID,
+                module_utils::get_moduleid_from_id($idMod, $db)
+            );
             return true;
         }
     }
@@ -593,10 +589,15 @@ class UserUtils
      */
     public static function clear_staff_modules_by_moduleID($idMod, $db)
     {
+        $members = self::get_staff_modules_list_by_modID($idMod, $db);
         $stmt = $db->prepare('DELETE FROM modules_staff WHERE idMod = ?');
         $stmt->bind_param('i', $idMod);
         $stmt->execute();
         $stmt->close();
+        // Record team removals.
+        foreach ($members as $memberid) {
+            Audit::insertEvent(Audit::REMOVETEAMMEMBER, $memberid, module_utils::get_moduleid_from_id($idMod, $db));
+        }
     }
 
     /**
@@ -639,6 +640,7 @@ class UserUtils
     {
         $userObject = UserObject::get_instance();
 
+        $mods = array_values(UserUtils::getStaffModules($tmp_userID));
         $result = $db->prepare('DELETE FROM modules_staff WHERE memberID = ?');
         $result->bind_param('i', $tmp_userID);
         $result->execute();
@@ -646,6 +648,10 @@ class UserUtils
 
         if (!is_null($userObject) and $userObject->get_user_ID() == $tmp_userID) {
             $userObject->load_staff_modules();     // Re-cache modules if the user is the currently logged in person.
+        }
+        // Record team removals.
+        if (!empty($mods)) {
+            Audit::insertEvent(Audit::REMOVETEAMMEMBER, $tmp_userID, json_encode($mods));
         }
     }
 
@@ -713,6 +719,47 @@ class UserUtils
     }
 
     /**
+     * Get list of modules a user is a staff member of
+     * @param int $userID the user
+     * @return array
+     */
+    public static function getStaffModules(int $userID): array
+    {
+        $user_modules = array();
+        $result = Config::get_instance()->db->prepare('SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ?');
+        $result->bind_param('i', $userID);
+        $result->execute();
+        $result->bind_result($moduleID, $idMod);
+        while ($result->fetch()) {
+            $user_modules[$idMod] = $moduleID;
+        }
+        $result->close();
+        return $user_modules;
+    }
+
+    /**
+     * Get list of modules a user is a student member of
+     *
+     * @param int $userID the user
+     * @param int $calendar_year the calender year for the academic session
+     * @param int $attempt the users attempt number
+     * @return array
+     */
+    public static function getStudentModules(int $userID, int $calendar_year, int $attempt): array
+    {
+        $user_modules = array();
+        $result = Config::get_instance()->db->prepare('SELECT moduleID, idMod FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ? AND attempt = ?');
+        $result->bind_param('iii', $userID, $calendar_year, $attempt);
+        $result->execute();
+        $result->bind_result($moduleID, $idMod);
+        while ($result->fetch()) {
+            $user_modules[$idMod] = $moduleID;
+        }
+        $result->close();
+        return $user_modules;
+    }
+
+    /**
      * Enrole a student on a module.
      *
      * @param int $userID ID of the student to be enroled.
@@ -770,7 +817,8 @@ class UserUtils
         }
 
         // Check is module exists.
-        if (!module_utils::get_moduleid_from_id($idMod, $db)) {
+        $modulecode = module_utils::get_moduleid_from_id($idMod, $db);
+        if ($modulecode === false) {
             return false;
         }
 
@@ -787,11 +835,13 @@ class UserUtils
             if ($db->errno != 0) {
                 return false;
             }
+            $enrolid = $db->insert_id;
             if (!is_null($userObject) and $tmp_userID === $userObject->get_user_ID()) {
                 $userObject->load_student_modules();
             }
-
-            return $db->insert_id;
+            // Record module enrolment.
+            Audit::insertEvent(Audit::ADDENROLMENT, $tmp_userID, $modulecode);
+            return $enrolid;
         }
     }
 
@@ -807,7 +857,7 @@ class UserUtils
     public static function clear_student_modules_by_userID($tmp_userID, $session, $attempt, $db)
     {
         $userObject = UserObject::get_instance();
-
+        $mods = array_values(UserUtils::getStudentModules($tmp_userID, $session, $attempt));
         $result = $db->prepare('DELETE FROM modules_student WHERE userID = ? AND calendar_year = ? AND attempt = ?');
         $result->bind_param('isi', $tmp_userID, $session, $attempt);
         $result->execute();
@@ -815,6 +865,10 @@ class UserUtils
 
         if ($userObject->get_user_ID() == $tmp_userID) {
             $userObject->load_student_modules();     // Re-cache modules if the user is the currently logged in person.
+        }
+        // Record module removals.
+        if (!empty($mods)) {
+            Audit::insertEvent(Audit::REMOVEENROLMENT, $tmp_userID, json_encode($mods));
         }
     }
 
@@ -1088,6 +1142,11 @@ class UserUtils
             if ($db->errno != 0) {
                 return false;
             }
+            Audit::insertEvent(
+                Audit::REMOVEENROLMENT,
+                $userid,
+                module_utils::get_moduleid_from_id($moduleid, $db)
+            );
             return $id;
         }
         return false;

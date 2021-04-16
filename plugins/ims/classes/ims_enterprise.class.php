@@ -43,6 +43,10 @@ use plugins\ims\ims_enterprise_roles;
  */
 class ims_enterprise
 {
+    /**
+     * @var string Language pack component.
+     */
+    public const LANGCOMPONENT = 'plugins/ims/ims_enterprise';
     /** The orgname tag */
     public const SOURCE_ORGNAME = 'orgname';
     /** The orgunit tag */
@@ -1193,5 +1197,19 @@ class ims_enterprise
         $configObject->set_setting('prevtime', $prev_time, null, 'plugin_ims');
         $configObject->set_setting('prevpath', $prev_path, null, 'plugin_ims');
         $configObject->set_setting('prevmd5', $prev_md5, null, 'plugin_ims');
+    }
+
+    /**
+     * Get the source url and label for the Audit::mapSource function
+     * @return array
+     */
+    public function getSourceForAudit(): array
+    {
+        $langpack = new \langpack();
+        $configObject = \Config::get_instance();
+        return array(
+            'url' => $configObject->get('cfg_root_path') . '/plugins/ims/ims_settings.php',
+            'label' => $langpack->get_string(self::LANGCOMPONENT, 'ims'),
+        );
     }
 }

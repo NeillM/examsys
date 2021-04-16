@@ -1,0 +1,66 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the audit screen list.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables:
+
+header - list header info
+data - list data info
+#}
+<main>
+    <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
+        <thead>
+        <tr>
+            <th class="col10">{{lang.object}}</th>
+            <th class="col">{{lang.objecttype}}</th>
+            <th class="col">{{lang.time}}</th>
+            <th class="col">{{lang.user}}</th>
+            <th class="col">{{lang.affecteduser}}</th>
+            <th class="col">{{lang.source}}</th>
+            <th class="col">{{lang.eventtype}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for id,item in data.items %}
+        <tr id="{{id}}" class="l">
+            <td id="object" class="col10">
+                {% for obj in item.object %}
+                    {% if loop.index0 != 0 %}
+                    -
+                    {% endif %}
+                    <a href="{{obj.url}}">{{obj.label}}</a>
+                {% endfor %}
+            </td>
+            <td class="col">{{item.objecttype}}</td>
+            <td class="col">{{item.time}}</td>
+            <td class="col">{{item.user}}</td>
+            <td id="user" class="col">
+                <a href="{{item.affecteduser.url}}">{{item.affecteduser.label}}</a>
+            </td>
+            <td id="source" class="col">
+                <a href="{{item.source.url}}">{{item.source.label}}</a>
+            </td>
+            <td class="col">{{item.eventtype}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</main>

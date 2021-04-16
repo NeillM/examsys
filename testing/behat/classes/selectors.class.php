@@ -80,6 +80,9 @@ class selectors
         'class_totals_menu_item' => 'class_totals_menu_item',
         'class_totals_student' => 'class_totals_student',
         'question_bank_item' => 'question_bank_item',
+        'audit_object' => 'audit_object',
+        'audit_user' => 'audit_user',
+        'audit_source' => 'audit_source',
     );
 
     /**
@@ -171,6 +174,15 @@ XPATH
 XPATH
     ,'question_bank_item' => <<<XPATH
 //tr[contains(@class, 'q') and contains(normalize-space(.) , %locator%)]
+XPATH
+    ,'audit_object' => <<<XPATH
+//td[contains(@id, 'object')]//a[contains(normalize-space(.) , %locator%)]
+XPATH
+    ,'audit_user' => <<<XPATH
+//td[contains(@id, 'user')]//a[contains(normalize-space(.) , %locator%)]
+XPATH
+    ,'audit_source' => <<<XPATH
+//td[contains(@id, 'source')]//a[contains(normalize-space(.) , %locator%)]
 XPATH
     );
 

@@ -1770,6 +1770,28 @@ QUERY;
             KEY `paperID` (`paperID`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
+
+        $this->tableList['audit_log'] = <<<QUERY
+            CREATE TABLE `audit_log` (
+            `userID` int(10) unsigned NOT NULL,
+            `action` varchar(30) NOT NULL,
+            `time` timestamp NOT NULL,
+            `sourceID` int NOT NULL,
+            `source` TEXT,
+            `details` TEXT,
+            KEY `audit_log_key1` (`userID`, `action`)
+        ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+        $this->tableList['retention'] = <<<QUERY
+            CREATE TABLE `retention` (
+            `table` varchar(100) NOT NULL,
+            `days` integer NOT NULL DEFAULT 90,
+            `lastrun` timestamp DEFAULT NULL NULL,
+            PRIMARY KEY (`table`)
+        ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
     }
 
     public function next()
