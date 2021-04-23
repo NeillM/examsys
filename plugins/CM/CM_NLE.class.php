@@ -103,6 +103,9 @@ class CM_NLE implements iCMAPI
      */
     private function map_response($response, $newmodcode, $oldmodcode)
     {
+        if (is_null($response)) {
+            return array();
+        }
         $keys = array_keys($response);
         $index = array_search($oldmodcode, $keys);
         if ($index !== false) {
