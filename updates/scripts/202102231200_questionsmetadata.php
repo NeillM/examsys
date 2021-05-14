@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.3.0')) {
+if ($updater_utils->check_version('7.4.0')) {
     if (!$updater_utils->has_updated('ROGO-2671')) {
         $sql = 'ALTER TABLE questions_metadata ADD CONSTRAINT questions_metadata_fk0 FOREIGN KEY (questionID) REFERENCES questions(q_id)';
         $updater_utils->execute_query($sql, false);
