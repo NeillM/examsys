@@ -17,7 +17,7 @@
 
 /**
  * Archive data for graduated and left users
- * Moves formative and progress user responses to archive tables, deletes LTI links of users and resets their password
+ * Moves formative and progress user responses to archive tables
  * @author Simon Wilkinson
  * @author Dr Joseph baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham
@@ -39,30 +39,40 @@ if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARAT
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'load_config.php';
 
 // Lets look to see what arguments have been passed.
-$options = 'ha:lrt::';
+$options = '';
 $longoptions = array(
     'help',
-    'account:',
     'archive',
+    'commit',
+    'account:',
     'target::',
+    'batch::',
+    'userlimit::',
+    'skip::',
+    'noprogress::',
+    'noformative::'
 );
 
 $optionslist = getopt($options, $longoptions);
 $help = 'Rogo archive script options. Archives all graduated and left accounts, unless the target param is specified'
-    . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
-    . PHP_EOL . PHP_EOL . "-a, --account, \t\tRogo account to log process against [Required]"
-    . PHP_EOL . PHP_EOL . "-r, --archive, \t\tArchive data to a seperate database [Optional]"
-    . PHP_EOL . PHP_EOL . "-t, --target, \t\tTarget a single user account [Optional]";
+    . PHP_EOL . PHP_EOL . "--help \t\tDisplay help"
+    . PHP_EOL . PHP_EOL . "--account, \t\tRogo account to log process against [Required]"
+    . PHP_EOL . PHP_EOL . "--archive, \t\tArchive data to a seperate database (default no) [Optional]"
+    . PHP_EOL . PHP_EOL . "--target, \t\tTarget a single user account [Optional]"
+    . PHP_EOL . PHP_EOL . "--batch, \t\tBatch size (default 50 papers) [Optional]"
+    . PHP_EOL . PHP_EOL . "--commit, \t\tCommit transactions (default no) [Optional]"
+    . PHP_EOL . PHP_EOL . "--userlimit, \t\tNumber of users to archive (default 100 user) [Optional]"
+    . PHP_EOL . PHP_EOL . "--skip, \t\tSkip already archived users (default no) [Optional]"
+    . PHP_EOL . PHP_EOL . "--noprogress, \t\tDo not archive progress tests (default archive) [Optional]"
+    . PHP_EOL . PHP_EOL . "--noformative, \t\tDo not archive formative tests (default archive) [Optional]";
 
-if ((isset($optionslist['h']) or isset($optionslist['help'])) or ((!isset($optionslist['a']) and !isset($optionslist['account'])))) {
+if (isset($optionslist['help']) or !isset($optionslist['account'])) {
     // Display some help information.
     cli_utils::prompt($help);
     exit(0);
 }
 
-if (isset($optionslist['a'])) {
-    $account = $optionslist['a'];
-} elseif (isset($optionslist['account'])) {
+if (isset($optionslist['account'])) {
     $account = $optionslist['account'];
 }
 $account = param::clean($account, param::TEXT);
@@ -71,23 +81,60 @@ if (is_null($account)) {
     exit(0);
 }
 
-if (isset($optionslist['r']) or isset($optionslist['archive'])) {
-    $archive = 1;
+if (isset($optionslist['archive'])) {
+    $archive = true;
 } else {
-    $archive = 0;
+    $archive = false;
 }
 
-if (isset($optionslist['t'])) {
-    $target = 1;
-    $targetted_user = $optionslist['t'];
-} elseif (isset($optionslist['target'])) {
+if (isset($optionslist['commit'])) {
+    $commit = true;
+} else {
+    cli_utils::prompt('*** This is a dry run nothing will be committed to the database ***');
+    $commit = false;
+}
+
+if (isset($optionslist['target'])) {
     $target = 1;
     $targetted_user = $optionslist['target'];
 } else {
     $target = 0;
 }
+
+if (isset($optionslist['batch'])) {
+    $batchsize = $optionslist['batch'];
+} else {
+    $batchsize = 50;
+}
+
+if (isset($optionslist['userlimit'])) {
+    $userlimit = $optionslist['userlimit'];
+} else {
+    $userlimit = 100;
+}
+
+if (isset($optionslist['skip'])) {
+    $skiparchived = true;
+} else {
+    $skiparchived = false;
+}
+
+if (isset($optionslist['noformative'])) {
+    $formative = false;
+} else {
+    $formative = true;
+}
+
+
+if (isset($optionslist['noprogress'])) {
+    $progress = false;
+} else {
+    $progress = true;
+}
+
+
 if ($target == 0) {
-    cli_utils::prompt('Archiving all LEFT and GRADUATE accounts');
+    cli_utils::prompt('Archiving ' . $userlimit . ' LEFT and GRADUATE accounts');
 } else {
     $targetted_user = param::clean($targetted_user, param::TEXT);
     if (is_null($targetted_user)) {
@@ -151,18 +198,22 @@ cli_utils::prompt('Start Archive Process ' . date('Y-m-d H:i:s'));
 
 $log0_deleted_overall = 0;
 $log1_deleted_overall = 0;
-$lti_user_deleted_overall = 0;
 
-// Archive all left and graduate accounts.
+// Archive X left and graduate accounts. Not already archived.
 if ($target == 0) {
-    $sql = 'SELECT u.id FROM '
+    $sql = 'SELECT distinct u.id FROM '
         . $cfg_db_database . '.users u, '
         . $cfg_db_database . '.user_roles ur, '
-        . $cfg_db_database . '.roles r
+        . $cfg_db_database . '.roles r, '
+        . $cfg_db_database . '.log_metadata lm
     WHERE
         ur.roleid = r.id 
     AND u.id = ur.userid
+    AND u.id = lm.userID
     AND r.name IN ("graduate", "left")';
+    if ($skiparchived) {
+        $sql .= ' AND u.id NOT IN (SELECT distinct userID from log_metadata_deleted)';
+    }
 } else {
     $sql = 'SELECT id FROM '
         . $cfg_db_database . '.users u
@@ -175,167 +226,264 @@ if ($target == 1) {
 }
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($user_to_delete);
-$numusers = $stmt->num_rows();
-cli_utils::prompt($numusers . ' users to potentially archive');
-$usercount = 1;
+$stmt->bind_result($user_to_archive);
+if ($target != 1) {
+    $numusers = $stmt->num_rows();
+    cli_utils::prompt($numusers . ' users to potentially archive');
+}
+$potential_users = array();
+while ($stmt->fetch()) {
+    $potential_users[] = $user_to_archive;
+}
+$stmt->close();
 
 // Prepare queries.
 $selectquery0 = $mysqli->prepare(get_logselectquery('log0', $cfg_db_database));
-$logquery0 = $mysqliarchive->prepare(get_loginsertquery('log0_deleted', $cfg_archivedb_database));
-$metaselectquery0 = $mysqli->prepare(get_metaselectquery('log0', $cfg_db_database));
-$metalogquery0 = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
 $selectquery1 = $mysqli->prepare(get_logselectquery('log1', $cfg_db_database));
+$metaselectquery = $mysqli->prepare(get_metaselectquery($cfg_db_database));
+$logquery0 = $mysqliarchive->prepare(get_loginsertquery('log0_deleted', $cfg_archivedb_database));
 $logquery1 = $mysqliarchive->prepare(get_loginsertquery('log1_deleted', $cfg_archivedb_database));
-$metaselectquery1 = $mysqli->prepare(get_metaselectquery('log1', $cfg_db_database));
-$metalogquery1 = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
-$deletequerylti = $mysqli->prepare('DELETE FROM ' . $cfg_db_database . '.lti_user WHERE lti_user_equ = ?');
-$deletequerylog0 = $mysqli->prepare('DELETE FROM ' . $cfg_db_database . '.log0 WHERE id = ?');
+$metalogquery = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
+$deletequerylog0 = $mysqli->prepare('DELETE FROM ' . $cfg_db_database . '.log0 WHERE metadataID = ?');
+$deletequerylog1 = $mysqli->prepare('DELETE FROM ' . $cfg_db_database . '.log1 WHERE metadataID = ?');
 $deletequerymd = $mysqli->prepare('DELETE FROM ' . $cfg_db_database . '.log_metadata WHERE id = ?');
-$deletequerylog1 = $mysqli->prepare('DELETE FROM ' . $cfg_db_database . '.log1 WHERE id = ?');
-$lm_check0 = $mysqli->prepare('SELECT count(lm.id) FROM ' . $cfg_db_database . '.log0 l INNER JOIN ' . $cfg_db_database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?');
-$lm_check1 = $mysqli->prepare('SELECT count(lm.id) FROM ' . $cfg_db_database . '.log1 l INNER JOIN ' . $cfg_db_database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?');
 
-while ($stmt->fetch()) {
-    $lti_user_deleted = 0;
+// Start transaction.
+$mysqli->autocommit(false);
 
-    $lm_check0->bind_param('i', $user_to_delete);
-    $lm_check0->execute();
-    $lm_check0->bind_result($lm_count);
-    $lm_check0->store_result();
-    $lm_check0->fetch();
-
-    cli_utils::prompt('Checking user ' . $usercount . ' / ' . $numusers);
-
-    if (isset($lm_count) and $lm_count > 0) {
-        cli_utils::prompt($lm_count . ' Log0 rows to archive');
-        $log0_deleted = 0;
-        $selectquery0->bind_param('i', $user_to_delete);
+// Formative papers.
+if ($formative) {
+    $usercount = 0;
+    for ($i = 0; $i < count($potential_users); $i++) {
+        // Get log0 data.
+        $selectquery0->bind_param('i', $potential_users[$i]);
         $selectquery0->execute();
-        $selectquery0->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+        $selectquery0->bind_result(
+            $id,
+            $q_id,
+            $mark,
+            $adjmark,
+            $totalpos,
+            $user_answer,
+            $errorstate,
+            $screen,
+            $duration,
+            $updated,
+            $dismiss,
+            $option_order,
+            $metadataID
+        );
         $selectquery0->store_result();
+        $log0_deleted = 0;
+        $archivecount = 0;
+        $oldmetdataID = 0;
         while ($selectquery0->fetch()) {
             // Insert into archive formative log.
-            $logquery0->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+            $logquery0->bind_param(
+                'iiiiisiiisssi',
+                $id,
+                $q_id,
+                $mark,
+                $adjmark,
+                $totalpos,
+                $user_answer,
+                $errorstate,
+                $screen,
+                $duration,
+                $updated,
+                $dismiss,
+                $option_order,
+                $metadataID
+            );
+
+            if ($metadataID != $oldmetdataID) {
+                if ($oldmetdataID !== 0) {
+                    $archivecount++;
+                    // Archive the Metadata.
+                    archiveMetaData($metaselectquery, $oldmetdataID, $metalogquery, $deletequerymd);
+                    // Delete from formative log.
+                    $deletequerylog0->bind_param('i', $oldmetdataID);
+                    $deletequerylog0->execute();
+                }
+                $oldmetdataID = $metadataID;
+            }
+
+            // Commit every batchsize number of paper attempts.
+            if ($archivecount === $batchsize) {
+                // Commit transaction.
+                if ($commit) {
+                    $mysqli->commit();
+                } else {
+                    $mysqli->rollback();
+                }
+                $archivecount = 0;
+            }
+
             $logquery0->execute();
-            // Delete from formative log.
-            $deletequerylog0->bind_param('i', $id);
-            $deletequerylog0->execute();
-            $log0_deleted += $deletequerylog0->affected_rows;
+            $log0_deleted++;
         }
+
         $log0_deleted_overall += $log0_deleted;
-        $metaselectquery0->bind_param('i', $user_to_delete);
-        $metaselectquery0->execute();
-        $metaselectquery0->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-        $metaselectquery0->store_result();
-        while ($metaselectquery0->fetch()) {
-            // Insert into archive meta log.
-            $metalogquery0->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-            $metalogquery0->execute();
-            // Delete from meta log.
-            $deletequerymd->bind_param('i', $id);
-            $deletequerymd->execute();
+
+        // Archive the left over.
+        if ($oldmetdataID !== 0) {
+            archiveMetaData($metaselectquery, $oldmetdataID, $metalogquery, $deletequerymd);
+            $deletequerylog0->bind_param('i', $oldmetdataID);
+            $deletequerylog0->execute();
+            if ($commit) {
+                $mysqli->commit();
+            } else {
+                $mysqli->rollback();
+            }
         }
 
         // Record the delete in audit trail
-        $logger->track_change('Deleted records from log0', $user_to_delete, $account, $log0_deleted, 0, 'Clear old logs');
-    }
-
-    $lm_check1->bind_param('i', $user_to_delete);
-    $lm_check1->execute();
-    $lm_check1->bind_result($lm_count);
-    $lm_check1->store_result();
-    $lm_check1->fetch();
-
-    if (isset($lm_count) and $lm_count > 0) {
-        cli_utils::prompt($lm_count . ' Log1 rows to archive');
-        $log1_deleted = 0;
-        $selectquery1->bind_param('i', $user_to_delete);
-        $selectquery1->execute();
-        $selectquery1->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
-        $selectquery1->store_result();
-        while ($selectquery1->fetch()) {
-            // Insert into archive progress log.
-            $logquery1->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
-            $logquery1->execute();
-            // Delete from progress log.
-            $deletequerylog1->bind_param('i', $id);
-            $deletequerylog1->execute();
-            $log1_deleted += $deletequerylog1->affected_rows;
+        if ($log0_deleted > 0) {
+            cli_utils::prompt($log0_deleted . ' formative logs archived for user ' . $potential_users[$i]);
+            $logger->track_change(
+                'Deleted records from log0',
+                $potential_users[$i],
+                $account,
+                $log0_deleted,
+                0,
+                'Clear old logs'
+            );
+            $usercount++;
+            if ($commit) {
+                $mysqli->commit();
+            } else {
+                $mysqli->rollback();
+            }
         }
+
+        // Only archive the number of users specified.
+        if (!$target and $usercount >= $userlimit) {
+            cli_utils::prompt($usercount . '/' . $userlimit . ' users complete (formative)');
+            break;
+        }
+    }
+}
+
+// Progress tests.
+if ($progress) {
+    $usercount = 0;
+    for ($i = 0; $i < count($potential_users); $i++) {
+        // Get log1 data.
+        $selectquery1->bind_param('i', $potential_users[$i]);
+        $selectquery1->execute();
+        $selectquery1->bind_result(
+            $id,
+            $q_id,
+            $mark,
+            $adjmark,
+            $totalpos,
+            $user_answer,
+            $errorstate,
+            $screen,
+            $duration,
+            $updated,
+            $dismiss,
+            $option_order,
+            $metadataID
+        );
+        $selectquery1->store_result();
+        $log1_deleted = 0;
+        $archivecount = 0;
+        $oldmetdataID = 0;
+        while ($selectquery1->fetch()) {
+            // Insert into archive formative log.
+            $logquery1->bind_param(
+                'iiiiisiiisssi',
+                $id,
+                $q_id,
+                $mark,
+                $adjmark,
+                $totalpos,
+                $user_answer,
+                $errorstate,
+                $screen,
+                $duration,
+                $updated,
+                $dismiss,
+                $option_order,
+                $metadataID
+            );
+
+            // Increment count for each new paper attempt.
+            if ($metadataID != $oldmetdataID) {
+                if ($oldmetdataID !== 0) {
+                    $archivecount++;
+                    // Archive the Metadata.
+                    archiveMetaData($metaselectquery, $oldmetdataID, $metalogquery, $deletequerymd);
+                    // Delete from progress log.
+                    $deletequerylog1->bind_param('i', $oldmetdataID);
+                    $deletequerylog1->execute();
+                }
+                $oldmetdataID = $metadataID;
+            }
+
+            // Commit every batchsize number of paper attempts.
+            if ($archivecount === $batchsize) {
+                // Commit transaction.
+                if ($commit) {
+                    $mysqli->commit();
+                } else {
+                    $mysqli->rollback();
+                }
+                $archivecount = 0;
+            }
+
+            $logquery1->execute();
+            $log1_deleted++;
+        }
+
         $log1_deleted_overall += $log1_deleted;
 
-        $metaselectquery1->bind_param('i', $user_to_delete);
-        $metaselectquery1->execute();
-        $metaselectquery1->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-        $metaselectquery1->store_result();
-        while ($metaselectquery1->fetch()) {
-            // Insert into archive meta log.
-            $metalogquery1->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-            $metalogquery1->execute();
-            // Delete from meta log.
-            $deletequerymd->bind_param('i', $id);
-            $deletequerymd->execute();
+        // Archive the left over.
+        if ($oldmetdataID !== 0) {
+            archiveMetaData($metaselectquery, $oldmetdataID, $metalogquery, $deletequerymd);
+            $deletequerylog1->bind_param('i', $oldmetdataID);
+            $deletequerylog1->execute();
+            if ($commit) {
+                $mysqli->commit();
+            } else {
+                $mysqli->rollback();
+            }
         }
 
         // Record the delete in audit trail
-        $logger->track_change('Deleted records from log1', $user_to_delete, $account, $log1_deleted, 0, 'Clear old logs');
-    }
+        if ($log1_deleted > 0) {
+            cli_utils::prompt($log1_deleted . ' progress logs archived for user ' . $potential_users[$i]);
+            $logger->track_change(
+                'Deleted records from log1',
+                $potential_users[$i],
+                $account,
+                $log1_deleted,
+                0,
+                'Clear old logs'
+            );
+            $usercount++;
+            if ($commit) {
+                $mysqli->commit();
+            } else {
+                $mysqli->rollback();
+            }
+        }
 
-    // Delete from lti_user table.
-    $deletequerylti->bind_param('i', $user_to_delete);
-    $deletequerylti->execute();
-    $lti_user_deleted = $deletequerylti->affected_rows;
-    $lti_user_deleted_overall += $lti_user_deleted;
-
-    if ($lti_user_deleted > 0) {
-        cli_utils::prompt($lti_user_deleted . ' LTI users to delete');
-        $logger->track_change('Delete LTI user', $user_to_delete, $account, 1, 0, 'Clear old logs');
+        // Only archive the number of users specified.
+        if (!$target and $usercount >= $userlimit) {
+            cli_utils::prompt($usercount . '/' . $userlimit . ' users complete (progress)');
+            break;
+        }
     }
-    $usercount++;
 }
-$stmt->close();
 $logquery0->close();
 $selectquery0->close();
 $logquery1->close();
 $selectquery1->close();
-$metalogquery0->close();
-$metaselectquery0->close();
-$metalogquery1->close();
-$metaselectquery1->close();
-$deletequerylti->close();
 $deletequerylog0->close();
 $deletequerylog1->close();
 $deletequerymd->close();
-$lm_check0->close();
-$lm_check1->close();
-
-// Reset passwords
-$sql = 'UPDATE '
-    . $cfg_db_database . '.users u, '
-    . $cfg_db_database . '.user_roles ur, '
-    . $cfg_db_database . '.roles r
-    SET u.password = ""
-    WHERE
-        ur.roleid = r.id
-    AND u.id = ur.userid
-    AND r.name IN ("graduate", "left")';
-if ($target == 1) {
-    $sql .= ' AND u.username = ?';
-}
-cli_utils::prompt('Resetting passwords');
-$updatequery = $mysqli->prepare($sql);
-if ($target == 1) {
-    $updatequery->bind_param('s', $targetted_user);
-}
-$roles_string = 'graduate and left';
-
-$updatequery->execute();
-if ($updatequery->affected_rows > 0) {
-    $logger->track_change('Reset passwords for roles ' . $roles_string, $account, $account, 1, 0, 'Clear old logs');
-}
-$updatequery->close();
-
 $mysqli->close();
 if ($archive) {
     $mysqliarchive->close();
@@ -353,7 +501,12 @@ cli_utils::prompt('End Archive Process ' . date('Y-m-d H:i:s'));
  */
 function get_logselectquery($table, $database)
 {
-    return 'SELECT l.id, l.q_id, l.mark, l.adjmark, l.totalpos, l.user_answer, l.errorstate, l.screen, l.duration, l.updated, l.dismiss, l.option_order, l.metadataID FROM ' . $database . '.' . $table . ' l INNER JOIN ' . $database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?';
+    return 'SELECT
+        l.id, l.q_id, l.mark, l.adjmark, l.totalpos, l.user_answer, l.errorstate, l.screen, l.duration,
+        l.updated, l.dismiss, l.option_order, l.metadataID
+    FROM '
+        . $database . '.' . $table . ' l INNER JOIN ' . $database . '.log_metadata lm ON l.metadataID = lm.id
+    WHERE lm.userID = ?';
 }
 
 /**
@@ -364,18 +517,26 @@ function get_logselectquery($table, $database)
  */
 function get_loginsertquery($table, $database)
 {
-    return 'INSERT INTO ' . $database . '.' . $table . ' (id, q_id, mark, adjmark, totalpos, user_answer, errorstate, screen, duration, updated, dismiss, option_order, metadataID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    return 'INSERT INTO '
+        . $database . '.' . $table
+        . ' (id, q_id, mark, adjmark, totalpos, user_answer, errorstate, screen, duration,
+            updated, dismiss, option_order, metadataID)
+            values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 }
 
 /**
  * Get the metadata table select query
- * @param string $table log table we want
  * @param string $database the database to select from
  * @return string
  */
-function get_metaselectquery($table, $database)
+function get_metaselectquery($database)
 {
-    return 'SELECT DISTINCT lm.id, lm.userID, lm.paperID, lm.started, lm.ipaddress, lm.student_grade, lm.year, lm.attempt, lm.completed, lm.lab_name, lm.highest_screen FROM ' . $database . '.' . $table . ' l INNER JOIN ' . $database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?';
+    return 'SELECT
+        lm.id, lm.userID, lm.paperID, lm.started, lm.ipaddress, lm.student_grade, lm.year, lm.attempt,
+        lm.completed, lm.lab_name, lm.highest_screen
+    FROM '
+        . $database . '.log_metadata lm
+    WHERE lm.id = ?';
 }
 
 /**
@@ -385,5 +546,58 @@ function get_metaselectquery($table, $database)
  */
 function get_metainsertquery($database)
 {
-    return 'INSERT INTO ' . $database . '.log_metadata_deleted (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed, lab_name, highest_screen) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    return 'INSERT INTO '
+        . $database . '.log_metadata_deleted
+        (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed,
+        lab_name, highest_screen)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+}
+
+/**
+ * Archive the metadata
+ * @param string $metaselectquery query to select metadata
+ * @param int $oldmetdataID metadata id
+ * @param string $metalogquery query to insert metadata
+ * @param string $deletequerymd query to delete metadata
+ */
+function archiveMetaData($metaselectquery, $oldmetdataID, $metalogquery, $deletequerymd)
+{
+    $metaselectquery->bind_param('i', $oldmetdataID);
+    $metaselectquery->execute();
+    $metaselectquery->bind_result(
+        $metaid,
+        $userID,
+        $paperID,
+        $started,
+        $ipaddress,
+        $student_grade,
+        $year,
+        $attempt,
+        $completed,
+        $lab_name,
+        $highest_screen
+    );
+    $metaselectquery->store_result();
+    $metaselectquery->fetch();
+
+    // Insert into archive meta log.
+    $metalogquery->bind_param(
+        'iiisssiissi',
+        $metaid,
+        $userID,
+        $paperID,
+        $started,
+        $ipaddress,
+        $student_grade,
+        $year,
+        $attempt,
+        $completed,
+        $lab_name,
+        $highest_screen
+    );
+    $metalogquery->execute();
+
+    // Delete from meta log.
+    $deletequerymd->bind_param('i', $metaid);
+    $deletequerymd->execute();
 }
