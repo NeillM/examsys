@@ -780,7 +780,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
         }
 
         /**
-         * Format the break time remaing for display.
+         * Format the break time remaining for display.
          */
         this.formatTimeRemaining = function(breaktime_remaining) {
             var minutes = Math.floor(breaktime_remaining / 60);
