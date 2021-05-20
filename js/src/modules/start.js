@@ -117,6 +117,11 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             scope.lastheartbeat = now;
             // Give some wiggle room.
             if (offBy > 100) {
+                if (scope.clockID) {
+                    // The time remaining values in the running timers is probably invalid, so we should stop it.
+                    clearTimeout(scope.clockID);
+                }
+
                 if (!scope.paused) {
                     // Not paused so just need to update the exam timer.
                     //   - taking into account time since last heartbeat with the break time added.
@@ -155,7 +160,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                 scope.examtime = remaining_time;
                 scope.UpdateClock(0, minutes, seconds);
 
-                if (remaining_time == 0 && close == true) {
+                if (remaining_time <= 0 && close == true) {
                     scope.KillClock();
                     scope.forceSave();
                     return;
@@ -775,7 +780,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
         }
 
         /**
-         * Format the break time remaing for display.
+         * Format the break time remaining for display.
          */
         this.formatTimeRemaining = function(breaktime_remaining) {
             var minutes = Math.floor(breaktime_remaining / 60);
