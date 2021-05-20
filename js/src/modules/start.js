@@ -117,6 +117,11 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             scope.lastheartbeat = now;
             // Give some wiggle room.
             if (offBy > 100) {
+                if (scope.clockID) {
+                    // The time remaining values in the running timers is probably invalid, so we should stop it.
+                    clearTimeout(scope.clockID);
+                }
+
                 if (!scope.paused) {
                     // Not paused so just need to update the exam timer.
                     //   - taking into account time since last heartbeat with the break time added.
