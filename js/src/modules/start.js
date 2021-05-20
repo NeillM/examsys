@@ -155,7 +155,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                 scope.examtime = remaining_time;
                 scope.UpdateClock(0, minutes, seconds);
 
-                if (remaining_time == 0 && close == true) {
+                if (remaining_time <= 0 && close == true) {
                     scope.KillClock();
                     scope.forceSave();
                     return;
