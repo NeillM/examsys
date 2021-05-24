@@ -223,10 +223,10 @@ class papers extends generator
                 $settings['remote'],
             );
 
-            // Set the management trype back to the correct state.
+            // Set the management type back to the correct state.
             $conf->set_setting('cfg_summative_mgmt', $management, $conf->get_setting_type('core', 'cfg_summative_mgmt'));
         } catch (Exception $e) {
-            // Set the management trype back to the correct state.
+            // Set the management type back to the correct state.
             $conf->set_setting('cfg_summative_mgmt', $management, $conf->get_setting_type('core', 'cfg_summative_mgmt'));
 
             $message = $e->getMessage();
