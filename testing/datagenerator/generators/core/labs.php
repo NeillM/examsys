@@ -137,6 +137,64 @@ class labs extends generator
     }
 
     /**
+     * Sets up a record for an exam lab setting the start and end time.
+     *
+     * @param array|stdClass $parameters
+     * @return array
+     */
+    public function createLabTime($parameters): array
+    {
+        // If an object is passed convert it into an array.
+        if (is_object($parameters)) {
+            $parameters = (array)$parameters;
+        }
+        // Check that the right type has been passed.
+        if (!is_array($parameters)) {
+            throw new data_error('Must pass an array or object');
+        }
+
+        // Check that required values have been passed.
+        if (!isset($parameters['labID'])) {
+            throw new data_error('Must pass a labID');
+        }
+
+        if (!isset($parameters['paperID'])) {
+            throw new data_error('Must pass a paperID');
+        }
+
+        // Ensure we have all the required data.
+        $defaults = [
+            'labID' => 0,
+            'invigilatorID' => 0,
+            'paperID' => 0,
+            'start_time' => 'now',
+            'end_time' => '1 hour',
+        ];
+        $values = $this->set_defaults_and_clean($defaults, $parameters);
+
+        // Ensure that the dates are a Timestamp.
+        $start = new \DateTime($values['start_time']);
+        $values['start_time'] = $start->getTimestamp();
+
+        $end = new \DateTime($values['end_time']);
+        $values['end_time'] = $end->getTimestamp();
+
+        // Create the record.
+        $sql = 'INSERT INTO log_lab_end_time (labID, invigilatorID, paperID, start_time, end_time) VALUES (?, ?, ?, ?, ?)';
+        $query = $this->db->prepare($sql);
+        $query->bind_param('iiiii', $values['labID'], $values['invigilatorID'], $values['paperID'], $values['start_date'], $values['end_time']);
+
+        if (!$query->execute()) {
+            // The end time was not successfully inserted.
+            throw new data_error("Failed to insert lab time into database");
+        }
+
+        // Return the data.
+        $values['id'] = $query->insert_id;
+        return $values;
+    }
+
+    /**
      * Gets the database id of a Campus from it's name.
      *
      * @param string $name
