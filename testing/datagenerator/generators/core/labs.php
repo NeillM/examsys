@@ -102,7 +102,7 @@ class labs extends generator
     /**
      * Creates a lab.
      *
-     * @param type $parameters
+     * @param array|stdClass $parameters
      * @return array
      * @throws data_error
      */
