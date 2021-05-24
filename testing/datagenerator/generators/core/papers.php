@@ -170,6 +170,10 @@ class papers extends generator
 
         $conf = Config::get_instance();
 
+        // We need to force summative management to be off (so that start dates will be set as defined).
+        $management = $conf->get_setting('core', 'cfg_summative_mgmt');
+        $conf->set_setting('cfg_summative_mgmt', false, $conf->get_setting_type('core', 'cfg_summative_mgmt'));
+
         $paper = new assessment($this->db, $conf);
         if (!empty($settings['calendaryear'])) {
             $settings['session'] = $settings['calendaryear'];
@@ -218,7 +222,13 @@ class papers extends generator
                 $settings['externalsys'],
                 $settings['remote'],
             );
+
+            // Set the management trype back to the correct state.
+            $conf->set_setting('cfg_summative_mgmt', $management, $conf->get_setting_type('core', 'cfg_summative_mgmt'));
         } catch (Exception $e) {
+            // Set the management trype back to the correct state.
+            $conf->set_setting('cfg_summative_mgmt', $management, $conf->get_setting_type('core', 'cfg_summative_mgmt'));
+
             $message = $e->getMessage();
             echo $message;
             throw new data_error('Error: ' . $message);
