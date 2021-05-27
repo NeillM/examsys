@@ -154,11 +154,21 @@ class LogMetadata
         return $this->id;
     }
 
+    /**
+     * Gets the time the user started the paper.
+     *
+     * @return DateTime
+     */
     public function get_start_datetime()
     {
         return $this->start_datetime;
     }
 
+    /**
+     * Gets the time the user finished the paper.
+     *
+     * @return ?DateTime
+     */
     public function get_finish_datetime()
     {
         return $this->finish_datetime;
