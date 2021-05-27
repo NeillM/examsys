@@ -40,7 +40,7 @@ if ($student_id !== 0) {
         $lab_object = $lab_factory->get_lab_based_on_client($current_address);
 
         $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli, $string);
-        $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
+        $log_lab_end_time = $propertyObj->getLogLabEndTime($lab_object->get_id());
         $log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
 
         $invigilator_id = $userObject->get_user_ID();

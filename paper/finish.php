@@ -111,7 +111,7 @@ $summative_exam_session_started = false;
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
     // Has this lab had an end time set?
-    $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
+    $log_lab_end_time = $propertyObj->getLogLabEndTime($lab_id);
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 

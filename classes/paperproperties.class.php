@@ -96,6 +96,15 @@ class PaperProperties
     private $_date_timezone = null;
 
     /**
+     * A static cache of LogLabEndTime objects indexed by the id of the lab.
+     *
+     * We use this to reduce database calls when using them in different places in code.
+     *
+     * @var array
+     */
+    protected $lab_end_cache = [];
+
+    /**
      * @var PaperSettings paper settings
      */
     private $papersettings;
@@ -109,6 +118,9 @@ class PaperProperties
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
         $this->db = null;
+
+        // We should not keep any cached objects.
+        $this->lab_end_cache = [];
     }
 
     public function __construct($db)
@@ -3188,5 +3200,22 @@ class PaperProperties
         }
 
         return ($end_passed and ($progress or ($summative and $paper_scheduled and $lab_end_date == false)));
+    }
+
+    /**
+     * Get the end time object for this paper in a specific lab.
+     *
+     * @param int|null $lab_id
+     * @return \LogLabEndTime
+     */
+    public function getLogLabEndTime(?int $lab_id): LogLabEndTime
+    {
+        $labkey = $lab_id ?? 0;
+
+        if (!isset($this->lab_end_cache[$labkey])) {
+            $this->lab_end_cache[$labkey] = new LogLabEndTime($lab_id, $this, $this->db);
+        }
+
+        return $this->lab_end_cache[$labkey];
     }
 }

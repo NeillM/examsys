@@ -108,7 +108,7 @@ if (!$lab_object and !$remote) {
 
             // Has 'Start' button been submitted
 
-            $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
+            $log_lab_end_time = $property_object->getLogLabEndTime($lab_object->get_id());
 
             $end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 

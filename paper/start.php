@@ -222,7 +222,7 @@ $allow_timing = $propertyObj->display_timer();
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if (!$remote and $propertyObj->get_exam_duration() != null and $papertype == '2' and !$is_question_preview_mode) {
     // Has this lab had an end time set?
-    $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
+    $log_lab_end_time = $propertyObj->getLogLabEndTime($lab_id);
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
