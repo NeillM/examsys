@@ -372,7 +372,7 @@ $timer_label = '';
 $timed = false;
 $special_needs_percentage = $userObject->get_special_needs_percentage();
 $remaining_time = null;
-if ($allow_timing and $propertyObj->get_exam_duration() != null) {
+if ($allow_timing) {
     $timed = true;
     // Summative type. Time is only active in live.
     if (!$remote and $papertype == '2' and $is_preview_mode === false) {

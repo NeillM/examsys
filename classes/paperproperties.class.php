@@ -2785,17 +2785,20 @@ class PaperProperties
      */
     public function display_timer()
     {
-        // Foramtive, Progressive or REMOTE summative papers that have a duration set should use the timer.
+        if (is_null($this->get_exam_duration())) {
+            // A timer cannot be used on papers with no duration.
+            return false;
+        }
+
         if (
             $this->paper_type == '0' or
             $this->paper_type == '1' or
             ($this->paper_type ==  '2' and $this->getSetting('remote_summative'))
         ) {
-            if ($this->get_exam_duration() != null) {
-                return true;
-            }
-            // Summative exams only allow timing if ALL the modules of the paper allow it.
+            // Foramtive, Progressive or REMOTE summative papers that have a duration set should use the timer.
+            return true;
         } elseif ($this->paper_type == '2') {
+            // Summative exams only allow timing if ALL the modules of the paper allow it.
             return module_utils::modules_allow_timing(array_keys(Paper_utils::get_modules($this->property_id, $this->db)), $this->db);
         }
         return false;
