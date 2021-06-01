@@ -3218,4 +3218,46 @@ class PaperProperties
 
         return $this->lab_end_cache[$labkey];
     }
+
+    /**
+     * Calculates the time remaining on a paper to the current user.
+     *
+     * @param int|null $lab_id
+     * @param \LogMetadata $log
+     * @param bool $preview
+     * @return int|null
+     * @throws \coding_exception
+     */
+    public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview): ?int
+    {
+        $remaining_time = null;
+        /* @var UserObject $user */
+        $user = UserObject::get_instance();
+        $special_needs_percentage = $user->get_special_needs_percentage();
+
+        if (!$this->getSetting('remote_summative') and $this->get_paper_type() == assessment::TYPE_SUMMATIVE and $preview) {
+            $log_lab_end_time = $this->getLogLabEndTime($lab_id);
+
+            // Has the student been allotted extra time by an invigilator?
+            $student_object['user_ID'] = $user->get_user_ID();
+            $student_object['special_needs_percentage'] = $special_needs_percentage;
+            $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $this->db);
+
+            // Do not time the exam if the invigilator has not clicked on the 'Start' button
+            if ($log_lab_end_time->get_session_end_date_datetime() !== false) {
+                $summative_timer = new SummativeTimer($log_extra_time);
+                $remaining_time = $summative_timer->calculate_remaining_time_secs();
+            }
+        } else {
+            $timer = new Timer($log, $this->get_exam_duration(), $special_needs_percentage);
+
+            if (!$timer->is_started()) {
+                $timer->start();
+            }
+
+            $remaining_time = $timer->calculate_remaining_time();
+        }
+
+        return $remaining_time;
+    }
 }

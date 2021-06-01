@@ -374,28 +374,9 @@ $special_needs_percentage = $userObject->get_special_needs_percentage();
 $remaining_time = null;
 if ($allow_timing) {
     $timed = true;
-    // Summative type. Time is only active in live.
-    if (!$remote and $papertype == '2' and $is_preview_mode === false) {
-        // Has the student been allotted extra time by an invigilator?
-        $student_object['user_ID'] = $userObject->get_user_ID();
-        $student_object['special_needs_percentage'] = $special_needs_percentage;
-        $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
-
-        // Do not time the exam if the invigilator has not clicked on the 'Start' button
-        if ($summative_exam_session_started !== false) {
-            $summative_timer  = new SummativeTimer($log_extra_time);
-            $remaining_time   = $summative_timer->calculate_remaining_time_secs();
-            $timer_label      = $string['timeremaining'] . ':';
-        }
-    } else {
-        $timer = new Timer($log_metadata, $propertyObj->get_exam_duration(), $special_needs_percentage);
-
-        if (!$timer->is_started()) {
-            $timer->start();
-        }
-
-        $remaining_time = $timer->calculate_remaining_time();
-        $timer_label    = $string['timeremaining'] . ':';
+    $remaining_time = $propertyObj->calculateTimeRemaining($lab_id, $log_metadata, $is_preview_mode);
+    if (!is_null($remaining_time)) {
+        $timer_label = $string['timeremaining'] . ':';
     }
 }
 
