@@ -140,7 +140,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         $properties = $this->generatePaperProperties(assessment::TYPE_PROGRESS, $start, $end, $this->testmodule['fullname']);
         $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $this->user['id'], $start);
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate(null));
+        $this->assertEquals($expected, $properties->shouldLogLate(null, $metadata));
     }
 
     /**
@@ -168,7 +168,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         $properties = $this->generatePaperProperties(assessment::TYPE_FORMATIVE, $start, $end, $this->testmodule['fullname']);
         $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $this->user['id'], $start);
         $this->set_active_user($this->user['id']);
-        $this->assertFalse($properties->shouldLogLate(null));
+        $this->assertFalse($properties->shouldLogLate(null, $metadata));
     }
 
     /**
@@ -200,11 +200,11 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
 
         // Test that the late log is used correctly.
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id']));
+        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id'], $metadata));
     }
 
     /**
-     * Data for testSummativeUnTimed
+     * Data for estSummativeUnTimed
      * @return array[]
      */
     public function dataSummativeUnTimed(): array
@@ -244,7 +244,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
 
         // Test that the late log is used correctly.
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id']));
+        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id'], $metadata));
     }
 
     /**
@@ -256,12 +256,9 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during exam' => ['30 minutes ago', '30 minutes', '30 minutes ago', '30 minutes', false],
-            // I think this one should be not be sending to the late log yet (but this is how things currently work).
             'during, lab ends after exam end' => ['61 minutes ago', '1 minute ago', '50 minutes ago', '10 minutes', false],
-            // I don't really expect this...
-            'after exam' => ['61 minutes ago', '1 minute ago', '61 minutes ago', '1 minute ago', false],
-            // I think this one should be sending to the late log (but this is how things currently work).
-            'after lab end, before exam end' => ['62 minutes ago', '30 minutes', '61 minutes ago', '1 minute ago', false],
+            'after exam' => ['61 minutes ago', '1 minute ago', '61 minutes ago', '1 minute ago', true],
+            'after lab end, before exam end' => ['62 minutes ago', '30 minutes', '61 minutes ago', '1 minute ago', true],
         ];
     }
 
@@ -282,7 +279,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
 
         // Test that the late log is used correctly.
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate(null));
+        $this->assertEquals($expected, $properties->shouldLogLate(null, $metadata));
     }
 
     /**
@@ -294,8 +291,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during exam' => ['4 hours ago', '4 hours', '30 minutes ago', false],
-            // I think this one should be sending to the late log (but this is how things currently work).
-            'user out of time' => ['4 hours ago', '4 hours', '61 minutes ago', false],
+            'user out of time' => ['4 hours ago', '4 hours', '61 minutes ago', true],
             'exam over, user has time remaining' => ['8 hours ago', '1 minute ago', '30 minutes ago', true],
             'exam over, user out of time' => ['8 hours ago', '1 minute ago', '61 minutes ago', true],
         ];

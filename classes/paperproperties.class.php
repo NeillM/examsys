@@ -3185,9 +3185,10 @@ class PaperProperties
      * Checks if results submitted now should be added to the late log.
      *
      * @param int|null $lab_id The id of the lab the exam is in.
+     * @param \LogMetadata $log The metadata record for the user taking the exam.
      * @return bool
      */
-    public function shouldLogLate(?int $lab_id): bool
+    public function shouldLogLate(?int $lab_id, LogMetadata $log): bool
     {
         $log_late = false;
 
@@ -3196,7 +3197,7 @@ class PaperProperties
                 $log_late = $this->shouldProgressLogLate();
                 break;
             case assessment::TYPE_SUMMATIVE:
-                $log_late = $this->shouldSummativeLogLate($lab_id);
+                $log_late = $this->shouldSummativeLogLate($lab_id, $log);
                 break;
         }
 
@@ -3217,20 +3218,47 @@ class PaperProperties
      * Checks if summative exam answers should be logged late.
      *
      * @param int|null $lab_id
+     * @param \LogMetadata $metadata
      * @return bool
      */
-    protected function shouldSummativeLogLate(?int $lab_id): bool
+    protected function shouldSummativeLogLate(?int $lab_id, LogMetadata $metadata): bool
     {
-        $end_passed = time() > $this->get_end_date();
-        $paper_scheduled = !is_null($this->get_start_date());
-        $lab_end_date = false;
-
-        if (!is_null($this->get_exam_duration())) {
-            $log_lab_end_time = new LogLabEndTime($lab_id, $this, $this->db);
-            $lab_end_date = $log_lab_end_time->get_session_end_date_datetime();
+        if (is_null($this->get_start_date())) {
+            // Never log late if there is no start date set.
+            return false;
         }
 
-        return ($end_passed && $paper_scheduled and $lab_end_date == false);
+        $timed = $this->display_timer();
+
+        // Assume the paper end date.
+        $end_date = $this->get_end_date();
+
+        // Assume remaining time.
+        $remaining = true;
+
+        if ($timed) {
+            $remaining_time = $this->calculateTimeRemaining($lab_id, $metadata, false);
+        }
+
+        if ($timed and $this->getSetting('remote_summative')) {
+            if (!is_null($remaining_time)) {
+                $remaining = ($remaining_time > 0);
+            }
+        } elseif ($timed) {
+            // Find out if the lab has a timer set on it.
+            $log_lab_end_time = $this->getLogLabEndTime($lab_id);
+            $lab_end_date = $log_lab_end_time->get_session_end_date_datetime();
+
+            if ($lab_end_date !== false) {
+                $end_date = $lab_end_date->getTimestamp();
+            } elseif (!is_null($remaining_time)) {
+                $remaining = ($remaining_time > 0);
+            }
+        }
+
+        $end_passed = time() > $end_date;
+
+        return ($end_passed or !$remaining);
     }
 
     /**

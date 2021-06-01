@@ -115,6 +115,18 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
+if ($getuser) {
+    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
+        $log_metadata = new LogMetadata($getuser, $paperID, $mysqli);
+    } else {   // Student is hacking the userid parameter.
+        $contactemail = support::get_email();
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    }
+} else {
+    $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
+}
+
 if ($userObject->has_role(array('External Examiner'))) {
     // No further security checks.
     if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
@@ -145,7 +157,7 @@ if ($userObject->has_role(array('External Examiner'))) {
     // Check for Safe Exam Browser restrictions
     check_seb_headers($paperID, $userObject, $string, $mysqli);
 
-    if ($propertyObj->shouldLogLate($lab_id)) {
+    if ($propertyObj->shouldLogLate($lab_id, $log_metadata)) {
         $paper_type = '_late';
     }
 }
@@ -174,17 +186,6 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
     $is_exam_review_mode        = true;
 }
 
-if ($getuser) {
-    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
-        $log_metadata = new LogMetadata($getuser, $paperID, $mysqli);
-    } else {   // Student is hacking the userid parameter.
-        $contactemail = support::get_email();
-        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-    }
-} else {
-    $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
-}
 if (!empty($metadataid)) {
     $log_metadata->get_record($metadataid);
 } else {
