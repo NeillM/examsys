@@ -555,29 +555,10 @@ if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_
         if (!$remote) {
             $footer_data['fire'] = 1;
         }
-        $userbreaks = $userObject->getRequiresBreaks();
-        if ($remote and !empty($userbreaks) and $configObject->get_setting('core', 'paper_pause_exam')) {
-            // Get available break time from database or calculate if none already used.
-            $durationsecs = LogBreakTime::getBreak($userObject->get_user_ID(), $paperID);
-            if ($durationsecs === -1) {
-                $examtime = $propertyObj->get_exam_duration() * 60;
-                if ($special_needs_percentage > 0) {
-                    $extratime = 1 + ($special_needs_percentage / 100);
-                } else {
-                    $extratime = 1;
-                }
-                $examtime = $examtime * $extratime;
-                if ($configObject->get_setting('core', 'paper_breaktime_mins')) {
-                    $durationsecs = (ceil($examtime / 3600) * $userbreaks) * 60;
-                } else {
-                    if ($userbreaks > 0) {
-                        $durationsecs = $examtime * ($userbreaks / 100);
-                    } else {
-                        $durationsecs = 0;
-                    }
-                }
-            }
-            $footer_data['breaks'] = round($durationsecs);
+
+        $break_time = $propertyObj->calculateBreakTime();
+        if (!is_null($break_time)) {
+            $footer_data['breaks'] = $break_time;
         }
     }
 
