@@ -184,9 +184,9 @@ class PaperProperties
      * @param mysqli $db database object
      * @param boolean $remote flag to indicate if remote summatives being queried
      * @param mixed $lab_object - Lab object or null
-     * @return mixed array of PaperProperties or false on error
+     * @return array List of PaperProperties
      */
-    private static function getSummativeProperties($db, bool $remote = false, $lab_object = null)
+    private static function getSummativeProperties($db, bool $remote = false, $lab_object = null): array
     {
         // SELECT statement.
         $select = 'properties.property_id,
@@ -244,7 +244,7 @@ class PaperProperties
 
         if ($paper_results->num_rows <= 0) {
             $paper_results->close();
-            return false;
+            return [];
         }
 
         $properties = array();
@@ -270,25 +270,25 @@ class PaperProperties
         return $properties;
     }
 
-    /*
+    /**
      * Load the paper properties for active remote summative exams
      * used in the invigilator screens
      * @param object $db - Link to MySQL db.
-     * @return mixed array of PaperProperties or false on error
+     * @return array List of PaperProperties
      */
-    public static function getRemoteSummativePaperProperties($db)
+    public static function getRemoteSummativePaperProperties($db): array
     {
         return self::getSummativeProperties($db, true);
     }
 
-    /*
+    /**
     * Load the paper properties by lab ID
     * used in the invigilator screens. previously called (get_invigilator_properties)
     * @param object $lab_object - Lab object.
     * @param object $db                 - Link to MySQL db.
-    * @return array of PaperProperties
+    * @return array List of PaperProperties
     */
-    public static function get_paper_properties_by_lab($lab_object, $db)
+    public static function get_paper_properties_by_lab($lab_object, $db): array
     {
         return self::getSummativeProperties($db, false, $lab_object);
     }
