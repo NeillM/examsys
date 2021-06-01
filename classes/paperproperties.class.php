@@ -3163,4 +3163,27 @@ class PaperProperties
         }
         return $minavail;
     }
+
+    /**
+     * Checks if results submitted now should be added to the late log.
+     *
+     * @param int|null $lab_id The id of the lab the exam is in.
+     * @return bool
+     */
+    public function shouldLogLate(?int $lab_id): bool
+    {
+        $end_passed = time() > $this->get_end_date();
+        $paper_type = $this->get_paper_type();
+        $progress = $paper_type == assessment::TYPE_PROGRESS;
+        $summative = $paper_type == assessment::TYPE_SUMMATIVE;
+        $lab_end_date = false;
+
+        $paper_scheduled = !is_null($this->get_start_date());
+        if ($summative and !is_null($this->get_exam_duration())) {
+            $log_lab_end_time = new LogLabEndTime($lab_id, $this, $this->db);
+            $lab_end_date = $log_lab_end_time->get_session_end_date_datetime();
+        }
+
+        return ($end_passed and ($progress or ($summative and $paper_scheduled and $lab_end_date == false)));
+    }
 }

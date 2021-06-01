@@ -145,7 +145,7 @@ if ($userObject->has_role(array('External Examiner'))) {
     // Check for Safe Exam Browser restrictions
     check_seb_headers($paperID, $userObject, $string, $mysqli);
 
-    if (time() > $end_date and ($paper_type == '1' or ($paper_type == '2' and $paper_scheduled and $summative_exam_session_started === false))) {
+    if ($propertyObj->shouldLogLate($lab_id)) {
         $paper_type = '_late';
     }
 }
