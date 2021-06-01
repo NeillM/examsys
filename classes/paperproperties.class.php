@@ -27,6 +27,8 @@ class PaperProperties
 {
     /** @var mysqli The Rogo database connection. */
     private $db;
+
+    /** @var null @var ConfigObject The Rogo configuration. */
     private $configObject;
 
     private $property_id;
