@@ -3283,7 +3283,7 @@ class PaperProperties
             $durationsecs = LogBreakTime::getBreak($user->get_user_ID(), $this->get_property_id());
 
             if ($durationsecs === -1) {
-                $examtime = $this->get_exam_duration() * 60;
+                $examtime = $this->get_exam_duration_sec();
                 if ($special_needs_percentage > 0) {
                     $extratime = 1 + ($special_needs_percentage / 100);
                 } else {
