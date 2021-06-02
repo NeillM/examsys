@@ -24,16 +24,24 @@
  */
 class Timer
 {
-    /** @var LogMetadata */
-    private $log_start_time;
+    /** @var LogMetadata The user log metadata for the exam. */
+    protected $log_start_time;
 
-    private $exam_duration;
-    private $start_datetime;
-    private $special_needs_percentage;
+    /** @var int The duration of the exam. */
+    protected $exam_duration;
+
+    /** @var \DateTime The start time of the exam. */
+    protected $start_datetime;
+
+    /** @var int|null The percentage extra time the user gets on an exam. */
+    protected $special_needs_percentage;
 
     /**
+     * Constructor for the timer.
+     *
      * @param LogStartTime $log_start_time
      * @param int $exam_duration
+     * @param int|null $special_needs_percentage
      */
     public function __construct($log_metadata, $exam_duration, $special_needs_percentage)
     {
@@ -43,6 +51,8 @@ class Timer
     }
 
     /**
+     * Start the timer.
+     *
      * @return void
      */
     public function start()
@@ -52,6 +62,8 @@ class Timer
     }
 
     /**
+     * Checks if the exam timer is started.
+     *
      * @return bool
      */
     public function is_started()
@@ -104,6 +116,8 @@ class Timer
     }
 
     /**
+     * Gets the time the user started the exam.
+     *
      * @return DateTime
      */
     public function get_start_datetime()
