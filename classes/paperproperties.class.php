@@ -3250,7 +3250,16 @@ class PaperProperties
             $lab_end_date = $log_lab_end_time->get_session_end_date_datetime();
 
             if ($lab_end_date !== false) {
-                $end_date = $lab_end_date->getTimestamp();
+                // Get the amount of special needs time.
+                /* @var \UserObject $user */
+                $user = UserObject::get_instance();
+                $special_needs_time = ($this->get_exam_duration_sec() / 100) * $user->get_special_needs_percentage();
+
+                // Get the invigilator assigned extra time.
+                $log_extra_time = new LogExtraTime($log_lab_end_time, ['user_ID' => $user->get_user_ID()], $this->db);
+                $extra_time_secs = $log_extra_time->get_extra_time_secs();
+
+                $end_date = $lab_end_date->getTimestamp() + $extra_time_secs + $special_needs_time;
             } elseif (!is_null($remaining_time)) {
                 $remaining = ($remaining_time > 0);
             }
