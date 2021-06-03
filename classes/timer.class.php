@@ -57,7 +57,7 @@ class Timer
      */
     public function start()
     {
-        $metdataid = $this->log_start_time->get_metadata_id();
+        $metadataID = $this->log_start_time->get_metadata_id();
         $this->log_start_time->get_record($metadataID, true);
     }
 
