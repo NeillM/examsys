@@ -97,4 +97,34 @@ class LogBreakTime
         $result->bind_param('ii', $paperid, $userid);
         $result->execute();
     }
+
+    /**
+     * Calculates the total amount of break time based on the criteria.
+     *
+     * @param int $standard_duration The standard duration of the exam.
+     * @param int|null $special_needs The percentage of extra time a user gets for the exam.
+     * @param int|null $userbreaks The amount of break time a user is eligible to take.
+     * @return int
+     */
+    public static function calculateBreakTime(int $standard_duration, ?int $special_needs, ?int $userbreaks): int
+    {
+        if (!is_null($special_needs) and $special_needs > 0) {
+            $extratime = 1 + ($special_needs / 100);
+        } else {
+            $extratime = 1;
+        }
+
+        $examtime = $standard_duration * $extratime;
+
+        if (Config::get_instance()->get_setting('core', 'paper_breaktime_mins')) {
+            $durationsecs = (ceil($examtime / 3600) * $userbreaks) * 60;
+        } else {
+            if (!is_null($userbreaks) and $userbreaks > 0) {
+                $durationsecs = $examtime * ($userbreaks / 100);
+            } else {
+                $durationsecs = 0;
+            }
+        }
+        return $durationsecs;
+    }
 }

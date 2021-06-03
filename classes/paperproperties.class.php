@@ -3283,24 +3283,11 @@ class PaperProperties
             $durationsecs = LogBreakTime::getBreak($user->get_user_ID(), $this->get_property_id());
 
             if ($durationsecs === -1) {
-                $examtime = $this->get_exam_duration_sec();
-                if ($special_needs_percentage > 0) {
-                    $extratime = 1 + ($special_needs_percentage / 100);
-                } else {
-                    $extratime = 1;
-                }
-
-                $examtime = $examtime * $extratime;
-
-                if ($this->configObject->get_setting('core', 'paper_breaktime_mins')) {
-                    $durationsecs = (ceil($examtime / 3600) * $userbreaks) * 60;
-                } else {
-                    if ($userbreaks > 0) {
-                        $durationsecs = $examtime * ($userbreaks / 100);
-                    } else {
-                        $durationsecs = 0;
-                    }
-                }
+                $durationsecs = LogBreakTime::calculateBreakTime(
+                    $this->get_exam_duration_sec(),
+                    $special_needs_percentage,
+                    $userbreaks
+                );
             }
             $break_time = round($durationsecs);
         }
