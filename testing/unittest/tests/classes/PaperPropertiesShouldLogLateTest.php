@@ -432,4 +432,108 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
             'extended passed' => ['76 minutes ago', '30 minutes', '16 minutes ago', 15, true],
         ];
     }
+
+    /**
+     * Tests that remote summative exams with breaks enabled work as expected.
+     *
+     * @param string $start The start of the paper and the user attempt
+     * @param string $end The end of the paper
+     * @param bool $use_minutes If the break time is in minutes or a percentage of the paper duration.
+     * @param int $break_time The amount of break time the user has.
+     * @param ?int $break_remaining The amount of break time remaining to the user, or null if the exam has not been paused.
+     * @param int $extra_time The amount of special needs time the user has added to papers.
+     * @param bool $expected The expected result
+     * @dataProvider dataSummativeRemoteBreaks
+     */
+    public function testSummativeRemoteBreaks(
+        string $start,
+        string $end,
+        bool $use_minutes,
+        int $break_time,
+        ?int $break_remaining,
+        int $extra_time,
+        bool $expected
+    )
+    {
+        $this->configureSummatives($use_minutes, true);
+
+        // Create the paper and get the property.
+        $properties = $this->generatePaperProperties(assessment::TYPE_SUMMATIVE, $start, $end, $this->testmodule['fullname'], null, true);
+
+        // Create the user.
+        $datagenerator = $this->get_datagenerator('users');
+        $userdata = [
+            'sid' => '5265727',
+        ];
+        $special_needs = [];
+
+        if ($extra_time > 0) {
+            // Create a user with extra time.
+            $special_needs['extra_time'] = $extra_time;
+        }
+
+        if ($break_time > 0) {
+            // Create break time for the user.
+            $special_needs['break_time'] = $break_time;
+        }
+
+        if (!empty($special_needs)) {
+            // The user has special needs.
+            $userdata['special_needs'] = $special_needs;
+        }
+
+        $user = $datagenerator->create_user($userdata);
+
+        $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $user['id'], $start);
+
+        if (!is_null($break_remaining)) {
+            // Set the remaining time for the exam.
+            $datagenerator = $this->get_datagenerator('breaks');
+            $break = [
+                'paperID' => $properties->get_property_id(),
+                'userID' => $user['id'],
+                'time' => ($break_remaining * 60),
+            ];
+            $datagenerator->createExamBreak($break);
+        }
+
+        // Test that the late log is used correctly.
+        $this->set_active_user($user['id']);
+        $this->assertEquals($expected, $properties->shouldLogLate(null, $metadata));
+    }
+
+    /**
+     * Data for testSummativeRemoteBreaks.
+     *
+     * @return array
+     */
+    public function dataSummativeRemoteBreaks(): array
+    {
+        return [
+            // No special needs time. 15 minutes of breaks will be given.
+            'during' => ['59 minutes ago', '1 hour', true, 15, null, 0, false],
+            'after' => ['61 minutes ago', '1 hour', true, 15, null, 0, true],
+            'during, some break used' => ['69 minutes ago', '1 hour', true, 15, 5, 0, false],
+            'after, some break used' => ['71 minutes ago', '1 hour', true, 15, 5, 0, true],
+            'during, all break used' => ['74 minutes ago', '1 hour', true, 15, 0, 0, false],
+            'after, all break used' => ['76 minutes ago', '1 hour', true, 15, 0, 0, true],
+            'during, some break used, percentage' => ['69 minutes ago', '1 hour', false, 25, 5, 0, false],
+            'after, some break used, percentage' => ['71 minutes ago', '1 hour',  false, 25, 5, 0, true],
+            'during, all break used, percentage' => ['74 minutes ago', '1 hour',  false, 25, 0, 0, false],
+            'after, all break used, percentage' => ['76 minutes ago', '1 hour',  false, 25, 0, 0, true],
+
+            // 15 minutes of special needs time, i.e. 25% of 1 hour.
+            // Minute per hour will give 30 minutes of break time, percentage break time will give 19 minutes.
+            'during, special needs' => ['74 minutes ago', '1 hour', true, 15, null, 25, false],
+            'after, special needs' => ['76 minutes ago', '1 hour', true, 15, null, 25, true],
+            'during, some break used, special needs' => ['99 minutes ago', '1 hour', true, 15, 5, 25, false],
+            'after, some break used, special needs' => ['101 minutes ago', '1 hour', true, 15, 5, 25, true],
+            'during, all break used, special needs' => ['104 minutes ago', '1 hour', true, 15, 0, 25, false],
+            'after, all break used, special needs' => ['106 minutes ago', '1 hour', true, 15, 0, 25, true],
+            'during, some break used, percentage, special needs' => ['88 minutes ago', '1 hour', false, 25, 5, 25, false],
+            'after, some break used, percentage, special needs' => ['90 minutes ago', '1 hour',  false, 25, 5, 25, true],
+            'during, all break used, percentage, special needs' => ['93 minutes ago', '1 hour',  false, 25, 0, 25, false],
+            'after, all break used, percentage, special needs' => ['95 minutes ago', '1 hour',  false, 25, 0, 25, true],
+        ];
+    }
 }

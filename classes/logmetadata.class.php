@@ -26,7 +26,7 @@ class LogMetadata
 {
     private $id;
     private $paper_id;
-    private $userID;
+    private $userid;
     private $session_id; //started
     private $start_datetime; //date time object derived from started
     private $ipaddress;
@@ -152,6 +152,26 @@ class LogMetadata
     public function get_metadata_id()
     {
         return $this->id;
+    }
+
+    /**
+     * Gets the id of the user the metadata record is for.
+     *
+     * @return int
+     */
+    public function getUserID(): int
+    {
+        return $this->userid;
+    }
+
+    /**
+     * Get the id of the paper the metadata record is for.
+     *
+     * @return int
+     */
+    public function getPaperID(): int
+    {
+        return $this->paper_id;
     }
 
     /**

@@ -84,16 +84,30 @@ class Timer
     }
 
     /**
+     * Calculates the time remaining to the user.
+     *
      * @return int
      */
-    public function calculate_remaining_time()
-    {
+    protected function calculateExamDuration(): int {
         $exam_duration_mins = $this->exam_duration;
         $exam_duration_secs = $exam_duration_mins * 60;
 
         if ($this->special_needs_percentage > 0) {
             $exam_duration_secs += $exam_duration_secs * $this->special_needs_percentage / 100;
         }
+
+        // Ensure the return value is an integer.
+        return ceil($exam_duration_secs);
+    }
+
+    /**
+     * Calculates the remaining time available to the user.
+     *
+     * @return int
+     */
+    public function calculate_remaining_time()
+    {
+        $exam_duration_secs = $this->calculateExamDuration();
 
         // get existing start time or create a new one
         $start_datetime = $this->get_start_datetime();

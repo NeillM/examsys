@@ -3317,7 +3317,11 @@ class PaperProperties
                 $remaining_time = $summative_timer->calculate_remaining_time_secs();
             }
         } else {
-            $timer = new Timer($log, $this->get_exam_duration(), $special_needs_percentage);
+            if ($this->getSetting('remote_summative')) {
+                $timer = new RemoteSummativeTimer($log, $this->get_exam_duration(), $special_needs_percentage);
+            } else {
+                $timer = new Timer($log, $this->get_exam_duration(), $special_needs_percentage);
+            }
 
             if (!$timer->is_started()) {
                 $timer->start();
