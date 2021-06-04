@@ -37,7 +37,7 @@ try {
         // Check if enrolled.
         check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $string, $mysqli);
         // Check for any metadata security restrictions.
-        check_metadata($paperid, $userObject, $modIDs, $string, $mysqli);
+        check_security_metadata($paperid, $userObject, $modIDs, $string, $mysqli);
         // Check if the student has clicked 'Finish'.
         check_finished($propertyObj, $userObject, $string, $mysqli);
         // Check the time.
