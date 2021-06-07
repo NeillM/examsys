@@ -169,7 +169,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during time' => ['30 minutes ago', '30 minutes', false],
-            'after time' => ['61 minutes ago', '1 minute ago', true],
+            'after time' => ['61 minutes ago', '61 seconds ago', true],
         ];
     }
 
@@ -197,7 +197,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during time' => ['30 minutes ago', '30 minutes'],
-            'after time' => ['61 minutes ago', '1 minute ago'],
+            'after time' => ['61 minutes ago', '61 seconds ago'],
         ];
     }
 
@@ -228,7 +228,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during exam' => ['30 minutes ago', '30 minutes',false],
-            'after exam' => ['61 minutes ago', '1 minute ago', true],
+            'after exam' => ['61 minutes ago', '61 seconds ago', true],
         ];
     }
 
@@ -273,9 +273,11 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during exam' => ['30 minutes ago', '30 minutes', '30 minutes ago', '30 minutes', false],
-            'during, lab ends after exam end' => ['61 minutes ago', '1 minute ago', '50 minutes ago', '10 minutes', false],
-            'after exam' => ['61 minutes ago', '1 minute ago', '61 minutes ago', '1 minute ago', true],
-            'after lab end, before exam end' => ['62 minutes ago', '30 minutes', '61 minutes ago', '1 minute ago', true],
+            'grace period' => ['30 minutes ago', '30 minutes', '61 minutes ago', '10 seconds ago', false],
+            'during, lab ends after exam end' => ['61 minutes ago', '61 seconds ago', '50 minutes ago', '10 minutes', false],
+            'grace period, lab ends after exam end' => ['61 minutes ago', '61 seconds ago', '50 minutes ago', '10 seconds ago', false],
+            'after exam' => ['61 minutes ago', '61 seconds ago', '61 minutes ago', '61 seconds ago', true],
+            'after lab end, before exam end' => ['62 minutes ago', '30 minutes', '61 minutes ago', '61 seconds ago', true],
         ];
     }
 
@@ -310,9 +312,10 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during exam' => ['4 hours ago', '4 hours', '30 minutes ago', false],
-            'user out of time' => ['4 hours ago', '4 hours', '61 minutes ago', true],
-            'exam over, user has time remaining' => ['8 hours ago', '1 minute ago', '30 minutes ago', true],
-            'exam over, user out of time' => ['8 hours ago', '1 minute ago', '61 minutes ago', true],
+            'grace period' => ['4 hours ago', '4 hours', '60 minutes 10 second ago', false],
+            'user out of time' => ['4 hours ago', '4 hours', '61 minutes 1 second ago', true],
+            'exam over, user has time remaining' => ['8 hours ago', '61 seconds ago', '30 minutes ago', true],
+            'exam over, user out of time' => ['8 hours ago', '1 minute ago', '61 minutes 1 second ago', true],
         ];
     }
 
@@ -363,9 +366,9 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         return [
             // 25% extra time on a 1 hour exam is 15 minutes.
             'in extended period, in lab' => ['74 minutes ago', '30 minutes', 25, false, false],
-            'extended passed, in lab' => ['76 minutes ago', '30 minutes', 25, false, true],
+            'extended passed, in lab' => ['76 minutes 1 second ago', '30 minutes', 25, false, true],
             'in extended period, remote' => ['74 minutes ago', '30 minutes', 25, true, false],
-            'extended passed, remote' => ['76 minutes ago', '30 minutes', 25, true, true],
+            'extended passed, remote' => ['76 minutes 1 second ago', '30 minutes', 25, true, true],
         ];
     }
 
@@ -429,7 +432,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'in extended period' => ['74 minutes ago', '30 minutes', '14 minutes ago', 15, false],
-            'extended passed' => ['76 minutes ago', '30 minutes', '16 minutes ago', 15, true],
+            'extended passed' => ['76 minutes ago', '30 minutes', '16 minutes 1 second ago', 15, true],
         ];
     }
 
@@ -512,28 +515,28 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         return [
             // No special needs time. 15 minutes of breaks will be given.
             'during' => ['59 minutes ago', '1 hour', true, 15, null, 0, false],
-            'after' => ['61 minutes ago', '1 hour', true, 15, null, 0, true],
+            'after' => ['61 minutes 1 second ago', '1 hour', true, 15, null, 0, true],
             'during, some break used' => ['69 minutes ago', '1 hour', true, 15, 5, 0, false],
-            'after, some break used' => ['71 minutes ago', '1 hour', true, 15, 5, 0, true],
+            'after, some break used' => ['71 minutes 1 second ago', '1 hour', true, 15, 5, 0, true],
             'during, all break used' => ['74 minutes ago', '1 hour', true, 15, 0, 0, false],
-            'after, all break used' => ['76 minutes ago', '1 hour', true, 15, 0, 0, true],
+            'after, all break used' => ['76 minutes 1 second ago', '1 hour', true, 15, 0, 0, true],
             'during, some break used, percentage' => ['69 minutes ago', '1 hour', false, 25, 5, 0, false],
-            'after, some break used, percentage' => ['71 minutes ago', '1 hour',  false, 25, 5, 0, true],
+            'after, some break used, percentage' => ['71 minutes 1 second ago', '1 hour',  false, 25, 5, 0, true],
             'during, all break used, percentage' => ['74 minutes ago', '1 hour',  false, 25, 0, 0, false],
-            'after, all break used, percentage' => ['76 minutes ago', '1 hour',  false, 25, 0, 0, true],
+            'after, all break used, percentage' => ['76 minutes 1 second ago', '1 hour',  false, 25, 0, 0, true],
 
             // 15 minutes of special needs time, i.e. 25% of 1 hour.
             // Minute per hour will give 30 minutes of break time, percentage break time will give 19 minutes.
             'during, special needs' => ['74 minutes ago', '1 hour', true, 15, null, 25, false],
-            'after, special needs' => ['76 minutes ago', '1 hour', true, 15, null, 25, true],
+            'after, special needs' => ['76 minutes 1 second ago', '1 hour', true, 15, null, 25, true],
             'during, some break used, special needs' => ['99 minutes ago', '1 hour', true, 15, 5, 25, false],
-            'after, some break used, special needs' => ['101 minutes ago', '1 hour', true, 15, 5, 25, true],
+            'after, some break used, special needs' => ['101 minutes 1 second ago', '1 hour', true, 15, 5, 25, true],
             'during, all break used, special needs' => ['104 minutes ago', '1 hour', true, 15, 0, 25, false],
-            'after, all break used, special needs' => ['106 minutes ago', '1 hour', true, 15, 0, 25, true],
+            'after, all break used, special needs' => ['106 minutes 1 second ago', '1 hour', true, 15, 0, 25, true],
             'during, some break used, percentage, special needs' => ['88 minutes ago', '1 hour', false, 25, 5, 25, false],
-            'after, some break used, percentage, special needs' => ['90 minutes ago', '1 hour',  false, 25, 5, 25, true],
+            'after, some break used, percentage, special needs' => ['90 minutes 1 second ago', '1 hour',  false, 25, 5, 25, true],
             'during, all break used, percentage, special needs' => ['93 minutes ago', '1 hour',  false, 25, 0, 25, false],
-            'after, all break used, percentage, special needs' => ['95 minutes ago', '1 hour',  false, 25, 0, 25, true],
+            'after, all break used, percentage, special needs' => ['95 minutes 1 second ago', '1 hour',  false, 25, 0, 25, true],
         ];
     }
 }

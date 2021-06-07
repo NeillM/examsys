@@ -3228,6 +3228,11 @@ class PaperProperties
             return false;
         }
 
+        // We want to give users on timed exams a grace period after the end of the exam before
+        // answers are sent to the late log, so that it is not filled with people who have had
+        // the timer force submit their results.
+        $grace_period = 60;
+
         $timed = $this->display_timer();
 
         // Assume the paper end date.
@@ -3237,7 +3242,8 @@ class PaperProperties
         $remaining = true;
 
         if ($timed) {
-            $remaining_time = $this->calculateTimeRemaining($lab_id, $metadata, false);
+            $remaining_time = $this->calculateTimeRemaining($lab_id, $metadata, false, true);
+            $remaining_time += $grace_period;
         }
 
         if ($timed and $this->getSetting('remote_summative')) {
@@ -3259,7 +3265,7 @@ class PaperProperties
                 $log_extra_time = new LogExtraTime($log_lab_end_time, ['user_ID' => $user->get_user_ID()], $this->db);
                 $extra_time_secs = $log_extra_time->get_extra_time_secs();
 
-                $end_date = $lab_end_date->getTimestamp() + $extra_time_secs + $special_needs_time;
+                $end_date = $lab_end_date->getTimestamp() + $extra_time_secs + $special_needs_time + $grace_period;
             } elseif (!is_null($remaining_time)) {
                 $remaining = ($remaining_time > 0);
             }
@@ -3293,10 +3299,11 @@ class PaperProperties
      * @param int|null $lab_id
      * @param \LogMetadata $log
      * @param bool $preview
+     * @param bool $allow_negative If false the minimum value is zero (default: false)
      * @return int|null
      * @throws \coding_exception
      */
-    public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview): ?int
+    public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview, bool $allow_negative = false): ?int
     {
         $remaining_time = null;
         /* @var UserObject $user */
@@ -3314,7 +3321,7 @@ class PaperProperties
             // Do not time the exam if the invigilator has not clicked on the 'Start' button
             if ($log_lab_end_time->get_session_end_date_datetime() !== false) {
                 $summative_timer = new SummativeTimer($log_extra_time);
-                $remaining_time = $summative_timer->calculate_remaining_time_secs();
+                $remaining_time = $summative_timer->calculate_remaining_time_secs($allow_negative);
             }
         } else {
             if ($this->getSetting('remote_summative')) {
@@ -3327,7 +3334,7 @@ class PaperProperties
                 $timer->start();
             }
 
-            $remaining_time = $timer->calculate_remaining_time();
+            $remaining_time = $timer->calculate_remaining_time($allow_negative);
         }
 
         return $remaining_time;

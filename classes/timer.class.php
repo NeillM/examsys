@@ -103,9 +103,10 @@ class Timer
     /**
      * Calculates the remaining time available to the user.
      *
+     * @param bool $allow_negative If false the minimum value is zero (default: false)
      * @return int
      */
-    public function calculate_remaining_time()
+    public function calculate_remaining_time(bool $allow_negative = false)
     {
         $exam_duration_secs = $this->calculateExamDuration();
 
@@ -122,7 +123,7 @@ class Timer
             $remaining_time_secs = $exam_duration_secs - $time_elapsed_secs;
         }
 
-        if ($remaining_time_secs < 1) {
+        if (!$allow_negative and $remaining_time_secs < 1) {
             $remaining_time_secs = 0;
         }
 
