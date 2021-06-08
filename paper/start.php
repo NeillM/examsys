@@ -222,7 +222,7 @@ $allow_timing = $propertyObj->display_timer();
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if (!$remote and $propertyObj->get_exam_duration() != null and $papertype == '2' and !$is_question_preview_mode) {
     // Has this lab had an end time set?
-    $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
+    $log_lab_end_time = $propertyObj->getLogLabEndTime($lab_id);
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
@@ -372,30 +372,11 @@ $timer_label = '';
 $timed = false;
 $special_needs_percentage = $userObject->get_special_needs_percentage();
 $remaining_time = null;
-if ($allow_timing and $propertyObj->get_exam_duration() != null) {
+if ($allow_timing) {
     $timed = true;
-    // Summative type. Time is only active in live.
-    if (!$remote and $papertype == '2' and $is_preview_mode === false) {
-        // Has the student been allotted extra time by an invigilator?
-        $student_object['user_ID'] = $userObject->get_user_ID();
-        $student_object['special_needs_percentage'] = $special_needs_percentage;
-        $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
-
-        // Do not time the exam if the invigilator has not clicked on the 'Start' button
-        if ($summative_exam_session_started !== false) {
-            $summative_timer  = new SummativeTimer($log_extra_time);
-            $remaining_time   = $summative_timer->calculate_remaining_time_secs();
-            $timer_label      = $string['timeremaining'] . ':';
-        }
-    } else {
-        $timer = new Timer($log_metadata, $propertyObj->get_exam_duration(), $special_needs_percentage);
-
-        if (!$timer->is_started()) {
-            $timer->start();
-        }
-
-        $remaining_time = $timer->calculate_remaining_time();
-        $timer_label    = $string['timeremaining'] . ':';
+    $remaining_time = $propertyObj->calculateTimeRemaining($lab_id, $log_metadata, $is_preview_mode);
+    if (!is_null($remaining_time)) {
+        $timer_label = $string['timeremaining'] . ':';
     }
 }
 
@@ -574,29 +555,10 @@ if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_
         if (!$remote) {
             $footer_data['fire'] = 1;
         }
-        $userbreaks = $userObject->getRequiresBreaks();
-        if ($remote and !empty($userbreaks) and $configObject->get_setting('core', 'paper_pause_exam')) {
-            // Get available break time from database or calculate if none already used.
-            $durationsecs = LogBreakTime::getBreak($userObject->get_user_ID(), $paperID);
-            if ($durationsecs === -1) {
-                $examtime = $propertyObj->get_exam_duration() * 60;
-                if ($special_needs_percentage > 0) {
-                    $extratime = 1 + ($special_needs_percentage / 100);
-                } else {
-                    $extratime = 1;
-                }
-                $examtime = $examtime * $extratime;
-                if ($configObject->get_setting('core', 'paper_breaktime_mins')) {
-                    $durationsecs = (ceil($examtime / 3600) * $userbreaks) * 60;
-                } else {
-                    if ($userbreaks > 0) {
-                        $durationsecs = $examtime * ($userbreaks / 100);
-                    } else {
-                        $durationsecs = 0;
-                    }
-                }
-            }
-            $footer_data['breaks'] = round($durationsecs);
+
+        $break_time = $propertyObj->calculateBreakTime();
+        if (!is_null($break_time)) {
+            $footer_data['breaks'] = $break_time;
         }
     }
 

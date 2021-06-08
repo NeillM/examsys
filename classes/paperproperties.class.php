@@ -27,6 +27,8 @@ class PaperProperties
 {
     /** @var mysqli The Rogo database connection. */
     private $db;
+
+    /** @var null @var ConfigObject The Rogo configuration. */
     private $configObject;
 
     private $property_id;
@@ -96,6 +98,15 @@ class PaperProperties
     private $_date_timezone = null;
 
     /**
+     * A static cache of LogLabEndTime objects indexed by the id of the lab.
+     *
+     * We use this to reduce database calls when using them in different places in code.
+     *
+     * @var array
+     */
+    protected $lab_end_cache = [];
+
+    /**
      * @var PaperSettings paper settings
      */
     private $papersettings;
@@ -109,6 +120,9 @@ class PaperProperties
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
         $this->db = null;
+
+        // We should not keep any cached objects.
+        $this->lab_end_cache = [];
     }
 
     public function __construct($db)
@@ -2785,17 +2799,20 @@ class PaperProperties
      */
     public function display_timer()
     {
-        // Foramtive, Progressive or REMOTE summative papers that have a duration set should use the timer.
+        if (is_null($this->get_exam_duration())) {
+            // A timer cannot be used on papers with no duration.
+            return false;
+        }
+
         if (
             $this->paper_type == '0' or
             $this->paper_type == '1' or
             ($this->paper_type ==  '2' and $this->getSetting('remote_summative'))
         ) {
-            if ($this->get_exam_duration() != null) {
-                return true;
-            }
-            // Summative exams only allow timing if ALL the modules of the paper allow it.
+            // Foramtive, Progressive or REMOTE summative papers that have a duration set should use the timer.
+            return true;
         } elseif ($this->paper_type == '2') {
+            // Summative exams only allow timing if ALL the modules of the paper allow it.
             return module_utils::modules_allow_timing(array_keys(Paper_utils::get_modules($this->property_id, $this->db)), $this->db);
         }
         return false;
@@ -3185,5 +3202,109 @@ class PaperProperties
         }
 
         return ($end_passed and ($progress or ($summative and $paper_scheduled and $lab_end_date == false)));
+    }
+
+    /**
+     * Get the end time object for this paper in a specific lab.
+     *
+     * @param int|null $lab_id
+     * @return \LogLabEndTime
+     */
+    public function getLogLabEndTime(?int $lab_id): LogLabEndTime
+    {
+        $labkey = $lab_id ?? 0;
+
+        if (!isset($this->lab_end_cache[$labkey])) {
+            $this->lab_end_cache[$labkey] = new LogLabEndTime($lab_id, $this, $this->db);
+        }
+
+        return $this->lab_end_cache[$labkey];
+    }
+
+    /**
+     * Calculates the time remaining on a paper to the current user.
+     *
+     * @param int|null $lab_id
+     * @param \LogMetadata $log
+     * @param bool $preview
+     * @return int|null
+     * @throws \coding_exception
+     */
+    public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview): ?int
+    {
+        $remaining_time = null;
+        /* @var UserObject $user */
+        $user = UserObject::get_instance();
+        $special_needs_percentage = $user->get_special_needs_percentage();
+
+        if (!$this->getSetting('remote_summative') and $this->get_paper_type() == assessment::TYPE_SUMMATIVE and $preview) {
+            $log_lab_end_time = $this->getLogLabEndTime($lab_id);
+
+            // Has the student been allotted extra time by an invigilator?
+            $student_object['user_ID'] = $user->get_user_ID();
+            $student_object['special_needs_percentage'] = $special_needs_percentage;
+            $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $this->db);
+
+            // Do not time the exam if the invigilator has not clicked on the 'Start' button
+            if ($log_lab_end_time->get_session_end_date_datetime() !== false) {
+                $summative_timer = new SummativeTimer($log_extra_time);
+                $remaining_time = $summative_timer->calculate_remaining_time_secs();
+            }
+        } else {
+            $timer = new Timer($log, $this->get_exam_duration(), $special_needs_percentage);
+
+            if (!$timer->is_started()) {
+                $timer->start();
+            }
+
+            $remaining_time = $timer->calculate_remaining_time();
+        }
+
+        return $remaining_time;
+    }
+
+    /**
+     * Calculate the amount of break time available to the current user on the paper during a remote summative exam.
+     *
+     * @return int|null
+     */
+    public function calculateBreakTime(): ?int
+    {
+        $break_time = null;
+
+        /* @var UserObject $user */
+        $user = UserObject::get_instance();
+        $userbreaks = $user->getRequiresBreaks();
+        $remote = $this->getSetting('remote_summative');
+
+        if ($remote and !empty($userbreaks) and $this->configObject->get_setting('core', 'paper_pause_exam')) {
+            $special_needs_percentage = $user->get_special_needs_percentage();
+            // Get available break time from database or calculate if none already used.
+            $durationsecs = LogBreakTime::getBreak($user->get_user_ID(), $this->get_property_id());
+
+            if ($durationsecs === -1) {
+                $examtime = $this->get_exam_duration() * 60;
+                if ($special_needs_percentage > 0) {
+                    $extratime = 1 + ($special_needs_percentage / 100);
+                } else {
+                    $extratime = 1;
+                }
+
+                $examtime = $examtime * $extratime;
+
+                if ($this->configObject->get_setting('core', 'paper_breaktime_mins')) {
+                    $durationsecs = (ceil($examtime / 3600) * $userbreaks) * 60;
+                } else {
+                    if ($userbreaks > 0) {
+                        $durationsecs = $examtime * ($userbreaks / 100);
+                    } else {
+                        $durationsecs = 0;
+                    }
+                }
+            }
+            $break_time = round($durationsecs);
+        }
+
+        return $break_time;
     }
 }

@@ -70,7 +70,7 @@ foreach ($properties_list as $property_object) {
         $modules = '\'' . $modules . '\'';
 
         if (!$remote) {
-            $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
+            $log_lab_end_time = $property_object->getLogLabEndTime($lab_object->get_id());
         } else {
             $log_lab_end_time = null;
         }

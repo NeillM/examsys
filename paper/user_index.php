@@ -209,7 +209,7 @@ if ($exam_duration !== null) {
     if ($test_type == '2' and !$remote) {
         $student_object['special_needs_percentage'] = $special_needs_percentage;
         $student_object['user_ID']   = $userObject->get_user_ID();
-        $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
+        $log_lab_end_time = $propertyObj->getLogLabEndTime($lab_id);
         $log_extra_time   = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
         $extra_time_secs  = $log_extra_time->get_extra_time_secs();
         $extra_time_mins  = $extra_time_secs / 60;

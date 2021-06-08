@@ -46,7 +46,7 @@ class SummativeTimer
     * subtracting the current time stamp from the session end time stamp. It then adds any
     * special needs allowance
     *
-    * @return int
+    * @return int|false
     */
     public function calculate_remaining_time_secs()
     {
