@@ -63,9 +63,6 @@ class SummativeTimer
 
         //has the student been given extra time?
         $extra_time = $this->get_extra_time_secs();
-        if ($extra_time === false) {
-            $extra_time = 0;
-        }
 
         $now_timestamp = time();
 

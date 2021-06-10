@@ -100,7 +100,6 @@ class LogExtraTime
      */
     public function get_extra_time_secs()
     {
-
         $lab_id = $this->get_lab_id();
         $student_id = $this->get_student_id();
         $paper_id = $this->get_paper_id();
@@ -110,7 +109,7 @@ class LogExtraTime
             if (isset($this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'])) {
                 return $this->log_extra_time_cache[$student_id][$lab_id]['extra_time_secs'];
             } else {
-                return false;
+                return 0;
             }
         }
 
@@ -123,7 +122,7 @@ class LogExtraTime
         if ($stmt->num_rows < 1) {
             $stmt->close();
 
-            return false;
+            return 0;
         }
 
         $bindResult = $stmt->bind_result($extra_time_secs);

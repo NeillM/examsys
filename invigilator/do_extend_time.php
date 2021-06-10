@@ -16,6 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Extends the time available to a user for an exam.
  *
  * @author Simon Wilkinson
  * @version 1.0
