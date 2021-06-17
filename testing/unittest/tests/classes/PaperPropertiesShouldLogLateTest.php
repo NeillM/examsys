@@ -105,6 +105,23 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     }
 
     /**
+     * Configure the system level remote summative exam settings.
+     *
+     * @param bool $use_minutes Sets if the user extra time is in minutes (default: false)
+     * @param bool $breaks Sets if a remote summative can be paused by users (default: false)
+     */
+    protected function configureSummatives(bool $use_minutes = false, bool $breaks = false)
+    {
+        $config = Config::get_instance();
+
+        $type = $config->get_setting_type('core', 'paper_pause_exam');
+        $config->set_setting('paper_pause_exam', $breaks, $type);
+
+        $type = $config->get_setting_type('core', 'paper_breaktime_mins');
+        $config->set_setting('paper_breaktime_mins', $use_minutes, $type);
+    }
+
+    /**
      * Generates and returns the log metadata for a user on the paper.
      *
      * @param int $paper_id
@@ -140,7 +157,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         $properties = $this->generatePaperProperties(assessment::TYPE_PROGRESS, $start, $end, $this->testmodule['fullname']);
         $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $this->user['id'], $start);
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate(null));
+        $this->assertEquals($expected, $properties->shouldLogLate(null, $metadata));
     }
 
     /**
@@ -152,7 +169,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during time' => ['30 minutes ago', '30 minutes', false],
-            'after time' => ['61 minutes ago', '1 minute ago', true],
+            'after time' => ['61 minutes ago', '61 seconds ago', true],
         ];
     }
 
@@ -168,7 +185,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         $properties = $this->generatePaperProperties(assessment::TYPE_FORMATIVE, $start, $end, $this->testmodule['fullname']);
         $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $this->user['id'], $start);
         $this->set_active_user($this->user['id']);
-        $this->assertFalse($properties->shouldLogLate(null));
+        $this->assertFalse($properties->shouldLogLate(null, $metadata));
     }
 
     /**
@@ -180,7 +197,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during time' => ['30 minutes ago', '30 minutes'],
-            'after time' => ['61 minutes ago', '1 minute ago'],
+            'after time' => ['61 minutes ago', '61 seconds ago'],
         ];
     }
 
@@ -200,18 +217,18 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
 
         // Test that the late log is used correctly.
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id']));
+        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id'], $metadata));
     }
 
     /**
-     * Data for testSummativeUnTimed
+     * Data for estSummativeUnTimed
      * @return array[]
      */
     public function dataSummativeUnTimed(): array
     {
         return [
             'during exam' => ['30 minutes ago', '30 minutes',false],
-            'after exam' => ['61 minutes ago', '1 minute ago', true],
+            'after exam' => ['61 minutes ago', '61 seconds ago', true],
         ];
     }
 
@@ -244,7 +261,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
 
         // Test that the late log is used correctly.
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id']));
+        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id'], $metadata));
     }
 
     /**
@@ -256,12 +273,11 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during exam' => ['30 minutes ago', '30 minutes', '30 minutes ago', '30 minutes', false],
-            // I think this one should be not be sending to the late log yet (but this is how things currently work).
-            'during, lab ends after exam end' => ['61 minutes ago', '1 minute ago', '50 minutes ago', '10 minutes', false],
-            // I don't really expect this...
-            'after exam' => ['61 minutes ago', '1 minute ago', '61 minutes ago', '1 minute ago', false],
-            // I think this one should be sending to the late log (but this is how things currently work).
-            'after lab end, before exam end' => ['62 minutes ago', '30 minutes', '61 minutes ago', '1 minute ago', false],
+            'grace period' => ['30 minutes ago', '30 minutes', '61 minutes ago', '10 seconds ago', false],
+            'during, lab ends after exam end' => ['61 minutes ago', '61 seconds ago', '50 minutes ago', '10 minutes', false],
+            'grace period, lab ends after exam end' => ['61 minutes ago', '61 seconds ago', '50 minutes ago', '10 seconds ago', false],
+            'after exam' => ['61 minutes ago', '61 seconds ago', '61 minutes ago', '61 seconds ago', true],
+            'after lab end, before exam end' => ['62 minutes ago', '30 minutes', '61 minutes ago', '61 seconds ago', true],
         ];
     }
 
@@ -276,13 +292,15 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
      */
     public function testSummativeRemote(string $paper_start, string $paper_end, string $user_start, bool $expected)
     {
+        $this->configureSummatives();
+
         // Create the paper and get the property.
         $properties = $this->generatePaperProperties(assessment::TYPE_SUMMATIVE, $paper_start, $paper_end, $this->testmodule['fullname'], null, true);
         $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $this->user['id'], $user_start);
 
         // Test that the late log is used correctly.
         $this->set_active_user($this->user['id']);
-        $this->assertEquals($expected, $properties->shouldLogLate(null));
+        $this->assertEquals($expected, $properties->shouldLogLate(null, $metadata));
     }
 
     /**
@@ -294,10 +312,231 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     {
         return [
             'during exam' => ['4 hours ago', '4 hours', '30 minutes ago', false],
-            // I think this one should be sending to the late log (but this is how things currently work).
-            'user out of time' => ['4 hours ago', '4 hours', '61 minutes ago', false],
-            'exam over, user has time remaining' => ['8 hours ago', '1 minute ago', '30 minutes ago', true],
-            'exam over, user out of time' => ['8 hours ago', '1 minute ago', '61 minutes ago', true],
+            'grace period' => ['4 hours ago', '4 hours', '60 minutes 10 second ago', false],
+            'user out of time' => ['4 hours ago', '4 hours', '61 minutes 1 second ago', true],
+            'exam over, user has time remaining' => ['8 hours ago', '61 seconds ago', '30 minutes ago', true],
+            'exam over, user out of time' => ['8 hours ago', '1 minute ago', '61 minutes 1 second ago', true],
+        ];
+    }
+
+    /**
+     * Tests that a student with extra time via their accessibility settings is late logged correctly.
+     *
+     * @param string $start The start of the paper and user start time.
+     * @param string $paper_end The paper end time.
+     * @param int $extra Extra time as a percentage of the paper time.
+     * @param bool $remote Set if the exam should be remote or not.
+     * @param bool $expected The expected outcome.
+     * @dataProvider dataSummativeStudentExtraTime
+     */
+    public function testSummativeStudentExtraTime(string $start, string $paper_end, int $extra, bool $remote, bool $expected)
+    {
+        $this->configureSummatives();
+
+        // Create the paper and get the property.
+        $properties = $this->generatePaperProperties(assessment::TYPE_SUMMATIVE, $start, $paper_end, $this->timedmodule['fullname'], $this->lab['id'], $remote);
+
+        // Create a user with extra time.
+        $datagenerator = $this->get_datagenerator('users');
+        $userdata = [
+            'sid' => '5265727',
+            'special_needs' => [
+                'extra_time' => $extra,
+            ],
+        ];
+        $user = $datagenerator->create_user($userdata);
+
+        $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $user['id'], $start);
+
+        // Use the lab when not a remote exam.
+        $lab = ($remote) ? null : $this->lab['id'];
+
+        // Test that the late log is used correctly.
+        $this->set_active_user($user['id']);
+        $this->assertEquals($expected, $properties->shouldLogLate($lab, $metadata));
+    }
+
+    /**
+     * Data for testSummativeStudentExtraTime
+     *
+     * @return array
+     */
+    public function dataSummativeStudentExtraTime(): array
+    {
+        return [
+            // 25% extra time on a 1 hour exam is 15 minutes.
+            'in extended period, in lab' => ['74 minutes ago', '30 minutes', 25, false, false],
+            'extended passed, in lab' => ['76 minutes 1 second ago', '30 minutes', 25, false, true],
+            'in extended period, remote' => ['74 minutes ago', '30 minutes', 25, true, false],
+            'extended passed, remote' => ['76 minutes 1 second ago', '30 minutes', 25, true, true],
+        ];
+    }
+
+    /**
+     * Checks that the late log is used correctly when an invigilator gives a user extra time.
+     *
+     * @param string $start The paper and lab start time
+     * @param string $paper_end The paper end time.
+     * @param string $lab_end the lab end time
+     * @param int $extra The amount of extra time available to the user.
+     * @param bool $expected The expected outcome.
+     * @dataProvider dataSummativeLabUserExtraTime
+     */
+    public function testSummativeLabUserExtraTime(
+        string $start,
+        string $paper_end,
+        string $lab_end,
+        int $extra,
+        bool $expected
+    )
+    {
+        // Set the paper break setting.
+        $this->configureSummatives();
+
+        // Create the paper and get the property.
+        $properties = $this->generatePaperProperties(assessment::TYPE_SUMMATIVE, $start, $paper_end, $this->timedmodule['fullname'], $this->lab['id']);
+        $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $this->user['id'], $start);
+
+        // Create the lab end time.
+        $datagenerator = $this->get_datagenerator('labs');
+        $lab_time = [
+            'labID' => $this->lab['id'],
+            'invigilatorID' => $this->admin['id'],
+            'paperID' => $properties->get_property_id(),
+            'start_time' => $start,
+            'end_time' => $lab_end,
+        ];
+        $datagenerator->createLabTime($lab_time);
+
+        // Add invigilator awarded extra time.
+        $extra_time = [
+            'extra_time' => $extra,
+            'invigilator' => $this->admin['id'],
+            'lab' => $this->lab['id'],
+            'paper' => $properties->get_property_id(),
+            'student' => $this->user['id'],
+        ];
+        $datagenerator->createExtraTime($extra_time);
+
+        // Test that the late log is used correctly.
+        $this->set_active_user($this->user['id']);
+        $this->assertEquals($expected, $properties->shouldLogLate($this->lab['id'], $metadata));
+    }
+
+    /**
+     * Data for testSummativeLabUserExtraTime
+     *
+     * @return array
+     */
+    public function dataSummativeLabUserExtraTime(): array
+    {
+        return [
+            'in extended period' => ['74 minutes ago', '30 minutes', '14 minutes ago', 15, false],
+            'extended passed' => ['76 minutes ago', '30 minutes', '16 minutes 1 second ago', 15, true],
+        ];
+    }
+
+    /**
+     * Tests that remote summative exams with breaks enabled work as expected.
+     *
+     * @param string $start The start of the paper and the user attempt
+     * @param string $end The end of the paper
+     * @param bool $use_minutes If the break time is in minutes or a percentage of the paper duration.
+     * @param int $break_time The amount of break time the user has.
+     * @param ?int $break_remaining The amount of break time remaining to the user, or null if the exam has not been paused.
+     * @param int $extra_time The amount of special needs time the user has added to papers.
+     * @param bool $expected The expected result
+     * @dataProvider dataSummativeRemoteBreaks
+     */
+    public function testSummativeRemoteBreaks(
+        string $start,
+        string $end,
+        bool $use_minutes,
+        int $break_time,
+        ?int $break_remaining,
+        int $extra_time,
+        bool $expected
+    )
+    {
+        $this->configureSummatives($use_minutes, true);
+
+        // Create the paper and get the property.
+        $properties = $this->generatePaperProperties(assessment::TYPE_SUMMATIVE, $start, $end, $this->testmodule['fullname'], null, true);
+
+        // Create the user.
+        $datagenerator = $this->get_datagenerator('users');
+        $userdata = [
+            'sid' => '5265727',
+        ];
+        $special_needs = [];
+
+        if ($extra_time > 0) {
+            // Create a user with extra time.
+            $special_needs['extra_time'] = $extra_time;
+        }
+
+        if ($break_time > 0) {
+            // Create break time for the user.
+            $special_needs['break_time'] = $break_time;
+        }
+
+        if (!empty($special_needs)) {
+            // The user has special needs.
+            $userdata['special_needs'] = $special_needs;
+        }
+
+        $user = $datagenerator->create_user($userdata);
+
+        $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $user['id'], $start);
+
+        if (!is_null($break_remaining)) {
+            // Set the remaining time for the exam.
+            $datagenerator = $this->get_datagenerator('breaks');
+            $break = [
+                'paperID' => $properties->get_property_id(),
+                'userID' => $user['id'],
+                'time' => ($break_remaining * 60),
+            ];
+            $datagenerator->createExamBreak($break);
+        }
+
+        // Test that the late log is used correctly.
+        $this->set_active_user($user['id']);
+        $this->assertEquals($expected, $properties->shouldLogLate(null, $metadata));
+    }
+
+    /**
+     * Data for testSummativeRemoteBreaks.
+     *
+     * @return array
+     */
+    public function dataSummativeRemoteBreaks(): array
+    {
+        return [
+            // No special needs time. 15 minutes of breaks will be given.
+            'during' => ['59 minutes ago', '1 hour', true, 15, null, 0, false],
+            'after' => ['61 minutes 1 second ago', '1 hour', true, 15, null, 0, true],
+            'during, some break used' => ['69 minutes ago', '1 hour', true, 15, 5, 0, false],
+            'after, some break used' => ['71 minutes 1 second ago', '1 hour', true, 15, 5, 0, true],
+            'during, all break used' => ['74 minutes ago', '1 hour', true, 15, 0, 0, false],
+            'after, all break used' => ['76 minutes 1 second ago', '1 hour', true, 15, 0, 0, true],
+            'during, some break used, percentage' => ['69 minutes ago', '1 hour', false, 25, 5, 0, false],
+            'after, some break used, percentage' => ['71 minutes 1 second ago', '1 hour',  false, 25, 5, 0, true],
+            'during, all break used, percentage' => ['74 minutes ago', '1 hour',  false, 25, 0, 0, false],
+            'after, all break used, percentage' => ['76 minutes 1 second ago', '1 hour',  false, 25, 0, 0, true],
+
+            // 15 minutes of special needs time, i.e. 25% of 1 hour.
+            // Minute per hour will give 30 minutes of break time, percentage break time will give 19 minutes.
+            'during, special needs' => ['74 minutes ago', '1 hour', true, 15, null, 25, false],
+            'after, special needs' => ['76 minutes 1 second ago', '1 hour', true, 15, null, 25, true],
+            'during, some break used, special needs' => ['99 minutes ago', '1 hour', true, 15, 5, 25, false],
+            'after, some break used, special needs' => ['101 minutes 1 second ago', '1 hour', true, 15, 5, 25, true],
+            'during, all break used, special needs' => ['104 minutes ago', '1 hour', true, 15, 0, 25, false],
+            'after, all break used, special needs' => ['106 minutes 1 second ago', '1 hour', true, 15, 0, 25, true],
+            'during, some break used, percentage, special needs' => ['88 minutes ago', '1 hour', false, 25, 5, 25, false],
+            'after, some break used, percentage, special needs' => ['90 minutes 1 second ago', '1 hour',  false, 25, 5, 25, true],
+            'during, all break used, percentage, special needs' => ['93 minutes ago', '1 hour',  false, 25, 0, 25, false],
+            'after, all break used, percentage, special needs' => ['95 minutes 1 second ago', '1 hour',  false, 25, 0, 25, true],
         ];
     }
 }

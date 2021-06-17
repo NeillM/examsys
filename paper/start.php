@@ -248,7 +248,7 @@ if (!$is_question_preview_mode) {
 $log = log::get_paperlog($papertype);
 $check_log_late = false;
 // Check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
-if ($is_preview_mode === false and $propertyObj->shouldLogLate($lab_id)) {
+if ($is_preview_mode === false and $propertyObj->shouldLogLate($lab_id, $log_metadata)) {
     $check_log_late = true;
 }
 $l = $log->get_previous_answers($metadataID, $do_restart, $current_screen, $check_log_late);

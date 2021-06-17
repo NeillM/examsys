@@ -242,7 +242,11 @@ if ($exam_duration !== null) {
             $display_remaining_time = true;
         }
         $studentID       = $userObject->get_user_ID();
-        $timer           = new Timer($log_metadata, $exam_duration, $special_needs_percentage);
+        if ($remote) {
+            $timer = new RemoteSummativeTimer($log_metadata, $exam_duration, $special_needs_percentage);
+        } else {
+            $timer = new Timer($log_metadata, $exam_duration, $special_needs_percentage);
+        }
         $remaining_time  = $timer->calculate_remaining_time();
 
         // We are a remote summative.

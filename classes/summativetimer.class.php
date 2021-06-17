@@ -46,9 +46,10 @@ class SummativeTimer
     * subtracting the current time stamp from the session end time stamp. It then adds any
     * special needs allowance
     *
+    * @param bool $allow_negative If false the minimum value is zero (default: false)
     * @return int|false
     */
-    public function calculate_remaining_time_secs()
+    public function calculate_remaining_time_secs(bool $allow_negative = false)
     {
 
         //has the lab got an end time set?
@@ -70,7 +71,7 @@ class SummativeTimer
 
         $remaining_time_secs = $session_end_timestamp - $now_timestamp + $extra_time + $special_needs_secs;
 
-        if ($remaining_time_secs < 1) {
+        if (!$allow_negative and $remaining_time_secs < 1) {
             $remaining_time_secs = 0;
         }
 

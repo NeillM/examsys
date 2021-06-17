@@ -3185,23 +3185,95 @@ class PaperProperties
      * Checks if results submitted now should be added to the late log.
      *
      * @param int|null $lab_id The id of the lab the exam is in.
+     * @param \LogMetadata $log The metadata record for the user taking the exam.
      * @return bool
      */
-    public function shouldLogLate(?int $lab_id): bool
+    public function shouldLogLate(?int $lab_id, LogMetadata $log): bool
     {
-        $end_passed = time() > $this->get_end_date();
-        $paper_type = $this->get_paper_type();
-        $progress = $paper_type == assessment::TYPE_PROGRESS;
-        $summative = $paper_type == assessment::TYPE_SUMMATIVE;
-        $lab_end_date = false;
+        $log_late = false;
 
-        $paper_scheduled = !is_null($this->get_start_date());
-        if ($summative and !is_null($this->get_exam_duration())) {
-            $log_lab_end_time = new LogLabEndTime($lab_id, $this, $this->db);
-            $lab_end_date = $log_lab_end_time->get_session_end_date_datetime();
+        switch ($this->get_paper_type()) {
+            case assessment::TYPE_PROGRESS:
+                $log_late = $this->shouldProgressLogLate();
+                break;
+            case assessment::TYPE_SUMMATIVE:
+                $log_late = $this->shouldSummativeLogLate($lab_id, $log);
+                break;
         }
 
-        return ($end_passed and ($progress or ($summative and $paper_scheduled and $lab_end_date == false)));
+        return $log_late;
+    }
+
+    /**
+     * Tests if a progress test should log it's results as late.
+     *
+     * @return bool
+     */
+    protected function shouldProgressLogLate(): bool
+    {
+        return (time() > $this->get_end_date());
+    }
+
+    /**
+     * Checks if summative exam answers should be logged late.
+     *
+     * @param int|null $lab_id
+     * @param \LogMetadata $metadata
+     * @return bool
+     */
+    protected function shouldSummativeLogLate(?int $lab_id, LogMetadata $metadata): bool
+    {
+        if (is_null($this->get_start_date())) {
+            // Never log late if there is no start date set.
+            return false;
+        }
+
+        // We want to give users on timed exams a grace period after the end of the exam before
+        // answers are sent to the late log, so that it is not filled with people who have had
+        // the timer force submit their results.
+        $grace_period = 60;
+
+        $timed = $this->display_timer();
+
+        // Assume the paper end date.
+        $end_date = $this->get_end_date();
+
+        // Assume remaining time.
+        $remaining = true;
+
+        if ($timed) {
+            $remaining_time = $this->calculateTimeRemaining($lab_id, $metadata, false, true);
+            $remaining_time += $grace_period;
+        }
+
+        if ($timed and $this->getSetting('remote_summative')) {
+            if (!is_null($remaining_time)) {
+                $remaining = ($remaining_time > 0);
+            }
+        } elseif ($timed) {
+            // Find out if the lab has a timer set on it.
+            $log_lab_end_time = $this->getLogLabEndTime($lab_id);
+            $lab_end_date = $log_lab_end_time->get_session_end_date_datetime();
+
+            if ($lab_end_date !== false) {
+                // Get the amount of special needs time.
+                /* @var \UserObject $user */
+                $user = UserObject::get_instance();
+                $special_needs_time = ($this->get_exam_duration_sec() / 100) * $user->get_special_needs_percentage();
+
+                // Get the invigilator assigned extra time.
+                $log_extra_time = new LogExtraTime($log_lab_end_time, ['user_ID' => $user->get_user_ID()], $this->db);
+                $extra_time_secs = $log_extra_time->get_extra_time_secs();
+
+                $end_date = $lab_end_date->getTimestamp() + $extra_time_secs + $special_needs_time + $grace_period;
+            } elseif (!is_null($remaining_time)) {
+                $remaining = ($remaining_time > 0);
+            }
+        }
+
+        $end_passed = time() > $end_date;
+
+        return ($end_passed or !$remaining);
     }
 
     /**
@@ -3227,10 +3299,11 @@ class PaperProperties
      * @param int|null $lab_id
      * @param \LogMetadata $log
      * @param bool $preview
+     * @param bool $allow_negative If false the minimum value is zero (default: false)
      * @return int|null
      * @throws \coding_exception
      */
-    public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview): ?int
+    public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview, bool $allow_negative = false): ?int
     {
         $remaining_time = null;
         /* @var UserObject $user */
@@ -3248,16 +3321,20 @@ class PaperProperties
             // Do not time the exam if the invigilator has not clicked on the 'Start' button
             if ($log_lab_end_time->get_session_end_date_datetime() !== false) {
                 $summative_timer = new SummativeTimer($log_extra_time);
-                $remaining_time = $summative_timer->calculate_remaining_time_secs();
+                $remaining_time = $summative_timer->calculate_remaining_time_secs($allow_negative);
             }
         } else {
-            $timer = new Timer($log, $this->get_exam_duration(), $special_needs_percentage);
+            if ($this->getSetting('remote_summative')) {
+                $timer = new RemoteSummativeTimer($log, $this->get_exam_duration(), $special_needs_percentage);
+            } else {
+                $timer = new Timer($log, $this->get_exam_duration(), $special_needs_percentage);
+            }
 
             if (!$timer->is_started()) {
                 $timer->start();
             }
 
-            $remaining_time = $timer->calculate_remaining_time();
+            $remaining_time = $timer->calculate_remaining_time($allow_negative);
         }
 
         return $remaining_time;

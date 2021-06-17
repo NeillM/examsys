@@ -17,6 +17,9 @@
 
 namespace testing\datagenerator;
 
+use LogExtraTime;
+use PaperProperties;
+
 /**
  * Generates Rogo Campuses and Labs.
  *
@@ -133,6 +136,69 @@ class labs extends generator
             throw new data_error("Campus '$campus' does not exist.");
         }
         $values['id'] = $this->insert_lab($values);
+        return $values;
+    }
+
+    /**
+     * Create an entry for a user having extra time on a paper in a lab.
+     *
+     * Required parameters:
+     * - lab: The id of the lab the extra time is for.
+     * - paper: The id of the paper.
+     * - student: The id of the student getting extra time
+     * - invigilator: The id of the invigilator assigning extra time
+     *
+     * Optional parameters:
+     * - extra_time: The amount of extra time granted to the user in minutes (default: 10)
+     *
+     * @param array|stdClass $parameters
+     * @return array
+     * @throws data_error
+     */
+    public function createExtraTime($parameters): array
+    {
+        // If an object is passed convert it into an array.
+        if (is_object($parameters)) {
+            $parameters = (array)$parameters;
+        }
+
+        // Check that the right type has been passed.
+        if (!is_array($parameters)) {
+            throw new data_error('Must pass an array or object');
+        }
+
+        // Check that the required fields are present.
+        if (!isset($parameters['invigilator'])) {
+            throw new data_error('The invigilator must be passed.');
+        }
+
+        if (!isset($parameters['lab'])) {
+            throw new data_error('The lab must be passed.');
+        }
+
+        if (!isset($parameters['paper'])) {
+            throw new data_error('The paper must be passed.');
+        }
+
+        if (!isset($parameters['student'])) {
+            throw new data_error('The student must be passed.');
+        }
+
+        // Clean the values.
+        $defaults = array(
+            'extra_time' => 10,
+            'invigilator' => null,
+            'lab' => null,
+            'paper' => null,
+            'student' => null,
+        );
+        $values = $this->set_defaults_and_clean($defaults, $parameters);
+
+        // Save the entry.
+        $propertyObj = PaperProperties::get_paper_properties_by_id($values['paper'], $this->db, []);
+        $log_lab_end_time = $propertyObj->getLogLabEndTime($values['lab']);
+        $log_extra_time = new LogExtraTime($log_lab_end_time, ['user_ID' => $values['student']], $this->db);
+        $log_extra_time->save($values['invigilator'], $values['extra_time']);
         return $values;
     }
 

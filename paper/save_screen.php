@@ -120,13 +120,13 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
 }
 
 $is_preview = ($mode === 'preview');
+$log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 
-if (!$is_preview and $propertyObj->shouldLogLate($lab_id)) {
+if (!$is_preview and $propertyObj->shouldLogLate($lab_id, $log_metadata)) {
     $propertyObj->set_paper_type('_late');
 }
 
 $preview_q_id = param::optional('q_id', null, param::INT, param::FETCH_GET);
-$log_metadata = new LogMetadata($userObject->get_user_ID(), $propertyObj->get_property_id(), $mysqli);
 if ($log_metadata->get_record() === false) {
     $notice->access_denied($mysqli, $string, $string['error_paper'], false);
 }
