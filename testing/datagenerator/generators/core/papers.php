@@ -178,10 +178,10 @@ class papers extends generator
         if (!empty($settings['calendaryear'])) {
             $settings['session'] = $settings['calendaryear'];
         } else {
-            $settings['session'] = date('Y');
-
             $yearutils = new yearutils($this->db);
             $supported = $yearutils->get_supported_years();
+
+            $settings['session'] = $yearutils->get_current_session();
 
             if (!array_key_exists($settings['session'], $supported)) {
                 $generator = new academic_year();
