@@ -1791,7 +1791,6 @@ QUERY;
             PRIMARY KEY (`table`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
-
     }
 
     public function next()

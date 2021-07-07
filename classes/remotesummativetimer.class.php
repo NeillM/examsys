@@ -35,8 +35,7 @@ class RemoteSummativeTimer extends Timer
         LogMetadata $log_metadata,
         int $exam_duration,
         ?int $special_needs_percentage
-    )
-    {
+    ) {
         parent::__construct($log_metadata, $exam_duration, $special_needs_percentage);
     }
 

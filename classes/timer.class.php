@@ -88,7 +88,8 @@ class Timer
      *
      * @return int
      */
-    protected function calculateExamDuration(): int {
+    protected function calculateExamDuration(): int
+    {
         $exam_duration_mins = $this->exam_duration;
         $exam_duration_secs = $exam_duration_mins * 60;
 

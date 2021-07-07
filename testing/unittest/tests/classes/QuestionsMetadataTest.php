@@ -110,5 +110,4 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
         $expected = 'testvalue';
         $this->assertEquals($expected, $actual);
     }
-
 }

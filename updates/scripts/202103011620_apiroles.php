@@ -27,5 +27,5 @@ if ($updater_utils->check_version('7.3.0')) {
         )';
         $updater_utils->execute_query($newdata, false);
         $updater_utils->record_update('rogo_2997');
-   }
+    }
 }

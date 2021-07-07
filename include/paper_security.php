@@ -88,7 +88,7 @@ function check_paper_password($paperID, $password, $string, $db, $show_form = fa
                 if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $decrypt_password) {
                     $_SESSION['paperpwd'] = $password;
                 } else {
-                   renderPasswordForm($string);
+                    renderPasswordForm($string);
                 }
             } else {
                 $notice = UserNotices::get_instance();
