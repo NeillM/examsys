@@ -12,8 +12,8 @@ Feature: Add student note in the class totals report
       | moduleid | fullname |
       | m1 | m1 |
     And the following "module enrolment" exist:
-      | sid | modulecode |
-      | 987654321 | m1 |
+      | sid | modulecode | calendar_year |
+      | 987654321 | m1 | 2020 |
     And the following "papers" exist:
       | type | papertitle | paperowner | modulename | startdate | calendaryear |
       | progress | paper1 | admin | m1 | 2020-02-27 12:00:00 | 2020 |
