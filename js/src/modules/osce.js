@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jquery'], function($) {
+define(['jquery', 'rogoconfig'], function($, CONFIG) {
     return function () {
         /**
          * View OSCE script.
@@ -28,7 +28,8 @@ define(['jquery'], function($) {
             if (this.metadataid != '') {
                 var winwidth = 750;
                 var winheight = screen.height-80;
-                window.open("/osce/view_form.php?paperID=" + this.paperid + "&userID=" + this.userid + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+                var url = CONFIG.cfgrootpath + "/osce/view_form.php?paperID=" + this.paperid + "&userID=" + this.userid;
+                window.open(url,"paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
             }
         };
 
