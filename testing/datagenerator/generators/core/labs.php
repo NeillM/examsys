@@ -252,7 +252,7 @@ class labs extends generator
 
         if (!$query->execute()) {
             // The end time was not successfully inserted.
-            throw new data_error("Failed to insert lab time into database");
+            throw new data_error('Failed to insert lab time into database');
         }
 
         // Return the data.

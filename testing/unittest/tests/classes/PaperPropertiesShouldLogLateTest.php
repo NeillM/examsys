@@ -81,8 +81,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         string $modulename,
         ?string $labs = null,
         bool $remote = false
-    ): PaperProperties
-    {
+    ): PaperProperties {
         $datagenerator = $this->get_datagenerator('papers');
         $papaer_details = [
             'papertitle' => 'Test paper',
@@ -388,8 +387,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         string $lab_end,
         int $extra,
         bool $expected
-    )
-    {
+    ) {
         // Set the paper break setting.
         $this->configureSummatives();
 
@@ -456,8 +454,7 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
         ?int $break_remaining,
         int $extra_time,
         bool $expected
-    )
-    {
+    ) {
         $this->configureSummatives($use_minutes, true);
 
         // Create the paper and get the property.

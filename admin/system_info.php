@@ -117,9 +117,9 @@ if ($Rows > 0) {
     echo '<tr><td>temp_users</td><td style="text-align:right">' . number_format($Rows) . '</td>';
 }
 
-  echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-  echo '<tr><td colspan="3" class="sechead">' . $string['mysqlstatus'] . "</td><td colspan=\"2\"></td></tr>\n";
-  $status = explode('  ', $mysqli->stat());
+echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+echo '<tr><td colspan="3" class="sechead">' . $string['mysqlstatus'] . "</td><td colspan=\"2\"></td></tr>\n";
+$status = explode('  ', $mysqli->stat());
 for ($i = 0; $i <= 7; $i++) {
     $parts = explode(': ', $status[$i]);
     if ($i == 0) {
@@ -140,7 +140,7 @@ for ($i = 0; $i <= 7; $i++) {
         echo '<tr><td>' . $string[mb_strtolower($parts[0])] . '</td><td style="text-align:right">' . $parts[1] . "</td><td colspan=\"2\"></td></tr>\n";
     }
 }
-  echo "</table>\n<br />\n";
+echo "</table>\n<br />\n";
 
 // Get info on authentication stack
 $authinfo = $authentication->version_info(true, false);
@@ -204,7 +204,6 @@ if ($e6 == 'improved') {
 
 $yearutils = new yearutils($mysqli);
 
-
 if ($configObject->get_setting('core', 'system_hostname_lookup')) {
     $hostname_lookup = $string['hostname'];
 } else {
@@ -218,10 +217,12 @@ if ($configObject->get_setting('core', 'system_hostname_lookup')) {
 <tr><td colspan="2" class="sechead"><?php echo $string['application']; ?></td></tr>
 <tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get_setting('core', 'rogo_version'); ?></td></tr>
 <?php
-    $build = $configObject->getxml('build');
-    if (!is_null($build)) {
-        echo '<tr><td>' . $string['build'] . '</td><td>' . $build . '</td></tr>';
-    }
+
+$build = $configObject->getxml('build');
+if (!is_null($build)) {
+    echo '<tr><td>' . $string['build'] . '</td><td>' . $build . '</td></tr>';
+}
+
 ?>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
@@ -288,21 +289,21 @@ if (php_uname('s') != 'Windows NT') {
     echo '<tr><td>' . $string['processor'] . '</td><td>' . $lines[1] . "</td></tr>\n";
 }
 
-  echo '<tr><td style="width:90px">' . $string['servername'] . '</td><td>' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
-  echo '<tr><td>' . $string['hostname'] . '</td><td>' . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
-  echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_server_address() . "</td></tr>\n";
-  echo '<tr><td>' . $string['clock'] . '</td><td>' . date($configObject->get('cfg_long_datetime_php')) . "</td></tr>\n";
-;
-  echo '<tr><td>' . $string['os'] . '</td><td>' . php_uname('s') . "</td></tr>\n";
-;
-  echo '<tr><td>' . $string['webserver'] . '</td><td>' . $_SERVER['SERVER_SOFTWARE'] . "</td></tr>\n";
-  echo '<tr><td>' . $string['php'] . '</td><td>' . phpversion() . "</td></tr>\n";
-  echo '<tr><td>' . $string['mysql'] . '</td><td>' . $mysqli->server_info . "</td></tr>\n";
+echo '<tr><td style="width:90px">' . $string['servername'] . '</td><td>' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
+echo '<tr><td>' . $string['hostname'] . '</td><td>' . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
+echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_server_address() . "</td></tr>\n";
+echo '<tr><td>' . $string['clock'] . '</td><td>' . date($configObject->get('cfg_long_datetime_php')) . "</td></tr>\n";
 
-  echo '<tr><td colspan="2">&nbsp;</td></tr>';
-  echo '<tr><td colspan="2" class="sechead">' . $string['partitions'] . '</td></tr>';
+echo '<tr><td>' . $string['os'] . '</td><td>' . php_uname('s') . "</td></tr>\n";
 
-  echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
+echo '<tr><td>' . $string['webserver'] . '</td><td>' . $_SERVER['SERVER_SOFTWARE'] . "</td></tr>\n";
+echo '<tr><td>' . $string['php'] . '</td><td>' . phpversion() . "</td></tr>\n";
+echo '<tr><td>' . $string['mysql'] . '</td><td>' . $mysqli->server_info . "</td></tr>\n";
+
+echo '<tr><td colspan="2">&nbsp;</td></tr>';
+echo '<tr><td colspan="2" class="sechead">' . $string['partitions'] . '</td></tr>';
+
+echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
 
 if (php_uname('s') == 'Windows NT') {
     $disks = array('A:\\', 'B:\\', 'C:\\', 'D:\\', 'E:\\', 'F:\\', 'G:\\', 'H:\\', 'I:\\',
@@ -364,10 +365,11 @@ for ($i = 1; $i < ($row_no - 1); $i++) {
         echo '</span><span style="color:#808080">' . sprintf($string['freespace'], format_space($master_array[$i][3]), format_space($master_array[$i][1])) . '</span></td></tr>';
     }
 }
-  echo '</table></td></tr>';
+echo '</table></td></tr>';
 
-  echo "</table>\n<br />\n";
-  $mysqli->close();
+echo "</table>\n<br />\n";
+$mysqli->close();
+
 ?>
 </td></tr>
 </table>
