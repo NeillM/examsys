@@ -44,7 +44,7 @@ class plugin_managertest extends unittestdatabase
      */
     public function test_get_plugin_type_enabled()
     {
-        $this->assertEquals(array('plugin_tinymce3_texteditor'), plugin_manager::get_plugin_type_enabled('plugin_texteditor'));
+        $this->assertEquals(array('plugin_tinymce_texteditor'), plugin_manager::get_plugin_type_enabled('plugin_texteditor'));
     }
 
     /**
@@ -53,7 +53,7 @@ class plugin_managertest extends unittestdatabase
      */
     public function test_plugin_installed()
     {
-        $this->assertTrue(plugin_manager::plugin_installed('plugin_tinymce3_texteditor'));
+        $this->assertTrue(plugin_manager::plugin_installed('plugin_tinymce_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('plugin_plain_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('unknowntestplugin'));
     }

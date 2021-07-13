@@ -30,7 +30,7 @@
   "translation" : "/plugins/texteditor/plugin_plain_texteditor/lang/%two_letters_code%/%original_file_name%"
  },
  {
-  "source" : "/plugins/texteditor/plugin_tinymce3_texteditor/lang/en/*",
-  "translation" : "/plugins/texteditor/plugin_tinymce3_texteditor/lang/%two_letters_code%/%original_file_name%"
+  "source" : "/plugins/texteditor/plugin_tinymce_texteditor/lang/en/*",
+  "translation" : "/plugins/texteditor/plugin_tinymce_texteditor/lang/%two_letters_code%/%original_file_name%"
  }
 ]

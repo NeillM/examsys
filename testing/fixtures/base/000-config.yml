@@ -272,7 +272,7 @@ config:
     value: '20971520'
     type: "integer"
   -
-    component: "plugin_tinymce3_texteditor"
+    component: "plugin_tinymce_texteditor"
     setting: "installed"
     value: 1
     type: "boolean"
@@ -289,5 +289,5 @@ config:
   -
     component: "plugin_texteditor"
     setting: "enabled_plugin"
-    value: "[\"plugin_tinymce3_texteditor\"]"
+    value: "[\"plugin_tinymce_texteditor\"]"
     type: "json"

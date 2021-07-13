@@ -4,7 +4,7 @@
     <!-- Skip 3rd party code-->
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
-    <exclude-pattern>*/plugins/texteditor/plugin_tinymce3_texteditor/mee/mee/tools/include/*</exclude-pattern>
+    <exclude-pattern>*/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation_editor/mee/mee/tools/include/*</exclude-pattern>
     <exclude-pattern>*/plugins/questions/enhancedcalc/rserve/*</exclude-pattern>
     <exclude-pattern>*/LTI/classes/*</exclude-pattern>
     <exclude-pattern>*/LTI/ims-lti/lti_util.php</exclude-pattern>

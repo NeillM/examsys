@@ -41,7 +41,7 @@ class plugin_manager
      * @const CORE_PLUGINS
      */
     public const CORE_PLUGINS = array(
-        array('namespace' => 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor', 'enabled' => true),
+        array('namespace' => 'plugins\texteditor\plugin_tinymce_texteditor\plugin_tinymce_texteditor', 'enabled' => true),
         array('namespace' => 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor', 'enabled' => false)
     );
 

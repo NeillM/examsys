@@ -206,7 +206,6 @@ selenium-server.jar
 !/js/jquery-ui-1.10.4.min.js
 !/js/jquery.validate.min.js
 !/js/jquery.tablesorter.min.js
-!/plugins/texteditor/plugin_tinymce3_texteditor/mee/mee/jquery/*.min.js
 
 # ignore files built by grunt
 /js/src/modules/html_questions/html5.image.js
@@ -214,3 +213,7 @@ selenium-server.jar
 
 # ignore minimised css
 /css/*.css
+
+# ignore tinymce plugins that are added at build
+plugins/texteditor/plugin_tinymce_texteditor/js/plugins/ruby-annotation
+plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation-editor

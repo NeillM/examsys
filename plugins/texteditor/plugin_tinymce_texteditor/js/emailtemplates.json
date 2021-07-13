@@ -1,0 +1,16 @@
+[
+  {"title": "Paper Title", "description": "The placeholder {paper-title} will be replaced with the paper title when the email is sent", "content": "{paper-title}"},
+  {"title": "Total Paper Mark", "description": "The placeholder {total-paper-mark} will be replaced with the total marks available on the paper when the email is sent", "content": "{total-paper-mark}"},
+  {"title": "Random Mark", "description": "The placeholder {random-mark} will be replaced with the paper papers random mark when the email is sent", "content": "{random-mark}"},
+  {"title": "Student Title", "description": "The placeholder {student-title} will be replaced with the students title when the email is sent", "content": "{student-title}"},
+  {"title": "Student Last Name", "description": "The placeholder {student-last-name} will be replaced with the students last name when the email is sent", "content": "{student-last-name}"},
+  {"title": "Student Mark", "description": "The placeholder {student-mark} will be replaced with the students mark when the email is sent", "content": "{student-mark}"},
+  {"title": "Student %", "description": "The placeholder {student-percent} will be replaced with the students mark as a percentage when the email is sent", "content": "{student-percent}"},
+  {"title": "Student Trime", "description": "The placeholder {student-time} will be replaced with the students time spent on the paper when the email is sent", "content": "{student-time}"},
+  {"title": "Class mean Mark", "description": "The placeholder {class-mean-mark} will be replaced with the class average mark when the email is sent", "content": "{class-mean-mark}"},
+  {"title": "Class mean percent", "description": "The placeholder {class-mean-percent} will be replaced with the class average marks as a percentage when the email is sent", "content": "{class-mean-percent}"},
+  {"title": "Class StDev", "description": "The placeholder {class-stdev} will be replaced with the standard deviation of the class marks when the email is sent", "content": "{class-stdev}"},
+  {"title": "Class max mark", "description": "The placeholder {class-max-mark} will be replaced with the maximum mark achieved by the class when the email is sent", "content": "{class-max-mark}"},
+  {"title": "Class min mark", "description": "The placeholder {class-min-mark} will be replaced with the minimum mark achieved by the class when the email is sent", "content": "{class-min-mark}"},
+  {"title": "Class mean time", "description": "The placeholder {class-mean-time} will be replaced with the average mark of the class when the email is sent", "content": "{class-mean-time}"}
+]

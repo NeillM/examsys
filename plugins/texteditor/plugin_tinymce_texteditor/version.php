@@ -15,8 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['npmmissing'] = 'NPM missing. Please install manually.';
-$string['couldnotinstallnpm'] = 'Could not install NPM dependencies.';
-$string['couldnotupdatenpm'] = 'Could not update NPM dependencies.';
-$string['couldnotinstallnpmtiny'] = 'Could not install NPM TinyMCE dependencies.';
-$string['couldnotupdatenpmtiny'] = 'Could not update NPM TinyMCE dependencies.';
+/**
+ * Text Editor version file
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2021 onwards The University of Nottingham
+ */
+
+$this->version = '1.0.0';
+$this->requires = '7.4.0';

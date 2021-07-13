@@ -25,6 +25,7 @@ define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, jsxls, 
          */
         this.init = function () {
             $('#edit_form').submit(function () {
+                $('#leadin_ifr').removeClass('invalid');
                 Editor.triggerSave();
             });
             $('#edit_form').validate({
@@ -73,13 +74,12 @@ define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, jsxls, 
                 },
                 errorPlacement: function (error, element) {
                     if (element.attr('name') == 'leadin') {
-                        error.insertAfter('#leadin_parent');
-                        $('#leadin_tbl').css({'border-color': '#C00000'});
-                        $('#leadin_tbl').css({'box-shadow': '0 0 6px rgba(200, 0, 0, 0.85)'});
+                        error.insertBefore('#leadin');
+                        $('#leadin_ifr').addClass('invalid');
                     } else if (element.attr('name') == 'option_text1') {
-                        error.insertAfter('#option_media1');
+                        error.insertAfter('#filepickeroption_media1');
                     } else if (element.attr('name') == 'option_text2') {
-                        error.insertAfter('#option_media2');
+                        error.insertAfter('#filepickeroption_media2');
                     } else {
                         error.insertAfter(element);
                     }

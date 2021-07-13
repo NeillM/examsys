@@ -43,7 +43,7 @@ requirejs.config({
         qunit: "node_modules/qunit/qunit/qunit",
         mathjax: "node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML&amp;delayStartupUntil=configured",
         editor: "js/modules/editor.min",
-        tinyMCE: "plugins/texteditor/plugin_tinymce3_texteditor/tinymce/jscripts/tiny_mce/tiny_mce",
+        tinyMCE: "plugins/texteditor/plugin_tinymce_texteditor/node_modules/tinymce/tinymce.min",
         three: "node_modules/three/build/three.min",
         colourpicker: "tools/colour_picker/js/colour_picker.min",
         campuses: "admin/campus/js/campuses.min",

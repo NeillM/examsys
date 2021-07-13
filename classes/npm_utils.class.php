@@ -84,6 +84,10 @@ class npm_utils
         if ($statuscode != 0) {
             throw new Exception($langpack->get_string(self::langcomponent, 'couldnotinstallnpm'));
         }
+        passthru('npm install --prefix plugins/texteditor/plugin_tinymce_texteditor', $statuscode);
+        if ($statuscode != 0) {
+            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotinstallnpmtiny'));
+        }
     }
 
     /**
@@ -97,6 +101,10 @@ class npm_utils
         passthru('npm update', $statuscode);
         if ($statuscode != 0) {
             throw new Exception($langpack->get_string(self::langcomponent, 'couldnotupdatenpm'));
+        }
+        passthru('npm update --prefix plugins/texteditor/plugin_tinymce_texteditor', $statuscode);
+        if ($statuscode != 0) {
+            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotupdatenpmtiny'));
         }
     }
 }

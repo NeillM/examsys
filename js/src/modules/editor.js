@@ -21,15 +21,22 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 //
-define(['rogoconfig', 'tinyMCE'], function(Config, Tinymce3) {
+define(['rogoconfig', 'tinyMCE'], function(Config, Tinymce) {
     return {
         /**
          * Trigger save.
          */
         triggerSave: function () {
-            if (Config.editor == "plugin_tinymce3_texteditor") {
-                Tinymce3.triggerSave();
+            if (typeof(Tinymce) != "undefined") {
+                Tinymce.triggerSave();
             }
+        },
+
+        /**
+         * Init tinymce.
+         */
+        init: function (textareaselector) {
+            Tinymce.init({selector:textareaselector});
         }
     }
 });
