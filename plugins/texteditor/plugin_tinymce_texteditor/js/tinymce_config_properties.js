@@ -1,7 +1,7 @@
 requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
     Tinymce.init({
         selector: ".editorStandard",
-        plugins: "visualchars nonbreaking paste lists code table",
+        plugins: "visualchars nonbreaking paste lists code table help",
         external_plugins: {
             'maths-equation-editor': config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation-editor/plugin.min.js",
         },
@@ -17,6 +17,7 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         images_upload_url: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/upload.php",
         menubar: false,
         statusbar: false,
-        toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | maths-equation-editor | alignleft aligncenter alignright | numlist bullist | table | code |",
+        toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | maths-equation-editor | alignleft aligncenter alignright | numlist bullist | table | code | help",
+        help_tabs: ['shortcuts', 'keyboardnav'],
     });
 });

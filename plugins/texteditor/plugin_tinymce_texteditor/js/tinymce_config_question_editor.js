@@ -1,7 +1,7 @@
 requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
     Tinymce.init({
         selector: ".editorStandard",
-        plugins: "visualchars nonbreaking paste lists code table image preview",
+        plugins: "visualchars nonbreaking paste lists code table image preview help",
         external_plugins: {
             'ruby-annotation': config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/ruby-annotation/plugin.min.js",
             'maths-equation-editor': config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation-editor/plugin.min.js",
@@ -18,12 +18,14 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         images_upload_url: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/upload.php",
         menubar: false,
         statusbar: false,
-        toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | maths-equation-editor | ruby-annotation | alignleft aligncenter alignright | numlist bullist | image | table | code | preview |",
+        toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | maths-equation-editor | ruby-annotation | alignleft aligncenter alignright | numlist bullist | image | table | code | preview | help",
+        help_tabs: ['shortcuts', 'keyboardnav'],
     });
 
     Tinymce.init({
         selector: ".editorSimple",
-        plugins: "visualchars nonbreaking paste code preview",external_plugins: {
+        plugins: "visualchars nonbreaking paste code preview help",
+        external_plugins: {
             'maths-equation-editor': config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation-editor/plugin.min.js",
         },
         language : 'en',
@@ -38,12 +40,13 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         images_upload_url: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/upload.php",
         menubar: false,
         statusbar: false,
-        toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | maths-equation-editor | code | preview |",
+        toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | maths-equation-editor | code | preview | help",
+        help_tabs: ['shortcuts', 'keyboardnav'],
     });
 
     Tinymce.init({
         selector: ".editorBasic",
-        plugins: "visualchars nonbreaking paste",
+        plugins: "visualchars nonbreaking paste help",
         a11y_advanced_options: true,
         image_advtab: true,
         image_dimensions: false,
@@ -52,6 +55,7 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         images_upload_url: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/upload.php",
         menubar: false,
         statusbar: false,
-        toolbar: "cut copy paste pastetext| undo | removeformat |",
+        toolbar: "cut copy paste pastetext| undo | removeformat | help",
+        help_tabs: ['shortcuts', 'keyboardnav'],
     });
 });

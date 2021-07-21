@@ -1,7 +1,7 @@
 requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
 	Tinymce.init({
 		selector: ".editorStandard",
-		plugins: "visualchars nonbreaking paste lists code table image",
+		plugins: "visualchars nonbreaking paste lists code table image help",
 		a11y_advanced_options: true,
 		image_advtab: true,
 		image_dimensions: false,
@@ -10,6 +10,7 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
 		images_upload_url: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/upload.php",
 		menubar: false,
 		statusbar: false,
-		toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | alignleft aligncenter alignright | numlist bullist | image | table | code |",
+		toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | alignleft aligncenter alignright | numlist bullist | image | table | code | help",
+		help_tabs: ['shortcuts', 'keyboardnav'],
 	});
 });
