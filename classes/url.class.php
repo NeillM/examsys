@@ -59,11 +59,25 @@ class Url
      */
     public function __construct($url)
     {
-        if (false === filter_var($url, FILTER_VALIDATE_URL)) {
+        $this->url = $url;
+        $this->parse();
+
+        if ($this->parts === false) {
+            // The url was too corrupted to be parsed.
             throw new \InvalidArgumentException('Invalid URL: ' . $url);
         }
 
-        $this->url = $url;
+        // Now validate the non-query parts of the url.
+        $plainurl = $this->getPart(static::SCHEME, 'http')
+            . '://' . $this->getPart(static::HOST) . '/'
+            . $this->getPart(static::PATH, '');
+
+        $cleanurl = param::clean($plainurl, param::URL);
+
+        if (is_null($cleanurl) or $plainurl !== $cleanurl) {
+            // Something was invalid in the url.
+            throw new \InvalidArgumentException('Invalid URL: ' . $url);
+        }
     }
 
     /**
@@ -124,10 +138,6 @@ class Url
      */
     public function getPart($name, $default = null)
     {
-        if (null === $this->parts) {
-            $this->parse();
-        }
-
         return isset($this->parts[$name]) ? $this->parts[$name] : $default;
     }
 
@@ -304,8 +314,6 @@ class Url
      */
     public function setQueryValues(array $values)
     {
-        $this->parse();
-
         if (0 === count($values)) {
             unset($this->parts[static::QUERY]);
             return $this;
