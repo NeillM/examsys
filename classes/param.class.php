@@ -99,54 +99,54 @@ class param
             case self::ALPHA:
                 $filter = FILTER_SANITIZE_STRING;
                 $options = array(
-                'options' => $opt,
-                'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
+                    'options' => $opt,
+                    'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
                 );
                 break;
             case self::ALPHANUM:
                 $filter = FILTER_SANITIZE_STRING;
                 $options = array(
-                'options' => $opt,
-                'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
+                    'options' => $opt,
+                    'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
                 );
                 break;
             case self::BOOLEAN:
                 $filter = FILTER_VALIDATE_BOOLEAN;
                 $options = array(
-                'options' => $opt,
-                'flags' => FILTER_NULL_ON_FAILURE,
+                    'options' => $opt,
+                    'flags' => FILTER_NULL_ON_FAILURE,
                 );
                 break;
             case self::EMAIL:
                 $filter = FILTER_VALIDATE_EMAIL;
                 $options = array(
-                'options' => $opt,
+                    'options' => $opt,
                 );
                 break;
             case self::FLOAT:
                 $filter = FILTER_VALIDATE_FLOAT;
                 $options = array(
-                'options' => $opt,
+                    'options' => $opt,
                 );
                 break;
             case self::HTML:
                 $filter = FILTER_UNSAFE_RAW;
                 $options = array(
-                'options' => $opt,
+                    'options' => $opt,
                 );
                 break;
             case self::INT:
                 $filter = FILTER_VALIDATE_INT;
                 $options = array(
-                'options' => $opt,
-                'flags' => FILTER_FLAG_ALLOW_OCTAL | FILTER_FLAG_ALLOW_HEX,
+                    'options' => $opt,
+                    'flags' => FILTER_FLAG_ALLOW_OCTAL | FILTER_FLAG_ALLOW_HEX,
                 );
                 break;
             case self::IP_ADDRESS:
                 $filter = FILTER_VALIDATE_IP;
                 $options = array(
-                'options' => $opt,
-                'flags' => FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6,
+                    'options' => $opt,
+                    'flags' => FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6,
                 );
                 break;
             case self::RAW:
@@ -161,22 +161,26 @@ class param
             case self::LOCAL_URL:
                 $filter = FILTER_VALIDATE_URL;
                 $options = array(
-                'options' => $opt,
+                    'options' => $opt,
                 );
                 break;
             case self::REGEXP:
                 $filter = FILTER_VALIDATE_REGEXP;
                 $options = array(
-                'options' => $opt,
+                    'options' => $opt,
                 );
                 break;
             case self::SQLDATETIME:
                 $filter = FILTER_VALIDATE_REGEXP;
-                $options = array( 'options' => array('regexp' => '/^([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01][0-9]|2[0-3])[0-5]\d[0-5]\d)$/',));
+                $options = array(
+                    'options' => array(
+                        'regexp' => '/^([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01][0-9]|2[0-3])[0-5]\d[0-5]\d)$/',
+                    )
+                );
                 break;
             default:
                 throw new coding_exception('invalid_type');
-            break;
+                break;
         }
         // Filter the input.
         $return = filter_var($value, $filter, $options);
@@ -219,10 +223,10 @@ class param
                 // We now know if it is a valid ULR ot not, we just need to ensure it is for the local instance of Rogo.
                 $filter = FILTER_VALIDATE_REGEXP;
                 $options = array(
-                'options' => array(
-                'default' => null,
-                'regexp' => "#^https?://$rogo_url(/.*)?$#",
-                ),
+                    'options' => array(
+                        'default' => null,
+                        'regexp' => "#^https?://$rogo_url(/.*)?$#",
+                    ),
                 );
                 $return = filter_var($return, $filter, $options);
                 break;
