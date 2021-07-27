@@ -1532,7 +1532,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         sort($marks);
         foreach ($marks as $mark) {
             $i++;
-            $question_data['parts'][$i]['mark'] = $mark;
+            $question_data['parts'][$i]['mark'] = preg_replace('/^([0-9]+)\.0$/', '\1', $mark); // Strip hanging .0s
             if (isset($freq_log[$q_id][1][$mark])) {
                 $question_data['parts'][$i]['t'] = ($freq_log[$q_id][1][$mark] / $user_total) * 100;
             } else {
