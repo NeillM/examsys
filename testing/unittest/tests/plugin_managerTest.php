@@ -34,8 +34,7 @@ class plugin_managertest extends unittestdatabase
      */
     public function datageneration(): void
     {
-        $datagenerator = $this->get_datagenerator('config', 'core');
-        $datagenerator->change_setting(array('component' => 'plugin_plain_texteditor', 'setting' => 'installed', 'value' => 0));
+        // Do nothing.
     }
 
     /**
@@ -44,7 +43,8 @@ class plugin_managertest extends unittestdatabase
      */
     public function test_get_plugin_type_enabled()
     {
-        $this->assertEquals(array('plugin_tinymce_texteditor'), plugin_manager::get_plugin_type_enabled('plugin_texteditor'));
+        $editor = $this->config->get_setting('plugin_texteditor', 'enabled_plugin');
+        $this->assertEquals($editor, plugin_manager::get_plugin_type_enabled('plugin_texteditor'));
     }
 
     /**
@@ -53,6 +53,8 @@ class plugin_managertest extends unittestdatabase
      */
     public function test_plugin_installed()
     {
+        $datagenerator = $this->get_datagenerator('config', 'core');
+        $datagenerator->change_setting(array('component' => 'plugin_plain_texteditor', 'setting' => 'installed', 'value' => 0));
         $this->assertTrue(plugin_manager::plugin_installed('plugin_tinymce_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('plugin_plain_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('unknowntestplugin'));

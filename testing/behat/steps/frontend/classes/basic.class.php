@@ -524,27 +524,32 @@ JS;
      */
     public function fillTinyMCE(string $id, string $value): void
     {
-        $lastexception = null;
+        $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+        if ($editor[0] === 'plugin_tinymce_texteditor') {
+            $lastexception = null;
 
-        for ($i = 0; $i < 10; $i++) {
-            try {
-                $this->getSession()->executeScript(
-                    "requirejs(['tinyMCE'], function () {
-                        tinyMCE.get('" . $id . "').setContent('" . $value . "');
-                    });"
-                );
-            } catch (Exception $e) {
-                // Catching any kind of exception and ignoring it until times out.
-                $lastexception = $e;
+            for ($i = 0; $i < 10; $i++) {
+                try {
+                    $this->getSession()->executeScript(
+                        "requirejs(['tinyMCE'], function () {
+                            tinyMCE.get('" . $id . "').setContent('" . $value . "');
+                        });"
+                    );
+                } catch (Exception $e) {
+                    // Catching any kind of exception and ignoring it until times out.
+                    $lastexception = $e;
 
-                // Waiting 0.1 seconds.
-                usleep(100000);
+                    // Waiting 0.1 seconds.
+                    usleep(100000);
+                }
             }
-        }
 
-        // If it is not available we throw the last exception.
-        if (is_a($lastexception, 'Exception')) {
-            throw $lastexception;
+            // If it is not available we throw the last exception.
+            if (is_a($lastexception, 'Exception')) {
+                throw $lastexception;
+            }
+        } else {
+            $this->fillField($id, $value);
         }
     }
 

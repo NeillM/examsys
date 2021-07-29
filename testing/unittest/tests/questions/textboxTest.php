@@ -101,7 +101,10 @@ class textboxtest extends unittestdatabase
         $data->set_option_answer(0, '', '', 1);
         $this->assertEquals(40, $data->editorcolumns);
         $this->assertEquals(10, $data->editorrows);
-        $this->assertEquals('tinymce', $data->editor);
+        $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+        $te = explode('_', $texteditorplugin->get_name());
+        $editor = $te[1];
+        $this->assertEquals($editor, $data->editor);
         $this->assertTrue($data->unanswered);
         $this->assertFalse($data->editormathjax);
         $this->assertEquals(array(1, 2), $data->textboxesseen);

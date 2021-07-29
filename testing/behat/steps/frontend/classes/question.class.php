@@ -381,7 +381,7 @@ trait Question
         $this->pressButton('submit_media');
         $this->genericfields($fields);
         // Bottom Bar obscures page elements so need to scroll so we can draw.
-        $this->scrollToElement('#leadin_ifr');
+        $this->scrollToElement('#qscenario');
         // Get coordinates and validate them.
         $coords = explode(',', $fields['coordinates']);
         if (!empty($coords) and count($coords) % 2 == 0) {
@@ -533,7 +533,7 @@ trait Question
         $this->genericfields($fields);
         $this->uploadQuestionMedia($fields['file']);
         // Bottom Bar obscures page elements so need to scroll so we can click.
-        $this->scrollToElement('#leadin_ifr');
+        $this->scrollToElement('#display_method');
         if ($fields['true'] == 1) {
             $select = 'option_correct1_t';
         } else {
