@@ -109,6 +109,7 @@ class UrlTest extends UnitTest
             array('/path', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::PATH, null),
             array('foo=bar', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::QUERY, null),
             array('anchor', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::FRAGMENT, null),
+            'non-ascii query' => array('www.example.com', 'http://www.example.com/file.php?name=Majeský', Url::HOST, null),
         );
     }
 
