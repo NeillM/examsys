@@ -19,12 +19,14 @@ if ($updater_utils->check_version('7.4.0')) {
     if (!$updater_utils->has_updated('rogo_2943')) {
         // Create audit permissions schema.
         $sqlroles = 'CREATE TABLE `audit_log` (
+            `id` int unsigned NOT NULL AUTO_INCREMENT,
             `userID` int(10) unsigned NOT NULL,
             `action` varchar(30) NOT NULL,
             `time` timestamp NOT NULL,
             `sourceID` int NOT NULL,
             `source` TEXT,
             `details` TEXT,
+            PRIMARY KEY (`id`),
             KEY `audit_log_key1` (`userID`, `action`),
             FOREIGN KEY audit_log_fk0 (userID) REFERENCES users(id)
         )';

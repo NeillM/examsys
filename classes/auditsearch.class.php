@@ -24,7 +24,7 @@
 class AuditSearch extends Search
 {
     /** @var string The ordering clause for the query. */
-    protected $orderby = 'time DESC';
+    protected $orderby = 'time DESC, id ASC';
 
     /** @var string A time to search from. */
     protected $time;

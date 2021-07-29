@@ -1773,12 +1773,14 @@ QUERY;
 
         $this->tableList['audit_log'] = <<<QUERY
             CREATE TABLE `audit_log` (
+            `id` int unsigned NOT NULL AUTO_INCREMENT,
             `userID` int(10) unsigned NOT NULL,
             `action` varchar(30) NOT NULL,
             `time` timestamp NOT NULL,
             `sourceID` int NOT NULL,
             `source` TEXT,
             `details` TEXT,
+            PRIMARY KEY (`id`),
             KEY `audit_log_key1` (`userID`, `action`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
