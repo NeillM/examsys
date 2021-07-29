@@ -265,6 +265,9 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
                 }
             }
         }
+        if ($q_type == 'flash') {
+            $temp_array[$row_no]['warnings'][] = $string['flashendoflife'];
+        }
     }
 }
 

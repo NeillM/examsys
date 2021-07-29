@@ -71,3 +71,4 @@ $string['invalidscreenbreak'] = 'Invalid screen break selected. Screen break was
 $string['ajaxerror'] = 'There was a problem carrying out your action. Please refresh the page and try again';
 $string['screen1'] = 'Screen 1';
 $string['randomblockempty'] = 'Random block is empty';
+$string['flashendoflife'] = 'Flash is no longer supported as such flash media can no longer be viewed.';
