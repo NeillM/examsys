@@ -506,7 +506,7 @@ function get_logselectquery($table, $database)
         l.updated, l.dismiss, l.option_order, l.metadataID
     FROM '
         . $database . '.' . $table . ' l INNER JOIN ' . $database . '.log_metadata lm ON l.metadataID = lm.id
-    WHERE lm.userID = ? ORDER BY l.metadataID';
+    WHERE lm.userID = ? ORDER BY lm.id, l.id';
 }
 
 /**
