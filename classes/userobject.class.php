@@ -71,6 +71,9 @@ class UserObject extends RogoStaticSingleton
     private $font;
     private $unanswered;
     private $dismiss;
+    private $globalthemecolour;
+    private $globalthemefontcolour;
+    private $highlightbgcolour;
 
     private $impersonateduser;
 
@@ -204,6 +207,48 @@ class UserObject extends RogoStaticSingleton
         }
 
         return $this->dismiss;
+    }
+
+    /**
+     * Get the users global theme colour preference
+     * @param string $default default colour
+     * @return string
+     */
+    public function getPaperGlobalThemeColour($default = '')
+    {
+        if (!isset($this->globalthemecolour) and $default != '') {
+            $this->globalthemecolour = $default;
+        }
+
+        return $this->globalthemecolour;
+    }
+
+    /**
+     * Get the users global theme font colour preference
+     * @param string $default default colour
+     * @return string
+     */
+    public function getPaperGlobalThemeFontColour($default = '')
+    {
+        if (!isset($this->globalthemefontcolour) and $default != '') {
+            $this->globalthemefontcolour = $default;
+        }
+
+        return $this->globalthemefontcolour;
+    }
+
+    /**
+     * Get the users highlight background colour preference
+     * @param string $default default colour
+     * @return string
+     */
+    public function getHighlightBackgroundColour($default = '')
+    {
+        if (!isset($this->highlightbgcolour) and $default != '') {
+            $this->highlightbgcolour = $default;
+        }
+
+        return $this->highlightbgcolour;
     }
 
     /**
@@ -867,7 +912,10 @@ class UserObject extends RogoStaticSingleton
                     font,
                     unanswered,
                     dismiss,
-                    break_time
+                    break_time,
+                    globalthemecolour,
+                    globalthemefont_colour,
+                    highlight_bgcolour
                 FROM
                     special_needs
                 WHERE
@@ -876,7 +924,22 @@ class UserObject extends RogoStaticSingleton
             $stmt->bind_param('i', $userID);
             $stmt->execute();
             $stmt->store_result();
-            $stmt->bind_result($this->background, $this->foreground, $this->textsize, $this->extra_time, $this->marks_color, $this->themecolor, $this->labelcolor, $this->font, $this->unanswered, $this->dismiss, $this->breaks);
+            $stmt->bind_result(
+                $this->background,
+                $this->foreground,
+                $this->textsize,
+                $this->extra_time,
+                $this->marks_color,
+                $this->themecolor,
+                $this->labelcolor,
+                $this->font,
+                $this->unanswered,
+                $this->dismiss,
+                $this->breaks,
+                $this->globalthemecolour,
+                $this->globalthemefontcolour,
+                $this->highlightbgcolour
+            );
             $stmt->fetch();
             $stmt->close();
         }

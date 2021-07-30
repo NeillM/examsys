@@ -795,41 +795,6 @@ class PaperProperties
     }
 
     /**
-     * Set the default colour scheme for this paper and allow current users' special settings to override
-     *
-     * $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-     *
-     */
-    public function set_paper_colour_scheme($userObject, &$bgcolor, &$fgcolor, &$textsize, &$marks_color, &$themecolor, &$labelcolor, &$font, &$unanswered_color, &$dismiss_color)
-    {
-        /*
-        *  DEFAULT colour scheme
-        */
-        $bgcolor = $this->get_bgcolor();
-        $fgcolor = $this->get_fgcolor();
-        $textsize = 90;
-        $marks_color = '#808080';
-        $themecolor = $this->get_themecolor();
-        $labelcolor = $this->get_labelcolor();
-        $font = 'Arial';
-        $unanswered_color = '#FFC0C0';
-        $dismiss_color = '#A5A5A5';
-
-        // If set overwrite the default colours with the current users' special settings
-        if ($userObject->is_special_needs()) {
-            $bgcolor = $userObject->get_bgcolor($bgcolor);
-            $fgcolor = $userObject->get_fgcolor($fgcolor);
-            $textsize = $userObject->get_textsize($textsize);
-            $marks_color = $userObject->get_marks_color($marks_color);
-            $themecolor = $userObject->get_themecolor($themecolor);
-            $labelcolor = $userObject->get_labelcolor($labelcolor);
-            $font = $userObject->get_font($font);
-            $unanswered_color = $userObject->get_unanswered_color($unanswered_color);
-            $dismiss_color = $userObject->get_dismiss_color($dismiss_color);
-        }
-    }
-
-    /**
      * @return string $property_id
      */
     public function get_property_id()
@@ -3370,5 +3335,70 @@ class PaperProperties
         }
 
         return $break_time;
+    }
+
+    /**
+     * Generate root paper css
+     *
+     * @param UserObject $userObject the user
+     * @param string $bgcolor the paper back ground colour
+     * @param string $fgcolor the paper font colour
+     * @param string $textsize the paper text size
+     * @param string $marks_color the question marks font colour
+     * @param string $themecolor the paper theme section font colour
+     * @param string $labelcolor the question labels font colour
+     * @param string $font the paper font family
+     * @param string $unanswered_color the unanswered question colour
+     * @param string $dismiss_color the dimissed answer colour
+     * @param string $paper_global_themecolour the system theme colour
+     * @param string $paper_global_themefont_colour the system theme font colour
+     * @param string $highlight_bgcolour the questioh highlight colour
+     * @return string
+     */
+    public static function paperCss
+    (
+        UserObject $userObject,
+        string $bgcolor = '#FFFFFF',
+        string $fgcolor = '#000000',
+        string $textsize = '90',
+        string $marks_color = '#808080',
+        string $themecolor = '#316AC5',
+        string $labelcolor = '#C00000',
+        string $font = 'Arial',
+        string $unanswered_color = '#FFC0C0',
+        string $dismiss_color = '#A5A5A5',
+        string $paper_global_themecolour = '#5590CF',
+        string $paper_global_themefont_colour = '#FFFFFF',
+        string $highlight_bgcolour = '#FCF6CF'
+    ) : string {
+
+        // If set overwrite the default colours with the current users' special settings
+        if ($userObject->is_special_needs()) {
+            $bgcolor = $userObject->get_bgcolor($bgcolor);
+            $fgcolor = $userObject->get_fgcolor($fgcolor);
+            $textsize = $userObject->get_textsize($textsize);
+            $marks_color = $userObject->get_marks_color($marks_color);
+            $themecolor = $userObject->get_themecolor($themecolor);
+            $labelcolor = $userObject->get_labelcolor($labelcolor);
+            $font = $userObject->get_font($font);
+            $unanswered_color = $userObject->get_unanswered_color($unanswered_color);
+            $dismiss_color = $userObject->get_dismiss_color($dismiss_color);
+            $paper_global_themecolour = $userObject->getPaperGlobalThemeColour($paper_global_themecolour);
+            $paper_global_themefont_colour = $userObject->getPaperGlobalThemeFontcolour($paper_global_themefont_colour);
+            $highlight_bgcolour = $userObject->getHighlightBackgroundColour($highlight_bgcolour);
+        }
+
+        return '<style type="text/css">:root {--paper-global-themecolor: ' . $paper_global_themecolour
+            . '; --paper-global-themefont-color: ' . $paper_global_themefont_colour
+            . '; --paper-backgroundcolour: ' . $bgcolor
+            . '; --paper-foregroundcolour: ' . $fgcolor
+            . '; --paper-notecolour: ' . $labelcolor
+            . '; --paper-markscolour: ' . $marks_color
+            . '; --paper-themecolour: ' . $themecolor
+            . '; --paper-dismisscolour: ' . $dismiss_color
+            . '; --paper-unanswered: ' . $unanswered_color
+            . '; --paper-highlightbgcolour: ' . $highlight_bgcolour
+            . '; --paper-fontsize: ' . $textsize . '%'
+            . '; --paper-font: ' . $font . ',sans-sarif;}</style>';
     }
 }

@@ -104,13 +104,6 @@ $no_screens = $propertyObj->get_max_screen();
 // Is this a type of paper that allows only one attempt?
 $do_restart = ($is_first_launch and ($papertype == 1 or $papertype == 2 or $papertype == 3));
 
-/*
-* Set the default colour scheme for this paper and allow current users' special settings to override
-* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-*/
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
-
 $attempt = 1;                 //default attempt to 1 overwritten if the student is resit candidate by (check_modules)
 $low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
 $lab_name = null;             //default overwritten by (check_labs)
@@ -328,7 +321,9 @@ $headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
 $headerdata['texteditor'] = $texteditorplugin->get_header_file();
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 $headerdata['editor'] = $editor[0];
-$render->render($headerdata, $lang, 'header.html');
+
+$css = PaperProperties::paperCss($userObject);
+$render->render($headerdata, $lang, 'header.html', '', $css);
 
 /*
 *
@@ -487,7 +482,6 @@ foreach ($questions_array as &$question) {
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
         $questionrender->questiondata->unansweredkey = true;
     }
-    $questionrender->questiondata->labelcolour = $labelcolor;
     $questionrender->questiondata->displaycalc = $calculator;
     // Check if last scenario is the same as this one, and on the same screen,
     // for skipping repeat scenario display if turned on
@@ -615,19 +609,6 @@ $dataset['attributes']['saveretry'] = $retrylimit;
 $dataset['attributes']['timed'] = $timed;
 $dataset['attributes']['unanswered'] = $unanswered;
 $render->render($dataset, array(), 'dataset.html');
-// CSS dataset.
-$datasetcss['name'] = 'css';
-$datasetcss['attributes']['bgcolor'] = $bgcolor;
-$datasetcss['attributes']['fgcolor'] = $fgcolor;
-$datasetcss['attributes']['font'] = $font;
-$datasetcss['attributes']['textsize'] = $textsize;
-$datasetcss['attributes']['unanswered_color'] = $unanswered_color;
-$datasetcss['attributes']['themecolor'] = $themecolor;
-$datasetcss['attributes']['marks_color'] = $marks_color;
-$datasetcss['attributes']['dismiss_color'] = $dismiss_color;
-$datasetcss['attributes']['max_ref_width'] = $max_ref_width;
-$datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
-$render->render($datasetcss, array(), 'dataset.html');
 // User dataset.
 $datasetuser['name'] = 'user';
 $datasetuser['attributes']['student'] = $userObject->has_role('Student');

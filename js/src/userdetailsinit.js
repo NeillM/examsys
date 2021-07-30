@@ -112,6 +112,15 @@ requirejs(['user', 'colourpicker', 'osce', 'classtotals', 'menu', 'rolelist', 'j
             case 'dismisscolor':
                 $('#dismiss_radio_on').attr('checked', true);
                 break;
+            case 'globalthemecolour':
+                $('#globalthemecolour_radio_on').attr('checked', true);
+                break;
+            case 'highlightcolour':
+                $('#highlightcolour_radio_on').attr('checked', true);
+                break;
+            case 'globalthemefontcolour':
+                $('#globalthemefontcolour_radio_on').attr('checked', true);
+                break;
             default:
                 break;
         }

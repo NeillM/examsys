@@ -41,13 +41,6 @@ $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli,
 
 $start_of_day_ts = strtotime('midnight');
 
-/*
-* Set the default colour scheme for this paper and allow current users' special settings to override
-* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-*/
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
-
 $marking                            = $propertyObj->get_marking();
 $paperID                            = $propertyObj->get_property_id();
 $start_date                     = $propertyObj->get_start_date();
@@ -114,6 +107,11 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" type="text/css" href="../css/review.css" />
 <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 
+<?php
+$css = PaperProperties::paperCss($userObject);
+
+echo $css;
+?>
 <script id="rogoconfig"
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
@@ -288,7 +286,7 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
     echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
     echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
 
-    echo $bottom_html;
+    echo '<div class="footerbar basetheme">' . $bottom_html;
     echo '<span style="color:white">
       <span id="theTime" type="text" class="thetime"></span>
   </span>';
@@ -314,7 +312,7 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
     } else {
         echo '<input id="next" type="submit" name="next" value="' . $string['screen'] . ' ' . $current_screen . ' &gt;" />';
     }
-    echo '</td></tr></table>';
+    echo '</div></td></tr></table>';
 
     ?>
 </td></tr></table>
@@ -343,19 +341,6 @@ $miscdataset['attributes']['bidirectional'] = (bool)$propertyObj->get_bidirectio
 $miscdataset['attributes']['id'] = $id;
 $miscdataset['attributes']['self'] = $_SERVER['PHP_SELF'];
 $render->render($miscdataset, array(), 'dataset.html');
-// CSS dataset.
-$datasetcss['name'] = 'css';
-$datasetcss['attributes']['bgcolor'] = $bgcolor;
-$datasetcss['attributes']['fgcolor'] = $fgcolor;
-$datasetcss['attributes']['font'] = $font;
-$datasetcss['attributes']['textsize'] = $textsize;
-$datasetcss['attributes']['unanswered_color'] = $unanswered_color;
-$datasetcss['attributes']['themecolor'] = $themecolor;
-$datasetcss['attributes']['marks_color'] = $marks_color;
-$datasetcss['attributes']['dismiss_color'] = $dismiss_color;
-$datasetcss['attributes']['max_ref_width'] = $max_ref_width;
-$datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
-$render->render($datasetcss, array(), 'dataset.html');
 // Paper dataset.
 $dataset['name'] = 'paper';
 $dataset['attributes']['refcount'] = count($reference_materials);

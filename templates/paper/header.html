@@ -47,7 +47,7 @@ lang.examprogress
         <div>
     {% else %}
         <div>
-            <header class="headerbar">
+            <header class="headerbar basetheme">
                 <div>
                     <h1 class="paper">{{data.papertitle}}</h1>
                     {% if data.student|length > 0 %}
@@ -67,7 +67,7 @@ lang.examprogress
                 {% for s in data.screen %}
                     {% if s.screentype == 'scr_cur' %}
                         {% set current = s.pageno %}
-                        <nav aria-label="{{lang.examprogress}}" class="scr_blurb">
+                        <nav aria-label="{{lang.examprogress}}" class="scr_blurb basetheme">
                             {{lang.youronscreen | format(current, data.screen|length)}}
                             <div>
                     {% endif %}
@@ -93,7 +93,7 @@ lang.examprogress
 {% else %}
     <div>
         <div>
-            <header class="headerbar">
+            <header class="headerbar basetheme">
                 <div>
                     <h1 class="paper">{{data.papertitle}}</h1>
                     <div style="clear:both"></div>

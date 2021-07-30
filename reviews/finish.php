@@ -30,13 +30,6 @@ check_var('id', 'GET', true, false, false);
 
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
-  
-/*
-* Set the default colour scheme for this paper and allow current users' special settings to override
-* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-*/
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
 $paperID    = $propertyObj->get_property_id();
 $paper_type = $propertyObj->get_paper_type();
@@ -85,12 +78,12 @@ function close_window($fullscreen)
   <title>Rog&#333;</title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>; font-size:<?php echo $textsize; ?>%}
-    li {margin-left:15px; margin-right:15px; font-size:100%}
-    blockquote {font-size:90%}
-    .paper {font-size:180%; color:white; font-weight:bold}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/reviews.css" />
+<?php
+$css = PaperProperties::paperCss($userObject);
+
+echo $css;
+?>
 </head>
 
 <body>

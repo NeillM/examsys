@@ -145,9 +145,11 @@ define(['jquery'], function($) {
             if ($("#labels_radio_on").is(':checked')) {
                 $('#demo_true_label').css('color', $('#span_labelcolor').css('background-color'));
                 $('#demo_false_label').css('color', $('#span_labelcolor').css('background-color'));
+                $('#demo_note').css('color', $('#span_labelcolor').css('background-color'));
             } else {
                 $('#demo_true_label').css('color', '#C00000');
                 $('#demo_false_label').css('color', '#C00000');
+                $('#demo_note').css('color', '#C00000');
             }
 
             if ($("#unanswered_radio_on").is(':checked')) {
@@ -160,6 +162,27 @@ define(['jquery'], function($) {
                 $('#demo_marks').css('color', $('#span_marks_color').css('background-color'));
             } else {
                 $('#demo_marks').css('color', '#808080');
+            }
+
+            if ($("#globalthemecolour_radio_on").is(':checked')) {
+                $('#demo_header').css('background-color', $('#span_globalthemecolour').css('background-color'));
+                $('#demo_footer').css('background-color', $('#span_globalthemecolour').css('background-color'));
+            } else {
+                $('#demo_header').css('background-color', '#5590CF');
+                $('#demo_footer').css('background-color', '#5590CF');
+            }
+            
+            if ($("#globalthemefontcolour_radio_on").is(':checked')) {
+                $('#demo_header').css('color', $('#span_globalthemefontcolour').css('background-color'));
+                $('#demo_footer').css('color', $('#span_globalthemefontcolour').css('background-color'));
+            } else {
+                $('#demo_header').css('color', '#FFFFFF')
+                $('#demo_footer').css('color', '#FFFFFF')
+            }
+            if ($("#highlightcolour_radio_on").is(':checked')) {
+                $('#demo_highlight').css('background-color', $('#span_highlightcolour').css('background-color'));
+            } else {
+                $('#demo_highlight').css('background-color', '#FCF6CF');
             }
         };
     }

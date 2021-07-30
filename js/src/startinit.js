@@ -25,8 +25,6 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
     var ref = new REF();
     ref.init();
     $(function() {
-        start.generatePaperCss();
-
         var el = document.getElementById('paper');
         var el2 = document.getElementById('user');
 
@@ -109,7 +107,8 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
             }
         });
 
-        $("#info_dialog_ok").click(function() {
+        $("#info_dialog_ok").click(function(event) {
+            event.preventDefault();
             $("#info_overlay").hide();
         });
 

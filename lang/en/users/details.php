@@ -84,11 +84,14 @@ $string['background'] = 'Background Colour';
 $string['foreground'] = 'Foreground Colour';
 $string['markscolour'] = 'Marks Colour';
 $string['themecolour'] = 'Heading/Theme Colour';
-$string['labelscolour'] = 'Labels Colour';
-$string['unanswered'] = 'Unanswered';
+$string['labelscolour'] = 'Note/Labels Colour';
+$string['unanswered'] = 'Unanswered/Error';
 $string['dismisscolor'] = 'Dismiss Color';
 $string['medical'] = 'Medical';
 $string['breaks'] = 'Breaks';
+$string['globalthemecolour'] = 'Global Theme Colour';
+$string['globalthemefontcolour'] = 'Global Theme Font Colour';
+$string['highlightcolour'] = 'Highlight Colour';
 $string['default'] = 'Default';
 $string['noextratime'] = 'no extra time';
 $string['angledefault'] = '&lt;default&gt;';
@@ -129,6 +132,9 @@ $string['demo5'] = 'London';
 $string['demo6'] = 'New York';
 $string['demo7'] = 'Paris';
 $string['demo8'] = '3 marks';
+$string['demo9'] = 'This is a note';
+$string['demo10'] = 'Example paper';
+$string['demo11'] = '© 2021, University of Nottingham ';
 
 //Colour picker
 $string['colour'] = 'Colour';

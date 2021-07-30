@@ -34,7 +34,6 @@ options.position - option position
 options.inact - flag to indicate if option  has previously been set as dismissed
 data.negativemarking - flag to indicate if negative marking is enabled
 data.abstainselected - flag to indicate if abstain option has previously been selected
-data.labelcolour - colour of label, controlled by user accessibility settings.
 data.dismiss - record of which options have been dismissed by the user
 data.papertype - the paper type
 data.partid - the question part id
@@ -71,7 +70,7 @@ lang.other - other
 {% endif %}
 {% if data.negativemarking %}
         <li class="question-container">
-            <label id="abstain{{data.questionno}}" class="optiontext" style="color:{{data.labelcolour}}">
+            <label id="abstain{{data.questionno}}" class="optiontext note">
                 <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %}/>
                 <span>{{lang.abstain}}</span>
             </label>

@@ -273,14 +273,15 @@ lang.ok
     <div class="powered"><i>powered by</i> Rogō {{data.version}}</div>
 </footer>
 
-<div id="info_overlay">
-    <div id="info_submit_dialog">
-        <div id="info_submit_dialog_icon">
+<div id="info_overlay" class="overlay">
+    <div id="info_submit_dialog" class="dialogs">
+        <div id="info_submit_dialog_icon" class="dialogs_icon">
+            <img src="../artwork/question_mark_64.png" width="64" height="64" alt="" />
             <img src="../artwork/question_mark_64.png" width="64" height="64" alt="" />
         </div>
         <p id="info_submit_dialog_title"></p>
-        <p id="info_submit_dialog_msg"></p>
-        <div id="info_submit_dialog_buttons">
+        <p id="info_submit_dialog_msg" class="dialogs_msg"></p>
+        <div id="info_submit_dialog_buttons" class="basetheme dialogs_buttons">
             <input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="{{lang.ok}}" />
         </div>
     </div>

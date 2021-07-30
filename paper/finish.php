@@ -58,13 +58,6 @@ $userID = $userObject->get_user_ID();
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
-/*
-* Set the default colour scheme for this paper and allow current users' special settings to override
-* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-*/
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismisscolor = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismisscolor);
-
 $paperID                    = $propertyObj->get_property_id();
 $labs                       = $propertyObj->get_labs();
 $calendar_year              = $propertyObj->get_calendar_year();
@@ -221,7 +214,6 @@ $headerdata = array(
     'css' => array(
         '/css/start.css',
         '/css/finish.css',
-        '/css/key.css',
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
     ),
@@ -246,36 +238,7 @@ $headerdata['texteditor'] = $texteditorplugin->get_header_file();
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 $headerdata['editor'] = $editor[0];
 
-$css = '';
-if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
-    $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
-    $css .= ".key{background-color:$bgcolor}\n";
-}
-if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
-    $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
-    $css .= ".staffview {\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);}\n";
-}
-if ($font != 'Arial') {
-    if (mb_strpos($font, ' ') === false) {
-        $css .= "body {font-family:$font,sans-serif}\n";
-        $css .= "pre {font-family:$font,sans-serif}\n";
-    } else {
-        $css .= "body {font-family:'$font',sans-serif}\n";
-        $css .= "pre {font-family:'$font',sans-serif}\n";
-    }
-}
-if ($themecolor != '#316AC5') {
-    $css .= ".theme {color:$themecolor}\n";
-    $css .= ".objH {color:$themecolor}\n";
-}
-if ($labelcolor != '#316AC5') {
-    $css .= ".fback {color:$labelcolor}\n";
-    $css .= ".label {color:$labelcolor}\n";
-}
-
-if ($css != '') {
-    $css = '<style type="text/css">' . $css . '</style>';
-}
+$css = PaperProperties::paperCss($userObject);
 $render->render($headerdata, $lang, 'header.html', '', $css);
 
 $themedirectory = rogo_directory::get_directory('theme');

@@ -26,27 +26,26 @@ lang.questionmark - ?
 lang.pass - pass
 lang.cancel - cancel
 #}
-<div id="overlay">
+<div id="overlay" class="overlay">
   <div id="submit_dialog" class="dialogs">
-    <div id="submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="{{lang.questionmark}}" /></div><p id="submit_dialog_msg"></p>
-    <div id="submit_dialog_buttons"><input type="button" name="dialog_ok" id="dialog_ok" class="ok" value="{{lang.ok}}" /><input type="button" name="dialog_cancel" id="dialog_cancel" class="cancel" value="{{lang.cancel}}" />&nbsp;&nbsp;</div>
+    <div id="submit_dialog_icon" class="dialogs_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="{{lang.questionmark}}" /></div><p id="submit_dialog_msg" class="dialogs_msg"></p>
+      <div id="submit_dialog_buttons" class="basetheme dialogs_buttons"><button name="dialog_ok" id="dialog_ok" class="ok" value="{{lang.ok}}">{{lang.ok}}</button><button name="dialog_cancel" id="dialog_cancel" class="cancel" value="{{lang.cancel}}">{{lang.cancel}}</button></div>
   </div>
   <div id="enhancedcalc_warning" class="dialogs">
-    <div id="enhancedcalc_warning_icon">
+    <div id="enhancedcalc_warning_icon" class="dialogs_icon">
         <img src="../artwork/question_mark_64.png" width="64" height="64" alt="{{lang.questionmark}}" />
     </div>
-    <p id="enhancedcalc_warning_msg"></p>
-    <div id="enhancedcalc_warning_buttons">
-        <input type="button" name="dialog_cancel" id="enhancedcalc_warning_cancel" value="{{lang.goback}}" />
-        <input type="button" name="dialog_ok" id="enhancedcalc_warning_ok" value="{{lang.pass}}" />
-        &nbsp;&nbsp;
+    <p id="enhancedcalc_warning_msg" class="dialogs_msg"></p>
+    <div id="enhancedcalc_warning_buttons" class="basetheme dialogs_buttons">
+        <button name="dialog_cancel" id="enhancedcalc_warning_cancel" value="{{lang.goback}}">{{lang.goback}}</button>
+        <button name="dialog_ok" id="enhancedcalc_warning_ok" value="{{lang.pass}}">{{lang.pass}}</button>
     </div>
   </div>
 </div>
-<div id="info_overlay">
-  <div id="info_submit_dialog">
-    <div id="info_submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="{{lang.questionmark}}" /></div><p id="info_submit_dialog_msg"></p>
-    <div id="info_submit_dialog_buttons"><input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="OK" /></div>
-    <div id="info_submit_dialog_extra"></div>
+<div id="info_overlay" class="overlay">
+  <div id="info_submit_dialog" class="dialogs">
+    <div id="info_submit_dialog_icon" class="dialogs_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="{{lang.questionmark}}" /></div><p id="info_submit_dialog_msg" class="dialogs_msg"></p>
+    <div id="info_submit_dialog_buttons" class="basetheme dialogs_buttons"><button name="info_dialog_ok" id="info_dialog_ok" class="ok" value="OK">{{lang.ok}}</button></div>
+    <div id="info_submit_dialog_extra" class="dialogs_extra"></div>
   </div>
 </div>

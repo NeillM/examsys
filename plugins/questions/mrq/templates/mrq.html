@@ -36,7 +36,6 @@ options.allowedresponses - maximum number of responses allowed
 options.inact - flag to indicate if option  has previously been set as dismissed
 data.negativemarking - flag to indicate if negative marking is enabled
 data.abstainselected - flag to indicate if abstain option has previously been selected
-data.labelcolour - colour of label, controlled by user accessibility settings.
 data.dismiss - record of which options have been dismissed by the user
 
 Required localised text -
@@ -61,7 +60,7 @@ lang.abstain - abstain
         <li class="question-container">
             <label id="abstain{{data.questionno}}" class="optiontext">
                 <input type="checkbox" class="abstain" data-qno="{{data.questionno}}" data-ono="{{data.optionnumber}}" name="q{{data.questionno}}_abstain" id="q{{data.questionno}}_abstain" value="y" {% if data.abstainselected %} checked="checked" {% endif %} />
-                <span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
+                <span class="note">{{lang.abstain}}</span>
             </label>
         </li>
     {% endif %}

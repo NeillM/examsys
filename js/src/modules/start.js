@@ -402,13 +402,15 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
          * @param object event event
          */
         this.checkSubmit = function(event) {
+            event.preventDefault();
             scope.stopAutoSave();
             Editor.triggerSave();
             if (event === null) {
                 $('#button_pressed').attr('value', event.target.id);
             }
 
-            $("#dialog_cancel, #enhancedcalc_warning_cancel").click(function() {
+            $("#dialog_cancel, #enhancedcalc_warning_cancel").click(function(event) {
+                event.preventDefault();
                 if ($('#button_pressed').val() === 'jumpscreen') {
                     $('#jumpscreen option').each(function () {
                         if (this.defaultSelected) {
@@ -700,51 +702,6 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             $('body').css('cursor','default');
             scope.submitted = false;
             return false;
-        };
-
-        /**
-         * Generate the css for the paper.
-         */
-        this.generatePaperCss = function() {
-            var bgcolor = $('#css').attr('data-bgcolor');
-            var special_needs = $('#css').attr('data-special_needs');
-            var fgcolor = $('#css').attr('data-fgcolor');
-            var font = $('#css').attr('data-font');
-            var textsize = $('#css').attr('data-textsize');
-            var themecolor = $('#css').attr('data-themecolor');
-            var marks_color = $('#css').attr('data-marks_color');
-            var unanswered_color = $('#css').attr('data-unanswered_color');
-            var dismiss_color = $('#css').attr('data-dismiss_color');
-            if (special_needs && bgcolor !== '#FFFFFF' && bgcolor !== 'white') {
-                $('select,input').css('background-color', bgcolor);
-                $('select,input').css('color', fgcolor);
-                $('select,input').css('font-family', font + ",sans-serif");
-            }
-            if ((bgcolor !== '#FFFFFF' && bgcolor !== 'white') || (fgcolor !== '#000000' && fgcolor !== 'black') || textsize !== 90) {
-                $('body').css('background-color', bgcolor);
-                $('body').css('color', fgcolor);
-                $('body').css('font-size', textsize + "%");
-            }
-            if (font !== 'Arial') {
-                $('body').css('font-family', font + "',sans-serif");
-                $('pre').css('font-family', font + "',sans-serif");
-            }
-            if (themecolor !== '#316AC5') {
-                $('.theme').css('color', themecolor);
-            }
-            if (marks_color  !== '#808080') {
-                $('.mk').css('color', marks_color);
-            }
-            if (fgcolor !== '#000000' && fgcolor !== 'black') {
-                $('.act').css('color', fgcolor);
-            }
-            if (unanswered_color !== '#FFC0C0') {
-                $('.unans').css('background-color', unanswered_color);
-                $('.scr_un').css('background-color', unanswered_color);
-            }
-            if (dismiss_color !== '#A5A5A5') {
-                $('.inact').css('color', dismiss_color);
-            }
         };
 
         /**

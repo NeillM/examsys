@@ -80,12 +80,6 @@ $display_photos = $propertyObj->get_display_correct_answer();
 $review                 = $propertyObj->get_display_question_mark();
 $type                       = $propertyObj->get_rubric();
 $demo = \demo::is_demo($userObject);
-/*
-* Set the default colour scheme for this paper and allow current users' special settings to override
-* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-*/
-$bgcolor = $paper_fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
 $modules = Paper_utils::get_modules($property_id, $mysqli);
 
@@ -194,18 +188,12 @@ if ($group == '') {
   <title><?php echo $string['peerreview']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    td p {margin:0; padding:0}
-    p {margin:0; padding:0}
-    .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
-    .group {padding-left:5px; color:white}
-    .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
-    .col {text-align:center; color:<?php echo $labelcolor; ?>}
-    .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
-    .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
-    .thankyou {margin-left: 10px; font-size: 350%; font-weight: bold; line-height: 140%}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/peerreview.css" />
+<?php
+$css = PaperProperties::paperCss($userObject);
+
+echo $css;
+?>
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
@@ -408,9 +396,9 @@ if (isset($_POST['submit'])) {
 
     echo '<table border="0" cellpadding="2" cellspacing="0" style="width:100%"><tr><td style="background-color:#5590CF; text-align:center">';
     if ($userObject->has_role('Student')) {
-        echo '<input type="submit" name="submit" value="' . $string['save'] . '" class="ok" />';
+        echo '<button name="submit" value="' . $string['save'] . '" class="ok">' . $string['save'] . '</button>';
     } else {
-        echo '<input type="button" name="close" value="' . $string['close'] . '" style="width:140px" onclick="window.close();" />';
+        echo '<button name="close" value="' . $string['close'] . '" style="width:140px" onclick="window.close();">' . $string['close'] . '</button>';
     }
     echo "</td></tr>\n";
     echo "</table>\n</form>\n";

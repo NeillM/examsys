@@ -69,14 +69,6 @@ $is_preview_mode_first_launch = ($is_preview_mode == true and $getmode === 'prev
 // Are we in a staff single question testmode
 $is_question_preview_mode = !is_null($q_id);
 
-/*
-* Set the default colour scheme for this paper and allow current users' special settings to override
-* $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color are passed by reference!!
-*/
-$bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
-
-
 $original_paper_type = $paper_type; //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
 $attempt = 1; //default attempt to 1 overwritten if the student is resit candidate
 $modIDs = array_keys(Paper_utils::get_modules($property_id, $mysqli));
@@ -154,6 +146,11 @@ if ($is_question_preview_mode == false) {
     body {text-align:center}
     .norun {font-weight:bold; margin-bottom:250px}
   </style>
+<?php
+$css = PaperProperties::paperCss($userObject);
+
+echo $css;
+?>
 </head>
 <body>
   <form method="post" name="questions" action="start.php?id=<?php echo $id ?>&dont_record=true&page=<?php echo $page; ?>" autocomplete="off">

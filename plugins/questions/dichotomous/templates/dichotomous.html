@@ -21,7 +21,6 @@ author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 copyright 2018 onwards The University of Nottingham
 
 Required variables:
-data.labelcolour - colour of label, controlled by user accessibility settings.
 data.displayTF - displays true/false options if true otherwise Y/N
 data.options - the options available to select
 options.question_no - the question number
@@ -37,14 +36,14 @@ data.partid - the question part id
     <div class="question-container">
         <div class="question-header">
             <div class="question-cell question-label"></div>
-            <div aria-hidden="true" id="q{{data.questionno}}yes" class="question-cell question-label" style="color:{{data.labelcolour}}; font-size:90%">
+            <div aria-hidden="true" id="q{{data.questionno}}yes" class="question-cell question-label dichotomous-note">
 {% if data.displayTF %}
                 {{lang.true}}
 {% else %}
                 {{lang.yes}}
 {% endif %}
             </div>
-            <div aria-hidden="true" id="q{{data.questionno}}no" class="question-cell question-label" style="color:{{data.labelcolour}};font-size:90%">
+            <div aria-hidden="true" id="q{{data.questionno}}no" class="question-cell question-label dichotomous-note">
 {% if data.displayTF %}
                 {{lang.false}}
 {% else %}
@@ -52,7 +51,7 @@ data.partid - the question part id
 {% endif %}
             </div>
 {% if data.displayAbstain %}
-            <div id="q{{data.questionno}}abstain" class="question-cell question-label" style="color:{{data.labelcolour}}; font-size:90%">
+            <div id="q{{data.questionno}}abstain" class="question-cell question-label dichotomous-note">
                 {{lang.abstain}}
             </div>
 {% endif %}

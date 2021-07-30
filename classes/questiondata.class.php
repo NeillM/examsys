@@ -102,12 +102,6 @@ abstract class questiondata
     public $unansweredkey;
 
     /**
-     * Colour of 'labels' in paper
-     * @var string
-     */
-    public $labelcolour;
-
-    /**
      * Question settings
      * @var json
      */
@@ -450,7 +444,6 @@ abstract class questiondata
         $this->config = Config::get_instance();
         $this->db = $this->config->db;
         $this->unanswered = false;
-        $this->labelcolour = '#C00000';
         $this->displaycalc = true;
         $this->displayprologue = false;
         $this->displaytheme = false;

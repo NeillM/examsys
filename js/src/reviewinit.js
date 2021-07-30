@@ -27,7 +27,6 @@ requirejs(['media', 'jquery', 'start', 'review', 'reference', 'jsxls'], function
     ref.init();
     var start = new START();
     $(function() {
-        start.generatePaperCss();
         start.StartClock();
 
         var bidirectional = $('#dataset').attr('data-bidirectional');

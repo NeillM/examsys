@@ -84,7 +84,7 @@ lang.changescreen
     {% if data.adminview %}
     <input id="finish" type="button" value="{{lang.finish}}" />
     {% else %}
-    <div class="footerbar">
+    <div class="footerbar basetheme">
         {% if data.fire %}
         <div id ="fire_exit"></div>
         {% endif %}
@@ -107,7 +107,7 @@ lang.changescreen
             <nav aria-label="{{lang.changescreen}}">
                 {% if data.bidirectional %}
                 {% if data.previous %}
-                <input id="previous" type="button" value="{{lang.previousscreen}}" />
+                <button id="previous" value="{{lang.previousscreen}}">{{lang.previousscreen}}</button>
                 {% endif %}
                 {% if data.jumpscreen %}
                 <select aria-label="{{lang.jumpscreen}}" name="jumpscreen" id="jumpscreen">
@@ -118,9 +118,9 @@ lang.changescreen
                 {% endif %}
                 {% endif %}
                 {% if data.endscreen %}
-                <input id="finish" type="button" value="{{lang.finish}}" />
+                <button id="finish" value="{{lang.finish}}">{{lang.finish}}</button>
                 {% else %}
-                <input id="next" type="button" value="{{lang.nextscreen}}" />
+                <button id="next" value="{{lang.nextscreen}}">{{lang.nextscreen}}</button>
                 {% endif %}
             </nav>
         </div>

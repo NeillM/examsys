@@ -1272,6 +1272,9 @@ QUERY;
           `medical` text,
           `breaks` text,
           `break_time` smallint default NULL,
+          `globalthemecolour` varchar(20) default NULL,
+          `globalthemefont_colour` varchar(20) default NULL,
+          `highlight_bgcolour` varchar(20) default NULL,
           PRIMARY KEY (`special_id`),
           UNIQUE KEY `idx_userID` (`userID`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}

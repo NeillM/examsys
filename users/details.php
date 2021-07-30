@@ -155,6 +155,9 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     $colour_labels = param::optional('labels_radio', false, param::BOOLEAN, param::FETCH_POST);
     $colour_unanswered = param::optional('unanswered_radio', false, param::BOOLEAN, param::FETCH_POST);
     $colour_dismiss = param::optional('dismiss_radio', false, param::BOOLEAN, param::FETCH_POST);
+    $colour_globaltheme = param::optional('colour_globaltheme_radio', false, param::BOOLEAN, param::FETCH_POST);
+    $colour_globalthemefont = param::optional('colour_globalthemefont_radio', false, param::BOOLEAN, param::FETCH_POST);
+    $colour_highlight = param::optional('colour_highlight_radio', false, param::BOOLEAN, param::FETCH_POST);
 
     if ($colour_background) {
         $background = param::optional('background', null, param::TEXT, param::FETCH_POST);
@@ -195,6 +198,22 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     } else {
         $dismisscolor = null;
     }
+    if ($colour_globaltheme) {
+        $globalthemecolour = param::optional('globalthemecolour', null, param::TEXT, param::FETCH_POST);
+    } else {
+        $globalthemecolour = null;
+    }
+    if ($colour_globalthemefont) {
+        $globalthemefontcolour = param::optional('globalthemefontcolour', null, param::TEXT, param::FETCH_POST);
+    } else {
+        $globalthemefontcolour = null;
+    }
+    if ($colour_highlight) {
+        $highlightcolour = param::optional('highlightcolour', null, param::TEXT, param::FETCH_POST);
+    } else {
+        $highlightcolour = null;
+    }
+
     $medical = trim(param::optional('medical', '', param::TEXT, param::FETCH_POST));
     $breaks = trim(param::optional('breaks', '', param::TEXT, param::FETCH_POST));
 
@@ -203,9 +222,45 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     $result->execute();
     $result->close();
 
-    if ($background != null or $foreground != null or $marks_color != null or $textsize != 0 or $extra_time != 0 or $font != null or $themecolor != null or $labelcolor != null or $unansweredcolor != null or $dismisscolor != null or $medical != '' or $breaks != '' or $break_time != 0) {
-        $result = $mysqli->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $result->bind_param('issiissssssssi', $userID, $background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks, $break_time);
+    if (
+        $background != null
+        or $foreground != null
+        or $marks_color != null
+        or $textsize != 0
+        or $extra_time != 0
+        or $font != null
+        or $themecolor != null
+        or $labelcolor != null
+        or $unansweredcolor != null
+        or $dismisscolor != null
+        or $medical != ''
+        or $breaks != ''
+        or $break_time != 0
+        or $globalthemecolour != null
+        or $globalthemefontcolour != null
+        or $highlightcolour != null
+    ) {
+        $result = $mysqli->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $result->bind_param(
+            'issiissssssssisss',
+            $userID,
+            $background,
+            $foreground,
+            $textsize,
+            $extra_time,
+            $marks_color,
+            $themecolor,
+            $labelcolor,
+            $font,
+            $unansweredcolor,
+            $dismisscolor,
+            $medical,
+            $breaks,
+            $break_time,
+            $globalthemecolour,
+            $globalthemefontcolour,
+            $highlightcolour
+        );
         $result->execute();
         $result->close();
 
@@ -765,12 +820,38 @@ if ($tab == 'accessibility') {
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
   echo '<tr><td align="center"><table cellspacing="1" cellpadding="1" border="0" style="padding-top:20px; text-align:left">';
 
-  $result = $mysqli->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss, medical, breaks, break_time FROM special_needs WHERE userID = ? LIMIT 1');
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($background, $foreground, $textsize, $extra_time, $marks_color, $themecolor, $labelcolor, $font, $unansweredcolor, $dismisscolor, $medical, $breaks, $break_time);
-  $result->fetch();
+$result = $mysqli->prepare('
+SELECT
+    background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered,
+    dismiss, medical, breaks, break_time, globalthemecolour, globalthemefont_colour, highlight_bgcolour
+FROM
+    special_needs
+WHERE
+    userID = ?
+LIMIT 1
+');
+$result->bind_param('i', $userID);
+$result->execute();
+$result->store_result();
+$result->bind_result(
+    $background,
+    $foreground,
+    $textsize,
+    $extra_time,
+    $marks_color,
+    $themecolor,
+    $labelcolor,
+    $font,
+    $unansweredcolor,
+    $dismisscolor,
+    $medical,
+    $breaks,
+    $break_time,
+    $globalthemecolour,
+    $globalthemefontcolour,
+    $highlightcolour
+);
+$result->fetch();
 if ($result->num_rows > 0) {
     $special_needs = true;
 }
@@ -807,7 +888,16 @@ if (!isset($unansweredcolor)) {
 if (!isset($dismisscolor)) {
     $dismisscolor = '';
 }
-  $result->close();
+if (!isset($globalthemecolour)) {
+    $globalthemecolour = '';
+}
+if (!isset($globalthemefontcolour)) {
+    $globalthemefontcolour = '';
+}
+if (!isset($highlightcolour)) {
+    $highlightcolour = '';
+}
+$result->close();
 ?>
 <tr>
 <td><?php echo $string['extratime']; ?></td>
@@ -828,23 +918,28 @@ foreach ($times as $individual_time) {
 </td>
 <td rowspan="10" style="width:40px">&nbsp;</td>
 <td rowspan="10" style="font-size:110%">
-<div id="demo_paper_background" style="width:450px; height:300px; border:1px solid #909090; padding:15px; float:right">
-
-<span id="demo_theme" style="font-size:150%; font-weight:bold; color:#316AC5"><?php echo $string['demo1']; ?></span>
-
+<div style="width:450px; border:1px solid #909090; float:right">
+<div id="demo_header" style="font-weight: bold; font-size: x-large;"><?php echo $string['demo10']; ?></div>
+<div id="demo_paper_background">
+<span id="demo_theme" style="font-weight: bold; font-size: large;"><?php echo $string['demo1']; ?></span>
+<p id="demo_note">
+    <img src="/artwork/notes_icon.gif" width="16" height="16" alt="Note">
+    <?php echo $string['demo9']; ?>
+</p>
 <p>1. &nbsp;<?php echo $string['demo2']; ?></p>
 
 <table cellspacing="0" cellpadding="2" border="0" style="margin-left:30px; width:200px">
   <tr><td style="text-align:center; color:#C00000" id="demo_true_label"><?php echo $string['demo3']; ?></td><td style="text-align:center; color:#C00000" id="demo_false_label"><?php echo $string['demo4']; ?></td><td></tr>
 <tr><td style="text-align:center"><input type="radio" name="q1" value="t" checked="checked" /></td><td style="text-align:center"><input type="radio" name="q1" value="f" /></td><td><?php echo $string['demo5']; ?></td></tr>
-<tr><td style="text-align:center"><input type="radio" name="q2" value="t" /></td><td style="text-align:center"><input type="radio" name="q2" value="f" checked="checked" /></td><td><?php echo $string['demo6']; ?></td></tr>
-<tr id="demo_unanswered" style="background-color:#FFC0C0"><td style="text-align:center"><input type="radio" name="q3" value="t" /></td><td style="text-align:center"><input type="radio" name="q3" value="f" /></td><td><?php echo $string['demo7']; ?></td></tr>
+<tr id="demo_highlight"><td style="text-align:center"><input type="radio" name="q2" value="t" /></td><td style="text-align:center"><input type="radio" name="q2" value="f" checked="checked" /></td><td><?php echo $string['demo6']; ?></td></tr>
+<tr id="demo_unanswered"><td style="text-align:center"><input type="radio" name="q3" value="t" /></td><td style="text-align:center"><input type="radio" name="q3" value="f" /></td><td><?php echo $string['demo7']; ?></td></tr>
 </table>
 <br />
 <span id="demo_marks" style="font-size:90%; color:#808080">(<?php echo $string['demo8']; ?>)</span>
 
 </div>
-
+<div id="demo_footer"><?php echo $string['demo11']; ?></div>
+<div>
 </td>
 </tr>
 <tr>
@@ -1001,6 +1096,57 @@ if ($dismisscolor == '') {
 }
 ?>
 </td>
+</tr>
+<tr>
+    <td><?php echo $string['highlightcolour']; ?></td>
+    <td><input class="access" type="radio" name="colour_highlight_radio" value="0"<?php if ($highlightcolour == '') {
+            echo ' checked';
+        } ?> /><?php echo $string['default']; ?></td>
+    <td><input class="access" type="radio" name="colour_highlight_radio" id="highlightcolour_radio_on" value="1"<?php if ($highlightcolour != '') {
+            echo ' checked';
+        } ?> />
+        <?php
+        if ($highlightcolour == '') {
+            echo "<div class=\"showpicker\" data-pickertype=\"highlightcolour\" id=\"span_highlightcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"highlightcolour\" name=\"highlightcolour\" value=\"$highlightcolour\" />";
+        } else {
+            echo "<div class=\"showpicker\" data-pickertype=\"highlightcolour\" id=\"span_highlightcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$highlightcolour\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"highlightcolour\" name=\"highlightcolour\" value=\"$highlightcolour\" />";
+        }
+        ?>
+    </td>
+</tr>
+<tr>
+    <td><?php echo $string['globalthemecolour']; ?></td>
+    <td><input class="access" type="radio" name="colour_globaltheme_radio" value="0"<?php if ($globalthemecolour == '') {
+            echo ' checked';
+        } ?> /><?php echo $string['default']; ?></td>
+    <td><input class="access" type="radio" name="colour_globaltheme_radio" id="globalthemecolour_radio_on" value="1"<?php if ($globalthemecolour != '') {
+            echo ' checked';
+        } ?> />
+        <?php
+        if ($globalthemecolour == '') {
+            echo "<div class=\"showpicker\" data-pickertype=\"globalthemecolour\" id=\"span_globalthemecolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemecolour\" name=\"globalthemecolour\" value=\"$globalthemecolour\" />";
+        } else {
+            echo "<div class=\"showpicker\" data-pickertype=\"globalthemecolour\" id=\"span_globalthemecolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$globalthemecolour\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemecolour\" name=\"globalthemecolour\" value=\"$globalthemecolour\" />";
+        }
+        ?>
+    </td>
+</tr>
+<tr>
+    <td><?php echo $string['globalthemefontcolour']; ?></td>
+    <td><input class="access" type="radio" name="colour_globalthemefont_radio" value="0"<?php if ($globalthemefontcolour == '') {
+            echo ' checked';
+        } ?> /><?php echo $string['default']; ?></td>
+    <td><input class="access" type="radio" name="colour_globalthemefont_radio" id="globalthemefontcolour_radio_on" value="1"<?php if ($globalthemefontcolour != '') {
+            echo ' checked';
+        } ?> />
+        <?php
+        if ($globalthemefontcolour == '') {
+            echo "<div class=\"showpicker\" data-pickertype=\"globalthemefontcolour\" id=\"span_globalthemefontcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:#FFFFFF\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemefontcolour\" name=\"globalthemefontcolour\" value=\"$globalthemefontcolour\" />";
+        } else {
+            echo "<div class=\"showpicker\" data-pickertype=\"globalthemefontcolour\" id=\"span_globalthemefontcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$globalthemefontcolour\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemefontcolour\" name=\"globalthemefontcolour\" value=\"$globalthemefontcolour\" />";
+        }
+        ?>
+    </td>
 </tr>
 <tr><td colspan="5">&nbsp;</td></tr>
 <tr><td class="medical"><?php echo $string['medical'] ?></td><td colspan="4"><textarea cols="60" rows="3" name="medical" style="width:100%"><?php echo $medical ?></textarea></td></tr>

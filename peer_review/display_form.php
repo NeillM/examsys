@@ -54,8 +54,6 @@ if ($type == '') {
     display_error('Error', 'No field in the metadata set for groups.', false, true);
 }
 
-$bgcolor = $paper_fgcolor = $textsize = $marks_color = $paper_themecolor = $labelcolor = $font = $unanswered_color = $dismiss_color = '';
-$propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $paper_themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 // Get questions on the paper
 $questions = array();
 $result = $mysqli->prepare('SELECT question, q_type, leadin, display_method FROM (papers, questions) WHERE papers.question = questions.q_id AND paper = ? ORDER BY display_pos');
@@ -129,19 +127,12 @@ $result->close();
   <title>Form</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    td p {margin:0px}
-    .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
-    .group {padding-left:5px; color:white}
-    .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
-    .col {text-align:center; color:<?php echo $labelcolor; ?>}
-    .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
-    .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
-    .mcq td {vertical-align:top; padding: 3px 0}
-    .mcq td.radio {width: 36px}
-    .indented {margin-left: 36px; width:100%; border: 0; border-collapse: collapse}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/peerreview.css" />
+<?php
+$css = PaperProperties::paperCss($userObject);
+
+echo $css;
+?>
 </head>
 <body>
 
@@ -176,7 +167,7 @@ if ($review_type == '1') {
 }
 echo "</table>\n";
 echo '<table border="0" cellpadding="2" cellspacing="0" style="width:100%"><tr><td style="background-color:#5590CF; text-align:center">';
-echo '<input type="button" name="close" value="' . $string['close'] . '" style="width:100px" onclick="window.close();" />';
+echo '<button name="close" value="' . $string['close'] . '" style="width:100px" onclick="window.close();">' . $string['close'] . '</button>';
 echo "</td></tr>\n";
 echo "</table>\n</form>\n";
 

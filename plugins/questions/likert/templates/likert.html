@@ -28,7 +28,6 @@ data.displaylikertscenario - flag to indicate if there is a note to scenario
 data.likertscenariocolspan - col span of scenario
 data.scenario - the scenario
 data.displayna  - flag to indicate if n/a option should be displayed
-data.labelcolour - the label colour - controlled by user accessibility options
 data.scale - the likert scale
 data.unanswered - flag to indicate if question has previously been answered
 data.assignednumber - question number
@@ -62,12 +61,12 @@ lang.na - not applicable
         <div aria-hidden="true" class="question-header">
             <div class="question-cell"></div>
 {% if data.displayna %}
-            <div class="question-cell" style="color:{{data.labelcolour}}; font-size:80%">
+            <div class="question-cell likert-note">
                 {{lang.na}}
             </div>
 {% endif %}
 {% for i in data.scale %}
-            <div class="question-cell" style="color:{{data.labelcolour}}; font-size:80%">
+            <div class="question-cell likert-note">
                 {{i|raw}}
             </div>
 {% endfor %}
