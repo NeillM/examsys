@@ -528,7 +528,7 @@ JS;
         if ($editor[0] === 'plugin_tinymce_texteditor') {
             $lastexception = null;
 
-            for ($i = 0; $i < 10; $i++) {
+            for ($i = 0; $i < 30; $i++) {
                 try {
                     $this->getSession()->executeScript(
                         "requirejs(['tinyMCE'], function () {

@@ -289,5 +289,5 @@ config:
   -
     component: "plugin_texteditor"
     setting: "enabled_plugin"
-    value: "[\"plugin_plain_texteditor\"]"
+    value: "[\"plugin_tinymce_texteditor\"]"
     type: "json"
