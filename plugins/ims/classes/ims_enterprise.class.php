@@ -438,18 +438,18 @@ class ims_enterprise
                 switch ($grouptype) {
                     case self::GROUP_FACULTY:
                         $this->process_group_faculty($node);
-                        continue;
+                        continue 2;
                     case self::GROUP_MODULE:
                         $this->process_group_module($node);
-                        continue;
+                        continue 2;
                     case self::GROUP_PROGRAMME:
                         $this->process_group_programme($node);
-                        continue;
+                        continue 2;
                     case self::GROUP_SCHOOL:
                         $this->process_group_school($node);
-                        continue;
+                        continue 2;
                     default:
-                        continue;
+                        continue 2;
                 }
             }
         }
@@ -620,7 +620,7 @@ class ims_enterprise
                 $this->process_group_school($node);
                 break;
             default:
-                continue;
+                break;
         }
     }
 
