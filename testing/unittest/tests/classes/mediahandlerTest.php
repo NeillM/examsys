@@ -237,6 +237,65 @@ class MediaHandlerTest extends unittestdatabase
     }
 
     /**
+     * Test updating media with null values
+     * @group media
+     */
+    public function testUpdateMediaNullValues(): void
+    {
+        $source = 'test.png';
+        $width = 100;
+        $height = 100;
+        $alt = 'test text';
+        $owner = $this->admin['id'];
+        $id = \media_handler::insertMedia(
+            $source,
+            $width,
+            $height,
+            $alt,
+            $owner
+        );
+        $updatealt = null;
+        $updatewidth = null;
+        $updateheight = null;
+        \media_handler::updateMedia(
+            $id,
+            $source,
+            $updatewidth,
+            $updateheight,
+            $updatealt,
+            $owner
+        );
+        $queryTable = $this->query(
+            array(
+                'columns' => array(
+                    'source',
+                    'width',
+                    'height',
+                    'alt',
+                    'ownerid'
+                ),
+                'table' => 'media',
+                'where' => array(
+                    array(
+                        'column' => 'id',
+                        'value' => $id
+                    )
+                )
+            )
+        );
+        $expectedTable = array(
+            0 => array (
+                'source' => $source,
+                'width' => $updatewidth,
+                'height' => $updateheight,
+                'alt' => $updatealt,
+                'ownerid' => $owner
+            )
+        );
+        $this->assertEquals($expectedTable, $queryTable);
+    }
+
+    /**
      * Test updating media alt text.
      * @group media
      */
