@@ -220,7 +220,7 @@ class param
                 break;
             case self::LOCAL_URL:
                 $rogo_url = Config::get_instance()->get('cfg_web_host');
-                // We now know if it is a valid ULR ot not, we just need to ensure it is for the local instance of Rogo.
+                // We now know if it is a valid URL or not, we just need to ensure it is for the local instance of Rogo.
                 $filter = FILTER_VALIDATE_REGEXP;
                 $options = array(
                     'options' => array(
@@ -272,6 +272,7 @@ class param
      */
     protected static function strip_tags($text)
     {
+        $text = self::cleanBadChars($text);
         if ($text === '' or preg_match('#<.*>#', $text) === 0) {
             // No html.
             return $text;
@@ -283,6 +284,18 @@ class param
         }
         $return = strip_tags($text);
         return $return . $postfix;
+    }
+
+    /**
+     * Clean bad characters such as non-breaking spaces
+     *
+     * @param string $text String to sanitize
+     * @return string
+     */
+    public static function cleanBadChars($text) {
+        // Removes all unicode spacing, odd characters and control characters, replacing with a regular space
+        $text = preg_replace('/[\pZ\pC]+/u', ' ', $text);
+        return $text;
     }
 
     /**

@@ -317,6 +317,7 @@ define(['helplauncher', 'log', 'html5_question', 'html5_menu', 'hotspot_layer', 
 
     var text_area = document.createElement('div');
     text_area.className = this.html_classes.layername;
+    text_area.id = 'hotspot_label_' + layer.index;
     $(text_area).append(layer.text);
     $(text_area).attr('tabindex', -1);
 
