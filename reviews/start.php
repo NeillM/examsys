@@ -329,6 +329,8 @@ if (count($reference_materials) > 0) {
 }
 $mysqli->close();
 
+echo '</div>';
+
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);

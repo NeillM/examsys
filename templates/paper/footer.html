@@ -47,90 +47,95 @@ lang.previousscreen
 lang.nextscreen
 lang.changescreen
 #}
-</main>
-<footer>
-    <br />
-    <input type="hidden" name="current_screen" value="{{data.current_screen}}" />
-    <input type="hidden" name="page_start" value="{{data.page_start}}" />
-    <input type="hidden" name="old_screen" value="{{data.old_screen}}" />
-    <input type="hidden" name="previous_duration" value="{{data.previous_duration}}" />
-    <input type="hidden" id="button_pressed" name="button_pressed" value="next" />
-    <input type="hidden" id="randomPageID" name="randomPageID" value="" />
-    <input type="hidden" name="refpane" id="refpane" value="{{data.refpane}}" />
-    {% if data.previewmode %}
-    <input type="hidden" id="mode" name="mode" value="preview" />
-    {% endif %}
-    {% if data.previewmode %}
-    {% if data.msg != '' %}
-    <div class="callout">
-        <div id="calloutTxt">
-            {{data.msg}}
-        </div>
-        <b class="notch"></b>
-    </div>
-    {% endif %}
-    {% endif %}
-    <div id="saveError">
-        <img src="{{path}}/artwork/no_save.png" width="60" height="60" alt="Warning" />
-        <div>
-            <span style="color:#C42828; font-weight:bold">
-                {{lang.savefailed}}
-            </span>
-            <br />
-            {{lang.tryagain}}
-        </div>
-    </div>
-    {# Display the paper footer admin or student information #}
-    {% if data.adminview %}
-    <input id="finish" type="button" value="{{lang.finish}}" />
-    {% else %}
-    <div class="footerbar basetheme">
-        {% if data.fire %}
-        <div id ="fire_exit"></div>
-        {% endif %}
-        <div class="copyright">
-            {{data.copyright}}
-        </div>
-        <div class="timerdiv">
-            <div class="timer">
-                {{data.timerlabel}} <span id="theTime" type="text" class="thetime"></span>
+                    </main>
+                    <footer>
+                        <br />
+                        <input type="hidden" name="current_screen" value="{{data.current_screen}}" />
+                        <input type="hidden" name="page_start" value="{{data.page_start}}" />
+                        <input type="hidden" name="old_screen" value="{{data.old_screen}}" />
+                        <input type="hidden" name="previous_duration" value="{{data.previous_duration}}" />
+                        <input type="hidden" id="button_pressed" name="button_pressed" value="next" />
+                        <input type="hidden" id="randomPageID" name="randomPageID" value="" />
+                        <input type="hidden" name="refpane" id="refpane" value="{{data.refpane}}" />
+                        {% if data.previewmode %}
+                        <input type="hidden" id="mode" name="mode" value="preview" />
+                        {% endif %}
+                        {% if data.previewmode %}
+                        {% if data.msg != '' %}
+                        <div class="callout">
+                            <div id="calloutTxt">
+                                {{data.msg}}
+                            </div>
+                            <b class="notch"></b>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                        <div id="saveError">
+                            <img src="{{path}}/artwork/no_save.png" width="60" height="60" alt="Warning" />
+                            <div>
+                                <span style="color:#C42828; font-weight:bold">
+                                    {{lang.savefailed}}
+                                </span>
+                                <br />
+                                {{lang.tryagain}}
+                            </div>
+                        </div>
+                        {# Display the paper footer admin or student information #}
+                        {% if data.adminview %}
+                        <input id="finish" type="button" value="{{lang.finish}}" />
+                        {% else %}
+                        <div class="footerbar basetheme">
+                            {% if data.fire %}
+                            <div id ="fire_exit"></div>
+                            {% endif %}
+                            <div class="copyright">
+                                {{data.copyright}}
+                            </div>
+                            <div class="timerdiv">
+                                <div class="timer">
+                                    {{data.timerlabel}} <span id="theTime" type="text" class="thetime"></span>
+                                </div>
+                                {% if data.breaks != -1 %}
+                                <div id="breaks" class="pause"></div>
+                                <div id="breakstext">{{lang.pause}}</div>
+                                <div id="breaktimeremaining"></div>
+                                {% endif %}
+                            </div>
+                            <div class="controls">
+                                <span id="savemsg"></span>
+                                {# Display additional controls for bidirectional papers #}
+                                <nav aria-label="{{lang.changescreen}}">
+                                    {% if data.bidirectional %}
+                                    {% if data.previous %}
+                                    <button id="previous" value="{{lang.previousscreen}}">{{lang.previousscreen}}</button>
+                                    {% endif %}
+                                    {% if data.jumpscreen %}
+                                    <select aria-label="{{lang.jumpscreen}}" name="jumpscreen" id="jumpscreen">
+                                        {% for id,selected in data.jumpscreenoptions %}
+                                        <option value="{{id}}"{{selected}}>{{id}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% if data.endscreen %}
+                                    <button id="finish" value="{{lang.finish}}">{{lang.finish}}</button>
+                                    {% else %}
+                                    <button id="next" value="{{lang.nextscreen}}">{{lang.nextscreen}}</button>
+                                    {% endif %}
+                                </nav>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </footer>
+                    <textarea id="save_failed" name="save_failed" style="display:none"></textarea>
+                </div>
             </div>
-            {% if data.breaks != -1 %}
-            <div id="breaks" class="pause"></div>
-            <div id="breakstext">{{lang.pause}}</div>
-            <div id="breaktimeremaining"></div>
-            {% endif %}
-        </div>
-        <div class="controls">
-            <span id="savemsg"></span>
-            {# Display additional controls for bidirectional papers #}
-            <nav aria-label="{{lang.changescreen}}">
-                {% if data.bidirectional %}
-                {% if data.previous %}
-                <button id="previous" value="{{lang.previousscreen}}">{{lang.previousscreen}}</button>
-                {% endif %}
-                {% if data.jumpscreen %}
-                <select aria-label="{{lang.jumpscreen}}" name="jumpscreen" id="jumpscreen">
-                    {% for id,selected in data.jumpscreenoptions %}
-                    <option value="{{id}}"{{selected}}>{{id}}</option>
-                    {% endfor %}
-                </select>
-                {% endif %}
-                {% endif %}
-                {% if data.endscreen %}
-                <button id="finish" value="{{lang.finish}}">{{lang.finish}}</button>
-                {% else %}
-                <button id="next" value="{{lang.nextscreen}}">{{lang.nextscreen}}</button>
-                {% endif %}
-            </nav>
-        </div>
+        </form>
     </div>
-    {% endif %}
-</footer>
-<textarea id="save_failed" name="save_failed" style="display:none"></textarea>
-</form>
+{% if data.ref > 0 %}
+    {% include 'paper/refmaterial.html' %}
+{% endif %}
 </div>
-
 {% if data.editorconfig != '' %}
     {% include data.editorconfig %}
 {% endif %}

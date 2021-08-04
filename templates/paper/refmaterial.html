@@ -24,10 +24,9 @@ Required variables -
 data.ref - ref info
 data.refpane - ref pane id
 #}
-  <div class="references">
+<div class="references">
 {% for ref in data.ref %}
     <div class="refhead basetheme" id="refhead{{ref.num}}" data-id="{{ref.num}}">{{ref.title}}</div>
     <div class="framecontent" id="framecontent{{ref.num}}">{{ref.material|raw}}</div>
 {% endfor %}
-  </div>
 </div>

@@ -587,6 +587,11 @@ if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_
 
 $footer_data['copyright'] = sprintf($string['papercopyright'], date('Y'), $configObject->get_setting('core', 'misc_company'));
 
+if (count($reference_materials) > 0) {
+    $footer_data['ref'] = $reference_materials;
+    $footer_data['refpane'] = $refpane;
+}
+
 $render->render($footer_data, $string, 'paper/footer.html');
 $render->render(array(), $string, 'paper/overlays.html');
 // Paper dataset.
@@ -632,13 +637,6 @@ $miscdataset['attributes']['remotesummative'] = $remote;
 $miscdataset['attributes']['breaks'] = $footer_data['breaks'];
 $render->render($miscdataset, array(), 'dataset.html');
 
-if (count($reference_materials) > 0) {
-    $refdata = array(
-    'ref' => $reference_materials,
-    'refpane' => $refpane
-    );
-    $render->render($refdata, $string, 'paper/refmaterial.html');
-}
 $mysqli->close();
 
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
