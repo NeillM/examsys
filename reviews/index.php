@@ -47,7 +47,7 @@ require '../config/index.inc';  // Get the logo
         <?php
     }
     ?>
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />

@@ -93,7 +93,7 @@ if (isset($_POST['Save'])) {
     .note {width:90%}
   </style>
 
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/mappingsessioninit.min.js"></script>

@@ -41,7 +41,7 @@ require_once '../include/sidebar_menu.inc';
     .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
   </style>
 
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
 </head>

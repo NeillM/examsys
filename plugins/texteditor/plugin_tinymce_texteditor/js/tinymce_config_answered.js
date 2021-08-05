@@ -12,6 +12,8 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         statusbar: false,
         toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | alignleft aligncenter alignright | numlist bullist | table | help",
         help_tabs: ['shortcuts', 'keyboardnav'],
+        language: config.lang,
+        language_url: '/plugins/texteditor/plugin_tinymce_texteditor/js/langs/' + config.lang + '.js',
     });
 
     Tinymce.init({
@@ -28,5 +30,7 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | alignleft aligncenter alignright | numlist bullist | table | help",
         content_css: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/css/unanswered.css",
         help_tabs: ['shortcuts', 'keyboardnav'],
+        language: config.lang,
+        language_url: '/plugins/texteditor/plugin_tinymce_texteditor/js/langs/' + config.lang + '.js',
     });
 });

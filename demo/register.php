@@ -173,7 +173,7 @@ MESSAGE;
     <title><?php echo page::title('Rog&#333;: ' . $string['register']); ?></title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
 </head>
@@ -204,7 +204,7 @@ MESSAGE;
             .h {font-weight: bold; padding-top: 10px}
     </style>
 
-    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
     <script src="../js/registerinit.min.js"></script>

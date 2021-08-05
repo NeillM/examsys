@@ -78,7 +78,7 @@ $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/examclarification.css" />
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>" data-editor="<?php echo $editor[0]; ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>" data-editor="<?php echo $editor[0]; ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/examclarificationinit.min.js"></script>

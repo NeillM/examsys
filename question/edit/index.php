@@ -528,7 +528,7 @@ if ($critical_error == '') {
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 ?>
 
-<script id="rogoconfig"
+<script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>"
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
         data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>"

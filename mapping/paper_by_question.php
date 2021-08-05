@@ -53,7 +53,7 @@ $mediadirectory = rogo_directory::get_directory('media');
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-    <script id="rogoconfig"
+    <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
     </script>

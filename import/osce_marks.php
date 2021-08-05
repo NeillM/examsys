@@ -235,7 +235,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
         <link rel="stylesheet" href="../css/dialog.css" type="text/css">
         <link rel="stylesheet" href="../css/submenu.css" type="text/css">
         <link rel="stylesheet" href="../css/osceimport.css" type="text/css">
-        <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+        <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
         <script src='../js/require.js'></script>
         <script src='../js/main.min.js'></script>
         <script src="../js/importmarksinit.min.js"></script>

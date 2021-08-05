@@ -55,7 +55,7 @@ $themecolor = $propertyObj->get_themecolor();
     .overall {border:1px solid #909090; width:20%; height:35px; text-align:center}
     ul {margin-top:0; margin-bottom:0}
   </style>
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   </head>

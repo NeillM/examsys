@@ -217,3 +217,29 @@ selenium-server.jar
 # ignore tinymce plugins that are added at build
 plugins/texteditor/plugin_tinymce_texteditor/js/plugins/ruby-annotation
 plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation-editor
+plugins/texteditor/plugin_tinymce_texteditor/js/langs/*
+!/plugins/texteditor/plugin_tinymce_texteditor/js/langs/index.html
+
+# ignore non en localisation files
+testing/lang/cs
+testing/lang/sk
+testing/lang/pl
+plugins/texteditor/plugin_plain_texteditor/lang/cs
+plugins/texteditor/plugin_plain_texteditor/lang/sk
+plugins/texteditor/plugin_plain_texteditor/lang/pl
+plugins/texteditor/plugin_tinymce_texteditor/lang/cs
+plugins/texteditor/plugin_tinymce_texteditor/lang/sk
+plugins/texteditor/plugin_tinymce_texteditor/lang/pl
+LTI/lang/cs
+LTI/lang/sk
+LTI/lang/pl
+lang/cs
+lang/sk
+lang/pl
+classes/lang/cs
+classes/lang/sk
+classes/lang/pl
+api/lang/cs
+api/lang/sk
+api/lang/pl
+

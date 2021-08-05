@@ -12,5 +12,7 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         statusbar: false,
         toolbar: "cut copy paste | undo | bold italic underline | subscript superscript | alignleft aligncenter alignright | numlist bullist | image | table | code | help",
         help_tabs: ['shortcuts', 'keyboardnav'],
+        language: config.lang,
+        language_url: '/plugins/texteditor/plugin_tinymce_texteditor/js/langs/' + config.lang + '.js',
     });
 });

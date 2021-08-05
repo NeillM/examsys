@@ -126,7 +126,7 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen)
         .divider {font-size:80%; font-weight:bold; padding-left:6px}
     .ok {font-size:90%}
   </style>
-    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../../../js/require.js'></script>
     <script src='../../../js/main.min.js'></script>
     <script src="js/variablelinkinit.min.js"></script>

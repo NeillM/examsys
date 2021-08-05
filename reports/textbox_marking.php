@@ -94,7 +94,7 @@ HTML;
   .noanswer {background-image: url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat; background-position: 2px center; background-color:#FFC0C0; padding-left:20px; padding-right:5px; color: #800000 !important}
   .marked {color:#808080}
   </style>
-  <script id="rogoconfig"
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
             data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">

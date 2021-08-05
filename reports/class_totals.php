@@ -87,7 +87,7 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
     <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
     <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
     <script src='../js/classtotalsinit.min.js'></script>
@@ -152,7 +152,7 @@ ob_start();
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src='../js/classtotalsinit.min.js'></script>

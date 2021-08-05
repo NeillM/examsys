@@ -6,8 +6,8 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
             'ruby-annotation': config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/ruby-annotation/plugin.min.js",
             'maths-equation-editor': config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation-editor/plugin.min.js",
         },
-        language : 'en',
-        language_load : true,
+        language: config.lang,
+        language_url: '/plugins/texteditor/plugin_tinymce_texteditor/js/langs/' + config.lang + '.js',
         icons_url: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/icons/icons.js",
         icons: 'rogo',
         a11y_advanced_options: true,
@@ -28,8 +28,8 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         external_plugins: {
             'maths-equation-editor': config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/js/plugins/maths-equation-editor/plugin.min.js",
         },
-        language : 'en',
-        language_load : true,
+        language: config.lang,
+        language_url: '/plugins/texteditor/plugin_tinymce_texteditor/js/langs/' + config.lang + '.js',
         icons_url: config.cfgrootpath +  "/plugins/texteditor/plugin_tinymce_texteditor/icons/icons.js",
         icons: 'rogo',
         a11y_advanced_options: true,
@@ -57,5 +57,7 @@ requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (Tinymce, config, $) {
         statusbar: false,
         toolbar: "cut copy paste pastetext| undo | removeformat | help",
         help_tabs: ['shortcuts', 'keyboardnav'],
+        language: config.lang,
+        language_url: '/plugins/texteditor/plugin_tinymce_texteditor/js/langs/' + config.lang + '.js',
     });
 });

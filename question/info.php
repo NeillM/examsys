@@ -44,7 +44,7 @@ $q_id = check_var('q_id', 'GET', true, false, true);
     .screen {font-size:90%; color:#808080}
     .num {text-align:right; padding-right:6px}
   </style>
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/questioninfoinit.min.js"></script>

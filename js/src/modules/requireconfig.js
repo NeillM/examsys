@@ -24,6 +24,7 @@ define(['jquery', 'log'], function($, Log) {
     var three = 0;
     var editor = config.data('editor');
     var cfgrootpath = config.data('root');
+    var lang = config.data('lang');
     if (config.data('mathjax')) {
         mathjax = 1;
     }
@@ -37,6 +38,10 @@ define(['jquery', 'log'], function($, Log) {
         Log('Root path not set, using default', 'warn');
         cfgrootpath = '';
     }
+    if (typeof lang === 'undefined') {
+        Log('Lang not set, using default', 'warn');
+        lang = 'en';
+    }
     return {
         // Root path.
         cfgrootpath: cfgrootpath,
@@ -45,6 +50,8 @@ define(['jquery', 'log'], function($, Log) {
         // ThreeJS enabled?
         three: three,
         // Editor enabled?
-        editor: editor
+        editor: editor,
+        // Localisation Language.
+        lang: lang,
     }
 });

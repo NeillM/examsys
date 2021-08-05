@@ -145,7 +145,7 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
     .key {position: relative; width: 300px; height: 173px; border: 2px solid #FCE699; z-index: 10; float: right; top: 30px; right: 10px; font-size: 75%; padding: 5px; line-height: 100%; background-color: #FFFFEE; color: #404040}
   </style>
 
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../js/require.js"></script>
   <script src="../js/main.min.js"></script>
 <?php

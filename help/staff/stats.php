@@ -59,7 +59,7 @@ if (isset($_POST['startday'])) {
     .stats td {vertical-align:top; border-bottom: 1px solid #295AAD; border-right: 1px solid #295AAD}
         th {background-color:#295AAD; color:white; border:#295AAD 1px solid}
   </style>
-  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
   <script type="text/javascript" src="../../js/helpinit.min.js"></script>
