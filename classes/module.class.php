@@ -310,7 +310,6 @@ class module
             if (!is_null($userObject)) {
                 $logger = new Logger($db);
                 foreach ($modinfo as $key => $val) {
-                      $key = mb_strtolower($key);
                     if ($key == 'idmod') {
                         continue;
                     }
@@ -321,7 +320,7 @@ class module
                             $userObject->get_user_ID(),
                             $orig_modinfo[$key],
                             $modinfo[$key],
-                            $string[$lang_mappings[$key]]
+                            $this->langstrings[$lang_mappings[$key]]
                         );
                     }
                 }

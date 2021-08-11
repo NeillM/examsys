@@ -67,7 +67,7 @@ if ($userObject->has_role('External Examiner')) {
 $review = new Review($paperID, $userObject->get_user_ID(), $review_type, $mysqli);
 
 // Get standards setting data
-if ($marking{0} == '2') {
+if ($marking[0] == '2') {
     $standards_setting = array();
     $tmp_parts = explode(',', $marking);
   

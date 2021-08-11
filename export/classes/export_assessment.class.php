@@ -228,7 +228,7 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'rank':
-                        if ($tmp_exclude{0} == '0') {
+                        if ($tmp_exclude[0] == '0') {
                             for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
                                   $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);

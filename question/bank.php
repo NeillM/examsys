@@ -145,11 +145,11 @@ foreach ($bank_types as $id => $type_name) {
     $url = 'list.php?type=' . $type . '&subtype=' . $id . '&module=' . $module;
 
     if ($type == 'keyword') {
-        if ($old_section != $type_name{0}) {
+        if ($old_section != $type_name[0]) {
             echo "<br clear=\"all\" />\n";
-            echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $type_name{0} . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+            echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $type_name[0] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
         }
-        $old_section = $type_name{0};
+        $old_section = $type_name[0];
     } elseif ($type == 'performance' and $id == 'highest') {
         echo "<br clear=\"left\" />\n";
         echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $string['bydiscrimination'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";

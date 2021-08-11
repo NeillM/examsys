@@ -232,7 +232,7 @@ class Anonymise
         $initials = '';
         foreach ($initial as $name) {
             if ($name != '') {
-                $initials .= $name{0};
+                $initials .= $name[0];
             }
         }
         $initials = mb_strtoupper($initials);

@@ -141,7 +141,7 @@ function parse_leadin_word_2003($text, $parts)
     if ($count > 1) {
         for ($i = 0; $i < $count; $i++) {
             if ($i > 0) {
-                if ($value{$i - 1} == 1) {
+                if ($value[$i - 1] == 1) {
                     $tmptext .= '<w:r><w:rPr><w:color w:val="00B050"/><w:u w:val="single"/></w:rPr><w:t>';
                 } else {
                     $tmptext .= '<w:r><w:rPr></w:rPr><w:t>';
@@ -202,7 +202,7 @@ function parse_leadin($text, $parts)
     if ($count > 1) {
         $tmptext .= $starts[0];
         for ($i = 1; $i < $count; $i++) {
-            if ($value{$i - 1} == 1) {
+            if ($value[$i - 1] == 1) {
                  $class = 'part_ok';
             } else {
                 $class = 'part';

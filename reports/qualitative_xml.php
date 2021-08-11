@@ -102,8 +102,8 @@ while ($result->fetch()) {
         for (
             $character = 0; $character < strlen($user_answer); $character++
         ) {
-            if (ord($user_answer{$character}) > 31 and ord($user_answer{$character}) < 127) {
-                $buffer .= $user_answer{$character};
+            if (ord($user_answer[$character]) > 31 and ord($user_answer[$character]) < 127) {
+                $buffer .= $user_answer[$character];
             }
         }
         echo '<w:p><w:pPr><w:listPr><w:ilvl w:val="0"/><w:ilfo w:val="1"/><wx:t wx:val="·" wx:wTabBefore="360" wx:wTabAfter="270"/><wx:font wx:val="Symbol"/></w:listPr><w:spacing w:before="100" w:before-autospacing="on" w:after="100" w:after-autospacing="on"/><w:rPr><w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial"/><wx:font wx:val="Arial"/><w:color w:val="000000"/><w:sz w:val="22"/><w:sz-cs w:val="22"/></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial"/><wx:font wx:val="Arial"/><w:color w:val="000000"/><w:sz w:val="22"/><w:sz-cs w:val="22"/></w:rPr><w:t>' . StringUtils::wordToUtf8($buffer) . '</w:t></w:r></w:p>';

@@ -615,7 +615,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_excluded()
     {
-        return (isset($this->excluded{0}) and $this->excluded{0} == 1);
+        return (isset($this->excluded[0]) and $this->excluded[0] == 1);
     }
 
     /**

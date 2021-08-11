@@ -215,8 +215,8 @@ foreach ($log_array as $individual) {
                     $tmp_data = $log_array[$tmp_user_ID][$tmp_question_ID];
                     $buffer = '';
                     for ($character = 0; $character < strlen($tmp_data); $character++) {
-                        if (ord($tmp_data{$character}) > 31 and ord($tmp_data{$character}) < 127) {
-                            $buffer .= $tmp_data{$character};
+                        if (ord($tmp_data[$character]) > 31 and ord($tmp_data[$character]) < 127) {
+                            $buffer .= $tmp_data[$character];
                         }
                     }
                     echo htmlspecialchars($buffer);

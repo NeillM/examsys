@@ -314,7 +314,7 @@ class ClassTotals
             for ($i = 0; $i < $user_no; $i++) {
                 $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
             }
-        } elseif ($this->marking{0} == '2') {                     // Standards Setting
+        } elseif ($this->marking[0] == '2') {                     // Standards Setting
             $this->set_ss_pass();
 
             for ($i = 0; $i < $user_no; $i++) {
@@ -490,7 +490,7 @@ class ClassTotals
 
         if ($q_type != 'mrq' and $q_type != 'rank' and mb_strlen($exclude) > 1) {
             for ($i = 0; $i < mb_strlen($exclude); $i++) {
-                if ($exclude{$i} == '1') {
+                if ($exclude[$i] == '1') {
                     if ($subpart == '') {
                         if ($q_type == 'extmatch') {
                               $subpart = $numerals[$i];
@@ -747,7 +747,7 @@ class ClassTotals
                             $exclude_on = true;
                             $count_sub_paper_answers = count($sub_paper_answers);
                             for ($c = 0; $c < $count_sub_paper_answers; $c++) {
-                                if (isset($tmp_exclude{$section}) and $tmp_exclude{$section} == '0') {
+                                if (isset($tmp_exclude[$section]) and $tmp_exclude[$section] == '0') {
                                     if (!isset($sub_user_answers[$c]) or $sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
                                         // Do nothing
                                     } elseif (in_array($sub_user_answers[$c], $sub_paper_answers)) {
@@ -767,7 +767,7 @@ class ClassTotals
                                       $tmp_user_mark_array[$q_id][] = $section_mark;
                             }
                         } else {   // Matrix
-                            if ($tmp_exclude{$a} == '0') {
+                            if ($tmp_exclude[$a] == '0') {
                                 if ($paper_answers[$a] == $user_answers[$a]) {
                                         $tmp_mark += $question['marks_correct'];
                                         $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
@@ -785,7 +785,7 @@ class ClassTotals
                 $user_answers = json_decode($tmp_user_answer);
                 $count_user_answer = count($user_answers);
                 for ($a = 0; $a < $count_user_answer; $a++) {
-                    if ($tmp_exclude{$a} == '0') {
+                    if ($tmp_exclude[$a] == '0') {
                         // Ensure that the students answer is encoded in the same way as the correct answers.
                         $student_answer = html_entity_decode(StringUtils::clean_and_trim($user_answers[$a]));
                         if ($question['display_method'] == 'dropdown') {
@@ -825,12 +825,12 @@ class ClassTotals
             } elseif ($question['q_type'] == 'dichotomous') {
                 $count_question_correct = count($question['correct']);
                 for ($a = 0; $a < $count_question_correct; $a++) {
-                    if ($tmp_exclude{$a} == '0') {
-                        if ($question['correct'][$a] == $tmp_user_answer{$a}) {
+                    if ($tmp_exclude[$a] == '0') {
+                        if ($question['correct'][$a] == $tmp_user_answer[$a]) {
                             $tmp_mark += $question['marks_correct'];
                             $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
                         } else {
-                            if ($tmp_user_answer{$a} == 'a' or $tmp_user_answer{$a} == 'u') {
+                            if ($tmp_user_answer[$a] == 'a' or $tmp_user_answer[$a] == 'u') {
                                 $tmp_user_mark_array[$q_id][] = 0;
                             } else {
                                 $tmp_mark += $question['marks_incorrect'];
@@ -840,7 +840,7 @@ class ClassTotals
                     }
                 }
             } elseif ($question['q_type'] == 'enhancedcalc') {
-                if ($tmp_exclude{0} == '0') {
+                if ($tmp_exclude[0] == '0') {
                     $settings = json_decode($question['settings'], true);
 
                     if (isset($this->marking_overrides[$q_id][$userID])) {
@@ -866,7 +866,7 @@ class ClassTotals
                 $user_answers = explode('|', $tmp_user_answer);
                 $count_question_parts = count($question_parts);
                 for ($i = 0; $i < $count_question_parts; $i++) {
-                    if ($tmp_exclude{$i} == '0') {
+                    if ($tmp_exclude[$i] == '0') {
                         if (isset($user_answers[$i]) and mb_substr($user_answers[$i], 0, 1) == '1') {
                             $tmp_mark += $question['marks_correct'];
                             $tmp_user_mark_array[$q_id][] = $question['marks_correct'];
@@ -897,7 +897,7 @@ class ClassTotals
                         $x = round($tmp_second_split[$label_no - 2]);
                         $y = round($tmp_second_split[$label_no - 1]) - 25;
                         $correct_labels[$x . 'x' . $y] = mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'));
-                        if ($tmp_exclude{$i} == '0') {
+                        if ($tmp_exclude[$i] == '0') {
                             $placeholders++;
                         } else {
                             $excluded_no++;
@@ -928,7 +928,7 @@ class ClassTotals
                         if (isset($correct_labels[$x . 'x' . $y])) {
                             $index = $correct_labels_pos[$x . 'x' . $y];
                         }
-                        if ($tmp_exclude{$index} == '0') {
+                        if ($tmp_exclude[$index] == '0') {
                             if (isset($correct_labels[$x . 'x' . $y]) and $correct_labels[$x . 'x' . $y] == $user_split2[$a + 2]) {
                                 $tmp_mark += $question['marks_correct'];
                                 $correct += $question['marks_correct'];
@@ -954,7 +954,7 @@ class ClassTotals
                 $i = 0;
                 $correct_labels_exc = array();
                 foreach ($correct_labels as $cli => $clv) {
-                    if ($tmp_exclude{$i++} == '0') {
+                    if ($tmp_exclude[$i++] == '0') {
                         $correct_labels_exc[$cli] = $clv;
                     }
                 }
@@ -974,7 +974,7 @@ class ClassTotals
             }
         } else {
             // Marking per Question, or all other question types, simply return the original mark.
-            if ($tmp_exclude{0} == '0') {
+            if ($tmp_exclude[0] == '0') {
                 $round_tmp_user_mark = round($tmp_user_mark, 2);
                 $tmp_mark += $round_tmp_user_mark;
                 $tmp_user_mark_array[$q_id] = $round_tmp_user_mark;
@@ -1423,9 +1423,9 @@ class ClassTotals
             }
 
             if ($this->demo) {
-                $surname     = \demo::demo_replace($surname, true, true, $surname{0});
-                $initials    = \demo::demo_replace($initials, true, true, $initials{0});
-                $first_names = \demo::demo_replace($first_names, true, true, $first_names{0});
+                $surname     = \demo::demo_replace($surname, true, true, $surname[0]);
+                $initials    = \demo::demo_replace($initials, true, true, $initials[0]);
+                $first_names = \demo::demo_replace($first_names, true, true, $first_names[0]);
                 $email       = \demo::demo_replace($email);
                 $student_id  = \demo::demo_replace_number($student_id);
             }

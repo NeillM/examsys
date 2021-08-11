@@ -844,7 +844,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     $saved_response = $hotspot_answer;
                     $sub_parts = explode('|', $saved_response);
                     foreach ($sub_parts as $sub_part) {
-                        if ($sub_part{0} == 1) {
+                        if ($sub_part[0] == 1) {
                             $mark += $marks_correct;
                         } else {
                             $all_correct = false;

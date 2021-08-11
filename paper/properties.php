@@ -197,7 +197,7 @@ function format_marking($marking, $string)
 {
     $marking_string = $marking;
 
-    $marking_type = $marking{0};
+    $marking_type = $marking[0];
 
     switch ($marking_type) {
         case MARK_NO_ADJUSTMENT:
@@ -232,7 +232,7 @@ function format_method($method, $string)
         return $string['noadjustment'];
     } elseif ($method == '1') {
         return $string['calculatrrandommark'];
-    } elseif ($method{0} == '2') {
+    } elseif ($method[0] == '2') {
         return $string['stdset'];
     } elseif ($method == '3') {
         return $string['overallclass2'];

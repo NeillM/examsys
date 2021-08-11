@@ -66,7 +66,7 @@ class demo
                     $char = 97 - $start_on;
                 }
 
-                if ($text{$i} == ' ') {
+                if ($text[$i] == ' ') {
                     $new_text .= ' ';
                     $upper_flag = true;
                 } elseif ($upper_flag) {

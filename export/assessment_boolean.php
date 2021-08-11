@@ -316,9 +316,9 @@ if ($student_no > 0) {
                             }
                         }
                     } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank' or $question['q_type'] == 'rank') and $question['score_method'] != 'Mark per Question') {
-                        if ($tmp_exclude{0} == '0' or $question['q_type'] != 'rank') {
+                        if ($tmp_exclude[0] == '0' or $question['q_type'] != 'rank') {
                             for ($a = 0; $a < count($question['correct']); $a++) {
-                                if ($tmp_exclude{$a} == '0' and ($question['q_type'] != 'rank' || $question['correct'][$a] > 0)) {
+                                if ($tmp_exclude[$a] == '0' and ($question['q_type'] != 'rank' || $question['correct'][$a] > 0)) {
                                     $csv .= ',Q' . $q_no . chr($a + 65);
                                 }
                             }
@@ -327,28 +327,28 @@ if ($student_no > 0) {
                             }
                         }
                     } elseif ($question['q_type'] == 'mrq' and $question['score_method'] == 'Mark per Option') {
-                        if ($tmp_exclude{0} == '0') {
+                        if ($tmp_exclude[0] == '0') {
                             for ($a = 0; $a < count($question['correct']); $a++) {
-                                if ($tmp_exclude{$a} == '0' and $question['correct'][$a] == 'y') {
+                                if ($tmp_exclude[$a] == '0' and $question['correct'][$a] == 'y') {
                                     $csv .= ',Q' . $q_no . chr($a + 65);
                                 }
                             }
                         }
                     } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
                         for ($a = 0; $a < (count($question['correct_labels']) + mb_substr_count($tmp_exclude, '1')); $a++) {
-                            if ($tmp_exclude{$a} == '0') {
+                            if ($tmp_exclude[$a] == '0') {
                                 $csv .= ',Q' . $q_no . chr($a + 65);
                             }
                         }
                     } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
                         $paper_answers = explode('|', $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
-                            if ($tmp_exclude{$a} == '0') {
+                            if ($tmp_exclude[$a] == '0') {
                                 $csv .= ',Q' . $q_no . chr($a + 65);
                             }
                         }
                     } else {
-                        if ($tmp_exclude{0} == '0') {
+                        if ($tmp_exclude[0] == '0') {
                             $csv .= ',Q' . $q_no;
                         }
                     }
@@ -490,29 +490,29 @@ if ($student_no > 0) {
                             }
                         } elseif (($question['q_type'] == 'dichotomous' or $question['q_type'] == 'blank') and $question['score_method'] == 'Mark per Option') {
                             for ($a = 0; $a < count($question['correct']); $a++) {
-                                if ($tmp_exclude{$a} == '0') {
+                                if ($tmp_exclude[$a] == '0') {
                                     $csv .= ',0';
                                 }
                             }
                         } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
                             for ($a = 0; $a < count($question['correct_labels']); $a++) {
-                                if ($tmp_exclude{$a} == '0') {
+                                if ($tmp_exclude[$a] == '0') {
                                     $csv .= ',0';
                                 }
                             }
                         } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
                             $paper_answers = explode('|', $question['correct'][0]);
                             for ($a = 0; $a < count($paper_answers); $a++) {
-                                if ($tmp_exclude{$a} == '0') {
+                                if ($tmp_exclude[$a] == '0') {
                                     $csv .= ',0';
                                 }
                             }
                         } elseif ($question['q_type'] == 'enhancedcalc') {
-                            if ($tmp_exclude{0} == '0') {
+                            if ($tmp_exclude[0] == '0') {
                                 $csv .= ',unmarked';
                             }
                         } else {
-                            if ($tmp_exclude{0} == '0') {
+                            if ($tmp_exclude[0] == '0') {
                                         $csv .= ',0';
                             }
                         }

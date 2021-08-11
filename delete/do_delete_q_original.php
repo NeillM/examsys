@@ -29,7 +29,7 @@ require '../include/staff_auth.inc';
 require '../include/errors.php';
 
 $qIDs = check_var('q_id', 'POST', true, false, true);
-if ($qIDs{0} == ',') {
+if ($qIDs[0] == ',') {
     $qIDs = mb_substr($qIDs, 1);
 }
 

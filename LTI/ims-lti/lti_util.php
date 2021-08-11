@@ -296,6 +296,9 @@ class BLTI
 
     function getResourceKey()
     {
+        if (!isset($this->info['oauth_consumer_key'])) {
+            return false;
+        }
         $oauth = $this->info['oauth_consumer_key'];
         $id = $this->info['resource_link_id'];
         if (strlen($id) > 0 and strlen($oauth) > 0) {

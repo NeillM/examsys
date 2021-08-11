@@ -279,7 +279,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                         <thead>
                             <tr>
                                 <?php foreach ($table_order as $display) : ?>
-                                    <?php if ($display{0} == '#') : ?>
+                                    <?php if ($display[0] == '#') : ?>
                                         <th>&nbsp;</th>
                                     <?php else : ?>
                                         <th class="col"><?= $display ?></th>
@@ -315,8 +315,8 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                                                 <?= $string[mb_strtolower($tmp_title)] ?>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?= $tmp_surname == '' ? \demo::demo_replace($tmp_surname, $demo, true, ' ') : \demo::demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) ?></td>
-                                        <td><?= $tmp_first_names == '' ? \demo::demo_replace($tmp_first_names, $demo, true, ' ') : \demo::demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) ?></td>
+                                        <td><?= $tmp_surname == '' ? \demo::demo_replace($tmp_surname, $demo, true, ' ') : \demo::demo_replace($tmp_surname, $demo, true, $tmp_surname[0]) ?></td>
+                                        <td><?= $tmp_first_names == '' ? \demo::demo_replace($tmp_first_names, $demo, true, ' ') : \demo::demo_replace($tmp_first_names, $demo, true, $tmp_first_names[0]) ?></td>
                                         <td><?= \demo::demo_replace($tmp_username, $demo, false) ?></td>
                                         <td class="fn">
                                             <?php if (false !== mb_strpos($tmp_roles, 'Student')) : ?>

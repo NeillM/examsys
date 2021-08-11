@@ -43,7 +43,7 @@ function find_break($text)
     $break = 0;
     $txt_len = strlen($text);
     for ($i = 25; $i < $txt_len; $i++) {
-        if ($text{$i} == ' ' or $text{$i} == '_' or $text{$i} == '-' or $text{$i} == ':' or $text{$i} == ',') {
+        if ($text[$i] == ' ' or $text[$i] == '_' or $text[$i] == '-' or $text[$i] == ':' or $text[$i] == ',') {
             if ($break == 0) {
                 $break = $i;
             }

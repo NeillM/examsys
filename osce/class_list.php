@@ -112,7 +112,7 @@ function quick_links($string)
             echo "<table id='user_list' cellpadding=\"6\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
 
             while ($result->fetch()) {
-                $current_letter = mb_strtoupper($surname{0});
+                $current_letter = mb_strtoupper($surname[0]);
                 if ($old_letter != $current_letter) {
                     echo "<tr><td colspan=\"3\" class=\"letter\"><a name=\"$current_letter\"></a>$current_letter</td></tr>";
                 }

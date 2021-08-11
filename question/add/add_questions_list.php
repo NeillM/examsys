@@ -126,7 +126,7 @@ if (isset($_GET['sortby'])) {
     echo '<tr>';
     $table_order = array('#1' => 18, '#2' => 18, $string['question'] => 400, $string['type'] => 100, $string['modified'] => 100, $string['status'] => 120);
     foreach ($table_order as $display => $col_width) {
-        if ($display{0} == '#') {
+        if ($display[0] == '#') {
             echo '<th style="width:' . $col_width . "px\" class=\"vert_div\"></th>\n";
         } elseif ($display == $string['modified']) {
             echo '<th style="width:' . $col_width . "px\" class=\"{sorter: 'datetime'} vert_div\">$display</th>\n";
