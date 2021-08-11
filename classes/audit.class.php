@@ -118,27 +118,29 @@ class Audit
     /**
      * Map source of event to a navigable page
      * @param string $source cause of the event
-     * @param string $action action of the event
+     * @param string $details details of the event
      * @param int $userid the user the event relates to
      * @return array
      */
-    private static function mapSource(string $source, string $action, int $userid): array
+    private static function mapSource(string $source, string $details, int $userid): array
     {
         $langpack = new langpack();
         $configObject = Config::get_instance();
         $webroot = $configObject->get('cfg_root_path');
         switch ($source) {
             case '/module/do_edit_team.php':
+                // In this case details equates to the module code.
                 $mapsto = array(
                     'url' => $webroot . '/module/index.php?module='
-                    . module_utils::get_idMod($action, $configObject->db),
+                    . module_utils::get_idMod($details, $configObject->db),
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'module'),
                 );
                 break;
             case '/self_enrol.php':
+                // In this case details equates to the module code.
                 $mapsto = array(
                     'url' => $webroot . '/module/index.php?module='
-                    . module_utils::get_idMod($action, $configObject->db),
+                    . module_utils::get_idMod($details, $configObject->db),
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'selfenrol'),
                 );
                 break;
@@ -256,7 +258,7 @@ class Audit
                     'url' => $webroot . '/users/details.php?userID=' . $userID,
                     'label' => UserUtils::get_username($userID, Config::get_instance()->db),
                 ),
-                'source' => self::mapSource($source, $action, $userID),
+                'source' => self::mapSource($source, $objects, $userID),
                 'eventtype' => $langpack->get_string(self::LANGCOMPONENT, $action),
             );
         }

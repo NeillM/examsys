@@ -17,6 +17,7 @@ Feature: Audit Administration
       | student1 | Add-Enrolment | teacher | /api/modulemanagement/enrol | TEST1001 |
       | student1 | Remove-Enrolment | teacher | /plugins/ims/cron.php | TEST1001 |
       | student1 | Remove-Enrolment | teacher | /plugins/SMS/plugin_cs_sms/sync_all_cron.php | TEST1001 |
+      | teacher | Add-Team-Member | teacher | /module/do_edit_team.php | TEST1001 |
 
   @admin_audit_manage_object_role
   Scenario: Navigate to the object
@@ -65,3 +66,12 @@ Feature: Audit Administration
     And I click "Access Audit" "admin_tool_link"
     And I click "SMS" "audit_source"
     Then I should be on "/admin/sms_import_summary.php"
+
+  @admin_audit_manage_source_module
+  Scenario: Navigate to page the source of the change
+    Given I login as "admin"
+    When I follow "Administrative Tools"
+    And I click "Access Audit" "admin_tool_link"
+    And I click "Module" "audit_source"
+    And I should be on "/module/index.php"
+    Then I should see page with title "Module: TEST1001"
