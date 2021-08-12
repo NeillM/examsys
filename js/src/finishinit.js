@@ -70,4 +70,8 @@ requirejs(['rogoconfig', 'media', 'helplauncher', 'html5', 'qarea', 'qlabelling'
                 break;
         }
     });
+
+    $('.print').click(function() {
+        window.print();
+    });
 });

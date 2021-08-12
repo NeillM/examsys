@@ -153,3 +153,11 @@ input.exclude, select.exclude {
 .theme {
   color: var(--paper-themecolour, '#316AC5');
 }
+
+.print:hover {
+  cursor: pointer;
+}
+
+#maincontent {
+  overflow: unset;
+}

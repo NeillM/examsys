@@ -83,3 +83,4 @@ $string['logissue'] = 'Log an issue you had during the exam';
 $string['previewmathjax'] = 'Preview';
 $string['postscript'] = 'Postscript';
 $string['closeexam'] = 'Close exam instructions';
+$string['print'] = 'Print Feedback';
