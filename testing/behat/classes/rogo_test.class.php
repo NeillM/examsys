@@ -19,10 +19,12 @@ namespace testing\behat;
 
 use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\MinkContext;
-use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Session;
 use testing\datagenerator\loader;
 use coding_exception;
 use Exception;
+use Config;
 
 /**
  * All Rogo behat test definitions should extend this class if they wish to do browser based tests.
@@ -219,8 +221,11 @@ class rogo_test extends MinkContext
      */
     public function spin($lambda)
     {
-        $wait = 15;
-        for ($i = 0; $i < $wait; $i++) {
+        $timeout = self::getTimeout();
+        $start = microtime(true);
+        $end = $start + $timeout;
+
+        do {
             try {
                 if ($lambda($this)) {
                     return true;
@@ -228,8 +233,14 @@ class rogo_test extends MinkContext
             } catch (Exception $e) {
                 // do nothing
             }
-            sleep(1);
-        }
+
+            if (!$this->running_javascript()) {
+                break;
+            }
+
+            usleep(100000);
+
+        } while (microtime(true) < $end);
 
         $backtrace = debug_backtrace();
         $message = 'Timeout thrown by ' . $backtrace[1]['class'] . '::' . $backtrace[1]['function'] . '()';
@@ -259,5 +270,148 @@ class rogo_test extends MinkContext
             'files_path',
             environment::get_basedir() . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $path
         );
+    }
+
+    /**
+     * Waits for all the JS to be loaded.
+     * Wait for JS copied from https://github.com/moodle/moodle/blob/master/lib/behat/classes/behat_session_trait.php
+     *
+     * @return  bool Whether any JS is still pending completion.
+     */
+    public function waitForPendingJs()
+    {
+        return static::waitForPendingJsInSession($this->getSession());
+    }
+
+    /**
+     * Waits for all the JS to be loaded.
+     * @param   Session $session The Mink Session where JS can be run
+     * @return  bool Whether any JS is still pending completion.
+     */
+    public static function waitForPendingJsInSession(Session $session)
+    {
+        if (!self::runningJavascriptInSession($session)) {
+            // JS is not available therefore there is nothing to wait for.
+            return false;
+        }
+
+        // We don't use rogo_test::spin() here as we don't want to end up with an exception
+        // if the page & JSs don't finish loading properly.
+        for ($i = 0; $i < self::getExtendedTimeout() * 10; $i++) {
+            try {
+                $jscode = trim(preg_replace('/\s+/', ' ', '
+                    return (function() {
+                        if (document.readyState !== "complete") {
+                            return "incomplete";
+                        }
+                        return "";
+                    })()'));
+                $pending = self::evaluateScriptInSession($session, $jscode);
+            } catch (Exception $e) {
+                // We catch an exception here, in case we just closed the window we were interacting with.
+                // No javascript is running if there is no window right?
+                $pending = '';
+            }
+
+            // If there are no pending JS we stop waiting.
+            if ($pending === '') {
+                return true;
+            }
+
+            // 0.1 seconds.
+            usleep(100000);
+        }
+
+        // Timeout waiting for JS to complete.
+        // It is unlikely that Javascript code of a page or an AJAX request needs more than
+        // getExtendedTimeout() seconds to be loaded.
+        throw new \Exception('Javascript code and/or AJAX requests are not ready after ' .
+                             self::getExtendedTimeout() .
+                             ' seconds. There is a Javascript error or the code is extremely slow (' . $pending .
+                             '). If you are using a slow machine, consider setting increasetimeout in behat config.');
+    }
+
+    /**
+     * Whether Javascript is available in the specified Session.
+     *
+     * @param Session $session
+     * @return boolean
+     */
+    protected static function runningJavascriptInSession(Session $session): bool
+    {
+        return get_class($session->getDriver()) !== 'Behat\Mink\Driver\GoutteDriver';
+    }
+
+    /**
+     * Gets the extended timeout.
+     *
+     * A longer timeout for cases where the normal timeout is not enough.
+     *
+     * @return int Timeout in seconds
+     */
+    public static function getExtendedTimeout() : int
+    {
+        return self::getRealTimeout(30);
+    }
+
+    /**
+     * Gets the default timeout.
+     *
+     * The timeout for each Behat step (load page, wait for an element to load...).
+     *
+     * @return int Timeout in seconds
+     */
+    public static function getTimeout() : int {
+        return self::getRealTimeout(15);
+    }
+
+    /**
+     * Gets the required timeout in seconds.
+     *
+     * @param int $timeout One of the TIMEOUT constants
+     * @return int Actual timeout (in seconds)
+     */
+    protected static function getRealTimeout(int $timeout) : int
+    {
+        $cfg_behat_increasetimeout = Config::get_instance()->get('cfg_behat_increasetimeout');
+        if (isset($cfg_behat_increasetimeout)) {
+            return $timeout * $cfg_behat_increasetimeout;
+        } else {
+            return $timeout;
+        }
+    }
+
+    /**
+     * Evaluate the supplied script in the specified session, returning the result.
+     *
+     * @param Session $session
+     * @param string $script
+     * @return mixed
+     */
+    public static function evaluateScriptInSession(Session $session, string $script)
+    {
+        self::requireJavascriptInSession($session);
+
+        return $session->evaluateScript($script);
+    }
+
+    /**
+     * Require that javascript be available for the specified Session.
+     *
+     * @param Session $session
+     * @param null|string $message An additional information message to show when JS is not available
+     * @throws DriverException
+     */
+    protected static function requireJavascriptInSession(Session $session, ?string $message = null): void
+    {
+        if (self::runningJavascriptInSession($session)) {
+            return;
+        }
+
+        $error = "Javascript is required for this step.";
+        if ($message) {
+            $error = "{$error} {$message}";
+        }
+        throw new DriverException($error);
     }
 }

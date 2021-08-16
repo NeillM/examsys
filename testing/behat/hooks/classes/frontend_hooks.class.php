@@ -24,6 +24,7 @@ use Behat\Behat\Hook\Scope\AfterFeatureScope;
 use Behat\Behat\Hook\Scope\BeforeFeatureScope;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Behat\Hook\Scope\BeforeStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Testwork\Tester\Result\TestResult;
 use testing\behat\environment;
@@ -167,6 +168,21 @@ trait frontend_hooks
     }
 
     /**
+     * Handle preconditions of a step.
+     *
+     * @param \Behat\Behat\Hook\Scope\BeforeStepScope $event
+     * @BeforeStep
+     */
+    public function before_step(BeforeStepScope $event)
+    {
+        // Only run if JS.
+        if ($this->running_javascript()) {
+            // Wait for JS to complete before beginning interacting with the DOM.
+            $this->waitForPendingJs();
+        }
+    }
+
+    /**
      * Handles failures in a step.
      *
      * @param \Behat\Behat\Hook\Scope\AfterStepScope $event
@@ -178,6 +194,12 @@ trait frontend_hooks
         if ($event->getTestResult()->getResultCode() == TestResult::FAILED) {
             // The step failed.
             $this->takeScreenshot($event);
+        }
+
+        // Only run if JS.
+        if ($this->running_javascript()) {
+            // With this we ensure that there are not AJAX calls still in progress.
+            $this->waitForPendingJs();
         }
     }
 
