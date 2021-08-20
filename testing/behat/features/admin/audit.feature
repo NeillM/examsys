@@ -8,10 +8,13 @@ Feature: Audit Administration
     Given the following "modules" exist:
       | moduleid | fullname |
       | TEST1001 | Test module |
+    And the following "courses" exist:
+       | name | description | school |
+       | test course | a test course | Training |
     And the following "users" exist:
-      | username | roles | sid |
-      | teacher | Staff | |
-      | student1 | Student | 42424242 |
+      | username | roles | sid | grade |
+      | teacher | Staff | | University Lecturer |
+      | student1 | Student | 42424242 | test course |
     And the following "access audit" exist:
       | username | action | sourceuser | source | details |
       | student1 | Add-Enrolment | teacher | /api/modulemanagement/enrol | TEST1001 |

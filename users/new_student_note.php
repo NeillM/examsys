@@ -66,14 +66,16 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
 <body>
 <form action="" method="post" name="theform" id="theform" autocomplete="off">
 <?php
-    $disabled = '';
+$disabled = '';
 $note_details = array('note_id' => 0, 'note' => '');
-  
-    $student_details = UserUtils::get_user_details($userID, $mysqli);
+$student_details = UserUtils::get_user_details($userID, $mysqli);
 if (isset($_GET['paperID'])) {
     echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . "\" />\n";
         
     $note_details = StudentNotes::get_note($_GET['paperID'], $userID, $mysqli);
+    if ($note_details === false) {
+        $note_details = array('note_id' => 0, 'note' => '');
+    }
     if ($calling === 'class_totals') {
         echo '<strong>' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['initials'] . '</strong><br />';
     }

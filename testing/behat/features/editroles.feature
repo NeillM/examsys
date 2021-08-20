@@ -5,9 +5,12 @@ Feature: Editing user roles
   I need to be able to manage user roles
 
   Background:
-    Given the following "users" exist:
-      | username | roles | sid |
-      | student | Student | 987654321 |
+    Given the following "courses" exist:
+      | name | description | school |
+      | test course | a test course | Training |
+    And the following "users" exist:
+      | username | roles | sid | grade |
+      | student | Student | 987654321 | test course |
 
   Scenario: A system administrator can modify roles
     Given I login as "admin"

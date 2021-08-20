@@ -5,9 +5,12 @@ Feature: Add student note in the user profile
   I want to add a student note
 
   Background:
-    Given the following "users" exist:
-      | username | roles | sid |
-      | student1 | Student | 987654321 |
+    Given the following "courses" exist:
+      | name | description | school |
+      | test course | a test course | Training |
+    And the following "users" exist:
+      | username | roles | sid | grade |
+      | student1 | Student | 987654321 | test course |
     And the following "modules" exist:
       | moduleid | fullname |
       | m1 | m1 |

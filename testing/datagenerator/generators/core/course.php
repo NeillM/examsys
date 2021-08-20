@@ -45,7 +45,10 @@ class course extends generator
     public function create_course($parameters)
     {
         if (empty($parameters['schoolid'])) {
-            throw new data_error('facultyID must be provided');
+            if (empty($parameters['school'])) {
+                throw new data_error('schoolid or school must be provided');
+            }
+            $parameters['schoolid'] = \SchoolUtils::get_school_id_by_name($parameters['school'], $this->db);
         }
         $coursenumber = ++self::$coursescreated;
         $defaults = array('name' => 'TEST' . $coursenumber, 'description' => 'a course description ' . $coursenumber, 'externalid' => null, 'externalsys' => null, 'schoolid' => $parameters['schoolid']);

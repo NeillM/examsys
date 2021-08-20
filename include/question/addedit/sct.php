@@ -25,7 +25,7 @@
 
 $num_options = count($question->options);
 $types = $question->get_sct_types();
-$type = ($question-> id != -1) ? $types[$question->get_display_method() - 1] : 1;
+$type = ($question->id != -1) ? $types[$question->get_display_method() - 1] : $types[1];
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
 <div id="sctdataset" data-sct_types="<?php echo htmlspecialchars(json_encode($types), ENT_QUOTES, 'UTF-8'); ?>"></div>

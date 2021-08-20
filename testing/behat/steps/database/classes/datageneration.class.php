@@ -63,6 +63,7 @@ trait datageneration
         'module enrolment' => array('modules', 'core', 'create_enrolment', 'preProcessmoduleEnrolment'),
         'paper note' => array('users', 'core', 'addPaperNote', 'preProcessPaperNote'),
         'access audit' => array('audit', 'core', 'create', null),
+        'courses' => array('course', 'core', 'create_course', null),
     );
 
     /**
