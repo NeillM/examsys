@@ -536,7 +536,6 @@ $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 </script>
 <script src='../../js/require.js'></script>
 <script src='../../js/main.min.js'></script>
-<script src="../../js/questioneditinit.min.js"></script>
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->display_header();
@@ -787,5 +786,6 @@ if ($question->requires_html5()) {
     $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 }
 ?>
+<script src="../../js/questioneditinit.min.js"></script>
 </body>
 </html>
