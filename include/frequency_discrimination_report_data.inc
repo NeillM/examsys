@@ -2063,11 +2063,20 @@ function capture_log_data(
     }
     $result->close();
 
+    if ($students_only or $paper_type == '0') {
+        $from_sql = 'log' . $paper_type . ', log_metadata, questions, users, user_roles ur JOIN roles r ON ur.roleid = r.id';
+        $from_sql2 = 'log1, log_metadata, questions, users, user_roles ur JOIN roles r ON ur.roleid = r.id';
+        $roles_sql = " AND users.id = ur.userid AND r.name IN ('Student', 'graduate')";
+    } else {
+        $from_sql = 'log' . $paper_type . ', log_metadata, questions, users';
+        $roles_sql = '';
+    }
+
     if ($paper_type == '0') {
-        $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log0, log_metadata, questions, users WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID $roles_sql AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log1, log_metadata, questions,  users WHERE log1.metadataID = log_metadata.id AND log1.q_id=questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID $roles_sql AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ')');
+        $result = $mysqli->prepare("(SELECT username, log_metadata.userID, log0.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM $from_sql WHERE log0.metadataID = log_metadata.id $roles_sql AND log0.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID $roles_sql AND started >= ? AND started <= ? $student_modules_sql) UNION ALL (SELECT username, log_metadata.userID, log1.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM $from_sql2 WHERE log1.metadataID = log_metadata.id $roles_sql AND log1.q_id=questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID $roles_sql AND started >= ? AND started <= ? " . str_replace('log0', 'log1', $student_modules_sql) . ')');
         $result->bind_param('isssisss', $paperID, $repcourse, $startdate, $enddate, $paperID, $repcourse, $startdate, $enddate);
     } else {
-        $result = $mysqli->prepare("SELECT username, log_metadata.userID, log$paper_type.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM log$paper_type, log_metadata, questions, users WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $student_modules_sql");
+        $result = $mysqli->prepare("SELECT username, log_metadata.userID, log$paper_type.q_id, user_answer, q_type, score_method, display_method, settings, mark, totalpos, option_order, started FROM $from_sql WHERE log$paper_type.metadataID = log_metadata.id $roles_sql AND log$paper_type.q_id = questions.q_id AND paperID = ? AND grade LIKE ? AND users.id = log_metadata.userID $roles_sql AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $student_modules_sql");
         $result->bind_param('isss', $paperID, $repcourse, $startdate, $enddate);
     }
     $result->execute();
