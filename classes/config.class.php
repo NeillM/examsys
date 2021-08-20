@@ -368,6 +368,9 @@ class Config extends RogoStaticSingleton
             $url['path'] =  null;
         }
         $this->set('cfg_root_path', $url['path']);
+        // Ensure error level is as high as possible.
+        $this->set('displayerrors', true);
+        $this->set('displayallerrors', true);
     }
 
     /**
