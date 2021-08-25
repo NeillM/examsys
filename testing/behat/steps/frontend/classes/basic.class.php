@@ -149,11 +149,11 @@ trait basic
             // The element is present but hidden from the user.
             return;
         }
-        throw new \Exception("The \"$selector\" with the value of \"$content\" is visibile");
+        throw new \Exception("The \"$selector\" with the value of \"$content\" is visible");
     }
 
     /**
-     * Keep browser live, for debuging
+     * Keep browser live, for debugging
      *
      * @Given /^I pause "(?P<seconds_number>\d+)" seconds$/
      * @param int $seconds

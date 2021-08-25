@@ -283,6 +283,18 @@ class Authentication
             }
         }
 
+        // Store any lost POST data if config option enabled - will only apply for manual logins
+        if ($this->configObj->get_setting('core', 'system_recover_postdata')) {
+            // Recover any POSTed data assuming there's none already stored
+            if (!empty($_POST) && empty($_SESSION['recovered_postdata'])) {
+                // Filter out login form inputs
+                $data_resubmit = array_diff_key($_POST, array_flip(array('ROGO_USER', 'ROGO_PW', 'rogo-login-form-std')));
+                if (!empty($data_resubmit)) {
+                    $_SESSION['recovered_postdata'] = serialize($data_resubmit);
+                }
+            }
+        }
+
         $override = $this->configObj->get('cfg_web_root') . '/config/login_form.php';
         $this->debug[] = 'Display form';
         if (file_exists($override)) {

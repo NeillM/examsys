@@ -87,6 +87,12 @@ $authentication->do_authentication($string);
 $getauthobj = new auth_obj();
 $authentication->get_auth_obj($getauthobj);
 
+// Recover any lost POST data and re-apply if config option enabled
+if ($configObject->get_setting('core', 'system_recover_postdata') && isset($_SESSION['recovered_postdata'])) {
+    $_POST += unserialize($_SESSION['recovered_postdata']);
+    unset($_SESSION['recovered_postdata']);
+}
+
 $userObject = UserObject::get_instance();
 $userObject->db_user_change();
 if (!$userObject->has_role('SysAdmin')) {
