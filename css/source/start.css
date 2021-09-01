@@ -17,7 +17,7 @@ body {
   font-family: var(--paper-font, 'Arial, sans-sarif');
 }
 
-select,button,input,textarea {
+select,button,input,textarea,.textarea {
   background-color: var(--paper-backgroundcolour, '#FFFFFF');
   color: var(--paper-foregroundcolour, '#000000');
   font-family: var(--paper-font, 'Arial, sans-sarif');
