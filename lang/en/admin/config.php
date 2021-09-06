@@ -107,3 +107,4 @@ $string['paper_breaktime_scale'] = 'Scale for additional break time availble to 
 $string['paper_breaktime_mins'] = 'If selected scale values are minutes per hour, otherwise they are a percentage of the total exam time.';
 $string['paper_pause_exam'] = 'Enable/Disable pausing of remote summative exams for students with accomodations.';
 $string['paper_seb_enabled'] = 'Safe Exam Browser key support enabled';
+$string['system_recover_postdata'] = 'Attempt to recover POST data if session expired and user redirected to login screen';

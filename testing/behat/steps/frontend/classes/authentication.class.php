@@ -65,4 +65,36 @@ trait authentication
         $this->toggle_main_menu();
         $this->i_click('signout', 'id');
     }
+
+    /**
+     * Log out Rogo transparently without changing page
+     *
+     * @Then /^I destroy the session$/
+     */
+    public function i_destroy_session()
+    {
+        $config = \Config::get_instance();
+        $this->getSession()->setCookie($config->get('cfg_session_name'), null);
+    }
+
+    /**
+     * Re-log into Rogo from the current page.
+     *
+     * @Given /^I relogin as "([^"]*)"$/
+     * @param $username The username to be logged in.
+     */
+    public function i_relogin_as($username)
+    {
+        $this->i_set_field('ROGO_USER', $username);
+        $this->i_set_field('ROGO_PW', $username);
+        $this->i_click('rogo-login-form-std', 'button');
+        $this->i_wait_for_page_to_load();
+        try {
+            $this->i_should_not_see('rogo-login-form-std', 'button');
+        } catch (\Exception $e) {
+            // We are still on the login page, so lets give a reasonable message.
+            throw new \Exception("Re-login failed for $username");
+        }
+    }
+
 }

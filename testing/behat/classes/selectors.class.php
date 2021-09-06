@@ -146,7 +146,7 @@ XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' subsect_title ')]/nobr
 XPATH
     ,'folder' => <<<XPATH
-//div[contains(concat(' ', normalize-space(@class), ' '), ' f_details ')]/a
+    //div[contains(concat(' ', normalize-space(@class), ' '), ' f_details ') and contains(normalize-space(.) , %locator%)]
 XPATH
     ,'paper_type' => <<<XPATH
 //td[contains(concat(' ', normalize-space(@class), ' '), ' icon ') and contains(normalize-space(.) , %locator%)]

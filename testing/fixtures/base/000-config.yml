@@ -272,6 +272,11 @@ config:
     value: '20971520'
     type: "integer"
   -
+    component: "core"
+    setting: "system_recover_postdata"
+    value: 0
+    type: "boolean"
+  -
     component: "plugin_tinymce_texteditor"
     setting: "installed"
     value: 1

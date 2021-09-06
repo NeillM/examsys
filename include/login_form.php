@@ -127,7 +127,7 @@ if (isset($displaystdformobj->fields)) {
             } else {
                 $value = '';
             }
-                        echo '<td><input type="' . $field->type . '" name="' . $field->name . '" value="' . $value . '" style="width:240px"></td>';
+            echo '<td><input type="' . $field->type . '" name="' . $field->name . '" value="' . $value . '" style="width:240px"></td>';
             echo '</tr>';
         }
     }
