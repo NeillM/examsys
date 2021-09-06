@@ -342,12 +342,14 @@ trait Question
         foreach ($hotspots as $h) {
             // Add label.
             $key = $this->find('xpath', '//*[@id="question1-layer-' . $layer . '"]//*[@class="mainarea"]//*[@class="textarea"]');
-            $keynum = $layer + 1;
-            $key->setValue('key' . $keynum);
-            // Draw hotspot.
+            // Split array
             $hotspot = explode(',', $h);
-            $shape = $hotspot[0];
-            $coords = array_slice($hotspot, 1);
+            $label = $hotspot[0];
+            $shape = $hotspot[1];
+            $coords = array_slice($hotspot, 2);
+            // Set label
+            $key->setValue($label);
+            // Draw hotspot.
             // Get coordinates and validate them.
             if (!empty($coords) and count($coords) % 2 == 0) {
                 $coordinates = array();

@@ -152,9 +152,9 @@ Feature: Question creation
       | notes | hotspot notes |
       | scenario | hotspot scenario |
       | file | plants.jpg |
-      | hotspot_1 | rectangle,0,200,100,100 |
-      | hotspot_2 | ellipse,100,100,100,100 |
-      | hotspot_3 | polygon,100,50,100,0,0,100,-100,-100 |
+      | hotspot_1 | label1,rectangle,0,200,100,100 |
+      | hotspot_2 | label2,ellipse,100,100,100,100 |
+      | hotspot_3 | label3,polygon,100,50,100,0,0,100,-100,-100 |
     When I click "Add to Bank" "button"
     Then I should see "Module: TEST1001" "paper_title"
 

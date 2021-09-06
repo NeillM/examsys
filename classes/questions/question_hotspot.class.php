@@ -76,6 +76,8 @@ class QuestionHOTSPOT extends QuestionEdit
 
     public function set_points1($value)
     {
+        $value = param::cleanBadChars($value);
+
         if ($value != $this->get_points1()) {
             $this->set_modified_field('points1', $this->points1);
             $this->points1 = $value;

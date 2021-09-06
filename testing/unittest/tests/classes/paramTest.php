@@ -61,4 +61,19 @@ class paramtest extends UnitTest
         $this->assertEquals('A1', $ok);
         $this->assertEquals(null, $bad);
     }
+
+    /**
+     * Test unicode/non-breaking spaces correctly switched to regular spaces
+     * @group param
+     */
+    public function test_clean_bad_chars()
+    {
+        $in = "1\u{A0}" # non-breaking space
+        . "2\u{2007}" # figure space
+        . "3\u{202F}" # narrow non-breaking space
+        . "4\u{2060}" # word joiner
+        . "5";
+        $cleaned = \param::cleanBadChars($in);
+        $this->assertEquals("1 2 3 4 5", $cleaned);
+    }
 }
