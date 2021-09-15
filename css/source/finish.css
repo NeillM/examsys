@@ -100,6 +100,12 @@ input.exclude, select.exclude {
   padding: 2px;
   text-align: justify;
 }
+
+@media print {
+  .textbox_answer {
+    max-width: 15cm;
+  }
+}
 .thankyou {
   font-size: 450%;
   font-weight: bold;

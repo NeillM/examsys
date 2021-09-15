@@ -35,7 +35,6 @@ requirejs(['rogoconfig', 'media', 'helplauncher', 'html5', 'qarea', 'qlabelling'
 
     $('.textbox_answer').each(function() {
         // Resize the textarea so the content fits.
-        $(this).height($(this).prop('scrollHeight'));
         $(this).width($(this).prop('scrollWidth'));
     });
 
