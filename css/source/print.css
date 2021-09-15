@@ -196,3 +196,14 @@ body {
 .labellingcontainer {
   position: relative;
 }
+
+.editorStandard,
+.editorStandardUans,
+.editorBasic,
+.editorSimple {
+  max-width: 15cm;
+}
+
+.questionarea {
+  display: grid;
+}

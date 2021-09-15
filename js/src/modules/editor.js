@@ -37,6 +37,13 @@ define(['rogoconfig', 'tinyMCE'], function(Config, Tinymce) {
          */
         init: function (textareaselector) {
             Tinymce.init({selector:textareaselector});
+        },
+
+        /**
+         * Hide all instances of the editor on screen. Useful for printing.
+         */
+        hide: function() {
+            Tinymce.editors.forEach(function(item) {item.hide()});
         }
     }
 });

@@ -18,12 +18,13 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['media', 'start', 'jquery'], function (Media, START, $) {
+requirejs(['editor', 'media', 'start', 'jquery'], function (Editor, Media, START, $) {
     var media = new Media();
     media.init();
     var start = new START();
     $(function() {
         start.html5init();
+        Editor.hide();
         window.print();
     });
 });
