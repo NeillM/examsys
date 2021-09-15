@@ -617,20 +617,31 @@ class PaperUtils
         return $name;
     }
 
+    /**
+     * Display a paper type icon
+     * @param string $paper_type the paper type
+     * @param string $title the papers authors title / the paper title if surname not provided
+     * @param string $initials the papers authors initials
+     * @param string $surname the papers authors surname
+     * @param string $locked the locked paper icon identifier
+     * @param string $retired the retired paper icon identifier
+     * @return string
+     */
     public function displayIcon($paper_type, $title, $initials, $surname, $locked, $retired)
     {
         $configObj = Config::get_instance();
 
+        $paper_type_string = array_search($paper_type, self::getTypeList());
         $paper_type = strval($paper_type);
 
         if ($retired != '') {
             $retired = '_retired';
         }
 
-        if (isset($surname)) {
+        if (isset($surname) and $surname != '') {
             $alt = "&#013;Author: $title $initials $surname";
         } else {
-            $alt = '';
+            $alt = $paper_type_string . ' - ' . $title;
         }
 
         switch ($paper_type) {
