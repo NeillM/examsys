@@ -273,16 +273,15 @@ lang.ok
     <div class="powered"><i>powered by</i> Rogō {{data.version}}</div>
 </footer>
 
-<div id="info_overlay" class="overlay">
-    <div id="info_submit_dialog" class="dialogs">
+<div id="info_overlay" class="overlay" aria-hidden="true">
+    <div id="info_submit_dialog" class="dialogs" role="dialog" aria-modal="true" aria-labelledby="info_submit_dialog_msg">
         <div id="info_submit_dialog_icon" class="dialogs_icon">
-            <img src="../artwork/question_mark_64.png" width="64" height="64" alt="" />
             <img src="../artwork/question_mark_64.png" width="64" height="64" alt="" />
         </div>
         <p id="info_submit_dialog_title"></p>
         <p id="info_submit_dialog_msg" class="dialogs_msg"></p>
         <div id="info_submit_dialog_buttons" class="basetheme dialogs_buttons">
-            <input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="{{lang.ok}}" />
+            <input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="{{lang.ok}}" aria-label="{{lang.ok}}" data-micromodal-close />
         </div>
     </div>
 </div>

@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(Editor, Html5, Qarea, Qlabelling, Jsxls, $) {
+define(['micromodal', 'editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(Modal, Editor, Html5, Qarea, Qlabelling, Jsxls, $) {
     return function() {
         var scope = this;
 
@@ -56,7 +56,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
          * @param string msg message to display.
          */
         this.info_dialog = function(msg) {
-            $("#info_overlay").show();
+            Modal.show('info_overlay');
             $("#info_submit_dialog_msg").html(msg);
             $("#info_submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
             $("#info_submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
@@ -193,7 +193,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                     scope.KillBreakClock();
                     $('#breaks').removeClass('play');
                     $('#breakstext').html(Jsxls.lang_string['pause']);
-                    $("#info_overlay").hide();
+                    Modal.close('info_overlay');
                     scope.paused = false;
                     $('#breakstext').css('display', 'none');
                     $('#breaktimeremaining').css('display', 'none');
@@ -352,7 +352,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             $("#dialog_ok").click(function(event) {
                 $('body').css('cursor','wait');
                 scope.submitted = true;
-                $("#overlay").hide();
+                Modal.close('overlay');
                 scope.conductSave(event);
             });
         };
@@ -370,7 +370,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                 $("#dialog_ok").click(function(event) {
                     $('body').css('cursor','wait');
                     scope.submitted = true;
-                    $("#overlay").hide();
+                    Modal.show('overlay');
                     scope.conductSave(event);
                 });
             } else {
@@ -388,7 +388,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                     $("#enhancedcalc_warning_ok").click(function(event) {
                         scope.submitted = true;
                         $('body').css('cursor','wait');
-                        $("#overlay").hide();
+                        Modal.show('overlay');
                         scope.conductSave(event);
                     });
                 } else {
@@ -421,7 +421,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                 }
                 $('#savemsg').html("");
                 $('body').css('cursor','default');
-                $("#overlay").hide();
+                Modal.show('overlay');
             });
             scope.confirmSubmit(event);
         };
@@ -463,8 +463,8 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             $("#submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
             $("#submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
             $(".dialogs").hide();
+            Modal.show('overlay');
             $("#submit_dialog").show();
-            $("#overlay").show();
         };
 
         /**
@@ -477,8 +477,8 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             $("#enhancedcalc_warning").css('left', (($(window).width() / 2) - 250) + 'px');
             $("#enhancedcalc_warning").css('top', (($(window).height() / 2) - 200) + 'px');
             $(".dialogs").hide();
+            Modal.show('overlay');
             $("#enhancedcalc_warning").show();
-            $("#overlay").show();
         };
 
         /**

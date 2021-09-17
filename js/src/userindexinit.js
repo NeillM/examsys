@@ -18,7 +18,8 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['userindex', 'jsxls', 'jquery'], function (USER, jsxls, $) {
+requirejs(['micromodal', 'userindex', 'jsxls', 'jquery'], function (Modal, USER, jsxls, $) {
+    Modal.init();
     var user = new USER();
 
     if ($('#dataset').attr('data-lticontext')) {
@@ -28,14 +29,12 @@ requirejs(['userindex', 'jsxls', 'jquery'], function (USER, jsxls, $) {
     $('body').css('font-size', $('#dataset').attr('data-textsize') + '%');
     $('body').css('font-family', $('#dataset').attr('data-font') );
 
-    $("#overlay").hide();
-
     $("#info_dialog_ok").click(function() {
-        $("#info_overlay").hide();
+        Modal.close('info_overlay');
     });
 
     if ($('#dataset').attr('data-ipmismatch')) {
-        $("#info_overlay").show();
+        Modal.show('info_overlay');
         $("#info_submit_dialog_title").html(jsxls.lang_string['ipmismatchtitle']);
         var blurb = jsxls.lang_string['ipmismatchblurb'];
         if ($('#dataset').attr('data-remotesummative') == 1) {

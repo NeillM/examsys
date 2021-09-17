@@ -589,3 +589,7 @@ div.error {
   color: var(--paper-notecolour, '#C00000');
   font-size: 90%;
 }
+
+.overlay.is-open {
+  display: block;
+}

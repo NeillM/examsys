@@ -88,7 +88,6 @@ input[type=button].notok:hover {
   margin-bottom: 4px;
 }
 #info_overlay {
-  display: none;
   position: absolute;
   left: 0;
   top: 0;
@@ -257,3 +256,12 @@ input[type=button] {
   flex-flow: wrap;
   width: 40%;
 }
+
+.overlay.is-open {
+  display: block;
+}
+
+.overlay {
+  display: none;
+}
+

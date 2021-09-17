@@ -18,7 +18,8 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, Media, REF, START, $) {
+requirejs(['micromodal', 'jsxls', 'media', 'reference', 'start', 'jquery'], function (Modal, Jsxls, Media, REF, START, $) {
+    Modal.init();
     var media = new Media();
     media.init();
     var start = new START();
@@ -109,7 +110,7 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
 
         $("#info_dialog_ok").click(function(event) {
             event.preventDefault();
-            $("#info_overlay").hide();
+            Modal.close('info_overlay');
         });
 
         $('#next').click(start.checkSubmit);
@@ -163,6 +164,7 @@ requirejs(['jsxls', 'media', 'reference', 'start', 'jquery'], function (Jsxls, M
             $('#breaks').addClass('pause');
             $('#breakstext').html(Jsxls.lang_string['pause']);
             $("#info_overlay").hide();
+            Modal.show('info_overlay');
             start.paused = false;
             start.formatTimeRemaining(start.breaktime);
             start.saveBreaks(start.breaktime);
