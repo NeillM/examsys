@@ -72,13 +72,13 @@ lang.negmarking - negative marking
 {% endif %}
 {% if data.questiontype != 'info' %}
     <input type="hidden" name="order{{data.questionno}}" value="{{data.optionorder}}" />
+{% endif %}
 {# close questionblock div #}
     </div>
 {# close question-type div #}
 </div>
 {# close question section #}
 </section>
-{% endif %}
 {% if data.pagebreak %}
 <div class='page_break'></div>
 {% endif %}

@@ -50,7 +50,11 @@ lang.questionheader - the question landmark region name
         {{data.prologue|raw}}
     </section>
 {% endif %}
+{% if data.questiontype == 'info' %}
+<section aria-label="{{lang.informationheader}}">
+{% else %}
 <section aria-label="{{lang.questionheader | format(data.assignednumber)}}">
+{% endif %}
 {% if data.displaytheme %}
     <div class="theme">
         {{data.theme}}
@@ -71,4 +75,7 @@ lang.questionheader - the question landmark region name
             &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
         </p>
         {% endif %}
+{% elseif data.questiontype == 'info' %}
+    <div class="question-{{data.questiontype}} question-parent">
+        <div class="questionblock">
 {% endif %}

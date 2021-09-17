@@ -129,3 +129,5 @@ $string['examprogress'] = 'Exam progress';
 $string['prologue'] = 'Paper prologue';
 // Question header.
 $string['questionheader'] = 'Question %s';
+// Information header.
+$string['informationheader'] = 'Information block';
