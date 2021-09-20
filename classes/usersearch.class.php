@@ -111,14 +111,14 @@ class UserSearch extends Search
         // Query for finding students.
         $student_tables = $this->generateStudentTableSQL();
         $student_where = SQLFragment::combine(' AND ', $not_deleted, $year, $studentmods, $name, $username, $idnumber, $roles);
-        $student_query = "SELECT $fields FROM $student_tables WHERE $student_where->sql GROUP BY users.id, sid.student_id, special_needs.special_id";
+        $student_query = "SELECT $fields FROM $student_tables WHERE $student_where->sql GROUP BY users.id, sid.student_id";
 
         // Query for finding staff.
         $staff_tables = $this->generateStaffTableSQL();
         // Need to get only staff,student roles to avoid duplication.
         $staff_where = SQLFragment::combine(' AND ', $not_deleted, $staffyear, $staffmods, $name, $username, $idnumber, $roles);
         $where = str_replace('Student', 'Staff,Student', $staff_where->sql);
-        $staff_query = "SELECT $fields FROM $staff_tables WHERE $where GROUP BY users.id, sid.student_id, special_needs.special_id";
+        $staff_query = "SELECT $fields FROM $staff_tables WHERE $where GROUP BY users.id, sid.student_id";
 
         $sql = "($student_query) UNION ($staff_query) ORDER BY $this->orderby LIMIT $this->limit OFFSET $this->offset";
 
@@ -370,7 +370,6 @@ class UserSearch extends Search
           JOIN roles ON user_roles.roleid = roles.id
           JOIN modules_staff ON users.id = modules_staff.memberID 
           LEFT JOIN sid ON users.id = sid.userID
-          LEFT JOIN special_needs ON users.id = special_needs.userID 
           LEFT JOIN modules ON modules_staff.idMod = modules.id';
         return $tables;
     }
@@ -387,7 +386,6 @@ class UserSearch extends Search
           JOIN roles ON user_roles.roleid = roles.id
           LEFT JOIN modules_student ON users.id = modules_student.userID
           LEFT JOIN sid ON users.id = sid.userID
-          LEFT JOIN special_needs ON users.id = special_needs.userID 
           LEFT JOIN modules ON modules_student.idMod = modules.id';
         return $tables;
     }
@@ -411,7 +409,7 @@ class UserSearch extends Search
                 'grade',
                 'yearofstudy',
                 'email',
-                'special_id',
+                'special_needs',
         ];
     }
 

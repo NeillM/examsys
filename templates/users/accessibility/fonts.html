@@ -1,0 +1,60 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the font section of the accessibilty screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables:
+
+data.fontsize - the font sizes availalbe to the user, and there current selection
+data.fontfamily - the font families availalbe to the user, and there current selection
+
+Required localised language strings -
+lang.fontsize
+lang.angledefault
+lang.typeface
+#}
+<div class="items">
+    <div class="item">
+        <div class="label">
+            <label for="textsize">{{lang.fontsize}}</label>
+        </div>
+        <div class="userset">
+            <select class="access" name="textsize" id="textsize">
+                <option value="0">{{lang.angledefault}}</option>
+                {% for size, selected in data.fontsize %}
+                <option value="{{size}}" {% if selected %} selected {% endif %}>{{size}}%</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="item">
+        <div class="label">
+            <label for="font">{{lang.typeface}}</label>
+        </div>
+        <div class="userset">
+            <select class="access" name="font" id="font">
+                <option value="">{{lang.angledefault}}</option>
+                {% for family, selected in data.fontfamily %}
+                <option style="font-family:{{family}}" value="{{family}}" {% if selected %} selected {% endif %}>{{family}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>

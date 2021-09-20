@@ -59,3 +59,41 @@
     background-color: darkred;
     border-color: orangered;
 }
+
+.settingblock {
+    display: flex;
+    justify-content: center;
+}
+
+.settings {
+    display: flex;
+}
+
+.items {
+    display: table;
+    table-layout: fixed;
+}
+
+.item {
+    display: table-row;
+}
+
+.label {
+    display: table-cell;
+    text-align: left;
+}
+
+.userset {
+    display: table-cell;
+    padding: 1em;
+}
+
+.accessbuttons {
+    display: flex;
+    justify-content: center;
+}
+
+.colours {
+    display: inline;
+    border: 0.1em solid #C5C5C5;
+}

@@ -1,0 +1,65 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the accessibilty audit screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables:
+
+data - the track_changes log for 'User Profile' changes for the selected user
+
+Required localised language strings -
+lang.changedtime
+lang.setting
+lang.old
+lang.new
+lang.changedby
+lang.background
+lang.foreground
+lang.marks
+lang.theme
+lang.label
+lang.unanswered
+lang.dismiss
+lang.globaltheme
+lang.globalthemefont
+lang.highlight
+lang.textsize
+lang.font
+#}
+<table class="audittable">
+    <thead class="auditheader">
+        <th>{{lang.changedtime}}</th>
+        <th>{{lang.setting}}</th>
+        <th>{{lang.old}}</th>
+        <th>{{lang.new}}</th>
+        <th>{{lang.changedby}}</th>
+    </thead>
+    <tbody>
+    {% for item in data %}
+    <tr class="{{item.rowclass}}">
+        <td>{{item.date}}</td>
+        <td>{{lang[item.part]}}</td>
+        <td>{{item.old}} {% if item.displaycolour and item.old != '' %}<div class="colours" style="background-color: {{item.old}};">&nbsp;&nbsp;&nbsp;&nbsp;</div>{% endif %}</td>
+        <td>{{item.new}} {% if item.displaycolour and item.new != '' %}<div class="colours" style="background-color: {{item.new}};">&nbsp;&nbsp;&nbsp;&nbsp;</div>{% endif %}</td>
+        <td>{{item.title}} {{item.initials}} {{item.surname}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

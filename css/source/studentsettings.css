@@ -1,0 +1,50 @@
+.header {
+    background-color: #EEF4FF;
+    padding-left: 1em;
+}
+
+.navmenu {
+    text-align: right;
+    padding-right: 0.2em;
+}
+
+.headerlinebreak {
+    clear: both;
+}
+
+.settings {
+    display: flex;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
+
+.items {
+    display: table;
+    table-layout: fixed;
+}
+
+.item {
+    display: table-row;
+}
+
+.label {
+    display: table-cell;
+    text-align: left;
+}
+
+.userset {
+    display: table-cell;
+    padding: 1em;
+}
+
+.cancel {
+    width: 11em;
+}
+
+.colours {
+    display: inline;
+    border: 0.1em solid #C5C5C5;
+}

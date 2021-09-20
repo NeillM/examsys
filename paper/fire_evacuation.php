@@ -147,7 +147,15 @@ if ($is_question_preview_mode == false) {
     .norun {font-weight:bold; margin-bottom:250px}
   </style>
 <?php
-$css = PaperProperties::paperCss($userObject);
+$css = PaperProperties::paperCss(
+    $userObject,
+    $propertyObj->get_bgcolor(),
+    $propertyObj->get_fgcolor(),
+    UserObject::TEXTSIZE,
+    UserObject::MARKSCOLOUR,
+    $propertyObj->get_themecolor(),
+    $propertyObj->get_labelcolor(),
+);
 
 echo $css;
 ?>

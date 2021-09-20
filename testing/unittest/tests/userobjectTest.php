@@ -86,4 +86,84 @@ class UserObjectTest extends unittestdatabase
         $this->set_active_user($this->studentneeds['id']);
         $this->assertEquals(0, $this->userobject->getRequiresBreaks());
     }
+
+    /**
+     * Test if user setting accessibility
+     * @group user
+     */
+    public function testuserSetAccessibility()
+    {
+        $this->set_active_user($this->student['id']);
+        $this->userobject->userSetAccessibility(
+            null,
+            null,
+            null,
+            '#C0C0C0',
+            null,
+            null,
+            null,
+            null,
+            null,
+            '#DDDDDD',
+            null,
+            null
+        );
+        $expected = array(
+            0 => array(
+                'background' => UserObject::BGCOLOUR,
+                'foreground' => UserObject::FGCOLOUR,
+                'textsize' => UserObject::TEXTSIZE,
+                'marks_color' => '#C0C0C0',
+                'themecolor' => UserObject::THEMECOLOUR,
+                'labelcolor' => UserObject::LABELCOLOUR,
+                'font' => UserObject::FONT,
+                'unanswered' => UserObject::UNANSWEREDCOLOUR,
+                'dismiss' => UserObject::DISMISSCOLOUR,
+                'globalthemecolour' => '#DDDDDD',
+                'globalthemefont_colour' => UserObject::GLOBALTHEMEFONTCOLOUR,
+                'highlight_bgcolour' => UserObject::HIGHLIGHTCOLOUR,
+            ),
+        );
+        $actual = $this->query(
+            array('columns' => array(
+                    'background','foreground', 'textsize', 'marks_color', 'themecolor', 'labelcolor',
+                    'font', 'unanswered', 'dismiss', 'globalthemecolour', 'globalthemefont_colour',
+                    'highlight_bgcolour'),
+                'table' => 'special_needs',
+                'where' => array(array('column' => 'userID', 'value' => $this->student['id']))
+            )
+        );
+
+        $this->assertEquals($expected, $actual);
+
+        // Check tracked changes.
+        $expectedtrack = array(
+            0 => array(
+                'type' => 'User Profile',
+                'typeID' => $this->student['id'],
+                'editor' => $this->student['id'],
+                'old' => UserObject::MARKSCOLOUR,
+                'new' => '#C0C0C0',
+                'part' => 'marks',
+            ),
+            1 => array(
+                'type' => 'User Profile',
+                'typeID' => $this->student['id'],
+                'editor' => $this->student['id'],
+                'old' => UserObject::GLOBALTHEMECOLOUR,
+                'new' => '#DDDDDD',
+                'part' => 'globaltheme',
+            ),
+        );
+
+        $actualtrack = $this->query(
+            array('columns' => array(
+                'type', 'typeID', 'editor', 'old', 'new', 'part'),
+                'table' => 'track_changes',
+                'where' => array(array('column' => 'typeID', 'value' => $this->student['id']))
+            )
+        );
+
+        $this->assertEquals($expectedtrack, $actualtrack);
+    }
 }

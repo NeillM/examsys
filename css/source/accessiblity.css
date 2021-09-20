@@ -1,0 +1,69 @@
+.demo {
+    display: grid;
+    padding-top: 20em;
+    padding-left: 1em;
+}
+
+.demo_dismiss {
+    text-decoration: line-through;
+}
+
+.demo_labels {
+    display: flex;
+    padding-left: 1em;
+}
+
+.demo_radio {
+    display: flex;
+    padding-left: 1em;
+}
+
+.demo_marks {
+    padding-left: 1em;
+}
+
+.demo_item {
+    padding-right: 0.5em;
+}
+
+.demo_header {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.demo_theme {
+    font-weight: bold;
+    font-size: large;
+}
+
+.demobox {
+    width: 450px;
+    border: 1px solid #909090;
+    float: right
+}
+
+.demo_space {
+    height: 2em;
+}
+
+.demo_blurb {
+    padding-bottom: 1em;
+}
+
+.audittable {
+    width: 100%;
+}
+
+.auditheader {
+    background-color: #CFDBEB;
+    text-align: left;
+    border-bottom: 0.1em solid #CCC;
+}
+
+.auditaltrow {
+    background-color: #E2EBFA;
+}
+
+.colours {
+    float: right;
+}

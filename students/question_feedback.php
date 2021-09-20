@@ -137,7 +137,15 @@ $headerdata['texteditor'] = $texteditorplugin->get_header_file();
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 $headerdata['editor'] = $editor[0];
 
-$css = PaperProperties::paperCss($userObject);
+$css = PaperProperties::paperCss(
+    $userObject,
+    $propertyObj->get_bgcolor(),
+    $propertyObj->get_fgcolor(),
+    UserObject::TEXTSIZE,
+    UserObject::MARKSCOLOUR,
+    $propertyObj->get_themecolor(),
+    $propertyObj->get_labelcolor(),
+);
 $render->render($headerdata, $lang, 'header.html', '', $css);
 
 $themedirectory = rogo_directory::get_directory('theme');

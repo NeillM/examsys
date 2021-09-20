@@ -63,6 +63,7 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color, 
         $tab_array[] = 'Notes';
         $tab_array[] = 'Accessibility';
         $tab_array[] = 'Metadata';
+        $tab_array[] = 'profileaudit';
     }
 
     $tab_array[] = 'roles';
@@ -162,66 +163,201 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     if ($colour_background) {
         $background = param::optional('background', null, param::TEXT, param::FETCH_POST);
     } else {
-        $background = null;
+        $background = UserObject::BGCOLOUR;
     }
     if ($colour_forground) {
         $foreground = param::optional('foreground', null, param::TEXT, param::FETCH_POST);
     } else {
-        $foreground = null;
+        $foreground = UserObject::FGCOLOUR;
     }
-    $textsize = param::optional('textsize', 0, param::INT, param::FETCH_POST);
+    $textsize = param::optional('textsize', UserObject::TEXTSIZE, param::INT, param::FETCH_POST);
     $extra_time = param::optional('extra_time', 0, param::INT, param::FETCH_POST);
     $break_time = param::optional('break_time', 0, param::INT, param::FETCH_POST);
-    $font = param::optional('font', null, param::ALPHA, param::FETCH_POST);
+    $font = param::optional('font', UserObject::FONT, param::ALPHA, param::FETCH_POST);
     if ($colour_marks) {
         $marks_color = param::optional('marks_color', null, param::TEXT, param::FETCH_POST);
     } else {
-        $marks_color = null;
+        $marks_color = UserObject::MARKSCOLOUR;
     }
     if ($colour_theme) {
         $themecolor = param::optional('themecolor', null, param::TEXT, param::FETCH_POST);
     } else {
-        $themecolor = null;
+        $themecolor = UserObject::THEMECOLOUR;
     }
     if ($colour_labels) {
         $labelcolor = param::optional('labelcolor', null, param::TEXT, param::FETCH_POST);
     } else {
-        $labelcolor = null;
+        $labelcolor = UserObject::LABELCOLOUR;
     }
     if ($colour_unanswered) {
         $unansweredcolor = param::optional('unansweredcolor', null, param::TEXT, param::FETCH_POST);
     } else {
-        $unansweredcolor = null;
+        $unansweredcolor = UserObject::UNANSWEREDCOLOUR;
     }
     if ($colour_dismiss) {
         $dismisscolor = param::optional('dismisscolor', null, param::TEXT, param::FETCH_POST);
     } else {
-        $dismisscolor = null;
+        $dismisscolor = UserObject::DISMISSCOLOUR;
     }
     if ($colour_globaltheme) {
         $globalthemecolour = param::optional('globalthemecolour', null, param::TEXT, param::FETCH_POST);
     } else {
-        $globalthemecolour = null;
+        $globalthemecolour = UserObject::GLOBALTHEMECOLOUR;
     }
     if ($colour_globalthemefont) {
         $globalthemefontcolour = param::optional('globalthemefontcolour', null, param::TEXT, param::FETCH_POST);
     } else {
-        $globalthemefontcolour = null;
+        $globalthemefontcolour = UserObject::GLOBALTHEMEFONTCOLOUR;
     }
     if ($colour_highlight) {
         $highlightcolour = param::optional('highlightcolour', null, param::TEXT, param::FETCH_POST);
     } else {
-        $highlightcolour = null;
+        $highlightcolour = UserObject::HIGHLIGHTCOLOUR;
     }
 
     $medical = trim(param::optional('medical', '', param::TEXT, param::FETCH_POST));
     $breaks = trim(param::optional('breaks', '', param::TEXT, param::FETCH_POST));
+
+    $details = UserUtils::getUserProfile($userID, $mysqli);
 
     $result = $mysqli->prepare('DELETE FROM special_needs WHERE userID = ?');
     $result->bind_param('i', $userID);
     $result->execute();
     $result->close();
 
+    // Log changes.
+    $logger = new Logger($mysqli);
+    if ($background != $details['background']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['background'],
+            $background,
+            'background'
+        );
+    }
+
+    if ($foreground != $details['foreground']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['foreground'],
+            $foreground,
+            'foreground'
+        );
+    }
+
+    if ($marks_color != $details['marks']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['marks'],
+            $marks_color,
+            'marks'
+        );
+    }
+
+    if ($textsize != $details['textsize']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['textsize'],
+            $textsize,
+            'textsize'
+        );
+    }
+
+    if ($font != $details['font']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['font'],
+            $font,
+            'font'
+        );
+    }
+
+    if ($themecolor != $details['theme']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['theme'],
+            $themecolor,
+            'theme'
+        );
+    }
+
+    if ($labelcolor != $details['label']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['label'],
+            $labelcolor,
+            'label'
+        );
+    }
+
+    if ($unansweredcolor != $details['unanswered']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['unanswered'],
+            $unansweredcolor,
+            'unanswered'
+        );
+    }
+
+    if ($dismisscolor != $details['dismiss']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['dismiss'],
+            $dismisscolor,
+            'dismiss'
+        );
+    }
+
+    if ($globalthemecolour != $details['globaltheme']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['globaltheme'],
+            $globalthemecolour,
+            'globaltheme'
+        );
+    }
+
+    if ($globalthemefontcolour != $details['globalthemefontcolour']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['globalthemefontcolour'],
+            $globalthemefontcolour,
+            'globalthemefont'
+        );
+    }
+
+    if ($highlightcolour != $details['highlight']) {
+        $logger->track_change(
+            'User Profile',
+            $userID,
+            $userObject->get_user_ID(),
+            $details['highlight'],
+            $highlightcolour,
+            'highlight'
+        );
+    }
     if (
         $background != null
         or $foreground != null
@@ -263,7 +399,15 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
         );
         $result->execute();
         $result->close();
+    }
 
+    // Only flag as special needs student if extra / break time given or a medical note attached.
+    if (
+        $extra_time != 0
+        or $medical != ''
+        or $breaks != ''
+        or $break_time != 0
+    ) {
         $result = $mysqli->prepare('UPDATE users SET special_needs = 1 WHERE id = ?');
         $result->bind_param('i', $userID);
         $result->execute();
@@ -327,6 +471,7 @@ $render = new render($configObject);
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/userdetails.css" />
+  <link rel="stylesheet" type="text/css" href="../css/accessiblity.css" />
 
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
@@ -815,10 +960,9 @@ if ($tab == 'accessibility') {
 } else {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"Accessibility_tab\" style=\"width:100%; text-align:left; display:none\">\n";
 }
-  echo '<form name="accessibility" action="' . $_SERVER['PHP_SELF'] . "?userID=$userID&tab=accessibility\" method=\"post\" autocomplete=\"off\">";
   echo drawTabs('Accessibility', 1, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;</td></tr>\n";
-  echo '<tr><td align="center"><table cellspacing="1" cellpadding="1" border="0" style="padding-top:20px; text-align:left">';
+  echo '<tr><td>';
 
 $result = $mysqli->prepare('
 SELECT
@@ -898,303 +1042,129 @@ if (!isset($highlightcolour)) {
     $highlightcolour = '';
 }
 $result->close();
-?>
-<tr>
-<td><?php echo $string['extratime']; ?></td>
-<td colspan="2">
-<select name="extra_time">
-<option value="0"><?php echo $string['noextratime']; ?></option>
-<?php
-  $times = array(5, 10, 25, 33, 50, 100, 200, 300);
+
+$times = array(5, 10, 25, 33, 50, 100, 200, 300);
+$accessibilitydata['extratime'] = array();
 foreach ($times as $individual_time) {
     if ($individual_time == $extra_time) {
-        echo "<option value=\"$individual_time\" selected>$individual_time%</option>\n";
+        $accessibilitydata['extratime'][$individual_time] = true;
     } else {
-        echo "<option value=\"$individual_time\">$individual_time%</option>\n";
+        $accessibilitydata['extratime'][$individual_time] = false;
     }
 }
-?>
-</select>
-</td>
-<td rowspan="10" style="width:40px">&nbsp;</td>
-<td rowspan="10" style="font-size:110%">
-<div style="width:450px; border:1px solid #909090; float:right">
-<div id="demo_header" style="font-weight: bold; font-size: x-large;"><?php echo $string['demo10']; ?></div>
-<div id="demo_paper_background">
-<span id="demo_theme" style="font-weight: bold; font-size: large;"><?php echo $string['demo1']; ?></span>
-<p id="demo_note">
-    <img src="/artwork/notes_icon.gif" width="16" height="16" alt="Note">
-    <?php echo $string['demo9']; ?>
-</p>
-<p>1. &nbsp;<?php echo $string['demo2']; ?></p>
-
-<table cellspacing="0" cellpadding="2" border="0" style="margin-left:30px; width:200px">
-  <tr><td style="text-align:center; color:#C00000" id="demo_true_label"><?php echo $string['demo3']; ?></td><td style="text-align:center; color:#C00000" id="demo_false_label"><?php echo $string['demo4']; ?></td><td></tr>
-<tr><td style="text-align:center"><input type="radio" name="q1" value="t" checked="checked" /></td><td style="text-align:center"><input type="radio" name="q1" value="f" /></td><td><?php echo $string['demo5']; ?></td></tr>
-<tr id="demo_highlight"><td style="text-align:center"><input type="radio" name="q2" value="t" /></td><td style="text-align:center"><input type="radio" name="q2" value="f" checked="checked" /></td><td><?php echo $string['demo6']; ?></td></tr>
-<tr id="demo_unanswered"><td style="text-align:center"><input type="radio" name="q3" value="t" /></td><td style="text-align:center"><input type="radio" name="q3" value="f" /></td><td><?php echo $string['demo7']; ?></td></tr>
-</table>
-<br />
-<span id="demo_marks" style="font-size:90%; color:#808080">(<?php echo $string['demo8']; ?>)</span>
-
-</div>
-<div id="demo_footer"><?php echo $string['demo11']; ?></div>
-<div>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['fontsize']; ?></td>
-<td colspan="2">
-<select class="access" name="textsize" id="textsize">
-<option value="0"><?php echo $string['angledefault']; ?></option>
-<?php
-  $fontsizes = array(90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400);
+$fontsizes = array(90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400);
+$accessibilitydata['fontsize'] = array();
 foreach ($fontsizes as $individual_fontsize) {
     if ($individual_fontsize == $textsize) {
-        echo "<option value=\"$individual_fontsize\" selected>$individual_fontsize%</option>\n";
+        $accessibilitydata['fontsize'][$individual_fontsize] = true;
     } else {
-        echo "<option value=\"$individual_fontsize\">$individual_fontsize%</option>\n";
+        $accessibilitydata['fontsize'][$individual_fontsize] = false;
     }
 }
-?>
-</select>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['typeface']; ?></td>
-<td colspan="2">
-<select class="access" name="font" id="font">
-<option value=""><?php echo $string['angledefault']; ?></option>
-<?php
-  $fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
+
+$fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
+$accessibilitydata['fontfamily'] = array();
 foreach ($fontfamily as $individual_fontfamily) {
     if ($individual_fontfamily == $font) {
-        echo "<option style=\"font-family:$individual_fontfamily\" value=\"$individual_fontfamily\" selected>$individual_fontfamily</option>\n";
+        $accessibilitydata['fontfamily'][$individual_fontfamily] = true;
     } else {
-        echo "<option style=\"font-family:$individual_fontfamily\" value=\"$individual_fontfamily\">$individual_fontfamily</option>\n";
+        $accessibilitydata['fontfamily'][$individual_fontfamily] = false;
     }
 }
-?>
-</select>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['background']; ?></td>
-<td><input class="access" type="radio" name="bg_radio" value="0"<?php if ($background == '') {
-    echo ' checked';
-                                                                } ?> /><?php echo $string['default']; ?></td>
-<td><input class="access" type="radio" name="bg_radio" id="bg_radio_on" value="1"<?php if ($background != '') {
-    echo ' checked';
-                                                                                 } ?> />
-<?php
-if ($background == '') {
-    echo "<div class=\"showpicker\" data-pickertype=\"background\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
-} else {
-    echo "<div class=\"showpicker\" data-pickertype=\"background\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$background\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
-}
-?>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['foreground']; ?></td>
-<td><input class="access" type="radio" name="fg_radio" value="0"<?php if ($foreground == '') {
-    echo ' checked';
-                                                                } ?> /><?php echo $string['default']; ?></td>
-<td><input class="access" type="radio" name="fg_radio" id="fg_radio_on" value="1"<?php if ($foreground != '') {
-    echo ' checked';
-                                                                                 } ?> />
-<?php
-if ($foreground == '') {
-    echo "<div class=\"showpicker\" data-pickertype=\"foreground\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
-} else {
-    echo "<div class=\"showpicker\" data-pickertype=\"foreground\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$foreground\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
-}
-?>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['markscolour']; ?></td>
-<td><input class="access" type="radio" name="marks_radio" value="0"<?php if ($marks_color == '') {
-    echo ' checked';
-                                                                   } ?> /><?php echo $string['default']; ?></td>
-<td><input class="access" type="radio" name="marks_radio" id="marks_radio_on" value="1"<?php if ($marks_color != '') {
-    echo ' checked';
-                                                                                       } ?> />
-<?php
-if ($marks_color == '') {
-    echo "<div class=\"showpicker\" data-pickertype=\"marks_color\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
-} else {
-    echo "<div class=\"showpicker\" data-pickertype=\"marks_color\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$marks_color\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
-}
-?>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['themecolour']; ?></td>
-<td><input class="access" type="radio" name="theme_radio" value="0"<?php if ($themecolor == '') {
-    echo ' checked';
-                                                                   } ?> /><?php echo $string['default']; ?></td>
-<td><input class="access" type="radio" name="theme_radio" id="theme_radio_on" value="1"<?php if ($themecolor != '') {
-    echo ' checked';
-                                                                                       } ?> />
-<?php
-if ($themecolor == '') {
-    echo "<div class=\"showpicker\" data-pickertype=\"themecolor\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
-} else {
-    echo "<div class=\"showpicker\" data-pickertype=\"themecolor\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
-}
-?>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['labelscolour']; ?></td>
-<td><input class="access" type="radio" name="labels_radio" value="0"<?php if ($labelcolor == '') {
-    echo ' checked';
-                                                                    } ?> /><?php echo $string['default']; ?></td>
-<td><input class="access" type="radio" name="labels_radio" id="labels_radio_on" value="1"<?php if ($labelcolor != '') {
-    echo ' checked';
-                                                                                         } ?> />
-<?php
-if ($labelcolor == '') {
-    echo "<div class=\"showpicker\" data-pickertype=\"labelcolor\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
-} else {
-    echo "<div class=\"showpicker\" data-pickertype=\"labelcolor\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
-}
-?>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['unanswered']; ?></td>
-<td><input class="access" type="radio" name="unanswered_radio" value="0"<?php if ($unansweredcolor == '') {
-    echo ' checked';
-                                                                        } ?> /><?php echo $string['default']; ?></td>
-<td><input class="access" type="radio" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') {
-    echo ' checked';
-                                                                                                 } ?> />
-<?php
-if ($unansweredcolor == '') {
-    echo "<div class=\"showpicker\" data-pickertype=\"unansweredcolor\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
-} else {
-    echo "<div class=\"showpicker\" data-pickertype=\"unansweredcolor\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$unansweredcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
-}
-?>
-</td>
-</tr>
-<tr>
-<td><?php echo $string['dismisscolor']; ?></td>
-<td><input type="radio" name="dismiss_radio" value="0"<?php if ($dismisscolor == '') {
-    echo ' checked';
-                                                      } ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" name="dismiss_radio" id="dismiss_radio_on" value="1"<?php if ($dismisscolor != '') {
-    echo ' checked';
-                                                                            } ?> />
-<?php
-if ($dismisscolor == '') {
-    echo "<div class=\"showpicker\" data-pickertype=\"dismisscolor\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
-} else {
-    echo "<div class=\"showpicker\" data-pickertype=\"dismisscolor\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$dismisscolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
-}
-?>
-</td>
-</tr>
-<tr>
-    <td><?php echo $string['highlightcolour']; ?></td>
-    <td><input class="access" type="radio" name="colour_highlight_radio" value="0"<?php if ($highlightcolour == '') {
-            echo ' checked';
-        } ?> /><?php echo $string['default']; ?></td>
-    <td><input class="access" type="radio" name="colour_highlight_radio" id="highlightcolour_radio_on" value="1"<?php if ($highlightcolour != '') {
-            echo ' checked';
-        } ?> />
-        <?php
-        if ($highlightcolour == '') {
-            echo "<div class=\"showpicker\" data-pickertype=\"highlightcolour\" id=\"span_highlightcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"highlightcolour\" name=\"highlightcolour\" value=\"$highlightcolour\" />";
-        } else {
-            echo "<div class=\"showpicker\" data-pickertype=\"highlightcolour\" id=\"span_highlightcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$highlightcolour\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"highlightcolour\" name=\"highlightcolour\" value=\"$highlightcolour\" />";
-        }
-        ?>
-    </td>
-</tr>
-<tr>
-    <td><?php echo $string['globalthemecolour']; ?></td>
-    <td><input class="access" type="radio" name="colour_globaltheme_radio" value="0"<?php if ($globalthemecolour == '') {
-            echo ' checked';
-        } ?> /><?php echo $string['default']; ?></td>
-    <td><input class="access" type="radio" name="colour_globaltheme_radio" id="globalthemecolour_radio_on" value="1"<?php if ($globalthemecolour != '') {
-            echo ' checked';
-        } ?> />
-        <?php
-        if ($globalthemecolour == '') {
-            echo "<div class=\"showpicker\" data-pickertype=\"globalthemecolour\" id=\"span_globalthemecolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemecolour\" name=\"globalthemecolour\" value=\"$globalthemecolour\" />";
-        } else {
-            echo "<div class=\"showpicker\" data-pickertype=\"globalthemecolour\" id=\"span_globalthemecolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$globalthemecolour\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemecolour\" name=\"globalthemecolour\" value=\"$globalthemecolour\" />";
-        }
-        ?>
-    </td>
-</tr>
-<tr>
-    <td><?php echo $string['globalthemefontcolour']; ?></td>
-    <td><input class="access" type="radio" name="colour_globalthemefont_radio" value="0"<?php if ($globalthemefontcolour == '') {
-            echo ' checked';
-        } ?> /><?php echo $string['default']; ?></td>
-    <td><input class="access" type="radio" name="colour_globalthemefont_radio" id="globalthemefontcolour_radio_on" value="1"<?php if ($globalthemefontcolour != '') {
-            echo ' checked';
-        } ?> />
-        <?php
-        if ($globalthemefontcolour == '') {
-            echo "<div class=\"showpicker\" data-pickertype=\"globalthemefontcolour\" id=\"span_globalthemefontcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:#FFFFFF\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemefontcolour\" name=\"globalthemefontcolour\" value=\"$globalthemefontcolour\" />";
-        } else {
-            echo "<div class=\"showpicker\" data-pickertype=\"globalthemefontcolour\" id=\"span_globalthemefontcolour\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$globalthemefontcolour\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"globalthemefontcolour\" name=\"globalthemefontcolour\" value=\"$globalthemefontcolour\" />";
-        }
-        ?>
-    </td>
-</tr>
-<tr><td colspan="5">&nbsp;</td></tr>
-<tr><td class="medical"><?php echo $string['medical'] ?></td><td colspan="4"><textarea cols="60" rows="3" name="medical" style="width:100%"><?php echo $medical ?></textarea></td></tr>
-<tr><td class="breaks"><?php echo $string['breaks'] ?></td><td colspan="4"><textarea cols="60" rows="3" name="breaks" style="width:100%"><?php echo $breaks ?></textarea></td></tr>
-<tr>
-<?php
+$accessibilitydata['colours'] = array(
+    array(
+        'name' => $string['background'],
+        'value' => $background,
+        'radio_name' => 'bg',
+        'input_name' => 'background'
+    ),
+    array(
+        'name' => $string['foreground'],
+        'value' => $foreground,
+        'radio_name' => 'fg',
+        'input_name' => 'foreground'
+    ),
+    array(
+        'name' => $string['markscolour'],
+        'value' => $marks_color,
+        'radio_name' => 'marks',
+        'input_name' => 'marks_color'
+    ),
+    array(
+        'name' => $string['themecolour'],
+        'value' => $themecolor,
+        'radio_name' => 'theme',
+        'input_name' => 'themecolor'
+    ),
+    array(
+        'name' => $string['labelscolour'],
+        'value' => $labelcolor,
+        'radio_name' => 'labels',
+        'input_name' => 'labelcolor'
+    ),
+    array(
+        'name' => $string['unanswered'],
+        'value' => $unansweredcolor,
+        'radio_name' => 'unanswered',
+        'input_name' => 'unansweredcolor'
+    ),
+    array(
+        'name' => $string['dismisscolor'],
+        'value' => $dismisscolor,
+        'radio_name' => 'dismiss',
+        'input_name' => 'dismisscolor'
+    ),
+    array(
+        'name' => $string['highlightcolour'],
+        'value' => $highlightcolour,
+        'radio_name' => 'colour_highlight',
+        'input_name' => 'highlightcolour'
+    ),
+    array(
+        'name' => $string['globalthemecolour'],
+        'value' => $globalthemecolour,
+        'radio_name' => 'colour_globaltheme',
+        'input_name' => 'globalthemecolour'
+    ),
+    array(
+        'name' => $string['globalthemefontcolour'],
+        'value' => $globalthemefontcolour,
+        'radio_name' => 'colour_globalthemefont',
+        'input_name' => 'globalthemefontcolour'
+    ),
+);
+$accessibilitydata['medical'] = $medical;
+$accessibilitydata['breaks'] = $breaks;
 if ($configObject->get_setting('core', 'paper_breaktime_mins')) {
-    $scaletype = $string['breaktimeminpserhour'];
+    $accessibilitydata['breaksscaletype'] = $string['breaktimeminpserhour'];
 } else {
-    $scaletype = $string['breaktime'];
+    $accessibilitydata['breaksscaletype'] = $string['breaktime'];
 }
-?>
-    <td><?php echo $scaletype; ?></td>
-    <td colspan="2">
-        <select name="break_time">
-            <?php
-            $scale = $configObject->get_setting('core', 'paper_breaktime_scale');
-            echo '<optgroup>' . PHP_EOL;
-            echo '<option value="0">' . $string['nobreaktime'] . '</option>' . PHP_EOL;
-            foreach ($scale as $individual_time) {
-                if ($individual_time == $break_time) {
-                    echo '<option value="' . $individual_time . '" selected>' . $individual_time . '</option>' . PHP_EOL;
-                } else {
-                    echo '<option value="' . $individual_time . '">' . $individual_time . '</option>' . PHP_EOL;
-                }
-            }
-            echo '</optgroup>' . PHP_EOL;
-            // Still display students settings even if no longer available as an option.
-            if ($break_time != 0 and !in_array($break_time, $scale)) {
-                echo '<optgroup>' . PHP_EOL;
-                echo '<option value="' . $break_time . '" selected>' . $break_time . '</option>' . PHP_EOL;
-                echo '</optgroup>' . PHP_EOL;
-            }
-            ?>
-        </select>
-    </td>
-</tr>
-<?php
+$scale = $configObject->get_setting('core', 'paper_breaktime_scale');
+foreach ($scale as $individual_time) {
+    if ($individual_time == $break_time) {
+        $accessibilitydata['breaksscale'][$individual_time] = true;
+    } else {
+        $accessibilitydata['breaksscale'][$individual_time] = false;
+    }
+}
+// Still display students settings even if no longer available as an option.
+if ($break_time != 0 and !in_array($break_time, $scale)) {
+    $accessibilitydata['oldbreakscale'] = array($break_time, true);
+} else {
+    $accessibilitydata['oldbreakscale'] = '';
+}
 if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-    echo '<tr><td colspan="5" align="center"><input type="submit" name="updateaccess" value="' . $string['save'] . "\" class=\"ok\" /></td></tr>\n";
+    $accessibilitydata['admin'] = true;
+} else {
+    $accessibilitydata['admin'] = false;
 }
+$accessibilitydata['userid'] = $userID;
+$render->render($accessibilitydata, $string, 'users/accessibility/accessibility.html');
 ?>
-</table>
-
 
 </td>
 </tr>
-</form>
 </table>
 
 <?php
@@ -1296,6 +1266,42 @@ $roledata = [
     'userid' => $userID,
 ];
 $render->render($roledata, $string, $roles_template);
+
+echo '</td></tr>';
+?>
+</table>
+<?php
+if ($tab == 'profileaudit') {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"profileaudit_tab\" style=\"width:100%\">\n";
+} else {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" id=\"profileaudit_tab\" style=\"width:100%; display:none\">\n";
+}
+echo drawTabs('profileaudit', 1, '', $user_details['roles'], $bg_color, $string);
+echo '<tr><td class="coltitle">&nbsp;</td></tr>' . "\n";
+echo '<tr><td>';
+
+
+$logger = new Logger($mysqli);
+
+// Get the changes to be used later
+$changes = $logger->get_changes('User Profile', $userID);
+$profileauditdata = [];
+$profilecount = 0;
+foreach ($changes as $change) {
+    $profileauditdata[] = array(
+        'date' => date($configObject->get('cfg_very_short_datetime_php'), $change['date']),
+        'part' => $change['part'],
+        'old' => $change['old'],
+        'new' => $change['new'],
+        'title' => $change['title'],
+        'initials' => $change['initials'],
+        'surname' => $change['surname'],
+        'rowclass' => $profilecount % 2 ? 'auditrow auditaltrow' : 'auditrow',
+        'displaycolour' => $change['part'] != 'font' && $change['part'] != 'textsize' ? true : false,
+    );
+    $profilecount++;
+}
+$render->render($profileauditdata, $string, 'users/details/profileaudit.html');
 
 echo '</td></tr>';
 ?>

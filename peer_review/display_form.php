@@ -129,7 +129,15 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/peerreview.css" />
 <?php
-$css = PaperProperties::paperCss($userObject);
+$css = PaperProperties::paperCss(
+    $userObject,
+    $propertyObj->get_bgcolor(),
+    $propertyObj->get_fgcolor(),
+    UserObject::TEXTSIZE,
+    UserObject::MARKSCOLOUR,
+    $propertyObj->get_themecolor(),
+    $propertyObj->get_labelcolor(),
+);
 
 echo $css;
 ?>

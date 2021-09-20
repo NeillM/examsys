@@ -113,13 +113,13 @@ requirejs(['user', 'colourpicker', 'osce', 'classtotals', 'menu', 'rolelist', 'j
                 $('#dismiss_radio_on').attr('checked', true);
                 break;
             case 'globalthemecolour':
-                $('#globalthemecolour_radio_on').attr('checked', true);
+                $('#colour_globaltheme_radio_on').attr('checked', true);
                 break;
             case 'highlightcolour':
-                $('#highlightcolour_radio_on').attr('checked', true);
+                $('#colour_highlight_radio_on').attr('checked', true);
                 break;
             case 'globalthemefontcolour':
-                $('#globalthemefontcolour_radio_on').attr('checked', true);
+                $('#colour_globalthemefont_radio_on').attr('checked', true);
                 break;
             default:
                 break;

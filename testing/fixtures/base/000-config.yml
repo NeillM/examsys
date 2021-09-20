@@ -296,3 +296,8 @@ config:
     setting: "enabled_plugin"
     value: "[\"plugin_tinymce_texteditor\"]"
     type: "json"
+  -
+    component: "core"
+    setting: "system_user_accessibility"
+    value: 0
+    type: "boolean"

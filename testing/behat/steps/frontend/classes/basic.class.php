@@ -692,4 +692,19 @@ JS;
             throw new \Exception('The "id_or_name" with the value of "current_screen" could not be found');
         }
     }
+
+    /**
+     * Select a colour from the colour picker
+     * @param string $id colour picker id
+     * @param string $colour the colour
+     */
+    public function fillColourPicker(string $id, string $colour): void
+    {
+        $select = $this->find('xpath', '//*[@id="' . $id . '"]');
+        $select->click();
+        // Select a radnom colour from the top row.
+        $select = $this->find('xpath', '//*[@data-colour="' . $colour . '"]');
+        $select->click();
+    }
+
 }

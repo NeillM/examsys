@@ -60,23 +60,47 @@ define(['rogoconfig', 'jquery'], function(config, $) {
             });
 
             $('#admintools').click(function () {
-                $('#toprightmenu').hide();
-                location.href = config.cfgrootpath + '/admin/index.php';
+                scope.launchAdmin();
             });
 
             $('#signout').click(function () {
-                $('#toprightmenu').hide();
-                location.href = config.cfgrootpath + '/logout.php';
+                scope.logout();
             });
 
             $('#displaycredits').click(function () {
-                $('#toprightmenu').hide();
-                scope.opencredits();
+                scope.launchCredits();
             });
 
             $('#aboutrogo').click(function () {
-                $('#toprightmenu').hide();
-                scope.opencredits();
+                scope.launchCredits();
+            });
+
+            $('#userprofile').click(function () {
+                scope.launchProfile();
+            });
+
+            $('#admintools').keydown(function (event) {
+                if (event.keyCode && event.key == "Enter") {
+                    scope.launchAdmin();
+                }
+            });
+
+            $('#signout').keydown(function (event) {
+                if (event.keyCode && event.key == "Enter") {
+                    scope.logout();
+                }
+            });
+
+            $('#aboutrogo').keydown(function (event) {
+                if (event.keyCode && event.key == "Enter") {
+                    scope.launchCredits();
+                }
+            });
+
+            $('#userprofile').keydown(function (event) {
+                if (event.keyCode && event.key == "Enter") {
+                    scope.launchProfile();
+                }
             });
         };
 
@@ -90,5 +114,25 @@ define(['rogoconfig', 'jquery'], function(config, $) {
                 notice.focus();
             }
         };
+
+        this.launchAdmin = function() {
+            $('#toprightmenu').hide();
+            location.href = config.cfgrootpath + '/admin/index.php';
+        }
+
+        this.logout = function() {
+            $('#toprightmenu').hide();
+            location.href = config.cfgrootpath + '/logout.php';
+        }
+
+        this.launchCredits = function() {
+            $('#toprightmenu').hide();
+            this.opencredits();
+        }
+
+        this.launchProfile = function() {
+            $('#toprightmenu').hide();
+            location.href = config.cfgrootpath + '/students/settings.php';
+        }
     }
 });

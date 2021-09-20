@@ -1,0 +1,48 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the colours section of the accessibilty screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables:
+
+data.colours - the colour selection options for the different sections of the exam paper
+
+Required localised language strings -
+lang.default
+#}
+<div class="items">
+{% for item in data.colours %}
+    <div class="item">
+        <div class="label">
+            <input class="access" type="radio" name="{{item.radio_name}}_radio" id="{{item.radio_name}}_radio_off" value="0" {% if item.value == '' %}checked{% endif %} />
+            <label for="{{item.radio_name}}_radio_off">{{lang.resettodefault | format(item.name)}}</label>
+        </div>
+        <div class="label userset">
+            <input class="access" type="radio" name="{{item.radio_name}}_radio" id="{{item.radio_name}}_radio_on" value="1" {% if item.value != '' %}checked{% endif %} />
+            <label for="{{item.radio_name}}_radio_on">{{lang.selectcolour | format(item.name)}}</label>
+            <div class="showpicker colours" data-pickertype="{{item.input_name}}" id="span_{{item.input_name}}" style="background-color:{% if item.value == '' %}white{% else %}{{item.value}}{% endif %}">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+<input type="hidden" id="{{item.input_name}}" name="{{item.input_name}}" value="{{item.value}}" />
+{% endfor %}
+</div>
+

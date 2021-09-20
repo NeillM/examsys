@@ -1,0 +1,87 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the demo section of the accessibility screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required localised language strings -
+lang.demoblurb
+lang.demo1
+lang.demo2
+lang.demo3
+lang.demo4
+lang.demo5
+lang.demo6
+lang.demo7
+lang.demo8
+lang.demo9
+lang.demo10
+lang.demo11
+#}
+<div class="demo">
+    <div class="demo_blurb">{{lang.demoblurb}}</div>
+    <div class="demobox">
+        <div id="demo_header" class="demo_header">{{lang.demo10}}</div>
+        <div id="demo_paper_background">
+            <span id="demo_theme" class="demo_theme">{{lang.demo1}}</span>
+            <p id="demo_note">
+                <img src="/artwork/notes_icon.gif" alt="Note">
+                {{lang.demo9}}
+            </p>
+            <p>1. &nbsp;{{lang.demo2}}</p>
+            <div>
+                <div aria-hidden="true" class="demo_labels">
+                    <div id="demo_true_label" class="demo_item">{{lang.demo3}}</div>
+                    <div id="demo_false_label" class="demo_item">{{lang.demo4}}</div>
+                </div>
+                <div class="demo_radio">
+                    <div class="demo_item">
+                        <input aria-label="{{lang.true}}" type="radio" name="q1" value="t" checked="checked" />
+                    </div>
+                    <div class="demo_item">
+                        <input aria-label="{{lang.false}}" type="radio" name="q1" value="f" />
+                    </div>
+                    <div id="demo_dismiss" class="demo_dismiss">{{lang.demo5}}</div>
+                </div>
+                <div id="demo_highlight" class="demo_radio">
+                    <div class="demo_item">
+                        <input aria-label="{{lang.true}}" type="radio" name="q2" value="t" />
+                    </div>
+                    <div class="demo_item">
+                        <input aria-label="{{lang.false}}" type="radio" name="q2" value="f" checked="checked" />
+                    </div>
+                    <div>{{lang.demo6}}</div>
+                </div>
+                <div id="demo_unanswered" class="demo_radio">
+                    <div class="demo_item">
+                        <input aria-label="{{lang.true}}" type="radio" name="q3" value="t" />
+                    </div>
+                    <div class="demo_item">
+                        <input aria-label="{{lang.false}}" type="radio" name="q3" value="f" />
+                    </div>
+                    <div>{{lang.demo7}}</div>
+                </div>
+            </div>
+            <br />
+            <span id="demo_marks" class="demo_marks">({{lang.demo8}})</span>
+            <div class="demo_space"></div>
+        </div>
+        <div id="demo_footer">{{lang.demo11}}</div>
+    </div>
+</div>

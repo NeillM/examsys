@@ -64,7 +64,18 @@ class userutilstest extends unittestdatabase
                 )
             )
         );
-        $this->student2 = $datagenerator->create_user(['roles' => 'Student', 'sid' => '13579', 'surname' => 'Johnson']);
+        $this->student2 = $datagenerator->create_user(
+            array('roles' => 'Student',
+                'sid' => '13579',
+                'surname' => 'Johnson',
+                'special_needs' => array(
+                    'background' => '#000000',
+                    'foreground' => '#FFFFFF',
+                    'textsize' => 110,
+                    'font' => 'Verdana',
+                )
+            )
+        );
     }
 
     /**
@@ -138,5 +149,46 @@ class userutilstest extends unittestdatabase
             'breaktime' => 0,
         );
         $this->assertEquals($expected, UserUtils::getExtraTime($this->student2['id'], $this->db));
+    }
+
+    /**
+     * Test getting user profile data
+     * @group user
+     */
+    public function testgetUserProfile()
+    {
+        // No profile info.
+        $expected = array(
+            'background' => UserObject::BGCOLOUR,
+            'foreground' => UserObject::FGCOLOUR,
+            'textsize' => UserObject::TEXTSIZE,
+            'marks' => UserObject::MARKSCOLOUR,
+            'theme' => UserObject::THEMECOLOUR,
+            'label' => UserObject::LABELCOLOUR,
+            'font' => UserObject::FONT,
+            'unanswered' => UserObject::UNANSWEREDCOLOUR,
+            'dismiss' => UserObject::DISMISSCOLOUR,
+            'globaltheme' => UserObject::GLOBALTHEMECOLOUR,
+            'globalthemefontcolour' => UserObject::GLOBALTHEMEFONTCOLOUR,
+            'highlight' => UserObject::HIGHLIGHTCOLOUR
+        );
+        $this->assertEquals($expected, UserUtils::getUserProfile($this->student1['id'], $this->db));
+
+        // Profile info.
+        $expected = array(
+            'background' => '#000000',
+            'foreground' => '#FFFFFF',
+            'textsize' => 110,
+            'marks' => UserObject::MARKSCOLOUR,
+            'theme' => UserObject::THEMECOLOUR,
+            'label' => UserObject::LABELCOLOUR,
+            'font' => 'Verdana',
+            'unanswered' => UserObject::UNANSWEREDCOLOUR,
+            'dismiss' => UserObject::DISMISSCOLOUR,
+            'globaltheme' => UserObject::GLOBALTHEMECOLOUR,
+            'globalthemefontcolour' => UserObject::GLOBALTHEMEFONTCOLOUR,
+            'highlight' => UserObject::HIGHLIGHTCOLOUR
+        );
+        $this->assertEquals($expected, UserUtils::getUserProfile($this->student2['id'], $this->db));
     }
 }

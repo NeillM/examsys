@@ -94,7 +94,7 @@ $string['globalthemefontcolour'] = 'Global Theme Font Colour';
 $string['highlightcolour'] = 'Highlight Colour';
 $string['default'] = 'Default';
 $string['noextratime'] = 'no extra time';
-$string['angledefault'] = '&lt;default&gt;';
+$string['angledefault'] = '<default>';
 $string['value'] = 'Value';
 $string['save'] = 'Save';
 $string['dateadded'] = 'Date Added';
@@ -122,6 +122,7 @@ $string['rolesavefailure'] = 'The roles could not be updated.';
 $string['breaktime'] = 'Break Time (percent)';
 $string['breaktimeminpserhour'] = 'Break Time (mins per hour)';
 $string['nobreaktime'] = 'no break time';
+$string['profileaudit'] = 'Profile Audit';
 
 //demo
 $string['demo1'] = 'Cities';
@@ -135,9 +136,31 @@ $string['demo8'] = '3 marks';
 $string['demo9'] = 'This is a note';
 $string['demo10'] = 'Example paper';
 $string['demo11'] = '© 2021, University of Nottingham ';
+$string['demoblurb'] = 'Below is ane example of what an exam screen will look like with the settings applied.';
 
 //Colour picker
 $string['colour'] = 'Colour';
 $string['themecolours'] = 'Theme Colours';
 $string['standardcolours'] = 'Standard Colours';
 $string['more'] = 'More...';
+
+//Profile Audit
+$string['changedtime'] = 'Date/Time';
+$string['setting'] = 'Profile Setting';
+$string['old'] = 'Old value';
+$string['new'] = 'New Value';
+$string['changedby'] = 'Changed by';
+$string['background'] = 'Background';
+$string['foreground'] = 'Foreground';
+$string['marks'] = 'Marks';
+$string['theme'] = 'Theme';
+$string['label'] = 'Label';
+$string['unanswered'] = 'Unanswered';
+$string['dismiss'] = 'Dismiss';
+$string['globaltheme'] = 'Global Theme';
+$string['globalthemefont'] = 'Global theme Typeface';
+$string['highlight'] = 'Highlight';
+$string['textsize'] = 'Text size';
+$string['font'] = 'Typeface';
+$string['selectcolour'] = 'Select a %s';
+$string['resettodefault'] = 'Reset %s to system default';

@@ -108,7 +108,15 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 
 <?php
-$css = PaperProperties::paperCss($userObject);
+$css = PaperProperties::paperCss(
+    $userObject,
+    $propertyObj->get_bgcolor(),
+    $propertyObj->get_fgcolor(),
+    UserObject::TEXTSIZE,
+    UserObject::MARKSCOLOUR,
+    $propertyObj->get_themecolor(),
+    $propertyObj->get_labelcolor(),
+);
 
 echo $css;
 ?>

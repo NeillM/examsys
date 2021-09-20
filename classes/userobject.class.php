@@ -82,6 +82,31 @@ class UserObject extends RogoStaticSingleton
     /** @var array language strings */
     protected $langstrings;
 
+    /** @var string the default background colour for an exam */
+    public const BGCOLOUR = '#FFFFFF';
+    /** @var string the default foreground colour for an exam */
+    public const FGCOLOUR = '#000000';
+    /** @var string the default text size for an exam */
+    public const TEXTSIZE = 100;
+    /** @var string the default marks colour for an exam */
+    public const MARKSCOLOUR = '#808080';
+    /** @var string the default theme heading colour for an exam */
+    public const THEMECOLOUR = '#316AC5';
+    /** @var string the default label colour for an exam */
+    public const LABELCOLOUR = '#C00000';
+    /** @var string the default font family for an exam */
+    public const FONT = 'Arial';
+    /** @var string the default unaswered question colour for an exam */
+    public const UNANSWEREDCOLOUR = '#FFC0C0';
+    /** @var string the default dismiss option colour for an exam */
+    public const DISMISSCOLOUR = '#A5A5A5';
+    /** @var string the default global theme colour for an exam */
+    public const GLOBALTHEMECOLOUR = '#5590CF';
+    /** @var string the default global theme font colour for an exam */
+    public const GLOBALTHEMEFONTCOLOUR = '#FFFFFF';
+    /** @var string the default highlight option colour for an exam */
+    public const HIGHLIGHTCOLOUR = '#FCF6CF';
+    
     /**
      * Called when the object is unserialised.
      */
@@ -898,24 +923,52 @@ class UserObject extends RogoStaticSingleton
             return false;
         }
 
-        // Add additional special needs data.
+        // Get special needs data. Any user can set their own settings for these.
+        $stmt = $this->db->prepare('
+            SELECT
+                background,
+                foreground,
+                textsize,
+                marks_color,
+                themecolor,
+                labelcolor,
+                font,
+                unanswered,
+                dismiss,
+                globalthemecolour,
+                globalthemefont_colour,
+                highlight_bgcolour
+            FROM
+                special_needs
+            WHERE
+                userID = ?
+        ');
+        $stmt->bind_param('i', $userID);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result(
+            $this->background,
+            $this->foreground,
+            $this->textsize,
+            $this->marks_color,
+            $this->themecolor,
+            $this->labelcolor,
+            $this->font,
+            $this->unanswered,
+            $this->dismiss,
+            $this->globalthemecolour,
+            $this->globalthemefontcolour,
+            $this->highlightbgcolour
+        );
+        $stmt->fetch();
+        $stmt->close();
+
+        // Add additional special needs data. These can only be set by admins for a user.
         if ($this->special_needs == 1) {
             $stmt = $this->db->prepare('
                 SELECT
-                    background,
-                    foreground,
-                    textsize,
                     extra_time,
-                    marks_color,
-                    themecolor,
-                    labelcolor,
-                    font,
-                    unanswered,
-                    dismiss,
-                    break_time,
-                    globalthemecolour,
-                    globalthemefont_colour,
-                    highlight_bgcolour
+                    break_time
                 FROM
                     special_needs
                 WHERE
@@ -925,20 +978,8 @@ class UserObject extends RogoStaticSingleton
             $stmt->execute();
             $stmt->store_result();
             $stmt->bind_result(
-                $this->background,
-                $this->foreground,
-                $this->textsize,
                 $this->extra_time,
-                $this->marks_color,
-                $this->themecolor,
-                $this->labelcolor,
-                $this->font,
-                $this->unanswered,
-                $this->dismiss,
                 $this->breaks,
-                $this->globalthemecolour,
-                $this->globalthemefontcolour,
-                $this->highlightbgcolour
             );
             $stmt->fetch();
             $stmt->close();
@@ -1034,5 +1075,257 @@ class UserObject extends RogoStaticSingleton
         }
         $result->close();
         return false;
+    }
+
+    /**
+     * Set accessibilty settings.
+     * This is called by the user themselves. It does not update break, extra tiem and medical conditions.
+     *
+     * @param ?string $bgcolor the paper back ground colour
+     * @param ?string $fgcolor the paper font colour
+     * @param ?int $textsize the paper text size
+     * @param ?string $marks_color the question marks font colour
+     * @param ?string $themecolor the paper theme section font colour
+     * @param ?string $labelcolor the question labels font colour
+     * @param ?string $font the paper font family
+     * @param ?string $unanswered_color the unanswered question colour
+     * @param ?string $dismiss_color the dimissed answer colour
+     * @param ?string $paper_global_themecolour the system theme colour
+     * @param ?string $paper_global_themefont_colour the system theme font colour
+     * @param ?string $highlight_bgcolour the question highlight colour
+     */
+    public function userSetAccessibility(
+        ?string $bgcolor,
+        ?string $fgcolor,
+        ?int $textsize,
+        ?string $marks_color,
+        ?string $themecolor,
+        ?string $labelcolor,
+        ?string $font,
+        ?string $unanswered_color,
+        ?string $dismiss_color,
+        ?string $paper_global_themecolour,
+        ?string $paper_global_themefont_colour,
+        ?string $highlight_bgcolour
+    ): void {
+        // Remove existing settings.
+        $result = $this->db->prepare('DELETE FROM special_needs WHERE userID = ?');
+        $result->bind_param('i', $this->userID);
+        $result->execute();
+        $result->close();
+
+        // Default values if null provided.
+        if (is_null($bgcolor)) {
+            $bgcolor = self::BGCOLOUR;
+        }
+        if (is_null($fgcolor)) {
+            $fgcolor = self::FGCOLOUR;
+        }
+        if (is_null($marks_color)) {
+            $marks_color = self::MARKSCOLOUR;
+        }
+        if (is_null($textsize)) {
+            $textsize = self::TEXTSIZE;
+        }
+        if (is_null($font)) {
+            $font = self::FONT;
+        }
+        if (is_null($themecolor)) {
+            $themecolor = self::THEMECOLOUR;
+        }
+        if (is_null($labelcolor)) {
+            $labelcolor = self::LABELCOLOUR;
+        }
+        if (is_null($unanswered_color)) {
+            $unanswered_color = self::UNANSWEREDCOLOUR;
+        }
+        if (is_null($dismiss_color)) {
+            $dismiss_color = self::DISMISSCOLOUR;
+        }
+        if (is_null($paper_global_themecolour)) {
+            $paper_global_themecolour = self::GLOBALTHEMECOLOUR;
+        }
+        if (is_null($paper_global_themefont_colour)) {
+            $paper_global_themefont_colour = self::GLOBALTHEMEFONTCOLOUR;
+        }
+        if (is_null($highlight_bgcolour)) {
+            $highlight_bgcolour = self::HIGHLIGHTCOLOUR;
+        }
+
+        // Log changes.
+        $changes = 0;
+        $logger = new Logger($this->db);
+        if ($bgcolor != $this->get_bgcolor(self::BGCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_bgcolor(),
+                $bgcolor == '' ? self::BGCOLOUR : $bgcolor,
+                'background'
+            );
+            $changes++;
+        }
+
+        if ($fgcolor != $this->get_fgcolor(self::FGCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_fgcolor(),
+                $fgcolor == '' ? self::FGCOLOUR : $fgcolor,
+                'foreground'
+            );
+            $changes++;
+        }
+
+        if ($marks_color != $this->get_marks_color(self::MARKSCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_marks_color(),
+                $marks_color == '' ? self::MARKSCOLOUR : $marks_color,
+                'marks'
+            );
+            $changes++;
+        }
+
+        if ($textsize != $this->get_textsize(self::TEXTSIZE)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_textsize(self::TEXTSIZE),
+                $textsize == 0 ? self::TEXTSIZE : $textsize,
+                'textsize'
+            );
+            $changes++;
+        }
+
+        if ($font != $this->get_font(self::FONT)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_font(self::FONT),
+                $font == '' ? self::FONT : $font,
+                'font'
+            );
+            $changes++;
+        }
+
+        if ($themecolor != $this->get_themecolor(self::THEMECOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_themecolor(self::THEMECOLOUR),
+                $themecolor == '' ? self::THEMECOLOUR : $themecolor,
+                'theme'
+            );
+            $changes++;
+        }
+
+        if ($labelcolor != $this->get_labelcolor(self::LABELCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_labelcolor(self::LABELCOLOUR),
+                $labelcolor == '' ? self::LABELCOLOUR : $labelcolor,
+                'label'
+            );
+            $changes++;
+        }
+
+        if ($unanswered_color != $this->get_unanswered_color(self::UNANSWEREDCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_unanswered_color(self::UNANSWEREDCOLOUR),
+                $unanswered_color == '' ? self::UNANSWEREDCOLOUR : $unanswered_color,
+                'unanswered'
+            );
+            $changes++;
+        }
+
+        if ($dismiss_color != $this->get_dismiss_color(self::DISMISSCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->get_dismiss_color(self::DISMISSCOLOUR),
+                $dismiss_color == '' ? self::DISMISSCOLOUR : $dismiss_color,
+                'dismiss'
+            );
+            $changes++;
+        }
+
+        if ($paper_global_themecolour != $this->getPaperGlobalThemeColour(self::GLOBALTHEMECOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->getPaperGlobalThemeColour(self::GLOBALTHEMECOLOUR),
+                $paper_global_themecolour == '' ? self::GLOBALTHEMECOLOUR : $paper_global_themecolour,
+                'globaltheme'
+            );
+            $changes++;
+        }
+
+        if ($paper_global_themefont_colour != $this->getPaperGlobalThemeFontColour(self::GLOBALTHEMEFONTCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->getPaperGlobalThemeFontColour(self::GLOBALTHEMEFONTCOLOUR),
+                $paper_global_themefont_colour == '' ? self::GLOBALTHEMEFONTCOLOUR : $paper_global_themefont_colour,
+                'globalthemefont'
+            );
+            $changes++;
+        }
+
+        if ($highlight_bgcolour != $this->getHighlightBackgroundColour(self::HIGHLIGHTCOLOUR)) {
+            $logger->track_change(
+                'User Profile',
+                $this->userID,
+                $this->userID,
+                $this->getHighlightBackgroundColour(self::HIGHLIGHTCOLOUR),
+                $highlight_bgcolour == '' ? self::HIGHLIGHTCOLOUR : $highlight_bgcolour,
+                'highlight'
+            );
+            $changes++;
+        }
+        // Insert new settings.
+        if (
+            $changes > 0
+        ) {
+            $result = $this->db->prepare(
+                'INSERT INTO special_needs (
+                special_id, userID, background, foreground, textsize, marks_color, themecolor, labelcolor, font,
+                unanswered, dismiss, globalthemecolour, globalthemefont_colour, highlight_bgcolour)
+                VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            );
+            $result->bind_param(
+                'ississsssssss',
+                $this->userID,
+                $bgcolor,
+                $fgcolor,
+                $textsize,
+                $marks_color,
+                $themecolor,
+                $labelcolor,
+                $font,
+                $unanswered_color,
+                $dismiss_color,
+                $paper_global_themecolour,
+                $paper_global_themefont_colour,
+                $highlight_bgcolour
+            );
+            $result->execute();
+            $result->close();
+        }
     }
 }

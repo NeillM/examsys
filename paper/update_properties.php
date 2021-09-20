@@ -374,8 +374,8 @@ if (!$title_unique) {
         $properties->set_fullscreen($_POST['fullscreen']);
     }
 
-    $properties->set_bgcolor($_POST['bgcolor']);
-    $properties->set_fgcolor($_POST['fgcolor']);
+    $properties->set_bgcolor($_POST['background']);
+    $properties->set_fgcolor($_POST['foreground']);
     $properties->set_themecolor($_POST['themecolor']);
     $properties->set_labelcolor($_POST['labelcolor']);
     $properties->set_folder($_POST['folderID']);

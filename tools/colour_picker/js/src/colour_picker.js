@@ -52,7 +52,7 @@ define(['user', 'jquery', 'jqueryui'], function(USER, $) {
             $('#span_' + this.textBox).css('background-color', color);
             this.hidePicker();
 
-            if (page == '/users/details.php') {
+            if (page == '/users/details.php' || page == '/students/settings.php') {
                 var user = new USER();
                 user.updateAccessDemo();
             }

@@ -871,6 +871,7 @@ class InstallUtils
         $configObject->set_setting('paper_breaktime_mins', 0, Config::BOOLEAN);
         $configObject->set_setting('paper_pause_exam', 0, Config::BOOLEAN);
         $configObject->set_setting('paper_seb_enabled', 1, Config::BOOLEAN);
+        $configObject->set_setting('system_user_accessibility', false, Config::BOOLEAN);
         // Add external systems.
         $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
         $insert->execute();
@@ -1163,7 +1164,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".std_set_questions TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".state TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".student_help TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
-        $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".special_needs TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".special_needs TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".sys_errors TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE ON ' . $dbname . ".temp_users TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE ON ' . $dbname . ".users TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
@@ -1186,6 +1187,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE ON ' . $dbname . ".log_break_time TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".breaks TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".audit_log TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".track_changes TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
 

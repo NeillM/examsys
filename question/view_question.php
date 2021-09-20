@@ -133,7 +133,15 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
   <link rel="stylesheet" type="text/css" href="../css/html5.css" />
   <link rel="stylesheet" href="../../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 <?php
-$css = PaperProperties::paperCss($userObject);
+$css = PaperProperties::paperCss(
+    $userObject,
+    $propertyObj->get_bgcolor(),
+    $propertyObj->get_fgcolor(),
+    UserObject::TEXTSIZE,
+    UserObject::MARKSCOLOUR,
+    $propertyObj->get_themecolor(),
+    $propertyObj->get_labelcolor(),
+);
 
 echo $css;
 ?>

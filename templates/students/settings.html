@@ -1,0 +1,80 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the user profile screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables:
+
+data.toprightmenu - the top right menu html
+data.username - the logged in users username
+
+Required localised language strings -
+lang.eassessmentmanagementsystem
+lang.menu
+lang.username
+lang.systemsettings
+lang.systemsettingsblrub
+lang.examsettings
+lang.examsettingsblrub
+lang.settingswarning
+lang.resetdefault
+lang.resettoprevious
+lang.save
+lang.close
+lang.system
+#}
+<div class="header">
+    <nav class="navmenu">
+        <img tabindex="0" src="../artwork/toprightmenu.gif" id="toprightmenu_icon" alt="{{lang.menu}}"/>
+    </nav>
+    {{data.toprightmenu|raw}}
+    <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
+    <div class="logo_lrg_txt">{{lang.system}}</div>
+    <div class="logo_small_txt">{{lang.eassessmentmanagementsystem}}</div>
+</div>
+<div class="headerlinebreak"></div>
+<div id="content">
+    <main>
+        <form id="accessibility" name="accessibility" action="?userID={{data.userid}}&tab=accessibility\" method="post" autocomplete="off">
+            <div class="settings">
+                <div>
+                    <h1>{{lang.title}}</h1>
+                    <p>{{lang.username}}: {{data.username}}</p>
+                    <h2>{{lang.systemsettings}}</h2>
+                    <p>{{lang.systemsettingsblrub}}</p>
+                    {% include 'users/accessibility/fonts.html' %}
+                    <h2>{{lang.examsettings}}</h2>
+                    <p>{{lang.examsettingsblrub}}</p>
+                    {% include 'users/accessibility/colours.html' %}
+                </div>
+                <div>
+                    {% include 'users/accessibility/demo.html' %}
+                </div>
+            </div>
+            <div>
+                <p>{{lang.settingswarning}}</p>
+                <button type="button" name="resettodefault" id="resettodefault" class="ok">{{lang.resetdefault}}</button>
+                <button type="button" name="resettoprevious" id="resettoprevious" value="{{lang.resettoprevious}}" class="ok">{{lang.resetprevious}}</button>
+                <button type="submit" name="updateaccess" value="{{lang.save}}" class="ok">{{lang.save}}</button>
+                <button type="button" name="close" id="close" value="{{lang.close}}" class="cancel">{{lang.close}}</button>
+            </div>
+        </form>
+    </main>
+</div>

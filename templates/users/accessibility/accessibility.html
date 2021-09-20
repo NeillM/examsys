@@ -1,0 +1,108 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the accessibilty screen.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2021 onwards The University of Nottingham
+
+Required variables:
+
+data.userid - The id of the user the settings are for
+data.extratime - the extra time options avaiable to the user and their current selection
+data.medical - the users medical notes
+data.breaks - the users break requirement notes
+data.breaksscaletype - the break tiem scale being used - percent/minutes
+data.breaksscale - the breaktime time options avaiable to the user and their current selection
+data.oldbreakscale - the users current break selection (stored incase no longer available to select)
+data.admin - flag to indicate if user is an admin
+
+Required localised language strings -
+lang.extratime
+lang.noextratime
+lang.medical
+lang.breaks
+lang.nobreaktime
+lang.save
+#}
+<form id="accessibility" name="accessibility" action="?userID={{data.userid}}&tab=accessibility\" method="post" autocomplete="off">
+    <div class="settingblock">
+        <div class="settings">
+            <div>
+                <div class="items">
+                    <div class="label">
+                        <label for="extra_time">{{lang.extratime}}</label>
+                    </div>
+                    <div class="userset">
+                        <select id="extra_time" name="extra_time">
+                            <option value="0">{{lang.noextratime}}</option>
+                            {% for time, selected in data.extratime %}
+                            <option value="{{time}}" {% if selected %} selected {% endif %}>{{time}}%</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% include 'users/accessibility/fonts.html' %}
+                {% include 'users/accessibility/colours.html' %}
+                <div class="items">
+                    <div class="label medical">
+                        <label for="medical">{{lang.medical}}</label>
+                    </div>
+                    <div class="userset">
+                        <textarea cols="60" rows="3" id="medical" name="medical">{{data.medical}}</textarea>
+                    </div>
+                </div>
+                <div class="items">
+                    <div class="label breaks">
+                        <label for="breaks">{{lang.breaks}}</label>
+                    </div>
+                    <div class="userset">
+                        <textarea cols="60" rows="3" id="breaks" name="breaks" style="width:100%">{{data.breaks}}</textarea>
+                    </div>
+                </div>
+                <div class="items">
+                    <div class="label">
+                        <label for="break_time">{{data.breaksscaletype}}</label>
+                    </div>
+                    <div class="userset">
+                        <select id="break_time" name="break_time">
+                            <optgroup>
+                                <option value="0">{{lang.nobreaktime}}</option>
+                                {% for time, selected in data.breaksscale %}
+                                <option value="{{time}}" {% if selected %} selected {% endif %}>{{time}}%</option>
+                                {% endfor %}
+                            </optgroup>
+                            {% if data.oldbreakscale != '' %}
+                            <optgroup>
+                                <option value="{{data.oldbreakscale}}" {% if selected %} selected {% endif %}>{{time}}%</option>
+                            </optgroup>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div>
+                {% include 'users/accessibility/demo.html' %}
+            </div>
+        </div>
+    </div>
+    {% if data.admin %}
+    <div class="accessbuttons">
+        <input type="submit" name="updateaccess" value="{{lang.save}}" class="ok" />
+    </div>
+    {% endif %}
+</form>

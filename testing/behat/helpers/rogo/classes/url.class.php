@@ -58,6 +58,9 @@ class Url
             case 'Teams':
                 $sectionparam = '&tab=teams';
                 break;
+            case 'Profile Audit':
+                $sectionparam = '&tab="profileaudit';
+                break;
             default:
                 $sectionparam = '';
                 break;

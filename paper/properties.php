@@ -651,8 +651,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
 
         echo "<tr>\n";
-        echo '<td align="right">' . $string['background'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="background" id="span_background" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_bgcolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="bgcolor" name="bgcolor" value="' . $properties->get_bgcolor() . '" /></td>';
-        echo '<td align="right">' . $string['foreground'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="foreground" id="span_foreground" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_fgcolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="fgcolor" name="fgcolor" value="' . $properties->get_fgcolor() . '" /></td>';
+        echo '<td align="right">' . $string['background'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="background" id="span_background" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_bgcolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="background" name="background" value="' . $properties->get_bgcolor() . '" /></td>';
+        echo '<td align="right">' . $string['foreground'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="foreground" id="span_foreground" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_fgcolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="foreground" name="foreground" value="' . $properties->get_fgcolor() . '" /></td>';
         echo "</tr>\n";
 
         echo "<tr>\n";

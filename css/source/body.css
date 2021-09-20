@@ -300,3 +300,9 @@ hr {
 .show {
   display: block;
 }
+
+.userprofile {
+    background-image: url('../artwork/profile.png');
+    background-repeat: no-repeat;
+    background-position: 0 0.2em;
+}

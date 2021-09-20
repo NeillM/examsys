@@ -1219,4 +1219,51 @@ class UserUtils
             'breaktime' => $break
         );
     }
+
+    /**
+     * Get user profile data
+     * @param int $id the user id
+     * @param mysqli $db the database connection
+     * @return array
+     */
+    public static function getUserProfile(int $id, $db): array
+    {
+        $result = $db->prepare('SELECT background, foreground, textsize, marks_color, themecolor,
+            labelcolor, font, unanswered, dismiss, globalthemecolour, globalthemefont_colour, highlight_bgcolour
+            FROM special_needs WHERE userID = ?');
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result(
+            $background,
+            $foreground,
+            $textsize,
+            $marks_color,
+            $themecolor,
+            $labelcolor,
+            $font,
+            $unanswered,
+            $dismiss,
+            $globalthemecolour,
+            $globalthemefont_colour,
+            $highlight_bgcolour
+        );
+        $result->fetch();
+        $details = array(
+            'background' => $background ?? UserObject::BGCOLOUR,
+            'foreground' => $foreground ?? UserObject::FGCOLOUR,
+            'textsize' => $textsize == 0 ? UserObject::TEXTSIZE : $textsize,
+            'marks' => $marks_color ?? UserObject::MARKSCOLOUR,
+            'theme' => $themecolor ?? UserObject::THEMECOLOUR,
+            'label' => $labelcolor ?? UserObject::LABELCOLOUR,
+            'font' => $font ?? UserObject::FONT,
+            'unanswered' => $unanswered ?? UserObject::UNANSWEREDCOLOUR,
+            'dismiss' => $dismiss ?? UserObject::DISMISSCOLOUR,
+            'globaltheme' => $globalthemecolour ?? UserObject::GLOBALTHEMECOLOUR,
+            'globalthemefontcolour' => $globalthemefont_colour ?? UserObject::GLOBALTHEMEFONTCOLOUR,
+            'highlight' => $highlight_bgcolour ?? UserObject::HIGHLIGHTCOLOUR
+        );
+        $result->close();
+        return $details;
+    }
 }

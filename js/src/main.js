@@ -280,6 +280,11 @@ requirejs(['helplauncher', 'jquery'], function (HELPLAUNCHER, $) {
         $('#helplink').click(function () {
             HELPLAUNCHER.launchHelp($(this).attr('data-id'), $(this).attr('data-role'));
         });
+        $('#helplink').keydown(function (event) {
+            if (event.keyCode && event.keyCode == 13) {
+                HELPLAUNCHER.launchHelp($(this).attr('data-id'), $(this).attr('data-role'));
+            }
+        });
     });
 });
 

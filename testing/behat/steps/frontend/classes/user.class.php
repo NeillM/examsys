@@ -53,4 +53,63 @@ trait User
         $this->only_main_window();
         $this->i_focus_main_window();
     }
+
+    /**
+     * Set user accessibility settings
+     *
+     * @Given I set the accessibility settings:
+     * @param TableNode $data
+     */
+    public function iSetTheAccessiblitySettings(TableNode $data): void
+    {
+        $fields = $data->getRowsHash();
+        if (isset($fields['extratime'])) {
+            $this->fillField('extra_time', $fields['extratime']);
+        }
+        if (isset($fields['fontsize'])) {
+            $this->fillField('textsize', $fields['fontsize']);
+        }
+        if (isset($fields['typeface'])) {
+            $this->fillField('font', $fields['typeface']);
+        }
+        if (isset($fields['background'])) {
+            $this->fillColourPicker('span_background', $fields['background']);
+        }
+        if (isset($fields['foreground'])) {
+            $this->fillColourPicker('span_foreground', $fields['foreground']);
+        }
+        if (isset($fields['marks'])) {
+            $this->fillColourPicker('span_marks_color', $fields['marks']);
+        }
+        if (isset($fields['heading'])) {
+            $this->fillColourPicker('span_themecolor', $fields['heading']);
+        }
+        if (isset($fields['label'])) {
+            $this->fillColourPicker('span_labelcolor', $fields['label']);
+        }
+        if (isset($fields['unanswered'])) {
+            $this->fillColourPicker('span_unansweredcolor', $fields['unanswered']);
+        }
+        if (isset($fields['dismiss'])) {
+            $this->fillColourPicker('span_dismisscolor', $fields['dismiss']);
+        }
+        if (isset($fields['highlight'])) {
+            $this->fillColourPicker('span_highlightcolour', $fields['highlight']);
+        }
+        if (isset($fields['globaltheme'])) {
+            $this->fillColourPicker('span_globalthemecolour', $fields['globaltheme']);
+        }
+        if (isset($fields['globalfont'])) {
+            $this->fillColourPicker('span_globalthemefontcolour', $fields['globalfont']);
+        }
+        if (isset($fields['medical'])) {
+            $this->fillField('medical', $fields['medical']);
+        }
+        if (isset($fields['breaks'])) {
+            $this->fillField('breaks', $fields['breaks']);
+        }
+        if (isset($fields['breaktime'])) {
+            $this->fillField('break_time', $fields['breaktime']);
+        }
+    }
 }

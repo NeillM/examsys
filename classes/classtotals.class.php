@@ -1922,7 +1922,7 @@ class ClassTotals
         }
         $users_in = implode(',', $users_in);
         if ($users_in != '') {
-            $result = $this->db->prepare("SELECT userID FROM special_needs where userID IN ($users_in)");
+            $result = $this->db->prepare("SELECT id FROM users where id IN ($users_in) AND special_needs = 1");
             $result->execute();
             $result->bind_result($special_userID);
             while ($result->fetch()) {

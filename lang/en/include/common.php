@@ -107,3 +107,4 @@ $string['name'] = 'Name';
 $string['eassessmentmanagementsystem'] = 'eAssessment Management System';
 $string['up'] = 'up';
 $string['down'] = 'down';
+$string['userprofile'] = 'User Profile';

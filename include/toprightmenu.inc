@@ -48,6 +48,16 @@ function draw_toprightmenu($helpID = 1)
         $role = 'staff';
     }
     $html .= "<div tabindex='0' class=\"trm_div\" id=\"helplink\" data-role=\"$role\" data-id=\"$helpID\">" . $string['helpsupport'] . '</div>';
+
+    // Only allow access to valid students i.e. not guest accounts.
+    if (
+        $role === 'student' and
+        $configObject->get_setting('core', 'system_user_accessibility')
+        and UserUtils::username_is_valid($userObject->get_username())
+    ) {
+        $html .= '<div tabindex="0" class="trm_div userprofile" id="userprofile">' . $string['userprofile'] . '</div>';
+    }
+
     $html .= '<div tabindex="0" class="trm_div" id="signout" style="background-image: url(\'' . $rootpath . '/artwork/logout16.gif\'); background-repeat: no-repeat; background-position: 0 3px">' . $string['signout'] . '</div>';
     $html .= '<div tabindex="0" class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get_setting('core', 'rogo_version')) . '</div>';
 
