@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-// Likert Scales data - this is how the settings are saved, separate columns with vertical bars (<br /> tages can be used for break lines)
+// Likert Scales data - this is how the settings are saved, separate columns with vertical bars)
 $string['failpass3'] = 'Fail|Borderline|Pass';
 $string['lowhigh3'] = 'Low|Medium|High';
 $string['lowhigh4'] = 'Low|Tending Low|Tending High|High';
@@ -24,10 +24,10 @@ $string['neveralways3'] = 'Never|Sometimes|Always';
 $string['neveralways4'] = 'Never|Hardly|Sometimes|Always';
 $string['neveralways5'] = 'Never|Hardly|Occasionally|Sometimes|Always';
 $string['disagre3'] = 'Disagree|Neutral|Agree';
-$string['disagre4'] = 'Strongly<br />Disagree|Disagree|Agree|Strongly<br />Agree';
-$string['disagre5a'] = 'Strongly<br />Disagree|Disagree|Neither Disagree<br />nor Agree|Agree|Strongly<br />Agree';
-$string['disagre5b'] = 'Strongly<br />Disagree|Disagree|Uncertain|Agree|Strongly<br />Agree';
-$string['disagre5c'] = 'Strongly<br />Disagree|Disagree|Neutral|Agree|Strongly<br />Agree';
+$string['disagre4'] = 'Strongly Disagree|Disagree|Agree|Strongly Agree';
+$string['disagre5a'] = 'Strongly Disagree|Disagree|Neither Disagree nor Agree|Agree|Strongly Agree';
+$string['disagre5b'] = 'Strongly Disagree|Disagree|Uncertain|Agree|Strongly Agree';
+$string['disagre5c'] = 'Strongly Disagree|Disagree|Neutral|Agree|Strongly Agree';
 // Likert Scales
 $string['failpass'] = 'Fail, Borderline, Pass';
 $string['lowhigh'] = 'Low to High';
