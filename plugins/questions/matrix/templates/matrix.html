@@ -59,19 +59,15 @@ data.print - flag to indicate if printing question
 </div>
 {% else %}
 <table class="matrix matrixtable">
-    <thead>
-        <tr>
-            <th class="question-empty-cell"></th>
-            <th class="question-empty-cell"></th>
-            {% for m in data.matchoptions %}
-            <th class="question-empty-cell matrixborder" scope="col">{{m.option}}</th>
-        {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
+    <tr>
+        <td class="question-empty-cell" colspan="2"></td>
+        {% for m in data.matchoptions %}
+        <th class="question-empty-cell matrixborder" scope="col">{{m.option}}</th>
+    {% endfor %}
+    </tr>
     {% for i,s in data.matchscenarios %}
     <tr {% if s.unanswered %} class="unans"{% endif %}>
-        <th class="question-emptycell matrixborder" aria-hidden="true" align="right">{{s.id}}.</th>
+        <td class="question-emptycell matrixborder" align="right">{{s.id}}.</td>
         <th class="question-emptycell matrixborder" scope="row">{{s.value}}</th>
         {% for m in data.matchoptions %}
         <td class="question-cell matrixborder">
@@ -82,6 +78,5 @@ data.print - flag to indicate if printing question
         {% endfor %}
     </tr>
     {% endfor %}
-    </tbody>
 </table>
 {% endif %}
