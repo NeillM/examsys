@@ -66,7 +66,7 @@ $data['versionerror'] = false;
 $data['staffhelperror'] = false;
 $data['stuhelperror'] = false;
 $data['langerror'] = false;
-$min_version = '6.5.0';
+$min_version = '7.2.0';
 if ($updater_utils->check_version($min_version)) {
     $data['versionerror'] = true;
     $lang['warning1'] = sprintf($string['versionwarning1'], $old_version);
