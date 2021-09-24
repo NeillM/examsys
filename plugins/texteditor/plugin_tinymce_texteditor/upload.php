@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     return;
 }
 
+// Parameter to distinguish how filenames are treated.
+// Help files keep the name supplied. Questions generated a unique name.
+$uploadtype = param::optional('type', null, param::ALPHA, param::FETCH_GET);
+
 reset($_FILES);
 $temp = current($_FILES);
 if (is_uploaded_file($temp['tmp_name'])) {
@@ -59,7 +63,12 @@ if (is_uploaded_file($temp['tmp_name'])) {
     // Accept upload
     $mediadirectory = rogo_directory::get_directory($mediatype);
     $filename = mb_strtolower($temp['name']);
-    $unique_name = \media_handler::unique_filename($filename);
+    if ($uploadtype === 'help') {
+        // Help files keep the image name.
+        $unique_name = $filename;
+    } else {
+        $unique_name = \media_handler::unique_filename($filename);
+    }
     $fullpath = $mediadirectory->fullpath($unique_name);
     move_uploaded_file($temp['tmp_name'], $fullpath);
 
