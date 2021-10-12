@@ -90,9 +90,6 @@ input.exclude, select.exclude {
   border-top: 2px solid #C00000;
   background-color: var(--paper-unanswered, '#FFC0C0');
 }
-.raw_textarea {
-  resize: none;
-}
 .textbox_answer {
   margin-top: 26px;
   margin-right: 26px;

@@ -2331,29 +2331,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                     $tmp_answer = textbox_marking_utils::higlightterms($settings, $tmp_answer);
                 }
 
-                if ($settings['editor'] === 'WYSIWYG') {
-                    echo "<div class='textbox_answer'
-                    id='q" . $question_no . "'>"
-                        . $tmp_answer
-                        . '</div>';
-                } else {
-                    echo "<textarea readonly='true'
-                    class='raw_textarea textbox_answer'
-                    id='q" . $question_no . "'>"
-                        . $tmp_answer
-                        . '</textarea>';
-                    if ($settings['editor'] === 'mathjax') {
-                        echo '<p>' . $string['previewmathjax'] . '</p>';
-                        echo '<div id="MathPreview' . $question_no . '" class="mathbuffer"></div>
-                            <div id="MathBuffer' . $question_no . '" class="mathpreview" style="visibility:hidden;"></div>';
-                        echo '<script>
-                            requirejs(["mathjaxpreview"], function(MathJaxPreview) {
-                                var Preview = new MathJaxPreview("' . $question_no . '");
-                                Preview.Init();
-                                Preview.Update();
-                            });</script>';
-                    }
-                }
+                echo "<div class='textbox_answer'
+                id='q" . $question_no . "'>"
+                    . $tmp_answer
+                    . '</div>';
 
                 if ($tmp_answer == '') {
                     reset_feedback($hide_if_unanswered);
