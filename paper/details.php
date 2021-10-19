@@ -435,7 +435,6 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src='../js/paperdetailsinit.min.js'></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -1110,6 +1109,7 @@ if ($properties->get_retired() == '') {
     $render->render($jsdataset, array(), 'dataset.html');
     $mysqli->close();
     ?>
+
+    <script src='../js/paperdetailsinit.min.js'></script>
 </body>
 </html>
-
