@@ -361,7 +361,7 @@ class export_assessment extends exporter
                                     $csvdata[0][] = '';
                                 } else {
                                     if ($mode == 'numeric') {
-                                                    $csvdata[0][] = str_replace('$', '","', $correct_parts[$outer]);
+                                        $csvdata[0] = array_merge($csvdata[0], explode('$', $correct_parts[$outer]));
                                     } else {
                                         if (mb_strpos($correct_parts[$outer], '$') === false) {
                                             $csvdata[0][] = $correct_text_parts[$correct_parts[$outer]];
