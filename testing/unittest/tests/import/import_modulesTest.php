@@ -180,7 +180,7 @@ class import_modulesTest extends unittestdatabase
         $expectedTable = array(
             0 => array(
                 'moduleid' => 'TRAIN',
-                'vle_api' => 'NLE',
+                'vle_api' => 'UoNCM',
             ),
         );
         $this->assertEquals($expectedTable, $queryTable);

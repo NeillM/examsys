@@ -26,6 +26,12 @@
  */
 class CMFactory
 {
+    /**
+     * Create a cmap object
+     * @param string $vleapi the name of the vle
+     * @return mixed
+     * @throws ClassNotFoundException
+     */
     public static function GetCMAPI($vleapi)
     {
         $configObject = Config::get_instance();
@@ -37,7 +43,7 @@ class CMFactory
             include_once $configObject->get('cfg_web_root') . '/plugins/CM/' . $classfile;
             $object = new $classname();
         } catch (Exception $ex) {
-            throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
+            throw new ClassNotFoundException($classname);
         }
 
         return $object;

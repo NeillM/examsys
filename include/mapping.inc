@@ -301,14 +301,18 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
         if ($vle_api != '') {
             // Get objectives from the Curriculum Map via REST request
             if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session])) {
-                $vle = CMFactory::GetCMAPI($vle_api);
-                $vle->setMappingLevel($map_level);
-                $resp = $vle->getObjectives($thisModuleid, $session, $db);
-                if ($resp == 'error') {
-                    throw new Exception('could_not_retrieve_objectives');
-                }
-                if ($resp != '') {
-                    $objsBySession_cache[$thisModuleid][$session] = $resp;
+                try {
+                    $vle = CMFactory::GetCMAPI($vle_api);
+                    $vle->setMappingLevel($map_level);
+                    $resp = $vle->getObjectives($thisModuleid, $session, $db);
+                    if ($resp == 'error') {
+                        throw new Exception('could_not_retrieve_objectives');
+                    }
+                    if ($resp != '') {
+                        $objsBySession_cache[$thisModuleid][$session] = $resp;
+                    }
+                } catch (ClassNotFoundException $e) {
+                    // CMAP class not found. Probably the old NLE.
                 }
             }
             if (isset($objsBySession_cache[$thisModuleid][$session][$thisModuleid])) {

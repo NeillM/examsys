@@ -15,11 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/' . $language . '/admin/add_module.php';
-
-$string['entermoduleidentifier'] = 'Please enter an Identifier for the module.';
-$string['entermoduletitle'] = 'Please enter a title for the module.';
-$string['selectschool'] = 'Please select a school for the module.';
-$string['nolookup'] = '&lt;No lookup&gt;';
-$string['uoncm'] = 'Curriculum Map (UoNCM)';
-$string['syncerror'] = 'Error syncing moudle.';
+if ($updater_utils->check_version('7.5.0')) {
+    if (!$updater_utils->has_updated('rogo_3087')) {
+        // The NLE no longer exists so this data is now meaningless and can be deleted.
+        $sql = 'DELETE FROM relationships WHERE vle_api = "NLE"';
+        $updater_utils->execute_query($sql, false);
+        $sql = 'DELETE FROM sessions WHERE source_url like "http://www.nle.nottingham.ac.uk%"';
+        $updater_utils->execute_query($sql, false);
+        $sql = 'UPDATE modules SET vle_api = NULL WHERE vle_api = "NLE"';
+        $updater_utils->execute_query($sql, false);
+        $updater_utils->record_update('rogo_3087');
+    }
+}

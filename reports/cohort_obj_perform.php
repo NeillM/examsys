@@ -153,7 +153,6 @@ if (count($objByModule) == 0) {
     <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/ok_comment.png" width="16" height="16" alt="<?php echo $string['completely']; ?>" /></td><td><?php echo $string['key1']; ?></td></tr>
     <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/minor_comment.png" width="16" height="16" alt="<?php echo $string['partically']; ?>" /></td><td><?php echo $string['key2']; ?></td></tr>
     <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/major_comment.png" width="16" height="16" alt="<?php echo $string['mostly']; ?>" /></td><td><?php echo $string['key3']; ?></td></tr>
-    <tr><td style="margin:0; font-weight:bold; text-align:right"><img src="../artwork/small_link.png" width="11" height="11" alt="<?php echo $string['shortcut']; ?>" /></td><td><?php echo $string['key4']; ?></td></tr>
     </table></div>
     <h1><?php echo $string['learningobjectives']; ?></h1>
     <p><?php printf($string['msg'], count($objectives)); ?></p>
@@ -172,15 +171,6 @@ if (count($objByModule) == 0) {
             $tmp_identifier = $obj_data['session']['identifier'];
         } else {
             $tmp_identifier = '';
-        }
-        if (isset($obj_data['session']['specificguide'])) {
-            $session_string = '&nbsp;&nbsp;<a target="_blank" href="' . $configObject->get_setting('core', 'cfg_nle_url')
-                . '/displayMediGuide.php?module=' . $module . '&session=' . $session . '&specificguide='
-                . $obj_data['session']['specificguide'] . '&mk=' . $tmp_identifier
-                . '"><img src="../artwork/small_link.png" width="11" height="11" /></a>&nbsp;<a target="_blank" href="'
-                . $configObject->get_setting('core', 'cfg_nle_url') . '/displayMediGuide.php?module=' . $module . '&session='
-                . $session . '&specificguide=' . $obj_data['session']['specificguide'] . '&mk=' . $tmp_identifier . '">'
-                . $obj_data['session']['sessiontitle'] . '</a>';
         }
         echo "<tr><td><img src=\"$img_src\" alt=\"" . $obj_data['mark_sum'] . ' out of ' . $obj_data['totalpos_sum'] . ' objectives acquired" width="16" height="16" /></td><td>' . floor(($obj_data['mark_sum'] / $obj_data['totalpos_sum']) * 100) . '%</td><td>' . $obj_data['content'] . " $session_string</td></tr>\n";
     }

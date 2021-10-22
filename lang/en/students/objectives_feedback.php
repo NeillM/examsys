@@ -38,7 +38,6 @@ $string['staffmsg'] = 'To see feedback for specific students please access via t
 $string['greenicon'] = 'Acquisition of 80-100% of specific objective';
 $string['ambericon'] = 'Acquisition of 50-79% of specific objective';
 $string['redicon'] = 'Acquisition of 0-49% of specific objective';
-$string['hyperlink'] = '<a href="" onclick="return false;">hyperlink</a> - jump to section in the NLE for further details';
 $string['relativekey'] = "<strong>Relative</strong> - number of marks above '+' or below '-' relative to the mean of the cohort";
 $string['question'] = '<strong>Q no</strong> - number of questions mapped to objective';
 
