@@ -665,6 +665,7 @@ class InstallUtils
         $alter[] = 'ALTER TABLE options_media ADD CONSTRAINT options_media_fk0 FOREIGN KEY (oid) REFERENCES options(id_num)';
         $alter[] = 'ALTER TABLE options_media ADD CONSTRAINT options_media_fk1 FOREIGN KEY (mediaid) REFERENCES media(id)';
         $alter[] = 'ALTER TABLE questions_metadata ADD CONSTRAINT questions_metadata_fk0 FOREIGN KEY (questionID) REFERENCES questions(q_id)';
+        $alter[] = 'ALTER TABLE options_metadata ADD CONSTRAINT options_metadata_fk0 FOREIGN KEY (optionID) REFERENCES options(id_num)';
         $alter[] = 'ALTER TABLE audit_log ADD CONSTRAINT `audit_log_fk0` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)';
         foreach ($alter as $a) {
             $res = self::$db->prepare($a);

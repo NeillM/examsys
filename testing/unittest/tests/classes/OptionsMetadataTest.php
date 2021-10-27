@@ -16,18 +16,24 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tests the QuestionsMetadata class.
+ * Tests the OptionsMetadata class.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @author Richard Aspden <richard@getjohn.co.uk>
  * @copyright Copyright (c) 2021 onwards The University of Nottingham
  * @package tests
  */
-class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
+class OptionsMetadataTest extends \testing\unittest\unittestdatabase
 {
     /**
      * @var array Storage for question data in tests
      */
     private $question;
+
+    /**
+     * @var array Storage for associated option data in tests
+     */
+    private $option;
 
     /**
      * Generate data for test.
@@ -55,61 +61,72 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
                 'externalref' => 'testvalue',
             )
         );
+
+        $this->option = $datagenerator->add_options_to_question([
+            'question' => $this->question['id'],
+            'option_text' => 'test option',
+            'feedback_right' => 'right',
+            'feedback_wrong' => 'wrong',
+            'correct' => 1,
+            'marks_correct' => 2,
+            'marks_partial' => 1,
+            'marks_incorrect' => 0
+        ]);
     }
 
     /**
-     * Tests that question metadata is correctly set in the database
+     * Tests that option metadata is correctly set in the database
      * @group questions
      */
     public function testSet(): void
     {
         // Insert.
-        QuestionsMetadata::set('testtype', $this->question['id'], 'testvalue');
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata'));
-        $expected = array(
-            0 => array(
-                'type' => 'externalref',
-                'value' =>  $this->question['externalref'],
-                'questionID' =>  $this->question['id'],
-            ),
-            1 => array(
+        OptionsMetadata::set('testtype', $this->option['id_num'], 'testvalue');
+        OptionsMetadata::set('longtest', $this->option['id_num'], str_repeat('testvalue1', 100));
+        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
+        $expected = [
+            [
+                'type' => 'longtest',
+                'value' => str_repeat('testvalue1', 100),
+                'optionID' => $this->option['id_num'],
+            ],[
                 'type' => 'testtype',
                 'value' => 'testvalue',
-                'questionID' =>  $this->question['id'],
-            ),
-        );
+                'optionID' => $this->option['id_num'],
+            ],
+        ];
         $this->assertEquals($expected, $actual);
-        // Update and test for long strings.
-        QuestionsMetadata::set('externalref', $this->question['id'], str_repeat('9876543210',100));
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata'));
-        $expected = array(
-            0 => array(
-                'type' => 'externalref',
-                'value' => str_repeat('9876543210',100), // 1000 character string for long varchar
-                'questionID' =>  $this->question['id'],
-            ),
-            1 => array(
+        // Update.
+        OptionsMetadata::set('testtype', $this->option['id_num'], 'newvalue');
+        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
+        $expected = [
+            [
+                'type' => 'longtest',
+                'value' => str_repeat('testvalue1', 100),
+                'optionID' => $this->option['id_num'],
+            ],[
                 'type' => 'testtype',
-                'value' => 'testvalue',
-                'questionID' =>  $this->question['id'],
-            ),
-        );
+                'value' => 'newvalue',
+                'optionID' => $this->option['id_num'],
+            ],
+        ];
         $this->assertEquals($expected, $actual);
         // Update and check that exception occurs attempting to set to >2500 characters
         $this->expectExceptionMessage('Maximum metadata size exceeded');
-        QuestionsMetadata::set('externalref', $this->question['id'], str_repeat('9876543210',251));
+        OptionsMetadata::set('longtest', $this->option['id_num'], str_repeat('9876543210',251));
     }
 
     /**
-     * Tests that question metadata is correctly retrieved when multiple values present
+     * Tests that option metadata is correctly retrieved from the database.
      * @group questions
      */
     public function testGet(): void
     {
-        // Add another metadata so there is not just one in there.
-        QuestionsMetadata::set('another testtype', $this->question['id'], 'another testvalue');
+        // Insert a couple of metadata entries
+        OptionsMetadata::set('testtype', $this->option['id_num'], 'testvalue');
+        OptionsMetadata::set('another testtype', $this->option['id_num'], 'another testvalue');
         // Confirm we get the right one.
-        $actual = QuestionsMetadata::get('externalref', $this->question['id']);
+        $actual = OptionsMetadata::get('testtype', $this->option['id_num']);
         $expected = 'testvalue';
         $this->assertEquals($expected, $actual);
     }

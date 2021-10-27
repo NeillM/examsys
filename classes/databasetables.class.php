@@ -808,6 +808,16 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+        $this->tableList['options_metadata'] = <<<QUERY
+        CREATE TABLE `options_metadata` (
+          `optionID` INT(11) NOT NULL,
+          `type` VARCHAR(255) NOT NULL,
+          `value` VARCHAR(2500) NULL DEFAULT NULL,
+          PRIMARY KEY (`optionID`, `type`),
+          INDEX `options_metadata_fk0` (`optionID`)
+        ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        QUERY;
+
         $this->tableList['paper_feedback'] = <<<QUERY
         CREATE TABLE `paper_feedback` (
           `id` int(11) unsigned NOT NULL auto_increment,
@@ -1047,10 +1057,11 @@ QUERY;
         $this->tableList['questions_metadata'] = <<<QUERY
         CREATE TABLE `questions_metadata` (
           `id` int(11) NOT NULL auto_increment,
-          `questionID` int(11) default NULL,
+          `questionID` int(11) NOT NULL,
           `type` varchar(255) default NULL,
-          `value` varchar(255) default NULL,
-          PRIMARY KEY (`id`)
+          `value` varchar(2500) default NULL,
+          PRIMARY KEY (`id`),
+          INDEX `questions_metadata_fk0` (`questionID`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 

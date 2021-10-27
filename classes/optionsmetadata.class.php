@@ -17,24 +17,25 @@
 
 /**
  *
- * Question metadata helper functions
+ * Options metadata helper functions
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @author Richard Aspden <richard@getjohn.co.uk>
  * @copyright Copyright (c) 2021 The University of Nottingham
  */
-class QuestionsMetadata
+class OptionsMetadata
 {
     /**
-     * Get question metadata
+     * Get option metadata
      * @param string $type the type
-     * @param int $qid the question identifier
+     * @param int $oid the option identifier
      * @return string
      */
-    public static function get(string $type, int $qid)
+    public static function get(string $type, int $oid)
     {
         $configObject = Config::get_instance();
-        $sql = $configObject->db->prepare('SELECT value FROM questions_metadata WHERE type = ? and questionID = ?');
-        $sql->bind_param('si', $type, $qid);
+        $sql = $configObject->db->prepare('SELECT value FROM options_metadata WHERE type = ? and optionID = ?');
+        $sql->bind_param('si', $type, $oid);
         $sql->execute();
         $sql->store_result();
         $sql->bind_result($value);
@@ -50,30 +51,30 @@ class QuestionsMetadata
     }
 
     /**
-     * Set/update question metadata
+     * Set/update option metadata
      * @param string $type type
-     * @param int $qid question identifier
+     * @param int $oid option identifier
      * @param string $value value
      * @throws coding_exception
      */
-    public static function set(string $type, int $qid, string $value)
+    public static function set(string $type, int $oid, string $value)
     {
         if (strlen($value) > 2500) {
             throw new coding_exception('Maximum metadata size exceeded');
         }
         $configObject = Config::get_instance();
-        $current = self::get($type, $qid);
+        $current = self::get($type, $oid);
         if ($value != $current) {
             if ($current === '') {
                 $sql = $configObject->db->prepare(
-                    'INSERT INTO questions_metadata (id, questionID, type, value) VALUES (NULL, ?, ?, ?)'
+                    'INSERT INTO options_metadata (optionID, type, value) VALUES (?, ?, ?)'
                 );
-                $sql->bind_param('iss', $qid, $type, $value);
+                $sql->bind_param('iss', $oid, $type, $value);
             } else {
                 $sql = $configObject->db->prepare(
-                    'UPDATE questions_metadata SET value = ? WHERE questionID = ? AND type = ?'
+                    'UPDATE options_metadata SET value = ? WHERE optionID = ? AND type = ?'
                 );
-                $sql->bind_param('sis', $value, $qid, $type);
+                $sql->bind_param('sis', $value, $oid, $type);
             }
             $sql->execute();
             $sql->close();
