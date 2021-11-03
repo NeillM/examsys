@@ -32,5 +32,9 @@
  {
   "source" : "/plugins/texteditor/plugin_tinymce_texteditor/lang/en/*",
   "translation" : "/plugins/texteditor/plugin_tinymce_texteditor/lang/%two_letters_code%/%original_file_name%"
+ },
+ {
+  "source" : "/plugins/questions/**/lang/en/*",
+  "translation" : "/plugins/questions/**/lang/%two_letters_code%/%original_file_name%"
  }
 ]
