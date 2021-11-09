@@ -466,7 +466,7 @@ trait Question
     {
         $fields = $data->getRowsHash();
         $this->fillField('leadin', $fields['description']);
-        $this->i_click('Add Questions(s)', 'button');
+        $this->i_click('Add Question(s)', 'button');
         $questions = json_decode($fields['questions']);
         $questionarray = array();
         foreach ($questions as $q) {

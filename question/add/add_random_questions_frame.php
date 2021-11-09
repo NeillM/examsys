@@ -24,7 +24,6 @@
  */
 
   require '../../include/staff_auth.inc';
-  $mysqli->close();
   $questionlist = '';
   $question_no = '';
 if (isset($_GET['questionlist'])) {
