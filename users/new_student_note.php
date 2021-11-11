@@ -93,7 +93,24 @@ if (isset($_GET['paperID'])) {
       echo $string['papername'] . " <select name=\"paperID\" id=\"paperID\" required>\n<option value=\"\"></option>\n";
     if (count($module_IDs) > 0) {
         // Look up papers that have been live in the last 28 days.
-            $result = $mysqli->prepare('SELECT DISTINCT properties.property_id, paper_title FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id AND idMod IN (' . implode(',', $module_IDs) . ') AND end_date > DATE_SUB(NOW(), INTERVAL 28 DAY) AND deleted IS NULL ORDER BY paper_title');
+        $result = $mysqli->prepare('
+            SELECT DISTINCT
+                properties.property_id,
+                paper_title
+            FROM
+                properties,
+                properties_modules
+            WHERE
+                properties.property_id = properties_modules.property_id
+            AND
+                idMod IN (' . implode(',', $module_IDs) . ')
+            AND
+                end_date > UNIX_TIMESTAMP() - 2419200
+            AND
+                deleted IS NULL
+            ORDER BY
+                paper_title
+        ');
         $result->execute();
         $result->bind_result($property_id, $paper_title);
         while ($result->fetch()) {

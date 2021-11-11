@@ -99,8 +99,8 @@ class assessmenttest extends unittestdatabase
         $expectedTable = array(
             0 => array(
                 'paper_title' => 'Test create formative',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' => '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' => strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -298,8 +298,8 @@ class assessmenttest extends unittestdatabase
         $queryTable = $this->query(array('columns' => array('start_date', 'end_date', 'exam_duration'), 'table' => 'properties'));
         $expectedTable = array(
             0 => array(
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' => '2016-01-25 10:30:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' => strtotime('2016-01-25 10:30:00 Europe/London'),
                 'exam_duration' => 779
             )
         );
@@ -311,8 +311,8 @@ class assessmenttest extends unittestdatabase
         $queryTable = $this->query(array('columns' => array('start_date', 'end_date', 'exam_duration'), 'table' => 'properties'));
         $expectedTable = array(
             0 => array(
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' => '2016-01-25 10:30:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' => strtotime('2016-01-25 10:30:00 Europe/London'),
                 'exam_duration' => 0
             )
         );
@@ -555,20 +555,40 @@ class assessmenttest extends unittestdatabase
     {
         $assessment = new assessment($this->db, $this->config);
         // Test London.
-        $datesarray = $assessment->setup_start_end_dates(0, '2016-01-25 09:00:00', '2016-01-25 12:00:00', 'Europe/London');
-        $this->assertEquals('2016-01-25 09:00:00', $datesarray[0]);
-        $this->assertEquals('2016-01-25 12:00:00', $datesarray[1]);
+        $datesarray = $assessment->setup_start_end_dates(
+            0,
+            '2016-01-25 09:00:00',
+            '2016-01-25 12:00:00',
+            'Europe/London'
+        );
+        $this->assertEquals(strtotime('2016-01-25 09:00:00 Europe/London'), $datesarray[0]);
+        $this->assertEquals(strtotime('2016-01-25 12:00:00 Europe/London'), $datesarray[1]);
         // Test Kuwait.
-        $datesarray = $assessment->setup_start_end_dates(0, '2016-01-25 09:00:00', '2016-01-25 12:00:00', 'Asia/Kuwait');
-        $this->assertEquals('2016-01-25 06:00:00', $datesarray[0]);
-        $this->assertEquals('2016-01-25 09:00:00', $datesarray[1]);
+        $datesarray = $assessment->setup_start_end_dates(
+            0,
+            '2016-01-25 09:00:00',
+            '2016-01-25 12:00:00',
+            'Asia/Kuwait'
+        );
+        $this->assertEquals(strtotime('2016-01-25 06:00:00 Europe/London'), $datesarray[0]);
+        $this->assertEquals(strtotime('2016-01-25 09:00:00 Europe/London'), $datesarray[1]);
         // Test Honolulu.
-        $datesarray = $assessment->setup_start_end_dates(0, '2016-01-25 09:00:00', '2016-01-25 12:00:00', 'Pacific/Honolulu');
-        $this->assertEquals('2016-01-25 19:00:00', $datesarray[0]);
-        $this->assertEquals('2016-01-25 22:00:00', $datesarray[1]);
+        $datesarray = $assessment->setup_start_end_dates(
+            0,
+            '2016-01-25 09:00:00',
+            '2016-01-25 12:00:00',
+            'Pacific/Honolulu'
+        );
+        $this->assertEquals(strtotime('2016-01-25 19:00:00 Europe/London'), $datesarray[0]);
+        $this->assertEquals(strtotime('2016-01-25 22:00:00 Europe/London'), $datesarray[1]);
         // Test London non leap year feb 29th.
-        $datesarray = $assessment->setup_start_end_dates(0, '2017-02-29 09:00:00', '2017-02-29 12:00:00', 'Europe/London');
-        $this->assertEquals('2017-03-01 09:00:00', $datesarray[0]);
-        $this->assertEquals('2017-03-01 12:00:00', $datesarray[1]);
+        $datesarray = $assessment->setup_start_end_dates(
+            0,
+            '2017-02-29 09:00:00',
+            '2017-02-29 12:00:00',
+            'Europe/London'
+        );
+        $this->assertEquals(strtotime('2017-03-01 09:00:00 Europe/London'), $datesarray[0]);
+        $this->assertEquals(strtotime('2017-03-01 12:00:00 Europe/London'), $datesarray[1]);
     }
 }

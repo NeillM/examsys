@@ -43,7 +43,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
     }
 
     $session    = $propertyObj->get_calendar_year();
-    $paper_date = $propertyObj->get_raw_start_date();
+    $paper_date = $propertyObj->getRogoFormatStartDate();
     $marking    = $propertyObj->get_marking();
 
     // Get the questions on the paper.

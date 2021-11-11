@@ -22,6 +22,7 @@
         <phplongdatetime>H:i:s</phplongdatetime>
         <phpshortdatetime>H:i</phpshortdatetime>
         <phpveryshortdatetime>d/m/y H:i</phpveryshortdatetime>
+        <phplongfulldatetime>d/m/Y H:i</phplongfulldatetime>
         <timezone>Europe/London</timezone>
     </timedate>
     <sysadmin>

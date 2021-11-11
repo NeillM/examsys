@@ -40,7 +40,7 @@ if ($properties->get_summative_lock() == 1) {
 $new_title = $properties->get_paper_title() . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
 $properties->set_paper_title($new_title);
 
-$delete_date = date('YmdHis');
+$delete_date = time();
 $properties->set_deleted($delete_date);
 
 $properties->save();

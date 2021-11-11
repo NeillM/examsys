@@ -44,7 +44,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
   
     // Get properties of the paper.
     $session = $properties->get_calendar_year();
-    $paper_date = $properties->get_raw_start_date();
+    $paper_date = $properties->getRogoFormatStartDate();
 
     $moduleIDs = Paper_utils::get_modules($paperID, $db);
 

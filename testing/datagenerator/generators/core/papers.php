@@ -33,6 +33,20 @@ use UserUtils;
 class papers extends generator
 {
     /**
+     * @var array default paper properties
+     */
+    private $default_paper_properties = array(
+        'paper_prologue' => null, 'paper_postscript' => null, 'bgcolor' => 'white',
+        'fgcolor' => 'black', 'themecolor' => '#316AC5', 'labelcolor' => '#C00000',
+        'fullscreen' => '1', 'marking' => '1', 'bidirectional' => '1',
+        'pass_mark' => 40, 'distinction_mark' => 70, 'folder' => null,
+        'rubric' => null, 'calculator' => 1, 'random_mark' => 0.0, 'total_mark' => 0,
+        'display_correct_answer' => '1', 'display_question_mark' => '1', 'display_students_response' => '1',
+        'display_feedback' => '1', 'hide_if_unanswered' => '0', 'external_review_deadline' => null,
+        'internal_review_deadline' => null, 'sound_demo' => '0', 'password' => null
+    );
+
+    /**
      * Creates security metadata restrictions for a paper.
      *
      * Parameters:
@@ -143,32 +157,46 @@ class papers extends generator
             'externalsys' => null,
             'calendaryear' => null,
             'remote' => 0,
-            'password' => null,
             'settings' => '',
+            'deleted' => null
         );
         $settings = $this->set_defaults_and_clean($default, $parameters);
+        $timezone = new \DateTimeZone($settings['timezone']);
 
         if (!empty($settings['startdate'])) {
-            $startdate = new \DateTime($settings['startdate']);
-            if (empty($startdate)) { // If user's date is not vialid
+            try {
+                $settings['start_date'] = \date_utils::getUTCDateTime($settings['startdate'], $settings['timezone'])->getTimestamp() ;
+            } catch (\Exception $e) {
+                // If user's date is not valid
                 throw new data_error("Paper's startdate is wrong");
             }
         } else {
             // We need to be specific with start and end date as some paper types cannot run over into another day.
-            $startdate = new \DateTime('tomorrow');
+            $startdate = new \DateTime('tomorrow', $timezone);
             $startdate->setTime(12, 00);
+            $settings['startdate'] = $startdate->format('Y-m-d H:i:s');
+            $settings['start_date'] = $startdate->getTimestamp();
         }
         if (!empty($settings['enddate'])) {
-            $enddate = new \DateTime($settings['enddate']);
-            if (empty($enddate)) { // If user's date is not vialid
+            try {
+                $settings['end_date'] = \date_utils::getUTCDateTime($settings['enddate'], $settings['timezone'])->getTimestamp() ;
+            } catch (\Exception $e) {
+                // If user's date is not valid
                 throw new data_error("Paper's enddate is wrong");
             }
         } else {
-            $enddate = new \DateTime('tomorrow');
+            $enddate = new \DateTime('tomorrow', $timezone);
             $enddate->setTime(13, 00);
+            $settings['enddate'] = $enddate->format('Y-m-d H:i:s');
+            $settings['end_date'] = $enddate->getTimestamp();
         }
 
         $conf = Config::get_instance();
+
+        if (!is_null($settings['deleted'])) {
+            $deleted = \date_utils::getUTCDateTime($settings['deleted'], $conf->get('cfg_timezone'));
+            $settings['deleted'] = $deleted->getTimestamp();
+        }
 
         // We need to force summative management to be off (so that start dates will be set as defined).
         $management = $conf->get_setting('core', 'cfg_summative_mgmt');
@@ -203,16 +231,14 @@ class papers extends generator
         $settings['papertitle'] = $papertitle;
         $settings['papertype'] = $papertype;
         $settings['paperowner'] = $paperowner;
-        $settings['start_date'] = $startdate->format('Y-m-d H:i:s');
-        $settings['end_date'] = $enddate->format('Y-m-d H:i:s');
 
         try {
             $pid = $paper->create(
                 $settings['papertitle'],
                 $settings['papertype'],
                 $settings['paperowner'],
-                $settings['start_date'],
-                $settings['end_date'],
+                $settings['startdate'],
+                $settings['enddate'],
                 $settings['labs'],
                 $settings['duration'],
                 $settings['session'],
@@ -236,8 +262,20 @@ class papers extends generator
         $settings['id'] = $pid;
         // Post creation settings may be provided as a json array.
         if (!empty($settings['settings'])) {
-            $this->set_post_creation_settings($settings['id'], json_decode($settings['settings'], true));
+            $settings = array_merge($settings, $this->set_post_creation_settings($settings['id'], json_decode($settings['settings'], true)));
+        } else {
+            // Set defaults.
+            $settings = array_merge($settings, $this->default_paper_properties);
         }
+
+        // Set the paper to deleted if required.
+        if (!is_null($settings['deleted'])) {
+            $sql = $this->db->prepare('UPDATE properties SET deleted = ? WHERE property_id = ?');
+            $sql->bind_param('si', $settings['deleted'], $pid);
+            $sql->execute();
+            $sql->close();
+        }
+
         return $settings;
     }
 
@@ -288,16 +326,22 @@ class papers extends generator
      */
     public function set_post_creation_settings(int $pid, array $parameters): array
     {
-        $default = array('paper_prologue' => null, 'paper_postscript' => null, 'bgcolor' => 'white',
-            'fgcolor' => 'black', 'themecolor' => '#316AC5', 'labelcolor' => '#C00000',
-            'fullscreen' => 0, 'marking' => 0, 'bidirectional' => 1,
-            'pass_mark' => 40, 'distinction_mark' => 70, 'folder' => null,
-            'rubric' => null, 'calculator' => 1, 'display_correct_answer' => 1,
-            'display_question_mark' => 1, 'display_students_response' => 1, 'display_feedback' => 1,
-            'hide_if_unanswered' => 0, 'external_review_deadline' => null, 'internal_review_deadline' => null,
-            'sound_demo' => 0);
+        $settings = $this->set_defaults_and_clean($this->default_paper_properties, $parameters);
 
-        $settings = $this->set_defaults_and_clean($default, $parameters);
+        if (!is_null($settings['password'])) {
+            $properties = \PaperProperties::get_paper_properties_by_id($pid, $this->db, '');
+            $settings['password'] = $properties->encrypt_password($pid . $settings['password']);
+        }
+        if (!is_null($settings['external_review_deadline'])) {
+            $external = new \DateTime($settings['external_review_deadline']);
+            $external->setTime(12, 0);
+            $settings['external_review_deadline'] = $external->format('Y-m-d H:i:s');
+        }
+        if (!is_null($settings['internal_review_deadline'])) {
+            $internal = new \DateTime($settings['internal_review_deadline']);
+            $internal->setTime(12, 0);
+            $settings['internal_review_deadline'] = $internal->format('Y-m-d H:i:s');
+        }
 
         foreach ($settings as $setting => $value) {
             if (!is_null($setting)) {
@@ -331,5 +375,155 @@ class papers extends generator
         }
         $result->close();
         return $moduleid;
+    }
+
+    /**
+     * Add reviwers to a paper
+     *
+     * @param array $parameters
+     * Mandatories param in $parameters are
+     *  string reviwer
+     *  string paper
+     *  string type - external|internal
+     * @throws data_error If passed parameter is invalid
+     * @return array
+     */
+    public function addReviewer($parameters): array
+    {
+        if (is_object($parameters)) {
+            $parameters = (array)$parameters;
+        }
+        // Check that the right type has been passed.
+        if (!is_array($parameters)) {
+            throw new data_error('Must pass an array or object');
+        }
+        $types = array('external', 'internal');
+        if (
+            empty($parameters['reviewer'])
+            or empty($parameters['paper'])
+            or (!in_array($parameters['type'], $types))
+        ) {
+            throw new data_error('Error in | reviewer | paper | type |');
+        } else {
+            $parameters['paper'] = \Paper_utils::getPaperId($parameters['paper']);
+            $parameters['reviewer'] = \UserUtils::username_exists($parameters['reviewer'], $this->db);
+        }
+
+        $insert = $this->db->prepare('INSERT INTO properties_reviewers VALUES(NULL, ?, ?, ?)');
+        $insert->bind_param('iis', $parameters['paper'], $parameters['reviewer'], $parameters['type']);
+        $insert->execute();
+        $insert->close();
+
+        return $parameters;
+    }
+
+    /**
+     * Schedule a summative exam.
+     *
+     * @param array $parameters
+     * Mandatories param in $parameters are
+     *  string parameters[papertitle]
+     *  string parameters[paperowner]
+     *  string parameters[modulename]
+     * @throws data_error If passed parameter is invalid
+     * @return array
+     */
+    public function schedule($parameters): array
+    {
+        if (is_object($parameters)) {
+            $parameters = (array)$parameters;
+        }
+        // Check that the right type has been passed.
+        if (!is_array($parameters)) {
+            throw new data_error('Must pass an array or object');
+        }
+        if (empty($parameters['papertitle']) or empty($parameters['paperowner']) or empty($parameters['modulename'])) {
+            throw new data_error('Error in | papertitle | paperowner | modulename |');
+        }
+
+        $yearutils = new \yearutils($this->db);
+
+        $default = array(
+            'barriers' => 0,
+            'cohortsize' => '<whole cohort>',
+            'notes' => 'Some notes about the exam',
+            'sittings' => 1,
+            'campus' => 'Main Campus',
+            'duration' => \date_utils::HOURSECS,
+            'month' => rand(1, 12),
+            'session' => $yearutils->get_current_session(),
+            'remote' => 0,
+        );
+        $settings = $this->set_defaults_and_clean($default, $parameters);
+        $config = Config::get_instance();
+        $assessment = new \assessment($this->db, $config);
+
+        $settings['papertitle'] = $parameters['papertitle'];
+        $settings['papertype'] = \assessment::TYPE_SUMMATIVE;
+        $settings['paperowner'] = \UserUtils::username_exists($parameters['paperowner'], $this->db);
+        $modulename = $parameters['modulename'];
+
+        // Ensure academic session exists.
+        $supported = $yearutils->get_supported_years();
+        if (!array_key_exists($settings['session'], $supported)) {
+            $generator = new \academic_year();
+            $parameters['calendar_year'] = $settings['session'];
+            $parameters['academic_year'] = $settings['session'] . '/' . (date('y') + 1);
+            $generator->create_academic_year($parameters);
+        }
+
+        // Get modules ids.
+        $settings['moduleids'] = array();
+        if (is_array($modulename)) {
+            foreach ($modulename as $m) {
+                $settings['moduleids'][] = self::test_get_moduleidbyname($m, $this->db);
+            }
+        } else {
+            $settings['moduleids'][] = self::test_get_moduleidbyname($modulename, $this->db);
+        }
+
+        try {
+            // Create template paper.
+            $pid = $assessment->create(
+                $settings['papertitle'],
+                $settings['papertype'],
+                $settings['paperowner'],
+                null,
+                null,
+                '',
+                $settings['duration'],
+                $settings['session'],
+                $settings['moduleids'],
+                $config->get('cfg_timezone'),
+                null,
+                null,
+                $settings['remote'],
+            );
+
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            throw new data_error('Error: ' . $message);
+        }
+
+        $settings['id'] = $pid;
+
+        try {
+            // Create schedule entry.
+            $assessment->schedule(
+                $settings['id'],
+                $settings['month'],
+                $settings['barriers'],
+                $settings['cohortsize'],
+                $settings['notes'],
+                $settings['sittings'],
+                $settings['campus']
+            );
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            throw new data_error('Error: ' . $message);
+        }
+        return $settings;
     }
 }

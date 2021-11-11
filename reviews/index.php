@@ -91,9 +91,33 @@ if ($userObject->has_role(array('External Examiner'))) {
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
     <?php
     $start_of_day_ts = strtotime('midnight');
-
-    $result = $mysqli->prepare('SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, crypt_name FROM (properties, properties_reviewers, papers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() OR start_date IS NULL) AND properties.property_id = papers.paper AND reviewerID = ? GROUP BY paper ORDER BY paper_title');
-    $result->bind_param('i', $userObject->get_user_ID());
+    $now = time();
+    $result = $mysqli->prepare('
+        SELECT
+            paper_type,
+            paper_title,
+            property_id,
+            bidirectional,
+            fullscreen,
+            MAX(screen) AS max_screen,
+            UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline,
+            crypt_name
+        FROM
+            (properties, properties_reviewers, papers)
+        WHERE
+            properties.property_id = properties_reviewers.paperID
+        AND
+            deleted IS NULL
+        AND
+            (start_date + ' . \date_utils::WEEKSECS . ' > ? OR start_date IS NULL)
+        AND
+            properties.property_id = papers.paper
+        AND
+            reviewerID = ?
+        GROUP BY paper
+        ORDER BY paper_title
+    ');
+    $result->bind_param('ii', $now, $userObject->get_user_ID());
     $result->execute();
     $result->store_result();
     $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $crypt_name);

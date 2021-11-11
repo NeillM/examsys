@@ -44,6 +44,7 @@ $string['shortdatetimephp'] = 'Date time (PHP)';
 $string['veryshortdatetimephp'] = 'Date time with short year (PHP)';
 $string['longtimephp'] = 'Long time (PHP)';
 $string['shorttimephp'] = 'Short time (PHP)';
+$string['longfulldatetimephp'] = 'Long Date/Time (PHP)';
 $string['searchleadinlength'] = 'Search results lead-in length';
 $string['currenttimezone'] = 'Current Timezone';
 $string['authentication'] = 'Authentication';

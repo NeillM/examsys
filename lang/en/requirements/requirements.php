@@ -17,7 +17,7 @@
 
 $string['npmsuccess'] = 'NPM installation up to date.';
 $string['composersuccess'] = 'Composer installation up to date.';
-$string['phpversion'] = 'PHP version %s or above is required';
+$string['phpversion'] = 'PHP version %s (x64) or above is required';
 $string['phpsuccess'] = 'PHP version meets requirements';
 $string['dbconnection'] = 'Could not connect to database (%s)';
 $string['dbversion'] = 'MYSQL version %s or above is required';

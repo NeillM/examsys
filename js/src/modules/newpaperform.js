@@ -129,8 +129,8 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(jsxls, ALERT, $) {
                 return false;
             }
             // Check that the end datetime is greater than the start datetime
-            var from = String($('#fyear').val()) + String($('#fmonth').val()) + String($('#fday').val()) + String($('#ftime').val());
-            var to = String($('#tyear').val()) + String($('#tmonth').val()) + String($('#tday').val()) + String($('#ttime').val());
+            var from = String($('#fyear').val()) + String($('#fmonth').val()) + String($('#fday').val()) + String($('#fhour').val()) + String($('#fminute').val());
+            var to = String($('#tyear').val()) + String($('#tmonth').val()) + String($('#tday').val()) + String($('#thour').val()) + String($('#tminute').val());
             if (to <= from) {
                 alert.notification('msg10');
                 return false;

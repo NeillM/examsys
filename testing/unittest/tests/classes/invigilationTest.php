@@ -244,9 +244,6 @@ class InvigilationTest extends unittestdatabase
         $lab_object = $lab->get_lab_based_on_client($this->pc['address']);
         $labend = $paper->getLogLabEndTime($lab_object->get_id());
         $timing = module_utils::modules_allow_timing($modules, $this->db);
-        $tz = new DateTimeZone($this->config->get('cfg_timezone'));
-        $enddatetime = new DateTime($this->paper2['end_date'], $tz);
-        $enddatetime->setTimezone(new DateTimeZone($paper->get_timezone()));
         $data = array(
             'warn' => false,
             'id' => $this->paper2['id'] . '_' . $this->user['id'],
@@ -259,7 +256,7 @@ class InvigilationTest extends unittestdatabase
             'title' => $this->user['title'],
             'forname' => $this->user['first_names'],
             'surname' => $this->user['surname'],
-            'endtime' => $enddatetime->format($this->config->get('cfg_short_time_php')),
+            'endtime' => date($this->config->get('cfg_short_time_php'), $this->paper2['end_date']),
             'special' => '',
             'specialextra' => '',
             'specialextratime' => '',

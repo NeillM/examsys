@@ -123,4 +123,25 @@ class Url
             . '&studentsonly=' . $settings['studentsonly']
             . '&ordering=' . $settings['ordering'];
     }
+
+    /**
+     * Generates the URL to the calendar page.
+     *
+     * @param string $year The calendar year
+     * @param string $week the calendar week
+     * @return string
+     */
+    public static function calendar(string $year, string $week): string
+    {
+        if ($year == '') {
+            $year = date('Y');
+        } else {
+            $date = new \DateTime($year);
+            $year = $date->format('Y');
+        }
+        if ($week == '') {
+            $week = date('W');
+        }
+        return '/admin/calendar.php?calyear=' . $year . '#week' . $week;
+    }
 }

@@ -79,7 +79,7 @@ class Statistics
         $month_start['06'] = ($year + 1) . '0601000000';
         $month_start['07'] = ($year + 1) . '0701000000';
         $month_start['08'] = ($year + 1) . '0801000000';
-        return $month_start[$month];
+        return strtotime($month_start[$month]);
     }
 
     /**
@@ -102,7 +102,7 @@ class Statistics
         $month_end['06'] = ($year + 1) . '0701000000';
         $month_end['07'] = ($year + 1) . '0801000000';
         $month_end['08'] = ($year + 1) . '0901000000';
-        return $month_end[$month];
+        return strtotime($month_end[$month]);
     }
 
     /**
@@ -112,12 +112,13 @@ class Statistics
      */
     public function getSummativePapers(int $current_year): array
     {
+        $start = strtotime($current_year . '0901000000');
+        $end = strtotime($current_year + 1 . '0831235959');
         $papers = array();
         $result = $this->db->prepare('
             SELECT
                 property_id,
                 paper_title,
-                DATE_FORMAT(start_date,"%m"),
                 start_date,
                 end_date,
                 labs
@@ -125,18 +126,18 @@ class Statistics
                 properties
             WHERE
                 paper_type = "2" AND
-                start_date >= ' . $current_year . '0901000000 AND
-                end_date < ' . ($current_year + 1) . '0831235959 AND
+                start_date >= ' . $start . ' AND
+                end_date < ' . $end . ' AND
                 deleted IS NULL
                 ORDER BY start_date
         ');
         $result->execute();
         $result->store_result();
-        $result->bind_result($property_id, $paper_title, $month, $start_date, $end_date, $labs);
+        $result->bind_result($property_id, $paper_title, $start_date, $end_date, $labs);
         while ($result->fetch()) {
             $papers[$property_id] = array(
                 'title' => $paper_title,
-                'month' => $month,
+                'month' => date('m', $start_date),
                 'start' => $start_date,
                 'end' => $end_date,
                 'labs' => $labs

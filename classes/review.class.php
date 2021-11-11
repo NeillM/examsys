@@ -128,7 +128,7 @@ SQL;
         // Calculate the duration, while it is stored against each comment, it seems to be calculated on a per page basis.
         $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($pagestart);
         if ($tmp_duration < 0) {
-            $tmp_duration += 86400;
+            $tmp_duration += \date_utils::DAYSECS;
         }
         $tmp_duration += $previous_duration;
 

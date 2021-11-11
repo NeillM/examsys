@@ -99,14 +99,25 @@ if ($userObject->has_role('Student')) {
 
     // Get papers for this module - types 0, 1, 3, 6 valid for this date
     $papers = 0;
+    $now = time();
     $papers_query = <<< QUERY
-  SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
+  SELECT
+    p.paper_title,
+    p.paper_type,
+    p.labs,
+    p.start_date,
+    p.end_date,
+    max(pa.screen) AS screens,
+    p.calendar_year,
+    p.crypt_name,
+    p.password
+  FROM (properties p, properties_modules pm)
   INNER JOIN papers pa ON p.property_id = pa.paper
   WHERE p.paper_type IN ('0', '1', '3', '6')
   AND p.property_id = pm.property_id
   AND idMod = ?
   AND (p.calendar_year = ? OR p.calendar_year = '' OR p.calendar_year IS NULL)
-  AND p.start_date < NOW() AND p.end_date > NOW()
+  AND p.start_date < ? AND p.end_date > ?
   AND p.deleted IS NULL
   GROUP BY p.property_id
   ORDER BY p.paper_title
@@ -114,9 +125,19 @@ QUERY;
 
     for ($i = 0; $i < count($modules); $i++) {
         if ($stmt = $mysqli->prepare($papers_query)) {
-            $stmt->bind_param('is', $modules[$i]['idMod'], $modules[$i]['year']);
+            $stmt->bind_param('isii', $modules[$i]['idMod'], $modules[$i]['year'], $now, $now);
             $stmt->execute();
-            $stmt->bind_result($paper_title, $paper_type, $labs, $start_date, $end_date, $screens, $calendar_year, $crypt_name, $password);
+            $stmt->bind_result(
+                $paper_title,
+                $paper_type,
+                $labs,
+                $start_date,
+                $end_date,
+                $screens,
+                $calendar_year,
+                $crypt_name,
+                $password
+            );
             $stmt->store_result();
             while ($stmt->fetch()) {
                 // Check if the user is able to access the paper from their current location
@@ -126,7 +147,16 @@ QUERY;
 
                     // Don't show if 0 screens
                     if ($screens > 0) {
-                        $modules[$i]['papers'][] = array('title' => $paper_title, 'type' => $paper_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
+                        $modules[$i]['papers'][] = array(
+                            'title' => $paper_title,
+                            'type' => $paper_type,
+                            'original_type' => $paper_type,
+                            'start' => $start_date,
+                            'end' => $end_date,
+                            'screens' => $screens,
+                            'crypt_name' => $crypt_name,
+                            'password' => $password
+                        );
                         $papers++;
 
                         if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
@@ -355,7 +385,9 @@ if (!$userObject->has_role('Student')) {
                                         echo $string['screens'];
                                     }
                                     echo '<br />';
-                                    echo date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start'])) . ' ' . $string['to'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['end']));
+                                    echo date($configObject->get('cfg_very_short_datetime_php'), $paper['start'])
+                                        . ' ' . $string['to'] . ' '
+                                        . date($configObject->get('cfg_very_short_datetime_php'), $paper['end']);
                                 }
                                 ?>
                             </span>

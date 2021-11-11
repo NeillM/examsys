@@ -342,7 +342,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             if ($question_no > 0 and $old_type != 'info') {
                 $tmp_duration = time_to_seconds($submit_time) - time_to_seconds($_POST['page_start']);
                 if ($tmp_duration < 0) {
-                    $tmp_duration += 86400;
+                    $tmp_duration += date_utils::DAYSECS;
                 }
                 $tmp_duration += $extra_duration;
 
@@ -929,7 +929,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $page_start = param::required('page_start', param::ALPHANUM, param::FETCH_POST);
         $tmp_duration = time_to_seconds($submit_time) - time_to_seconds($page_start);
         if ($tmp_duration < 0) {
-            $tmp_duration += 86400;
+            $tmp_duration += date_utils::DAYSECS;
         }
         $tmp_duration += $extra_duration;
 

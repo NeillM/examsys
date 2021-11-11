@@ -134,9 +134,9 @@ class assessment
      * @param string $papertitle - New paper title
      * @param int $papertype - Type of paper
      * @param integer $paperowner - Owner of paper
-     * @param string $startdate - Start date of paper
-     * @param string $enddate  - End date of paper
-     * @param array $labs - Labs the paper can be taken in
+     * @param ?string $startdate - Start date of paper
+     * @param ?string $enddate  - End date of paper
+     * @param string $labs - Labs the paper can be taken in
      * @param integer $duration - Length of time associated with the paper
      * @param string $session - Academic session the paper is relevant to
      * @param array $modules - Modules that have the paper available to them
@@ -146,9 +146,21 @@ class assessment
      * @param integer $remote - flag to indicate remote summative
      * @return integer|bool - id of new assessment or false on error
      */
-    public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $externalid = null, $externalsys = null, $remote = 0)
-    {
-
+    public function create(
+        $papertitle,
+        $papertype,
+        $paperowner,
+        ?string $startdate,
+        ?string $enddate,
+        $labs,
+        $duration,
+        $session,
+        $modules,
+        string $timezone,
+        $externalid = null,
+        $externalsys = null,
+        $remote = 0
+    ) {
         // Check externalid is unique.
         if (!is_null($externalid)) {
             $uniqueexternalid = Paper_utils::get_id_from_externalid($externalid, $externalsys, $this->db);
@@ -231,11 +243,10 @@ class assessment
             $duration = null;
         }
         $unixtime = time();
-        $timestamp = date('Y-m-d H:i:s', $unixtime);
         $params = array(
             'paper_title' => array('s', $papertitle),
-            'start_date' => array('s', $startdate),
-            'end_date' => array('s', $enddate),
+            'start_date' => array('i', $startdate),
+            'end_date' => array('i', $enddate),
             'timezone' => array('s', $timezone),
             'paper_type' => array('s', $papertype),
             'paper_ownerID' => array('i', $paperowner),
@@ -243,7 +254,7 @@ class assessment
             'rubric' => array('s', $default_rubric),
             'calculator' => array('i', $default_calc),
             'exam_duration' => array('i', $duration),
-            'created' => array('s', $timestamp),
+            'created' => array('i', $unixtime),
             'calendar_year' => array('i', $session),
             'externalid' => array('s', $externalid),
             'externalsys' => array('s', $externalsys)
@@ -288,9 +299,9 @@ class assessment
      * @param string $papertitle - New paper title
      * @param int $papertype - Type of paper
      * @param integer $paperowner - Owner of paper
-     * @param string $startdate - Start date of paper
-     * @param string $enddate  - End date of paper
-     * @param array $labs - Labs the paper can be taken in
+     * @param ?string $startdate - Start date of paper
+     * @param ?string $enddate  - End date of paper
+     * @param string $labs - Labs the paper can be taken in
      * @param integer $duration - Length of time associated with the paper
      * @param string $session - Academic session the paper is relevant to
      * @param array $modules - Modules that have the paper available to them
@@ -300,8 +311,22 @@ class assessment
      * @param string $externalsys - External system name
      * @return bool - true on success
      */
-    public function update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid, $externalid = null, $externalsys = null)
-    {
+    public function update(
+        $id,
+        $papertitle,
+        $papertype,
+        $paperowner,
+        ?string $startdate,
+        ?string $enddate,
+        $labs,
+        $duration,
+        $session,
+        $modules,
+        string $timezone,
+        $userid,
+        $externalid = null,
+        $externalsys = null
+    ) {
         $changes = array();
         $params = array();
         $details = Paper_utils::get_paper_properties($id, $this->db);
@@ -353,11 +378,11 @@ class assessment
             throw new Exception('INVALID_DATES');
         }
         if ($startdate != $details['startdatetime']) {
-            $params['start_date'] = array('s', $startdate);
+            $params['start_date'] = array('i', $startdate);
             $changes[] = array('old' => $details['startdatetime'], 'new' => $startdate, 'part' => 'startdate');
         }
         if ($enddate != $details['enddatetime']) {
-            $params['end_date'] = array('s', $enddate);
+            $params['end_date'] = array('i', $enddate);
             $changes[] = array('old' => $details['enddatetime'], 'new' => $enddate, 'part' => 'enddate');
         }
 
@@ -510,32 +535,17 @@ class assessment
     /**
      * Calculate start and end times based on timezone
      * @param string $papertype type of paper
-     * @param string $fromdatetime when the assessment starts
-     * @param string $todatetime when the assessment finishes
+     * @param ?string $fromdatetime when the assessment starts
+     * @param ?string $todatetime when the assessment finishes
      * @param string $timezone timezone assessment is being taken in
      * @return array start and end times
      */
-    public function setup_start_end_dates($papertype, $fromdatetime, $todatetime, $timezone)
+    public function setup_start_end_dates($papertype, ?string $fromdatetime, ?string $todatetime, string $timezone): array
     {
         if (!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) {
-            $server_timezone = new DateTimeZone($this->server_timezone);
-            $target_timezone = new DateTimeZone($timezone);
-
-            $start_date = new dateTime($fromdatetime, $target_timezone);
-            $start_date->setTimezone($server_timezone);
-
-            $end_date = new dateTime($todatetime, $target_timezone);
-            $end_date->setTimezone($server_timezone);
-
-            if ($timezone < 0) {
-                $start_date->modify('+' . abs($timezone) . ' hour');
-                $end_date->modify('+' . abs($timezone) . ' hour');
-            } elseif ($timezone > 0) {
-                $start_date->modify('-' . $timezone . ' hour');
-                $end_date->modify('-' . $timezone . ' hour');
-            }
-
-            return array($start_date->format('Y-m-d H:i:s'), $end_date->format('Y-m-d H:i:s'));
+            $start_date = date_utils::getUTCDateTime($fromdatetime, $timezone)->getTimestamp() ;
+            $end_date = date_utils::getUTCDateTime($todatetime, $timezone)->getTimestamp() ;
+            return array($start_date, $end_date);
         }
         // Summative exams do not have a start/end date if centrally scheduled.
         return array(null, null);

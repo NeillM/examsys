@@ -690,8 +690,8 @@ class assessmentmanagementtest extends unittestdatabase
         $expectedtable = array(
             0 => array(
                 'paper_title' => 'Test create formative',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -703,8 +703,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             1 => array(
                 'paper_title' => 'Test create formative 2',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 90,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -716,8 +716,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             2 => array(
                 'paper_title' => 'Test osce 3 update',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -729,8 +729,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             3 => array(
                 'paper_title' => 'Test create summative',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -892,8 +892,8 @@ class assessmentmanagementtest extends unittestdatabase
         $expectedtable = array(
             0 => array(
                 'paper_title' => 'Test create formative',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -905,8 +905,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             1 => array(
                 'paper_title' => 'Test create formative 2',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -918,8 +918,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             2 => array(
                 'paper_title' => 'Test create osce 3',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -931,8 +931,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             3 => array(
                 'paper_title' => 'Test create summative',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -1075,8 +1075,8 @@ class assessmentmanagementtest extends unittestdatabase
         $expectedtable = array(
             0 => array(
                 'paper_title' => 'Test create formative 2',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -1088,8 +1088,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             1 => array(
                 'paper_title' => 'Test create osce 3',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',
@@ -1101,8 +1101,8 @@ class assessmentmanagementtest extends unittestdatabase
             ),
             2 => array(
                 'paper_title' => 'Test create summative',
-                'start_date' => '2016-01-25 09:00:00',
-                'end_date' =>  '2016-01-25 10:00:00',
+                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
+                'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
                 'timezone' => 'Europe/London',

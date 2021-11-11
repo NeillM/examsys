@@ -33,6 +33,9 @@ class paperutilstest extends unittestdatabase
     /** @var array Storage for paper data in tests. */
     private $pid2;
 
+    /** @var array Storage for paper data in tests. */
+    private $pid3;
+
     /** @var array Storage for user data in tests. */
     private $user1;
 
@@ -48,6 +51,12 @@ class paperutilstest extends unittestdatabase
     /** @var array Storage for question data in tests. */
     private $question3;
 
+    /** @var integer Storage for lab id in tests. */
+    private $labid1;
+
+    /** @var integer Storage for lab id in tests. */
+    private $labid2;
+
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
@@ -58,6 +67,12 @@ class paperutilstest extends unittestdatabase
         $datagenerator->create_academic_year(array('calendar_year' => 2015, 'academic_year' => '2015/16'));
         $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
         $datagenerator->create_academic_year(array('calendar_year' => 2017, 'academic_year' => '2017/18'));
+        $datagenerator = $this->get_datagenerator('labs', 'core');
+        $datagenerator->create_campus(array('name' => 'Test Campus', 'isdefault' => 1));
+        $lab = $datagenerator->create_lab(array('name' => 'Test lab', 'building' => 'Test building', 'room' => 1));
+        $this->labid1 = $lab['id'];
+        $lab = $datagenerator->create_lab(array('name' => 'Test lab 2', 'building' => 'Test building', 'room' => 2));
+        $this->labid2 = $lab['id'];
         $datagenerator = $this->get_datagenerator('users', 'core');
         $this->user1 = $datagenerator->create_user(array('surname' => 'staff', 'username' => 'staff1', 'grade' => 'University Lecturer', 'initials' => 'a',
             'title' => 'Dr', 'email' => 'staff1@example.com', 'gender' => 'Male', 'first_names' => 'a', 'yearofstudy' => null, 'roles' => 'Staff'));
@@ -70,7 +85,8 @@ class paperutilstest extends unittestdatabase
             'calendaryear' => 2015,
             'paperowner' => 'staff1',
             'papertype' => '2',
-            'modulename' => 'Training Module'));
+            'modulename' => 'Training Module',
+            'settings' => '{"password":"password"}'));
         $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'Paper 2',
             'created' => '2017-01-09 14:31:00',
             'duration' => 90,
@@ -78,10 +94,27 @@ class paperutilstest extends unittestdatabase
             'paperowner' => 'staff1',
             'papertype' => '2',
             'modulename' => array('Training Module', 'Online Help')));
+        $this->pid3 = $datagenerator->create_paper(array('papertitle' => 'Paper 3',
+            'startdate' => '2016-01-25 09:00:00',
+            'enddate' => '2016-01-25 10:00:00',
+            'created' => '2017-01-09 14:35:00',
+            'duration' => 90,
+            'calendaryear' => 2016,
+            'paperowner' => 'staff1',
+            'papertype' => '2',
+            'modulename' => array('Training Module'),
+            'labs' => $this->labid1));
         $datagenerator = $this->get_datagenerator('modules', 'core');
         $datagenerator->create_module(array('moduleid' => 'ABC300', 'fullname' => 'Test module 3', 'schoolID' => 1));
         $datagenerator->create_module_team(array('moduleid' => 'TRAIN', 'username' => 'staff1'));
         $datagenerator->create_module_team(array('moduleid' => 'ABC300', 'username' => 'staff2'));
+        $datagenerator->create_enrolment(
+            array(
+                'userid' => $this->student['id'],
+                'moduleid' => $this->module,
+                'calendar_year' => 2015
+            )
+        );
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $this->question1 = $datagenerator->create_question(array('user' => 'admin',
             'type' => 'enhancedcalc',
@@ -165,11 +198,18 @@ class paperutilstest extends unittestdatabase
         $expectedpropertiestable = array(
             0 => array(
                 'property_id' => $this->pid1['id']
+            ),
+            1 => array(
+                'property_id' => $this->pid3['id']
             )
         );
         $expectedpropertiesmodulestable = array(
             0 => array(
                 'property_id' => $this->pid1['id'],
+                'idMod' => $this->module
+            ),
+            1 => array(
+                'property_id' => $this->pid3['id'],
                 'idMod' => $this->module
             )
         );
@@ -185,7 +225,7 @@ class paperutilstest extends unittestdatabase
      */
     public function test_get_papers_by_session()
     {
-        $papers = array($this->pid2['id']);
+        $papers = array($this->pid2['id'], $this->pid3['id']);
         $this->assertEquals($papers, Paper_utils::get_papers_by_session('2016', 2, $this->db));
         $papers = array();
         $this->assertEquals($papers, Paper_utils::get_papers_by_session('2016', 1, $this->db));
@@ -223,6 +263,9 @@ class paperutilstest extends unittestdatabase
             'created' => $created2, 'title' => $this->user1['title'], 'initials' => $this->user1['initials'], 'surname' => $this->user1['surname']);
         $papers[$this->pid2['id']]['moduleid'][0] = 'SYSTEM';
         $papers[$this->pid2['id']]['moduleid'][1] = 'TRAIN';
+        $papers[$this->pid3['id']] = array('paper_title' => $this->pid3['papertitle'], 'paper_type' => $this->pid3['papertype'],
+            'created' => $created2, 'title' => $this->user1['title'], 'initials' => $this->user1['initials'], 'surname' => $this->user1['surname']);
+        $papers[$this->pid3['id']]['moduleid'][0] = 'TRAIN';
         $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, '2', null));
     }
 
@@ -245,6 +288,9 @@ class paperutilstest extends unittestdatabase
         $papers[$this->pid2['id']] = array('paper_title' => $this->pid2['papertitle'], 'paper_type' => $this->pid2['papertype'],
             'created' => $created2, 'title' => $this->user1['title'], 'initials' => $this->user1['initials'], 'surname' => $this->user1['surname']);
         $papers[$this->pid2['id']]['moduleid'][0] = 'TRAIN';
+        $papers[$this->pid3['id']] = array('paper_title' => $this->pid3['papertitle'], 'paper_type' => $this->pid3['papertype'],
+            'created' => $created2, 'title' => $this->user1['title'], 'initials' => $this->user1['initials'], 'surname' => $this->user1['surname']);
+        $papers[$this->pid3['id']]['moduleid'][0] = 'TRAIN';
         $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, null, $this->module));
     }
 
@@ -328,6 +374,14 @@ class paperutilstest extends unittestdatabase
                 'exam_duration' =>  90
             ),
             2 => array(
+                'property_id' => $this->pid3['id'],
+                'paper_title' => $this->pid3['papertitle'],
+                'calendar_year' => $this->pid3['session'],
+                'paper_type' => '2',
+                'paper_ownerID' =>  $this->user1['id'] ,
+                'exam_duration' =>  90
+            ),
+            3 => array(
                 'property_id' => $papercopy['new_paper_id'],
                 'paper_title' => 'paper copy test',
                 'calendar_year' => 2017,
@@ -351,10 +405,14 @@ class paperutilstest extends unittestdatabase
                 'idMod' => $this->get_module_id('SYSTEM')
             ),
             3 => array(
-                'property_id' => $papercopy['new_paper_id'],
+                'property_id' => $this->pid3['id'],
                 'idMod' => $this->module
             ),
             4 => array(
+                'property_id' => $papercopy['new_paper_id'],
+                'idMod' => $this->module
+            ),
+            5 => array(
                 'property_id' => $papercopy['new_paper_id'],
                 'idMod' => $this->get_module_id('SYSTEM')
             ),
@@ -652,7 +710,7 @@ class paperutilstest extends unittestdatabase
     public function testGetPaperId(): void
     {
         $this->assertEquals($this->pid1['id'], Paper_utils::getPaperId($this->pid1['papertitle']));
-        $this->assertNull(Paper_utils::getPaperId('Paper 3'));
+        $this->assertNull(Paper_utils::getPaperId('Paper 4'));
     }
 
     /**
@@ -700,5 +758,98 @@ class paperutilstest extends unittestdatabase
             ),
         );
         $this->assertEquals($expected, $papers);
+    }
+
+    /**
+     * Tests looking for active papers for a student
+     * @group assessment
+     */
+    public function testGetActivePapers(): void
+    {
+        $paper_utils = Paper_utils::get_instance();
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, array());
+        $now = time();
+        $properties->set_start_date($now);
+        $properties->set_end_date($now + 1800);
+        $paper_display = array();
+        $this->set_active_user($this->student['id']);
+        $types = array ('0', '1', '2');
+        $exclude = '';
+        $expectedarray = array();
+        $this->assertEquals(
+            0,
+            $paper_utils->get_active_papers($paper_display, $types, $this->userobject, $this->db, $exclude)
+        );
+        $this->assertEquals($expectedarray, $paper_display);
+    }
+
+    /**
+     * Tests looking for available in lab exams for a student
+     * @group assessment
+     */
+    public function testPaperAvailableInLabNow(): void
+    {
+        // Load user id 1.
+        $this->set_active_user($this->admin['id']);
+        // No paper in 15 minute period.
+        $this->assertFalse(PaperUtils::paper_available_in_lab_now($this->labid1, $this->db));
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid3['id'], $this->db, array());
+        $now = time();
+        $properties->set_start_date($now + 450);
+        $properties->set_end_date($now + 1800);
+        $properties->save();
+        // Paper available.
+        $this->assertTrue(PaperUtils::paper_available_in_lab_now($this->labid1, $this->db));
+        // Paper not in lab.
+        $this->assertFalse(PaperUtils::paper_available_in_lab_now($this->labid2, $this->db));
+    }
+
+    /**
+     * Tests getting paper properties
+     * @group assessment
+     */
+    public function testGetPaperProperties(): void
+    {
+        $langpack = new langpack();
+        $default_rubric = $langpack->get_string('classes/assessment', 'summative_rubric');
+        $expected = array(
+            'title' => $this->pid3['papertitle'],
+            'startdatetime' => $this->pid3['start_date'],
+            'type' => $this->pid3['papertype'],
+            'owner' => $this->pid3['paperowner'],
+            'session' => $this->pid3['session'],
+            'enddatetime' => $this->pid3['end_date'],
+            'labs' => $this->pid3['labs'],
+            'duration' => $this->pid3['duration'],
+            'timezone' => $this->pid3['timezone'],
+            'externalid' => $this->pid3['externalid'],
+            'externalsys' => $this->pid3['externalsys'],
+            'paper_prologue' => $this->pid3['paper_prologue'],
+            'paper_postscript' => $this->pid3['paper_postscript'],
+            'bgcolor' => $this->pid3['bgcolor'],
+            'fgcolor' => $this->pid3['fgcolor'],
+            'themecolor' => $this->pid3['themecolor'],
+            'labelcolor' => $this->pid3['labelcolor'],
+            'fullscreen' => $this->pid3['fullscreen'],
+            'marking' => $this->pid3['marking'],
+            'bidirectional' => $this->pid3['bidirectional'],
+            'pass_mark' => $this->pid3['pass_mark'],
+            'distinction_mark' => $this->pid3['distinction_mark'],
+            'folder' => $this->pid3['folder'],
+            'rubric' => $default_rubric,
+            'calculator' => $this->pid3['calculator'],
+            'random_mark' => $this->pid3['random_mark'],
+            'total_mark' => $this->pid3['total_mark'],
+            'display_correct_answer' => $this->pid3['display_correct_answer'],
+            'display_question_mark' => $this->pid3['display_question_mark'],
+            'display_students_response' => $this->pid3['display_students_response'],
+            'display_feedback' => $this->pid3['display_feedback'],
+            'hide_if_unanswered' => $this->pid3['hide_if_unanswered'],
+            'external_review_deadline' => $this->pid3['external_review_deadline'],
+            'internal_review_deadline' => $this->pid3['internal_review_deadline'],
+            'sound_demo' => $this->pid3['sound_demo'],
+            'password' => $this->pid3['password']
+        );
+        $this->assertEquals($expected, PaperUtils::get_paper_properties($this->pid3['id'], $this->db));
     }
 }

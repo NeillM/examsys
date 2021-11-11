@@ -39,11 +39,11 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
     $moduleidorig = $moduleid;
     $moduleid = module_utils::get_idMod($moduleid, $mysqli);
 
-    $sql = "SELECT DISTINCT crypt_name, paper_type, paper_title, retired, idMod FROM properties, properties_modules WHERE idMod = ? and properties.property_id = properties_modules.property_id AND deleted IS NULL AND paper_type IN ('0','1','3','4') ORDER BY paper_type, paper_title";
+    $sql = "SELECT DISTINCT crypt_name, paper_type, paper_title, idMod FROM properties, properties_modules WHERE idMod = ? and properties.property_id = properties_modules.property_id AND deleted IS NULL AND paper_type IN ('0','1','3','4') ORDER BY paper_type, paper_title";
     $results2 = $mysqli->prepare($sql);
     $results2->bind_param('i', $moduleid);
     $results2->execute();
-    $results2->bind_result($crypt_name, $paper_type, $paper_title, $retired, $moduleID);
+    $results2->bind_result($crypt_name, $paper_type, $paper_title, $moduleID);
     $results2->store_result();
     if ($results2->num_rows() > 0) {
         $rt = $results2->num_rows();

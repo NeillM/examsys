@@ -133,14 +133,49 @@ foreach ($papers as $property_id => $paper_details) {
   <tr><td colspan="5">&nbsp;</td></tr>
   <tr><td colspan="5"><table border="0" class="subsect" style="width:98%"><tr><td><nobr><?php echo $string['scheduled']; ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
 <?php
-  $papers = array();
-$results = $mysqli->prepare("SELECT properties.property_id, paper_title, moduleid, period, barriers_needed, cohort_size, campus, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}'), end_date, labs FROM (properties, properties_modules, modules, scheduling) WHERE start_date > NOW() AND properties.property_id=scheduling.paperID AND properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND deleted IS NULL ORDER BY period");
+$papers = array();
+$now = time();
+$results = $mysqli->prepare("
+    SELECT
+        properties.property_id,
+        paper_title,
+        moduleid,
+        period,
+        barriers_needed,
+        cohort_size,
+        campus,
+        start_date,
+        end_date,
+        labs
+    FROM
+        (properties, properties_modules, modules, scheduling)
+    WHERE
+        start_date > ?
+    AND
+        properties.property_id = scheduling.paperID
+    AND
+        properties.property_id = properties_modules.property_id
+    AND
+        properties_modules.idMod = modules.id
+    AND
+        deleted IS NULL
+    ORDER BY period
+");
+$results->bind_param('i', $now);
 $results->execute();
 $results->store_result();
 $results->bind_result($property_id, $paper_title, $moduleID, $period, $barriers_needed, $cohort_size, $campus, $start_date, $end_date, $labs);
 while ($results->fetch()) {
     if (!isset($papers[$property_id])) {
-        $papers[$property_id] = array('paper_title' => $paper_title, 'period' => $period, 'barriers_needed' => $barriers_needed, 'cohort_size' => $cohort_size, 'campus' => $campus, 'start_date' => $start_date, 'end_date' => $end_date, 'labs' => $labs);
+        $papers[$property_id] = array(
+            'paper_title' => $paper_title,
+            'period' => $period,
+            'barriers_needed' => $barriers_needed,
+            'cohort_size' => $cohort_size,
+            'campus' => $campus,
+            'start_date' => date($configObject->get('cfg_very_short_datetime_php'), $start_date),
+            'end_date' => $end_date,
+            'labs' => $labs);
     }
     $papers[$property_id]['modules'][] = $moduleID;
 }

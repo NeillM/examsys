@@ -38,6 +38,10 @@ class requirements
         if (version_compare($phpversion, $php_min_ver, '<')) {
             return false;
         }
+        // Check if 32bit version of php.
+        if (PHP_INT_SIZE === 4) {
+            return false;
+        }
         return true;
     }
 

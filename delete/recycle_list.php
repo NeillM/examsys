@@ -132,7 +132,7 @@ for ($item = 0; $item < $list_size; $item++) {
     $split_name = explode('[deleted', $recycle_bin[$item]['name']);
     if ($recycle_bin[$item]['type'] == 'paper') {
         $temp_type = $recycle_bin[$item]['subtype'];
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"p" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/' . $paper_icons[$temp_type] . '" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"p" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/' . $paper_icons[$temp_type] . '" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date(Config::get_instance()->get('cfg_short_datetime_php'), $recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'folder') {
         echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"f" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/yellow_folder.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['folder'] . "</nobr></td></tr>\n";
     } elseif ($recycle_bin[$item]['type'] == 'academic_year') {

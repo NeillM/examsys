@@ -127,6 +127,9 @@ trait pages
             case 'Paper Details':
                 $this->visitPaperDetails($data, $section);
                 break;
+            case 'Calendar':
+                $this->visitCalendar($data, $section);
+                break;
             default:
                 // Unsupported page type.
                 throw new PendingException("A handler for the '$page' page has not been implemented.");
@@ -198,5 +201,18 @@ trait pages
             throw new \Exception('Invalid module code');
         }
         $this->visit(Url::classTotals($paperid, $data));
+    }
+
+    /**
+     * Loads the calendar page.
+     *
+     * @param string $year the calendar year
+     * @param string $week the calendar week
+     * @throws \Exception
+     * @throws PendingException
+     */
+    protected function visitCalendar(string $year, string $week): void
+    {
+        $this->visit(Url::calendar($year, $week));
     }
 }

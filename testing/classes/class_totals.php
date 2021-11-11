@@ -79,19 +79,18 @@ class class_totals
         $papers = array();
 
         if ($paperid != '') {
-            $result = $mysqli->prepare("
+            $result = $mysqli->prepare('
                 SELECT
                     crypt_name,
                     property_id,
                     paper_title,
-                    DATE_FORMAT(start_date,'%d/%m/%Y'),
-                    DATE_FORMAT(start_date,'%Y%m%d%H%i%s'),
-                    DATE_FORMAT(end_date,'%Y%m%d%H%i%s')
+                    start_date,
+                    end_date
                 FROM 
                     properties
                 WHERE
                     property_id = ?
-            ");
+            ');
             $result->bind_param('i', $paperid);
         } else {
             $result = $mysqli->prepare('
@@ -99,9 +98,8 @@ class class_totals
                     crypt_name,
                     property_id,
                     paper_title,
-                    DATE_FORMAT(start_date,"%d/%m/%Y"),
-                    DATE_FORMAT(start_date,"%Y%m%d%H%i%s"),
-                    DATE_FORMAT(end_date,"%Y%m%d%H%i%s")
+                    start_date,
+                    end_date
                 FROM
                     properties
                 WHERE
@@ -117,8 +115,11 @@ class class_totals
             ');
         }
         $result->execute();
-        $result->bind_result($crypt_name, $paperID, $title, $display_start_date, $start_date, $end_date);
+        $result->bind_result($crypt_name, $paperID, $title, $start_date, $end_date);
         while ($result->fetch()) {
+            $display_start_date = date($configObject->get('cfg_long_date_php'), $start_date);
+            $start_date = date('YmdHis', $start_date);
+            $end_date = date('YmdHis', $end_date);
             $papers[] = array(
                 'crypt_name' => $crypt_name,
                 'paperID' => $paperID,

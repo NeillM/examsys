@@ -415,7 +415,8 @@ trait Paper
         $this->fillField("{$prefix}day", $date->format('d'));
         $this->fillField("{$prefix}month", $date->format('m'));
         $this->fillField("{$prefix}year", $date->format('Y'));
-        $this->fillField("{$prefix}time", $date->format('His'));
+        $this->fillField("{$prefix}hour", $date->format('H'));
+        $this->fillField("{$prefix}minute", $date->format('i'));
     }
 
     /**

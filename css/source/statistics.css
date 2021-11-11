@@ -33,7 +33,8 @@ table.stats {
 
 .faculty {
   font-weight: bold;
-	padding-top: 10px;
+  padding-top: 10px;
+  float: left;
 }
 
 .subtotal {

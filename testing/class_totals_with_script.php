@@ -32,10 +32,28 @@
 
 require dirname(__DIR__) . '/include/sysadmin_auth.inc';
 $papers = array();
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y') FROM properties WHERE paper_type = '2' AND start_date < NOW() AND deleted IS NULL ORDER BY property_id");
+$now = time();
+$result = $mysqli->prepare("
+    SELECT
+        property_id,
+        paper_title,
+        start_date
+    FROM
+        properties
+    WHERE
+        paper_type = '2'
+    AND
+        start_date < ?
+    AND
+        deleted IS NULL
+    ORDER BY
+        property_id
+");
+$result->bind_param('i', $now);
 $result->execute();
 $result->bind_result($paperID, $title, $display_start_date);
 while ($result->fetch()) {
+    $display_start_date = date($configObject->get('cfg_long_date_php'), $display_start_date);
     $papers[] = array('paperID' => $paperID, 'title' => $title, 'display_start_date' => $display_start_date);
 }
 $result->close();

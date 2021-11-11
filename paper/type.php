@@ -121,10 +121,22 @@ if (!$userObject->has_role('Standards Setter') && $_GET['type'] == 2) {
     echo '<div class="f"><div class="f_icon"><a href="../admin/calendar.php#week' . date('W') . '"><img src="../artwork/calendar_icon.png" alt="Folder" /></a></div><div class="f_details"><a href="../admin/calendar.php#week' . date('W') . '">' . $string['examcalendar'] . '<br />' . date('Y') . "</a></div></div>\n";
 }
 
-$select = "SELECT properties.calendar_year, properties.paper_ownerID, properties.property_id, MAX(papers.screen) AS screens, properties.paper_title,
-    DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date,
-    DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, properties.exam_duration, users.title, users.initials,
-    users.surname, properties.retired, properties.password";
+$select = '
+    SELECT
+        properties.calendar_year,
+        properties.paper_ownerID,
+        properties.property_id,
+        MAX(papers.screen) AS screens,
+        properties.paper_title,
+        start_date,
+        end_date,
+        properties.exam_duration,
+        users.title,
+        users.initials,
+        users.surname,
+        properties.retired,
+        properties.password
+';
 $groupby = ' GROUP BY properties.calendar_year, properties.paper_title, properties.property_id, properties.paper_ownerID, properties.retired, users.surname,
     properties.exam_duration, properties.password, users.title, users.initials';
 $orderby = ' ORDER BY properties.calendar_year DESC, properties.paper_title';
@@ -143,12 +155,14 @@ if ($_GET['module'] != '0') {
     $results->bind_param('si', $type, $userObject->get_user_ID());
 }
 $results->execute();
-$results->bind_result($calendar_year, $paper_ownerID, $property_id, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
+$results->bind_result($calendar_year, $paper_ownerID, $property_id, $screens, $paper_title, $start_date, $end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
 $results->store_result();
 $old_calendar_year = 'zzzz';
 $sent_clear_all = false;
 if ($results->num_rows > 0) {
     while ($results->fetch()) {
+        $display_start_date = date($configObject->get('cfg_long_date_time'), $start_date);
+        $display_end_date = date($configObject->get('cfg_long_date_time'), $end_date);
         if ($old_calendar_year != $calendar_year) {
             if ($sent_clear_all) {
                 echo '<br clear="left" />';

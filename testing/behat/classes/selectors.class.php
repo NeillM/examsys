@@ -83,6 +83,8 @@ class selectors
         'audit_object' => 'audit_object',
         'audit_user' => 'audit_user',
         'audit_source' => 'audit_source',
+        'tab' => 'tab',
+        'papers_by_school' => 'papers_by_school',
     );
 
     /**
@@ -183,6 +185,9 @@ XPATH
 XPATH
     ,'audit_source' => <<<XPATH
 //td[contains(@id, 'source')]//a[contains(normalize-space(.) , %locator%)]
+XPATH
+    ,'tab' => <<<XPATH
+//td[contains(@class, 'tabon') or contains(@class, 'taboff') and contains(normalize-space(.) , %locator%)]   
 XPATH
     );
 

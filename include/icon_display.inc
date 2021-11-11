@@ -35,7 +35,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     echo '<div class="file_icon">';
 
     $icon_type = $paper_type;
-    if (date('YmdHis', time()) >= $start_date and $start_date != '') {
+    if (time() >= $start_date and $start_date != '') {
         $locked = '_locked';
     } else {
         $locked = '';

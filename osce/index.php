@@ -31,7 +31,23 @@ $paper_no = 0;
 $paper_display = array();
 
 // Get a list of OSCE stations that are live.
-$result = $mysqli->prepare("SELECT crypt_name, paper_title FROM properties WHERE paper_type = '4' AND deleted IS NULL AND start_date < DATE_ADD(NOW(), interval 5 minute) AND end_date > DATE_ADD(NOW(), interval 5 minute) ORDER BY paper_title");
+$result = $mysqli->prepare("
+    SELECT
+        crypt_name,
+        paper_title
+    FROM properties
+    WHERE
+        paper_type = '4'
+    AND
+        deleted IS NULL
+    AND
+        start_date < ?
+    AND
+        end_date > ?
+    ORDER BY paper_title
+");
+$infivemins = time() + (5 * date_utils::MINUTESECS);
+$result->bind_param('ii', $infivemins, $infivemins);
 $result->execute();
 $result->bind_result($crypt_name, $paper_title);
 while ($result->fetch()) {

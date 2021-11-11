@@ -28,12 +28,12 @@ namespace api;
  */
 class assessmentmanagement extends \api\abstractmanagement
 {
-    
+
     /**
      * Language pack component.
      */
     private $langcomponent = 'api/assessmentmanagement';
-    
+
     /**
      * Status codes
      */
@@ -59,7 +59,7 @@ class assessmentmanagement extends \api\abstractmanagement
         'PAPER_EXTERNALID_INUSE' => 217,
         'PAPER_INVALID_NO_MODULES' => 218
     );
-    
+
     /**
      * Check labs
      * Currently we are working with the lab name as there is no lab management web service.
@@ -184,7 +184,7 @@ class assessmentmanagement extends \api\abstractmanagement
                 }
             }
         }
-        
+
         if (count($error) > 0) {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
         } else {
@@ -196,7 +196,7 @@ class assessmentmanagement extends \api\abstractmanagement
             } else {
                 $labs = '';
             }
-            
+
             if (empty($params['duration'])) {
                 $params['duration'] = '';
             }
@@ -206,8 +206,8 @@ class assessmentmanagement extends \api\abstractmanagement
                     $params['title'],
                     $papertype,
                     $params['owner'],
-                    $params['startdatetime'],
-                    $params['enddatetime'],
+                    str_replace('T', ' ', $params['startdatetime']),
+                    str_replace('T', ' ', $params['enddatetime']),
                     $labs,
                     $params['duration'],
                     $params['session'],
@@ -225,7 +225,7 @@ class assessmentmanagement extends \api\abstractmanagement
                 $data = $this->handle_exception($e->getMessage());
             }
         }
-        
+
         return $this->get_response($data, 'create', $params['nodeid'], $error);
     }
     /**
@@ -286,31 +286,40 @@ class assessmentmanagement extends \api\abstractmanagement
         if (empty($params['session'])) {
             $params['session'] = $details['session'];
         }
+        // Get timezone if not provided.
+        if (empty($params['timezone'])) {
+            $params['timezone'] = $details['timezone'];
+        }
         // Get start datetime if not provided.
         if (empty($params['startdatetime'])) {
-            $params['startdatetime'] = $details['startdatetime'];
+            $params['startdatetime'] = date('Y-m-d H:i:s', $details['startdatetime']);
         } else {
             // Mark something is to be updated.
-            $startdate = str_replace('T', ' ', $params['startdatetime']);
-            if ($startdate != $details['startdatetime']) {
+            $params['startdatetime'] = str_replace('T', ' ', $params['startdatetime']);
+            if (
+                \date_utils::getUTCDateTime(
+                    $params['startdatetime'],
+                    $params['timezone']
+                )->getTimestamp() != $details['startdatetime']
+            ) {
                 $change = true;
             }
         }
         // Get end datetime if not provided.
         if (empty($params['enddatetime'])) {
-            $params['enddatetime'] = $details['enddatetime'];
+            $params['enddatetime'] = date('Y-m-d H:i:s', $details['enddatetime']);
         } else {
             // Mark something is to be updated.
-            $enddate = str_replace('T', ' ', $params['enddatetime']);
-            if ($enddate != $details['enddatetime']) {
+            $params['enddatetime'] = str_replace('T', ' ', $params['enddatetime']);
+            if (
+                \date_utils::getUTCDateTime(
+                    $params['enddatetime'],
+                    $params['timezone']
+                )->getTimestamp() != $details['enddatetime']
+            ) {
                 $change = true;
             }
         }
-        // Get end timezone if not provided.
-        if (empty($params['timezone'])) {
-            $params['timezone'] = $details['timezone'];
-        }
-
         // Check modules
         $modulesarray = array();
         if (!empty($params['extmodules'])) {
@@ -343,7 +352,7 @@ class assessmentmanagement extends \api\abstractmanagement
                 }
             }
         }
-        
+
         if (count($error) > 0) {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
         } else {
@@ -361,7 +370,7 @@ class assessmentmanagement extends \api\abstractmanagement
                     $change = true;
                 }
             }
-            
+
             if (empty($params['duration'])) {
                 $params['duration'] = $details['duration'];
             }
@@ -396,10 +405,10 @@ class assessmentmanagement extends \api\abstractmanagement
                 $data = array('statuscode' => $this->statuscodes['PAPER_NOTHING_TO_UPDATE'], 'status' => $strings['paper_nothing_to_update'], 'id' => null);
             }
         }
-        
+
         return $this->get_response($data, 'update', $params['nodeid'], $error);
     }
-    
+
     /**
      * Schedule a summative assessment
      * @param array $parms schedule summative parameters
@@ -447,8 +456,8 @@ class assessmentmanagement extends \api\abstractmanagement
             }
         }
         $labs = '';
-        $start = '';
-        $end = '';
+        $start = null;
+        $end = null;
         // Set defaults.
         if (empty($params['cohort_size'])) {
             $params['cohort_size'] = '<whole cohort>';
@@ -508,7 +517,7 @@ class assessmentmanagement extends \api\abstractmanagement
         } catch (\Exception $e) {
             $data = $this->handle_exception($e->getMessage());
         }
-        
+
         return $this->get_response($data, 'schedule', $params['nodeid'], $error);
     }
 

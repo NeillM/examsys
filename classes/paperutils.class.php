@@ -577,12 +577,12 @@ class PaperUtils
     {
         $configObject = \Config::get_instance();
         $assessment = new assessment($db, $configObject);
-        $now = date('Y-m-d H:i:s');
+        $now = time();
         $details = Paper_utils::get_paper_properties($paperID, $db);
         $papertitle = $details['title'] . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
         $update_params = array(
         'paper_title' => array('s',$papertitle),
-        'deleted' => array('s', $now),
+        'deleted' => array('i', $now),
         'paper_ownerID' => array('i', $owner)
         );
         return $assessment->db_update_assessment($paperID, $update_params);
@@ -701,10 +701,45 @@ class PaperUtils
         }
 
         $paper_no = 0;
-        $paper_query = $db->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, MAX(screen) AS max_screen, labs, calendar_year, password, completed
-      FROM (papers, properties) LEFT JOIN log_metadata ON properties.property_id = log_metadata.paperID AND userID = ?
-      WHERE papers.paper = properties.property_id AND (labs != '' OR password != '') AND ({$type_sql}) AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute)
-      AND end_date > NOW() $exclude_sql GROUP BY calendar_year, paper_type, paper_title, property_id, completed, crypt_name, paper_type, labs, bidirectional, password");
+        $paper_query = $db->prepare('
+            SELECT
+                property_id,
+                paper_type,
+                crypt_name,
+                paper_title,
+                bidirectional,
+                MAX(screen) AS max_screen,
+                labs,
+                calendar_year,
+                password,
+                completed
+            FROM
+                (papers, properties)
+            LEFT JOIN log_metadata ON properties.property_id = log_metadata.paperID AND userID = ?
+            WHERE
+                papers.paper = properties.property_id
+            AND
+                (labs != "" OR password != "")
+            AND
+                ( ' . $type_sql . ')
+            AND
+                deleted IS NULL
+            AND
+                start_date < UNIX_TIMESTAMP() + 900
+            AND
+                end_date > UNIX_TIMESTAMP() ' . $exclude_sql . '
+            GROUP BY
+                calendar_year,
+                paper_type,
+                paper_title,
+                property_id,
+                completed,
+                crypt_name,
+                paper_type,
+                labs,
+                bidirectional,
+                password
+        ');
         $paper_query->bind_param('i', $userObj->get_user_ID());
         $paper_query->execute();
         $paper_query->store_result();
@@ -891,8 +926,8 @@ class PaperUtils
     {
         $results = $db->prepare("SELECT NULL 
       FROM properties 
-      WHERE start_date < DATE_ADD(NOW(), interval 15 minute)
-      AND end_date > NOW()
+      WHERE start_date < UNIX_TIMESTAMP() + 900
+      AND end_date > UNIX_TIMESTAMP()
       AND paper_type IN ('1','2')
       AND labs REGEXP ?");
         $lab_regexp = '(^|,)(' . $lab . ')(,|$)';
@@ -971,44 +1006,46 @@ class PaperUtils
      */
     public static function get_paper_properties($id, $db)
     {
-        $result = $db->prepare('SELECT 
-      paper_title,
-      paper_type,
-      paper_ownerID,
-      calendar_year,
-      start_date,
-      end_date,
-      labs,
-      exam_duration,
-      timezone,
-      externalid,
-      externalsys,
-      paper_prologue,
-      paper_postscript,
-      bgcolor,
-      fgcolor,
-      themecolor,
-      labelcolor,
-      fullscreen,
-      marking,
-      bidirectional,
-      pass_mark,
-      distinction_mark,
-      folder,
-      rubric,
-      calculator,
-      random_mark, 
-      total_mark,
-      display_correct_answer,
-      display_question_mark,
-      display_students_response,
-      display_feedback,
-      hide_if_unanswered,
-      external_review_deadline,
-      internal_review_deadline,
-      sound_demo,
-      password
-    FROM properties WHERE property_id = ?');
+        $result = $db->prepare('
+            SELECT 
+                paper_title,
+                paper_type,
+                paper_ownerID,
+                calendar_year,
+                start_date,
+                end_date,
+                labs,
+                exam_duration,
+                timezone,
+                externalid,
+                externalsys,
+                paper_prologue,
+                paper_postscript,
+                bgcolor,
+                fgcolor,
+                themecolor,
+                labelcolor,
+                fullscreen,
+                marking,
+                bidirectional,
+                pass_mark,
+                distinction_mark,
+                folder,
+                rubric,
+                calculator,
+                random_mark, 
+                total_mark,
+                display_correct_answer,
+                display_question_mark,
+                display_students_response,
+                display_feedback,
+                hide_if_unanswered,
+                external_review_deadline,
+                internal_review_deadline,
+                sound_demo,
+                password
+            FROM properties WHERE property_id = ?
+        ');
         $result->bind_param('i', $id);
         $result->execute();
         $result->bind_result(
@@ -1192,12 +1229,9 @@ class PaperUtils
             if (count($user_teams) > 0) {
                 $my_teams = " OR idMod IN ($module_id_list)";
             }
-            $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $type . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
+            $sql = "SELECT properties.property_id, paper_title, paper_type, created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $type . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
         } else {
-            $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $teamid . ' AND deleted IS NULL AND paper_ownerID=users.id';
-        }
-        if ($order == 'created') {
-            $order = 'CAST(created AS DATE)';
+            $sql = "SELECT properties.property_id, paper_title, paper_type, created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $teamid . ' AND deleted IS NULL AND paper_ownerID=users.id';
         }
         $sql .= " ORDER BY {$order} " . mb_strtoupper($direction);
         if (mb_strpos($order, 'surname') === false) {
@@ -1211,7 +1245,17 @@ class PaperUtils
         $result->bind_result($property_id, $paper_title, $paper_type, $created, $title, $initials, $surname, $moduleid);
         while ($result->fetch()) {
             if (!isset($paper_details[$property_id])) {
-                $paper_details[$property_id] = array('paper_title' => $paper_title, 'paper_type' => $paper_type, 'created' => $created, 'title' => $title, 'initials' => $initials, 'surname' => $surname);
+                $paper_details[$property_id] = array(
+                    'paper_title' => $paper_title,
+                    'paper_type' => $paper_type,
+                    'created' => ' ' . date(
+                        $configObject->get('cfg_long_date_php'),
+                        $created
+                    ),
+                    'title' => $title,
+                    'initials' => $initials,
+                    'surname' => $surname
+                );
             }
             $paper_details[$property_id]['moduleid'][] = $moduleid;
         }
@@ -1329,13 +1373,17 @@ class PaperUtils
                 $tmp_end_date = null;
                 $labs = null;
             } else {
-                $tmp_start_date = '20200505090000';
-                $tmp_end_date = '20200505100000';
+                // Tomorrow.
+                $utc_timezone = new DateTimeZone('UTC');
+                $datetime = new DateTime('now', $utc_timezone);
+                $datetime->add(new DateInterval('P1D'));
+                $tmp_start_date = $datetime->getTimestamp();
+                // 1 hour long.
+                $tmp_end_date = $tmp_start_date + \date_utils::HOURSECS;
             }
         } else {
             $tmp_start_date = $properties['startdatetime'];
             $tmp_end_date = $properties['enddatetime'];
-            ;
         }
         $tmp_random_mark = $properties['random_mark'];
         if ($tmp_random_mark == '') {
@@ -1372,11 +1420,10 @@ class PaperUtils
 
         $assessment = new assessment($db, $configObject);
         $unixtime = time();
-        $created = date('Y-m-d H:i:s', $unixtime);
         $params = array(
             'paper_title' => array('s', $postparams['new_paper']),
-            'start_date' => array('s', $tmp_start_date),
-            'end_date' => array('s', $tmp_end_date),
+            'start_date' => array('i', $tmp_start_date),
+            'end_date' => array('i', $tmp_end_date),
             'timezone' => array('s', $properties['timezone']),
             'paper_type' => array('s', $postparams['paper_type']),
             'paper_prologue' => array('s', $properties['paper_prologue']),
@@ -1396,7 +1443,7 @@ class PaperUtils
             'rubric' => array('s', $properties['rubric']),
             'calculator' => array('i', $properties['calculator']),
             'exam_duration' => array('i', $tmp_exam_duration),
-            'created' => array('s', $created),
+            'created' => array('i', $unixtime),
             'random_mark' => array('d', $tmp_random_mark),
             'total_mark' => array('i', $tmp_total_mark),
             'display_correct_answer' => array('s', $properties['display_correct_answer']),

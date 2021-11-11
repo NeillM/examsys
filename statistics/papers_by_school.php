@@ -75,17 +75,6 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
 </table>
 
-<table class="stats">
-<tr>
-<th><?php echo $string['school']; ?></th>
-<th class="papertype"><?php echo $string['formative self-assessment']; ?></th>
-<th class="papertype"><?php echo $string['progress test']; ?></th>
-<th class="papertype"><?php echo $string['summative exam']; ?></th>
-<th class="papertype"><?php echo $string['survey']; ?></th>
-<th class="papertype"><?php echo $string['osce stations']; ?></th>
-<th class="papertype"><?php echo $string['offline papers']; ?></th>
-<th class="papertype"><?php echo $string['peer review']; ?></th>
-</tr>
 <?php
 $master_array = array();
 
@@ -117,19 +106,53 @@ foreach ($master_array as $school => $data) {
     if (count($moduleIDs) > 0) {
         // Get the papers.
         $date_range = '';
-        if ($_GET['calyear']) {
-            $year = $_GET['calyear'];
-
-            $date_range .= " AND ((start_date > {$year}0901000000 AND end_date <= " . ($year + 1) . '0831235959)';  // Start and end within year
-
-            $date_range .= " OR (start_date <= {$year}0901000000 AND end_date >= " . ($year + 1) . '0831235959)';   // Paper continuing this year
-
-            $date_range .= " OR (start_date <= {$year}0901000000 AND end_date >= {$year}0901000000 AND end_date <= " . ($year + 1) . '0831235959)';   // End date within year
-
-            $date_range .= " OR (start_date > {$year}0901000000 AND start_date <= " . ($year + 1) . '0831235959 AND end_date >= ' . ($year + 1) . '0831235959))';   // Start date within year
+        $year = param::optional('calyear', null, param::INT, param::FETCH_GET);
+        if (!is_null($year)) {
+            $startdatetime = date_utils::getUTCDateTime($year . '-09-01 00:00:00', 'UTC');
+            $enddatetime = date_utils::getUTCDateTime($year + 1 . '-08-31 23:59:59', 'UTC');
+            // Start and end within year.
+            $date_range .= ' AND ((start_date > '
+                . $startdatetime->getTimestamp()
+                . ' AND end_date <= '
+                . $enddatetime->getTimestamp() . ')';
+            // Paper continuing this year.
+            $date_range .= ' OR (start_date <= '
+                . $startdatetime->getTimestamp()
+                . ' AND end_date >= '
+                . $enddatetime->getTimestamp() . ')';
+            // End date within year.
+            $date_range .= ' OR (start_date <= '
+                . $startdatetime->getTimestamp()
+                . ' AND end_date >= '
+                . $startdatetime->getTimestamp()
+                . ' AND end_date <= '
+                . $enddatetime->getTimestamp() . ')';
+            // Start date within year.
+            $date_range .= ' OR (start_date >'
+                . $startdatetime->getTimestamp()
+                . ' AND start_date <= '
+                . $enddatetime->getTimestamp()
+                . ' AND end_date >= '
+                . $enddatetime->getTimestamp() . '))';
         }
 
-        $result = $mysqli->prepare("SELECT DISTINCT properties.property_id, paper_title, paper_type FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND idMod IN (" . implode(',', $moduleIDs) . ') AND deleted IS NULL GROUP BY property_id');
+        $result = $mysqli->prepare('
+            SELECT DISTINCT
+                properties.property_id,
+                paper_title,
+                paper_type
+                FROM
+                    properties,
+                    properties_modules
+                WHERE
+                    properties.property_id = properties_modules.property_id
+                    ' . $date_range . '
+                AND
+                    idMod IN (' . implode(',', $moduleIDs) . ')
+                AND
+                    deleted IS NULL
+                GROUP BY property_id
+            ');
         $result->execute();
         $result->bind_result($paperID, $paper_title, $paper_type);
         while ($result->fetch()) {
@@ -141,16 +164,28 @@ foreach ($master_array as $school => $data) {
 
 $old_faculty = '';
 $faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
-
+$newtable = false;
 foreach ($master_array as $school => $data) {
     if ($old_faculty != $data['faculty']) {
         if ($old_faculty != '') {
             echo output_faculty_stats($faculty_stats);
         }
-        echo '<tr><td colspan="8" class="faculty">' . $data['faculty'] . '</td></tr>';
+        echo '<table id="' . ltrim($data['faculty']) . '" class="stats">';
+        echo '<caption class="faculty">' . $data['faculty'] . '</caption>';
         $faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
+        $newtable = true;
     }
-    echo '<tr><td>' . $school . '</td>';
+    echo '<tr>
+    <th scope="col">' . $string['school'] . '</th>
+    <th scope="col" class="papertype">' . $string['formative self-assessment'] . '</th>
+    <th scope="col" class="papertype">' . $string['progress test'] . '</th>
+    <th scope="col" class="papertype">' . $string['summative exam'] . '</th>
+    <th scope="col" class="papertype">' . $string['survey'] . '</th>
+    <th scope="col"class="papertype">' . $string['osce stations'] . '</th>
+    <th scope="col"class="papertype">' . $string['offline papers'] . '</th>
+    <th scope="col" class="papertype">' . $string['peer review'] . '</th>
+    </tr>';
+    echo '<tr id="' . ltrim($school) . '"><th scope="row">' . $school . '</th>';
 
     for ($i = 0; $i <= 6; $i++) {
         if ($data['paper_types'][$i] == 0) {
@@ -161,11 +196,13 @@ foreach ($master_array as $school => $data) {
         $faculty_stats[$i] += $data['paper_types'][$i];
     }
     echo "</tr>\n";
-
+    if ($newtable) {
+        echo '</table>';
+    }
     $old_faculty = $data['faculty'];
 }
 ?>
-</table>
+
 
 </div>
 </body>

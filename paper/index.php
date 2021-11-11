@@ -174,13 +174,18 @@ if (
                 $staff_modules = $userObject->get_staff_modules();
             }
             $papers = array();
+            $now = time();
+            $utc_timezone = new DateTimeZone('UTC');
+            $datetime = new DateTime('now', $utc_timezone);
+            $datetime->add(new DateInterval('P42D'));
+            $infourtytwodays = $datetime->getTimestamp();
             foreach ($staff_modules as $idMod => $moduleID) {
                 $paper_q = $mysqli->prepare(
                     "SELECT DISTINCT
                         properties.property_id,
                         MAX(papers.screen) AS screens,
                         properties.paper_title,
-                        DATE_FORMAT(start_date,'" . $configObject->get('cfg_long_date_time') . "') AS display_start_date,
+                        start_date,
                         properties.exam_duration,
                         properties.crypt_name,
                         properties.fullscreen,
@@ -188,8 +193,8 @@ if (
                     FROM properties
                     LEFT JOIN papers ON properties.property_id = papers.paper
                     LEFT JOIN properties_modules ON properties.property_id = properties_modules.property_id
-                    WHERE paper_type='2' AND start_date > NOW()
-                    AND start_date < DATE_ADD(NOW(), INTERVAL 42 DAY)
+                    WHERE paper_type='2' AND start_date > ?
+                    AND start_date < ?
                     AND idMod = ?
                     AND deleted IS NULL
                     AND retired IS NULL
@@ -206,7 +211,7 @@ if (
                         properties.paper_type,
                         properties.paper_title"
                 );
-                $paper_q->bind_param('i', $idMod);
+                $paper_q->bind_param('iii', $now, $infourtytwodays, $idMod);
                 $paper_q->execute();
                 $paper_q->store_result();
                 $paper_q->bind_result(
@@ -220,6 +225,7 @@ if (
                     $labs
                 );
                 while ($paper_q->fetch()) {
+                    $start_date = date($configObject->get('cfg_long_date_time') , $start_date);
                     $papers[$moduleID][] = array(
                         'id' => $property_id,
                         'screens' => $screens,

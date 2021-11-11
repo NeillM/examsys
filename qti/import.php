@@ -36,22 +36,38 @@ foreach ($status_tmp as $sid => $status) {
     }
 }
 
-$stmt = $mysqli->prepare("SELECT paper_title, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date,
-  DATE_FORMAT(end_date,'%Y%m%d%H%i%S') AS end_date, paper_type
-  FROM properties_modules, modules, properties LEFT JOIN papers ON properties.property_id = papers.paper
-  WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND properties.property_id = ?
-  GROUP BY paper_title, moduleID, start_date, end_date, paper_type");
+$stmt = $mysqli->prepare('
+    SELECT
+        paper_title,
+        moduleID,
+        start_date,
+        end_date,
+        paper_type
+    FROM
+        properties_modules,
+        modules,
+        properties LEFT JOIN papers ON properties.property_id = papers.paper
+    WHERE
+        properties.property_id = properties_modules.property_id
+    AND
+        properties_modules.idMod = modules.id
+    AND
+        properties.property_id = ?
+    GROUP BY
+        paper_title, moduleID, start_date, end_date, paper_type
+');
 
 $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->bind_result($paper_title, $paper_moduleID, $start_date, $end_date, $paper_type);
+$now = time();
 while ($stmt->fetch()) {
-    if (date('YmdHis', time()) >= $start_date and date('YmdHis', time()) <= $end_date) {
+    if ($now >= $start_date and $now <= $end_date) {
         $active_date = 1;
     } else {
         $active_date = 0;
     }
-    if (date('YmdHis', time()) >= $start_date and $start_date != '' and $paper_type == '2') {
+    if ($now >= $start_date and $start_date != '' and $paper_type == '2') {
         $summative_lock = 1;
     } else {
         $summative_lock = 0;

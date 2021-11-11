@@ -26,6 +26,32 @@
  */
 class date_utils
 {
+
+    /**
+     * @var MINUTESECS seconds in a minute
+     */
+    public const MINUTESECS = 60;
+
+    /**
+     * @var HOURSECS seconds in a hour
+     */
+    public const HOURSECS = 3600;
+
+    /**
+     * @var DAYSECS seconds in a day
+     */
+    public const DAYSECS = 86400;
+
+    /**
+     * @var WEEKSECS seconds in a week
+     */
+    public const WEEKSECS = 604800;
+
+    /**
+     * @var YEARSECS seconds in a year
+     */
+    public const YEARSECS = 31557600;
+
     /**
      * Creates HTML dropdown menus to select day, month, year and hour (in half hour increments).
      * @param string $prefix            - Prefix string to make the name of the selector.
@@ -164,7 +190,7 @@ class date_utils
     }
 
     /**
-     * Get the timestamp
+     * Get the timestamp from time.
      *
      * @param integer $hours hours
      * @param integer $minutes minutes
@@ -177,5 +203,58 @@ class date_utils
         $date = new DateTime('now', $timezone);
         $date->setTime($hours, $minutes);
         return $date->getTimestamp();
+    }
+
+    /**
+     * Get the UTC date time object
+     *
+     * @param string $time the time
+     * @param string $timezone the timezone
+     * @throws Exception
+     * @return DateTime
+     */
+    public static function getUTCDateTime(string $time, string $timezone): DateTime
+    {
+        $utc_timezone = new DateTimeZone('UTC');
+        $target_timezone = new DateTimeZone($timezone);
+        $datetime = new DateTime($time, $target_timezone);
+        $datetime->setTimezone($utc_timezone);
+        return $datetime;
+    }
+
+    /**
+     * Get the date time object from rogo date time selctors
+     *
+     * @param integer $year year set
+     * @param integer $month month set
+     * @param integer $day day set
+     * @param integer $hour hour set
+     * @param integer $minute minute set
+     * @param string $timezone
+     * @throws Exception
+     * @return DateTime
+     */
+    public static function getDateTimeFromSelection(
+        int $year,
+        int $month,
+        int $day,
+        int $hour,
+        int $minute,
+        string $timezone
+    ): DateTime {
+        $utc_timezone = new DateTimeZone('UTC');
+        $target_timezone = new DateTimeZone($timezone);
+        $datetime = new DateTime('now', $target_timezone);
+        $datetime->setDate(
+            $year,
+            $month,
+            $day
+        );
+        $datetime->setTime(
+            $hour,
+            $minute
+        );
+        $datetime->setTimezone($utc_timezone);
+        return $datetime;
     }
 }

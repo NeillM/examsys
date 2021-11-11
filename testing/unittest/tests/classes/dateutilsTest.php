@@ -96,4 +96,84 @@ class DateUtilsTest extends unittest
             'alaska-late' => ['America/Anchorage', 23, 59],
         ];
     }
+
+    /**
+     * Test get UTC datetime object from time
+     * @param string $time
+     * @param string $timezone
+     * @param string $expected
+     * @dataProvider dataGetUTCDateTime
+     * @group dbutils
+     */
+    public function testgetUTCDateTime(string $time, string $timezone, string $expected): void
+    {
+        $this->assertEquals(
+            $expected,
+            date_utils::getUTCDateTime($time, $timezone)->format('Y-m-d H:i:s')
+        );
+    }
+
+    /**
+     * Data used to test getUTCDateTime
+     *
+     * @return array
+     */
+    public function dataGetUTCDateTime(): array
+    {
+        return [
+            'london' => ['2016-01-25 09:00:00', 'Europe/London', '2016-01-25 09:00:00'],
+            'Kuwait' => ['2016-01-25 09:00:00', 'Asia/Kuwait', '2016-01-25 06:00:00'],
+            'Honolulu' => ['2016-01-25 09:00:00', 'Pacific/Honolulu', '2016-01-25 19:00:00'],
+            'leapyear' => ['2017-02-29 09:00:00', 'Europe/London', '2017-03-01 09:00:00'],
+        ];
+    }
+
+    /**
+     * Test get the UTC datetime object from selectors
+     * @param string $year
+     * @param string $month
+     * @param string $day
+     * @param string $hour
+     * @param string $minute
+     * @param string $timezone
+     * @param string $expected
+     * @dataProvider dataDateTimeFromSelection
+     * @group dbutils
+     */
+    public function testgetDateTimeFromSelection(
+        string $year,
+        string $month,
+        string $day,
+        string $hour,
+        string $minute,
+        string $timezone,
+        string $expected
+    ): void {
+        $this->assertEquals(
+            $expected,
+            date_utils::getDateTimeFromSelection(
+                $year,
+                $month,
+                $day,
+                $hour,
+                $minute,
+                $timezone
+            )->format('Y-m-d H:i:s')
+        );
+    }
+
+    /**
+     * Data used to test DateTimeFromSelection
+     *
+     * @return array
+     */
+    public function dataDateTimeFromSelection(): array
+    {
+        return [
+            'london' => ['2016', '01', '25', '09', '00', 'Europe/London', '2016-01-25 09:00:00'],
+            'Kuwait' => ['2016', '01', '25', '09', '00', 'Asia/Kuwait', '2016-01-25 06:00:00'],
+            'Honolulu' => ['2016', '01', '25', '09', '00', 'Pacific/Honolulu', '2016-01-25 19:00:00'],
+            'leapyear' => ['2017', '02', '29', '09', '00', 'Europe/London', '2017-03-01 09:00:00'],
+        ];
+    }
 }

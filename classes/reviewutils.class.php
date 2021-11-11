@@ -47,17 +47,43 @@ class ReviewUtils
     {
         $config = Config::get_instance();
         $released_papers = array();
-
-        $result = $db->prepare("SELECT properties.property_id, paper_title, crypt_name, DATE_FORMAT(start_date, '" . $config->get('cfg_long_date_time') . "') FROM properties, properties_reviewers, feedback_release WHERE properties.property_id = properties_reviewers.paperID AND end_date < NOW() AND properties_reviewers.paperID = feedback_release.paper_id AND feedback_release.type = 'external_examiner' AND properties_reviewers.reviewerID = ? AND properties_reviewers.type = 'external' ORDER BY end_date DESC");
-        $result->bind_param('i', $externalID);
+        $now = time();
+        $result = $db->prepare("
+            SELECT
+                properties.property_id,
+                paper_title,
+                crypt_name,
+                start_date
+            FROM
+                properties,
+                properties_reviewers,
+                feedback_release
+            WHERE
+                properties.property_id = properties_reviewers.paperID
+            AND
+                end_date < ?
+            AND
+                properties_reviewers.paperID = feedback_release.paper_id
+            AND
+                feedback_release.type = 'external_examiner'
+            AND
+                properties_reviewers.reviewerID = ?
+            AND
+                properties_reviewers.type = 'external'
+            ORDER BY end_date DESC
+            ");
+        $result->bind_param('ii', $now, $externalID);
         $result->execute();
         $result->store_result();
         $result->bind_result($paperID, $paper_title, $crypt_name, $start_date);
         while ($result->fetch()) {
-            $released_papers[$paperID] = array('paper_title' => $paper_title, 'crypt_name' => $crypt_name, 'start_date' => $start_date);
+            $released_papers[$paperID] = array(
+                'paper_title' => $paper_title,
+                'crypt_name' => $crypt_name,
+                'start_date' => date($config->get('cfg_very_short_datetime_php'), $start_date)
+            );
         }
         $result->close();
-
         return $released_papers;
     }
 }

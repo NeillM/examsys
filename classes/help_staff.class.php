@@ -32,6 +32,6 @@ class help_staff extends rogo_directory
     public function cachetime()
     {
         // Cache for 24 hours.
-        return 86400;
+        return \date_utils::DAYSECS;
     }
 }

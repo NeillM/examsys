@@ -194,16 +194,16 @@ class StatisticsTest extends unittestdatabase
         $stats = new Statistics();
         $expected2020[$this->paper['id']] = array(
             'title' => $this->paper['papertitle'],
-            'month' => date('m', strtotime($this->paper['startdate'])),
-            'start' => $this->paper['startdate'],
-            'end' => $this->paper['enddate'],
+            'month' => date('m', $this->paper['start_date']),
+            'start' => $this->paper['start_date'],
+            'end' => $this->paper['end_date'],
             'labs' => $this->paper['labs']
         );
         $expected2019[$this->paper2['id']] = array(
             'title' => $this->paper2['papertitle'],
-            'month' => date('m', strtotime($this->paper2['startdate'])),
-            'start' => $this->paper2['startdate'],
-            'end' => $this->paper2['enddate'],
+            'month' => date('m', $this->paper2['start_date']),
+            'start' => $this->paper2['start_date'],
+            'end' => $this->paper2['end_date'],
             'labs' => $this->paper2['labs']
         );
         // Check 2020 academic year.

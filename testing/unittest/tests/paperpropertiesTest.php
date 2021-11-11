@@ -181,7 +181,7 @@ class PaperPropertiesTest extends unittestdatabase
         $this->pid1 = array_merge($this->pid1, $settings);
         $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'Test summative 2',
             'calendaryear' => 2015,
-            'password' => 'EC1VbYJtOq8NsidA+q60rDEzjZZ8eHmHm6dEtfVBpeQ=',
+            'settings' => '{"password":"password"}',
             'modulename' => 'Test module 3',
             'paperowner' => 'admin',
             'papertype' => '2',
@@ -640,11 +640,8 @@ class PaperPropertiesTest extends unittestdatabase
         $property_object = new PaperProperties($this->db);
         $property_object->set_property_id($this->pid1['id']);
         $property_object->set_paper_title($this->pid1['papertitle']);
-        $tz = new DateTimeZone($this->config->get('cfg_timezone'));
-        $startdatetime = new DateTime($this->pid1['start_date'], $tz);
-        $property_object->set_start_date($startdatetime->getTimestamp());
-        $enddatetime = new DateTime($this->pid1['end_date'], $tz);
-        $property_object->set_end_date($enddatetime->getTimestamp());
+        $property_object->set_start_date($this->pid1['start_date']);
+        $property_object->set_end_date($this->pid1['end_date']);
         $property_object->set_exam_duration($this->pid1['duration']);
         $property_object->set_calendar_year($this->pid1['calendaryear']);
         $property_object->set_password($this->pid1['password']);
@@ -787,5 +784,54 @@ class PaperPropertiesTest extends unittestdatabase
         $breaktime = ceil($totalexamtime / 60) * $et['breaktime'];
         $expected = round($totalexamtime + $breaktime);
         $this->assertEquals($expected, $properties->getMinAvailability());
+    }
+
+    /**
+     * Test checking if a paper is active.
+     * @group paper
+     */
+    public function testIsActive(): void
+    {
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, array());
+        $now = time();
+        $properties->set_start_date($now - \date_utils::DAYSECS);
+        $properties->set_end_date($now + 1800);
+        $this->assertTrue($properties->is_active());
+        // Check returns false if paper active period is in the future.
+        $properties->set_start_date($now + \date_utils::DAYSECS);
+        $properties->set_end_date($now + 88200);
+        $this->assertFalse($properties->is_active());
+    }
+
+    /**
+     * Test checking if a paper is live.
+     * @group paper
+     */
+    public function testIsLive(): void
+    {
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, array());
+        $now = time();
+        $properties->set_start_date($now - \date_utils::DAYSECS);
+        $properties->set_end_date($now + 1800);
+        $this->assertTrue($properties->is_live());
+        // Check returns false if paper live period is in the future.
+        $properties->set_start_date($now + \date_utils::DAYSECS);
+        $properties->set_end_date($now + 88200);
+        $this->assertFalse($properties->is_live());
+    }
+
+    /**
+     * Test rogo formatted dates
+     * @group paper
+     */
+    public function testGetRogoFormattedDates(): void
+    {
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, array());
+        $properties->set_start_date('1633343525');
+        $properties->set_end_date('1633429925');
+        $properties->setRogoFormatStartDate();
+        $properties->setRogoFormatEndDate();
+        $this->assertEquals('20211004113205', $properties->getRogoFormatStartDate());
+        $this->assertEquals('20211005113205', $properties->getRogoFormatEndDate());
     }
 }

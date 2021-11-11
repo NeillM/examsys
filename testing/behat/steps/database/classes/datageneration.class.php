@@ -64,6 +64,8 @@ trait datageneration
         'paper note' => array('users', 'core', 'addPaperNote', 'preProcessPaperNote'),
         'access audit' => array('audit', 'core', 'create', null),
         'courses' => array('course', 'core', 'create_course', null),
+        'reviewers' => array('papers', 'core', 'addReviewer', null),
+        'schedule' => array('papers', 'core', 'schedule', null),
     );
 
     /**
@@ -477,9 +479,9 @@ trait datageneration
         // Get paper type.
         $types = \PaperUtils::getTypeList();
         $row['papertype'] = $types[$row['type']];
-        // Generate settings json.
         $row['settings'] = '';
         if ($row['type'] === 'osce') {
+            // Generate settings json.
             switch ($row['marking']) {
                 case 'Pass | Fail':
                     $marking = 7;
@@ -501,6 +503,15 @@ trait datageneration
                     break;
             }
             $row['settings'] = '{"marking":"' . $marking . '"}';
+        } else {
+            $settings = array();
+            if (!empty($row['external_review_deadline'])) {
+                $settings['external_review_deadline'] = $row['external_review_deadline'];
+            }
+            if (!empty($row['password'])) {
+                $settings['password'] = $row['password'];
+            }
+            $row['settings']  = json_encode($settings);
         }
         return $row;
     }

@@ -188,57 +188,47 @@ if (!$title_unique) {
         $properties->set_hide_if_unanswered('0');
     }
 
-    if (!isset($_POST['timezone'])) {
-        $_POST['timezone'] = $properties->get_timezone();
-    }
+    $timezone = param::optional('timezone', $properties->get_timezone(), param::TEXT, param::FETCH_POST);
+
+    $fyear = check_var('fyear', 'POST', true, false, true);
+    $fmonth = check_var('fmonth', 'POST', true, false, true);
+    $fday = check_var('fday', 'POST', true, false, true);
+    $fhour = check_var('fhour', 'POST', true, false, true);
+    $fminute = check_var('fminute', 'POST', true, false, true);
+
+    $tyear = check_var('tyear', 'POST', true, false, true);
+    $tmonth = check_var('tmonth', 'POST', true, false, true);
+    $tday = check_var('tday', 'POST', true, false, true);
+    $thour = check_var('thour', 'POST', true, false, true);
+    $tminute = check_var('tminute', 'POST', true, false, true);
 
     if (($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == '2' and $userObject->has_role(array('SysAdmin', 'Admin'))) or !$configObject->get_setting('core', 'cfg_summative_mgmt') or $papertype != '2') {
-        $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
-        $target_timezone = new DateTimeZone($_POST['timezone']);
-
-        if (isset($_POST['fyear']) and isset($_POST['fmonth']) and isset($_POST['fday']) and isset($_POST['fhour']) and isset($_POST['fminute'])) {
+        if (isset($fyear) and isset($fmonth) and isset($fday) and isset($fhour) and isset($fminute)) {
             $null_start_date = false;
-            if ($_POST['fyear'] == '' and $_POST['fmonth'] == '' and $_POST['fday'] == '' and $_POST['fhour'] == '' and $_POST['fminute'] == '') {
+            if ($fyear == '' and $fmonth == '' and $fday == '' and $fhour == '' and $fminute == '') {
                 $null_start_date = true;
                 $tmp_start_date = null;
             } else {
-                $_POST['fday'] = fix_leapyear_day($_POST['fyear'], $_POST['fmonth'], $_POST['fday']);
-
-                $start_date = new dateTime($_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['fhour'] . $_POST['fminute'], $target_timezone);
-                $start_date->setTimezone($local_time);
-
-                if ($_POST['timezone'] < 0) {
-                    $start_date->modify('+' . abs($_POST['timezone']) . ' hour');
-                } elseif ($_POST['timezone'] > 0) {
-                    $start_date->modify('-' . $_POST['timezone'] . ' hour');
-                }
-
-                $properties->set_start_date($start_date->format('U'));
-                $properties->set_raw_start_date($start_date->format('YmdHis'));
+                $fday = fix_leapyear_day($fyear, $fmonth, $fday);
+                $start_date = date_utils::getDateTimeFromSelection($fyear, $fmonth, $fday, $fhour, $fminute, $timezone);
+                $properties->set_start_date($start_date->getTimestamp());
+                $properties->setRogoFormatStartDate();
             }
         }
 
-        if (isset($_POST['tyear']) and isset($_POST['tmonth']) and isset($_POST['tday']) and isset($_POST['thour']) and isset($_POST['tminute'])) {
+        if (isset($tyear) and isset($tmonth) and isset($tday) and isset($thour) and isset($tminute)) {
             $null_end_date = false;
-            if ($_POST['tyear'] == '' and $_POST['tmonth'] == '' and $_POST['tday'] == '' and $_POST['thour'] == '' and $_POST['tminute'] == '') {
+            if ($tyear == '' and $tmonth == '' and $tday == '' and $thour == '' and $tminute == '') {
                 $null_end_date = true;
                 $tmp_end_date = null;
             } else {
-                $_POST['tday'] = fix_leapyear_day($_POST['tyear'], $_POST['tmonth'], $_POST['tday']);
-
-                $end_date = new dateTime($_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['thour'] . $_POST['tminute'], $target_timezone);
-                $end_date->setTimezone($local_time);
-
-                if ($_POST['timezone'] < 0) {
-                    $end_date->modify('+' . abs($_POST['timezone']) . ' hour');
-                } elseif ($_POST['timezone'] > 0) {
-                    $end_date->modify('-' . $_POST['timezone'] . ' hour');
-                }
-                $properties->set_end_date($end_date->format('U'));
-                $properties->set_raw_end_date($end_date->format('YmdHis'));
+                $tday = fix_leapyear_day($tyear, $tmonth, $tday);
+                $end_date = date_utils::getDateTimeFromSelection($tyear, $tmonth, $tday, $thour, $tminute, $timezone);
+                $properties->set_end_date($end_date->getTimestamp());
+                $properties->setRogoFormatEndDate();
             }
         }
-        $properties->set_timezone($_POST['timezone']);
+        $properties->set_timezone($timezone);
 
         if (isset($_POST['calendar_year'])) {
             $calendar_year = ($_POST['calendar_year'] == '') ? null : $_POST['calendar_year'];

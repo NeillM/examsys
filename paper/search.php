@@ -166,15 +166,40 @@ if (isset($_POST['submit'])) {
           echo "</body>\n</html>\n";
           exit;
     }
-    $sql = "SELECT properties.property_id, users.title, users.initials, users.surname, GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '), paper_type, MAX(screen) AS screens, paper_title, DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date, DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, retired
-						FROM (properties, users, properties_modules, modules)
-						LEFT JOIN papers ON properties.property_id = papers.paper
-						WHERE properties.property_id = properties_modules.property_id
-						AND properties_modules.idMod = modules.id
-						AND properties.paper_ownerID = users.id $paper $owner $lab $moduleid $date $type
-						AND deleted IS NULL
-						GROUP BY properties.paper_type, properties.paper_title, properties.property_id, properties.retired, users.surname, users.title, users.initials";
-      $results = $mysqli->prepare($sql);
+    $sql = "
+    SELECT
+        properties.property_id,
+        users.title,
+        users.initials,
+        users.surname,
+        GROUP_CONCAT(DISTINCT moduleID SEPARATOR ', '),
+        paper_type,
+        MAX(screen) AS screens,
+        paper_title,
+        start_date,
+        retired,
+        end_date
+    FROM
+        (properties, users, properties_modules, modules)
+    LEFT JOIN papers ON properties.property_id = papers.paper
+    WHERE
+        properties.property_id = properties_modules.property_id
+        AND
+            properties_modules.idMod = modules.id
+        AND
+            properties.paper_ownerID = users.id $paper $owner $lab $moduleid $date $type
+        AND
+            deleted IS NULL
+    GROUP BY
+        properties.paper_type,
+        properties.paper_title,
+        properties.property_id,
+        properties.retired,
+        users.surname,
+        users.title,
+        users.initials
+    ";
+    $results = $mysqli->prepare($sql);
     if (count($variables) > 0) {
         array_unshift($variables, $params);
         $vars = array();
@@ -185,7 +210,19 @@ if (isset($_POST['submit'])) {
     }
     $results->execute();
     $results->store_result();
-    $results->bind_result($property_id, $title, $initials, $surname, $moduleID, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $retired);
+    $results->bind_result(
+        $property_id,
+        $title,
+        $initials,
+        $surname,
+        $moduleID,
+        $paper_type,
+        $screens,
+        $paper_title,
+        $start_date,
+        $retired,
+        $end_date
+    );
 
     echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
     echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
@@ -198,10 +235,12 @@ if (isset($_POST['submit'])) {
     if ($results->num_rows > 0) {
         echo '<br />';
         while ($results->fetch()) {
+            $display_start_date = date($configObject->get('cfg_very_short_datetime_php'), $start_date);
+            $display_end_date = date($configObject->get('cfg_very_short_datetime_php'), $end_date);
             echo '<div class="f">';
             echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:60px; text-align:center">';
             $type = $paper_type;
-            if ($start_date != '' and date('YmdHis', time()) >= $start_date) {
+            if ($start_date != null and time() >= $start_date) {
                 $locked = '_locked';
             } else {
                 $locked = '';

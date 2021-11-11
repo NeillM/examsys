@@ -37,9 +37,6 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 
 $paper_title = $propertyObj->get_paper_title();
 $session     = $propertyObj->get_calendar_year();
-$start_date  = $propertyObj->get_raw_start_date();
-$end_date    = $propertyObj->get_raw_end_date();
-$paper_type  = $propertyObj->get_paper_type();
 ?>
 <!DOCTYPE html>
 <html>

@@ -41,25 +41,30 @@ header('Connection: close');
 header('Content-Length: ' . strlen($response));
 echo $response;
 flush();
-$end_dateSQL = 'NOW()';
-if (isset($_POST['period']) and $_POST['period'] != '') {
-    if ($_POST['period'] == 'day') {
-        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 DAY)';
-    } elseif ($_POST['period'] == 'week') {
-        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 WEEK)';
-    } elseif ($_POST['period'] == 'month') {
-        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 MONTH)';
-    } elseif ($_POST['period'] == 'year') {
-        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 YEAR)';
-    } elseif ($_POST['period'] == '2year') {
-        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 2 YEAR)';
-    } elseif ($_POST['period'] == '3year') {
-        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 3 YEAR)';
-    } elseif ($_POST['period'] == '6year') {
-        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 6 YEAR)';
+$now = time();
+$end_dateSQL = $now;
+$period = param::optional('period', null, param::ALPHANUM, param::FETCH_POST);
+if (!is_null($period)) {
+    if ($period == 'day') {
+        $start_dateSQL = $now - date_utils::DAYSECS;
+    } elseif ($period == 'week') {
+        $start_dateSQL = $now - date_utils::WEEKSECS;
+    } elseif ($period == 'month') {
+        $server_timezone = new DateTimeZone($configObject->get('cfg_timezone'));
+        $datetime = new DateTime('now', $server_timezone);
+        $datetime->sub(new DateInterval('P1M'));
+        $start_dateSQL = $datetime->getTimestamp();
+    } elseif ($period == 'year') {
+        $start_dateSQL = $now - date_utils::YEARSECS;
+    } elseif ($period == '2year') {
+        $start_dateSQL = $now - (date_utils::YEARSECS * 2);
+    } elseif ($period == '3year') {
+        $start_dateSQL = $now - (date_utils::YEARSECS * 3);
+    } elseif ($period == '6year') {
+        $start_dateSQL = $now - (date_utils::YEARSECS * 6);
     }
 } else {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';
+    $start_dateSQL = $now - (date_utils::YEARSECS * 5);
 }
 
 if (!isset($protocol)) {

@@ -286,9 +286,11 @@ class webServiceRestAPI extends restAPI
             return '';
         }
         $papers = array();
-
-        $sql = "SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > SUBDATE(NOW(), INTERVAL 4 WEEK) AND end_date < NOW() AND deleted IS NULL ORDER BY start_date";
+        $now = time();
+        $fourwweksago = $now - (4 * date_utils::WEEKSECS);
+        $sql = "SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > ? AND end_date < ? AND deleted IS NULL ORDER BY start_date";
         $res = $this->db->prepare($sql);
+        $res->bind_param('ii', $fourwweksago, $now);
         $res->execute();
         $res->store_result();
         $res->bind_result($paperID);

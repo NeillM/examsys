@@ -47,8 +47,8 @@ $marking          = $propertyObj->get_marking();
 $pass_mark        = $propertyObj->get_pass_mark();
 $distinction_mark = $propertyObj->get_distinction_mark();
 $paper_type       = $propertyObj->get_paper_type();
-$startdate        = $propertyObj->get_raw_start_date();
-$enddate          = $propertyObj->get_raw_end_date();
+$startdate        = $propertyObj->getRogoFormatStartDate();
+$enddate          = $propertyObj->getRogoFormatEndDate();
 
 $percent      = 100;
 $ordering     = 'asc';

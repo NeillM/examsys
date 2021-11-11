@@ -72,7 +72,7 @@ if (isset($_POST['folder'])) {
 <?php
   echo "<table width=\"100%\" border=\"0\">\n";
 if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
-    echo '<tr><td colspan="6" class="titlebar">' . $string['availability'] . "</td></tr>\n";
+    echo '<tr><td colspan="7" class="titlebar">' . $string['availability'] . "</td></tr>\n";
 } else {
     echo '<tr><td colspan="6" class="titlebar">' . $string['summativeexamdetails'] . "</td></tr>\n";
 }
@@ -133,23 +133,23 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     }
     echo "</select><select id=\"fyear\" name=\"fyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < ($date_array['year'] + 21); $i++) {
-        // Temp bailout to handle 2038 mysql unixtimestamp issue.
-        if ($i > 2037) {
-            break;
-        }
         if ($current_month == 1 and $i == ($date_array['year'] + 1)) {
             echo "<option value=\"$i\" selected>$i</option>\n";
         } else {
             echo "<option value=\"$i\">$i</option>\n";
         }
     }
-    echo "</select><select id=\"ftime\" name=\"ftime\" class=\"datecopy\">\n";
+    echo "</select><select id=\"fhour\" name=\"fhour\" class=\"datecopy\">\n";
     // Available from Hour
-    $times = array('000000' => '00:00','003000' => '00:30','010000' => '01:00','013000' => '01:30','020000' => '02:00','023000' => '02:30','030000' => '03:00','033000' => '03:30','040000' => '04:00','043000' => '04:30','050000' => '05:00','053000' => '05:30','060000' => '06:00','063000' => '06:30','070000' => '07:00','073000' => '07:30','080000' => '08:00','083000' => '08:30','090000' => '09:00','093000' => '09:30','100000' => '10:00','103000' => '10:30','110000' => '11:00','113000' => '11:30','120000' => '12:00','123000' => '12:30','130000' => '13:00','133000' => '13:30','140000' => '14:00','143000' => '14:30','150000' => '15:00','153000' => '15:30','160000' => '16:00','163000' => '16:30','170000' => '17:00','173000' => '17:30','180000' => '18:00','183000' => '18:30','190000' => '19:00','193000' => '19:30','200000' => '20:00','203000' => '20:30','210000' => '21:00','213000' => '21:30','220000' => '22:00','223000' => '22:30','230000' => '23:00','233000' => '23:30');
-    foreach ($times as $key => $value) {
-        echo '<option value="' . $key . '">' . $value . "</option>\n";
+    for ($hour = 0; $hour < 24; $hour++) {
+        $h =  str_pad($hour, 2, '0', STR_PAD_LEFT);
+        echo '<option value="' . $h . '">' . $h . "</option>\n";
     }
-    echo "</select>\n</td>";
+    echo "</select><select id=\"fminute\" name=\"fminute\" class=\"datecopy\">\n";
+    // Available from Minute
+    echo '<option value="00">00</option>';
+    echo '<option value="30">30</option>';
+    echo '</select></td>';
     echo '<td align="right">' . $string['to'] . '&nbsp;</td><td>';
 
     // Available to Day
@@ -200,22 +200,23 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     }
     echo "<select id=\"tyear\" name=\"tyear\" class=\"datecopy\">\n";
     for ($i = $date_array['year']; $i < $date_array['year'] + 21; $i++) {
-        // Temp bailout to handle 2038 mysql unixtimestamp issue.
-        if ($i > 2037) {
-            break;
-        }
         if ($i == $target_year) {
             echo "<option value=\"$i\" selected>$i</option>\n";
         } else {
             echo "<option value=\"$i\">$i</option>\n";
         }
     }
-    echo "</select><select id=\"ttime\" name=\"ttime\" class=\"datecopy\">\n";
+    echo "</select><select id=\"thour\" name=\"thour\" class=\"datecopy\">\n";
     // Available to Hour
-    foreach ($times as $key => $value) {
-        echo '<option value="' . $key . '">' . $value . "</option>\n";
+    for ($hour = 0; $hour < 24; $hour++) {
+        $h =  str_pad($hour, 2, '0', STR_PAD_LEFT);
+        echo '<option value="' . $h . '">' . $h . "</option>\n";
     }
-    echo "</select>\n</td></tr>\n";
+    echo "</select><select id=\"tminute\" name=\"tminute\" class=\"datecopy\">\n";
+    // Available to Minute
+    echo '<option value="00">00</option>';
+    echo '<option value="30">30</option>';
+    echo '</select></td></tr>';
 
     echo '<tr><td align="right">' . $string['timezone'] . '</td><td colspan="3"><select name="timezone">';
     foreach ($timezone_array as $individual_zone => $display_zone) {

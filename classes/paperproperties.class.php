@@ -205,8 +205,8 @@ class PaperProperties
         // SELECT statement.
         $select = 'properties.property_id,
                 paper_title,
-                UNIX_TIMESTAMP(start_date) AS start_date,
-                UNIX_TIMESTAMP(end_date) AS end_date,
+                start_date AS start_date,
+                end_date AS end_date,
                 exam_duration,
                 calendar_year,
                 password,
@@ -224,14 +224,14 @@ class PaperProperties
                 paper_settings.setting = 'remote_summative' AND
                 paper_settings.value = 1 AND
                 properties.start_date IS NOT NULL AND
-                properties.end_date > NOW() AND
+                properties.end_date > UNIX_TIMESTAMP() AND
                 properties.deleted IS NULL
                 ORDER BY properties.property_id";
         } else {
             $where = "paper_type = '2' AND
                 labs REGEXP ? AND
-                start_date < DATE_ADD( NOW(), interval 30 minute ) AND
-                end_date > NOW() AND
+                start_date < UNIX_TIMESTAMP() + 1800 AND
+                end_date > UNIX_TIMESTAMP() AND
                 deleted IS NULL";
         }
         $sql = 'SELECT ' . $select . ' FROM ' . $from . ' WHERE ' . $where;
@@ -317,10 +317,8 @@ class PaperProperties
         $sql = "SELECT
                   property_id,
                   paper_title,
-                  DATE_FORMAT(start_date, '%Y%m%d%H%i%s'),
-                  DATE_FORMAT(end_date, '%Y%m%d%H%i%s'),
-                  UNIX_TIMESTAMP(start_date) AS start_date,
-                  UNIX_TIMESTAMP(end_date) AS end_date,
+                  start_date,
+                  end_date,
                   timezone,
                   paper_type,
                   paper_prologue,
@@ -341,7 +339,7 @@ class PaperProperties
                   calculator,
                   exam_duration,
                   deleted,
-                  UNIX_TIMESTAMP(created),
+                  created,
                   random_mark,
                   total_mark,
                   display_correct_answer,
@@ -386,8 +384,6 @@ class PaperProperties
         $paper_results->bind_result(
             $this->property_id,
             $this->paper_title,
-            $this->raw_start_date,
-            $this->raw_end_date,
             $this->start_date,
             $this->end_date,
             $this->timezone,
@@ -432,6 +428,8 @@ class PaperProperties
         $paper_results->fetch();
         $paper_results->close();
 
+        $this->setRogoFormatStartDate();
+        $this->setRogoFormatEndDate();
         $this->set_display_start_date();
         $this->set_display_start_time();
         $this->set_display_end_date();
@@ -512,10 +510,10 @@ class PaperProperties
             $params['hide_if_unanswered'] = array('s', $this->hide_if_unanswered);
             $params['sound_demo'] = array('s', $this->sound_demo);
             $params['password'] = array('s', $this->password);
-            $params['deleted'] = array('s', $this->deleted);
+            $params['deleted'] = array('i', $this->deleted);
             if (!$graded) {
-                $params['start_date'] = array('s', $this->raw_start_date);
-                $params['end_date'] = array('s', $this->raw_end_date);
+                $params['start_date'] = array('i', $this->start_date);
+                $params['end_date'] = array('i', $this->end_date);
                 $params['timezone'] = array('s', $this->timezone);
                 $params['marking'] = array('s', $this->marking);
                 $params['pass_mark'] = array('i', $this->pass_mark);
@@ -547,7 +545,8 @@ class PaperProperties
     */
     public function is_live()
     {
-        if ($this->start_date !== null and date('U', time()) >= $this->start_date and $this->end_date !== null and date('U', time()) <= $this->end_date) {
+        $now = time();
+        if ($this->start_date !== null and $now >= $this->start_date and $this->end_date !== null and $now <= $this->end_date) {
             return true;
         } else {
             return false;
@@ -560,7 +559,7 @@ class PaperProperties
     */
     private function load_summative_lock()
     {
-        if ($this->start_date !== null and date('U', time()) >= $this->start_date and $this->paper_type == '2') {
+        if ($this->start_date !== null and time() >= $this->start_date and $this->paper_type == '2') {
             $this->summative_lock = true;
         } else {
             $this->summative_lock = false;
@@ -845,16 +844,22 @@ class PaperProperties
     }
 
     /**
+     * Get the rogo formatted start date
+     * Used by log tables until they are migrated to bigint
      * @return string $start_date
      */
-    public function get_raw_start_date()
+    public function getRogoFormatStartDate()
     {
-        return $this->raw_start_date;
+        return $this->rogo_format_start_date;
     }
 
-    public function set_raw_start_date($raw_start_date)
+    /**
+     * Set the rogo formatted start date
+     * Used by log tables until they are migrated to bigint
+     */
+    public function setRogoFormatStartDate()
     {
-        $this->raw_start_date = $raw_start_date;
+        $this->rogo_format_start_date = date('YmdHis', $this->start_date);
     }
 
     /**
@@ -921,17 +926,24 @@ class PaperProperties
         }
     }
 
+
     /**
+     * Get the rogo formatted end date
+     * Used by log tables until they are migrated to bigint
      * @return string $end_date
      */
-    public function get_raw_end_date()
+    public function getRogoFormatEndDate()
     {
-        return $this->raw_end_date;
+        return $this->rogo_format_end_date;
     }
 
-    public function set_raw_end_date($raw_end_date)
+    /**
+     * Set the rogo formatted end date
+     * Used by log tables until they are migrated to bigint
+     */
+    public function setRogoFormatEndDate()
     {
-        $this->raw_end_date = $raw_end_date;
+        $this->rogo_format_end_date = date('YmdHis', $this->end_date);
     }
 
     /**
@@ -2180,7 +2192,8 @@ class PaperProperties
 
     public function is_active()
     {
-        if (date('U') > $this->start_date and date('U') < $this->end_date) {
+        $now = time();
+        if ($now > $this->start_date and $now < $this->end_date) {
               return true;
         } else {
             return false;

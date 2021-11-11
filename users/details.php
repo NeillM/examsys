@@ -644,24 +644,28 @@ if ($log_viewable) {
     if (stripos($user_details['roles'], 'External Examiner') !== false or stripos($user_details['roles'], 'Internal Reviewer') !== false) {
         $external_array = array();
 
-        $sql = "SELECT DISTINCT
-								crypt_name, paper_title, property_id, paper_type, started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started
-							FROM
-								(properties, properties_reviewers)
-							LEFT JOIN
-								review_metadata
-							ON
-								properties.property_id = review_metadata.paperID AND review_metadata.reviewerID = ?
-							WHERE
-								properties.property_id = properties_reviewers.paperID AND
-								properties_reviewers.reviewerID = ? AND
-								deleted IS NULL
-							ORDER BY
-								paper_title";
+        $sql = 'SELECT DISTINCT
+            crypt_name,
+            paper_title,
+            property_id,
+            paper_type,
+            started
+        FROM
+            (properties, properties_reviewers)
+        LEFT JOIN
+            review_metadata
+        ON
+            properties.property_id = review_metadata.paperID AND review_metadata.reviewerID = ?
+        WHERE
+            properties.property_id = properties_reviewers.paperID AND
+            properties_reviewers.reviewerID = ? AND
+            deleted IS NULL
+        ORDER BY
+            paper_title';
         $stmt = $mysqli->prepare($sql);
         $stmt->bind_param('ii', $userID, $userID);
         $stmt->execute();
-        $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type, $started, $display_started);
+        $stmt->bind_result($crypt_name, $paper_title, $property_id, $paper_type, $started);
         while ($stmt->fetch()) {
             $paper[$results_no]['crypt_name'] = $crypt_name;
             $paper[$results_no]['q_paper'] = $paper_title;
@@ -669,7 +673,7 @@ if ($log_viewable) {
             $paper[$results_no]['type'] = '2';
             $paper[$results_no]['paper_type'] = '2';
             $paper[$results_no]['started'] = $started;
-            $paper[$results_no]['display_started'] = $display_started;
+            $paper[$results_no]['display_started'] = date($configObject->get('cfg_long_date_php'), $started);
             $paper[$results_no]['duration'] = '';
             $paper[$results_no]['mark'] = '';
             $paper[$results_no]['totalpos'] = '';

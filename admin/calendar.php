@@ -341,30 +341,73 @@ $stmt->close();
     $paper_details = array();
     $paper_ids = array();
     $property_id = 0;
+    $startdatetime = strtotime($current_year . '0101000000');
+    $enddatetime = strtotime($current_year . '1231235959');
     // Get scheduled summative exams
     if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
         // Get papers running on various dates.
-        $result = $mysqli->prepare("SELECT paper_type, password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, timezone FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idmod = modules.id AND start_date >= " . $current_year . '0101000000 AND end_date <= ' . $current_year . "1231235959 AND paper_type IN ('2', '4') AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
+        $result = $mysqli->prepare("
+            SELECT
+                paper_type,
+                password,
+                exam_duration,
+                start_date,
+                end_date,
+                labs,
+                properties.property_id,
+                paper_title,
+                idMod,
+                timezone
+            FROM
+                properties,
+                properties_modules,
+                modules
+            WHERE
+                properties.property_id = properties_modules.property_id
+            AND
+                properties_modules.idmod = modules.id
+            AND
+                start_date >= ?
+            AND
+                end_date <= ?
+            AND
+                paper_type IN ('2', '4')
+            AND
+                deleted IS NULL
+            $schools_sql $lab_sql
+            ORDER BY start_date");
+        $result->bind_param('ii', $startdatetime, $enddatetime);
         $result->execute();
-        $result->bind_result($paper_type, $password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $start_day, $end_date, $idMod, $timezone);
+        $result->bind_result(
+            $paper_type,
+            $password,
+            $duration,
+            $start_date,
+            $end_date,
+            $labs,
+            $property_id,
+            $paper_title,
+            $idMod,
+            $timezone
+        );
         while ($result->fetch()) {
             $paper_details[$property_id]['type']          = $paper_type;
             $paper_details[$property_id]['labs']          = $labs;
-            $paper_details[$property_id]['date']          = $main_date;
-            $paper_details[$property_id]['start_day']     = $start_day;
-            $paper_details[$property_id]['start_time']    = $start_time;
-            $paper_details[$property_id]['am_pm']         = $am_pm;
-            $paper_details[$property_id]['end_date']      = $end_date;
+            $paper_details[$property_id]['date']          = date('Y/m/d', $start_date);
+            $paper_details[$property_id]['start_day']     = date('d', $start_date);
+            $paper_details[$property_id]['start_time']    = date('H:i', $start_date);
+            $paper_details[$property_id]['am_pm']         = date('A', $start_date);
+            $paper_details[$property_id]['end_date']      = date('j', $end_date);
             $paper_details[$property_id]['paper_title']   = $paper_title;
             if (mb_strlen($paper_details[$property_id]['paper_title']) > 30) {
                 $paper_details[$property_id]['paper_title'] = str_replace('_', ' ', $paper_details[$property_id]['paper_title']);
             }
             $paper_details[$property_id]['property_id']   = $property_id;
-            $paper_details[$property_id]['month']         = $month;
+            $paper_details[$property_id]['month']         = date('m', $start_date);
             $paper_details[$property_id]['cal_year']      = $current_year;
-            $paper_details[$property_id]['start_hour']    = $start_hour;
-            $paper_details[$property_id]['start_minute'] = $start_minute;
-            $paper_details[$property_id]['end_time']      = $end_time;
+            $paper_details[$property_id]['start_hour']    = date('H', $start_date);
+            $paper_details[$property_id]['start_minute'] = date('i', $start_date);
+            $paper_details[$property_id]['end_time']      = date('H:i', $end_date);
             $paper_details[$property_id]['idMod']         = $idMod;
             $paper_details[$property_id]['password']      = $password;
             $paper_details[$property_id]['duration']      = $duration;

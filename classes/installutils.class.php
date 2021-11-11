@@ -41,6 +41,7 @@ class InstallUtils
     public static $cfg_very_short_datetime_php;
     public static $cfg_long_time_php;
     public static $cfg_short_time_php;
+    public static $cfg_long_full_datetime_php;
     public static $cfg_search_leadin_length;
     public static $cfg_timezone;
     public static $cfg_tmpdir;
@@ -337,6 +338,7 @@ class InstallUtils
             self::$cfg_very_short_datetime_php = param::required('cfg_very_short_datetime_php', param::TEXT, param::FETCH_POST);
             self::$cfg_long_time_php = param::required('cfg_long_time_php', param::TEXT, param::FETCH_POST);
             self::$cfg_short_time_php = param::required('cfg_short_time_php', param::TEXT, param::FETCH_POST);
+            self::$cfg_long_full_datetime_php = param::required('cfg_long_full_datetime_php', param::TEXT, param::FETCH_POST);
             self::$cfg_search_leadin_length = param::required('cfg_search_leadin_length', param::INT, param::FETCH_POST);
             self::$cfg_timezone = param::required('cfg_timezone', param::TEXT, param::FETCH_POST);
             self::$cfg_tmpdir = param::required('tmpdir', param::TEXT, param::FETCH_POST);
@@ -354,6 +356,7 @@ class InstallUtils
             self::$cfg_very_short_datetime_php = self::getSettings(param::TEXT, true, 'timedate', 'phpveryshortdatetime');
             self::$cfg_long_time_php = self::getSettings(param::TEXT, true, 'timedate', 'phplongdatetime');
             self::$cfg_short_time_php = self::getSettings(param::TEXT, true, 'timedate', 'phpshortdatetime');
+            self::$cfg_long_full_datetime_php = self::getSettings(param::TEXT, true, 'timedate', 'phplongfulldatetime');
             self::$cfg_search_leadin_length = 160;
             self::$cfg_timezone = self::getSettings(param::TEXT, true, 'timedate', 'timezone');
             self::$cfg_tmpdir = self::getSettings(param::TEXT, true, 'server', 'temp');
@@ -2173,6 +2176,7 @@ class InstallUtils
   \$cfg_very_short_datetime_php = '{cfg_very_short_datetime_php}';
   \$cfg_long_time_php = '{cfg_long_time_php}';
   \$cfg_short_time_php = '{cfg_short_time_php}';
+  \$cfg_long_full_datetime_php = '{cfg_long_full_datetime_php}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 // cron user
@@ -2274,6 +2278,7 @@ CONFIG;
         $config = str_replace('{cfg_very_short_datetime_php}', self::$cfg_very_short_datetime_php, $config);
         $config = str_replace('{cfg_long_time_php}', self::$cfg_long_time_php, $config);
         $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
+        $config = str_replace('{cfg_long_full_datetime_php}', self::$cfg_long_full_datetime_php, $config);
         $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
         $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
         $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);

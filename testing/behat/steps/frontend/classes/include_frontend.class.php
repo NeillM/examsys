@@ -39,4 +39,5 @@ trait include_frontend
     use Keyword;
     use User;
     use ClassTotals;
+    use Statistics;
 }
