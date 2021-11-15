@@ -742,4 +742,207 @@ SQL;
         $mediasql->close();
         return $media;
     }
+
+    /**
+     * Set lineage for a question to the correct parent and root.
+     * If parent ID is unset, this is assumed to be a new question.
+     * @param int $qID      question ID
+     * @param int $changeID track_changes ID
+     * @param int $parentID (optional) question parent copied from, same as question ID if a new question
+     */
+    public static function addLineage(int $qID, int $changeID, int $parentID = null) {
+        $configObject = Config::get_instance();
+        $lineagesql = $configObject->db->prepare(
+            'INSERT INTO questions_lineage (questionID, parentID, rootID, changeID)
+            VALUES (?,?,?,?)'
+        );
+        if (!is_null($parentID) && $parentID != $qID) {
+            $rootID = self::getLineageRoot($parentID);
+        } else {
+            $rootID = $qID;
+            $parentID = null; // In case $parentID = $qID
+        }
+        $lineagesql->bind_param('iiii', $qID, $parentID, $rootID, $changeID);
+        $lineagesql->execute();
+        $lineagesql->free_result();
+    }
+
+    /**
+     * Get the root question ID for a question
+     * @param int $qID question ID
+     * 
+     * @return int
+     */
+    public static function getLineageRoot(int $qID) {
+        $configObject = Config::get_instance();
+        $lineagesql = $configObject->db->prepare(
+            'SELECT rootID
+            FROM questions_lineage
+            WHERE questionID = ?'
+        );
+        $lineagesql->bind_param('i', $qID);
+        $lineagesql->execute();
+        $lineagesql->bind_result($rootID);
+        $lineagesql->fetch();
+        $lineagesql->free_result();
+        return $rootID;
+    }
+
+    /**
+     * Get the parent question ID for a question
+     * @param int $qID question ID
+     * 
+     * @return int
+     */
+    public static function getLineageParent(int $qID) {
+        $configObject = Config::get_instance();
+        $lineagesql = $configObject->db->prepare(
+            'SELECT parentID
+            FROM questions_lineage
+            WHERE questionID = ?'
+        );
+        $lineagesql->bind_param('i', $qID);
+        $lineagesql->execute();
+        $lineagesql->bind_result($parentID);
+        $lineagesql->fetch();
+        $lineagesql->free_result();
+        return $parentID;
+    }
+
+    /**
+     * Get all parent lineage for a question including siblings
+     * @param int $qID question ID
+     * 
+     * @return array
+     */
+    public static function getLineage(int $qID) {
+        $configObject = Config::get_instance();
+
+        $lineagesql = $configObject->db->prepare(
+            'SELECT q1.questionID, q1.parentID FROM questions_lineage q1
+             JOIN questions_lineage q2 ON q1.rootID = q2.rootID
+             AND q2.questionID = ?
+             ORDER BY q1.questionID ASC'
+        );
+        $lineagesql->bind_param('i', $qID);
+        $lineagesql->execute();
+        $lineagesql->bind_result($questionID, $parentID);
+        $questionList = [];
+        while ($lineagesql->fetch()) {
+            $questionList[$questionID] = $parentID;
+        }
+        $lineagesql->free_result();
+        return $questionList;
+    }
+
+    /**
+     * Filter to a list of ancestors ordered from parent to root
+     * Limited to config option misc_full_question_history_display_limit
+     * @param int      $qID       Question ID to filter from
+     * @param array    $lineage   Lineage array from getLineage()
+     * @param string[] $string Language strings
+     * 
+     * @return array
+     */
+    public static function filterParentLineage(int $qID, array $lineage, array &$string) {
+        $parents = [];
+        $parent = $qID;
+        $i = 0;
+        $configObject = Config::get_instance();
+        $limit = $configObject->get_setting('core', 'misc_full_question_history_display_limit');
+        while (!is_null($lineage[$parent]) && $parent != $lineage[$parent]) {
+            $i++;
+            $parent = $lineage[$parent];
+            $parents[] = $parent;
+            if ($i >= $limit) {
+                $userObject = UserObject::get_instance();
+                $logger = new Logger($configObject->db);
+                $logger->record_application_warning($userObject->get_user_ID(), 'Question Lineage', sprintf($string['history_exceeded_parent_limit'], $limit), __FILE__, __LINE__ - 3, array('qID' => $qID));
+                break;
+            }
+        };
+        return $parents;
+    }
+
+    /**
+     * Simple filter to return only the direct children of a question from a lineage array
+     * @param array $lineage Lineage array from getLineage()
+     * 
+     * @return array
+     */
+    public static function filterChildLineage(int $qID, array $lineage) {
+        return array_keys($lineage, $qID);
+    }
+
+    /**
+     * Return full change array.
+     * @param int      $qID    Question ID
+     * @param int      $limit  Limit number of results
+     * @param string[] $string Language strings
+     *
+     * @return array
+     */
+    public static function getFullHistory(int $qID, int $limit, array &$string) {
+        $configObject = Config::get_instance();
+        $lineage = \QuestionUtils::getLineage($qID);
+        $parentIDs = \QuestionUtils::filterParentLineage($qID, $lineage, $string);
+        // $changeIDs = array_merge(array($qID), $parentIDs);
+        $childIDs = \QuestionUtils::filterChildLineage($qID, $lineage);
+        $sql = '';
+        // Load the changes into an array
+        $bindParams = [];
+        // 'Copied Question' is currently hardcoded, not localised - be aware when i18n is implemented
+        // Below gets all question history prior to the current question, and copied child question IDs
+        if (!empty($parentIDs)) {
+            $bindParams = array_merge($bindParams, [$qID], $parentIDs);
+            $paramsForParents = implode(',', array_fill(0, count($parentIDs) + 1, '?'));
+            $sql .= <<<SQL
+                SELECT `qlp`.`questionID`, `tc`.`type`, `tc`.`part`, `tc`.`old`, `tc`.`new`,
+                DATE_FORMAT(`tc`.`changed`, '%d/%m/%Y %H:%i') AS `display_changed`,
+                `users`.`title`, `users`.`initials`, `users`.`surname`,
+                `tc`.`id` AS `change_id_sort`
+                FROM `questions_lineage` `ql`
+                JOIN `questions_lineage` `qlp` ON `ql`.`parentID` = `qlp`.`questionID`
+                JOIN `track_changes` `tc` ON `qlp`.`questionID` = `tc`.`typeID`
+                LEFT JOIN `users` ON `tc`.`editor`=`users`.`id`
+                WHERE `ql`.`questionID` IN ($paramsForParents)
+                    AND `tc`.`id` < `ql`.`changeID`
+                    AND `qlp`.`questionID` IS NOT NULL
+                UNION ALL 
+                SQL;
+        }
+        array_push($bindParams, $qID);
+        $sql .= <<<SQL
+            SELECT `ql`.`questionID`, `tc`.`type`, `tc`.`part`, `tc`.`old`, `tc`.`new`,
+            DATE_FORMAT(`tc`.`changed`, '%d/%m/%Y %H:%i') AS `display_changed`,
+            `users`.`title`, `users`.`initials`, `users`.`surname`,
+            `tc`.`id` AS `change_id_sort`
+            FROM `questions_lineage` `ql`
+            JOIN `track_changes` `tc` ON `ql`.`questionID` = `tc`.`typeID`
+            LEFT JOIN `users` ON `tc`.`editor`=`users`.`id` 
+            WHERE (`ql`.`questionID` = ?) 
+            SQL;
+        if (!empty($childIDs)) {
+            $paramsForChildren = implode(',', array_fill(0, count($childIDs), '?'));
+            $bindParams = array_merge($bindParams, $childIDs);
+            $sql .= <<<SQL
+                OR (`ql`.`questionID` IN ($paramsForChildren) AND `tc`.`type` = 'Copied Question') 
+                SQL;
+        }
+        array_push($bindParams, $limit);
+        $sql .= <<<SQL
+            ORDER BY `change_id_sort` DESC
+            LIMIT ?
+            SQL;
+        $result = $configObject->db->prepare($sql);
+        $result->bind_param(str_repeat('i', count($bindParams)), ...$bindParams); // Dynamic bind for IN
+        $result->execute();
+        $result->bind_result($qID, $type, $part, $old, $new, $display_changed, $title, $initials, $surname, $changeID);
+        $changes = [];
+        while ($result->fetch()) {
+            $changes[] = array('qID' => $qID, 'date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname);
+        }
+        $result->close();
+        return $changes;
+    }
 }

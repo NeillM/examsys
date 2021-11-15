@@ -575,6 +575,7 @@ QUERY;
                 // Logging.
                 if ($newquestion) {
                     $this->_logger->track_change('New Question', $this->id, $this->_user_id, $this->get_leadin(), '', '');
+                    \QuestionUtils::addLineage($this->id, $this->_logger->lastChangeId);
                 } else {
                     // Log any changes
                     foreach ($this->_modified_fields as $key => $value) {
@@ -1581,6 +1582,27 @@ QUERY;
                 $this->_changes[] = array('date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname);
             }
             $result->close();
+        }
+
+        return $this->_changes;
+    }
+
+    /**
+     * Get the full change history of the question, including parents/direct children, lazily loaded
+     * Functionality moved to questionutils.class.php for phpunit testing
+     * @param int      $limit Maximum number of change results to return
+     * @param string[] $string Language strings
+     * 
+     * @return array   Associative array containing question ID, date, section, old value, new value and user for the change
+     */
+    public function get_full_history(int $limit, array &$string)
+    {
+        if ($this->id == -1) {
+            return array();
+        }
+
+        if (!is_array($this->_changes)) {
+            $this->_changes = \QuestionUtils::getFullHistory($this->id, $limit, $string);
         }
 
         return $this->_changes;

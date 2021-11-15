@@ -698,8 +698,14 @@ if ($critical_error != '') {
 
       <div id="changes" class="tab-area">
     <?php
-    $changes = $question->get_changes();
-    echo render_changes($changes, $string);
+    if ($configObject->get_setting('core', 'misc_full_question_history_enable')) {
+        $limit = $configObject->get_setting('core', 'misc_full_question_history_display_limit');
+        $changes = $question->get_full_history($limit, $string);
+        echo render_full_history($changes, $string, $question->id);
+    } else {
+        $changes = $question->get_changes();
+        echo render_changes($changes, $string);
+    }
     ?>
       </div>
 

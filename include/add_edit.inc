@@ -176,7 +176,88 @@ HTML;
 
         $html .= <<< HTML
 
-  				</tbody>
+            </tbody>
+        </table>
+
+HTML;
+    } else {
+        // Shouldn't happen if we're recording question creation as a change
+        $html = <<< HTML
+        <p>{$string['nochangesrecorded']}</p>
+
+HTML;
+    }
+
+    return $html;
+}
+
+function render_full_history($changes, &$string, $qID)
+{
+    $cutoff = 70;
+    $i = 0;
+    if (count($changes) > 0) {
+        $html = <<< HTML
+        <table class="data full-history">
+          <thead>
+            <tr>
+              <th class="data-smaller">{$string['date']}</th>
+              <th class="data-qid">{$string['question']}</th>
+              <th class="data-small">{$string['action']}</th>
+              <th class="data-small">{$string['section']}</th>
+              <th class="data-wide">{$string['old']}</th>
+              <th class="data-wide">{$string['new']}</th>
+              <th class="data-small">{$string['editor']}</th>
+            </tr>
+          </thead>
+          <tbody>
+
+HTML;
+
+        foreach ($changes as $change) {
+            $alt = ($i++ % 2 == 1) ? ' class="alt"' : '';
+            $change['old'] = strip_tags($change['old']);
+            $change['new'] = strip_tags($change['new']);
+            $change_old = $change['old'];
+            $change_old_more = '';
+            $change_new = $change['new'];
+            $change_new_more = '';
+            if (mb_strlen($change['old']) > $cutoff) {
+                $split_pos = mb_strrpos(mb_substr($change['old'], 0, $cutoff), ' ');
+                $change_old = mb_substr($change['old'], 0, $split_pos);
+                $change_old_more = mb_substr($change['old'], $split_pos);
+                $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
+            }
+            if (mb_strlen($change['new']) > $cutoff) {
+                $split_pos = mb_strrpos(mb_substr($change['new'], 0, $cutoff), ' ');
+                $change_new = mb_substr($change['new'], 0, $split_pos);
+                $change_new_more = mb_substr($change['new'], $split_pos);
+                $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
+            }
+            if ($change['section'] == $string['markscorrect'] or $change['section'] == $string['marksincorrect'] or $change['section'] == $string['markspartial']) {
+                $change['section'] = '<span class="marks-change">' . $change['section'] . '</span>';
+            }
+            if ($change['qID'] == $qID) {
+                $change['qID'] = '<span class="current-question">' . $qID . '</span>';
+            } else {
+                $change['qID'] = '<a href="/question/edit/index.php?q_id=' . $change['qID'] . '&amp;tab=changes">' . $change['qID'] . '</a>';
+            }
+            $html .= <<< HTML
+            <tr{$alt}>
+              <td>{$change['date']}</td>
+              <td>{$change['qID']}</td>
+              <td>{$change['action']}</td>
+              <td>{$change['section']}</td>
+              <td>{$change_old}{$change_old_more}</td>
+              <td>{$change_new}{$change_new_more}</td>
+              <td>{$change['user']}</td>
+            </tr>
+
+HTML;
+        }
+
+        $html .= <<< HTML
+
+            </tbody>
         </table>
 
 HTML;

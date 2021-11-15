@@ -316,6 +316,8 @@ class IE_Local_Save extends IE_Main
 
             $db->InsertRow('track_changes', 'id', $track);
 
+            \QuestionUtils::addLineage($this->q_row['q_id']);
+
             // we have a paper, add this question onto the list of questions for the paper
             if ($paperid && empty($data->papers)) {
                 $p_row = $this->db->GetBlankTableRow('papers');

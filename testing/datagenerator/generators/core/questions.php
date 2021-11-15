@@ -200,17 +200,17 @@ class questions extends generator
     /**
      * Create a new question
      *
-     * @parm array $parameters
+     * @param array $parameters
      *  string parameters[paperowner]
      *  string parameters[type]
+     * @param int|null $parentID Question parent if applicable
      * @throws data_error If passed parameter is invalid
      * @throws no_database
      * @throws not_found
      * @return array
      */
-    public function create_question($parameters)
+    public function create_question($parameters, $parentID = null)
     {
-
         $types = \QuestionEdit::$types;
         // Basic check mandatory parameters for creating question.
         if (empty($parameters['type']) or (!in_array($parameters['type'], $types)) or empty($parameters['user']) or empty($parameters['leadin'])) {
@@ -222,8 +222,39 @@ class questions extends generator
             if (!empty($parameters['scenario'])) {
                 $parameters['scenario_plain'] = strip_tags($parameters['scenario']);
             }
-            return $this->insert_question($parameters);
+            $question = $this->insert_question($parameters);
+            if (is_null($parentID)) {
+                $type = 'New Question';
+                $old = $question['leadin'];
+                $new = '';
+            } else {
+                $type = 'Copied Question';
+                $old = $parentID;
+                $new = $question['id'];
+            }
+            $changeID = $this->track_question_change($type, $question['id'], $parameters['user'], $old, $new);
+            \QuestionUtils::addLineage($question['id'], $changeID, $parentID);
+            return $question;
         }
+    }
+
+    /**
+     * Track a change to a question
+     * @param string $type Type of change to log
+     * @param int $qID Question ID
+     * @param |string $username Username to associate with change
+     * @param string $old Old field
+     * @param string $new New field
+     * @param string $part Affected part
+     * @return int Insert ID
+     */
+    public function track_question_change(string $type, int $qID, string $username, string $old, string $new = '', string $part = '')
+    {
+        $userID = UserUtils::username_exists($username, $this->db);
+        $trackquery = $this->db->prepare('INSERT INTO track_changes (type, typeID, editor, old, new, changed, part) VALUES (?, ?, ?, ?, ?, NOW(), ?)');
+        $trackquery->bind_param('siisss', $type, $qID, $userID, $old, $new, $part);
+        $trackquery->execute();
+        return $this->db->insert_id;
     }
 
     /**

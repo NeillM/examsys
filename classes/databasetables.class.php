@@ -1054,6 +1054,19 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
+        $this->tableList['questions_lineage'] = <<<QUERY
+        CREATE TABLE `questions_lineage` (
+          `questionID` INT(4) NOT NULL,
+          `parentID` INT(4) NULL DEFAULT NULL,
+          `rootID` INT(4) NOT NULL,
+          `changeID` INT(4) NOT NULL,
+          INDEX `questions_lineage_fk0_question` (`questionID`),
+          INDEX `questions_lineage_fk1_parent` (`parentID`),
+          INDEX `questions_lineage_fk2_root` (`rootID`),
+          INDEX `questions_lineage_fk3_change` (`changeID`)
+        ) ENGINE={$engine} DEFAULT CHARSET={$charset}
+QUERY;
+
         $this->tableList['questions_metadata'] = <<<QUERY
         CREATE TABLE `questions_metadata` (
           `id` int(11) NOT NULL auto_increment,

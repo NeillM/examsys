@@ -669,6 +669,10 @@ class InstallUtils
         $alter[] = 'ALTER TABLE options_media ADD CONSTRAINT options_media_fk1 FOREIGN KEY (mediaid) REFERENCES media(id)';
         $alter[] = 'ALTER TABLE questions_metadata ADD CONSTRAINT questions_metadata_fk0 FOREIGN KEY (questionID) REFERENCES questions(q_id)';
         $alter[] = 'ALTER TABLE options_metadata ADD CONSTRAINT options_metadata_fk0 FOREIGN KEY (optionID) REFERENCES options(id_num)';
+        $alter[] = 'ALTER TABLE questions_lineage ADD CONSTRAINT `questions_lineage_fk0_question` FOREIGN KEY (`questionID`) REFERENCES `questions` (`q_id`)';
+        $alter[] = 'ALTER TABLE questions_lineage ADD CONSTRAINT `questions_lineage_fk1_parent` FOREIGN KEY (`parentID`) REFERENCES `questions` (`q_id`)';
+        $alter[] = 'ALTER TABLE questions_lineage ADD CONSTRAINT `questions_lineage_fk2_root` FOREIGN KEY (`rootID`) REFERENCES `questions` (`q_id`)';
+        $alter[] = 'ALTER TABLE questions_lineage ADD CONSTRAINT `questions_lineage_fk3_change` FOREIGN KEY (`changeID`) REFERENCES `track_changes` (`id`)';
         $alter[] = 'ALTER TABLE audit_log ADD CONSTRAINT `audit_log_fk0` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)';
         foreach ($alter as $a) {
             $res = self::$db->prepare($a);
@@ -771,6 +775,8 @@ class InstallUtils
         $configObject->set_setting('system_hostname_lookup', self::$cfg_labsecuritytype, Config::BOOLEAN);
         $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
         $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
+        $configObject->set_setting('misc_full_question_history_enable', 0, Config::BOOLEAN);
+        $configObject->set_setting('misc_full_question_history_display_limit', 200, Config::INTEGER);
         $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
         $configObject->set_setting('rpt_fd_show_wordlist', 1, Config::BOOLEAN);
         $configObject->set_setting(
@@ -1401,6 +1407,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".properties_modules TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".question_exclude TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE ON ' . $dbname . ".questions TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".questions_lineage TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".question_statuses TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".questions_metadata TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".questions_modules TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
@@ -2151,7 +2158,7 @@ class InstallUtils
 //internal reviewer db user
   \$cfg_db_internal_user = '{cfg_db_internal}';
   \$cfg_db_internal_passwd = '{cfg_db_internal_passwd}';
-//sysdamin db user
+//sysadmin db user
   \$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
   \$cfg_db_sysadmin_passwd = '{cfg_db_sysadmin_passwd}';
 //sct db user
@@ -2160,7 +2167,7 @@ class InstallUtils
 //invigilator db user
   \$cfg_db_inv_user = '{cfg_db_inv_user}';
   \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
-//sysdamin db user
+//webservice db user
   \$cfg_db_webservice_user = '{cfg_db_webservice_user}';
   \$cfg_db_webservice_passwd = '{cfg_db_webservice_passwd}';
 // Date formats in MySQL DATE_FORMAT format

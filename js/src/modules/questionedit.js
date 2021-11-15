@@ -80,7 +80,8 @@ define(['jsxls', 'jquery'], function(jsxls, $) {
      * Display full / Trim change display.
      */
     this.trimLongChanges = function () {
-      $('a.more').click(function () {
+      $('a.more').click(function (e) {
+        e.preventDefault();
         $(this).prev().prev().prev().toggle();
         $(this).prev().prev().slideToggle();
         if ($(this).text() == jsxls.lang_string['showmore']) {

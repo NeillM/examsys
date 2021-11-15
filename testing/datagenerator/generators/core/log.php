@@ -224,7 +224,7 @@ class log extends generator
     }
 
     /**
-     * Create sumamtive exam log
+     * Create summative exam log
      *
      * @param array parameters
      *  string parameters[q_id]

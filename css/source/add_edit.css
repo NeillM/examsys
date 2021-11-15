@@ -536,6 +536,10 @@ textarea[disabled], textarea[readonly="readonly"], select:disabled, input[type=t
   border-bottom: 1px solid #ccc;
 }
 
+.data th.data-wide {
+  width: 25.5%;
+}
+
 .data th.data-medium {
   width: 16%;
 }
@@ -544,8 +548,32 @@ textarea[disabled], textarea[readonly="readonly"], select:disabled, input[type=t
   width: 12%;
 }
 
+.data th.data-smaller {
+  width: 8%;
+}
+
+.data th.data-qid {
+  width: 5%;
+}
+
 .data th.data-tiny {
   width: 3%;
+}
+
+.data.full-history tr {
+  overflow-wrap: break-word;
+}
+
+.data.full-history th:not(:first-child),.data.full-history td:not(:first-child) {
+  border-left: white solid 0.0625rem;
+}
+
+.data.full-history span.current-question {
+  font-weight: bold;
+}
+
+.data.full-history span.marks-change {
+  color: #C00000;
 }
 
 #extmatch-options {

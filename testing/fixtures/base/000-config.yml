@@ -108,6 +108,16 @@ config:
     type: "string"
   -
     component: "core"
+    setting: "misc_full_question_history_display_limit"
+    value: "200"
+    type: "integer"
+  -
+    component: "core"
+    setting: "misc_full_question_history_enable"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
     setting: "misc_logo_email"
     value: "alt_logo.png"
     type: "string"

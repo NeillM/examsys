@@ -289,11 +289,13 @@ class UpdaterUtils
     /**
      * Runs an SQL statement against the database.
      *
-     * @param string $sql                     - The SQL statement to run.
-     * @param bool $update_display    - If true then echo the SQL to the screen.
-     * @return int The id of the inserted row
+     * @param string $sql                 The SQL statement to run.
+     * @param bool   $update_display      If true then echo the SQL to the screen.
+     * @param bool   $returnAffectedRows  If true, return affected number of rows, otherwise return insert ID
+     * 
+     * @return int   The id of the inserted row or number of affected rows
      */
-    public function execute_query($sql, $update_display)
+    public function execute_query($sql, $update_display = false, $returnAffectedRows = false)
     {
         $insertID = false;
 
@@ -304,6 +306,7 @@ class UpdaterUtils
         }
 
         $this->mysqli->query($sql);
+        $affectedRows = $this->mysqli->affected_rows;
 
         if ($this->mysqli->errno == 0) {
             $insertID = $this->mysqli->insert_id;
@@ -336,11 +339,15 @@ class UpdaterUtils
             flush();
         }
 
-        return $insertID;
+        if ($returnAffectedRows) {
+            return $affectedRows;
+        } else {
+            return $insertID;
+        }
     }
 
     /**
-     * Check if update should be run againt installed version.
+     * Check if update should be run against installed version.
      *
      * @param string $version
      * @return bool true if update should be run

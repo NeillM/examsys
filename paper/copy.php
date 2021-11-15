@@ -371,6 +371,8 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 // Create a track changes record to say where question was copied from.
                 $logger = new Logger($mysqli);
                 $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $question, $question_id, 'Copied Question');
+                // Create a new lineage entry for the copied question
+                \QuestionUtils::addLineage($question_id, $logger->lastChangeId);
                 // Create a track changes record to say new question added to paper.
                 $logger->track_change('Paper', $new_paper_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
 

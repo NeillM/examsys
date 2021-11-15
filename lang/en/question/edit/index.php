@@ -117,6 +117,7 @@ $string['plaintext'] = 'Plain Text';
 $string['wysiwyg'] = 'WYSIWYG';
 $string['mathjax'] = 'MathJax';
 $string['changes'] = 'Changes';
+$string['history_exceeded_parent_limit'] = 'Exceeded parent limit of %d when tracing lineage';
 $string['comments'] = 'Comments';
 $string['mapping'] = 'Mapping';
 $string['performance'] = 'Performance';

@@ -27,6 +27,7 @@
 class Logger
 {
     private $_mysqli;
+    public $lastChangeId;
 
     /**
      * Create a new logger object
@@ -67,7 +68,8 @@ class Logger
 
             $result = $this->_mysqli->prepare($query);
             $result->bind_param('siisss', $message, $object_id, $user_id, $orig_val, $new_val, $part);
-            $success = $result->execute();
+            $result->execute();
+            $this->lastChangeId = $this->_mysqli->insert_id;
             $result->close();
         }
 

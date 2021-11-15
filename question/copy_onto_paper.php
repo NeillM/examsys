@@ -351,6 +351,9 @@ if (!isset($_POST['submit'])) {
                 $question_id = intval($question_id);
                 $success = $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $q_IDs[$i], $question_id, 'Copied Question');
 
+                // Add lineage
+                \QuestionUtils::addLineage($question_id, $logger->lastChangeId, $q_IDs[$i]);
+
                 // Lookup and copy the keywords
                 $keywords = QuestionUtils::get_keywords($q_IDs[$i], $mysqli);
                 QuestionUtils::add_keywords($keywords, $question_id, $mysqli);

@@ -532,17 +532,18 @@ class RAF
         $q_id =  $this->db->insert_id;
         $result->close();
 
-
         $date_format = $this->configObj->get('cfg_short_datetime_php');
 
         if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
             $old_q_id = $this->getQID_GUID($q['guid']);
 
             if ($old_q_id !== false) {
-                $this->logger->track_change('Paper', $q_id, $this->userID, $old_q_id, $q_id, 'Add Question (from RAF)');        // Log as a copied file
+                $this->logger->track_change('Paper', $q_id, $this->userID, $old_q_id, $q_id, 'Add Question (from RAF)'); // Log as a copied file
+                \QuestionUtils::addLineage($q_id, $this->logger->lastChangeId, $old_q_id);
             }
         } else {
-            $this->logger->track_change('Paper', $q_id, $this->userID, '', $q_id, 'Add Question (from RAF)');                                       // Log as a new file that has been imported
+            $this->logger->track_change('Paper', $q_id, $this->userID, '', $q_id, 'Add Question (from RAF)');  // Log as a new file that has been imported
+            \QuestionUtils::addLineage($q_id, $this->logger->lastChangeId);
         }
 
         return $q_id;

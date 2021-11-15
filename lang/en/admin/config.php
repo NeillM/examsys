@@ -108,3 +108,5 @@ $string['paper_pause_exam'] = 'Enable/Disable pausing of remote summative exams 
 $string['paper_seb_enabled'] = 'Safe Exam Browser key support enabled';
 $string['system_recover_postdata'] = 'Attempt to recover POST data if session expired and user redirected to login screen';
 $string['system_user_accessibility'] = 'Enable/Disable students being able to set their own user setttings';
+$string['misc_full_question_history_enable'] = 'Enable advanced full question history display, including parents and direct children for question edit page';
+$string['misc_full_question_history_display_limit'] = 'Maximum number of changes retrieved and displayed on the Full History tab';
