@@ -76,6 +76,8 @@ $csvdata = array();
 
 if ($student_no > 0) {
     $log_array = $propertyObj->get_paper_assessment_data($repcourse, $startdate, $enddate, $student_list, $studentonly, $demo);
+    // Data prep
+    $export->prepare_data($paper_buffer, $mode);
     // Header.
     $export->create_dynamic_header($paper_buffer, $exclusions);
     // Correct answers line.

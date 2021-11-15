@@ -219,13 +219,16 @@ class hotspot_helper extends RogoStaticSingleton
      *
      * @param string $answers
      * @param string $correct
+     * @param string $incorrect
      * @return string
      */
-    public function markWithLetters(string $answers, string $correct)
+    public function markWithLetters(string $answers, string $correct, string $incorrect = '')
     {
         // Assume all the parts are unanswered.
         $layer_answers = explode(self::LAYER_SEPARATOR, $answers);
         $layer_correct = explode(self::LAYER_SEPARATOR, $correct);
+        $layer_incorrect = $incorrect ? explode(self::LAYER_SEPARATOR, $incorrect) : [];
+        $all_answers = array_merge($layer_correct, $layer_incorrect);
         // The number of answers and layers should match.
         foreach ($layer_correct as $key => $correct_answer) {
             if (empty($layer_answers[$key])) {
@@ -251,11 +254,11 @@ class hotspot_helper extends RogoStaticSingleton
                     // In the case that the layers overlap, it will cycle through each layer and assign
                     // the latest matching letter to it, but will always break out if it finds a match
                     // to the current layer it is aiming for and mark it as correct.
-                    for ($i = 0; $i < count($layer_correct); $i++) {
+                    for ($i = 0; $i < count($all_answers); $i++) {
                         if ($key == $i) {
                             continue; // Skip correct layer, no point running loop
                         }
-                        $mark = explode(self::ANSWER_SEPARATOR, $this->mark_layer($layer_answers[$key], $layer_correct[$i]));
+                        $mark = explode(self::ANSWER_SEPARATOR, $this->mark_layer($layer_answers[$key], $all_answers[$i]));
                         if ($mark && $mark[0] == '1') {
                             $letters[] = \QuestionUtils::numbersToLetters($i + 1);
                         }

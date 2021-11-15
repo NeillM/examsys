@@ -25,13 +25,10 @@
  * @package
  */
 
-// TODO: deletion of layers - requires Flash change?
-
 class QuestionHOTSPOT extends QuestionEdit
 {
     protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
 
-    protected $points1 = '';
     protected $_requires_media = true;
     protected $_requires_correction_intermediate = true;
     protected $_requires_html5 = true;
@@ -43,64 +40,9 @@ class QuestionHOTSPOT extends QuestionEdit
 
         // Convert the max number of options into a list of variables
         $this->option_order = 'display order';
-        $this->_fields_editable[] = 'points1';
-        $this->_change_field_map['points1'] = 'points';
-        $this->_fields_change = array('option_correct1', 'option_marks_correct', 'option_marks_incorrect', 'points1');
-    }
-
-
-    /**
-     * Persist the object to the database
-     * @return boolean Success or failure of the save operation
-     * @throws ValidationException
-     */
-    public function save($clear_checkout = true)
-    {
-        // Make sure 'correct' value is set for option
-        if ((!isset($this->correct) or $this->correct = '') and $this->points1 != '' and count($this->options) > 0) {
-            $this->set_points1($this->points1);
-        }
-        return parent::save($clear_checkout);
-    }
-
-    // ACCESSORS
-
-    public function get_points1()
-    {
-        if (empty($this->points1) and count($this->options) > 0) {
-            $option = reset($this->options);
-            $this->points1 = $option->get_correct();
-        }
-        return $this->points1;
-    }
-
-    public function set_points1($value)
-    {
-        $value = param::cleanBadChars($value);
-
-        if ($value != $this->get_points1()) {
-            $this->set_modified_field('points1', $this->points1);
-            $this->points1 = $value;
-        }
-
-        $leadin = '';
-        $layers = explode('|', $value);
-        $i = 0;
-        foreach ($layers as $layer) {
-            $parts = explode('~', $layer);
-            if ($leadin == '') {
-                $leadin = chr(65 + $i) . ') ' . $parts[0];
-            } else {
-                $leadin .= ', ' . chr(65 + $i) . ') ' . $parts[0];
-            }
-            $i++;
-        }
-
-        $this->set_leadin($leadin);
-        if (count($this->options) > 0) {
-            $option = reset($this->options);
-            $option->set_correct($value);
-        }
+        $this->_fields_change = array('option_marks_correct', 'option_marks_incorrect', 'option_correct', 'option_incorrect');
+        $this->_fields_unified['correct'] = $lang_strings['correctlayers'];
+        $this->_fields_unified['incorrect'] = $lang_strings['incorrectlayers'];
     }
 
     /**

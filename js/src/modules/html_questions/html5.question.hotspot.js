@@ -393,13 +393,32 @@ define(['helplauncher', 'log', 'html5_question', 'html5_menu', 'hotspot_layer', 
    *
    * @returns {String}
    */
-  hotspot.prototype.toString = function () {
+  hotspot.prototype.getCorrect = function () {
     var data = [];
     for (var i in this.layers) {
-      data.push(this.layers[i].toString());
+      if (this.layers[i].text.length !== 0) {
+        data.push(this.layers[i].toString());
+      }
     }
     return data.join('|');
   };
+
+  /**
+   * Converts the hotspot into a string representation.
+   *
+   * @returns {String}
+   */
+   hotspot.prototype.getIncorrect = function () {
+    var data = [];
+    for (var i in this.layers) {
+      if (this.layers[i].text.length === 0) {
+        data.push(this.layers[i].toString());
+      }
+    }
+    return data.join('|');
+  };
+
+
 
   /**
    * Gets the answers for the question.
@@ -561,7 +580,7 @@ define(['helplauncher', 'log', 'html5_question', 'html5_menu', 'hotspot_layer', 
       if (this[this.menu_item_name_from_id(name) + '_on']) {
         this[this.menu_item_name_from_id(name) + '_on'].call(this);
       } else {
-        Log(this.menu_item_name_from_id(name) + ' activateion handler not implemented', 'warn');
+        Log(this.menu_item_name_from_id(name) + ' activation handler not implemented', 'warn');
       }
     } else {
       // The existing active button was toggled off, or is not togglable.
@@ -684,6 +703,7 @@ define(['helplauncher', 'log', 'html5_question', 'html5_menu', 'hotspot_layer', 
       // Update the label.
       $('#' + this.generate_layermenu_item_id(j) + ' .' + this.html_classes.layerlabel).text(this.layers[j].get_label());
     }
+    this.update_page();
     this.redraw();
   };
 

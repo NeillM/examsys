@@ -2985,10 +2985,10 @@ class PaperProperties
         $db = $configObject->db;
         $question_no = -1;
         $old_q_id = -1;
-        $result = $db->prepare("SELECT q_id, q_type, screen, correct, option_text, score_method, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
+        $result = $db->prepare("SELECT q_id, q_type, screen, correct, option_text, score_method, settings, id_num FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
         $result->bind_param('i', $this->property_id);
         $result->execute();
-        $result->bind_result($q_id, $q_type, $screen, $correct, $option_text, $score_method, $settings);
+        $result->bind_result($q_id, $q_type, $screen, $correct, $option_text, $score_method, $settings, $option_id);
         while ($result->fetch()) {
             if ($old_q_id != $q_id) {
                 $question_no++;
@@ -2999,6 +2999,7 @@ class PaperProperties
                 $paper_buffer[$question_no]['correct_text'] = "\t" . $option_text;
                 $paper_buffer[$question_no]['score_method'] = $score_method;
                 $paper_buffer[$question_no]['settings'] = $settings;
+                $paper_buffer[$question_no]['option_id'] = $option_id; // Used to pull option metadata from questions that store their answers in a single option
             } else {
                 // A seperate option for the same question as the last loop.
                 $old_correct = $paper_buffer[$question_no]['correct'] = QuestionUtils::fix_correct($q_type, $correct, $old_correct, $option_text);

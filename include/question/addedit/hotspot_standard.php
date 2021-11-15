@@ -28,9 +28,13 @@ $plugin_height = max($media['height'] + 25, 400);
 if (count($question->options) > 0) {
     $option = reset($question->options);
     $correct = $option->get_correct();
+    $incorrect = $option->get_incorrect();
+    $points1 = empty($incorrect) ? $correct : $correct . hotspot_helper::LAYER_SEPARATOR . $incorrect;
     $option_id = $option->id;
 } else {
     $correct = '';
+    $incorrect = '';
+    $points1 = '';
     $option_id = -1;
 }
 $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
@@ -41,6 +45,7 @@ if ($question->get_locked() != '') {
     // Full editing capabilities.
     $hotspot_mode = 'edit';
 }
+
 ?>
 
                 <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
@@ -62,6 +67,9 @@ require_once 'detail_parts/details_scenario.php';
             <tr>
               <td>
                 <div id="hs_holder">
+<?php if ($configObject->get_setting('core', 'rpt_letters_for_hotspots')) { ?>
+                  <p><?php echo $string['hotspot_letters_blank_note'] ?></p>
+<?php } ?>
                   <p><input type="submit" name="submit" value="Replace Media"/></p>
                   <div
                     id="question1"
@@ -72,10 +80,11 @@ require_once 'detail_parts/details_scenario.php';
                     data-image="<?php echo $imageurl; ?>"
                     data-image-width="<?php echo $media['width']; ?>"
                     data-image-height="<?php echo $media['height']; ?>"
-                    data-setup="<?php echo htmlentities($correct); ?>"
+                    data-setup="<?php echo htmlentities($points1); ?>"
                  ></div>
                   <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
-                  <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
+                  <input type="hidden" id="option_correct" name="option_correct" value="<?php echo htmlentities($correct) ?>" />
+                  <input type="hidden" id="option_incorrect" name="option_incorrect" value="<?php echo htmlentities($incorrect) ?>" />
                   <?php if (!isset($_POST['submit']) or $_POST['submit'] != 'Replace Media') { ?>
                     <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
                     <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />

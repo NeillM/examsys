@@ -604,7 +604,8 @@ define(['log', 'lang', 'hotspot', 'html5_chk', 'html5_filler', 'html5_group', 'h
    * @returns {void}
    */
   hotspot_correction.prototype.update_page = function () {
-    $('#points' + this.number).attr('value', this.toString());
+    $('#option_correct').attr('value', this.getCorrect());
+    $('#option_incorrect').attr('value', this.getIncorrect());
   };
 
   return hotspot_correction;

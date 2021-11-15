@@ -170,13 +170,13 @@ class RAF
     {
         $options = array();
 
-        $result = $this->db->prepare('SELECT option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial FROM options WHERE o_id = ? ORDER BY id_num');
+        $result = $this->db->prepare('SELECT option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, id_num FROM options WHERE o_id = ? ORDER BY id_num');
         $result->bind_param('i', $o_id);
         $result->execute();
         $result->store_result();
-        $result->bind_result($option_text, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
+        $result->bind_result($option_text, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $id_num);
         while ($result->fetch()) {
-            $options[] = array('option_text' => $option_text, 'feedback_right' => $feedback_right, 'feedback_wrong' => $feedback_wrong, 'correct' => $correct, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial);
+            $options[] = array('option_text' => $option_text, 'feedback_right' => $feedback_right, 'feedback_wrong' => $feedback_wrong, 'correct' => $correct, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial, 'optionmetadata' => OptionsMetadata::getArray($id_num));
         }
         $result->free_result();
         $result->close();
@@ -235,7 +235,8 @@ class RAF
      */
     private function getQuestionsMetadata(int $q_id): array
     {
-        $metadata = \QuestionsMetadata::getArray($q_id);
+        $metadata = QuestionsMetadata::getArray($q_id);
+        $metadataRAF = [];
         foreach ($metadata as $type => $value) {
             $metadataRAF[] = array('type' => $type, 'questionID' => $q_id, 'value' => $value);
         }
@@ -426,6 +427,9 @@ class RAF
             $i = 0;
             foreach ($item['options'] as $options) {
                 $idnum = $this->write_option($options, $q_id);
+                if (!empty($options['optionmetadata'])) {
+                    OptionsMetadata::setArray($idnum, $options['optionmetadata']);
+                }
                 if (isset($item['optionmedia'][$i])) {
                     $this->writeOptionMedia($item['optionmedia'][$i], $idnum);
                 }
@@ -572,7 +576,7 @@ class RAF
         foreach ($metadataRAF as $entry) {
             $metadata[$entry['type']] = $entry['value'];
         }
-        \QuestionsMetadata::setArray($q_id, $metadata);
+        QuestionsMetadata::setArray($q_id, $metadata);
     }
 
     /**
