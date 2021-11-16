@@ -295,7 +295,25 @@ class PaperPropertiesTest extends unittestdatabase
         $this->assertNotEquals($newpassword, $savedencryptedpass);
         $savedpass = $paperproperty->get_decrypted_password();
         $this->assertEquals($newpassword, $savedpass);
-        $actual = $this->query(array('columns' => array('type', 'typeID', 'editor', 'new', 'old', 'part'), 'table' => 'track_changes'));
+        $actual = $this->query(
+            array(
+                'columns' => array(
+                    'type',
+                    'typeID',
+                    'editor',
+                    'new',
+                    'old',
+                    'part'
+                ),
+                'table' => 'track_changes',
+                'where' => array(
+                    array(
+                        'column' => 'typeID',
+                        'value' => $this->pid2['id'],
+                    )
+                )
+            )
+        );
         $expected = array(
             0 => array(
                 'type' => 'Paper',
