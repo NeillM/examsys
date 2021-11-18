@@ -29,13 +29,13 @@ class Mailer
 {
     /**
      * Send email
-     * @param string $to recipients address
+     * @param string $to recipients address (semi-colon seperated list of addresses)
      * @param string $subject the email subject
      * @param string $message the email body
      * @param string $from sender address
      * @param string $reply reply-to address
-     * @param string $cc cc address
-     * @param string $bcc bcc address
+     * @param string $cc cc address (semi-colon seperated list of addresses)
+     * @param string $bcc bcc address (semi-colon seperated list of addresses)
      * @param bool $html flag to indicate if html email or not
      */
     public static function send(
@@ -79,13 +79,19 @@ class Mailer
             }
             $mail->CharSet = $mail::CHARSET_UTF8;
             $mail->setFrom($from);
-            $mail->addAddress($to);
+            foreach (explode(';', $to) as $t) {
+                $mail->addAddress($t);
+            }
             $mail->addReplyTo($reply);
             if ($cc != '') {
-                $mail->addCC($cc);
+                foreach (explode(';', $cc) as $c) {
+                    $mail->addCC($c);
+                }
             }
             if ($bcc != '') {
-                $mail->addBCC($bcc);
+                foreach (explode(';', $bcc) as $b) {
+                    $mail->addBCC($b);
+                }
             }
             // Content.
             if ($html) {
