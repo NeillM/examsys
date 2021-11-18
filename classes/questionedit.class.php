@@ -34,6 +34,7 @@ class QuestionEdit extends RogoObject
     protected $leadin = '';
     protected $leadin_plain = '';
     protected $notes = '';
+    protected $staffnotes = '';
     protected $correct_fback = '';
     protected $incorrect_fback = '';
     protected $score_method = 'Mark per Option';
@@ -89,12 +90,11 @@ class QuestionEdit extends RogoObject
     protected $_user_id;
     protected $_qfields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
     protected $_fields = array('id', 'type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
-    /** @var array metadata fields available for this question type */
-    public static $_metafields = array();
+    public static $_metafields = array('staffnotes');
     protected $_mfields = array('media_source', 'media_width', 'media_height', 'media_alt', 'media_owner');
     protected $_qmfields = array('media', 'id', 'media_num');
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
+    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status', 'staffnotes');
     protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
     /** @var array metadata fields required for this question type */
     protected $_metafields_required = array();
@@ -1718,6 +1718,27 @@ QUERY;
             return reset($this->options);
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Get the staff notes for the question
+     * @return string Staff notes string
+     */
+    public function get_staffnotes()
+    {
+        return $this->staffnotes;
+    }
+
+    /**
+     * Set the staff notes for the question
+     * @param string $value
+     */
+    public function set_staffnotes($value)
+    {
+        if ($value != $this->staffnotes) {
+            $this->set_modified_field('staffnotes', $this->staffnotes);
+            $this->staffnotes = $value;
         }
     }
 

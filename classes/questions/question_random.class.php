@@ -31,7 +31,7 @@ class QuestionRANDOM extends QuestionEdit
     protected $questions = array();
     protected $_allow_correction = false;
 
-    protected $_fields_editable = array('leadin', 'status');
+    protected $_fields_editable = array('leadin', 'status', 'staffnotes');
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {

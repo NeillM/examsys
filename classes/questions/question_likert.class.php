@@ -33,7 +33,7 @@ class QuestionLIKERT extends QuestionEdit
     public $max_stems = 10;
     protected $_allow_correction = false;
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'scale_type', 'not_applicable', 'option_order', 'bloom', 'status');
+    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'scale_type', 'not_applicable', 'option_order', 'bloom', 'status', 'staffnotes');
     protected $_fields_compound = array('custom_scale');
     protected $_fields_force = array('not_applicable');
 

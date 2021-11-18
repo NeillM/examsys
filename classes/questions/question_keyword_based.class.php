@@ -30,7 +30,7 @@ class QuestionKEYWORD_BASED extends QuestionEdit
     protected $_allow_change_marking_method = false;
     protected $_allow_correction = false;
 
-    protected $_fields_editable = array('leadin', 'bloom', 'status');
+    protected $_fields_editable = array('leadin', 'bloom', 'status', 'staffnotes');
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {

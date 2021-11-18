@@ -34,7 +34,7 @@ class QuestionSCT extends QuestionEdit
 
     protected $sct_types;
 
-    protected $_fields_editable = array('theme', 'scenario', 'hypothesis', 'new_information', 'notes', 'correct_fback', 'incorrect_fback', 'display_method', 'option_order', 'bloom', 'status');
+    protected $_fields_editable = array('theme', 'scenario', 'hypothesis', 'new_information', 'notes', 'correct_fback', 'incorrect_fback', 'display_method', 'option_order', 'bloom', 'status', 'staffnotes');
     protected $_fields_required = array('type', 'leadin', 'display_method', 'owner_id', 'status');
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)

@@ -98,6 +98,7 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
                 <input type="hidden" name="calling" value="<?php echo $_POST['calling']; ?>" />
                 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
                 <input type="hidden" name="scrOfY" value="<?php echo $_POST['scrOfY']; ?>" />
+                <input type="hidden" name="staffnotes" value="<?php echo $_POST['staffnotes']; ?>" />
                 <input type="hidden" name="checkout_author" value="
                 <?php
                 if (isset($_POST['checkout_author'])) {

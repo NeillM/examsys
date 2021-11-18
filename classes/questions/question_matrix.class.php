@@ -32,7 +32,7 @@ class QuestionMATRIX extends QuestionEdit
     public $max_stems = 10;
 
     protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
-    protected $_fields_editable = array('theme', 'leadin', 'notes', 'correct_fback', 'score_method', 'option_order', 'bloom', 'status');
+    protected $_fields_editable = array('theme', 'leadin', 'notes', 'correct_fback', 'score_method', 'option_order', 'bloom', 'status', 'staffnotes');
     protected $_fields_compound = array('stem');
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)

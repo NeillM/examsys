@@ -336,7 +336,7 @@ if ($critical_error == '') {
             }
             $question->set_teams($question_teams);
             // Save metadata
-            $part_names = array('bloom', 'status', 'correct_fback', 'incorrect_fback', 'externalref');
+            $part_names = array('bloom', 'status', 'correct_fback', 'incorrect_fback', 'externalref', 'staffnotes');
             if (!isset($_POST['teams'])) {
                 $_POST['teams'] = array();
             }

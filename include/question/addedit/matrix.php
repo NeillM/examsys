@@ -42,6 +42,7 @@ $stems = $question->get_all_stems();
                     <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
+require_once 'detail_parts/details_staffnotes.php';
 require_once 'detail_parts/details_media.php';
 require_once 'detail_parts/details_leadin.php';
 ?>
