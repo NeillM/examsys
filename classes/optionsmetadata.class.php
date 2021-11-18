@@ -27,11 +27,11 @@ class OptionsMetadata
 {
     /**
      * Get option metadata
+     * @param int $oid option ID
      * @param string $type the type
-     * @param int $oid the option identifier
      * @return string
      */
-    public static function get(string $type, int $oid)
+    public static function get(int $oid, string $type)
     {
         $configObject = Config::get_instance();
         $sql = $configObject->db->prepare('SELECT value FROM options_metadata WHERE type = ? and optionID = ?');
@@ -51,19 +51,47 @@ class OptionsMetadata
     }
 
     /**
+     * Get multiple option metadata entries (or all)
+     * @param int $oid option ID
+     * @param string[] $types keys to fetch, or unset to fetch all metadata associated with question
+     * @return string[] associated type as key => value array
+     */
+    public static function getArray(int $oid, array $types = [])
+    {
+        $configObject = Config::get_instance();
+        $sql = 'SELECT type, value FROM options_metadata WHERE optionID = ?';
+        if (!empty($types)) {
+            $sql .= ' AND type IN (' . implode(',', array_fill(0, count($types), '?')) . ')';
+        }
+        $result = $configObject->db->prepare($sql);
+        $result->bind_param('i' . str_repeat('s', count($types)), $oid, ...$types);
+        $result->execute();
+        $result->store_result();
+        $type = '';
+        $value = '';
+        $return = [];
+        $result->bind_result($type, $value);
+        while ($result->fetch()) {
+            $return[$type] = $value;
+        }
+        $result->close();
+        return $return;
+    }
+
+    /**
      * Set/update option metadata
+     * @param int $oid option ID
      * @param string $type type
-     * @param int $oid option identifier
      * @param string $value value
      * @throws coding_exception
      */
-    public static function set(string $type, int $oid, string $value)
+    public static function set(int $oid, string $type, string $value)
     {
         if (strlen($value) > 2500) {
             throw new coding_exception('Maximum metadata size exceeded');
         }
         $configObject = Config::get_instance();
-        $current = self::get($type, $oid);
+        $current = self::get($oid, $type);
         if ($value != $current) {
             if ($current === '') {
                 $sql = $configObject->db->prepare(
@@ -79,5 +107,39 @@ class OptionsMetadata
             $sql->execute();
             $sql->close();
         }
+    }
+
+    /**
+     * Set multiple option metadata entries. Simple wrapper around self::set
+     * @param int $oid option ID
+     * @param string[] $types keys to set, with type as array key
+     */
+    public static function setArray(int $oid, array $typesAndValues = [])
+    {
+        foreach ($typesAndValues as $type => $value) {
+            self::set($oid, $type, $value);
+        }
+    }
+
+    /**
+     * Delete option metadata entries
+     * @param int $oid option ID
+     * @param string[]|string|null $types keys to delete, or blank for all
+     */
+    public static function delete(int $oid, $types = [])
+    {
+        $configObject = Config::get_instance();
+        $sql = 'DELETE FROM options_metadata WHERE optionID = ?';
+        $bind_params = [$oid];
+        if (!empty($types)) {
+            if (!is_array($types)) {
+                $types = [$types];
+            }
+            $sql .= ' AND type IN (' . implode(',', array_fill(0, count($types), '?')) . ')';
+            $bind_params = array_merge($bind_params, $types);
+        }
+        $result = $configObject->db->prepare($sql);
+        $result->bind_param('i' . str_repeat('s', count($types)), $oid, ...$types);
+        $result->execute();
     }
 }

@@ -187,7 +187,7 @@ class questions extends generator
             }
             // External reference.
             if (!empty($qdata['externalref'])) {
-                \QuestionsMetadata::set('externalref', $qdata['id'], $qdata['externalref']);
+                \QuestionsMetadata::set($qdata['id'], 'externalref', $qdata['externalref']);
             }
             return $qdata;
         } catch (Exception $e) {

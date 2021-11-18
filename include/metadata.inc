@@ -28,7 +28,7 @@ function render_metadata($db, $question, $bloom_on, $module, $disabled, &$string
     global $staff_modules, $faculty;
 
     $configObject = Config::get_instance();
-    $externalref = htmlspecialchars(QuestionsMetadata::get('externalref', $question->id));
+    $externalref = htmlspecialchars(QuestionsMetadata::get($question->id, 'externalref'));
 
     $html = <<< META
           <table id="q-metadata-basic" class="form" summary="{$string['qmetasummary']}">

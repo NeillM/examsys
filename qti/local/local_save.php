@@ -294,9 +294,8 @@ class IE_Local_Save extends IE_Main
             }
             // store additional metadata
             if ($question->load_id != '') {
-                $meta_row = array('id' => null, 'questionID' => $question->save_id, 'type' => 'QTI Ident', 'value' => $question->load_id);
+                \QuestionsMetadata::set($question->save_id, 'QTI Ident', $question->load_id);
             }
-            $this->db->InsertRow('questions_metadata', 'id', $meta_row);
 
             echo "<h4>{$string['questiontables']}</h4>";
             echo "<div>{$string['questionsrow']}</div>";

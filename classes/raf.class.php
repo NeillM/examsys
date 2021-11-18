@@ -235,17 +235,11 @@ class RAF
      */
     private function getQuestionsMetadata(int $q_id): array
     {
-        $metadata = array();
-        $result = $this->db->prepare('SELECT id, questionID, type, value FROM questions_metadata WHERE questionID = ?');
-        $result->bind_param('i', $q_id);
-        $result->execute();
-        $result->bind_result($id, $qid, $type, $value);
-        while ($result->fetch()) {
-            $metadata[$id] = array('type' => $type, 'questionID' => $qid, 'value' => $value);
+        $metadata = \QuestionsMetadata::getArray($q_id);
+        foreach ($metadata as $type => $value) {
+            $metadataRAF[] = array('type' => $type, 'questionID' => $q_id, 'value' => $value);
         }
-        $result->close();
-
-        return $metadata;
+        return $metadataRAF;
     }
 
     /**
@@ -571,11 +565,14 @@ class RAF
      * @param array $metadata the metadata
      * @param int $q_id the id of the new question
      */
-    private function writeMetadata(array $metadata, int $q_id): void
+    private function writeMetadata(array $metadataRAF, int $q_id): void
     {
-        foreach ($metadata as $data) {
-            QuestionsMetadata::set($data['type'], $q_id, $data['value']);
+        // Unpack into suitable format
+        $metadata = [];
+        foreach ($metadataRAF as $entry) {
+            $metadata[$entry['type']] = $entry['value'];
         }
+        \QuestionsMetadata::setArray($q_id, $metadata);
     }
 
     /**

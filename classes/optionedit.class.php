@@ -384,8 +384,8 @@ QUERY;
     public function delete()
     {
         $query = <<< QUERY
-DELETE FROM options WHERE id_num = ?
-QUERY;
+        DELETE FROM options WHERE id_num = ?
+        QUERY;
         $result = $this->_mysqli->prepare($query);
         $result->bind_param('i', $this->id);
         $result->execute();
@@ -396,6 +396,9 @@ QUERY;
             $logger = new Logger($this->_mysqli);
             $this->track_delete($logger, $this->_number);
         }
+
+        // Delete any associated metadata
+        \OptionsMetadata::delete($this->id);
 
         return $success;
     }

@@ -81,8 +81,8 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
     public function testSet(): void
     {
         // Insert.
-        OptionsMetadata::set('testtype', $this->option['id_num'], 'testvalue');
-        OptionsMetadata::set('longtest', $this->option['id_num'], str_repeat('testvalue1', 100));
+        OptionsMetadata::set($this->option['id_num'], 'testtype', 'testvalue');
+        OptionsMetadata::set($this->option['id_num'], 'longtest', str_repeat('testvalue1', 100));
         $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
         $expected = [
             [
@@ -97,7 +97,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
         ];
         $this->assertEquals($expected, $actual);
         // Update.
-        OptionsMetadata::set('testtype', $this->option['id_num'], 'newvalue');
+        OptionsMetadata::set($this->option['id_num'], 'testtype', 'newvalue');
         $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
         $expected = [
             [
@@ -113,7 +113,31 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
         $this->assertEquals($expected, $actual);
         // Update and check that exception occurs attempting to set to >2500 characters
         $this->expectExceptionMessage('Maximum metadata size exceeded');
-        OptionsMetadata::set('longtest', $this->option['id_num'], str_repeat('9876543210',251));
+        OptionsMetadata::set($this->option['id_num'], 'longtest', str_repeat('9876543210',251));
+    }
+
+    /**
+     * Tests that option metadata is correctly set in the database (array)
+     * @group questions
+     */
+    public function testSetArray(): void
+    {
+        // Insert.
+        OptionsMetadata::setArray($this->option['id_num'], ['testtype' => 'testvalue', 'testtype2' => 'anothertestvalue']);
+        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
+        $expected = array(
+            0 => array(
+                'type' => 'testtype',
+                'value' => 'testvalue',
+                'optionID' => $this->option['id_num'],
+            ),
+            1 => array(
+                'type' => 'testtype2',
+                'value' => 'anothertestvalue',
+                'optionID' => $this->option['id_num'],
+            ),
+        );
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -123,11 +147,71 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
     public function testGet(): void
     {
         // Insert a couple of metadata entries
-        OptionsMetadata::set('testtype', $this->option['id_num'], 'testvalue');
-        OptionsMetadata::set('another testtype', $this->option['id_num'], 'another testvalue');
+        OptionsMetadata::set($this->option['id_num'], 'testtype', 'testvalue');
+        OptionsMetadata::set($this->option['id_num'], 'another testtype', 'another testvalue');
         // Confirm we get the right one.
-        $actual = OptionsMetadata::get('testtype', $this->option['id_num']);
+        $actual = OptionsMetadata::get($this->option['id_num'], 'testtype');
         $expected = 'testvalue';
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Tests that option metadata is correctly retrieved when multiple values present
+     * @group questions
+     */
+    public function testGetArray(): void
+    {
+        // Add another metadata so there is not just one in there.
+        OptionsMetadata::set($this->option['id_num'], 'testtype1', 'testvalue1');
+        OptionsMetadata::set($this->option['id_num'], 'testtype2', 'testvalue2');
+        OptionsMetadata::set($this->option['id_num'], 'testtype3', 'testvalue3');
+        // Confirm we get just the first two
+        $actual = OptionsMetadata::getArray($this->option['id_num'], ['testtype1', 'testtype2']);
+        $expected = ['testtype1' => 'testvalue1', 'testtype2' => 'testvalue2'];
+        ksort($actual);
+        $this->assertEquals($expected, $actual);
+        // Check retrieving all
+        $actual = OptionsMetadata::getArray($this->option['id_num']);
+        $expected = ['testtype1' => 'testvalue1', 'testtype2' => 'testvalue2', 'testtype3' => 'testvalue3'];
+        ksort($actual);
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Tests that option metadata is correctly deleted from the database
+     * @group questions
+     */
+    public function testDelete(): void
+    {
+        OptionsMetadata::set($this->option['id_num'], 'testtype', 'testvalue');
+        OptionsMetadata::set($this->option['id_num'], 'deletetest', 'nothere');
+        OptionsMetadata::delete($this->option['id_num'], 'deletetest');
+        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata'));
+        $expected = array(
+            0 => array(
+                'type' => 'testtype',
+                'value' =>  'testvalue',
+                'optionID' =>  $this->option['id_num'],
+            ),
+        );
+        $this->assertEquals($expected, $actual);
+
+        OptionsMetadata::setArray($this->option['id_num'], ['deletetest' => 'nothere', 'delete2' => 'alsogone']);
+        OptionsMetadata::delete($this->option['id_num'], ['deletetest', 'delete2']);
+        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata'));
+        $expected = array(
+            0 => array(
+                'type' => 'testtype',
+                'value' =>  'testvalue',
+                'optionID' =>  $this->option['id_num'],
+            ),
+        );
+        $this->assertEquals($expected, $actual);
+
+        OptionsMetadata::setArray($this->option['id_num'], ['deletetest' => 'nothere', 'delete2' => 'alsogone']);
+        OptionsMetadata::delete($this->option['id_num']);
+        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata'));
+        $expected = [];
         $this->assertEquals($expected, $actual);
     }
 }

@@ -30,6 +30,9 @@ require_once '../classes/questionbank.class.php';
 
 check_var('q_id', 'GET', true, false, false);
 
+// Replace $mysqli object with one from configObject to ensure autocommit below works in function context
+$mysqli = $configObject->db;
+
 if (!QuestionUtils::question_exists(mb_substr($_GET['q_id'], 1), $mysqli)) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
@@ -154,6 +157,7 @@ if (!isset($_POST['submit'])) {
         }
 
         while ($result->fetch()) {
+            $questionMetadata = \QuestionsMetadata::getArray($q_id);
             $o_result = $mysqli->prepare('
                 SELECT
                     o_id,
@@ -161,6 +165,7 @@ if (!isset($_POST['submit'])) {
                     feedback_right,
                     feedback_wrong,
                     correct,
+                    id_num,
                     source,
                     width,
                     height,
@@ -185,6 +190,7 @@ if (!isset($_POST['submit'])) {
                 $feedback_right,
                 $feedback_wrong,
                 $correct,
+                $id_num,
                 $option_media,
                 $option_media_width,
                 $option_media_height,
@@ -233,6 +239,8 @@ if (!isset($_POST['submit'])) {
             $addQuestion->close();
 
             if ($save_ok) {
+                \QuestionsMetadata::setArray($question_id, $questionMetadata);
+
                 // Copy Question Media.
                 $newmedia = array();
                 $media = QuestionUtils::getMediaAsString($q_id);
@@ -279,6 +287,7 @@ if (!isset($_POST['submit'])) {
             }
 
             while ($save_ok and $o_result->fetch()) {
+                $optionMetadata = \OptionsMetadata::getArray($id_num);
                 $addOption = $mysqli->prepare('INSERT INTO options
                         (o_id, option_text, feedback_right, feedback_wrong, correct, id_num, marks_correct,
                         marks_incorrect, marks_partial)
@@ -292,6 +301,7 @@ if (!isset($_POST['submit'])) {
                 if ($save_ok) {
                     $newidnum = $mysqli->insert_id;
                     $addOption->close();
+                    \OptionsMetadata::setArray($newidnum, $optionMetadata);
                     $newomedia = false;
                     if (isset($option_media) and $option_media != '') {
                         $new_media_name = media_handler::unique_filename($option_media);

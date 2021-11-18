@@ -160,7 +160,7 @@ class export_assessment extends exporter
         $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
         for ($i = 0; $i < count($paper); $i++) {
             $tmp_question_ID = $paper[$i]['ID'];
-            $externalref = \QuestionsMetadata::get('externalref', $tmp_question_ID);
+            $externalref = \QuestionsMetadata::get($tmp_question_ID, 'externalref');
             if ($externalref != '') {
                 $externalref = ' [' . $externalref . ']';
             }

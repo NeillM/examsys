@@ -596,7 +596,7 @@ QUERY;
                 // Updates the teams/question modules
                 QuestionUtils::update_modules($this->teams, $this->id, $this->_mysqli, $this->_userObj);
                 // Update external ref.
-                QuestionsMetadata::set('externalref', $this->id, $this->externalref);
+                QuestionsMetadata::set($this->id, 'externalref', $this->externalref);
             }
 
             if ($success) {
@@ -1859,7 +1859,7 @@ QUERY;
             }
 
             // Get the external reference.
-            $this->externalref = QuestionsMetadata::get('externalref', $this->id);
+            $this->externalref = QuestionsMetadata::get($this->id, 'externalref');
 
             // Get the options
             $o_query = <<< QUERY

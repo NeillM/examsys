@@ -223,6 +223,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 feedback_right,
                 feedback_wrong,
                 correct,
+                id_num,
                 marks_correct,
                 marks_incorrect,
                 marks_partial
@@ -271,6 +272,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
             $feedback_right,
             $feedback_wrong,
             $correct,
+            $id_num,
             $marks_correct,
             $marks_incorrect,
             $marks_partial
@@ -310,6 +312,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $addQuestion->bind_param('ssssssssissssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
                 $addQuestion->execute();
                 $new_qids[] = $question_id = $mysqli->insert_id;
+
                 //making duplicate question a killer question
                 if ($KillerQuestionsObj->is_killer_question($question)) {
                     $copyKillerQuestion = new Killer_Question($new_paper_id, $mysqli);
@@ -320,6 +323,9 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                     $calculation_qid_map[$q_id] = $question_id;
                 }
                 $addQuestion->close();
+
+                // Transfer metadata
+                \QuestionsMetadata::setArray($question_id, \QuestionsMetadata::getArray($q_id));
 
                 // Copy Question Media.
                 $media = QuestionUtils::getMediaAsString($q_id);
@@ -459,9 +465,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                     $q->set_question_vars($vars);
                     $q->save($mysqli);
                 }
-            }
-      
-            if ($q_type != 'enhancedcalc') {  // Calculation questions have no options.
+            } else {  // Calculation questions have no options.
                 $addOption = $mysqli->prepare('INSERT INTO options
                         (o_id, option_text, feedback_right, feedback_wrong, correct, id_num, marks_correct,
                         marks_incorrect, marks_partial)
@@ -471,6 +475,8 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $addOption->execute();
                 $addOption->close();
                 $newidnum = $mysqli->insert_id;
+                // Transfer metadata
+                \OptionsMetadata::setArray($newidnum, \OptionsMetadata::getArray($id_num));
                 // Option media.
                 $newomedia = false;
                 if (isset($option_media) and trim($option_media) != '') {

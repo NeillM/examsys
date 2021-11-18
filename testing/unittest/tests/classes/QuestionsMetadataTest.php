@@ -64,8 +64,8 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
     public function testSet(): void
     {
         // Insert.
-        QuestionsMetadata::set('testtype', $this->question['id'], 'testvalue');
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata'));
+        QuestionsMetadata::set($this->question['id'], 'testtype', 'testvalue');
+        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
         $expected = array(
             0 => array(
                 'type' => 'externalref',
@@ -80,8 +80,8 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
         );
         $this->assertEquals($expected, $actual);
         // Update and test for long strings.
-        QuestionsMetadata::set('externalref', $this->question['id'], str_repeat('9876543210',100));
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata'));
+        QuestionsMetadata::set($this->question['id'], 'externalref', str_repeat('9876543210',100));
+        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
         $expected = array(
             0 => array(
                 'type' => 'externalref',
@@ -97,7 +97,36 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
         $this->assertEquals($expected, $actual);
         // Update and check that exception occurs attempting to set to >2500 characters
         $this->expectExceptionMessage('Maximum metadata size exceeded');
-        QuestionsMetadata::set('externalref', $this->question['id'], str_repeat('9876543210',251));
+        QuestionsMetadata::set($this->question['id'], 'externalref', str_repeat('9876543210',251));
+    }
+
+    /**
+     * Tests that question metadata is correctly set in the database (array)
+     * @group questions
+     */
+    public function testSetArray(): void
+    {
+        // Insert.
+        QuestionsMetadata::setArray($this->question['id'], ['testtype' => 'testvalue', 'testtype2' => 'anothertestvalue']);
+        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
+        $expected = array(
+            0 => array(
+                'type' => 'externalref',
+                'value' =>  $this->question['externalref'],
+                'questionID' =>  $this->question['id'],
+            ),
+            1 => array(
+                'type' => 'testtype',
+                'value' => 'testvalue',
+                'questionID' =>  $this->question['id'],
+            ),
+            2 => array(
+                'type' => 'testtype2',
+                'value' => 'anothertestvalue',
+                'questionID' =>  $this->question['id'],
+            ),
+        );
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -107,10 +136,31 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
     public function testGet(): void
     {
         // Add another metadata so there is not just one in there.
-        QuestionsMetadata::set('another testtype', $this->question['id'], 'another testvalue');
+        QuestionsMetadata::set($this->question['id'], 'another testtype', 'another testvalue');
         // Confirm we get the right one.
-        $actual = QuestionsMetadata::get('externalref', $this->question['id']);
+        $actual = QuestionsMetadata::get($this->question['id'], 'externalref');
         $expected = 'testvalue';
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Tests that array of question metadata is correctly retrieved when multiple values present
+     * @group questions
+     */
+    public function testGetArray(): void
+    {
+        // Add another metadata so there is not just one in there.
+        QuestionsMetadata::set($this->question['id'], 'testtype1', 'testvalue1');
+        QuestionsMetadata::set($this->question['id'], 'testtype2', 'testvalue2');
+        // Confirm we get both
+        $actual = QuestionsMetadata::getArray($this->question['id'], ['testtype1', 'testtype2']);
+        $expected = ['testtype1' => 'testvalue1', 'testtype2' => 'testvalue2'];
+        ksort($actual);
+        $this->assertEquals($expected, $actual);
+        // Retrieve all
+        $actual = QuestionsMetadata::getArray($this->question['id']);
+        $expected = ['externalref' => 'testvalue', 'testtype1' => 'testvalue1', 'testtype2' => 'testvalue2'];
+        ksort($actual);
         $this->assertEquals($expected, $actual);
     }
 }
