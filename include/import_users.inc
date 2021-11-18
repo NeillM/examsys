@@ -42,7 +42,6 @@ function add_users_from_file($fileName)
     $users['html'] = "<table style=\"width:100%\">\n";
 
     $lines = file($fileName);
-    $support_email = support::get_primary_email();
     foreach ($lines as $separate_line) {
         if (mb_strpos($separate_line, '","') !== false) {
             $separate_line = '","' . $separate_line . ',"';
@@ -223,7 +222,7 @@ function add_users_from_file($fileName)
 
             //send Welcome Email if ticked
             if (isset($_POST['welcome']) and $_POST['welcome'] != '') {
-                send_welcome_email($title, $surname, $support_email, $email, $string);
+                send_welcome_email($title, $surname, $email, $string);
             }
         } elseif ($username != '' and stristr('ps_', $username) === false) {
             //update existing student records
@@ -282,15 +281,12 @@ function add_users_from_file($fileName)
  * Send welcome email
  * @param string $title users title
  * @param string $surname users surname
- * @param string $support_email the suport accounts email address
  * @param string $user_email the users email
  * @param array $string translations
  */
-function send_welcome_email(string $title, string $surname, string $support_email, string $user_email, array $string): void
+function send_welcome_email(string $title, string $surname, string $user_email, array $string): void
 {
     $subject = $string['newrogoaccount'];
-    $headers = "From: $support_email\n";
-    $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=iso-8859-1\n";
     $message = '<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
@@ -309,5 +305,7 @@ body, td, p, div {font-family:Arial,sans-serif; background-color:white; color:#0
 </ul>\n
 </body>\n</html>";
 
-    mail($user_email, $subject, $message, $headers) or print '<p>' . $string['emailmsg7'] . " <strong>$user_email</strong>.</p>";
+    if (!Mailer::send($user_email, $subject, $message, '', '', '', '', true)) {
+        echo '<p>' . $string['emailmsg7'] . ' <strong>' . $user_email . '</strong>.</p>';
+    }
 }

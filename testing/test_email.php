@@ -40,10 +40,11 @@ if (isset($_POST['submit'])) {
     $to = trim($_POST['email']);
     $subject = 'Test email from Rogo ' . $configObject->get_setting('core', 'rogo_version');
     $message = 'This is a test email message sent at ' . date('F j, Y, g:i a') . ' from ' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . '.';
-    $headers = 'From: ' . support::get_primary_email();
-
-    mail($to, $subject, $message, $headers);
-    echo 'Email sent, please check your inbox.';
+    if (Mailer::send($to, $subject, $message)) {
+        echo 'Email sent, please check your inbox.';
+    } else {
+        echo 'Email not sent, please check the system error log.';
+    }
 } else {
     ?>
   <form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">

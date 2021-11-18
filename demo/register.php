@@ -135,8 +135,6 @@ if (isset($_POST['submit'])) {
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
         $tmp_email = trim($_POST['new_email']);
         $subject = "{$string['newrogoaccount']}";
-        $headers = 'From: ' . support::get_primary_email() . "\n";
-        $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
         $sname = ucwords($_POST['new_surname']);
         $message = <<< MESSAGE
 <!DOCTYPE html>
@@ -160,7 +158,9 @@ MESSAGE;
         $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
         $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/\">https://{$host}/</a></p>";
         $message .= "</body>\n</html>";
-        mail($to, $subject, $message, $headers) or $mailerror = true;
+        if (!Mailer::send($to, $subject, $message, '', '', '', '', true)) {
+            $mailerror = true;
+        }
     }
 
     ?>

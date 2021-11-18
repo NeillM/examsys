@@ -882,6 +882,13 @@ class InstallUtils
         $configObject->set_setting('paper_pause_exam', 0, Config::BOOLEAN);
         $configObject->set_setting('paper_seb_enabled', 1, Config::BOOLEAN);
         $configObject->set_setting('system_user_accessibility', false, Config::BOOLEAN);
+        $configObject->set_setting('mailer_host', '', Config::STRING);
+        $configObject->set_setting('mailer_port', '', Config::STRING);
+        $configObject->set_setting('mailer_debug', 0, Config::INTEGER);
+        $configObject->set_setting('mailer_auth', false, Config::BOOLEAN);
+        $configObject->set_setting('mailer_username', '', Config::STRING);
+        $configObject->set_setting('mailer_password', '', Config::STRING);
+        $configObject->set_setting('mailer_secure', '', Config::STRING);
         // Add external systems.
         $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
         $insert->execute();

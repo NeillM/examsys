@@ -110,3 +110,12 @@ $string['system_recover_postdata'] = 'Attempt to recover POST data if session ex
 $string['system_user_accessibility'] = 'Enable/Disable students being able to set their own user setttings';
 $string['misc_full_question_history_enable'] = 'Enable advanced full question history display, including parents and direct children for question edit page';
 $string['misc_full_question_history_display_limit'] = 'Maximum number of changes retrieved and displayed on the Full History tab';
+$string['mailer_host'] = 'The SMTP server host. Leave blank to use internal php mail.';
+$string['mailer_port'] = 'The SMTP server port.';
+$string['mailer_debug'] = 'PhpMailer debug level. 0 for off';
+$string['mailer_auth'] = 'Is the SMTP using authentication?';
+$string['mailer_username'] = 'The SMTP server username';
+$string['mailer_password'] = 'The SMTP server password';
+$string['mailer_secure'] = 'The SMTP secure connection settings - ssl,tls or blank';
+$string['mailer'] = 'Mail';
+

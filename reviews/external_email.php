@@ -120,18 +120,11 @@ if (isset($_POST['submit'])) {
         $to = trim($individual_to);
         $subject = trim($_POST['subject']);
         $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; font-size:90%}\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
+        $from = $userObject->get_email();
+        $cc = trim($_POST['ccaddress']);
+        $bcc = trim($_POST['bccaddress']);
 
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type:text/html;charset=' . $configObject->get('cfg_page_charset') . "\r\n";
-        $headers .= 'From: ' . $userObject->get_email() . "\r\n";
-        if (trim($_POST['ccaddress']) != '') {
-            $headers .= 'CC: ' . trim($_POST['ccaddress']) . "\r\n";
-        }
-        if (trim($_POST['bccaddress']) != '') {
-            $headers .= 'BCC: ' . trim($_POST['ccaddress']) . "\r\n";
-        }
-
-        mail($to, $subject, $message, $headers);
+        Mailer::send($to, $subject, $message, $from, $from, $cc, $bcc, true);
     }
     echo '<p>' . $string['emailsent'] . '</p>';
     echo '<p><input type="button" value="' . $string['back'] . '" name="back" id="back" class="ok" /></p>';

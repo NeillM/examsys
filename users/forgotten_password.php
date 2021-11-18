@@ -107,9 +107,7 @@ EMAIL;
 EMAIL;
                 $mail_to = $email;
                 $subject = "Rogo {$string['passwordreset']}";
-                $headers = 'From: ' . $contactemail . "\n";
-                $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
-                if (!@mail($mail_to, $subject, $email_body, $headers)) {
+                if (!Mailer::send($mail_to, $subject, $email_body, '', '', '', '', true)) {
                     $errors[] = sprintf($string['couldntsendemail'], $email);
                 } else {
                     $message = sprintf($string['emailsentmsg'], $email);

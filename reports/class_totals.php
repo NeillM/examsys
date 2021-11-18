@@ -806,17 +806,13 @@ if ($user_no > 0) {
             $subject = str_replace('{class-mean-time}', formatsec($mean), $subject);
             $subject = str_replace('{random-mark}', number_format($report->get_total_random_mark(), 1, '.', ','), $subject);
             $subject = str_replace('{paper-title}', $paper, $subject);
-
-            $headers = 'From: ' . $userObject->get_email() . "\n";
-            $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf8\n";
-            if ($_POST['ccaddress'] != '') {
-                $headers .= 'cc: ' . $_POST['ccaddress'] . "\n";
-            }
-            if ($_POST['bccaddress'] != '') {
-                $headers .= 'bcc: ' . $_POST['bccaddress'] . "\n";
-            }
+            $cc = $_POST['ccaddress'];
+            $bcc = $_POST['bccaddress'];
+            $from = $userObject->get_email();
             $message .= "</body>\n</html>\n";
-            mail($to, $subject, $message, $headers) or print '<div>' . $string['couldnotsend'] . " <strong>$to</strong>.</div>";
+            if (!Mailer::send($to, $subject, $message, $from, $from, $cc, $bcc, true)) {
+                echo '<div>' . $string['couldnotsend'] . '<strong>' . $to . '</strong>.</div>';
+            }
         }
         echo '<p>' . $string['emailssent'] . '</p>';
     } else {

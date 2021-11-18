@@ -102,14 +102,11 @@ while ($testresult->fetch()) {
     $message .= 'Failure: user - ' . $user_id . ', paper - ' . $paper_id . ', error - ' . $errors . "\n";
 }
 $testresult->close();
-$headers = "From: $support_email\n";
-$headers .= "MIME-Version: 1.0\nContent-type: text/plain; charset=UTF-8\n";
 $subject = 'Rogo Summative Exam check';
 if ($message != '') {
     echo $message;
-    $sent = mail($support_email, $subject, $message, $headers);
-    if ($sent) {
-        echo "Email sent to $support_email";
+    if (Mailer::send($support_email, $subject, $message)) {
+        echo 'Email sent to ' . $support_email;
     }
 }
 $mysqli->close();

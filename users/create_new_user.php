@@ -80,8 +80,6 @@ if ($submit and $unique_username) {
         // Send out email welcome.
         if (isset($new_welcome) and $new_welcome != '') {
             $subject = "{$string['newrogoaccount']}";
-            $headers = 'From: ' . support::get_primary_email() . "\n";
-            $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
             $sname = ucwords($new_surname);
             $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
             $message = <<< MESSAGE
@@ -111,7 +109,9 @@ MESSAGE;
                 $message .= '<p>' . $string['email3'] . '</p>';
             }
             $message .= "</body>\n</html>";
-            mail($new_email, $subject, $message, $headers) or print '<p>' . $string['couldnotsend'] . ' <strong>' . $new_email . '</strong>.</p>';
+            if (!Mailer::send($new_email, $subject, $message, '', '', '', '', true)) {
+                echo '<p>' . $string['couldnotsend'] . ' <strong>' . $new_email . '</strong>.</p>';
+            }
         }
         ?>
 <p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $new_users_title . ' ' . $new_surname ?>.</p>

@@ -32,7 +32,22 @@ class Config extends RogoStaticSingleton
      * Areas of the Rogo system that can be configured.
      * @var array list of areas
      */
-    public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc', 'calc', 'system', 'rpt', 'stdset', 'ims', 'contact');
+    public static $config_area = array(
+        'api',
+        'gradebook',
+        'lti',
+        'paper',
+        'summative',
+        'url',
+        'misc',
+        'calc',
+        'system',
+        'rpt',
+        'stdset',
+        'ims',
+        'contact',
+        'mailer'
+    );
     /**
      * @var array
      */
@@ -307,7 +322,7 @@ class Config extends RogoStaticSingleton
      *
      * @return boolean
      */
-    protected function is_behat_site()
+    public function is_behat_site()
     {
         $behaturl = $this->get('cfg_behat_website');
         $parsedurl = parse_url($behaturl . '/');
@@ -319,7 +334,7 @@ class Config extends RogoStaticSingleton
      *
      * @return boolean
      */
-    protected function is_phpunit_site()
+    public function is_phpunit_site()
     {
         // Check if unittest constant has been defined.
         return defined('PHPUNIT_ROGO_TESTSUITE');
