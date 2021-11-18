@@ -43,6 +43,16 @@ class export_assessment extends exporter
     );
 
     /**
+     * Extmatch letter marking config option
+     */
+    private $mark_with_letters_extmatch;
+
+    /**
+     * Hotspot letter marking config option
+     */
+    private $mark_with_letters_hotspots;
+
+    /**
      * Convert a string to comma separated HEX numbers to the decimal equivalent
      * @param $data
      * @return string
@@ -141,6 +151,10 @@ class export_assessment extends exporter
      */
     public function create_dynamic_header($paper, $exclusions)
     {
+        // Get letter marking settings
+        $this->mark_with_letters_extmatch = $this->config->get_setting('core', 'rpt_letters_for_extmatch');
+        $this->mark_with_letters_hotspots = $this->config->get_setting('core', 'rpt_letters_for_hotspots');
+
         // Write out the headings.
         $csvdata = array();
         $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
@@ -282,7 +296,7 @@ class export_assessment extends exporter
 
     /**
      * Create correct answers row
-     * @param array $paper paer info
+     * @param array $paper paper info
      * @param \Exclusion $exclusions paper exclusions
      * @param string $mode the display mode
      * @param array $string the language pack
@@ -362,6 +376,8 @@ class export_assessment extends exporter
                                 } else {
                                     if ($mode == 'numeric') {
                                         $csvdata[0] = array_merge($csvdata[0], explode('$', $correct_parts[$outer]));
+                                    } elseif ($this->mark_with_letters_extmatch) {
+                                        $csvdata[0] = array_merge($csvdata[0], \QuestionUtils::numbersToLetters(explode('$', $correct_parts[$outer])));
                                     } else {
                                         if (mb_strpos($correct_parts[$outer], '$') === false) {
                                             $csvdata[0][] = $correct_text_parts[$correct_parts[$outer]];
@@ -388,7 +404,7 @@ class export_assessment extends exporter
                                     $csvdata[0][] = '';
                                 } else {
                                     if ($mode == 'numeric') {
-                                                    $csvdata[0][] = $correct_parts[$partID];
+                                        $csvdata[0][] = $correct_parts[$partID];
                                     } else {
                                         $csvdata[0][] = $correct_text_parts[$correct_parts[$partID]];
                                     }
@@ -428,7 +444,11 @@ class export_assessment extends exporter
                         $correct_parts = explode('|', $question['correct']);
                         for ($partID = 0; $partID < count($correct_parts); $partID++) {
                             if (mb_substr($tmp_exclude, $partID - 1, 1) == '0') {
-                                $csvdata[0][] = '';
+                                if ($mode != 'numeric' && $this->mark_with_letters_hotspots) {
+                                    $csvdata[0][] = \QuestionUtils::numbersToLetters($partID + 1);
+                                } else {
+                                    $csvdata[0][] = '';
+                                }
                             }
                         }
                         break;
@@ -758,12 +778,14 @@ class export_assessment extends exporter
                                             }
 
                                             if ($answer_subparts[$k] != -1) {
-                                                    $subpart = $answer_subparts[$k];
+                                                $subpart = $answer_subparts[$k];
                                                 if ($mode == 'numeric') {
                                                     $csvdata[$j][] = $answer_subparts[$k];
                                                 } else {
-                                                    if (isset($correct_text_parts[$subpart])) {
-                                                                      $csvdata[$j][] = $correct_text_parts[$subpart];
+                                                    if ($this->mark_with_letters_extmatch) {
+                                                        $csvdata[$j][] = \QuestionUtils::numbersToLetters($answer_subparts[$k]);
+                                                    } elseif (isset($correct_text_parts[$subpart])) {
+                                                        $csvdata[$j][] = $correct_text_parts[$subpart];
                                                     } else {
                                                         $csvdata[$j][] = '';
                                                     }
@@ -772,6 +794,8 @@ class export_assessment extends exporter
                                             if ($is_random) {
                                                 if ($mode == 'numeric') {
                                                     $csvdata[$j][] = $correct_subparts[$k];
+                                                } elseif ($this->mark_with_letters_extmatch) {
+                                                    $csvdata[$j][] = \QuestionUtils::numbersToLetters($correct_subparts[$k]);
                                                 } else {
                                                     $csvdata[$j][] = $correct_text_parts[$correct_subparts[$k]];
                                                 }
@@ -782,6 +806,8 @@ class export_assessment extends exporter
                                             if ($is_random) {
                                                 if ($mode == 'numeric') {
                                                     $csvdata[$j][] = $correct_subparts[$k];
+                                                } elseif ($this->mark_with_letters_extmatch) {
+                                                    $csvdata[$j][] = \QuestionUtils::numbersToLetters($correct_subparts[$k]);
                                                 } else {
                                                     $csvdata[$j][] = $correct_text_parts[$correct_subparts[$k]] . '"';
                                                 }
@@ -839,14 +865,35 @@ class export_assessment extends exporter
                             break;
                         case 'hotspot':
                             $correct_parts = explode('|', $question['correct']);
-                            $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+                            if ($mode != 'numeric' && $this->mark_with_letters_hotspots) {
+                                // Letter-marking code
+                                if (empty($individual[$tmp_screen][$tmp_question_ID])) {
+                                    $answer_parts = array_fill(0, count($correct_parts), '0,?');
+                                } elseif ($individual[$tmp_screen][$tmp_question_ID] == 'u') {
+                                    $answer_parts = array_fill(0, count($correct_parts), '0,u');
+                                }
+                                if ($individual[$tmp_screen][$tmp_question_ID] == 'u') {
+                                    $answer_parts = array_fill(0, count($correct_parts), '0,u');
+                                } else {
+                                    $answer_parts = explode('|', \hotspot_helper::get_instance()->markWithLetters($individual[$tmp_screen][$tmp_question_ID], $question['correct']));
+                                }
 
-                            for ($partID = 0; $partID < count($correct_parts); $partID++) {
-                                if (mb_substr($tmp_exclude, $partID, 1) == '0') {
-                                    if (isset($answer_parts[$partID]) and $answer_parts[$partID] != 'u') {
-                                        $csvdata[$j][] =  str_replace(',', 'x', mb_substr($answer_parts[$partID], 2));
-                                    } else {
-                                        $csvdata[$j][] = '';
+                                for ($partID = 0; $partID < count($correct_parts); $partID++) {
+                                    if (mb_substr($tmp_exclude, $partID, 1) == '0') {
+                                        $csvdata[$j][] =  mb_substr($answer_parts[$partID], 2);
+                                    }
+                                }
+                            } else {
+                                // Raw (numeric) or non-letter marking code
+                                $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+
+                                for ($partID = 0; $partID < count($correct_parts); $partID++) {
+                                    if (mb_substr($tmp_exclude, $partID, 1) == '0') {
+                                        if (isset($answer_parts[$partID]) and $answer_parts[$partID] != 'u') {
+                                            $csvdata[$j][] =  str_replace(',', 'x', mb_substr($answer_parts[$partID], 2));
+                                        } else {
+                                            $csvdata[$j][] = '';
+                                        }
                                     }
                                 }
                             }

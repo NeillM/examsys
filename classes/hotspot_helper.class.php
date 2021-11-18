@@ -215,6 +215,62 @@ class hotspot_helper extends RogoStaticSingleton
     }
 
     /**
+     * Marks an answer for assessment export, returning hotspot layer indexes for CSV
+     *
+     * @param string $answers
+     * @param string $correct
+     * @return string
+     */
+    public function markWithLetters(string $answers, string $correct)
+    {
+        // Assume all the parts are unanswered.
+        $layer_answers = explode(self::LAYER_SEPARATOR, $answers);
+        $layer_correct = explode(self::LAYER_SEPARATOR, $correct);
+        // The number of answers and layers should match.
+        foreach ($layer_correct as $key => $correct_answer) {
+            if (empty($layer_answers[$key])) {
+                $layer_answers[$key] = '0,?'; // Blank entry, likely caused by added option after exam taken
+            } elseif ($layer_answers[$key] == 'u') {
+                $layer_answers[$key] = '0,u'; // Mark wrong and unanswered
+            } else {
+                // Test to see if unmarked or correct
+                $mark = $this->mark_layer($layer_answers[$key], $correct_answer);
+                if ($mark == 'u') {
+                    $layer_answers[$key] = '0,u';
+                } elseif ($mark[0] == '1') {
+                    $layer_answers[$key] = '1,' . \QuestionUtils::numbersToLetters($key + 1);
+                } else {
+                    $letters = [];
+                    // The loop here is to cycle through all available layers to see if the coordinates
+                    // match one of them, and if so, assign $letter to the letter for that layer.
+                    // If it matches the layer we’re supposed to be on, it gets marked as correct as
+                    // well, and the loop broken out of. This allows us to check to see if a student’s
+                    // answer matched a different defined layer, e.g. if they clicked on the layer A
+                    // defined area for what should have been the answer for layer D, so it’s easy to
+                    // see if a large number of students chose the wrong area to match for a label.
+                    // In the case that the layers overlap, it will cycle through each layer and assign
+                    // the latest matching letter to it, but will always break out if it finds a match
+                    // to the current layer it is aiming for and mark it as correct.
+                    for ($i = 0; $i < count($layer_correct); $i++) {
+                        if ($key == $i) {
+                            continue; // Skip correct layer, no point running loop
+                        }
+                        $mark = explode(self::ANSWER_SEPARATOR, $this->mark_layer($layer_answers[$key], $layer_correct[$i]));
+                        if ($mark && $mark[0] == '1') {
+                            $letters[] = \QuestionUtils::numbersToLetters($i + 1);
+                        }
+                    }
+                    if (empty($letters)) {
+                        $letters = ['x'];
+                    }
+                    $layer_answers[$key] = '0,' . implode(',',$letters);
+                }
+            }
+        }
+        return implode(self::LAYER_SEPARATOR, $layer_answers);
+    }
+
+    /**
      * Test if the answer coordinate is inside the shape.
      *
      * @param array $answer
@@ -377,7 +433,7 @@ class hotspot_helper extends RogoStaticSingleton
     }
 
     /**
-     * Coordinates are encoded as hexidecimal numbers,
+     * Coordinates are encoded as hexadecimal numbers,
      * this converts them to decimal so our maths will work.
      *
      * @param array $coordinates

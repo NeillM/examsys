@@ -945,4 +945,47 @@ SQL;
         $result->close();
         return $changes;
     }
+
+    /**
+     * Convert a number (or array of numbers) to their letter equivalent(s) for marking or display,
+     * e.g. 1 => 'A', 4 => 'D', 26 => 'Z', or 'u' for an unanswered question
+     * @param int|int[] $data
+     * @return string|string[]
+     * @throws coding_exception
+     */
+    public static function numbersToLetters($data)
+    {
+        if (is_array($data)) {
+            $letters = [];
+            foreach ($data as $value) {
+                if ($value == 'u' || $value == '') { // unanswered
+                    $letters[] = 'u';
+                } else {
+                    if (!is_int($value) && ctype_digit($value)) {
+                        $value = (int)$value;
+                    } elseif (!is_int($value)) {
+                        throw new coding_exception('Input datatype incorrect');
+                    }
+                    if ($value < 1 || $value > 26) {
+                        throw new coding_exception('Input exceeds range');
+                    }
+                    $letters[] = chr($value + 64);
+                }
+            }
+            return $letters;
+        } else {
+            if ($data == 'u' || $data == '') { // unanswered
+                return 'u';
+            }
+            if (!is_int($data) && ctype_digit($data)) {
+                $data = (int)$data;
+            } elseif (!is_int($data)) {
+                throw new coding_exception('Input datatype incorrect');
+            }
+            if ($data > 26 || $data < 1) {
+                throw new coding_exception('Input exceeds range');
+            }
+            return chr($data + 64);
+        }
+    }
 }

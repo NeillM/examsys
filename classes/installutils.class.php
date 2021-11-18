@@ -779,6 +779,8 @@ class InstallUtils
         $configObject->set_setting('misc_full_question_history_display_limit', 200, Config::INTEGER);
         $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
         $configObject->set_setting('rpt_fd_show_wordlist', 1, Config::BOOLEAN);
+        $configObject->set_setting('rpt_letters_for_extmatch', false, Config::BOOLEAN);
+        $configObject->set_setting('rpt_letters_for_hotspots', false, Config::BOOLEAN);
         $configObject->set_setting(
             'stdset_hofstee_pass',
             array(

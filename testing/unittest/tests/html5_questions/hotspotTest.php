@@ -47,7 +47,7 @@ class html5hotspottest extends UnitTest
     /**
      * Test that correct answers have their coordinates removed by the correct_to_answer_mode method.
      *
-     * This tests mupliple shapes with 3 shapes in one layer.
+     * This tests multiple shapes with 3 shapes in one layer.
      */
     public function test_correct_to_answer_mode2()
     {
@@ -352,6 +352,56 @@ class html5hotspottest extends UnitTest
         $answer = '250,81|';
         $expected = '1,250,81|u';
         $result = hotspot_helper::get_instance()->mark($answer, $correct);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Letter answered layers with all correct
+     */
+    public function testMarkCorrectLetters()
+    {
+        $correct = 'Top left square~16711680~rectangle~10,11,74,65~0~|Top circle~16776960~ellipse~11b,17,17d,71~0~|Bottom square overlaid with diamond~45136~rectangle~47,ac,9a,f9~0~|Bottom mid - circle top left~28864~ellipse~e2,9e,12a,e6~0~|Bottom mid - circle bottom~7352480~ellipse~143,108,fe,c4~0~|Bottom right - circle~12582912~ellipse~181,c8,1cc,112~0~';
+        $answer = '1,71,55|1,331,75|1,78,178|1,260,187|1,293,249|1,412,256';
+        $expected = '1,A|1,B|1,C|1,D|1,E|1,F';
+        $result = hotspot_helper::get_instance()->markWithLetters($answer, $correct);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Letter answered layers with all correct, some overlaps with other correct layers
+     * C no overlap, D overlaps E, E overlaps D, F no overlap
+     */
+    public function testMarkCorrectLettersOverlapping()
+    {
+        $correct = 'Top left square~16711680~rectangle~10,11,74,65~0~|Top circle~16776960~ellipse~11b,17,17d,71~0~|Bottom square overlaid with diamond~45136~rectangle~47,ac,9a,f9~0~|Bottom mid - circle top left~28864~ellipse~e2,9e,12a,e6~0~|Bottom mid - circle bottom~7352480~ellipse~143,108,fe,c4~0~|Bottom right - circle~12582912~ellipse~181,c8,1cc,112~0~';
+        $answer = '1,70,67|1,328,84|1,109,211|1,288,204|1,289,208|1,437,215';
+        $expected = '1,A|1,B|1,C|1,D|1,E|1,F';
+        $result = hotspot_helper::get_instance()->markWithLetters($answer, $correct);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Letter answered layers with all wrong, E not matching any layers
+     * A=>C; B=>D,E; C=>F, D=>A, E=>x, F=>B
+     */
+    public function testMarkWrongLettersOverlapping()
+    {
+        $correct = 'Top left square~16711680~rectangle~10,11,74,65~0~|Top circle~16776960~ellipse~11b,17,17d,71~0~|Bottom square overlaid with diamond~45136~rectangle~47,ac,9a,f9~0~|Bottom mid - circle top left~28864~ellipse~e2,9e,12a,e6~0~|Bottom mid - circle bottom~7352480~ellipse~143,108,fe,c4~0~|Bottom right - circle~12582912~ellipse~181,c8,1cc,112~0~';
+        $answer = '0,114,212|0,292,205|0,439,216|0,70,64|0,187,69|0,340,68';
+        $expected = '0,C|0,D,E|0,F|0,A|0,x|0,B';
+        $result = hotspot_helper::get_instance()->markWithLetters($answer, $correct);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Answer incorrect, overlays 3 other layers. Includes 3 unanswered layers, and one layer added post-exam sitting
+     */
+    public function testMarkIncorrectThreeLayers()
+    {
+        $correct = 'Top left square~16711680~rectangle~10,11,74,65~0~|Bottom mid - circle top left~28864~ellipse~e2,9e,12a,e6~0~|Bottom mid - circle bottom~7352480~ellipse~143,108,fe,c4~0~|Bottom mid - circle right~8288~ellipse~117,e9,162,9e~0~|Bottom right - circle~12582912~ellipse~181,c8,1cc,112~0~';
+        $answer = '0,292,205|u|u|u';
+        $expected = '0,B,C,D|0,u|0,u|0,u|0,?';
+        $result = hotspot_helper::get_instance()->markWithLetters($answer, $correct);
         $this->assertEquals($expected, $result);
     }
 }
