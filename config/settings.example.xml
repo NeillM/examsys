@@ -6,6 +6,7 @@
         <data>/rogomedia</data>
         <temp>/tmp/</temp>
         <root>/</root>
+        <site_address>https://localhost</site_address>
     </server>
     <database>
         <prefix>rogo</prefix>
@@ -48,6 +49,7 @@
         <prefix></prefix>
     </ldap>
     <supportemail></supportemail>
+    <paperanomalyemail></paperanomalyemail>
     <contact1>
         <name></name>
         <telephone></telephone>

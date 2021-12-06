@@ -1820,6 +1820,28 @@ QUERY;
             PRIMARY KEY (`table`)
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
+
+        $this->tableList['anomaly'] = <<<QUERY
+            CREATE TABLE `anomaly` (
+            `id` int unsigned NOT NULL AUTO_INCREMENT,
+            `type` tinyint NOT NULL,
+            `time` bigint(10) NOT NULL,
+            `details` TEXT,
+            `userID` int(10) unsigned NOT NULL,
+            `paperID` mediumint(8) unsigned NOT NULL,
+            `screen` tinyint(3) unsigned DEFAULT NULL,
+            PRIMARY KEY (`id`),
+            KEY `anomaly_log_key0` (`type`, `userID`, `paperID`)
+        ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
+
+        $this->tableList['scheduledmail'] = <<<QUERY
+            CREATE TABLE `scheduledmail` (
+            `type` varchar(10) NOT NULL,
+            `last` bigint(10) NOT NULL,
+            PRIMARY KEY (`type`)
+        ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+QUERY;
     }
 
     public function next()

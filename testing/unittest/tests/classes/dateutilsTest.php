@@ -176,4 +176,28 @@ class DateUtilsTest extends unittest
             'leapyear' => ['2017', '02', '29', '09', '00', 'Europe/London', '2017-03-01 09:00:00'],
         ];
     }
+
+    /**
+     * Tests that dates are converted to the correct timestamp.
+     *
+     * @dataProvider dataRogoToTimestamp
+     */
+    public function testRogoToTimestamp(string $input, string $timezone, int $expected)
+    {
+        Config::get_instance()->set('cfg_timezone', $timezone);
+        $this->assertEquals($expected, date_utils::rogoToTimestamp($input));
+    }
+
+    /**
+     * Data used to test the date formatting.
+     *
+     * @return array
+     */
+    public function dataRogoToTimestamp(): array
+    {
+        return [
+            'default' => ['20211116000000', 'Europe/London', 1637020800],
+            'default' => ['20211116000000', 'Australia/Perth', 1636992000],
+        ];
+    }
 }

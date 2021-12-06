@@ -257,4 +257,26 @@ class date_utils
         $datetime->setTimezone($utc_timezone);
         return $datetime;
     }
+
+    /**
+     * Converts a time/date from 20140301103059 into a UTC timestamp.
+     *
+     * @param string $original - The date that needs to be convered.
+     * @return int
+     */
+    public static function rogoToTimestamp(string $original): int
+    {
+        $day = mb_substr($original, 6, 2);
+        $month = mb_substr($original, 4, 2);
+        $year = mb_substr($original, 0, 4);
+        $hours = mb_substr($original, 8, 2);
+        $minutes = mb_substr($original, 10, 2);
+        $utc_timezone = new DateTimeZone('UTC');
+        $target_timezone = new DateTimeZone(Config::get_instance()->get('cfg_timezone'));
+        $date = new \DateTime('now', $target_timezone);
+        $date->setDate($year, $month, $day);
+        $date->setTime($hours, $minutes, 0);
+        $date->setTimezone($utc_timezone);
+        return $date->getTimestamp();
+    }
 }

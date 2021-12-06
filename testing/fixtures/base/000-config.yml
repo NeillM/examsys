@@ -311,3 +311,8 @@ config:
     setting: "system_user_accessibility"
     value: 0
     type: "boolean"
+  -
+    component: 'core'
+    setting: 'paper_anomaly_detection'
+    value: '{"progress":0,"summative":0}'
+    type: 'assoc'

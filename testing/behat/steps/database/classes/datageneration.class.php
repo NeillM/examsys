@@ -24,6 +24,7 @@ use module_utils;
 use PaperUtils;
 use StudentNotes;
 use testing\behat\helpers\database\state;
+use testing\datagenerator\Anomaly;
 use testing\datagenerator\data_error;
 use UserUtils;
 
@@ -66,6 +67,7 @@ trait datageneration
         'courses' => array('course', 'core', 'create_course', null),
         'reviewers' => array('papers', 'core', 'addReviewer', null),
         'schedule' => array('papers', 'core', 'schedule', null),
+        'anomaly' => array('anomaly', 'core', 'createAnomaly', 'preProcessAnomaly'),
     );
 
     /**
@@ -581,6 +583,40 @@ trait datageneration
         unset($row['user']);
         unset($row['paper']);
         unset($row['author']);
+        return $row;
+    }
+
+    /**
+     * Add an anomaly to a paper
+     *
+     * @param array $row paper anomaly data row
+     * @return array
+     * @throws data_error
+     */
+    private function preProcessAnomaly(array $row): array
+    {
+        if (empty($row['user'])) {
+            throw new data_error('user must be provided');
+        }
+        if (empty($row['paper'])) {
+            throw new data_error('paper must be provided');
+        }
+        if (empty($row['type'])) {
+            throw new data_error('paper must be provided');
+        }
+        if (!empty($row['time'])) {
+            $timestamp = new \DateTime($row['time']);
+            $row['time'] = $timestamp->getTimestamp();
+        }
+        $row['userid'] = UserUtils::username_exists($row['user'], state::get_db());
+        $row['paperid'] = PaperUtils::getPaperId($row['paper']);
+        if ($row['type'] === 'clock') {
+            $row['type'] = \Anomaly::CLOCK;
+        } else {
+            throw new data_error('anomaly type unknown');
+        }
+        unset($row['user']);
+        unset($row['paper']);
         return $row;
     }
 

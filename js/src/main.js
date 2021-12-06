@@ -222,6 +222,7 @@ requirejs.config({
         audit: "admin/audit/js/audit.min",
         micromodal: "node_modules/micromodal/dist/micromodal.min",
         rogomodal: "js/modules/rogomodal.min",
+		anomaly: "js/modules/anomaly.min",
     },
     shim: {
         // Mathjax configration.

@@ -45,6 +45,7 @@ class InstallUtils
     public static $cfg_search_leadin_length;
     public static $cfg_timezone;
     public static $cfg_tmpdir;
+    public static $cfg_site_address;
     public static $cfg_tablesorter_date_time;
 
     //database config options
@@ -112,6 +113,7 @@ class InstallUtils
     public static $cfg_labsecuritytype;
 
     public static $cfg_support_email;
+    public static $paper_anomaly_email;
     public static $emergency_support_numbers;
 
     /** @var bool Stores if this is a behat installation. */
@@ -342,6 +344,7 @@ class InstallUtils
             self::$cfg_search_leadin_length = param::required('cfg_search_leadin_length', param::INT, param::FETCH_POST);
             self::$cfg_timezone = param::required('cfg_timezone', param::TEXT, param::FETCH_POST);
             self::$cfg_tmpdir = param::required('tmpdir', param::TEXT, param::FETCH_POST);
+            self::$cfg_site_address = 'https://' . $_SERVER['HTTP_HOST'] . self::$cfg_root_path;
         } else {
             self::$cfg_db_basename = self::getSettings(param::TEXT, true, 'database', 'prefix');
             self::$cfg_SysAdmin_username = self::getSettings(param::TEXT, true, 'sysadmin', 'username');
@@ -360,6 +363,7 @@ class InstallUtils
             self::$cfg_search_leadin_length = 160;
             self::$cfg_timezone = self::getSettings(param::TEXT, true, 'timedate', 'timezone');
             self::$cfg_tmpdir = self::getSettings(param::TEXT, true, 'server', 'temp');
+            self::$cfg_site_address = self::getSettings(param::TEXT, true, 'server', 'site_address');
         }
         if (self::$cfg_long_date_time == '%d/%m/%Y %H:%i') {
             self::$cfg_tablesorter_date_time = 'uk';
@@ -421,8 +425,10 @@ class InstallUtils
         //ASSISTANCE
         if (!self::$cli) {
             self::$cfg_support_email = param::required('support_email', param::TEXT, param::FETCH_POST);
+            self::$paper_anomaly_email = param::required('paper_anomaly_email', param::TEXT, param::FETCH_POST);
         } else {
             self::$cfg_support_email = self::getSettings(param::TEXT, true, 'supportemail');
+            self::$paper_anomaly_email = self::getSettings(param::TEXT, true, 'paperanomalyemail');
         }
         self::$emergency_support_numbers = array();
         for ($i = 1; $i <= 3; $i++) {
@@ -674,6 +680,8 @@ class InstallUtils
         $alter[] = 'ALTER TABLE questions_lineage ADD CONSTRAINT `questions_lineage_fk2_root` FOREIGN KEY (`rootID`) REFERENCES `questions` (`q_id`)';
         $alter[] = 'ALTER TABLE questions_lineage ADD CONSTRAINT `questions_lineage_fk3_change` FOREIGN KEY (`changeID`) REFERENCES `track_changes` (`id`)';
         $alter[] = 'ALTER TABLE audit_log ADD CONSTRAINT `audit_log_fk0` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)';
+        $alter[] = 'ALTER TABLE anomaly ADD CONSTRAINT `anomaly_log_fk0` FOREIGN KEY (`userID`) REFERENCES `users` (`id`)';
+        $alter[] = 'ALTER TABLE anomaly ADD CONSTRAINT `anomaly_log_fk1` FOREIGN KEY (`paperID`) REFERENCES `properties` (`property_id`)';
         foreach ($alter as $a) {
             $res = self::$db->prepare($a);
             $res->execute();
@@ -891,6 +899,12 @@ class InstallUtils
         $configObject->set_setting('mailer_username', '', Config::STRING);
         $configObject->set_setting('mailer_password', '', Config::STRING);
         $configObject->set_setting('mailer_secure', '', Config::STRING);
+        $anomalypapersettings = array(
+            'progress' => 0,
+            'summative' => 0,
+        );
+        $configObject->set_setting('paper_anomaly_detection', $anomalypapersettings, Config::ASSOC);
+        $configObject->set_setting('paper_anomaly_email', array(self::$paper_anomaly_email), Config::EMAIL);
         // Add external systems.
         $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
         $insert->execute();
@@ -1207,6 +1221,7 @@ class InstallUtils
         $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".breaks TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".audit_log TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".track_changes TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".anomaly TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
 
@@ -1873,7 +1888,9 @@ class InstallUtils
      */
     protected static function createRetention()
     {
-        $insert = self::$db->prepare("INSERT INTO retention (`table`, `days`) VALUES ('audit_log', 90)");
+        $insert = self::$db->prepare(
+            "INSERT INTO retention (`table`, `days`) VALUES ('audit_log', 90), ('anomaly', 365)"
+        );
         $insert->execute();
         $insert->close();
         self::$db->commit();
@@ -2143,6 +2160,7 @@ class InstallUtils
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset = 'UTF-8';
 \$cfg_tmpdir = '{cfg_tmpdir}';
+\$cfg_site_address = '{cfg_site_address}';
 
   \$cfg_web_host = '{cfg_web_host}';
   \$cfg_rogo_data = '{cfg_rogo_data}';
@@ -2299,6 +2317,7 @@ CONFIG;
         $config = str_replace('{cfg_long_full_datetime_php}', self::$cfg_long_full_datetime_php, $config);
         $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
         $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
+        $config = str_replace('{cfg_site_address}', self::$cfg_site_address, $config);
         $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);
 
         $authentication_arrays = array();

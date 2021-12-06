@@ -111,6 +111,7 @@ if (date('n') < 7) {
 
   $menudata = array();
   $menudata['audit']                = array('./audit/list_audit.php', 'audit.png');
+  $menudata['anomaly']              = array('./anomaly/settings.php', 'anomaly.png');
   $menudata['academicsessions']     = array('academic_sessions.php', 'sessions.png');
   $menudata['authentication']       = array('./oauth/list_oauth.php', 'auth.png');
   $menudata['bug']                  = array('https://rogo-eassessment.atlassian.net', 'bug.png');

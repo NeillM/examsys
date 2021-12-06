@@ -36,6 +36,7 @@ requirejs(['rogomodal', 'jsxls', 'media', 'reference', 'start', 'jquery'], funct
         };
 
         if (el.dataset.timed) {
+            start.anomaly = el.dataset.anomaly;
             start.paused = false;
             start.examtime = el2.dataset.remaining_time;
             start.breaktime = $('#dataset').attr('data-breaks');
@@ -122,6 +123,8 @@ requirejs(['rogomodal', 'jsxls', 'media', 'reference', 'start', 'jquery'], funct
         start.last_save_point = (new Date).getTime();
         start.last_saved_user_answers = null; // Holds the data of the last successful auto save
         start.submitted = false;
+        start.screen = $('#current_screen').val() - 1;
+        start.paperid = el.dataset.paperid;
 
         // Setup autosave
         start.startAutoSave();

@@ -285,4 +285,53 @@ class DBUtils
         }
         return true;
     }
+
+    /**
+     * Get the column data type
+     * @param string $table the table
+     * @param string $column the column
+     * @return string
+     */
+    public static function checkColumnType(string $table, string $column): string
+    {
+        $sql = 'SELECT
+          DATA_TYPE
+        FROM
+          INFORMATION_SCHEMA.COLUMNS
+        WHERE
+          TABLE_SCHEMA = ?
+        AND
+          TABLE_NAME = ?
+          AND COLUMN_NAME = ?';
+        $schema = Config::get_instance()->get('cfg_db_database');
+        $query = Config::get_instance()->db->prepare($sql);
+        $query->bind_param('sss', $schema, $table, $column);
+        $query->execute();
+        $query->bind_result($type);
+        $query->fetch();
+        $query->close();
+        return $type;
+    }
+
+    /**
+     * Get a commond line tool database connection
+     */
+    public static function cliDbConnect(): void
+    {
+        $configObject = \Config::get_instance();
+        $cfg_db_host = $configObject->get('cfg_db_host');
+        $cfg_db_port = $configObject->get('cfg_db_port');
+        $cfg_db_database = $configObject->get('cfg_db_database');
+        $cfg_db_charset = $configObject->get('cfg_db_charset');
+        $cfg_db_sysadmin_user = $configObject->get('cfg_db_sysadmin_user');
+        $cfg_db_sysadmin_passwd = $configObject->get('cfg_db_sysadmin_passwd');
+
+        @$configObject->db = new mysqli($cfg_db_host, $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_port);
+        if ($configObject->db->connect_error == '') {
+            $configObject->db->set_charset($cfg_db_charset);
+        } else {
+            \cli_utils::prompt('Unable to connect to database - ' . $configObject->db->connect_error);
+            exit(0);
+        }
+    }
 }

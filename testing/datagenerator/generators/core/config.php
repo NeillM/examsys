@@ -55,6 +55,9 @@ class config extends generator
 
         $config = \Config::get_instance();
         $type = $config->get_setting_type($component, $setting);
+        if ($type == \Config::ASSOC) {
+            $value = json_decode($value, true);
+        }
         if (is_null($type)) {
             throw new data_error("$component/$setting is not a valid Rogo setting");
         }

@@ -40,4 +40,5 @@ trait include_frontend
     use User;
     use ClassTotals;
     use Statistics;
+    use Anomaly;
 }

@@ -80,6 +80,10 @@ trait pages
                 $filters = $data->getRowsHash();
                 $this->visitClassTotals($instance, $filters['moduleid'], $data);
                 break;
+            case 'Anomaly':
+                $filters = $data->getRowsHash();
+                $this->visitAnomalies($instance, $filters['moduleid'], $data);
+                break;
             default:
                 // Unsupported page type.
                 throw new PendingException("A handler for the report '$name' page has not been implemented.");
@@ -214,5 +218,28 @@ trait pages
     protected function visitCalendar(string $year, string $week): void
     {
         $this->visit(Url::calendar($year, $week));
+    }
+
+    /**
+     * Loads the anomalies report for a paper.
+     *
+     * @param string $paper the paper name
+     * @param string $module the module code
+     * @param TableNode $filters the report filters
+     * @throws \Exception
+     * @throws PendingException
+     */
+    protected function visitAnomalies(string $paper, string $module, TableNode $filters): void
+    {
+        $paperid = \PaperUtils::getPaperId($paper);
+        if ($paperid === null) {
+            throw new \Exception('Invalid paper title');
+        }
+        $data = $filters->getRowsHash();
+        $data['module'] = \module_utils::get_idMod($module, state::get_db());
+        if ($data['module']  === false) {
+            throw new \Exception('Invalid module code');
+        }
+        $this->visit(Url::anomalies($paperid, $data));
     }
 }

@@ -51,7 +51,7 @@ class AuditTest extends \testing\unittest\unittestdatabase
     {
         Audit::setRetentionPeriod(45);
         // Check tables are correct.
-        $queryTable = $this->query(array('table' => 'retention'));
+        $queryTable = $this->query(array('table' => 'retention', 'where' => array(array('column' => '`table`', 'value' => 'audit_log'))));
         $expectedTable = array(
             0 => array (
                 'table' => 'audit_log',

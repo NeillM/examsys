@@ -310,55 +310,31 @@ class Audit
 
     /**
      * Get the retention period for the data.
+     *
      * @return ?int
      */
     public static function getRententionPeriod(): ?int
     {
-        $sql = 'SELECT days FROM retention WHERE `table` = ?';
-        $query = Config::get_instance()->db->prepare($sql);
-        $table = 'audit_log';
-        $query->bind_param('s', $table);
-        $query->execute();
-        $query->store_result();
-        $query->bind_result($days);
-        $query->fetch();
-        $query->close();
-        return $days;
+        return \Retention::getRententionPeriod('audit_log');
     }
 
     /**
      * Set the retention period
+     *
      * @param int $days retention period
      */
     public static function setRetentionPeriod(int $days): void
     {
-        $current = self::getRententionPeriod();
-        if ($current !== $days) {
-            $sql = 'UPDATE retention SET days = ? WHERE `table` = ?';
-            $query = Config::get_instance()->db->prepare($sql);
-            $table = 'audit_log';
-            $query->bind_param('is', $days, $table);
-            $query->execute();
-            $query->close();
-        }
+        \Retention::setRetentionPeriod($days, 'audit_log');
     }
 
     /**
-     * Delete audit permissions data according to the data retention policy.
+     * Delete data according to the data retention policy.
+     *
      * @return boolean
      */
     public static function deleteDataByRetentionPolicy(): bool
     {
-        $retention = Audit::getRententionPeriod();
-        if (empty($retention)) {
-            return false;
-        }
-        $retentionperiod = date('Y-m-d H:i:s', strtotime('-' . $retention . ' day'));
-        $sql = 'DELETE FROM audit_log WHERE time < ?';
-        $query = Config::get_instance()->db->prepare($sql);
-        $query->bind_param('s', $retentionperiod);
-        $query->execute();
-        $query->close();
-        return true;
+        return \Retention::deleteDataByRetentionPolicy('audit_log');
     }
 }

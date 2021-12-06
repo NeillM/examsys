@@ -52,21 +52,13 @@ if ((isset($optionslist['h']) or isset($optionslist['help']))) {
     exit(0);
 }
 
-$cfg_db_host = $configObject->get('cfg_db_host');
-$cfg_db_port = $configObject->get('cfg_db_port');
-$cfg_db_database = $configObject->get('cfg_db_database');
-$charset = 'utf8mb4';
-$cfg_db_sysadmin_user = $configObject->get('cfg_db_sysadmin_user');
-$cfg_db_sysadmin_passwd = $configObject->get('cfg_db_sysadmin_passwd');
+\DBUtils::cliDbConnect();
 
-@$configObject->db = new mysqli($cfg_db_host, $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_port);
-if ($configObject->db->connect_error == '') {
-    $configObject->db->set_charset($charset);
-} else {
-    cli_utils::prompt('Unable to connect to database - ' . $configObject->db->connect_error);
-    exit(0);
-}
-
-if (!Audit::deleteDataByRetentionPolicy()) {
-    cli_utils::prompt('Rentention policy set to retain all data.');
+$tables = Retention::getRetentionPolicesTables();
+foreach ($tables as $table) {
+    if (!Retention::deleteDataByRetentionPolicy($table)) {
+        cli_utils::prompt($table . ' rentention policy set to retain all data.');
+    } else {
+        cli_utils::prompt($table . ' rentention policy applied');
+    }
 }

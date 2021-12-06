@@ -240,4 +240,15 @@ class render
 
         return $this->twig->render('admin/navigation.html', $data);
     }
+
+    /**
+     * Render string reponse.
+     * @param array $data - data
+     * @param string $template - template location
+     * @return string
+     */
+    public function renderString(array $data, string $template): string
+    {
+        return $this->twig->render($template, $data);
+    }
 }

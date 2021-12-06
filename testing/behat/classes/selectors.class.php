@@ -85,6 +85,7 @@ class selectors
         'audit_source' => 'audit_source',
         'tab' => 'tab',
         'papers_by_school' => 'papers_by_school',
+        'clock_anomaly' => 'clock_anomaly',
     );
 
     /**
@@ -187,7 +188,10 @@ XPATH
 //td[contains(@id, 'source')]//a[contains(normalize-space(.) , %locator%)]
 XPATH
     ,'tab' => <<<XPATH
-//td[contains(@class, 'tabon') or contains(@class, 'taboff') and contains(normalize-space(.) , %locator%)]   
+//td[contains(@class, 'tabon') or contains(@class, 'taboff') and contains(normalize-space(.) , %locator%)]  
+XPATH
+    ,'clock_anomaly' => <<<XPATH
+//td[contains(normalize-space(.), %locator%)]/following-sibling::td[contains(text(), 'User System Clock Anomaly')]
 XPATH
     );
 

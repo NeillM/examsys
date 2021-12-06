@@ -144,4 +144,41 @@ class Url
         }
         return '/admin/calendar.php?calyear=' . $year . '#week' . $week;
     }
+
+    /**
+     * Generates the URL to an anomalies report.
+     *
+     * @param int $paperid The id of the paper.
+     * @param array $filters the report filters
+     * @return string
+     */
+    public static function anomalies(
+        int $paperid,
+        array $filters
+    ): string {
+        if (isset($filters['startdate'])) {
+            $filters['startdate'] = new \DateTime($filters['startdate']);
+        }
+        if (isset($filters['enddate'])) {
+            $filters['enddate'] = new \DateTime($filters['enddate']);
+        }
+        $defaults = array(
+            'module' => '',
+            'folder' => '',
+            'studentsonly' => '1',
+        );
+        $defaults['startdate'] = new \DateTime('tomorrow');
+        $defaults['startdate']->setTime(12, 00);
+        $defaults['enddate'] = new \DateTime('tomorrow');
+        $defaults['enddate']->setTime(13, 00);
+        $return = array_merge($defaults, $filters);
+        $settings = array_intersect_key($return, $defaults);
+        return '/reports/anomalies.php?paperID='
+            . $paperid
+            . '&startdate=' . $settings['startdate']->format('YmdHis')
+            . '&enddate=' . $settings['enddate']->format('YmdHis')
+            . '&module=' . $settings['module']
+            . '&folder=' . $settings['folder']
+            . '&studentsonly=' . $settings['studentsonly'];
+    }
 }

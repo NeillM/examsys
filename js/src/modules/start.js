@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['rogomodal', 'editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(Modal, Editor, Html5, Qarea, Qlabelling, Jsxls, $) {
+define(['anomaly', 'rogomodal', 'editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(Anomaly, Modal, Editor, Html5, Qarea, Qlabelling, Jsxls, $) {
     return function() {
         var scope = this;
 
@@ -114,6 +114,17 @@ define(['rogomodal', 'editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'
             var diff = nowtime - scope.lastheartbeat;
             // Expeted to be one second since last heartbeat.
             var offBy = diff - 1000;
+            // Anomaly detection..
+            if (scope.anomaly) {
+                // Log an anomaly if clock is not what was expected.
+                //   - A positive diff should be handle by the clock correction logic below, we log an anomlay anyway for our records
+                //   - A negative diff would be odd as the client would be losing time, log it as user might have been having pc issues
+                //   - A diff of 0 might indicate the client is tampering with there system clock
+                if (diff > 3000 || diff <= 0) {
+                    var anomaly = new Anomaly();
+                    anomaly.log(scope.paperid, scope.screen, scope.lastheartbeat.toString(), now.toString());
+                }
+            }
             scope.lastheartbeat = now;
             // Give some wiggle room.
             if (offBy > 100) {
