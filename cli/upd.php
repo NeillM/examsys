@@ -52,13 +52,13 @@ $longoptions = array(
 
 $optionslist = getopt($options, $longoptions);
 
-$help = 'Rogo initialisation script options'
-    . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
-    . PHP_EOL . PHP_EOL . "-u, --user, \t\tDatabase username"
-    . PHP_EOL . PHP_EOL . "-p, --passwd, \t\tDatabase password"
-    . PHP_EOL . PHP_EOL . "-o, --staff_help, \tLoad staff help (0/1, default 0)"
-    . PHP_EOL . PHP_EOL . "-q, --student_help, \tLoad student help (0/1, default 0)"
-    . PHP_EOL . PHP_EOL . "-l, --langpacks, \tLoad language packs (0/1, default 0)";
+$help = 'Rogō initialisation script options:'
+    . PHP_EOL . " -h, --help \tDisplay help"
+    . PHP_EOL . " -u \t\tDatabase username"
+    . PHP_EOL . " -p \t\tDatabase password"
+    . PHP_EOL . " -o \t\tLoad staff help (0/1, default 0)"
+    . PHP_EOL . " -q \t\tLoad student help (0/1, default 0)"
+    . PHP_EOL . " -l \t\tLoad language packs (0/1, default 0)";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
     // Display some help information.
