@@ -121,12 +121,14 @@ $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database')
 $version = $configObject->getxml('version');
 // Get the installed version.
 $old_version = $configObject->get_setting('core', 'rogo_version');
-if ($version == $old_version) {
-    cli_utils::prompt('Nothing to update.');
-    exit(0);
-}
-if ($updater_utils->check_version('7.2.0')) {
-    cli_utils::prompt('This version of Rogo requires at least version 7.2.0 is installed prior to upgrade.');
+
+$min_version = '7.2.0';
+if ($updater_utils->check_version($min_version)) {
+    if ($version == $old_version) {
+        cli_utils::prompt("Rogō $version is already installed, nothing to update.");
+    } else {
+        cli_utils::prompt("Rogō $version requires at least version $min_version is installed prior to upgrade.");
+    }
     exit(0);
 }
 // Get update file dir.
