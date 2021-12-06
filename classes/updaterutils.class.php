@@ -292,7 +292,7 @@ class UpdaterUtils
      * @param string $sql                 The SQL statement to run.
      * @param bool   $update_display      If true then echo the SQL to the screen.
      * @param bool   $returnAffectedRows  If true, return affected number of rows, otherwise return insert ID
-     * 
+     *
      * @return int   The id of the inserted row or number of affected rows
      */
     public function execute_query($sql, $update_display = false, $returnAffectedRows = false)
@@ -411,8 +411,12 @@ class UpdaterUtils
             if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
                 InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
             }
-            ob_flush();
-            flush();
+
+            if (!empty(ob_list_handlers())) {
+                // Only flush the buffers if some are open.
+                ob_flush();
+                flush();
+            }
         }
     }
 
