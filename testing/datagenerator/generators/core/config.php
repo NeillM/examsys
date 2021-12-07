@@ -55,7 +55,10 @@ class config extends generator
 
         $config = \Config::get_instance();
         $type = $config->get_setting_type($component, $setting);
-        if ($type == \Config::ASSOC) {
+        if ($type == \Config::ASSOC and is_string($value)) {
+            // We allow a JSON encoded string to be passed in behat,
+            // but it is also valid to pass a value that is not encoded
+            // for example in a unit test.
             $value = json_decode($value, true);
         }
         if (is_null($type)) {

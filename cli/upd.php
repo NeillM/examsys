@@ -45,20 +45,22 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARAT
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'errors.php';
 
 // Lets look to see what arguments have been passed.
-$options = 'hu:p:o::q::l::';
+$options = 'hu:p:s::o::q::l::';
 $longoptions = array(
   'help',
 );
 
 $optionslist = getopt($options, $longoptions);
 
-$help = 'Rogo initialisation script options'
-    . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
-    . PHP_EOL . PHP_EOL . "-u, --user, \t\tDatabase username"
-    . PHP_EOL . PHP_EOL . "-p, --passwd, \t\tDatabase password"
-    . PHP_EOL . PHP_EOL . "-o, --staff_help, \tLoad staff help (0/1, default 0)"
-    . PHP_EOL . PHP_EOL . "-q, --student_help, \tLoad student help (0/1, default 0)"
-    . PHP_EOL . PHP_EOL . "-l, --langpacks, \tLoad language packs (0/1, default 0)";
+$help = 'Rogō initialisation script options:'
+    . PHP_EOL . " -h, --help \tDisplay help"
+    . PHP_EOL . " -u \t\tDatabase username"
+    . PHP_EOL . " -p \t\tDatabase password"
+    . PHP_EOL . " -s \t\tWeb server address. It should be in the form https://www.example.com/path/"
+    . PHP_EOL . "\t\tIt is only used on upgrades to version 7.5.0 to avoid a command line prompt (optional)"
+    . PHP_EOL . " -o \t\tLoad staff help (0/1, default 0)"
+    . PHP_EOL . " -q \t\tLoad student help (0/1, default 0)"
+    . PHP_EOL . " -l \t\tLoad language packs (0/1, default 0)";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
     // Display some help information.
@@ -76,6 +78,12 @@ $cfg_db_student_user  = $configObject->get('cfg_db_student_user');
 $cfg_db_staff_user    = $configObject->get('cfg_db_staff_user');
 $cfg_db_external_user = $configObject->get('cfg_db_external_user');
 $cfg_db_inv_username  = $configObject->get('cfg_db_inv_user');
+
+// We get the site address in following preferred order:
+// * Config file
+// * User passed option
+// * Set to null if not configured at all
+$cfg_site_address = $configObject->get('cfg_site_address') ?? $optionslist['s'] ?? null;
 
 $cfg_web_host = $configObject->get('cfg_web_host');
 if ($cfg_web_host == '') {
@@ -121,12 +129,14 @@ $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database')
 $version = $configObject->getxml('version');
 // Get the installed version.
 $old_version = $configObject->get_setting('core', 'rogo_version');
-if ($version == $old_version) {
-    cli_utils::prompt('Nothing to update.');
-    exit(0);
-}
-if ($updater_utils->check_version('7.2.0')) {
-    cli_utils::prompt('This version of Rogo requires at least version 7.2.0 is installed prior to upgrade.');
+
+$min_version = '7.2.0';
+if ($updater_utils->check_version($min_version)) {
+    if ($version == $old_version) {
+        cli_utils::prompt("Rogō $version is already installed, nothing to update.");
+    } else {
+        cli_utils::prompt("Rogō $version requires at least version $min_version is installed prior to upgrade.");
+    }
     exit(0);
 }
 // Get update file dir.
