@@ -17,6 +17,8 @@
 
 if ($updater_utils->check_version('7.5.0')) {
     if (!$updater_utils->has_updated('ROGO-2551')) {
+        $updater_utils->execute_query('SET foreign_key_checks = 0', false);
+
         $sql = <<<SQL
             CREATE TABLE `options_metadata` (
                 `optionID` INT(11) NOT NULL,
@@ -32,9 +34,14 @@ if ($updater_utils->check_version('7.5.0')) {
         $sql = <<<SQL
             ALTER TABLE `questions_metadata`
                 MODIFY COLUMN `value` varchar(2500) DEFAULT NULL,
-                MODIFY COLUMN `questionID` int(11) NOT NULL
+                MODIFY COLUMN `questionID` INT(4) NOT NULL
             SQL;
         $updater_utils->execute_query($sql, false);
+
+        $updater_utils->execute_query('SET foreign_key_checks = 1', false);
+
+        $updater_utils->execute_query('GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $configObject->get('cfg_db_database') . ".options_metadata TO '" . $configObject->get('cfg_db_staff_user') . "'@'" . $configObject->get('cfg_web_host') . "'", false);
+        $updater_utils->execute_query('GRANT SELECT ON ' . $configObject->get('cfg_db_database') . ".options_metadata TO '" . $configObject->get('cfg_db_sct_user') . "'@'"  . $configObject->get('cfg_web_host') . "'", false);
 
         $updater_utils->record_update('ROGO-2551');
     }
