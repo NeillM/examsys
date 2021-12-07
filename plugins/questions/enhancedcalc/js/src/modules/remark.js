@@ -81,7 +81,7 @@ define(['alert', 'jquery'], function(ALERT, $) {
                                 alert.show('saveerror');
                                 return false;
                             }
-                            row.addClass('overridden').effect("highlight", {}, 1500);
+                            row.addClass('overridden');
                         }
                     ).fail(scope.doError);
                 }
