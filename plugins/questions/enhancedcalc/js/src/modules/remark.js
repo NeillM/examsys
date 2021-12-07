@@ -42,14 +42,6 @@ define(['alert', 'jquery'], function(ALERT, $) {
         };
 
         /**
-         * Handle error message.
-         */
-        this.doError = function () {
-            var alert = new ALERT();
-            alert.show('saveerror');
-        };
-
-        /**
          * Save all mark changes to the database.
          */
         this.saveAllRows = function() {
@@ -57,6 +49,9 @@ define(['alert', 'jquery'], function(ALERT, $) {
             var alert = new ALERT();
             var nomarks = true;
             var partialmarks = false;
+            var failsave = false;
+            var networkfail = false;
+            var saves = [];
 
             var save_mark = function (index, element) {
                 var logID = $(element).data('logid');
@@ -69,7 +64,7 @@ define(['alert', 'jquery'], function(ALERT, $) {
                 } else {
                     nomarks = false;
                     var row = $(element).parents('tr');
-                    $.post('../ajax/reports/save_enhancedcalc_override.php',
+                    var save = $.post('../ajax/reports/save_enhancedcalc_override.php',
                         {
                             log_id: logID,
                             user_id: userID,
@@ -82,16 +77,34 @@ define(['alert', 'jquery'], function(ALERT, $) {
                         },
                         function (data) {
                             if (data != 'OK') {
-                                alert.show('saveerror');
+                                failsave = true;
                                 return false;
                             }
                             row.addClass('overridden');
                         }
-                    ).fail(scope.doError);
+                    ).fail(function() {
+                        networkfail = true;
+                    });
+
+                    // Store the promise.
+                    saves.push(save);
                 }
             };
 
             $('.save-row').each(save_mark);
+
+            var display_errors = function() {
+                // Display messages about connection errors after all of the requests have completed.
+                if (failsave) {
+                    alert.show('saveerror');
+                }
+
+                if (networkfail) {
+                    alert.show('connectionerror');
+                }
+            }
+
+            $.when.apply($, saves).then(display_errors).fail(display_errors);
 
             if (nomarks) {
                 // No mark overrides were saved.

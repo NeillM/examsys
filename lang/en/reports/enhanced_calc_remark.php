@@ -33,5 +33,6 @@ $string['na'] = 'N/A';
 $string['addreason'] = 'Add reason';
 $string['missingmarkmsg'] = 'Some marks had no override';
 $string['nomarkmsg'] = 'No mark override selected';
+$string['connectionerror'] = 'No response from the save script, changes may not have saved.';
 $string['saveerror'] = 'Error saving mark. Please try again';
 $string['done'] = 'Done';
