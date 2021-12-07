@@ -55,16 +55,20 @@ define(['alert', 'jquery'], function(ALERT, $) {
         this.saveAllRows = function() {
             var scope = this;
             var alert = new ALERT();
-            $('.save-row').each(function () {
-                var logID = $(this).data('logid');
+            var nomarks = true;
+            var partialmarks = false;
+
+            var save_mark = function (index, element) {
+                var logID = $(element).data('logid');
                 var newMark = $('input[name=mark_' + logID + ']:checked').val();
                 var reason = $('#reason_' + logID).val();
                 var logType = $('#log_type_' + logID).val();
                 var userID = $('#user_id_' + logID).val();
                 if (typeof newMark == 'undefined') {
-                    alert.show('nomarkmsg');
+                    partialmarks = true;
                 } else {
-                    var row = $(this).parents('tr');
+                    nomarks = false;
+                    var row = $(element).parents('tr');
                     $.post('../ajax/reports/save_enhancedcalc_override.php',
                         {
                             log_id: logID,
@@ -85,7 +89,17 @@ define(['alert', 'jquery'], function(ALERT, $) {
                         }
                     ).fail(scope.doError);
                 }
-            });
+            };
+
+            $('.save-row').each(save_mark);
+
+            if (nomarks) {
+                // No mark overrides were saved.
+                alert.show('nomarkmsg');
+            } else if (partialmarks) {
+                // Some marks overrides were saved.
+                alert.show('missingmarkmsg');
+            }
         };
     }
 });

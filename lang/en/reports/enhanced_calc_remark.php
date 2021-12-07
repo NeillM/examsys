@@ -31,6 +31,7 @@ $string['incorrect'] = 'Incorrect';
 $string['reason'] = 'Reason';
 $string['na'] = 'N/A';
 $string['addreason'] = 'Add reason';
+$string['missingmarkmsg'] = 'Some marks had no override';
 $string['nomarkmsg'] = 'No mark override selected';
 $string['saveerror'] = 'Error saving mark. Please try again';
 $string['done'] = 'Done';
