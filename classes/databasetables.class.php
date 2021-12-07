@@ -1070,7 +1070,7 @@ QUERY;
         $this->tableList['questions_metadata'] = <<<QUERY
         CREATE TABLE `questions_metadata` (
           `id` int(11) NOT NULL auto_increment,
-          `questionID` int(11) NOT NULL,
+          `questionID` int(4) NOT NULL,
           `type` varchar(255) default NULL,
           `value` varchar(2500) default NULL,
           PRIMARY KEY (`id`),
