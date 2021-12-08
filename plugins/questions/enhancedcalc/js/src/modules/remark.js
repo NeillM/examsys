@@ -59,11 +59,18 @@ define(['alert', 'jquery'], function(ALERT, $) {
                 var reason = $('#reason_' + logID).val();
                 var logType = $('#log_type_' + logID).val();
                 var userID = $('#user_id_' + logID).val();
+                var row = $(element).parents('tr');
+                var startValue = row.data('current');
+                var startReason = row.data('reason');
+
                 if (typeof newMark == 'undefined') {
                     partialmarks = true;
-                } else {
+                } else if (startValue === newMark && startReason === reason) {
+                    // The mark is unchanged we do not need to save.
                     nomarks = false;
-                    var row = $(element).parents('tr');
+                } else {
+                    // Only save if the value has been changed.
+                    nomarks = false;
                     var save = $.post('../ajax/reports/save_enhancedcalc_override.php',
                         {
                             log_id: logID,
@@ -81,6 +88,10 @@ define(['alert', 'jquery'], function(ALERT, $) {
                                 return false;
                             }
                             row.addClass('overridden');
+
+                            // Update the saved values.
+                            row.data('current', newMark);
+                            row.data('reason', reason);
                         }
                     ).fail(function() {
                         networkfail = true;

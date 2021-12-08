@@ -243,7 +243,8 @@ foreach ($log_answers2 as $innerans) {
                 $new_type = $q_marks[$answer['mark']];
             }
         }
-        echo "<tr{$or_class}>";
+
+        echo "<tr{$or_class} data-current=\"{$new_type}\" data-reason=\"{$reason}\">";
         $u_vars = $answer['answer_obj']->get_user_vars();
         foreach ($u_vars as $label => $value) {
             echo "<td class=\"shortcolumn\">$value</td>\n";
