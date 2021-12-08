@@ -53,6 +53,10 @@ define(['alert', 'jquery'], function(ALERT, $) {
             var networkfail = false;
             var saves = [];
 
+            // Disable the save and close button while we are in the process of saving, since it may take a while.
+            $('#save_all').attr('disabled', 'disabled');
+            $('#close').attr('disabled', 'disabled');
+
             var save_mark = function (index, element) {
                 var logID = $(element).data('logid');
                 var newMark = $('input[name=mark_' + logID + ']:checked').val();
@@ -116,6 +120,10 @@ define(['alert', 'jquery'], function(ALERT, $) {
                 if (networkfail) {
                     alert.show('connectionerror');
                 }
+
+                // Enable the save and close buttons again now that the save is complete.
+                $('#save_all').attr('disabled', null);
+                $('#close').attr('disabled', null);
             }
 
             $.when.apply($, saves).then(display_errors).fail(display_errors);
