@@ -23,3 +23,6 @@ $string['errorimageshotspot'] = 'Hotspot question cannot be displayed because so
 $string['hotspotcorrection'] = 'The green dots show students answers which will be marked as correct if saved.';
 $string['image'] = 'Image';
 $string['correctionmode'] = 'Correction mode';
+$string['correctlayers'] = 'Correct Layer(s)';
+$string['incorrectlayers'] = 'Incorrect Layer(s)';
+$string['hotspot_letters_blank_note'] = 'NOTE: Please ensure you mark all answer areas you wish to be marked with letters, leaving the label blank for non-answers. These are invisible to students';

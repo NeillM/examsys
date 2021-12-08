@@ -54,14 +54,24 @@ class OptionEdit extends RogoObject
     protected static $_fields = array('question_id', 'text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
     protected static $_mfields = array('media_source', 'media_width', 'media_height', 'media_alt', 'media_owner');
     protected static $_omfields = array('media', 'id');
+
+    /** @var array metadata fields available for this option type */
+    public static $_metafields = array();
+
     protected $_fields_editable = array('text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
     protected $_fields_required = array('question_id', 'marks_correct');
+
+    /** @var array metadata fields required for this option type */
+    protected $_metafields_required = array();
 
     protected $_question = null;
     protected $_number = -1;
     protected $_mysqli = null;
     protected $_user_id;
     protected $_data = array();
+    protected $_metadata = array();
+    protected $_mdata = array();
+    protected $_omdata = array();
 
     // Map our 'nice' property names to the database fields
     protected $_field_map = array('question_id' => 'o_id', 'text' => 'option_text', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'correct_fback' => 'feedback_right', 'incorrect_fback' => 'feedback_wrong');
@@ -94,6 +104,9 @@ class OptionEdit extends RogoObject
         // Array of references to the fields.  Allows succinct use of call_user_func_array
         foreach (self::$_fields as $field) {
             $this->_data[] = &$this->$field;
+        }
+        foreach (static::$_metafields as $field) {
+            $this->_metadata[$field] = &$this->$field;
         }
         foreach (self::$_mfields as $field) {
             $this->_mdata[$field] = &$this->$field;
@@ -250,6 +263,9 @@ QUERY;
                     $newoption = true;
                     $this->id = $this->_mysqli->insert_id;
                 }
+
+                OptionsMetadata::setArray($this->id, $this->_metadata);
+
                 $media = $this->_omdata['media'];
                 $source = $this->_mdata['media_source'];
                 $width = $this->_mdata['media_width'];
@@ -398,11 +414,10 @@ QUERY;
         }
 
         // Delete any associated metadata
-        \OptionsMetadata::delete($this->id);
+        OptionsMetadata::delete($this->id);
 
         return $success;
     }
-
 
     /**
      * Is this option blank?
@@ -446,8 +461,7 @@ QUERY;
     }
 
     /**
-     * Get the ID of the question to which this option relates
-     * @return string
+     * Set the ID of the question to which this option relates
      */
     public function set_question_id($value)
     {
@@ -719,6 +733,11 @@ QUERY;
         call_user_func_array(array($result, 'bind_result'), $this->_data);
         $result->fetch();
 
+        // Assign additional metadata to object field names
+        foreach (OptionsMetadata::getArray($this->id, static::$_metafields) as $key => $value) {
+            $this->$key = $value;
+        }
+
         $media = QuestionUtils::getOptionMedia($this->id);
         if ($media !== false) {
             $this->media = $media->id;
@@ -740,6 +759,11 @@ QUERY;
                 $missing_fields .= $this->_pretty_names[$req] . ', ';
             }
         }
+        foreach ($this->_metafields_required as $req) {
+            if ($this->$req === '' or $this->$req === null) {
+                $missing_fields .= $this->_pretty_names[$req] . ', ';
+            }
+        }
         if ($missing_fields != '') {
             $rval = 'The following required fields have not been supplied: ' . rtrim($missing_fields, ', ');
         }
@@ -749,7 +773,7 @@ QUERY;
 
     /**
      * Track the addition of a new option.  The message may be different in other question types so allow this method to be overridden
-     * @param Logger $option_number
+     * @param Logger $logger
      * @param integer $option_number
      */
     protected function track_new($logger, $option_number)

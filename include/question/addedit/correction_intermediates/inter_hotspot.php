@@ -23,7 +23,9 @@
  * @package
  */
 
-$points1 = param::optional('points1', '', param::TEXT, param::FETCH_POST);
+$option_correct = param::optional('option_correct', '', param::TEXT, param::FETCH_POST);
+$option_incorrect = param::optional('option_incorrect', '', param::TEXT, param::FETCH_POST);
+$points1 = $option_correct . (empty($option_incorrect) ? '' : hotspot_helper::LAYER_SEPARATOR . $option_incorrect);
 
 // Get student data for display.
 $fix_data = '';
@@ -48,7 +50,7 @@ while ($result->fetch()) {
         }
         $fix_data .= ';' . $id . ',' . $tmp_user_answer;
         // Temp Mark the students answers based on the new hotspots.
-        $correct = hotspot_helper::get_instance()->mark($tmp_user_answer, $points1);
+        $correct = hotspot_helper::get_instance()->mark($tmp_user_answer, $option_correct);
         $current_data .= ';' . $correct;
     }
 }
@@ -86,6 +88,8 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
                     data-answers="<?php echo $current_data; ?>"
                 ></div>
                 <input type="hidden" name="option_correct1" id="option_correct1" value="<?php echo $fix_data; ?>" />
+                <input type="hidden" id="option_correct" name="option_correct" value="<?php echo htmlentities($option_correct) ?>" />
+                <input type="hidden" id="option_incorrect" name="option_incorrect" value="<?php echo htmlentities($option_incorrect) ?>" />
                 <input type="hidden" name="option_marks_correct" id="option_marks_correct" value="<?php echo $_POST['option_marks_correct']; ?>" />
                 <input type="hidden" name="option_marks_incorrect" id="option_marks_incorrect" value="<?php echo $_POST['option_marks_incorrect']; ?>" />
                 <input type="hidden" name="corrected" value="OK" />
@@ -94,7 +98,6 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
                 <input type="hidden" name="calling" value="<?php echo $_POST['calling']; ?>" />
                 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
                 <input type="hidden" name="scrOfY" value="<?php echo $_POST['scrOfY']; ?>" />
-                <input type="hidden" name="points1" value="<?php echo $points1; ?>" />
                 <input type="hidden" name="checkout_author" value="
                 <?php
                 if (isset($_POST['checkout_author'])) {

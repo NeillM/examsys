@@ -946,7 +946,7 @@ SQL;
         return $changes;
     }
 
-    /**
+    /*
      * Convert a number (or array of numbers) to their letter equivalent(s) for marking or display,
      * e.g. 1 => 'A', 4 => 'D', 26 => 'Z', or 'u' for an unanswered question
      * @param int|int[] $data
@@ -958,7 +958,7 @@ SQL;
         if (is_array($data)) {
             $letters = [];
             foreach ($data as $value) {
-                if ($value == 'u' || $value == '') { // unanswered
+                if ($value === 'u' || $value === '') { // unanswered
                     $letters[] = 'u';
                 } else {
                     if (!is_int($value) && ctype_digit($value)) {
@@ -974,7 +974,7 @@ SQL;
             }
             return $letters;
         } else {
-            if ($data == 'u' || $data == '') { // unanswered
+            if ($data === 'u' || $data === '') { // unanswered
                 return 'u';
             }
             if (!is_int($data) && ctype_digit($data)) {

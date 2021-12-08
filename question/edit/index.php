@@ -106,9 +106,9 @@ function save_options(&$update_options_media, $question, $userObject, $db)
             // Editing existing option
             $part_names = $option->get_editable_fields();
             try {
-                    $postparams = get_post_params($part_names, $option, $option_no);
+                $postparams = get_post_params($part_names, $option, $option_no);
             } catch (\Exception $e) {
-                  return $e->getMessage();
+                return $e->getMessage();
             }
             // Build arrays for compound fields
             $compound_fields = $option->get_compound_fields();
@@ -290,11 +290,11 @@ if ($critical_error == '') {
                     }
                 }
                 $errors = $question->update_correct($fields, $paper_id);
-                foreach ($fields as $feild_to_update => $value) {
-                    if (stristr($feild_to_update, 'option_') !== false) {
+                foreach ($fields as $field_to_update => $value) {
+                    if (stristr($field_to_update, 'option_') !== false) {
                         continue;
                     }
-                    $call = 'set_' . $feild_to_update;
+                    $call = 'set_' . $field_to_update;
                     $question->$call($value);
                 }
             } else {

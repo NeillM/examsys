@@ -89,11 +89,16 @@ class QuestionEdit extends RogoObject
     protected $_user_id;
     protected $_qfields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
     protected $_fields = array('id', 'type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
+    /** @var array metadata fields available for this question type */
+    public static $_metafields = array();
     protected $_mfields = array('media_source', 'media_width', 'media_height', 'media_alt', 'media_owner');
     protected $_qmfields = array('media', 'id', 'media_num');
 
     protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status');
     protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
+    /** @var array metadata fields required for this question type */
+    protected $_metafields_required = array();
+
     protected $_fields_settings = array();
     //  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
     protected $_score_methods;
@@ -102,6 +107,9 @@ class QuestionEdit extends RogoObject
     protected $_mysqli = null;
     protected $_logger = null;
     protected $_data = array();
+    protected $_metadata = array();
+    protected $_mdata = array();
+    protected $_omdata = array();
 
     // These properties will be lazily loaded
     protected $_keywords = null;
@@ -181,6 +189,9 @@ class QuestionEdit extends RogoObject
         // Array of references to the fields.  Allows succinct use of call_user_func_array for saving
         foreach ($this->_fields as $field) {
             $this->_data[] = &$this->$field;
+        }
+        foreach (static::$_metafields as $field) {
+            $this->_metadata[$field] = &$this->$field;
         }
         foreach ($this->_qfields as $field) {
             $this->_qdata[] = &$this->$field;
@@ -440,6 +451,8 @@ QUERY;
                     $this->id = $this->_mysqli->insert_id;
                 }
 
+                \QuestionsMetadata::setArray($this->id, $this->_metadata);
+
                 $media = explode('|', $this->_qmdata['media']);
                 $source = explode('|', $this->_mdata['media_source']);
                 if (!isset($this->currentmedia['num'])) {
@@ -584,7 +597,7 @@ QUERY;
                         // Exception for media as it returns an array. Need better solution if other properties do the same in the future
                         $get_method = 'get_' . $key . (($key == 'media') ? '_filename' : '');
                         if ($value['message'] == '') {
-                              $this->_logger->track_change($this->_lang_strings['editquestion'], $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
+                            $this->_logger->track_change($this->_lang_strings['editquestion'], $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
                         } else {
                             $this->_logger->track_change($value['message'], $this->id, $this->_user_id, $value['value'], $this->$get_method(), $change_field);
                         }
@@ -1821,6 +1834,11 @@ QUERY;
         }
         $result->close();
 
+        // Assign additional metadata to object field names
+        foreach (\QuestionsMetadata::getArray($this->id, static::$_metafields) as $key => $value) {
+            $this->$key = $value;
+        }
+
         $this->currentmedia = QuestionUtils::getMediaAsString($this->id);
         $this->media = $this->currentmedia['id'];
         $this->media_source = $this->currentmedia['source'];
@@ -1875,6 +1893,17 @@ QUERY;
             call_user_func_array(array($result, 'bind_result'), $opt_data);
             // TODO: handle 'correctness' more nicely
             $i = 1;
+            if ($result->num_rows > 0) {
+                // Include question option class if it exists. Can't do a relative file_exists without __DIR__
+                $classfile = __DIR__ . '/options/option_' . mb_strtolower($this->type) . '.class.php';
+                if (file_exists($classfile)) {
+                    include_once $classfile;
+                    $classname = 'Option' . mb_strtoupper($this->type);
+                    $option_metafield_list = $classname::$_metafields;
+                } else {
+                    $option_metafield_list = OptionEdit::$_metafields;
+                }
+            }
             while ($success = $result->fetch()) {
                 $omedia = QuestionUtils::getOptionMedia($opt_data['id']);
                 if ($omedia !== false) {
@@ -1892,6 +1921,9 @@ QUERY;
                     $opt_data['media_alt'] = '';
                     $opt_data['media_owner'] = '';
                 }
+
+                $opt_data = array_merge($opt_data, OptionsMetadata::getArray($opt_data['id'], $option_metafield_list));
+
                 $this->options[$opt_data['id']] = OptionEdit::option_factory($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, $opt_data);
                 $i++;
             }
@@ -1910,13 +1942,15 @@ QUERY;
     protected function validate()
     {
         $rval = true;
-
         // If there are errors return an appropriate message
-
-        // Required fields
         $missing_fields = '';
         foreach ($this->_fields_required as $req) {
             if (empty($this->$req)) {
+                $missing_fields .= $this->_pretty_names[$req] . ', ';
+            }
+        }
+        foreach ($this->_metafields_required as $req) {
+            if ($this->$req === '' or $this->$req === null) {
                 $missing_fields .= $this->_pretty_names[$req] . ', ';
             }
         }
@@ -2065,7 +2099,7 @@ UPDATE questions
 SET deleted = ?
 WHERE q_id = ?
 QUERY;
-        $result = $this->_mysqli->prepare($d_query);
+        $result = $mysqli->prepare($d_query);
         $result->bind_param('si', $status, $id);
         $success = $result->execute();
         $result->close();

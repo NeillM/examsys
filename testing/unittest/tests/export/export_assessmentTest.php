@@ -858,6 +858,7 @@ class export_assessmentTest extends unittestdatabase
         $file = 'test.csv';
         $csvhandler = new \csv\csv_handler($file);
         $export = new \export\export_assessment($csvhandler);
+        $export->prepare_data($paper_buffer, 'numeric'); // Doesn't matter about type for header test
         $export->create_dynamic_header($paper_buffer, $exclusions);
         $expected = array(
             // Q1.
@@ -934,6 +935,7 @@ class export_assessmentTest extends unittestdatabase
         $file = 'test.csv';
         $csvhandler = new \csv\csv_handler($file);
         $export = new \export\export_assessment($csvhandler);
+        $export->prepare_data($paper_buffer, 'numeric');
         $language = 'en';
         $string['correctanswers'] = 'Correct Answers: ';
         // Text export.
@@ -1071,6 +1073,7 @@ class export_assessmentTest extends unittestdatabase
         $file = 'test.csv';
         $csvhandler = new \csv\csv_handler($file);
         $export = new \export\export_assessment($csvhandler);
+        $export->prepare_data($paper_buffer, 'text');
         $language = 'en';
         $string['error_random'] = 'error';
         // Text export.

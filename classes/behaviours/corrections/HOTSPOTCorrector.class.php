@@ -31,19 +31,27 @@ class HOTSPOTCorrector extends Corrector
 {
     /**
      * Change the correct answer after the question has been locked. Update user marks in summative log table
-     * @param integer $new_correct new correct answer
+     * @param mixed[] $new_correct new correct answer
      * @param integer $paper_id
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();
 
-        $old_points = $this->_question->get_points1();
         $option = reset($this->_question->options);
+        $old_correct = $option->get_correct();
+        $old_incorrect = $option->get_incorrect();
         $marks_correct = $option->get_marks_correct();
         $marks_incorrect = $option->get_marks_incorrect();
-        $this->_question->set_points1($new_correct['points1']);
-        $this->_question->add_unified_field_modification('points', 'points', $old_points, $new_correct['points1'], $this->_lang_strings['postexamchange']);
+
+        if ($old_correct != $new_correct['option_correct']) {
+            $option->set_correct($new_correct['option_correct']);
+            $this->_question->add_unified_field_modification('correct', $this->_lang_strings['correctlayers'], $old_correct, $new_correct['option_correct'], $this->_lang_strings['postexamchange']);
+        }
+        if ($old_incorrect != $new_correct['option_incorrect']) {
+            $option->set_incorrect($new_correct['option_incorrect']);
+            $this->_question->add_unified_field_modification('incorrect', $this->_lang_strings['incorrectlayers'], $old_incorrect, $new_correct['option_incorrect'], $this->_lang_strings['postexamchange']);
+        }
 
         try {
             if (!$this->_question->save()) {
@@ -58,7 +66,7 @@ class HOTSPOTCorrector extends Corrector
                         $answers = rtrim($answers, ',');
                         $mark = 0;
                         $all_correct = true;
-                        $hotspot_answer = hotspot_helper::get_instance()->mark($answers, $new_correct['points1']);
+                        $hotspot_answer = hotspot_helper::get_instance()->mark($answers, $new_correct['option_correct']);
                         $saved_response = $hotspot_answer;
                         $sub_parts = explode('|', $saved_response);
                         foreach ($sub_parts as $sub_part) {
@@ -78,7 +86,7 @@ class HOTSPOTCorrector extends Corrector
                             }
                             $totalpos = $marks_correct;
                         } else {
-                            $totalpos = (mb_substr_count($new_correct['points1'], '|') + 1) * $marks_correct;
+                            $totalpos = (mb_substr_count($new_correct['option_correct'], '|') + 1) * $marks_correct;
                         }
 
                         $result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ?, user_answer = ? WHERE id = ?");

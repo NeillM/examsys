@@ -42,6 +42,8 @@ class export_assessment extends exporter
         'Started',
     );
 
+    private $_hotspotIncorrect = [];
+
     /**
      * Extmatch letter marking config option
      */
@@ -98,7 +100,7 @@ class export_assessment extends exporter
     {
         if ($random) {
             $csv[] = $col1 . ':user';
-            $csv[] = 'Q' . ($i + 1) . chr($sec + 64) . $subsec . ':correct';
+            $csv[] = $col1 . ':correct';
         } else {
             $csv[] = $col1;
         }
@@ -145,16 +147,58 @@ class export_assessment extends exporter
     }
 
     /**
-     * Create the dynamic header
-     * @param array $paper paer info
-     * @param \Exclusion $exclusions paper exclusions
+     * Prepare internal data for additional export info
+     * @param array $paper paper info
+     * @param string $mode Export mode
      */
-    public function create_dynamic_header($paper, $exclusions)
-    {
+    public function prepare_data(array $paper, string $mode) {
         // Get letter marking settings
         $this->mark_with_letters_extmatch = $this->config->get_setting('core', 'rpt_letters_for_extmatch');
         $this->mark_with_letters_hotspots = $this->config->get_setting('core', 'rpt_letters_for_hotspots');
 
+        // Would prefer to just use the OptionMetadata::getArray functions for this, but having
+        // to work around the random block functionality.
+        if ($this->mark_with_letters_hotspots && $mode != 'numeric') {
+            $incorrectDataIDs = [];
+            foreach ($paper as $question) {
+                if ($question['type'] == 'hotspot') {
+                    $incorrectDataIDs[] = $question['ID'];
+                } elseif ($question['type'] == 'random') {
+                    $incorrectDataIDs = array_merge($incorrectDataIDs, $question['rand_ids']);
+                }
+            }
+            
+            if (!empty($incorrectDataIDs)) {
+                // Get the data
+                $params = rtrim(str_repeat('?,', count($incorrectDataIDs)), ',');
+                $sql = <<<SQL
+                    SELECT q.q_id, om.value
+                    FROM questions q
+                    JOIN options o ON q.q_id = o.o_id
+                    JOIN options_metadata om ON o.id_num = om.optionID AND om.type = 'incorrect'
+                    WHERE q.q_type = 'hotspot'
+                    AND q.q_id IN ($params)
+                    SQL;
+                $result = $this->config->db->prepare($sql);
+                $result->bind_param(str_repeat('i', count($incorrectDataIDs)), ...$incorrectDataIDs);
+                $result->execute();
+                $result->store_result();
+                $result->bind_result($qID, $incorrect);
+                while ($result->fetch()) {
+                    $this->_hotspotIncorrect[$qID] = $incorrect;
+                }
+                $result->close();
+            }
+        }
+    }
+
+    /**
+     * Create the dynamic header
+     * @param array $paper paper info
+     * @param \Exclusion $exclusions paper exclusions
+     */
+    public function create_dynamic_header($paper, $exclusions)
+    {
         // Write out the headings.
         $csvdata = array();
         $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
@@ -371,8 +415,12 @@ class export_assessment extends exporter
                         for ($outer = 1; $outer < count($correct_parts); $outer++) {
                             if ($correct_parts[$outer] != '' and mb_substr($tmp_exclude, $partID - 1, 1) == '0') {
                                 if ($is_random) {
-                                    $csvdata[0][] = '';
-                                    $csvdata[0][] = '';
+                                    if (mb_strpos($correct_parts[$outer], '$') === false) {
+                                        $csvdata[0][] = '';
+                                        $csvdata[0][] = '';
+                                    } else {
+                                        $csvdata[0] = array_merge($csvdata[0], array_fill(0, (substr_count($correct_parts[$outer], '$') + 1) * 2, ''));
+                                    }
                                 } else {
                                     if ($mode == 'numeric') {
                                         $csvdata[0] = array_merge($csvdata[0], explode('$', $correct_parts[$outer]));
@@ -443,11 +491,16 @@ class export_assessment extends exporter
                     case 'hotspot':
                         $correct_parts = explode('|', $question['correct']);
                         for ($partID = 0; $partID < count($correct_parts); $partID++) {
-                            if (mb_substr($tmp_exclude, $partID - 1, 1) == '0') {
-                                if ($mode != 'numeric' && $this->mark_with_letters_hotspots) {
-                                    $csvdata[0][] = \QuestionUtils::numbersToLetters($partID + 1);
-                                } else {
-                                    $csvdata[0][] = '';
+                            if ($is_random) {
+                                $csvdata[0][] = '';
+                                $csvdata[0][] = '';
+                            } else {
+                                if (mb_substr($tmp_exclude, $partID - 1, 1) == '0') {
+                                    if ($mode != 'numeric' && $this->mark_with_letters_hotspots) {
+                                        $csvdata[0][] = \QuestionUtils::numbersToLetters($partID + 1);
+                                    } else {
+                                        $csvdata[0][] = '';
+                                    }
                                 }
                             }
                         }
@@ -755,19 +808,22 @@ class export_assessment extends exporter
                             break;
                         case 'extmatch':
                             $correct_parts = explode(',', $question['correct']);
-                            $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+                            if (isset($individual[$tmp_screen][$tmp_question_ID])) {
+                                $answer_parts = explode('|', $individual[$tmp_screen][$tmp_question_ID]);
+                            } else {
+                                array_fill(0, count(array_filter($correct_parts)), 'u');
+                            }
 
                             $partID = 0;
                             for ($outer = 1; $outer < count($correct_parts); $outer++) {
                                 if ($correct_parts[$outer] != '' and mb_substr($tmp_exclude, $partID, 1) == '0') {
-                                      $correct_subparts = explode('$', $correct_parts[$outer]);
-                                      $correct_text_parts = explode("\t", $question['correct_text']);
+                                    $correct_subparts = explode('$', $correct_parts[$outer]);
+                                    $correct_text_parts = explode("\t", $question['correct_text']);
                                     if (isset($answer_parts[$outer - 1])) {
                                         $answer_subparts = explode('$', $answer_parts[$outer - 1]);
                                         for ($k = 0; $k < count($correct_subparts); $k++) {
-                                            $diff = count($correct_subparts) - count($answer_subparts);
-                                            if ($diff > 0) {
-                                                $answer_subparts = array_pad($answer_subparts, -1 * ($diff + count($answer_subparts)), '-1');
+                                            if (count($correct_subparts) > count($answer_subparts)) {
+                                                $answer_subparts = array_pad(array_filter($answer_subparts), count($correct_subparts), 'u');
                                             }
 
                                             if (count($correct_subparts) > 1) {
@@ -787,10 +843,11 @@ class export_assessment extends exporter
                                                     } elseif (isset($correct_text_parts[$subpart])) {
                                                         $csvdata[$j][] = $correct_text_parts[$subpart];
                                                     } else {
-                                                        $csvdata[$j][] = '';
+                                                        $csvdata[$j][] = 'u';
                                                     }
                                                 }
                                             }
+
                                             if ($is_random) {
                                                 if ($mode == 'numeric') {
                                                     $csvdata[$j][] = $correct_subparts[$k];
@@ -864,7 +921,7 @@ class export_assessment extends exporter
                             }
                             break;
                         case 'hotspot':
-                            $correct_parts = explode('|', $question['correct']);
+                            $correct_parts = explode(\hotspot_helper::LAYER_SEPARATOR, $question['correct']);
                             if ($mode != 'numeric' && $this->mark_with_letters_hotspots) {
                                 // Letter-marking code
                                 if (empty($individual[$tmp_screen][$tmp_question_ID])) {
@@ -875,7 +932,7 @@ class export_assessment extends exporter
                                 if ($individual[$tmp_screen][$tmp_question_ID] == 'u') {
                                     $answer_parts = array_fill(0, count($correct_parts), '0,u');
                                 } else {
-                                    $answer_parts = explode('|', \hotspot_helper::get_instance()->markWithLetters($individual[$tmp_screen][$tmp_question_ID], $question['correct']));
+                                    $answer_parts = explode(\hotspot_helper::LAYER_SEPARATOR, \hotspot_helper::get_instance()->markWithLetters($individual[$tmp_screen][$tmp_question_ID], $question['correct'], $this->_hotspotIncorrect[$tmp_question_ID]));
                                 }
 
                                 for ($partID = 0; $partID < count($correct_parts); $partID++) {
@@ -885,7 +942,7 @@ class export_assessment extends exporter
                                 }
                             } else {
                                 // Raw (numeric) or non-letter marking code
-                                $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+                                $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode(\hotspot_helper::LAYER_SEPARATOR, $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
 
                                 for ($partID = 0; $partID < count($correct_parts); $partID++) {
                                     if (mb_substr($tmp_exclude, $partID, 1) == '0') {
