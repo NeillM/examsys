@@ -85,9 +85,11 @@ define(['alert', 'jquery'], function(ALERT, $) {
                         function (data) {
                             if (data != 'OK') {
                                 failsave = true;
+                                row.addClass('failure');
                                 return false;
                             }
                             row.addClass('overridden');
+                            row.removeClass('failure');
 
                             // Update the saved values.
                             row.data('current', newMark);
@@ -95,6 +97,7 @@ define(['alert', 'jquery'], function(ALERT, $) {
                         }
                     ).fail(function() {
                         networkfail = true;
+                        row.addClass('failure');
                     });
 
                     // Store the promise.

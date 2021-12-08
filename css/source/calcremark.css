@@ -49,3 +49,14 @@ td {
 .overridden {
     background-color: #B3C8E8
 }
+
+.failure {
+    background-color: #d99594;
+}
+
+.failure td:nth-last-child(2) {
+    background-image: url('../artwork/exclamation_48.png');
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
