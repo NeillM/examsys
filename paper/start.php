@@ -279,9 +279,6 @@ $headerdata = array(
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
     ),
-    'scripts' => array(
-        '/js/startinit.min.js',
-    ),
     'metadata' => array(
         'pragma' => 'no-cache',
     ),
@@ -390,7 +387,7 @@ if ($propertyObj->get_calculator()) {
 if ($current_screen < $no_screens) {
     $contentdata['action'] = Url::fromGlobals();
 } else {
-    $contentdata['action'] = '/finish.php?id=' . $id . $url_mod;
+    $contentdata['action'] = 'finish.php?id=' . $id . $url_mod;
 }
 $contentdata['hidden'] = $hidden;
 $contentdata['previewmode'] = $is_question_preview_mode;
@@ -649,4 +646,4 @@ $render->render($miscdataset, array(), 'dataset.html');
 $mysqli->close();
 
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-$render->render(array(), array(), 'footer.html');
+$render->render(array('scripts' => array('/js/startinit.min.js')), array(), 'footer.html');
