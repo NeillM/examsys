@@ -57,6 +57,8 @@ class UserObject extends RogoStaticSingleton
     private $staffModules;
     private $staffTeamModules;
     private $studentModules;
+
+    /** @var \mysqli The Rogo database connection.*/
     private $db;
     private $configObj;
 
