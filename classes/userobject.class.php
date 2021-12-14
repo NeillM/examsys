@@ -108,7 +108,7 @@ class UserObject extends RogoStaticSingleton
     public const GLOBALTHEMEFONTCOLOUR = '#FFFFFF';
     /** @var string the default highlight option colour for an exam */
     public const HIGHLIGHTCOLOUR = '#FCF6CF';
-    
+
     /**
      * Called when the object is unserialised.
      */
