@@ -53,7 +53,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
     protected $_allow_change_marking_method = false;
     protected $_allow_new_options = true;
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status');
+    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status', 'staffnotes');
     protected $_fields_change = array('option_formula', 'option_units', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_precision', 'marks_unit', 'tolerance_full', 'tolerance_partial');
     protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
     protected $_fields_force = array('show_units');

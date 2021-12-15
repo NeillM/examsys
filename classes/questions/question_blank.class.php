@@ -36,7 +36,7 @@ class QuestionBLANK extends QuestionEdit
         $this->_fields_unified = array('text' => $this->_lang_strings['questionstem'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
         $this->_display_methods = array('dropdown' => $this->_lang_strings['dropdownlists'], 'textboxes' => $this->_lang_strings['textboxes']);
 
-        // 'correct' is not a unified field for Dichotomous questions
+        // 'correct' is not a unified field for Fill in the Blank questions
         $this->_fields_editable[] = 'correct';
     }
 }

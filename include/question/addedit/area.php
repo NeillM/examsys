@@ -58,6 +58,7 @@ $error_range = range(0, 50);
                     <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
+require_once 'detail_parts/details_staffnotes.php';
 require_once 'detail_parts/details_scenario.php';
 require_once 'detail_parts/details_leadin.php';
 ?>

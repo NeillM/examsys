@@ -44,6 +44,9 @@ $keywords = $question->get_user_keywords($all_teams);
                 <input type="text" id="leadin" name="leadin" value="<?php echo $question->get_leadin() ?>" class="form-med" />
               </td>
             </tr>
+<?php
+require_once 'detail_parts/details_staffnotes.php';
+?>
             <tr>
               <th><span class="mandatory">*</span> <label for="option_text1"><?php echo $string['questionbasedon'] ?></label></th>
               <td>

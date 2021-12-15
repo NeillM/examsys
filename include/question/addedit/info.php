@@ -29,6 +29,7 @@ $show_notes = false;
                     <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
+require_once 'detail_parts/details_staffnotes.php';
 require_once 'detail_parts/details_media.php';
 $mandatory_leadin = false;
 $label_leadin = "<label for=\"leadin\">{$string['text']}</label>";

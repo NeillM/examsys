@@ -33,6 +33,7 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
                     <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
+require_once 'detail_parts/details_staffnotes.php';
 require_once 'detail_parts/details_media.php';
 $mandatory_editor = true;
 $label_editor = "<label for=\"scenario\">{$string['clinicalvignette']}</label>";

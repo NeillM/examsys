@@ -52,6 +52,7 @@ if ($question->get_locked() != '') {
                     <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
+require_once 'detail_parts/details_staffnotes.php';
 require_once 'detail_parts/details_scenario.php';
 ?>
                     </tbody>

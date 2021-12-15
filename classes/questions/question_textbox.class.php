@@ -38,7 +38,7 @@ class QuestionTEXTBOX extends QuestionEdit
     protected $_allow_option_edit = true;
 
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'correct', 'bloom', 'status');
+    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'correct', 'bloom', 'status', 'staffnotes');
     protected $_fields_settings = array('columns', 'rows', 'editor', 'terms');
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
