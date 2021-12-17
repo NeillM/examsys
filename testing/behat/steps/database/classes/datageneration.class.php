@@ -483,6 +483,9 @@ trait datageneration
         $row['papertype'] = $types[$row['type']];
         $row['settings'] = '';
         if ($row['type'] === 'osce') {
+            // Generate a default marking value for OSCE papers.
+            $row['marking'] = $row['marking'] ?? 'N/A';
+
             // Generate settings json.
             switch ($row['marking']) {
                 case 'Pass | Fail':
