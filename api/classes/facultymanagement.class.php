@@ -28,12 +28,12 @@ namespace api;
  */
 class facultymanagement extends \api\abstractmanagement
 {
-    
+
     /**
      * Language pack component.
      */
     private $langcomponent = 'api/facultymanagement';
-       
+
     /**
      * Status codes
      */
@@ -48,7 +48,7 @@ class facultymanagement extends \api\abstractmanagement
         'FACUTLY_NAME_NOT_SUPPLIED' => 406,
         'FACUTLY_NOTHING_TO_UPDATE' => 407
     );
-    
+
     /**
      * Create faculty
      * @param array $params faculty creation parameters
@@ -59,7 +59,7 @@ class facultymanagement extends \api\abstractmanagement
     {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_created', 'faculty_already_exists', 'faculty_name_not_supplied'));
-        
+
         // Name must be supplied.
         if (!isset($params['name']) or $params['name'] === '') {
             $data = array('statuscode' => $this->statuscodes['FACUTLY_NAME_NOT_SUPPLIED'], 'status' => $strings['faculty_name_not_supplied'], 'id' => null, 'externalid' => null);
@@ -108,7 +108,7 @@ class facultymanagement extends \api\abstractmanagement
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
-    
+
     /**
      * Update faculty
      * @param array $params faculty update parameters
@@ -136,7 +136,7 @@ class facultymanagement extends \api\abstractmanagement
         } else {
             $facultyid = false;
         }
-        
+
         if ($facultyid) {
             $details = \FacultyUtils::get_faculty_details_by_id($params['id'], $this->db);
             // Check if anything has been updated.

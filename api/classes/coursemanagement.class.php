@@ -28,12 +28,12 @@ namespace api;
  */
 class coursemanagement extends \api\abstractmanagement
 {
-    
+
     /**
      * Language pack component.
      */
     private $langcomponent = 'api/coursemanagement';
-    
+
     /**
      * Status codes
      */
@@ -50,7 +50,7 @@ class coursemanagement extends \api\abstractmanagement
         'COURSE_NOTHING_TO_UPDATE' => 308,
         'COURSE_SCHOOL_EXTID_INVALID' => 309
     );
-    
+
     /**
      * Update course
      * @param array $params course update parameters
@@ -150,7 +150,7 @@ class coursemanagement extends \api\abstractmanagement
         }
         return $this->get_response($data, 'update', $params['nodeid']);
     }
-    
+
     /**
      * Create course
      * @param array $params course creation parameters
@@ -215,7 +215,7 @@ class coursemanagement extends \api\abstractmanagement
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
-    
+
     /**
      * Delete course
      * @param array $parms delete course parameters

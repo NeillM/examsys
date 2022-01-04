@@ -51,7 +51,7 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 <?php
   require '../include/status_options.inc.php';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
   <div id="content">

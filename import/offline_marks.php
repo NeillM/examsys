@@ -39,9 +39,9 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
 {
     $configObject = Config::get_instance();
     $configObject->get('cfg_tmpdir');
-  
+
     $userObject = UserObject::get_instance();
-  
+
     // Get properties of the paper.
     $session = $properties->get_calendar_year();
     $paper_date = $properties->getRogoFormatStartDate();
@@ -97,7 +97,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
             }
             echo "</tr>\n";
         }
-    
+
         if ((!isset($_POST['header_row']) or $_POST['header_row'] != 1 ) or $line_written > 0) {
             $fields = explode(',', $separate_line);
             $sid = trim($fields[0]);
@@ -120,7 +120,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
                 }
                 $result->close();
             }
-      
+
             if (isset($students[$sid]) and $students[$sid]['username'] != '') {  // Student is in class List.
                 $save_ok = true;
                 $db->autocommit(false);
@@ -241,7 +241,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
     //}
 
     echo "</table>\n";
-  
+
     //turn auto commit back on so future queries function as before
     $db->autocommit(true);
 }

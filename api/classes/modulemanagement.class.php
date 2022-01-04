@@ -28,12 +28,12 @@ namespace api;
  */
 class modulemanagement extends \api\abstractmanagement
 {
-       
+
     /**
      * Language pack component.
      */
     private $langcomponent = 'api/modulemanagement';
-    
+
     /**
      * Status codes
      */
@@ -55,7 +55,7 @@ class modulemanagement extends \api\abstractmanagement
         'MODULE_SCHOOL_EXTID_INVALID' => 513,
         'MODULE_USER_ALREADY_ENROLLED' => 514
     );
-           
+
     /**
      * Enrol student on a Module.
      * @param array $params module enrol parameters
@@ -148,7 +148,7 @@ class modulemanagement extends \api\abstractmanagement
         }
         return $this->get_response($data, 'enrol', $params['nodeid']);
     }
-    
+
     /**
      * UnEnrol student on a Module.
      * @param array $params module enrol parameters
@@ -236,7 +236,7 @@ class modulemanagement extends \api\abstractmanagement
         }
         return $this->get_response($data, 'unenrol', $params['nodeid']);
     }
-    
+
     /**
      * Create module
      * @param array $params module creation parameters
@@ -406,7 +406,7 @@ class modulemanagement extends \api\abstractmanagement
             ;
             $moduleid = (bool) $params['id'];
         }
-        
+
         if (!$moduleid) {
             $data = array(
                 'statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'],
@@ -459,7 +459,7 @@ class modulemanagement extends \api\abstractmanagement
         } else {
             $schoolid = $details['schoolid'];
         }
-        
+
         // Cheeck if module code in use.
         $modcodeinuse = false;
         if (!empty($params['modulecode'])) {
@@ -493,7 +493,7 @@ class modulemanagement extends \api\abstractmanagement
                 if ((empty($params['name']))) {
                     $params['name'] = $details['fullname'];
                 }
-                
+
                 // Get student management system if not provided.
                 if ((empty($params['sms']))) {
                     $params['sms'] = $details['sms'];

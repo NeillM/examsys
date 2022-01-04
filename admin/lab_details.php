@@ -54,7 +54,7 @@ $results->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-    
+
   <style type="text/css">
     .foldername {float:left; width:380px; height:60px; padding-left:12px; font-size:80%}
   </style>
@@ -68,7 +68,7 @@ $results->close();
 <?php
   require '../include/lab_options.inc';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(231);
 ?>
 <div id="content">

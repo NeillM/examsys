@@ -706,5 +706,4 @@ JS;
         $select = $this->find('xpath', '//*[@data-colour="' . $colour . '"]');
         $select->click();
     }
-
 }

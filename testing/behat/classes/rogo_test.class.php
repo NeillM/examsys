@@ -239,7 +239,6 @@ class rogo_test extends MinkContext
             }
 
             usleep(100000);
-
         } while (microtime(true) < $end);
 
         $backtrace = debug_backtrace();

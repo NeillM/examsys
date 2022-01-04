@@ -27,7 +27,7 @@
 <div id="left-sidebar" class="sidebar">
 <?php
   $folder_ownerID = folder_utils::get_ownerID($folder, $mysqli);
-  
+
 if ($folder_ownerID == $userObject->get_user_ID()) {
     echo '<div class="menuitem folderprop"><a href="#"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/properties_icon.gif" alt="Properties" />' . $string['folderproperties'] . '</a></div>';
     echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/folder/index.php?module=' . $module . '&folder=' . $folder . '&newfolder=y"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/folder_16.png" alt="New Folder" />' . $string['makesubfolder'] . '</a></div>';

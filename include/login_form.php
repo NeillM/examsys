@@ -98,7 +98,7 @@ HTML;
                   <td><label for="ROGO_PW"><?php echo $string['password']; ?></label></td>
                   <td><input type="password" name="ROGO_PW" id="ROGO_PW" maxlength="60" value="<?php if (isset($_GET['guest_password'])) {
                         echo $_GET['guest_password'];
-                                                                                  } ?>" class="field" autocomplete="off" <?php echo $required; ?> /></td>
+                                                                                               } ?>" class="field" autocomplete="off" <?php echo $required; ?> /></td>
               </tr>
 <?php
 

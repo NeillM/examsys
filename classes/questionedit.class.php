@@ -1605,7 +1605,7 @@ QUERY;
      * Functionality moved to questionutils.class.php for phpunit testing
      * @param int      $limit Maximum number of change results to return
      * @param string[] $string Language strings
-     * 
+     *
      * @return array   Associative array containing question ID, date, section, old value, new value and user for the change
      */
     public function get_full_history(int $limit, array &$string)

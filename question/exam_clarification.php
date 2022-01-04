@@ -56,7 +56,7 @@ if (!QuestionUtils::question_exists($q_id, $mysqli)) {
 }
 
 $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
-  
+
 $screenNo = check_var('screenNo', 'GET', true, false, true);
 $questionNo = check_var('questionNo', 'GET', true, false, true);
 

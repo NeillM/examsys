@@ -499,7 +499,6 @@ class papers extends generator
                 null,
                 $settings['remote'],
             );
-
         } catch (Exception $e) {
             $message = $e->getMessage();
             echo $message;

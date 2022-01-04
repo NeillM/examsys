@@ -59,7 +59,7 @@ $userID = check_var('userID', 'REQUEST', true, false, true);
   $old_school = '';
   $mod_no = 0;
   echo '<div class="content" id="list">';
-  
+
   $result = $mysqli->prepare('SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleid');
   $result->execute();
   $result->bind_result($school, $moduleid, $fullname, $idMod);
@@ -67,7 +67,7 @@ while ($result->fetch()) {
     if ($old_school != $school) {
         echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>$school</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\"/></div></div>\n";
     }
-   
+
     if (isset($user_modules[$idMod])) {
         echo "<div class=\"r2\" id=\"divmod$mod_no\"><input type=\"checkbox\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" checked />";
     } else {

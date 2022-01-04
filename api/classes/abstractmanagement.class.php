@@ -32,7 +32,7 @@ namespace api;
  */
 abstract class abstractmanagement
 {
-           
+
     /**
      * Abstract create function
      *
@@ -42,7 +42,7 @@ abstract class abstractmanagement
      * @return array response to operation, id of construct or error message.
      */
     abstract public function create($params, $userid);
-    
+
     /**
      * Abstract delete function
      *
@@ -52,7 +52,7 @@ abstract class abstractmanagement
      * @return array response to operation, id of construct or error message.
      */
     abstract public function delete($params, $userid);
-    
+
     /**
      * The database connection.
      */
@@ -65,7 +65,7 @@ abstract class abstractmanagement
      * The config object.
      */
     protected $config;
-    
+
     /**
      * Constructor
      * @param mysqli $mysqli the database connection
@@ -77,7 +77,7 @@ abstract class abstractmanagement
         $this->client_id = $client_id;
         $this->config = \Config::get_instance();
     }
-    
+
     /**
      * Response creator
      *
@@ -103,7 +103,7 @@ abstract class abstractmanagement
             'node' => $action,
             'nodeid' => $nodeid);
     }
-    
+
     /**
      * Check if the parameters sent to the API will result in an update
      * @param array $parameters the parameters to check
@@ -122,7 +122,7 @@ abstract class abstractmanagement
         }
         return false;
     }
-    
+
     /**
      * Get the external system the request is for
      * @param string $externalsys system provided in request (used by sms plugins)

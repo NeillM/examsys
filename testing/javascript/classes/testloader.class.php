@@ -29,7 +29,7 @@ class TestLoader
 {
     /** @var array An array of all the Javascript unit tests. */
     public $tests = array();
-  
+
     /** @var \stdClass The configuration for the suite. */
     public $config;
 

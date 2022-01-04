@@ -78,7 +78,7 @@ if ($student_details['student_id'] != '') {
     echo ' (' . $student_details['student_id'] . ')';
 }
   echo '</div>';
-  
+
 
   echo "<input type=\"hidden\" id=\"paperID\" name=\"paperID\" value=\"$paperID\" />\n";
   echo '<input type="hidden" id="remote" name="remote" value="' . $remote . "\" />\n";

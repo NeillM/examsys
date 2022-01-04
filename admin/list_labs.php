@@ -48,7 +48,7 @@
 <?php
   require '../include/lab_options.inc';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(231);
 ?>
 <div id="content">

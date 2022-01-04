@@ -58,7 +58,7 @@
 <?php
   require '../include/options_menu.inc';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">

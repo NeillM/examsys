@@ -83,7 +83,7 @@ if ($result->num_rows == 0) {
     }
     echo "</table>\n";
 }
-  
+
   $mysqli->close();
 ?>
   </div>

@@ -125,9 +125,9 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
   require '../include/status_options.inc.php';
   require '../include/toprightmenu.inc';
   require '../tools/colour_picker/colour_picker.inc';
-    
+
     echo draw_toprightmenu();
-    
+
 ?>
   <div id="content">
     <div class="head_title">

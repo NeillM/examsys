@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
             $params['name'] = array('s', $name);
             $params['isdefault'] = array('i', 1);
             DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
-            
+
             $update = $mysqli->prepare('UPDATE campus SET isdefault = 0 WHERE id != ?');
             $update->bind_param('i', $campus);
             $update->execute();

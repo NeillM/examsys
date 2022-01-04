@@ -98,7 +98,7 @@ if (isset($state['checkbox1']) and $state['checkbox1'] == 'false') {
     $checked = ' checked="checked"';
 }
   echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\"$checked /> <label for=\"checkbox1\">" . $string['theme'] . "</label></div>\n";
-    
+
 if (isset($state['checkbox2']) and $state['checkbox2'] == 'false') {
     $checked = '';
 } else {

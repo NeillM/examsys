@@ -77,7 +77,7 @@ function display_question($question, &$question_no, $answers, $string)
 
     $sct_parts = explode('~', $question['leadin']);
     $sct_titles = array(1 => 'hypothesis', 2 => 'investigation', 3 => 'prescription', 4 => 'intervention', 5 => 'treatment');
-  
+
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
     echo '<tr><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $string[$sct_titles[$question['display_method']]] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $string['newinformation'] . "</td></tr>\n";
     echo '<tr><td style="width:49%; vertical-align:top">' . $sct_parts[0] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; vertical-align:top">' . $sct_parts[1] . "</td></tr>\n";
@@ -165,17 +165,17 @@ while ($stmt->fetch()) {
     $saved_data[$q_id]['reason'] = $reason;
 }
   $stmt->close();
-  
+
   // Output the top logo banner.
   echo $top_table_html;
   echo '<tr><td><div style="margin-left:0;font-size:180%;color:white;font-weight:bold">' . $propertyObj->get_paper_title() . '</div></td>';
   echo $logo_html;
-  
+
   echo '<form id="myform" name="myform" action="' . $_SERVER['PHP_SELF'] . "\" method=\"post\" autocomplete=\"off\">\n";
   echo "<br />\n";
-  
+
   echo '<div class="key">' . $string['top_msg'] . "</div>\n<br />\n";
-  
+
   echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:99%; font-size:100%\">\n<col width=\"40\"><col>\n";
 
   //build the questions_array
@@ -211,11 +211,11 @@ while ($stmt->fetch()) {
         $questions_array[$q_no]['q_option_order'] = $q_option_order;
     }
     $questions_array[$q_no]['options'][] = $option_text;
-    
+
     $old_q_id = $q_id;
 }
   $stmt->close();
-  
+
   // Display the questions
 if (count($questions_array) > 0) {
     foreach ($questions_array as &$question) {

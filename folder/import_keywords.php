@@ -29,7 +29,7 @@ ini_set('auto_detect_line_endings', true);
 function keywords_from_file($fileName, $userObj, $db)
 {
 
-  
+
     if ($_GET['module'] == '') {
         $type = 'personal';
         $tmp_userID = $userObj->get_user_ID();
@@ -57,7 +57,7 @@ function keywords_from_file($fileName, $userObj, $db)
         }
         $result->close();
     }
-  
+
     // Process the file
     $lines = file($fileName);
     foreach ($lines as $separate_line) {

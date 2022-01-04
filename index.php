@@ -119,15 +119,15 @@ if (isset($_POST['submit'])) {
 if ($userObject->is_impersonated() === true) {
     echo '<table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr><td style="width:40px"><div class="greywarn"><img src="./artwork/agent.png" width="32" height="32" alt="Impersonate" /></div></td><td><div class="greywarn">' . $string['loggedinas'] . ' ' . $userObject->get_title() . ' ' . $userObject->get_surname() . "</div></td></tr></table>\n";
 }
-  
+
   $staff_team_array = $userObject->get_staff_team_modules();
   $module_no = count($staff_team_array);
 if ($module_no == 0) {
     $contactemail = support::get_email();
     echo '<table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr><td style="width:40px"><div class="redwarn"><img src="./artwork/exclamation_red_bg.png" width="32" height="32" alt="Warning" /></div></td><td><div class="redwarn"><strong>' . $string['warning'] . '</strong> ' . $string['nomodules'] . ' <a href="mailto:' . $contactemail . '" style="color:#316AC5">' . $contactemail . "</div></td></tr></table>\n";
 }
-  
-  
+
+
 ?>
 <div style="padding-top:6px; padding-left:6px; padding-right:14px">
 <?php
@@ -137,7 +137,7 @@ foreach ($announcements as $announcement) {
         echo '<div class="announcement" id="announcement' . $announcement['id'] . "\"><img id='announce' src=\"./artwork/close_note.png\" style=\"display:block; float:right\" data-id=\"" . $announcement['id'] . "\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
     }
 }
-  
+
   // -- Display any papers for review ---------------------------------
   $internalreview = new internalreview($mysqli);
   $review_papers = $internalreview->get_review_papers($userObject->get_user_ID());

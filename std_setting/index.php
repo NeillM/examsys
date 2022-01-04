@@ -35,7 +35,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 function displayReview($review, $userObj)
 {
     $setter_id = $review['setter_id'];
-  
+
     if ($review['review_total'] == $review['total_marks']) {
         $icon = '../artwork/std_set_icon_16.gif';
         $text_color  = 'black';
@@ -49,7 +49,7 @@ function displayReview($review, $userObj)
         $icon = '../artwork/small_users_icon.png';
         $setter_id = $review['group_review'];
     }
-  
+
     $html = '';
     if ($setter_id == $userObj->get_user_ID() or $userObj->has_role('SysAdmin')) {
         $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" data-id=\"" . $review['std_setID'] . '" data-setter="' . $setter_id . '" data-method="' . $review['method'] . "\" data-menu='menu2b' data-group=\"" . $review['group_review'] . "\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
@@ -97,7 +97,7 @@ function displayReview($review, $userObj)
 <body>
 
 <?php
-    
+
 $reviews_html = '';
 $total_marks = 0;
 

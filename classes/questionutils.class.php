@@ -770,7 +770,7 @@ SQL;
     /**
      * Get the root question ID for a question
      * @param int $qID question ID
-     * 
+     *
      * @return int
      */
     public static function getLineageRoot(int $qID) {
@@ -791,7 +791,7 @@ SQL;
     /**
      * Get the parent question ID for a question
      * @param int $qID question ID
-     * 
+     *
      * @return int
      */
     public static function getLineageParent(int $qID) {
@@ -812,7 +812,7 @@ SQL;
     /**
      * Get all parent lineage for a question including siblings
      * @param int $qID question ID
-     * 
+     *
      * @return array
      */
     public static function getLineage(int $qID) {
@@ -841,7 +841,7 @@ SQL;
      * @param int      $qID       Question ID to filter from
      * @param array    $lineage   Lineage array from getLineage()
      * @param string[] $string Language strings
-     * 
+     *
      * @return array
      */
     public static function filterParentLineage(int $qID, array $lineage, array &$string) {
@@ -867,7 +867,7 @@ SQL;
     /**
      * Simple filter to return only the direct children of a question from a lineage array
      * @param array $lineage Lineage array from getLineage()
-     * 
+     *
      * @return array
      */
     public static function filterChildLineage(int $qID, array $lineage) {

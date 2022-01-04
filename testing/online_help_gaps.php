@@ -71,7 +71,7 @@ if (isset($_GET['type'])) {
 } else {
     $help_table = 'staff_help';
 }
-  
+
   // Get a list of the pages in the English (en) version.
   $en_pages = array();
 if ($help_table == 'staff_help') {
@@ -100,7 +100,7 @@ foreach ($languages as $language) {
     }
     echo '</ul>';
 }
-  
+
 ?>
   
 </div>
@@ -202,7 +202,7 @@ function get_languages($db)
         // Take a language through GET, useful for creating whole new languages.
           $languages[] = $_GET['lang'];
     }
-  
+
     return $languages;
 }
 

@@ -92,11 +92,11 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
                 foreach ($lines as $separate_line) {
                     if (trim($separate_line) != '') {
                         $fields = explode(',', $separate_line);
-            
+
                         $sid = trim($fields[0]);
                         $session = trim($fields[2]);
                         // Modules will be added later.
-            
+
                         $students[$sid]['sid'] = $sid;
                         $students[$sid]['session'] = $session;
                         $students[$sid]['modules'] = array();
@@ -106,7 +106,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
                 // Query the modules for each student
                 foreach ($students as $student) {
                     $student_databaseID = UserUtils::studentid_exists($student['sid'], $mysqli);
-          
+
                     if ($student_databaseID !== false) {
                         $students[$student['sid']]['dbID'] = $student_databaseID;
 
@@ -135,7 +135,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
                         } else {
                             $attempt = 1;
                         }
-            
+
                         if (isset($module_list[$module])) {
                             $require_insert = true;
                             if (isset($students[$sid]['modules'][$module])) {
@@ -180,7 +180,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
               echo '</ul>';
           }
             echo "</td></tr>\n";
-            
+
           echo '<tr><td>' . $string['missingmodules'] . '</td><td><div>' . count($unknow_ModuleID) . "</div>\n<ul>";
           if (count($unknow_ModuleID) > 0) {
               echo '<ul>';

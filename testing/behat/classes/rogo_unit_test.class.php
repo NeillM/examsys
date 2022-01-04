@@ -42,7 +42,7 @@ class rogo_unit_test implements Context
      * @var array
      */
     private $data = array();
-  
+
     /**
      * Get a data generator for adding information into the Rogo database.
      *
@@ -69,7 +69,7 @@ class rogo_unit_test implements Context
         }
         throw new coding_exception("The method $name does not exist");
     }
-  
+
     /**
      * Set some custom data.
      *
@@ -80,7 +80,7 @@ class rogo_unit_test implements Context
     {
         $this->data[$name] = $value;
     }
-  
+
     /**
      * Get custom data values stored in the class..
      *
@@ -94,7 +94,7 @@ class rogo_unit_test implements Context
         }
         return $this->data[$name];
     }
-  
+
     /**
      * Checks if a custom data variable is set.
      *
@@ -105,7 +105,7 @@ class rogo_unit_test implements Context
     {
         return isset($this->data[$name]);
     }
-  
+
     /**
      * Unsets a custom data function.
      *
@@ -117,7 +117,7 @@ class rogo_unit_test implements Context
             unset($this->data[$name]);
         }
     }
-  
+
     /**
      * Resets the custom data array back to it's default state.
      */

@@ -26,7 +26,7 @@
  */
 
 require_once 'staff_student_auth.inc';
-  
+
 if (!$userObject->has_role('SysAdmin')) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);

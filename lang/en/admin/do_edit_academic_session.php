@@ -16,4 +16,3 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/admin/edit_academic_session.php';
-

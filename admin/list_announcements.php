@@ -31,7 +31,7 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title('Rog&#333;: ' . $string['newsannouncements']); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -47,7 +47,7 @@ require '../include/sysadmin_auth.inc';
 <?php
   require '../include/announcement_options.inc';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
@@ -57,7 +57,7 @@ require '../include/sysadmin_auth.inc';
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
   <div class="page_title"><?php echo $string['newsannouncements'] ?></div>
 </div>
-  
+
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <thead>
 <tr>
@@ -80,7 +80,7 @@ while ($result->fetch()) {
     $announcements[$announce_no]['title'] = $title;
     $announcements[$announce_no]['startdate_display'] = $startdate_display;
     $announcements[$announce_no]['enddate_display'] = $enddate_display;
-  
+
     $announce_no++;
 }
 $result->close();

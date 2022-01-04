@@ -57,7 +57,7 @@ foreach ($types as $type) {
     $question_types[$type]['desc'] = $string[$type . '_desc'];
     $question_types[$type]['title'] = $string[$type];
 }
-  
+
   $break_no = round(count($question_types) / 2);
 ?>
   <table cellspacing="1" cellpadding="0" border="0">

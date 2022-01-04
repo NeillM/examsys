@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
     $oauth = new oauth($configObject);
     $storage = $oauth->get_storage();
     $storage->setClientDetails($client, $secret, $uri, null, null, $userid);
-    
+
     $manage = array('modulemanagement', 'usermanagement', 'assessmentmanagement',
             'coursemanagement', 'schoolmanagement', 'facultymanagement');
     foreach ($manage as $management) {
@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
     } else {
         $oauth->set_permission('modulemanagement/enrol', $client, false);
     }
-    
+
     if (isset($_POST['modulemanagement/unenrol'])) {
         $oauth->set_permission('modulemanagement/unenrol', $client, true);
     } else {
@@ -96,7 +96,7 @@ if (isset($_POST['submit'])) {
         $clients[$client_id] = array($client_secret, $redriect_uri, $user_id);
     }
     $result->close();
-    
+
     $clientperms = array();
     $result = $mysqli->prepare('SELECT p.action, w.access FROM permissions p
         LEFT JOIN webservice_permissions w ON p.action = w.action and w.client_id = ?');

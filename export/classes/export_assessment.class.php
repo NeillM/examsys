@@ -167,7 +167,7 @@ class export_assessment extends exporter
                     $incorrectDataIDs = array_merge($incorrectDataIDs, $question['rand_ids']);
                 }
             }
-            
+
             if (!empty($incorrectDataIDs)) {
                 // Get the data
                 $params = rtrim(str_repeat('?,', count($incorrectDataIDs)), ',');

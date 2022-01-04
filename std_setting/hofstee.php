@@ -43,7 +43,7 @@ $marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
 if (count($marks) == 0) {  // If there are no marks, re-cache off class totals.
     $startdate = $properties->getRogoFormatStartDate();
     $enddate   = $properties->getRogoFormatEndDate();
-  
+
     $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli, $string);
     $report->compile_report(true);
 
@@ -87,15 +87,15 @@ if (isset($_POST['submit'])) {
         $result->bind_param('iidd', $userID, $paperID, $pass_mark, $distinction_score);
         $result->execute();
         $result->close();
-    
+
         $insertID = $mysqli->insert_id;
-    
+
         $result = $mysqli->prepare('INSERT INTO hofstee VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $result->bind_param('iiddddddddi', $insertID, $_POST['whole_numbers'], $_POST['x1_pass'], $_POST['x2_pass'], $_POST['y1_pass'], $_POST['y2_pass'], $_POST['x1_distinction'], $_POST['x2_distinction'], $_POST['y1_distinction'], $_POST['y2_distinction'], $_POST['marking']);
         $result->execute();
         $result->close();
     }
-  
+
     if (isset($_POST['whole_numbers'])) {
         $checked = ' checked="checked"';
     } else {
@@ -109,7 +109,7 @@ if (isset($_POST['submit'])) {
     $x2_distinction = $_POST['x2_distinction'];
     $y1_distinction = $_POST['y1_distinction'];
     $y2_distinction = $_POST['y2_distinction'];
-  
+
     if ($_POST['marking'] == '1') {
         if ($pass_mark != '') {
             $properties->set_pass_mark($pass_mark);
@@ -124,19 +124,19 @@ if (isset($_POST['submit'])) {
         $properties->save();
     }
     $marking = $_POST['marking'];
-  
+
     header("location:index.php?paperID=$paperID&module=&folder=");
     exit();
 } elseif (isset($_GET['std_setID'])) {
     $insertID = $_GET['std_setID'];
-  
+
     $result = $mysqli->prepare('SELECT whole_numbers, x1_pass, x2_pass, y1_pass, y2_pass, x1_distinction, x2_distinction, y1_distinction, y2_distinction, marking FROM hofstee WHERE std_setID = ?');
     $result->bind_param('i', $insertID);
     $result->execute();
     $result->bind_result($whole_numbers, $x1_pass, $x2_pass, $y1_pass, $y2_pass, $x1_distinction, $x2_distinction, $y1_distinction, $y2_distinction, $marking);
     $result->fetch();
     $result->close();
-  
+
     if ($whole_numbers == 1) {
         $checked = ' checked="checked"';
     } else {
@@ -145,10 +145,10 @@ if (isset($_POST['submit'])) {
 } else {
     // Default values no POST and no editing existing review
     $checked = '';
-  
+
     $pass_defaults = $configObject->get_setting('core', 'stdset_hofstee_pass');
     $distinction_defaults = $configObject->get_setting('core', 'stdset_hofstee_distinction');
-  
+
     $x1_pass = check_values($pass_defaults['min_pass'], $stats);
     $x2_pass = check_values($pass_defaults['max_pass'], $stats);
     $y1_pass = check_values($pass_defaults['min_fail'], $stats);
@@ -184,7 +184,7 @@ if (isset($_POST['submit'])) {
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
@@ -193,7 +193,7 @@ if (isset($_POST['submit'])) {
     $results_cache = new ResultsCache($mysqli);
     $marks = array_values($results_cache->get_paper_marks_by_paper($paperID, true));
     $stats = array_values($results_cache->get_paper_cache($paperID));
-  
+
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
@@ -206,7 +206,7 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
 
   echo '<div class="page_title">' . $string['hofstee'] . '</div>';
   echo "</div>\n";
-  
+
   echo '<table style="margin:10px">';
   echo '<tr><td style="min-width:150px">' . $string['cohortsize'] . '</td><td>' . count($marks) . "</td></tr>\n";
   echo '<tr><td>' . $string['maximumscore'] . '</td><td>' . round($stats[1], 1) . "%</td></tr>\n";

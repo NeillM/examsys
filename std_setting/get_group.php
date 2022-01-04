@@ -66,7 +66,7 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 <?php
     require '../include/std_set_menu.inc';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(98);
 ?>
 <div id="content">

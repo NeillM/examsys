@@ -72,7 +72,7 @@ $result->close();
 <?php
   require '../include/school_options.inc';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">

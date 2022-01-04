@@ -49,7 +49,7 @@ function displayReviewCsv($review, $string)
     if ($review['group_review'] != 'No') {
         $rowOutcome = 'Group review';
     }
-  
+
     $output = '';
     $output = addslashes($rowOutcome) . ',';
 

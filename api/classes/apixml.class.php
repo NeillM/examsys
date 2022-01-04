@@ -50,7 +50,7 @@ class apixml extends \api\apiabstract
     {
         $this->xml = $request;
     }
-    
+
     /**
      * Validate the xml request againt an XSD
      * @param string $folder - sub dir where xsd is located
@@ -78,7 +78,7 @@ class apixml extends \api\apiabstract
         libxml_use_internal_errors(false);
         return $errorresp;
     }
-    
+
     /**
      * Parse the request and process it.
      * @param object $tasktype task object

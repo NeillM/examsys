@@ -65,7 +65,7 @@ $result->close();
   echo '<body>';
   require '../include/course_options.inc';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
   <div id="content">
@@ -87,7 +87,7 @@ $result->close();
       $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name, faculty.id FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != '' ORDER BY faculty.code, name, school");
       $result->execute();
       $result->bind_result($schoolid, $code, $school, $facultycode, $faculty, $facultyid);
-      
+
       $old_faculty = '';
       $old_facultycode = '';
       $old_facultyid = 0;
@@ -109,7 +109,7 @@ $result->close();
     }
       echo "</optgroup>\n";
       $result->close();
-      
+
     ?>
     </select></td></tr>
     <tr><td class="field"><?php echo $string['externalid'] ?></td><td><?php echo $current_externalid; ?></td></tr>

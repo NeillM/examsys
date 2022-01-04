@@ -396,7 +396,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 }
                 $keyword_result->close();
             }
-      
+
             // Look for and fix links in linked enhancedcalc questions
             if ($q_type == 'enhancedcalc') {
                 require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');

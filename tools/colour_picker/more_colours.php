@@ -32,22 +32,22 @@ function rgb_hex($input)
     $input = str_replace('rgb(', '', $input);
     $input = str_replace(')', '', $input);
     $parts = explode(',', $input);
-  
+
     $r = dechex($parts[0]);
     if ($r == '0') {
         $r = '00';
     }
-  
+
     $g = dechex($parts[1]);
     if ($g == '0') {
         $g = '00';
     }
-  
+
     $b = dechex($parts[2]);
     if ($b == '0') {
         $b = '00';
     }
-  
+
     return $r . $g . $b;
 }
 ?>

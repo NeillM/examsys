@@ -48,7 +48,7 @@
 <?php
   require '../include/ebel_grid_options.php';
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">

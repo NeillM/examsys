@@ -91,7 +91,7 @@ $result->close();
 <body>
 <?php
   require '../include/toprightmenu.inc';
-  
+
     echo draw_toprightmenu();
 ?>
 <div id="content">

@@ -58,7 +58,7 @@ if (!$module_code) {
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(296);
 
   $reference_materials = array();
@@ -82,7 +82,7 @@ while ($result->fetch()) {
         }
     }
     $sub_result->close();
-    
+
     $reference_materials[$id]['title'] = $title;
 }
   $result->close();

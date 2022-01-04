@@ -36,14 +36,14 @@ for ($i = 1; $i <= 100; $i++) {
         if (!isset($minMark)) {
             $minMark = $i;
         }
-        
+
         $TotalMarks += $mydata[$i] * $i;
         $TotalStudents += $mydata[$i];
     }
 }
-  
+
   $mean = round($TotalMarks / $TotalStudents, 0);
-  
+
   // Calculate y axis scaling.
 if ($max_frequency <= 10) {
     $gap = 24;
@@ -120,7 +120,7 @@ if (!isset($_GET['plotuser'])) {
         ImageLine($Image, ($label * 7) + 40, 250, ($label * 7) + 40, 253, $dkgrey);
     }
 }
-  
+
   // Label y axis
 for ($label = $label_inc; $label <= $points; $label += $label_inc) {
     if ($label < 10) {
@@ -129,7 +129,7 @@ for ($label = $label_inc; $label <= $points; $label += $label_inc) {
         ImageString($Image, 2, 20, 245 - ($label * $gap), $label, $black);
     }
     ImageLine($Image, 35, 250 - ($label * $gap), 40, 250 - ($label * $gap), $dkgrey);
-    
+
     ImageLine($Image, 41, 250 - ($label * $gap), 740  - $reduction_factor, 250 - ($label * $gap), $ltgrey);
 }
 
@@ -161,7 +161,7 @@ if (isset($_GET['plotuser'])) {
     }
 }
   ImageStringUp($Image, 3, 0, 166, 'Occurrance', $black);
-  
+
 if ($_GET['plotuser'] != '') {
     if ($label < 100) {
         ImageString($Image, 2, ($_GET['plotuser'] * 7) + 32 - $reduction_factor, 10, 'You', $blue);

@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
                 $course_list[] = $course_name;
             }
             $result->close();
-        
+
             // Get a list of schools held by Rogo.
             $unknown_schoolID = 0;
             $school_list = array();
@@ -112,7 +112,7 @@ if (isset($_POST['submit'])) {
             foreach ($lines as $separate_line) {
                 if (trim($separate_line) != '') {
                     $fields = explode(',', $separate_line);
-            
+
                     if (trim($fields[0]) != 'Course ID' and trim($fields[0]) != 'ID') {  // Ignore header line
                         $courseid = trim($fields[0]);
                         $description = trim($fields[1]);

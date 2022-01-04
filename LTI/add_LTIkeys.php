@@ -68,7 +68,7 @@ if (!is_null($submit)) {
     <?php
     require '../include/lti_keys_options.inc';
     require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
     ?>
 <div id="content">
