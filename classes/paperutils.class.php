@@ -1231,7 +1231,7 @@ class PaperUtils
             }
             $sql = "SELECT properties.property_id, paper_title, paper_type, created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $type . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
         } else {
-            $sql = "SELECT properties.property_id, paper_title, paper_type, created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $teamid . ' AND deleted IS NULL AND paper_ownerID=users.id';
+            $sql = 'SELECT properties.property_id, paper_title, paper_type, created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = ' . $teamid . ' AND deleted IS NULL AND paper_ownerID=users.id';
         }
         $sql .= " ORDER BY {$order} " . mb_strtoupper($direction);
         if (mb_strpos($order, 'surname') === false) {

@@ -74,6 +74,6 @@ class paramtest extends UnitTest
         . "4\u{2060}" # word joiner
         . "5";
         $cleaned = \param::cleanBadChars($in);
-        $this->assertEquals("1 2 3 4 5", $cleaned);
+        $this->assertEquals('1 2 3 4 5', $cleaned);
     }
 }

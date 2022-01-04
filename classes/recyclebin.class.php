@@ -64,7 +64,7 @@ class RecycleBin
     {
         // Query the Papers tables.
         $counter = 0;
-        $stmt = $this->db->prepare("SELECT property_id AS id, paper_type, paper_title, deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL");
+        $stmt = $this->db->prepare('SELECT property_id AS id, paper_type, paper_title, deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL');
         $stmt->bind_param('i', $this->userID);
         $stmt->execute();
         $stmt->bind_result($id, $paper_type, $paper_title, $deleted);

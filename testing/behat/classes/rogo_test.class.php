@@ -408,7 +408,7 @@ class rogo_test extends MinkContext
             return;
         }
 
-        $error = "Javascript is required for this step.";
+        $error = 'Javascript is required for this step.';
         if ($message) {
             $error = "{$error} {$message}";
         }
