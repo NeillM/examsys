@@ -16,12 +16,12 @@ Feature: View paper anomalies
       | moduleid | fullname |
       | m1 | m1 |
     And the following "module enrolment" exist:
-      | sid | modulecode | calendar_year |
-      | 987654321 | m1 | 2020 |
+      | sid | modulecode |
+      | 987654321 | m1 |
     And the following "papers" exist:
-      | type | papertitle | paperowner | modulename | startdate | calendaryear |
-      | progress | paper1 | admin | m1 | 2020-02-27 12:00:00 | 2020 |
-      | summative | paper2 | admin | m1 | 2020-02-27 12:00:00 | 2020 |
+      | type | papertitle | paperowner | modulename | startdate |
+      | progress | paper1 | admin | m1 | 2020-02-27 12:00:00 |
+      | summative | paper2 | admin | m1 | 2020-02-27 12:00:00 |
     And the following "anomaly" exist:
       | user | paper | type | previous | current | screen | time |
       | student1 | paper1 | clock | Tue Aug 19 1975 20:15:30 GMT+0200 (CEST) | Tue Aug 19 1975 20:10:30 GMT+0200 (CEST) | 1 | today |
