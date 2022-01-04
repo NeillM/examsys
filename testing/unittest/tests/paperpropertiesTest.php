@@ -638,6 +638,7 @@ class PaperPropertiesTest extends unittestdatabase
         $expected[0]['correct_text'] = "\t";
         $expected[0]['score_method'] = $this->question2['score_method'];
         $expected[0]['settings'] = $this->question2['settings'];
+        $expected[0]['option_id'] = null;
         $expected[1]['ID'] = $this->question6['id'];
         $expected[1]['type'] = $this->question6['q_type'];
         $expected[1]['screen'] = $this->qpaper2['screen'];
@@ -645,6 +646,7 @@ class PaperPropertiesTest extends unittestdatabase
         $expected[1]['correct_text'] = "\t" . $this->options['option_text'] . "\t" . $this->options2['option_text'] . "\t" . $this->options3['option_text'];
         $expected[1]['score_method'] = $this->question6['score_method'];
         $expected[1]['settings'] = $this->question6['settings'];
+        $expected[1]['option_id'] = $this->options['id_num'];
         $this->assertEquals($expected, $properties->get_paper_questions());
     }
 
