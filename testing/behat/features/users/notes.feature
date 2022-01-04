@@ -18,9 +18,9 @@ Feature: Add student note in the user profile
       | sid | modulecode |
       | 987654321 | m1 |
     And the following "papers" exist:
-      | type | papertitle | paperowner | modulename | startdate | calendaryear |
-      | progress | paper1 | admin | m1 | 2020-02-27 12:00:00 | 2020 |
-      | progress | paper2 | admin | m1 | 2020-02-25 12:00:00 | 2020 |
+      | type | papertitle | paperowner | modulename | startdate |
+      | progress | paper1 | admin | m1 | 2020-02-27 12:00:00 |
+      | progress | paper2 | admin | m1 | 2020-02-25 12:00:00 |
     And the following "paper note" exist:
       | paper | note | user | author |
       | paper2 | a note made by me | student1 | admin |

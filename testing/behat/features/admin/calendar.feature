@@ -16,12 +16,12 @@ Feature: Exam Calendar
       | teacher | Staff | | University Lecturer |
     And the following "papers" exist:
       | type | papertitle | paperowner | modulename | session | startdate | enddate |
-      | formative | a formative paper | teacher | Test module | | | |
-      | summative | a summative paper this year | teacher | Test module | | | |
-      | progress | a progress paper this year | teacher | Test module | | | |
-      | osce | a osce paper this year | teacher | Test module | | | |
-      | offline | a offline paper this year | teacher | Test module | | | |
-      | survey | a survey paper this year | teacher | Test module | | | |
+      | formative | a formative paper | teacher | Test module | today 12:00 | today 13:00 | |
+      | summative | a summative paper this year | teacher | Test module | today 12:00 | today 13:00 | |
+      | progress | a progress paper this year | teacher | Test module | today 12:00 | today 13:00 | |
+      | osce | a osce paper this year | teacher | Test module | today 12:00 | today 13:00 | |
+      | offline | a offline paper this year | teacher | Test module | today 12:00 | today 13:00 | |
+      | survey | a survey paper this year | teacher | Test module | today 12:00 | today 13:00 | |
       | summative | a summative paper next year | teacher | Test module | next year | second wednesday of January next year 9:30 | second wednesday of January next year 14:00 |
       | osce | a osce paper next year | teacher | Test module | next year | second wednesday of January next year 9:30 | second wednesday of January next year 14:00 |
 
