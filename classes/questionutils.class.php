@@ -750,7 +750,8 @@ SQL;
      * @param int $changeID track_changes ID
      * @param int $parentID (optional) question parent copied from, same as question ID if a new question
      */
-    public static function addLineage(int $qID, int $changeID, int $parentID = null) {
+    public static function addLineage(int $qID, int $changeID, int $parentID = null)
+    {
         $configObject = Config::get_instance();
         $lineagesql = $configObject->db->prepare(
             'INSERT INTO questions_lineage (questionID, parentID, rootID, changeID)
@@ -773,7 +774,8 @@ SQL;
      *
      * @return int
      */
-    public static function getLineageRoot(int $qID) {
+    public static function getLineageRoot(int $qID)
+    {
         $configObject = Config::get_instance();
         $lineagesql = $configObject->db->prepare(
             'SELECT rootID
@@ -794,7 +796,8 @@ SQL;
      *
      * @return int
      */
-    public static function getLineageParent(int $qID) {
+    public static function getLineageParent(int $qID)
+    {
         $configObject = Config::get_instance();
         $lineagesql = $configObject->db->prepare(
             'SELECT parentID
@@ -815,7 +818,8 @@ SQL;
      *
      * @return array
      */
-    public static function getLineage(int $qID) {
+    public static function getLineage(int $qID)
+    {
         $configObject = Config::get_instance();
 
         $lineagesql = $configObject->db->prepare(
@@ -844,7 +848,8 @@ SQL;
      *
      * @return array
      */
-    public static function filterParentLineage(int $qID, array $lineage, array &$string) {
+    public static function filterParentLineage(int $qID, array $lineage, array &$string)
+    {
         $parents = [];
         $parent = $qID;
         $i = 0;
@@ -870,7 +875,8 @@ SQL;
      *
      * @return array
      */
-    public static function filterChildLineage(int $qID, array $lineage) {
+    public static function filterChildLineage(int $qID, array $lineage)
+    {
         return array_keys($lineage, $qID);
     }
 
@@ -882,7 +888,8 @@ SQL;
      *
      * @return array
      */
-    public static function getFullHistory(int $qID, int $limit, array &$string) {
+    public static function getFullHistory(int $qID, int $limit, array &$string)
+    {
         $configObject = Config::get_instance();
         $lineage = \QuestionUtils::getLineage($qID);
         $parentIDs = \QuestionUtils::filterParentLineage($qID, $lineage, $string);

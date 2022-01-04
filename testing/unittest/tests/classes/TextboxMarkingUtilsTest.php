@@ -24,7 +24,8 @@
  * @group textbox
  * @group question
  */
-class TextboxMarkingUtilsTest extends \testing\unittest\UnitTest{
+class TextboxMarkingUtilsTest extends \testing\unittest\UnitTest
+{
     /**
      * Tests that terms will be highlighted correctly.
      *
@@ -34,7 +35,8 @@ class TextboxMarkingUtilsTest extends \testing\unittest\UnitTest{
      *
      * @dataProvider dataHighlightTerms
      */
-    public function testHighlightTerms(array $terms, string $answer, string $expected) {
+    public function testHighlightTerms(array $terms, string $answer, string $expected)
+    {
         $settings = [
             'terms' => json_encode($terms),
         ];
@@ -47,7 +49,8 @@ class TextboxMarkingUtilsTest extends \testing\unittest\UnitTest{
      *
      * @return array
      */
-    public function dataHighlightTerms(): array {
+    public function dataHighlightTerms(): array
+    {
         return [
             'no matches' => [
                 ['test'],

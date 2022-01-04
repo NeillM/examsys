@@ -292,7 +292,8 @@ class param
      * @param string $text String to sanitize
      * @return string
      */
-    public static function cleanBadChars($text) {
+    public static function cleanBadChars($text)
+    {
         // Removes all unicode spacing, odd characters and control characters, replacing with a regular space
         $text = preg_replace('/[\pZ\pC]+/u', ' ', $text);
         return $text;

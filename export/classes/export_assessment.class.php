@@ -151,7 +151,8 @@ class export_assessment extends exporter
      * @param array $paper paper info
      * @param string $mode Export mode
      */
-    public function prepare_data(array $paper, string $mode) {
+    public function prepare_data(array $paper, string $mode)
+    {
         // Get letter marking settings
         $this->mark_with_letters_extmatch = $this->config->get_setting('core', 'rpt_letters_for_extmatch');
         $this->mark_with_letters_hotspots = $this->config->get_setting('core', 'rpt_letters_for_hotspots');
