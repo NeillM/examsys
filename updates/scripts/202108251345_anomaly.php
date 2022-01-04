@@ -104,7 +104,7 @@ if ($updater_utils->check_version('7.5.0')) {
 
         // Store site address needed by cli email system.
         $search = '$cfg_site_address';
-        $new_lines = '$cfg_site_address = "' . $site_address. '";' . PHP_EOL;
+        $new_lines = '$cfg_site_address = "' . $site_address . '";' . PHP_EOL;
         $target_line = '$cfg_tmpdir';
         $updater_utils->add_line($string, $search, $new_lines, -1, $cfg_web_root, $target_line);
 

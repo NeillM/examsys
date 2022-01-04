@@ -113,7 +113,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
         $this->assertEquals($expected, $actual);
         // Update and check that exception occurs attempting to set to >2500 characters
         $this->expectExceptionMessage('Maximum metadata size exceeded');
-        OptionsMetadata::set($this->option['id_num'], 'longtest', str_repeat('9876543210',251));
+        OptionsMetadata::set($this->option['id_num'], 'longtest', str_repeat('9876543210', 251));
     }
 
     /**

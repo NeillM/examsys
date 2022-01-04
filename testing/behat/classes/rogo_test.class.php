@@ -348,7 +348,7 @@ class rogo_test extends MinkContext
      *
      * @return int Timeout in seconds
      */
-    public static function getExtendedTimeout() : int
+    public static function getExtendedTimeout(): int
     {
         return self::getRealTimeout(30);
     }
@@ -360,7 +360,8 @@ class rogo_test extends MinkContext
      *
      * @return int Timeout in seconds
      */
-    public static function getTimeout() : int {
+    public static function getTimeout(): int
+    {
         return self::getRealTimeout(15);
     }
 
@@ -370,7 +371,7 @@ class rogo_test extends MinkContext
      * @param int $timeout One of the TIMEOUT constants
      * @return int Actual timeout (in seconds)
      */
-    protected static function getRealTimeout(int $timeout) : int
+    protected static function getRealTimeout(int $timeout): int
     {
         $cfg_behat_increasetimeout = Config::get_instance()->get('cfg_behat_increasetimeout');
         if (isset($cfg_behat_increasetimeout)) {

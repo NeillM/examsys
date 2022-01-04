@@ -281,7 +281,7 @@ class QuestionLineageTest extends unittestdatabase
         $this->assertEquals(QuestionUtils::getLineageParent($this->questions['child1']['id']), $this->questions['primary']['id']);
         $this->assertEquals(QuestionUtils::getLineageParent($this->questions['child2']['id']), $this->questions['primary']['id']);
         $this->assertEquals(QuestionUtils::getLineageParent($this->questions['grandchild1']['id']), $this->questions['child1']['id']);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['unrelated_child']['id']) , $this->questions['unrelated']['id']);
+        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['unrelated_child']['id']), $this->questions['unrelated']['id']);
     }
 
     /**
