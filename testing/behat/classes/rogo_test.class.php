@@ -324,10 +324,12 @@ class rogo_test extends MinkContext
         // Timeout waiting for JS to complete.
         // It is unlikely that Javascript code of a page or an AJAX request needs more than
         // getExtendedTimeout() seconds to be loaded.
-        throw new \Exception('Javascript code and/or AJAX requests are not ready after ' .
-                             self::getExtendedTimeout() .
-                             ' seconds. There is a Javascript error or the code is extremely slow (' . $pending .
-                             '). If you are using a slow machine, consider setting increasetimeout in behat config.');
+        throw new \Exception(
+            'Javascript code and/or AJAX requests are not ready after '
+             . self::getExtendedTimeout()
+             . ' seconds. There is a Javascript error or the code is extremely slow (' . $pending
+             . '). If you are using a slow machine, consider setting increasetimeout in behat config.'
+        );
     }
 
     /**
