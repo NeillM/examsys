@@ -42,30 +42,40 @@ define(['alert', 'jquery'], function(ALERT, $) {
         };
 
         /**
-         * Handle error message.
-         */
-        this.doError = function () {
-            var alert = new ALERT();
-            alert.show('saveerror');
-        };
-
-        /**
          * Save all mark changes to the database.
          */
         this.saveAllRows = function() {
             var scope = this;
             var alert = new ALERT();
-            $('.save-row').each(function () {
-                var logID = $(this).data('logid');
+            var nomarks = true;
+            var partialmarks = false;
+            var failsave = false;
+            var networkfail = false;
+            var saves = [];
+
+            // Disable the save and close button while we are in the process of saving, since it may take a while.
+            $('#save_all').attr('disabled', 'disabled');
+            $('#close').attr('disabled', 'disabled');
+
+            var save_mark = function (index, element) {
+                var logID = $(element).data('logid');
                 var newMark = $('input[name=mark_' + logID + ']:checked').val();
                 var reason = $('#reason_' + logID).val();
                 var logType = $('#log_type_' + logID).val();
                 var userID = $('#user_id_' + logID).val();
+                var row = $(element).parents('tr');
+                var startValue = row.data('current');
+                var startReason = row.data('reason');
+
                 if (typeof newMark == 'undefined') {
-                    alert.show('nomarkmsg');
+                    partialmarks = true;
+                } else if (startValue === newMark && startReason === reason) {
+                    // The mark is unchanged we do not need to save.
+                    nomarks = false;
                 } else {
-                    var row = $(this).parents('tr');
-                    $.post('../ajax/reports/save_enhancedcalc_override.php',
+                    // Only save if the value has been changed.
+                    nomarks = false;
+                    var save = $.post('../ajax/reports/save_enhancedcalc_override.php',
                         {
                             log_id: logID,
                             user_id: userID,
@@ -78,14 +88,53 @@ define(['alert', 'jquery'], function(ALERT, $) {
                         },
                         function (data) {
                             if (data != 'OK') {
-                                alert.show('saveerror');
+                                failsave = true;
+                                row.addClass('failure');
                                 return false;
                             }
-                            row.addClass('overridden').effect("highlight", {}, 1500);
+                            row.addClass('overridden');
+                            row.removeClass('failure');
+
+                            // Update the saved values.
+                            row.data('current', newMark);
+                            row.data('reason', reason);
                         }
-                    ).fail(scope.doError);
+                    ).fail(function() {
+                        networkfail = true;
+                        row.addClass('failure');
+                    });
+
+                    // Store the promise.
+                    saves.push(save);
                 }
-            });
+            };
+
+            $('.save-row').each(save_mark);
+
+            var display_errors = function() {
+                // Display messages about connection errors after all of the requests have completed.
+                if (failsave) {
+                    alert.show('saveerror');
+                }
+
+                if (networkfail) {
+                    alert.show('connectionerror');
+                }
+
+                // Enable the save and close buttons again now that the save is complete.
+                $('#save_all').attr('disabled', null);
+                $('#close').attr('disabled', null);
+            }
+
+            $.when.apply($, saves).then(display_errors).fail(display_errors);
+
+            if (nomarks) {
+                // No mark overrides were saved.
+                alert.show('nomarkmsg');
+            } else if (partialmarks) {
+                // Some marks overrides were saved.
+                alert.show('missingmarkmsg');
+            }
         };
     }
 });

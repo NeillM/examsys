@@ -142,19 +142,7 @@ $q_marks = array_flip($marks_arr);
   <title><?php echo page::title($string['remark']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:90%; background-color:#F1F5FB}
-    th {text-align: center; font-weight:normal; color:white; background-color: #295AAD}
-    td {text-align: center}
-    .separate {border-bottom: 1px solid #CCD9EA}
-    .o {text-align:right; padding-right: 10px}
-    .c1 {width: 65px; text-align:center}
-    .c2 {width: 250px}
-    .r1 {background-color: white}
-    .r2 {background-color: #B3C8E8}
-    .msg {margin-left: 5px; font-size: 90%; color: #001687}
-    .overridden {background-color: #B3C8E8}
-  </style>
+    <link rel="stylesheet" type="text/css" href="../css/calcremark.css" />
 
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../js/require.js"></script>
@@ -235,7 +223,7 @@ foreach ($log_answers2 as $innerans) {
         $or_class = '';
         if (isset($overrides[$answer['id']])) {
             $new_type = $overrides[$answer['id']]['type'];
-            $reason = $overrides[$answer['id']]['reason'];
+            $reason = htmlentities($overrides[$answer['id']]['reason']);
             $or_class = ' class="overridden"';
         } else {
             // Populate with existing mark type
@@ -243,7 +231,8 @@ foreach ($log_answers2 as $innerans) {
                 $new_type = $q_marks[$answer['mark']];
             }
         }
-        echo "<tr{$or_class}>";
+
+        echo "<tr{$or_class} data-current=\"{$new_type}\" data-reason=\"{$reason}\">";
         $u_vars = $answer['answer_obj']->get_user_vars();
         foreach ($u_vars as $label => $value) {
             echo "<td class=\"shortcolumn\">$value</td>\n";
