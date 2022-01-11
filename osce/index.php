@@ -67,7 +67,7 @@ if ($paper_no == 1) {
 } else {
     // Multiple OSCE stations are found, present a list of choices to the user.
     echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<title>" . $string['exams'] . "</title>\n</head>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/osce_list.css\" />\n<body>\n";
-  
+
     echo '<div class="title">' . $string['multiplestations'] . "</div>\n";
 
     echo '<p style="margin-left:10px">' . $string['pleaseselect'] . "</p>\n";

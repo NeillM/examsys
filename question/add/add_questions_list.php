@@ -72,7 +72,7 @@ if (isset($_GET['sortby'])) {
     $sortby = 'leadin';
     $ordering = 'asc';
 }
-  
+
   $moduleObj = new module();
 
   echo "<form name=\"theform\" autocomplete=\"off\">\n";
@@ -223,7 +223,7 @@ if (isset($_GET['sortby'])) {
             }
             $result = $mysqli->prepare($sql);
             $result->bind_param('i', $userObject->get_user_ID());
-    
+
             break;
     }
     $result->execute();

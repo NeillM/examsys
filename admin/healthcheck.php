@@ -51,7 +51,7 @@ if ($ldapserver != '') {
         $error = true;
     }
 }
-  
+
   // Check access to media directory.
 try {
     $mediadir = rogo_directory::get_directory('media');

@@ -239,7 +239,6 @@ class rogo_test extends MinkContext
             }
 
             usleep(100000);
-
         } while (microtime(true) < $end);
 
         $backtrace = debug_backtrace();
@@ -325,10 +324,12 @@ class rogo_test extends MinkContext
         // Timeout waiting for JS to complete.
         // It is unlikely that Javascript code of a page or an AJAX request needs more than
         // getExtendedTimeout() seconds to be loaded.
-        throw new \Exception('Javascript code and/or AJAX requests are not ready after ' .
-                             self::getExtendedTimeout() .
-                             ' seconds. There is a Javascript error or the code is extremely slow (' . $pending .
-                             '). If you are using a slow machine, consider setting increasetimeout in behat config.');
+        throw new \Exception(
+            'Javascript code and/or AJAX requests are not ready after '
+             . self::getExtendedTimeout()
+             . ' seconds. There is a Javascript error or the code is extremely slow (' . $pending
+             . '). If you are using a slow machine, consider setting increasetimeout in behat config.'
+        );
     }
 
     /**
@@ -349,7 +350,7 @@ class rogo_test extends MinkContext
      *
      * @return int Timeout in seconds
      */
-    public static function getExtendedTimeout() : int
+    public static function getExtendedTimeout(): int
     {
         return self::getRealTimeout(30);
     }
@@ -361,7 +362,8 @@ class rogo_test extends MinkContext
      *
      * @return int Timeout in seconds
      */
-    public static function getTimeout() : int {
+    public static function getTimeout(): int
+    {
         return self::getRealTimeout(15);
     }
 
@@ -371,7 +373,7 @@ class rogo_test extends MinkContext
      * @param int $timeout One of the TIMEOUT constants
      * @return int Actual timeout (in seconds)
      */
-    protected static function getRealTimeout(int $timeout) : int
+    protected static function getRealTimeout(int $timeout): int
     {
         $cfg_behat_increasetimeout = Config::get_instance()->get('cfg_behat_increasetimeout');
         if (isset($cfg_behat_increasetimeout)) {
@@ -408,7 +410,7 @@ class rogo_test extends MinkContext
             return;
         }
 
-        $error = "Javascript is required for this step.";
+        $error = 'Javascript is required for this step.';
         if ($message) {
             $error = "{$error} {$message}";
         }

@@ -70,7 +70,7 @@ $review = new Review($paperID, $userObject->get_user_ID(), $review_type, $mysqli
 if ($marking[0] == '2') {
     $standards_setting = array();
     $tmp_parts = explode(',', $marking);
-  
+
     $standard_setting = new StandardSetting($mysqli);
     $standards_setting = $standard_setting->get_ratings_by_question($tmp_parts[1]);
 } else {
@@ -207,17 +207,17 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
     }
     echo '</td>';
     echo $logo_html;
-  
+
     if (($start_of_day_ts > $review_deadline or time() > $start_date) and $start_date != '') {
         echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; line-height:0\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Clock\" /></td><td class=\"redwarn\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
     }
-  
+
     $previous_duration = 0;
     $screen_pre_submitted = 0;
-    
+
     // Load past reviews from the database.
     $review->load_reviews();
-    
+
     $old_leadin = '';
     $old_q_type = '';
     $old_q_id = 0;
@@ -232,7 +232,7 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
 
     echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
     echo "<col width=\"40\"><col>\n";
-  
+
     // Random / Keyword questions.
     $tmp_questions_array = array();
     $tmp_q_no = 0;
@@ -284,7 +284,7 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
         $previous_q_type = $question['q_type'];
         $q_displayed++;
     }
-  
+
     echo "</table></td></tr>\n<tr><td valign=\"bottom\">\n<br />\n";
 
     $current_screen++;

@@ -71,7 +71,7 @@ $note_details = array('note_id' => 0, 'note' => '');
 $student_details = UserUtils::get_user_details($userID, $mysqli);
 if (isset($_GET['paperID'])) {
     echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . "\" />\n";
-        
+
     $note_details = StudentNotes::get_note($_GET['paperID'], $userID, $mysqli);
     if ($note_details === false) {
         $note_details = array('note_id' => 0, 'note' => '');
@@ -89,7 +89,7 @@ if (isset($_GET['paperID'])) {
             $module_IDs[] = $moduleID;
         }
     }
-     
+
       echo $string['papername'] . " <select name=\"paperID\" id=\"paperID\" required>\n<option value=\"\"></option>\n";
     if (count($module_IDs) > 0) {
         // Look up papers that have been live in the last 28 days.
@@ -122,7 +122,7 @@ if (isset($_GET['paperID'])) {
         $disabled = ' disabled="disabled"';
     }
 }
-  
+
   echo '<br />' . $string['note'] . "<br />\n";
 echo '<div style="text-align:center"><textarea name="note" id="note" required>' . $note_details['note'] . "</textarea></div>\n";
 ?>

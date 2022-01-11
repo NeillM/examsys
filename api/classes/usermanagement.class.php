@@ -28,7 +28,7 @@ namespace api;
  */
 class usermanagement extends \api\abstractmanagement
 {
-    
+
     /**
      * Language pack component.
      */
@@ -53,7 +53,7 @@ class usermanagement extends \api\abstractmanagement
         'USER_INVALID_ROLE' => 707,
         'USER_NOTHING_TO_UPDATE' => 708
     );
-        
+
     /**
      * Enrol users onto modules.
      * @param integer $id - user id
@@ -86,7 +86,7 @@ class usermanagement extends \api\abstractmanagement
         }
         return $error;
     }
-    
+
     /**
      * Check role / course of user is valid.
      * @param array $params action parameters
@@ -170,7 +170,7 @@ class usermanagement extends \api\abstractmanagement
         }
         return $this->get_response($data, 'create', $params['nodeid'], $error);
     }
- 
+
     /**
      * Update user
      * @param array $params update user params
@@ -186,7 +186,7 @@ class usermanagement extends \api\abstractmanagement
         $userexists = false;
         $checkparameter = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
                     'gender', 'year', 'role', 'studentid', 'initials');
-                    
+
         if (!empty($params['id'])) {
             $userexists = \UserUtils::userid_exists($params['id'], $this->db);
             if ($userexists) {
@@ -208,14 +208,14 @@ class usermanagement extends \api\abstractmanagement
             if (!empty($params['modules'])) {
                 $change = true;
             }
-            
+
             // If nothing updated return.
             if (!$change) {
                 $data = array('statuscode' => $this->statuscodes['USER_NOTHING_TO_UPDATE'], 'status' => $strings['user_nothing_to_update'], 'id' => null, 'externalid' => null);
                 return $this->get_response($data, 'update', $params['nodeid'], $error);
             }
         }
-        
+
         // Set defaults if not provided.
         foreach ($checkparameter as $name) {
             if (empty($params[$name])) {

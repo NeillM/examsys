@@ -58,7 +58,7 @@ $academic_year = $yearutils->get_academic_session($session);
 <?php
 require '../include/toprightmenu.inc';
 require '../include/admin_module_options.inc';
-    
+
 echo draw_toprightmenu();
 ?>
 <div id="content">

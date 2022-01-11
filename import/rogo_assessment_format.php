@@ -37,7 +37,7 @@ if (isset($_POST['submit'])) {
     $rafObject->import($paperID);
 
     $mysqli->close();
-    
+
     header("location: ../paper/details.php?paperID=$paperID");
 } else {
     ?>

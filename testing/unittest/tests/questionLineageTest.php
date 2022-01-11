@@ -183,7 +183,7 @@ class QuestionLineageTest extends unittestdatabase
          * Modified parent (2) - should not be shown
          * Copied question to child1
          * Copied question to child2
-         * 
+         *
          * No child edits should be visible, nor any edits outside of this tree.
          * Actual history pull will be the reverse of this for display ordering,
          * reflected below.
@@ -254,7 +254,7 @@ class QuestionLineageTest extends unittestdatabase
 
     /**
      * Test that we can correctly get the lineage root in all cases
-     * 
+     *
      * @group questionlineage
      */
     public function testGetLineageRoot()
@@ -270,7 +270,7 @@ class QuestionLineageTest extends unittestdatabase
 
     /**
      * Test that we can correctly get the direct parents of a question
-     * 
+     *
      * @group questionlineage
      */
     public function testGetLineageParent()
@@ -281,12 +281,12 @@ class QuestionLineageTest extends unittestdatabase
         $this->assertEquals(QuestionUtils::getLineageParent($this->questions['child1']['id']), $this->questions['primary']['id']);
         $this->assertEquals(QuestionUtils::getLineageParent($this->questions['child2']['id']), $this->questions['primary']['id']);
         $this->assertEquals(QuestionUtils::getLineageParent($this->questions['grandchild1']['id']), $this->questions['child1']['id']);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['unrelated_child']['id']) , $this->questions['unrelated']['id']);
+        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['unrelated_child']['id']), $this->questions['unrelated']['id']);
     }
 
     /**
      * Test that we can correctly get the full parental lineage of a question
-     * 
+     *
      * @group questionlineage
      */
     public function testFilterParentLineage()
@@ -298,7 +298,7 @@ class QuestionLineageTest extends unittestdatabase
 
     /**
      * Test that we can correctly get the direct children of a question
-     * 
+     *
      * @group questionlineage
      */
     public function testFilterDirectChildLineage()
@@ -310,7 +310,7 @@ class QuestionLineageTest extends unittestdatabase
     /**
      * Test to confirm question full history
      * Note: Needs other changes added to parent questions to be effective
-     * 
+     *
      * @group questionlineage
      */
     public function testFullHistory()

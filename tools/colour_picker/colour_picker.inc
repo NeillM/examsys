@@ -41,7 +41,7 @@
   $row[6] = array('#7F7F7F','#0C0C0C','#1D1B10','#0F243E','#244061','#632423','#4F6128','#3F3151','#205867','#974806');
   // Standard colours
   $row[7] = array('#C00000','#FF0000','#FFC000','#FFFF00','#92D050','#00B050','#00B0F0','#0070C0','#002060','#7030A0');
-  
+
   echo '<tr style="height:4px"><td colspan="21"></td></tr>';
   echo '<tr><td colspan="21" style="padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold">' . $string['themecolours'] . '</td></tr>';
   echo '<tr style="height:4px"><td colspan="21"></td></tr>';
@@ -53,7 +53,7 @@ foreach ($row[1] as $colour) {
 }
   echo "</tr>\n";
   echo '<tr style="height:8px"><td colspan="21"></td></tr>';
-  
+
 for ($row_no = 2; $row_no <= 6; $row_no++) {
     if ($row_no == 2) {
         $border_top = 'border-top: 1px solid #C5C5C5; ';
@@ -75,7 +75,7 @@ for ($row_no = 2; $row_no <= 6; $row_no++) {
   echo '<tr style="height:4px"><td colspan="21"></td></tr>';
   echo '<tr><td colspan="21" style="padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold">' . $string['standardcolours'] . '</td></tr>';
   echo '<tr style="height:4px"><td colspan="21"></td></tr>';
-  
+
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
 foreach ($row[7] as $colour) {
     echo "<td id=\"row$i\" style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['SCRIPT_NAME'] . '"></td><td style="width:5px"></td>';

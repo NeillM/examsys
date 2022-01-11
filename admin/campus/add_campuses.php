@@ -27,7 +27,7 @@ require_once '../../include/errors.php';
 require '../../include/toprightmenu.inc';
 
 $campusobj = new campus($mysqli);
-    
+
 if (isset($_POST['submit'])) {
     $name = check_var('name', 'POST', true, false, true);
     $duplicate = $campusobj->check_campus_name_inuse($name);

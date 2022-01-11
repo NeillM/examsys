@@ -33,8 +33,8 @@
               </td>
             </tr>
             <?php
-require_once 'detail_parts/details_staffnotes.php';
-?>
+            require_once 'detail_parts/details_staffnotes.php';
+            ?>
             <tr>
               <th><span class="mandatory">*</span> <label for="option_text1"><?php echo $string['questions'] ?></label></th>
               <td>

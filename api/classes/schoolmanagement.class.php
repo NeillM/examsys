@@ -28,12 +28,12 @@ namespace api;
  */
 class schoolmanagement extends \api\abstractmanagement
 {
-    
+
     /**
      * Language pack component.
      */
     private $langcomponent = 'api/schoolmanagement';
-    
+
     /**
      * Status codes
      */
@@ -49,7 +49,7 @@ class schoolmanagement extends \api\abstractmanagement
         'SCHOOL_NOTHING_TO_UPDATE' => 607,
         'SCHOOL_FACULTY_EXTID_INVALID' => 608
     );
-        
+
     /**
      * Create school
      * @param array $params school creation parameters
@@ -118,7 +118,7 @@ class schoolmanagement extends \api\abstractmanagement
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
-    
+
     /**
      * Update school
      * @param array $params school update parameters
@@ -145,7 +145,7 @@ class schoolmanagement extends \api\abstractmanagement
         } else {
             $schoolid = false;
         }
-        
+
         if ($schoolid) {
             $details = \SchoolUtils::get_school_details_by_id($params['id'], $this->db);
             // Check if anything has been updated.
@@ -155,19 +155,19 @@ class schoolmanagement extends \api\abstractmanagement
             $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null, 'externalid' => null);
             return $this->get_response($data, 'update', $params['nodeid']);
         }
-        
+
         // Get name if not provided.
         if (empty($params['name'])) {
             if (!isset($params['name'])) {
                 $params['name'] = $details['name'];
             }
         }
-        
+
         // Get code if not provided.
         if (!isset($params['code'])) {
             $params['code'] = $details['code'];
         }
-        
+
         // Get faculty if provided.
         if (!empty($params['facultyextid'])) {
             $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['facultyextid'], $params['externalsys'], $this->db);
@@ -194,7 +194,7 @@ class schoolmanagement extends \api\abstractmanagement
         } else {
             $faculty = false;
         }
-        
+
         if ($faculty) {
             // Update school.
             if ($change) {

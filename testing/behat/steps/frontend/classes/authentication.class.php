@@ -96,5 +96,4 @@ trait authentication
             throw new \Exception("Re-login failed for $username");
         }
     }
-
 }

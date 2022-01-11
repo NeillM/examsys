@@ -44,9 +44,9 @@ if (isset($_POST['save_changes'])) {
     $tmp_body = $_POST['edit1'];
     $tmp_title = $_POST['page_title'];
     $tmp_roles = $_POST['page_roles'];
-  
+
     $help_system->save_page($tmp_title, $tmp_body, $tmp_roles, $pageid, $_POST['edit_id']);
-  
+
     $mysqli->close();
     header("location: index.php?id=$pageid");
     exit;
@@ -127,7 +127,7 @@ if (isset($_POST['save_changes'])) {
         } else {
             // Set the lock to the current time/author.
             $help_system->set_edit_lock($edit_id);
-      
+
             $checkout_authorID = $userObject->get_user_ID();
         }
     } elseif ($disabled == '' and $userObject->get_user_ID() == $page_details['checkout_authorID']) {

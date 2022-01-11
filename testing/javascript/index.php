@@ -35,7 +35,7 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunit/qunit/qunit.js'
     // Find the test files.
     $loader = new SuiteLoader();
     $loader->locate_all();
-    
+
     // Start generating the page
     $twigloader = new \Twig\Loader\FilesystemLoader(__DIR__ . DIRECTORY_SEPARATOR . 'templates');
     $renderer = new \Twig\Environment($twigloader, array(
@@ -45,7 +45,7 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunit/qunit/qunit.js'
       'scripts' => $loader,
       'webroot' => $configObject->get('cfg_root_path'),
     );
-    
+
     // Output the page.
     echo $renderer->render('index.html', $data);
 } else {

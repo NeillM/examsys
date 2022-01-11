@@ -32,7 +32,7 @@ if (isset($_GET['questionlist'])) {
 if (isset($_GET['question_no'])) {
     $question_no = $_GET['question_no'];
 }
- 
+
 ?>
 <html>
 <head>

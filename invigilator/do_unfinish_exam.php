@@ -37,6 +37,6 @@ $stmt = $mysqli->prepare($sql);
 $stmt->bind_param('ii', $userID, $paperID);
 $stmt->execute();
 $stmt->close();
-    
+
 $mysqli->close();
 echo json_encode('');

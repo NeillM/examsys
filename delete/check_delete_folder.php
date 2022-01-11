@@ -27,7 +27,7 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
-  
+
 $folderID = check_var('folderID', 'GET', true, false, true);
 
 if ($userObject->get_user_ID() != folder_utils::get_ownerID($folderID, $mysqli)) {

@@ -43,7 +43,7 @@ $external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get
 $external_review_deadline->setTimezone($local_time);
 
 $display_deadline = $external_review_deadline->format($configObject->get('cfg_long_date_php'));
-      
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -71,7 +71,7 @@ $display_deadline = $external_review_deadline->format($configObject->get('cfg_lo
 <body>
 <?php
   $external_details = UserUtils::get_user_details($externalID, $mysqli);
-  
+
   $to = $external_details['email'];
   $cfgcompany = $configObject->get_setting('core', 'misc_company');
 if ($mode == 0) {
@@ -94,7 +94,7 @@ if ($mode == 0) {
   $message = str_replace('$external_title', $external_details['title'], $message);
   $message = str_replace('$logo_path', $logo_path, $message);
   $message = str_replace('$cfg_company', $cfgcompany, $message);
-    
+
   require '../include/toprightmenu.inc';
     echo draw_toprightmenu();
 ?>
@@ -115,7 +115,7 @@ if ($mode == 0) {
 <?php
 if (isset($_POST['submit'])) {
     $to_list = explode(';', $_POST['toaddress']);
-  
+
     foreach ($to_list as $individual_to) {
         $to = trim($individual_to);
         $subject = trim($_POST['subject']);

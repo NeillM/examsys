@@ -49,7 +49,7 @@ require '../include/errors.php';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
@@ -116,7 +116,7 @@ foreach ($master_array as $school => $data) {
         $faculty_stats = $types;
     }
     echo '<tr><td>' . $data['name'] . '</td>';
-    
+
     foreach ($types as $type) {
         if ($data['types'][$type] == 0) {
             echo '<td class="n grey">' . $data['types'][$type] . '</td>';
@@ -144,13 +144,13 @@ echo output_faculty_stats($faculty_stats, $types);
 function output_faculty_stats($stats, $types)
 {
     $html = '<tr><td>&nbsp;</td>';
-    
+
     foreach ($types as $type) {
         $html .= '<td class="n subtotal">' . number_format($stats[$type]) . '</td>';
     }
-    
+
     $html .= '</tr>';
-    
+
     return $html;
 }
 ?>

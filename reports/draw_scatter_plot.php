@@ -41,7 +41,7 @@ for ($i = 0; $i <= count($mydata); $i = $i + 2) {
         }
     }
 }
-  
+
   $color        = ImageColorAllocate($Image, 255, 255, 255);
   $red      = ImageColorAllocate($Image, 192, 0, 0);
   $ltgrey   = ImageColorAllocate($Image, 234, 234, 234);

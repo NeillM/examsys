@@ -84,7 +84,7 @@ if (!is_null($order)) {
 <?php
   $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_16.gif');
   $paper_details = array();
-  
+
   $type = param::optional('paper_type', null, param::INT, param::FETCH_GET);
   $teamid = param::optional('teamID', null, param::INT, param::FETCH_GET);
   $paper_details = PaperUtils::get_available_papers($userObject, $order, $direction, $type, $teamid);
@@ -101,7 +101,7 @@ foreach ($paper_details as $property_id => $paper_detail) {
     }
     echo $html . '</td><td class="s">' . $paper_detail['surname'] . ', ' . $paper_detail['initials'] . '. ' . $paper_detail['title'] . '</td><td class="s">' . $paper_detail['created'] . '</td></tr>';
 }
-  
+
 ?>
 </tbody>
 </table>

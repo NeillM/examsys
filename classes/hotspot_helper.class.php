@@ -266,7 +266,7 @@ class hotspot_helper extends RogoStaticSingleton
                     if (empty($letters)) {
                         $letters = ['x'];
                     }
-                    $layer_answers[$key] = '0,' . implode(',',$letters);
+                    $layer_answers[$key] = '0,' . implode(',', $letters);
                 }
             }
         }

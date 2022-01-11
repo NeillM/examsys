@@ -35,7 +35,7 @@ if (isset($_POST['save_changes'])) {
     $tmp_body = $_POST['edit1'];
     $tmp_title = $_POST['title'];
     $roles = $_POST['page_roles'];
-  
+
     $articleid = $help_system->create_page($tmp_title, $tmp_body, $roles);
 
     $mysqli->close();

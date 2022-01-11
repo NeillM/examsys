@@ -135,7 +135,7 @@ foreach ($papers as $property_id => $paper_details) {
 <?php
 $papers = array();
 $now = time();
-$results = $mysqli->prepare("
+$results = $mysqli->prepare('
     SELECT
         properties.property_id,
         paper_title,
@@ -160,7 +160,7 @@ $results = $mysqli->prepare("
     AND
         deleted IS NULL
     ORDER BY period
-");
+');
 $results->bind_param('i', $now);
 $results->execute();
 $results->store_result();

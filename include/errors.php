@@ -36,9 +36,9 @@ require $cfg_web_root . 'lang/' . $language . '/include/errors.php';
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true, $display_support_email = true)
 {
     global $mysqli, $string, $notice, $configObject;
-  
+
     $support_email = support::get_email();
-    
+
     $user = UserObject::get_instance();
     if ($user !== null and $user->get_user_ID() > 0) {
         $logger = new Logger($mysqli);
@@ -47,7 +47,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
         $logger = new Logger($mysqli);
         $logger->record_access_denied(0, $error_title, $error_description);                     // Record attempt in access denied log, userID set to zero.
     }
-  
+
     if ($headers == false) {
         echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>" . $error_title . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
     }
@@ -69,7 +69,7 @@ function uploadError($errCode)
 {
     global $string;
     $engDescription = $string['uploaderrormsg0'];
-  
+
     switch ($errCode) {
         case 0:
             $engDescription = $string['uploaderrormsg1'];
@@ -93,7 +93,7 @@ function uploadError($errCode)
             $engDescription = $string['uploaderrormsg7'];
             break;
     }
-  
+
     return $engDescription;
 }
 
@@ -115,7 +115,7 @@ function uploadError($errCode)
 function check_var($var_name, $method, $mandatory, $headers, $return_var, $type = param::RAW)
 {
     global $string;
-  
+
     if (is_array($method)) {
         if (!isset($method[$var_name]) or $method[$var_name] === '') {
             if ($mandatory) {

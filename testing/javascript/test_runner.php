@@ -33,11 +33,11 @@ require_once dirname(dirname(__DIR__)) . '/include/autoload.inc.php';
 autoloader::init();
 if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunit/qunit/qunit.js')) {
     $suite = param::optional('suite', '', param::ALPHANUM);
-    
+
     // Find the test files.
     $loader = new TestLoader();
     $success = $loader->locate($suite);
-    
+
     // Start generating the page
     $twigloader = new \Twig\Loader\FilesystemLoader(__DIR__ . DIRECTORY_SEPARATOR . 'templates');
     $renderer = new \Twig\Environment($twigloader, array(
@@ -47,13 +47,13 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunit/qunit/qunit.js'
       'scripts' => $loader,
       'webroot' => $configObject->get('cfg_root_path'),
     );
-    
+
     if ($success) {
         $template = 'test_runner.html';
     } else {
         $template = 'suite_not_found.html';
     }
-    
+
     // Output the page.
     echo $renderer->render($template, $data);
 } else {

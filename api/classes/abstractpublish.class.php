@@ -31,7 +31,7 @@ namespace api;
  */
 abstract class abstractpublish
 {
-           
+
     /**
      * Abstract get function
      *
@@ -42,12 +42,12 @@ abstract class abstractpublish
      * @return array response to operation, published data or error message.
      */
     abstract public function get($filtername, $filterid, $externalsys = null);
-    
+
     /**
      * The database connection.
      */
     protected $db;
-    
+
     /**
      * Constructor
      * @param mysqli $mysqli the database connection

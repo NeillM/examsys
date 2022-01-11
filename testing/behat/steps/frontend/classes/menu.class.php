@@ -63,7 +63,7 @@ trait menu
      * @param TableNode $menuitems The menu's items
      * @throws Exception
      */
-  
+
     public function i_should_see_menu_section_with_following_item($menu_section, TableNode $menuitems)
     {
         if (empty($menuitems) || empty($menu_section)) {
@@ -78,7 +78,7 @@ trait menu
             }
         }
     }
-   
+
     /**
      * Check for submenu items.
      *
@@ -100,8 +100,8 @@ trait menu
             }
         }
     }
-  
-  
+
+
     /**
      * Checks if topright menu is hiden.
      *

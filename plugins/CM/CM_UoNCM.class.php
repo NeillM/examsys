@@ -75,7 +75,7 @@ class CM_UoNCM implements iCMAPI
                     break;
             }
         }
-        
+
         return $objectives;
     }
 

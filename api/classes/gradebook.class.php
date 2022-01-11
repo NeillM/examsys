@@ -28,10 +28,10 @@ namespace api;
  */
 class gradebook extends \api\abstractpublish
 {
-    
+
     // Language pack component.
     private $langcomponent = 'api/gradebook';
-       
+
     /**
      * @brief Get data.
      * @param string $filtername

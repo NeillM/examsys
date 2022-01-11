@@ -38,7 +38,7 @@ function getPath($path, $pageID, $tmp_highlight)
             $path .= ' > <a class="searchpath" href="display_folder.php?title=' . $parts[$i] . '">' . $parts[$i] . '</a>';
         }
     }
-  
+
     return $path;
 }
 
@@ -52,7 +52,7 @@ function displayTitle($title)
 function drawHeader($tmp_page_no)
 {
     global $page_size, $total_hits, $hit_stop, $page_total, $string;
-  
+
     $hit_start = (($page_size * $tmp_page_no) - $page_size) + 1;
     $hit_stop = $page_size * $tmp_page_no;
     if ($hit_stop > $total_hits) {
@@ -110,11 +110,11 @@ function drawHeader($tmp_page_no)
       <div id="contents">
 <?php
   echo '<div style="font-size:130%; font-weight:bold; color:#295AAD">' . sprintf($string['searchedfor'], $_GET['searchstring']) . "</div>\n<br />\n";
-  
+
 if (isset($_GET['searchstring'])) {
     $searchstring = $_GET['searchstring'];
     $search_results = $help_system->find($searchstring);
-    
+
     $total_hits = count($search_results);
     $page_size = 25;
 

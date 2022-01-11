@@ -51,7 +51,7 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
         // Add role of 'Student' if current user doesn't have it.
         UserUtils::add_role('Student', $userObject->get_user_ID(), $mysqli);
     }
-  
+
     // Insert new module enrollment
     UserUtils::add_student_to_module($userObject->get_user_ID(), $modID, 1, $_POST['session'], $mysqli);
 }

@@ -49,9 +49,9 @@ if (!is_null($submit)) {
     $ltikey = trim(param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
     $ltisec = trim(param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
     $lticontext = trim(param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
-  
+
     $insert_id = $lti->update_lti_key($LTIkeysid, $ltiname, $ltikey, $ltisec, $lticontext);
-  
+
     // Log changes
     $logger = new Logger($mysqli);
     if ($ltis['name'] != $ltiname) {
@@ -101,7 +101,7 @@ if (!is_null($submit)) {
     <?php
     require '../include/lti_keys_options.inc';
     require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
     ?>
 <div id="content">

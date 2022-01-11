@@ -133,10 +133,10 @@ if ($userObject->has_role(array('External Examiner'))) {
         $log_results->bind_result($reviewed);
         $log_results->fetch();
         $log_results->close();
-    
+
         $restartdate = '';
         $display_deadline = date($configObject->get('cfg_long_date_php'), $external_review_deadline);
-    
+
         echo "<tr><td align=\"center\"><a href=\"../paper/user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
         echo "  <td><a href=\"../paper/user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . ' ';
         if ($start_of_day_ts > $external_review_deadline) {
@@ -161,13 +161,13 @@ if ($userObject->has_role(array('External Examiner'))) {
         echo '<tr><td colspan="2"><p style="color:red">' . $string['nopapersfound'] . "</p></td></tr>\n";
     }
     $result->close();
-  
+
     echo "</table>\n";
-  
-  
+
+
     $released_papers = ReviewUtils::get_past_papers($userObject->get_user_ID(), $mysqli);
     echo '<h1>' . $string['postexamreviews'] . '</h1>';
-  
+
     echo '<p style="margin-left:15px; margin-right:15px; text-align:justify">' .  $string['msg3'] . "</p>\n";
 
     echo "<table style=\"margin-left:15px\">\n";

@@ -25,9 +25,9 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
-  
+
 $q_id = check_var('q_id', 'GET', true, false, true);
-  
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,9 +73,9 @@ $q_id = check_var('q_id', 'GET', true, false, true);
   $question_data->store_result();
   $question_data->fetch();
   $question_data->close();
-  
+
   $q_id_list = array();
-  
+
   $found = false;
   $target_id = $q_id;
 do {
@@ -88,11 +88,11 @@ do {
         $found = false;
     }
 } while ($found);
-  
+
   $q_id_list[] = $q_id;
-  
+
   unset($data);
-  
+
   $data = question_info::check_copied($q_id, $mysqli);
   $rows = count($data);
 for ($i = 0; $i < $rows; $i++) {
@@ -100,9 +100,9 @@ for ($i = 0; $i < $rows; $i++) {
         $q_id_list[] = $data[$i]['question_id'];
     }
 }
-  
+
   $display_data = array();
-  
+
   $row = -1;
 foreach ($q_id_list as $lookup_q_id) {
     $performance_array = question_info::question_performance($lookup_q_id, $mysqli);
@@ -127,7 +127,7 @@ foreach ($q_id_list as $lookup_q_id) {
                 $performance['calendar_year'] = '?';
             }
             $display_data[$row]['calendar_year'] = $performance['calendar_year'];
-        
+
             if (isset($performance['performance'][1]['taken'])) {
                 $display_data[$row]['taken'] = $performance['performance'][1]['taken'];
                 $display_data[$row]['cohort'] = $performance['performance'][1]['cohort'];
@@ -138,11 +138,11 @@ foreach ($q_id_list as $lookup_q_id) {
         }
     }
 }
-  
+
   $sortby = 'calendar_year';
   $ordering = 'asc';
   $display_data = \sort::array_csort($display_data, $sortby, $ordering);
- 
+
   $row = 0;
 foreach ($display_data as $display_line) {
     if ($display_line['q_id'] == $q_id) {

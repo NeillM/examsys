@@ -53,7 +53,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
     }
 
     require '../include/user_search_options.php';
-    
+
     echo draw_toprightmenu();
     ?>
     <div id="content" class="content">

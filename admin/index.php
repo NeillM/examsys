@@ -45,7 +45,7 @@ require '../include/sysadmin_auth.inc';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 
   // How many guest accounts are reserved
@@ -82,7 +82,7 @@ require '../include/sysadmin_auth.inc';
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
   <div class="page_title"><?php echo $string['administrativetools'] ?></div>
 </div>
-  
+
 <?php
 if ($temp_account_no > 0) {
     $string['clearguestaccounts'] .= ' <span class="corners"><span class="num">' . $temp_account_no . '</span></span>';
@@ -91,7 +91,7 @@ if ($temp_account_no > 0) {
 if ($sys_error_no > 0) {
     $string['systemerrors'] .= ' <span class="corners"><span class="num">' . $sys_error_no . '</span></span>';
 }
-  
+
 if ($save_fail_log_no > 0) {
     $string['savefailattempts'] .= ' <span class="corners"><span class="num">' . $save_fail_log_no . '</span></span>';
 }
@@ -164,7 +164,7 @@ if ($configObject->get('cfg_setting_icons_order')) {
 
 ?>
 </div>
-  
+
 </div>
 
 <?php

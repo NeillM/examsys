@@ -36,7 +36,7 @@ abstract class apiabstract
      * @param string $request api request
      */
     abstract public function __construct($request);
-    
+
     /**
      * Abstract validate request
      *
@@ -46,7 +46,7 @@ abstract class apiabstract
      * @return array - list of errors in the request body
      */
     abstract protected function validate($folder, $type);
-    
+
     /**
      * Abstract parse request
      *
@@ -59,12 +59,12 @@ abstract class apiabstract
      * @return string - successful operation response or error response
      */
     abstract protected function parse($tasktype, $fields, $actions, $task, $userid);
-    
+
     /**
      * The request data.
      */
     protected $data;
-    
+
     /**
      * Get the request data
      * @return array the request data

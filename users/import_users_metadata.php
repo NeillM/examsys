@@ -72,7 +72,7 @@ if (!$module_details) {
 
 <?php
   $file_problem = false;
-      
+
 if (isset($_POST['submit'])) {
     ?>
 <br />
@@ -103,7 +103,7 @@ if (isset($_POST['submit'])) {
                 // Reference by Username
                 $student_id_array[$student_id]  = $id;
                 // Reference by Student ID
-          
+
                 $student_data[$id]['title']       = $title;
                 $student_data[$id]['surname']     = $surname;
                 $student_data[$id]['first_names'] = $first_names;
@@ -161,7 +161,7 @@ if (isset($_POST['submit'])) {
             }
             $stmt->close();
         }
-      
+
         echo "</table>\n";
         echo "<br />\n<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../module/index.php?module=" . $_GET['module'] . "';\" /></div>\n<br />\n</td></tr></table>\n</body>\n</html>\n";
         unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');

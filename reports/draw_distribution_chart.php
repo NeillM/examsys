@@ -29,7 +29,7 @@
 
   $mydata = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat');
   $mydata = unserialize($mydata[0]);
-  
+
   $max_frequency = 0;
   $negative = 10;
   $scale_start = 0;
@@ -110,7 +110,7 @@ if ($max_frequency <= 10) {
   $black   = ImageColorAllocate($Image, 0, 0, 0);
   $dkgreen = ImageColorAllocate($Image, 83, 129, 53);
   $blue    = ImageColorAllocate($Image, 91, 155, 213);
-  
+
   $font      = dirname(__dir__) . DIRECTORY_SEPARATOR . 'fonts' . DIRECTORY_SEPARATOR . 'SourceSansPro-Regular.ttf';
   $bold_font = dirname(__dir__)  . DIRECTORY_SEPARATOR . 'fonts' . DIRECTORY_SEPARATOR . 'SourceSansPro-Semibold.ttf';
 
@@ -152,12 +152,12 @@ if (isset($_GET['q1']) and isset($_GET['q2']) and isset($_GET['q3'])) {
   imagedashedline($Image, ($min_mark * 7) + 38 + $negative, 20, ($min_mark * 7) + 38 + $negative, 260, $blue);
   imagedashedline($Image, ($max_mark * 7) + 43 + $negative, 20, ($max_mark * 7) + 43 + $negative, 260, $blue);
   ImageRectangle($Image, (round($_GET['q1'], 2) * 7) + 40 + $negative, 1, (round($_GET['q3'], 2) * 7) + 40 + $negative, 13, $blue);
-  
+
   ImageLine($Image, (round($_GET['q2'], 2) * 7) + 40 + $negative, 1, (round($_GET['q2'], 2) * 7) + 40 + $negative, 12, $blue);                // Median vertical
 
   ImageLine($Image, ($min_mark * 7) + 38 + $negative, 1, ($min_mark * 7) + 38 + $negative, 13, $blue);                // Min vertical
   ImageLine($Image, ($min_mark * 7) + 38 + $negative, 7, (round($_GET['q1'], 2) * 7) + 40 + $negative, 7, $blue);   // Min whisker
-  
+
   ImageLine($Image, ($max_mark * 7) + 43 + $negative, 1, ($max_mark * 7) + 43 + $negative, 13, $blue);                // Max vertical
   ImageLine($Image, ($max_mark * 7) + 43 + $negative, 7, (round($_GET['q3'], 2) * 7) + 40 + $negative, 7, $blue);   // Max whisker
 
@@ -184,7 +184,7 @@ if (isset($_GET['plotuser'])) {
     }
 }
   imagettftext($Image, 12, 90, 12, 182, $black, $bold_font, $string['occurrance']);
-  
+
 if (isset($_GET['plotuser']) and $_GET['plotuser'] != '') {
     if ($label < 100) {
         ImageString($Image, 2, ($_GET['plotuser'] * 7) + 32, 0, 'You', $blue);

@@ -80,12 +80,12 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
         );
         $this->assertEquals($expected, $actual);
         // Update and test for long strings.
-        QuestionsMetadata::set($this->question['id'], 'externalref', str_repeat('9876543210',100));
+        QuestionsMetadata::set($this->question['id'], 'externalref', str_repeat('9876543210', 100));
         $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
         $expected = array(
             0 => array(
                 'type' => 'externalref',
-                'value' => str_repeat('9876543210',100), // 1000 character string for long varchar
+                'value' => str_repeat('9876543210', 100), // 1000 character string for long varchar
                 'questionID' =>  $this->question['id'],
             ),
             1 => array(
@@ -97,7 +97,7 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
         $this->assertEquals($expected, $actual);
         // Update and check that exception occurs attempting to set to >2500 characters
         $this->expectExceptionMessage('Maximum metadata size exceeded');
-        QuestionsMetadata::set($this->question['id'], 'externalref', str_repeat('9876543210',251));
+        QuestionsMetadata::set($this->question['id'], 'externalref', str_repeat('9876543210', 251));
     }
 
     /**

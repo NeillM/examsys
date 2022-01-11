@@ -237,7 +237,8 @@ class QuestionUtilsTest extends unittestdatabase
      * Test letters-to-numbers rejecting string
      * @group questions
      */
-    public function testLettersToNumbersStringInput() {
+    public function testLettersToNumbersStringInput()
+    {
         $this->expectExceptionMessage('Input datatype incorrect');
         $test = QuestionUtils::numbersToLetters('F');
     }
@@ -246,7 +247,8 @@ class QuestionUtilsTest extends unittestdatabase
      * Test letters-to-numbers rejecting completely incorrect type (object)
      * @group questions
      */
-    public function testLettersToNumbersObjectInput() {
+    public function testLettersToNumbersObjectInput()
+    {
         $this->expectExceptionMessage('Input datatype incorrect');
         $test = QuestionUtils::numbersToLetters(new stdClass());
     }
@@ -255,7 +257,8 @@ class QuestionUtilsTest extends unittestdatabase
      * Test letters-to-numbers rejecting number >26
      * @group questions
      */
-    public function testLettersToNumbersRangeTooHighInt() {
+    public function testLettersToNumbersRangeTooHighInt()
+    {
         $this->expectExceptionMessage('Input exceeds range');
         $test = QuestionUtils::numbersToLetters(34);
     }
@@ -264,7 +267,8 @@ class QuestionUtilsTest extends unittestdatabase
      * Test letters-to-numbers rejecting number >26 in array
      * @group questions
      */
-    public function testLettersToNumbersRangeTooHighArray() {
+    public function testLettersToNumbersRangeTooHighArray()
+    {
         $this->expectExceptionMessage('Input exceeds range');
         $test = QuestionUtils::numbersToLetters([25,4,88,2]);
     }
@@ -273,7 +277,8 @@ class QuestionUtilsTest extends unittestdatabase
      * Test letters-to-numbers rejecting number <1
      * @group questions
      */
-    public function testLettersToNumbersRangeTooLowInt() {
+    public function testLettersToNumbersRangeTooLowInt()
+    {
         $this->expectExceptionMessage('Input exceeds range');
         $test = QuestionUtils::numbersToLetters(0);
     }
@@ -282,7 +287,8 @@ class QuestionUtilsTest extends unittestdatabase
      * Test letters-to-numbers rejecting number <1 in array
      * @group questions
      */
-    public function testLettersToNumbersRangeTooLowArray() {
+    public function testLettersToNumbersRangeTooLowArray()
+    {
         $this->expectExceptionMessage('Input exceeds range');
         $test = QuestionUtils::numbersToLetters([25,4,0,2]);
     }

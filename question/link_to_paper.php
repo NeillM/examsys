@@ -84,16 +84,16 @@ if (!isset($_POST['submit'])) {
         }
     }
     $result->close();
-  
+
     echo "</table>\n</div>";
-  
+
     echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
     echo '<div style="text-align:center; padding-top:4px;"><img src="../artwork/working.gif" id="working" width="16" height="16" alt="Working" style="display: none" /> <input type="submit" class="ok" name="submit" value="' . $string['addtopaper'] . '" /><input type="button" class="cancel" name="cancel" id="cancel" value="' . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
     $property_id = $_POST['property_id'];
     $properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
     $q_id = $_GET['q_id'];
-  
+
     if ($map_outcomes) {
         $yearutils = new yearutils($mysqli);
         $vle_api_cache = array();
@@ -115,7 +115,7 @@ if (!isset($_POST['submit'])) {
     $q_IDs = explode(',', $q_id);
     for ($i = 1; $i < count($q_IDs); $i++) {
         $map_guid = array();
-    
+
         Paper_utils::add_question($property_id, $q_IDs[$i], $screen, $display_pos, $mysqli);
 
         $display_pos++;
@@ -149,7 +149,7 @@ if (!isset($_POST['submit'])) {
             // Get the mappings for the module in the paper's academic year
             $calendar_year = $properties->get_calendar_year();
             $outcomes = $qbank->get_outcomes($calendar_year, $vle_api_data);
-      
+
             foreach (array_keys($map_guid) as $guid) {
                 // Get the IDs of the outcomes for the GUIDs we've been passed
                 if (isset($outcomes[$guid])) {

@@ -84,7 +84,7 @@ for (
             $settinginfo .= $setting . '=' . $value;
         }
     }
-  
+
     echo '<tr><td>' . $authinfo->plugins[$i]->number . '.</td><td><nobr>' . $authinfo->plugins[$i]->name . '</nobr></td><td>' . $authinfo->plugins[$i]->classname . '</td><td>' . $authinfo->plugins[$i]->version . "</td><td>$settinginfo</td></tr>\n";
 }
 echo "</table>\n";

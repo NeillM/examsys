@@ -225,7 +225,7 @@ if (
                     $labs
                 );
                 while ($paper_q->fetch()) {
-                    $start_date = date($configObject->get('cfg_long_date_time') , $start_date);
+                    $start_date = date($configObject->get('cfg_long_date_time'), $start_date);
                     $papers[$moduleID][] = array(
                         'id' => $property_id,
                         'screens' => $screens,

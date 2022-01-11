@@ -47,11 +47,11 @@ require '../include/errors.php';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(237);
 
   $keyword_list = array();
-  
+
 if (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
     if (!$module_code) {
