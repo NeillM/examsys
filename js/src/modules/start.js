@@ -572,6 +572,8 @@ define(['anomaly', 'rogomodal', 'editor', 'html5', 'qarea', 'qlabelling', 'jsxls
                 data: $('#qForm').serialize(),
                 dataType: 'html',
                 timeout: el.dataset.savetimeout,
+                originalTimeout: el.dataset.savetimeout,
+                backoff: el.dataset.backoff,
                 cache: false,
                 tryCount : 0,
                 retryLimit : el.dataset.saveretry,
@@ -590,7 +592,7 @@ define(['anomaly', 'rogomodal', 'editor', 'html5', 'qarea', 'qlabelling', 'jsxls
                         scope.stop();
                         return;
                     }
-                    if (textStatus === 'error') {
+                    if (textStatus === 'error' || textStatus === 'timeout') {
                         if (this.retry()) {
                             return;
                         } else {
@@ -644,7 +646,12 @@ define(['anomaly', 'rogomodal', 'editor', 'html5', 'qarea', 'qlabelling', 'jsxls
                         } else {
                             this.url = this.url.replace("&retry=" + (this.tryCount - 1), "&retry=" + this.tryCount);
                         }
-                        $.ajax(this);
+
+                        // Increase the time we are willing to wait.
+                        this.timeout = this.originalTimeout * (this.tryCount + 1);
+
+                        // Wait a little to see if the problem goes away.
+                        setTimeout($.ajax, this.backoff * this.tryCount * 1000, this);
                         return true;
                     }
                     return false;
