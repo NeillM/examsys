@@ -653,8 +653,8 @@ class InstallUtils
         $alter[] = 'ALTER TABLE random_link ADD CONSTRAINT `random_link_fk1` FOREIGN KEY (`id`) REFERENCES `questions` (`q_id`)';
         $alter[] = 'ALTER TABLE random_link ADD CONSTRAINT `random_link_fk2` FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)';
         $alter[] = 'ALTER TABLE users_metadata ADD CONSTRAINT `users_metadata_fk1` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)';
-        $alter[] = 'ALTER TABLE questions_module ADD CONSTRAINT `questions_modules_fk1` FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)';
-        $alter[] = 'ALTER TABLE questions_module ADD CONSTRAINT `questions_modules_fk2` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)';
+        $alter[] = 'ALTER TABLE questions_modules ADD CONSTRAINT `questions_modules_fk1` FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)';
+        $alter[] = 'ALTER TABLE questions_modules ADD CONSTRAINT `questions_modules_fk2` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)';
         $alter[] = 'ALTER TABLE questions ADD CONSTRAINT `questions_fk1` FOREIGN KEY (`status`) REFERENCES `question_statuses` (`id`)';
         $alter[] = 'ALTER TABLE paper_feedback ADD CONSTRAINT `paper_feedback_fk1` FOREIGN KEY (`paperID`) REFERENCES `properties` (`property_id`)';
         $alter[] = 'ALTER TABLE paper_metadata ADD CONSTRAINT `paper_metadata_fk1` FOREIGN KEY (`paperID`) REFERENCES `properties` (`property_id`) ON DELETE CASCADE';
