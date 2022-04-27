@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-if (!$updater_utils->has_updated('ROGO-3233')) {
+if ($updater_utils->check_version('7.4.6') and !$updater_utils->has_updated('ROGO-3233')) {
     $sql1 = 'ALTER TABLE questions_modules ADD CONSTRAINT `questions_modules_fk1` FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)';
     $sql2 = 'ALTER TABLE questions_modules ADD CONSTRAINT `questions_modules_fk2` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)';
     $updater_utils->execute_query($sql1, false);
