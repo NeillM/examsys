@@ -721,6 +721,30 @@ if ($properties->get_deleted() != '') {
           }
       }
   }
+
+
+  // Store how many questions have media on a screen.
+  $screenmedia = [];
+
+  foreach ($temp_array as $question) {
+      if (!isset($question['screen'])) {
+          // Not a question.
+          continue;
+      }
+
+      $screen = $question['screen'];
+      if (!isset($screenmedia[$screen])) {
+          // The first question on the screen.
+          $screenmedia[$screen] = 0;
+      }
+
+      $hasmedia = !empty($question['q_media']) || !empty($question['o_media']);
+
+      if ($hasmedia) {
+          $screenmedia[$screen]++;
+      }
+  }
+
   try {
       require '../include/paper_options.php';
   } catch (Exception $e) {
@@ -883,7 +907,17 @@ if ($properties->get_retired() == '') {
                     echo '<tr><td colspan="6" style="height:55px; color:white; background-color:#C00000; padding-left:15px; padding-top:4x">' . $string['noquestionscreen'] . '</td></tr>';
                 }
             }
-            echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth"><h4><span class="subsect opaque">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4></td></tr>';
+            echo '<tr id="link_break' . $temp_array[$x]['screen'] . '" class="breakline qline"><td colspan="6" class="ie-fullwidth">';
+            echo '<h4><span class="subsect opaque">' . $string['screen'] . '&nbsp' . $temp_array[$x]['screen'] . '&nbsp;</span></h4>';
+
+            if ($screenmedia[$temp_array[$x]['screen']] > 2) {
+                echo '<span class="subsect">';
+                echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />';
+                echo $string['toomanyimagequestions'];
+                echo '</span>';
+            }
+
+            echo '</td></tr>';
         }
         $old_screen = $temp_array[$x]['screen'];
 

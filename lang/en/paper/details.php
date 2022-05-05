@@ -72,3 +72,4 @@ $string['ajaxerror'] = 'There was a problem carrying out your action. Please ref
 $string['screen1'] = 'Screen 1';
 $string['randomblockempty'] = 'Random block is empty';
 $string['flashendoflife'] = 'Flash is no longer supported as such flash media can no longer be viewed.';
+$string['toomanyimagequestions'] = 'This screen contains many questions with images. This may harm performance during an exam. Consider breaking it up into multiple screens';
