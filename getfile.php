@@ -26,6 +26,9 @@
 require_once './include/staff_student_auth.inc';
 require_once './include/errors.php';
 
+// End the session now so that it no longer blocks other files being loaded.
+session_write_close();
+
 // Get the request variables.
 $type = check_var('type', 'REQUEST', false, true, true, param::TEXT);
 $filename = check_var('filename', 'REQUEST', false, true, true, param::TEXT);
