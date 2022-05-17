@@ -86,7 +86,6 @@ class paperutils_counttest extends unittestdatabase
             'leadin' => 'this is a test 1',
             'type' => 'enhancedcalc'));
         $datagenerator->add_to_module(array('question' => $question['id'], 'module' => 1));
-
         $datagenerator->add_question_to_paper(array('paper' => $pid1['id'], 'question' => $question['id'], 'screen' => 1, 'displaypos' => 1));
         $question = $datagenerator->create_question(array('user' => 'staff1',
             'leadin' => 'this is a test 2',
