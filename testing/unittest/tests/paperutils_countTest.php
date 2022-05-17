@@ -85,10 +85,7 @@ class paperutils_counttest extends unittestdatabase
         $question = $datagenerator->create_question(array('user' => 'staff1',
             'leadin' => 'this is a test 1',
             'type' => 'enhancedcalc'));
-        $moduleObj = new module();
-        $moduleid= $moduleObj->get_moduleid_from_id(1, $this->db);
-        $module[1] = $moduleid;
-        $datagenerator->add_to_module(array('question' => $question['id'], 'module' => $module));
+        $datagenerator->add_to_module(array('question' => $question['id'], 'module' => 1));
 
         $datagenerator->add_question_to_paper(array('paper' => $pid1['id'], 'question' => $question['id'], 'screen' => 1, 'displaypos' => 1));
         $question = $datagenerator->create_question(array('user' => 'staff1',
@@ -98,11 +95,7 @@ class paperutils_counttest extends unittestdatabase
         $datagenerator->create_question(array('user' => 'staff1',
             'leadin' => 'this is a test 3',
             'type' => 'enhancedcalc'));
-        $moduleObj = new module();
-        $moduleid= $moduleObj->get_moduleid_from_id(2, $this->db);
-        $module[2] = $moduleid;
-        $datagenerator->add_to_module(array('question' => $question['id'], 'module' => $module));
-        
+        $datagenerator->add_to_module(array('question' => $question['id'], 'module' => 2));
         $datagenerator->create_question(array('user' => 'staff1',
             'leadin' => 'this is a test 4',
             'type' => 'enhancedcalc',
