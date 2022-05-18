@@ -381,8 +381,7 @@ class questions extends generator
         if (is_array($parameters['module'])) {
             $modules = $parameters['module'];
         } else {
-            $moduleObj = new \module();
-            $moduleid= $moduleObj->get_moduleid_from_id(2, $this->db);
+            $moduleid = \module_utils::get_moduleid_from_id($parameters['module'], $this->db);
             $modules = array($parameters['module'] => $moduleid);
         }
         QuestionUtils::add_modules($modules, $parameters['question'], $this->db);
