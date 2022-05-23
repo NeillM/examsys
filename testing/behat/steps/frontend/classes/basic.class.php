@@ -395,9 +395,15 @@ trait basic
      * Waits for the Rogo page in the focused window to load.
      *
      * @And I wait for page to load
+     * @return void
      */
     public function i_wait_for_page_to_load()
     {
+        if (!$this->running_javascript()) {
+            // We can only wait when Javascript is enabled.
+            return;
+        }
+
         $session = $this->getSession();
         $this->spin(function (rogo_test $context) use ($session) {
             try {
