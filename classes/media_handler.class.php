@@ -92,6 +92,61 @@ class media_handler
     }
 
     /**
+     * Gets information about te file dimensions, and tests if is good for Rogo.
+     *
+     * @param string $fullpath The full path to a file
+     * @param int $filetype The type of the file
+     * @return array list of width, height, if there is a problem with the file
+     */
+    public static function getFileInfo(string $fullpath, int $filetype): array {
+        $file_width = 0;
+        $file_height = 0;
+        $bad_file = false;
+
+        $getID3 = new getID3();
+        $file_info = $getID3->analyze($fullpath);
+
+        // File type checks.
+        switch ($filetype) {
+            case questiondata::DOC:
+                $file_width = '100';
+                $file_height = '350';
+                break;
+            case questiondata::IMAGE:
+                $identifier_size = GetImageSize($fullpath);
+                $file_width = $identifier_size[0];
+                $file_height = $identifier_size[1];
+                if ($file_width == 0 or $file_height == 0) {
+                    $bad_file = true;
+                }
+                break;
+            case questiondata::MOVIE:
+            case questiondata::HTML5VIDEO:
+                $file_width = $file_info['video']['resolution_x'];
+                $file_height = $file_info['video']['resolution_y'];
+                if ($file_width == 0 or $file_height == 0) {
+                    $bad_file = true;
+                }
+                break;
+            case questiondata::AUDIO:
+            case questiondata::HTML5AUDIO:
+                if (!isset($file_info['playtime_seconds'])) {
+                    $bad_file = true;
+                } elseif ($file_info['playtime_seconds'] == 0) {
+                    $bad_file = true;
+                }
+                break;
+            case questiondata::ARCHIVE:
+                self::process_archive($fullpath);
+                break;
+            default:
+                break;
+        }
+
+        return [$file_width, $file_height, $bad_file];
+    }
+
+    /**
      * Uploads a file onto the server from an HTML form and return its width and height.
      * @param string $fileID
      * @param ?string $alt - alternate text for media
@@ -104,9 +159,6 @@ class media_handler
     {
         $userObj = UserObject::get_instance();
         $owner = $userObj->get_user_ID();
-
-        $file_width = 0;
-        $file_height = 0;
 
         // Check we have a temp file to work with.
         if (!key_exists($fileID, $_FILES)) {
@@ -157,45 +209,9 @@ class media_handler
         }
 
         chmod($fullpath, 0664);
-        $getID3 = new getID3();
-        $file_info = $getID3->analyze($fullpath);
 
-        // File type checks.
-        switch ($filetype) {
-            case questiondata::DOC:
-                $file_width = '100';
-                $file_height = '350';
-                break;
-            case questiondata::IMAGE:
-                $identifier_size = GetImageSize($fullpath);
-                $file_width = $identifier_size[0];
-                $file_height = $identifier_size[1];
-                if ($file_width == 0 or $file_height == 0) {
-                    $bad_file = true;
-                }
-                break;
-            case questiondata::MOVIE:
-            case questiondata::HTML5VIDEO:
-                $file_width = $file_info['video']['resolution_x'];
-                $file_height = $file_info['video']['resolution_y'];
-                if ($file_width == 0 or $file_height == 0) {
-                    $bad_file = true;
-                }
-                break;
-            case questiondata::AUDIO:
-            case questiondata::HTML5AUDIO:
-                if (!isset($file_info['playtime_seconds'])) {
-                    $bad_file = true;
-                } elseif ($file_info['playtime_seconds'] == 0) {
-                    $bad_file = true;
-                }
-                break;
-            case questiondata::ARCHIVE:
-                self::process_archive($fullpath);
-                break;
-            default:
-                break;
-        }
+        list($file_width, $file_height, $problem) = self::getFileInfo($fullpath, $filetype);
+        $bad_file = $bad_file || $problem;
 
         // MIME specific checks.
         switch ($_FILES[$fileID]['type']) {
