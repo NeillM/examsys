@@ -260,6 +260,15 @@ class rogo_test extends MinkContext
     }
 
     /**
+     * Gets the base asset directory for behat test fixtures.
+     *
+     * @return string
+     */
+    public function getAssetPath(): string {
+        return environment::get_basedir() . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
+    }
+
+    /**
      * Sets files_path for the test
      * @param string $path location of test upload assets
      */
@@ -267,7 +276,7 @@ class rogo_test extends MinkContext
     {
         $this->setMinkParameter(
             'files_path',
-            environment::get_basedir() . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . $path
+            $this->getAssetPath() . $path
         );
     }
 

@@ -20,8 +20,12 @@ namespace testing\behat\steps\database;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Tester\Exception\PendingException;
+use getID3;
+use media_handler;
 use module_utils;
 use PaperUtils;
+use questiondata;
+use rogo_directory;
 use StudentNotes;
 use testing\behat\helpers\database\state;
 use testing\datagenerator\Anomaly;
@@ -91,6 +95,12 @@ trait datageneration
      */
     private function getBlankOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'blanks' => '',
             'marks_correct' => 1,
@@ -99,10 +109,16 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        return '{"option_text":"' . $row['blanks']
-            . '","marks_correct":"' . $row['marks_correct']
-            . '","marks_incorrect":"' . $row['marks_incorrect']
-            . '","marks_partial":"' . $row['marks_partial'] . '"}';
+        $defaultoption = [
+            'option_text' => $row['blanks'],
+            'marks_correct' => $row['marks_correct'],
+            'marks_incorrect' => $row['marks_incorrect'],
+            'marks_partial' => $row['marks_partial'],
+        ];
+
+        $options = (object)array_merge($defaultoption, $values);
+
+        return json_encode($options);
     }
 
     /**
@@ -112,6 +128,12 @@ trait datageneration
      */
     private function getTextBoxOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'correct' => 'placeholder',
             'marks_correct' => 1,
@@ -120,10 +142,16 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        return '{"correct":"' . $row['correct']
-            . '","marks_correct":"' . $row['marks_correct']
-            . '","marks_incorrect":"' . $row['marks_incorrect']
-            . '","marks_partial":"' . $row['marks_partial'] . '"}';
+        $defaultoption = [
+            'correct' => $row['correct'],
+            'marks_correct' => $row['marks_correct'],
+            'marks_incorrect' => $row['marks_incorrect'],
+            'marks_partial' => $row['marks_partial'],
+        ];
+
+        $options = (object)array_merge($defaultoption, $values);
+
+        return json_encode($options);
     }
 
     /**
@@ -133,6 +161,12 @@ trait datageneration
      */
     private function getTrueFalseOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         if ($row['correct'] == 'false') {
             $row['correct'] = 'f';
         } else {
@@ -147,10 +181,16 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        return '{"correct":"' . $row['correct']
-            . '","marks_correct":"' . $row['marks_correct']
-            . '","marks_incorrect":"' . $row['marks_incorrect']
-            . '","marks_partial":"' . $row['marks_partial'] . '"}';
+        $defaultoption = [
+            'correct' => $row['correct'],
+            'marks_correct' => $row['marks_correct'],
+            'marks_incorrect' => $row['marks_incorrect'],
+            'marks_partial' => $row['marks_partial'],
+        ];
+
+        $options = (object)array_merge($defaultoption, $values);
+
+        return json_encode($options);
     }
 
     /**
@@ -160,6 +200,12 @@ trait datageneration
      */
     private function getMCQOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'num_options' => 2,
             'correct' => 1,
@@ -169,16 +215,19 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        $row['options'] = '[';
         for ($i = 0; $i < $row['num_options']; $i++) {
             $needle = $i + 1;
-            $row['options'] .= '{"option_text":"option ' . $needle
-                . '","correct":"' . $row['correct']
-                . '","marks_correct":"' . $row['marks_correct']
-                . '","marks_incorrect":"' . $row['marks_incorrect']
-                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+            $defaultoption = [
+                'option_text' => "option {$needle}",
+                'correct' => $row['correct'],
+                'marks_correct' => $row['marks_correct'],
+                'marks_incorrect' => $row['marks_incorrect'],
+                'marks_partial' => $row['marks_partial'],
+            ];
+            $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
-        return rtrim($row['options'], ',') . ']';
+
+        return json_encode($values);
     }
 
     /**
@@ -188,6 +237,12 @@ trait datageneration
      */
     private function getMRQOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'num_options' => 2,
             'type' => 'dichotomous',
@@ -198,26 +253,29 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        $row['options'] = '[';
+        $dichotomous = ($row['type'] === 'dichotomous');
+
         for ($i = 0; $i < $row['num_options']; $i++) {
-            $correct = 'n';
-            if ($row['type'] === 'dichotomous') {
-                $correct = 'f';
-            }
             $needle = $i + 1;
+
             if (array_search($needle, explode(',', $row['correct_options'])) !== false) {
-                $correct = 'y';
-                if ($row['type'] === 'dichotomous') {
-                    $correct = 't';
-                }
+                $correct = ($dichotomous) ? 't' : 'y';
+            } else {
+                $correct = ($dichotomous) ? 'f' : 'n';
             }
-            $row['options'] .= '{"option_text":"option ' . $needle
-                . '","correct":"' . $correct
-                . '","marks_correct":"' . $row['marks_correct']
-                . '","marks_incorrect":"' . $row['marks_incorrect']
-                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+
+            $defaultoption = [
+                'option_text' => "option {$needle}",
+                'correct' => $correct,
+                'marks_correct' => $row['marks_correct'],
+                'marks_incorrect' => $row['marks_incorrect'],
+                'marks_partial' => $row['marks_partial'],
+            ];
+
+            $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
-        return rtrim($row['options'], ',') . ']';
+
+        return json_encode($values);
     }
 
     /**
@@ -227,6 +285,12 @@ trait datageneration
      */
     private function getRankOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'num_options' => 3,
             'correct_order' => '1,2,3',
@@ -236,17 +300,21 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        $row['options'] = '[';
         $correct = explode(',', $row['correct_order']);
+
         for ($i = 0; $i < $row['num_options']; $i++) {
             $needle = $i + 1;
-            $row['options'] .= '{"option_text":"option ' . $needle
-                . '","correct":"' . $correct[$i]
-                . '","marks_correct":"' . $row['marks_correct']
-                . '","marks_incorrect":"' . $row['marks_incorrect']
-                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+            $defaultoption = [
+                'option_text' => "option {$needle}",
+                'correct' => $correct[$i],
+                'marks_correct' => $row['marks_correct'],
+                'marks_incorrect' => $row['marks_incorrect'],
+                'marks_partial' => $row['marks_partial'],
+            ];
+            $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
-        return rtrim($row['options'], ',') . ']';
+
+        return json_encode($values);
     }
 
     /**
@@ -256,6 +324,12 @@ trait datageneration
      */
     private function getSCTOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'experts' => '1,2,10,3,1',
             'marks_correct' => 1,
@@ -264,23 +338,28 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        $row['options'] = '[';
-        for ($i = 0; $i < 5; $i++) {
-            $correct = explode(',', $row['experts']);
-            $text = array(
-                'very unlikely',
-                'unlikely',
-                'neither likely nor unlikely',
-                'more likely',
-                'very likely'
-            );
-            $row['options'] .= '{"option_text":"' . $text[$i]
-                . '","correct":"' . $correct[$i]
-                . '","marks_correct":"' . $row['marks_correct']
-                . '","marks_incorrect":"' . $row['marks_incorrect']
-                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+        $correct = explode(',', $row['experts']);
+
+        $text = array(
+            'very unlikely',
+            'unlikely',
+            'neither likely nor unlikely',
+            'more likely',
+            'very likely'
+        );
+
+        for ($i = 0; $i < count($text); $i++) {
+            $defaultoption = [
+                'option_text' => $text[$i],
+                'correct' => $correct[$i],
+                'marks_correct' => $row['marks_correct'],
+                'marks_incorrect' => $row['marks_incorrect'],
+                'marks_partial' => $row['marks_partial'],
+            ];
+            $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
-        return rtrim($row['options'], ',') . ']';
+
+        return json_encode($values);
     }
 
     /**
@@ -290,6 +369,12 @@ trait datageneration
      */
     private function getExtMatchOptions(array $row): string
     {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'num_options' => 3,
             'correct_options' => '3,1,2',
@@ -299,7 +384,6 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        $row['options'] = '[';
         $correct = str_replace(',', '|', $row['correct_options']) . '|';
         // Pad out pipes to max.
         $count = substr_count($correct, '|');
@@ -307,15 +391,20 @@ trait datageneration
             $append = str_repeat('|', 9 - $count);
             $correct .= $append;
         }
+
         for ($i = 0; $i < $row['num_options']; $i++) {
             $needle = $i + 1;
-            $row['options'] .= '{"option_text":"option ' . $needle
-                . '","correct":"' . $correct
-                . '","marks_correct":"' . $row['marks_correct']
-                . '","marks_incorrect":"' . $row['marks_incorrect']
-                . '","marks_partial":"' . $row['marks_partial'] . '"},';
+            $defaultoption = [
+                'option_text' => "option {$needle}",
+                'correct' => $correct,
+                'marks_correct' => $row['marks_correct'],
+                'marks_incorrect' => $row['marks_incorrect'],
+                'marks_partial' => $row['marks_partial'],
+            ];
+            $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
-        return rtrim($row['options'], ',') . ']';
+
+        return json_encode($values);
     }
 
     /**
@@ -325,40 +414,66 @@ trait datageneration
      */
     private function getCalcSettings(array $row): string
     {
+        if (!empty($row['settings'])) {
+            $values = json_decode($row['settings'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
-            'tolerance_full' => 0,
-            'tolerance_partial' => 0,
+            'tolerance_full' => '0',
+            'tolerance_partial' => '0',
             'variables' => '{}',
-            'dp' => 0,
-            'strictdisplay' => 'true',
-            'strictzeros' => 'false',
+            'dp' => '0',
+            'strictdisplay' => true,
+            'strictzeros' => false,
             'fulltoltyp' => '#',
             'parttoltyp' => '#',
             'marks_unit' => 0,
-            'show_units' => 'true',
+            'show_units' => true,
             'formula' => '',
-            'formula_units' => '""',
+            'formula_units' => '',
             'marks_correct' => 1,
             'marks_incorrect' => 0,
             'marks_partial' => 0,
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        return '{"tolerance_full":"' . $row['tolerance_full']
-            . '","tolerance_partial":"' . $row['tolerance_partial']
-            . '","vars":' . $row['variables']
-            . ',"marks_correct":' . $row['marks_correct']
-            . ',"marks_incorrect":' . $row['marks_incorrect']
-            . ',"marks_partial":' . $row['marks_partial']
-            . ',"dp":"' . $row['dp']
-            . '","strictdisplay":' . $row['strictdisplay']
-            . ',"strictzeros":' . $row['strictzeros']
-            . ',"fulltoltyp":"' . $row['fulltoltyp']
-            . '","parttoltyp":"' . $row['parttoltyp']
-            . '","marks_unit":' . $row['marks_unit']
-            . ',"show_units":' . $row['show_units']
-            . ',"answers":[{"formula":"' . $row['formula']
-            . '","units":' . $row['formula_units'] . '}]}';
+        $defaultanswers = [
+            'formula' => $row['formula'],
+            'units' => $row['formula_units'],
+        ];
+
+        $defaultoption = [
+            'tolerance_full' => $row['tolerance_full'],
+            'tolerance_partial' => $row['tolerance_partial'],
+            // We need to decode any value sent to that it is not double encoded.
+            'vars' => json_decode($row['variables']) ?? $row['variables'],
+            'marks_correct' => floatval($row['marks_correct']),
+            'marks_incorrect' => floatval($row['marks_incorrect']),
+            'marks_partial' => floatval($row['marks_partial']),
+            'dp' => $row['dp'],
+            'strictdisplay' => filter_var($row['strictdisplay'], FILTER_VALIDATE_BOOLEAN),
+            'strictzeros' => filter_var($row['strictzeros'], FILTER_VALIDATE_BOOLEAN),
+            'fulltoltyp' => $row['fulltoltyp'],
+            'parttoltyp' => $row['parttoltyp'],
+            'marks_unit' => floatval($row['marks_unit']),
+            'show_units' => filter_var($row['show_units'], FILTER_VALIDATE_BOOLEAN),
+            'answers' => [(object)$defaultanswers],
+        ];
+
+        if (!empty($values['answers']) && is_array($values['answers'])) {
+            foreach ($values['answers'] as $key => $answer) {
+                if (is_array($answer)) {
+                    // Covert the answers back into objects.
+                    $values['answers'][$key] = (object)$values['answers'][$key];
+                }
+            }
+        }
+
+        $options = (object)array_merge($defaultoption, $values);
+
+        return json_encode($options);
     }
 
     /**
@@ -368,18 +483,79 @@ trait datageneration
      */
     private function getTextBoxSettings(array $row): string
     {
+        if (!empty($row['settings'])) {
+            $values = json_decode($row['settings'], true);
+        } else {
+            $values = [];
+        }
+
         $defaults = [
             'columns' => 80,
             'rows' => 4,
             'editor' => 'Plain Text',
-            'terms' => '[]',
+            'terms' => [],
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        return '{"columns":"' . $row['columns']
-            . '","rows":"' . $row['rows']
-            . '","editor":"' . $row['editor']
-            . '","terms":"' . $row['terms'] . '"}';
+        $defaultoption = [
+            'columns' => $row['columns'],
+            'rows' => $row['rows'],
+            'editor' => $row['editor'],
+            'terms' => $row['terms'],
+        ];
+
+        $options = (object)array_merge($defaultoption, $values);
+        // Terms are json encoded.
+        $options->terms = json_encode($options->terms);
+
+        return json_encode($options);
+    }
+
+    /**
+     * Puts assets into the Media directory.
+     *
+     * @param string $path The path in the assets directory of the resource.
+     * @param string $prefix The prefix for the asset information in it's array.
+     * @return array Information about the media.
+     */
+    protected function set_media(string $path, string $prefix = 'q_'): array {
+        $mediadirectory = rogo_directory::get_directory('media');
+
+        // Get information about the file to be copied.
+        $explodedpath = explode('/', $path);
+        $filename = array_pop($explodedpath);
+        $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $filelocation = $this->getAssetPath() . $path;
+
+        // Calculate where we should save it.
+        $uniquename = media_handler::unique_filename($filename);
+        $fullpath = $mediadirectory->fullpath($uniquename);
+
+        // Create the file in the media directory.
+        copy($filelocation, $fullpath);
+        chmod($fullpath, 0664);
+
+        $filetype = media_handler::SUPPORTED[$ext];
+        list($width, $height, $problem) = media_handler::getFileInfo($fullpath, $filetype);
+
+        return [
+            $prefix . 'media' => $uniquename,
+            $prefix . 'media_width' => $width,
+            $prefix . 'media_height' => $height,
+        ];
+    }
+
+    /**
+     * Adds media to an option if needed.
+     *
+     * @param array $option
+     * @return array
+     */
+    protected function processOptionMedia(array $option): array {
+        if (!empty($option['media'])) {
+            $option = array_merge($option, $this->set_media($option['media'], 'o_'));
+        }
+        return $option;
     }
 
     /**
@@ -398,6 +574,10 @@ trait datageneration
         }
         if (empty($row['marks_partial'])) {
             $row['marks_partial'] = 0;
+        }
+        // Upload any media.
+        if (!empty($row['media'])) {
+            $row = array_merge($row, $this->set_media($row['media']));
         }
         // Force display method for sct.
         if ($row['type'] === 'sct') {
@@ -464,6 +644,21 @@ trait datageneration
             default:
                 break;
         }
+
+        if (!empty($row['options'])) {
+            // Options should be json encoded.
+            $options = json_decode($row['options'], false);
+            if (is_array($options)) {
+                foreach ($options as $key => $option) {
+                    $options[$key] = (object)$this->processOptionMedia((array)$option);
+                }
+            } else {
+                $options = (object)$this->processOptionMedia((array)$options);
+            }
+            // Save the options again.
+            $row['options'] = json_encode($options);
+        }
+
         // Generate paper json if assigned to a paper.
         if (isset($row['paper'])) {
             $row['paper'] = '{"paper":"' . $row['paper'] . '","screen":"' . $row['screen'] . '","displaypos":"' . $row['position'] . '"}';

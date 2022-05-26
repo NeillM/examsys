@@ -34,6 +34,8 @@ function baseUrl() {
 requirejs.config({
     // By default load any module IDs from js.
     baseUrl: baseUrl(),
+    // The amount of time to wait for a module to load before giving up, the default is 7 seconds.
+    waitSeconds : 15,
     // paths to modules.
     paths: {
         jquery: "node_modules/jquery/dist/jquery.min",
