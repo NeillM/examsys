@@ -518,7 +518,8 @@ trait datageneration
      * @param string $prefix The prefix for the asset information in it's array.
      * @return array Information about the media.
      */
-    protected function set_media(string $path, string $prefix = 'q_'): array {
+    protected function set_media(string $path, string $prefix = 'q_'): array
+    {
         $mediadirectory = rogo_directory::get_directory('media');
 
         // Get information about the file to be copied.
@@ -551,7 +552,8 @@ trait datageneration
      * @param array $option
      * @return array
      */
-    protected function processOptionMedia(array $option): array {
+    protected function processOptionMedia(array $option): array
+    {
         if (!empty($option['media'])) {
             $option = array_merge($option, $this->set_media($option['media'], 'o_'));
         }

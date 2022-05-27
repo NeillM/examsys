@@ -264,7 +264,8 @@ class rogo_test extends MinkContext
      *
      * @return string
      */
-    public function getAssetPath(): string {
+    public function getAssetPath(): string
+    {
         return environment::get_basedir() . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR;
     }
 
