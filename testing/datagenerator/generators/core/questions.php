@@ -148,6 +148,14 @@ class questions extends generator
                 if ($id !== -1) {
                     \media_handler::linkQuestionToMedia($qdata['q_media_id'], $qdata['id'], $qdata['q_media_num']);
                 }
+            } else {
+                // No media so set the values to be the ones that would be returned by the database.
+                $qdata['q_media_id'] = -1;
+                $qdata['q_media_width'] = '';
+                $qdata['q_media_height'] = '';
+                $qdata['q_media_alt'] = '';
+                $qdata['q_media_owner'] = '';
+                $qdata['q_media_num'] = '';
             }
             // Keywords may be provided as a json array.
             if (!empty($qdata['keywords'])) {
@@ -358,6 +366,13 @@ class questions extends generator
                     $settings['id_num'],
                 );
             }
+        } else {
+            // There is no media set so reflect the values that will be returned for media.
+            $settings['o_media_width'] = null;
+            $settings['o_media_height'] = null;
+            $settings['o_media_alt'] = null;
+            $settings['o_media_owner'] = null;
+            $settings['o_media_id'] = -1;
         }
         $settings['question'] = $parameters['question'];
         return $settings;
