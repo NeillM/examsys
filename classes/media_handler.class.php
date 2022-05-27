@@ -98,7 +98,8 @@ class media_handler
      * @param int $filetype The type of the file
      * @return array list of width, height, if there is a problem with the file
      */
-    public static function getFileInfo(string $fullpath, int $filetype): array {
+    public static function getFileInfo(string $fullpath, int $filetype): array
+    {
         $file_width = 0;
         $file_height = 0;
         $bad_file = false;
