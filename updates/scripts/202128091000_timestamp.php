@@ -75,15 +75,12 @@ if ($updater_utils->check_version('7.5.0')) {
         $updater_utils->execute_query($loadsql, false, true);
 
         // Alter schema.
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `start_date` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `end_date` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `deleted` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `created` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `retired` bigint(10) default NULL';
+        $altersql = 'ALTER TABLE properties
+            MODIFY COLUMN `start_date` bigint(10) default NULL,
+            MODIFY COLUMN `end_date` bigint(10) default NULL,
+            MODIFY COLUMN `deleted` bigint(10) default NULL,
+            MODIFY COLUMN `created` bigint(10) default NULL,
+            MODIFY COLUMN `retired` bigint(10) default NULL';
         $updater_utils->execute_query($altersql, false);
 
         // Update data.
