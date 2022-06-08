@@ -45,9 +45,9 @@ if ($updater_utils->check_version('7.5.0')) {
         $updater_utils->execute_query($fixsql, false, true);
         $fixsql = "UPDATE properties
             SET 
-            internal_review_deadline = '1000-01-01' 
+            retired = '1000-01-01 00:00:00' 
             WHERE
-            date_format(internal_review_deadline, '%Y-%m-%d') = '0000-00-00'";
+            date_format(retired, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
         $updater_utils->execute_query($fixsql, false, true);
 
         // Create temporary table
@@ -75,15 +75,12 @@ if ($updater_utils->check_version('7.5.0')) {
         $updater_utils->execute_query($loadsql, false, true);
 
         // Alter schema.
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `start_date` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `end_date` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `deleted` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `created` bigint(10) default NULL';
-        $updater_utils->execute_query($altersql, false);
-        $altersql = 'ALTER TABLE properties MODIFY COLUMN `retired` bigint(10) default NULL';
+        $altersql = 'ALTER TABLE properties
+            MODIFY COLUMN `start_date` bigint(10) default NULL,
+            MODIFY COLUMN `end_date` bigint(10) default NULL,
+            MODIFY COLUMN `deleted` bigint(10) default NULL,
+            MODIFY COLUMN `created` bigint(10) default NULL,
+            MODIFY COLUMN `retired` bigint(10) default NULL';
         $updater_utils->execute_query($altersql, false);
 
         // Update data.
