@@ -26,28 +26,42 @@ if ($updater_utils->check_version('7.5.0')) {
     if (!$updater_utils->has_updated('rogo_2839')) {
         // Fix some bad data/time out of range.
         $fixsql = "UPDATE properties
-            SET 
-            end_date = '1000-01-01 00:00:00' 
+            SET
+            end_date = '1000-01-01 00:00:00'
             WHERE
-            date_format(end_date, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(end_date, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
         $updater_utils->execute_query($fixsql, false, true);
         $fixsql = "UPDATE properties
-            SET 
-            start_date = '1000-01-01 00:00:00' 
+            SET
+            start_date = '1000-01-01 00:00:00'
             WHERE
-            date_format(start_date, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(start_date, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
         $updater_utils->execute_query($fixsql, false, true);
         $fixsql = "UPDATE properties
-            SET 
-            created = '1000-01-01 00:00:00' 
+            SET
+            created = '1000-01-01 00:00:00'
             WHERE
-            date_format(created, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(created, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
         $updater_utils->execute_query($fixsql, false, true);
         $fixsql = "UPDATE properties
-            SET 
-            retired = '1000-01-01 00:00:00' 
+            SET
+            retired = '1000-01-01 00:00:00'
             WHERE
-            date_format(retired, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(retired, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
+        $updater_utils->execute_query($fixsql, false, true);
+        // We need to fix any bad dates here or the alter will break even though we are not
+        // changing them in stract mode on date values.
+        $fixsql = "UPDATE properties
+            SET
+            internal_review_deadline = '1000-01-01'
+            WHERE
+            date_format(internal_review_deadline, '%Y-%m-%d') = '0000-00-00'";
+        $updater_utils->execute_query($fixsql, false, true);
+        $fixsql = "UPDATE properties
+            SET
+            external_review_deadline = '1000-01-01'
+            WHERE
+            date_format(external_review_deadline, '%Y-%m-%d') = '0000-00-00'";
         $updater_utils->execute_query($fixsql, false, true);
 
         // Create temporary table
