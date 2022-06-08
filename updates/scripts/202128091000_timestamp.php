@@ -75,18 +75,40 @@ if ($updater_utils->check_version('7.5.0')) {
         )';
         $updater_utils->execute_query($tempsql, false, true);
 
+        // Prepare the query that will insert data,
+        // this needs to be done before we start fetching the data to avoid an out of sync error.
+        $insertsql = 'INSERT INTO properties_dates VALUES (?, ?, ?, ?, ?, ?)';
+        $insertquery = $updater_utils->prepare_query($insertsql);
+        $insertquery->bind_param('iiiiii', $insertid, $insertstart, $insertend, $insertdeleted, $insertcreated, $insertretired);
+
         // Migrate data in temp table.
-        $loadsql = 'INSERT INTO properties_dates
-            SELECT
-                property_id,
-                UNIX_TIMESTAMP(start_date),
-                UNIX_TIMESTAMP(end_date),
-                UNIX_TIMESTAMP(deleted),
-                UNIX_TIMESTAMP(created),
-                UNIX_TIMESTAMP(retired)
-            FROM
-                properties';
-        $updater_utils->execute_query($loadsql, false, true);
+        $sql = "SELECT
+                    property_id,
+                    date_format(start_date, '%Y-%m-%d %H:%i:%s'),
+                    date_format(end_date, '%Y-%m-%d %H:%i:%s'),
+                    date_format(deleted, '%Y-%m-%d %H:%i:%s'),
+                    date_format(created, '%Y-%m-%d %H:%i:%s'),
+                    date_format(retired, '%Y-%m-%d %H:%i:%s'),
+                    timezone
+                FROM properties";
+        $query = $updater_utils->prepare_query($sql);
+        $query->bind_result($property_id, $start_date, $end_date, $deleted, $created, $retired, $timezone);
+        $query->execute();
+
+        while ($query->fetch()) {
+            $insertid = $property_id;
+            $format = 'Y-m-d H:i:s';
+            $tz = new DateTimeZone($timezone);
+            $insertstart = is_null($start_date) ? null : DateTime::createFromFormat($format, $start_date, $tz)->getTimestamp();
+            $insertend = is_null($end_date) ? null : DateTime::createFromFormat($format, $end_date, $tz)->getTimestamp();
+            $insertdeleted = is_null($deleted) ? null : DateTime::createFromFormat($format, $deleted, $tz)->getTimestamp();
+            $insertcreated = is_null($created) ? null : DateTime::createFromFormat($format, $created, $tz)->getTimestamp();
+            $insertretired = is_null($retired) ? null : DateTime::createFromFormat($format, $retired, $tz)->getTimestamp();
+            $insertquery->execute();
+        }
+
+        $insertquery->close();
+        $query->close();
 
         // Alter schema.
         $altersql = 'ALTER TABLE properties

@@ -26,6 +26,7 @@
  */
 class UpdaterUtils
 {
+    /** @var mysqli The database connection object. */
     private $mysqli;
     private $db_name;
 
@@ -344,6 +345,39 @@ class UpdaterUtils
         } else {
             return $insertID;
         }
+    }
+
+    /**
+     * Prepares a query.
+     *
+     * @param string $sql The SQL statement to prepare.
+     * @param bool $update_display If true then echo the SQL to the screen.
+     * @return false|\mysqli_stmt
+     */
+    public function prepare_query(string $sql, bool $update_display = false)
+    {
+        $query = $this->mysqli->prepare($sql);
+
+        if ($update_display) {
+            echo "<li>$sql&hellip;</li>";
+            ob_flush();
+            flush();
+        }
+
+        if ($query === false) {
+            echo '<li class="error">ERROR: ' . $sql;
+            if ($this->mysqli->error) {
+                echo $this->langstrings['showerror'] . '<br >';
+            }
+            echo "</li>\n";
+        }
+
+        if ($update_display) {
+            ob_flush();
+            flush();
+        }
+
+        return $query;
     }
 
     /**
