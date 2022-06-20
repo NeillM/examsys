@@ -26,28 +26,42 @@ if ($updater_utils->check_version('7.5.0')) {
     if (!$updater_utils->has_updated('rogo_2839')) {
         // Fix some bad data/time out of range.
         $fixsql = "UPDATE properties
-            SET 
-            end_date = '1000-01-01 00:00:00' 
+            SET
+            end_date = '1000-01-01 00:00:00'
             WHERE
-            date_format(end_date, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(end_date, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
         $updater_utils->execute_query($fixsql, false, true);
         $fixsql = "UPDATE properties
-            SET 
-            start_date = '1000-01-01 00:00:00' 
+            SET
+            start_date = '1000-01-01 00:00:00'
             WHERE
-            date_format(start_date, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(start_date, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
         $updater_utils->execute_query($fixsql, false, true);
         $fixsql = "UPDATE properties
-            SET 
-            created = '1000-01-01 00:00:00' 
+            SET
+            created = '1000-01-01 00:00:00'
             WHERE
-            date_format(created, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(created, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
         $updater_utils->execute_query($fixsql, false, true);
         $fixsql = "UPDATE properties
-            SET 
-            retired = '1000-01-01 00:00:00' 
+            SET
+            retired = '1000-01-01 00:00:00'
             WHERE
-            date_format(retired, '%Y-%m-%d %H:%m:%i') = '0000-00-00 00:00:00'";
+            date_format(retired, '%Y-%m-%d %H:%i:%s') = '0000-00-00 00:00:00'";
+        $updater_utils->execute_query($fixsql, false, true);
+        // We need to fix any bad dates here or the alter will break even though we are not
+        // changing them in stract mode on date values.
+        $fixsql = "UPDATE properties
+            SET
+            internal_review_deadline = '1000-01-01'
+            WHERE
+            date_format(internal_review_deadline, '%Y-%m-%d') = '0000-00-00'";
+        $updater_utils->execute_query($fixsql, false, true);
+        $fixsql = "UPDATE properties
+            SET
+            external_review_deadline = '1000-01-01'
+            WHERE
+            date_format(external_review_deadline, '%Y-%m-%d') = '0000-00-00'";
         $updater_utils->execute_query($fixsql, false, true);
 
         // Create temporary table
@@ -61,18 +75,40 @@ if ($updater_utils->check_version('7.5.0')) {
         )';
         $updater_utils->execute_query($tempsql, false, true);
 
+        // Prepare the query that will insert data,
+        // this needs to be done before we start fetching the data to avoid an out of sync error.
+        $insertsql = 'INSERT INTO properties_dates VALUES (?, ?, ?, ?, ?, ?)';
+        $insertquery = $updater_utils->prepare_query($insertsql);
+        $insertquery->bind_param('iiiiii', $insertid, $insertstart, $insertend, $insertdeleted, $insertcreated, $insertretired);
+
         // Migrate data in temp table.
-        $loadsql = 'INSERT INTO properties_dates
-            SELECT
-                property_id,
-                UNIX_TIMESTAMP(start_date),
-                UNIX_TIMESTAMP(end_date),
-                UNIX_TIMESTAMP(deleted),
-                UNIX_TIMESTAMP(created),
-                UNIX_TIMESTAMP(retired)
-            FROM
-                properties';
-        $updater_utils->execute_query($loadsql, false, true);
+        $sql = "SELECT
+                    property_id,
+                    date_format(start_date, '%Y-%m-%d %H:%i:%s'),
+                    date_format(end_date, '%Y-%m-%d %H:%i:%s'),
+                    date_format(deleted, '%Y-%m-%d %H:%i:%s'),
+                    date_format(created, '%Y-%m-%d %H:%i:%s'),
+                    date_format(retired, '%Y-%m-%d %H:%i:%s'),
+                    timezone
+                FROM properties";
+        $query = $updater_utils->prepare_query($sql);
+        $query->bind_result($property_id, $start_date, $end_date, $deleted, $created, $retired, $timezone);
+        $query->execute();
+
+        while ($query->fetch()) {
+            $insertid = $property_id;
+            $format = 'Y-m-d H:i:s';
+            $tz = new DateTimeZone($timezone);
+            $insertstart = is_null($start_date) ? null : DateTime::createFromFormat($format, $start_date, $tz)->getTimestamp();
+            $insertend = is_null($end_date) ? null : DateTime::createFromFormat($format, $end_date, $tz)->getTimestamp();
+            $insertdeleted = is_null($deleted) ? null : DateTime::createFromFormat($format, $deleted, $tz)->getTimestamp();
+            $insertcreated = is_null($created) ? null : DateTime::createFromFormat($format, $created, $tz)->getTimestamp();
+            $insertretired = is_null($retired) ? null : DateTime::createFromFormat($format, $retired, $tz)->getTimestamp();
+            $insertquery->execute();
+        }
+
+        $insertquery->close();
+        $query->close();
 
         // Alter schema.
         $altersql = 'ALTER TABLE properties
