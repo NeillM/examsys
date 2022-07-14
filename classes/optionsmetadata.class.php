@@ -93,19 +93,23 @@ class OptionsMetadata
         $configObject = Config::get_instance();
         $current = self::get($oid, $type);
         if ($value != $current) {
-            if ($current === '') {
-                $sql = $configObject->db->prepare(
-                    'INSERT INTO options_metadata (optionID, type, value) VALUES (?, ?, ?)'
-                );
-                $sql->bind_param('iss', $oid, $type, $value);
+            if ($value === '') {
+                self::delete($oid, $type);
             } else {
-                $sql = $configObject->db->prepare(
-                    'UPDATE options_metadata SET value = ? WHERE optionID = ? AND type = ?'
-                );
-                $sql->bind_param('sis', $value, $oid, $type);
+                if ($current === '') {
+                    $sql = $configObject->db->prepare(
+                        'INSERT INTO options_metadata (optionID, type, value) VALUES (?, ?, ?)'
+                    );
+                    $sql->bind_param('iss', $oid, $type, $value);
+                } else {
+                    $sql = $configObject->db->prepare(
+                        'UPDATE options_metadata SET value = ? WHERE optionID = ? AND type = ?'
+                    );
+                    $sql->bind_param('sis', $value, $oid, $type);
+                }
+                $sql->execute();
+                $sql->close();
             }
-            $sql->execute();
-            $sql->close();
         }
     }
 
@@ -139,7 +143,7 @@ class OptionsMetadata
             $bind_params = array_merge($bind_params, $types);
         }
         $result = $configObject->db->prepare($sql);
-        $result->bind_param('i' . str_repeat('s', count($types)), $oid, ...$types);
+        $result->bind_param('i' . str_repeat('s', count($types)), ...$bind_params);
         $result->execute();
     }
 }
