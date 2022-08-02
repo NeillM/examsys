@@ -82,10 +82,7 @@ if ($configObject->get('cfg_secure_connection')) {
     }
 }
 
-$authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
-$authentication->do_authentication($string);
-$getauthobj = new auth_obj();
-$authentication->get_auth_obj($getauthobj);
+require_once $cfg_web_root . 'classes/authentication.inc.php';
 
 // Recover any lost POST data and re-apply if config option enabled
 if ($configObject->get_setting('core', 'system_recover_postdata') && isset($_SESSION['recovered_postdata'])) {
