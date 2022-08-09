@@ -57,4 +57,6 @@ $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSIO
 $authentication->do_authentication($string);
 if ($authentication->get_userid() != -9999) {
     $notice->access_denied($mysqli, $string, $string['authfailed'], true, true);
+} else {
+    define('SCT_AUTH_SUCCESS', 1);
 }
