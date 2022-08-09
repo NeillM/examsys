@@ -24,12 +24,13 @@
  */
 
 require_once '../include/load_config.php';
+define('SCT_AUTH', 1);
 
 $language = LangUtils::getLang($cfg_web_root);
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 
 require_once '../include/errors.php';
-require_once '../include/sct_review.inc';
+require_once $cfg_web_root . 'classes/authentication.inc.php';
 
 // Connect to the database as the SCT user.
 $mysqli = DBUtils::get_mysqli_link(
