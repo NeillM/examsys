@@ -23,7 +23,12 @@
  * @package core
  */
 
-require_once './include/staff_student_auth.inc';
+require_once './include/load_config.php';
+if( ($_REQUEST['part'] != null) and ($_GET['part'] === $_REQUEST['part'])) {
+    define('SCT_AUTH', 1);
+    define('SCT_AUTH_SUCCESS', 1);
+}
+require_once $cfg_web_root . './classes/authentication.inc.php';
 require_once './include/errors.php';
 
 // End the session now so that it no longer blocks other files being loaded.
