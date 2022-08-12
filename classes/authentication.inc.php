@@ -16,14 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 if(!defined('SCT_AUTH_SUCCESS')) {
-    if (defined('SCT_AUTH') ) { // Check if already login)) {
-        require_once $cfg_web_root . '/include/sct_review.inc';
-    } else {
         $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
         $authentication->do_authentication($string);
-        $getauthobj = new auth_obj();
-        $authentication->get_auth_obj($getauthobj);
-        define('SCT_AUTH_SUCCESS', 1);
-    }
+        define('SCT_AUTH_SUCCESS', 1); // User logged in
 }
-
