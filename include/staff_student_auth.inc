@@ -81,8 +81,9 @@ if ($configObject->get('cfg_secure_connection')) {
         $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '/artwork/secure_connection.png', $title_color = '#C00000', true, true);
     }
 }
-
 require_once $cfg_web_root . 'classes/authentication.inc.php';
+$getauthobj = new auth_obj();
+$authentication->get_auth_obj($getauthobj);
 
 // Recover any lost POST data and re-apply if config option enabled
 if ($configObject->get_setting('core', 'system_recover_postdata') && isset($_SESSION['recovered_postdata'])) {
