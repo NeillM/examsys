@@ -33,6 +33,10 @@ require_once '../include/display_functions.inc';
 require_once '../include/errors.php';
 $userObject = UserObject::get_instance();
 
+if (!defined('SCT_AUTH_SUCCESS')) { // Should never happen, but if, stop it.
+    exit();
+}
+
 $id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
 
 // Special users have their own separate UI.
