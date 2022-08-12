@@ -356,10 +356,6 @@ abstract class rogo_directory
         // Generate and return the url.
         $url = $webroot . $this->downloadfile . $get;
 
-        if(defined('SCT_AUTH')) {  // Getfile.php need it to check user's Auth
-            $url .= '&part=' . $_REQUEST['id'];
-        }
-
         if ($escaped) {
             $url = htmlentities($url, ENT_HTML5);
         }
