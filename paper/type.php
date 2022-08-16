@@ -161,8 +161,8 @@ $old_calendar_year = 'zzzz';
 $sent_clear_all = false;
 if ($results->num_rows > 0) {
     while ($results->fetch()) {
-        $display_start_date = date($configObject->get('cfg_long_date_time'), $start_date);
-        $display_end_date = date($configObject->get('cfg_long_date_time'), $end_date);
+        $display_start_date = date($configObject->get('cfg_long_full_datetime_php'), $start_date);
+        $display_end_date = date($configObject->get('cfg_long_full_datetime_php'), $end_date);
         if ($old_calendar_year != $calendar_year) {
             if ($sent_clear_all) {
                 echo '<br clear="left" />';
