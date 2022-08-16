@@ -172,7 +172,7 @@ if (empty($paper_start) or empty($paper_end)) {
     $display_start_date->setTimezone($target_timezone);
     $display_end_date->setTimezone($target_timezone);
 
-    $tmp_cfg_long_date_time = str_replace('%', '', $configObject->get('cfg_long_date_time'));
+    $tmp_cfg_long_date_time = $configObject->get('cfg_long_full_datetime_php');
 
     $display_start_date = $display_start_date->format($tmp_cfg_long_date_time);
     $display_end_date   = $display_end_date->format($tmp_cfg_long_date_time);

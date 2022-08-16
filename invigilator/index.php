@@ -169,7 +169,7 @@ if (!$lab_object and !$remote) {
             $papers[$id]['end_time_h'] = $end_datetime->format('H');
             $papers[$id]['end_time_m'] = $end_datetime->format('i');
         } else {
-            $tmp_cfg_long_date_time = str_replace('%', '', $configObject->get('cfg_long_date_time'));
+            $tmp_cfg_long_date_time = $configObject->get('cfg_long_full_datetime_php');
             $tmp_start_date  = DateTime::createFromFormat('U', $property_object->get_start_date());
             $tmp_end_date    = DateTime::createFromFormat('U', $property_object->get_end_date());
             $papers[$id]['start_date'] = $tmp_start_date->format($tmp_cfg_long_date_time);
