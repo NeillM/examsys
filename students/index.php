@@ -374,9 +374,9 @@ if (!$userObject->has_role('Student')) {
                                 <?php
 
                                 if ($paper['type'] == 'objectives') {
-                                        echo $string['objectivesbased'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start']));
+                                        echo $string['objectivesbased'] . ' ' . date($configObject->get('cfg_long_full_datetime_php'), strtotime($paper['start']));
                                 } elseif ($paper['type'] == 'questions') {
-                                    echo $string['questionsbased'] . ' ' . date(str_replace('%', '', $configObject->get('cfg_long_date_time')), strtotime($paper['start']));
+                                    echo $string['questionsbased'] . ' ' . date($configObject->get('cfg_long_full_datetime_php'), strtotime($paper['start']));
                                 } else {
                                         echo $paper['screens'] . ' ';
                                     if ($paper['screens'] == 1) {
