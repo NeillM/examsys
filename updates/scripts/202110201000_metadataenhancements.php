@@ -18,22 +18,25 @@
 if ($updater_utils->check_version('7.5.0')) {
     if (!$updater_utils->has_updated('ROGO-2551')) {
         $updater_utils->execute_query('SET foreign_key_checks = 0', false);
+        $collation = $configObject->get('cfg_db_collation');
+        $charset = $configObject->get('cfg_db_charset');
+        $engine = $configObject->get('cfg_db_engine');
 
         $sql = <<<SQL
             CREATE TABLE `options_metadata` (
                 `optionID` INT(11) NOT NULL,
-                `type` VARCHAR(255) NOT NULL,
-                `value` VARCHAR(2500) NULL DEFAULT NULL,
+                `type` VARCHAR(255) NOT NULL COLLATE {$collation},
+                `value` VARCHAR(2500) NULL DEFAULT NULL COLLATE {$collation},
                 PRIMARY KEY (`optionID`, `type`),
                 INDEX `options_metadata_fk0` (`optionID`),
                 CONSTRAINT `options_metadata_fk0` FOREIGN KEY (`optionID`) REFERENCES `options` (`id_num`)
-            )
+            ) COLLATE='{$collation}' ENGINE={$engine} DEFAULT CHARSET={$charset}
             SQL;
         $updater_utils->execute_query($sql, false);
 
         $sql = <<<SQL
             ALTER TABLE `questions_metadata`
-                MODIFY COLUMN `value` varchar(2500) DEFAULT NULL,
+                MODIFY COLUMN `value` varchar(2500) DEFAULT NULL COLLATE {$collation},
                 MODIFY COLUMN `questionID` INT(4) NOT NULL
             SQL;
         $updater_utils->execute_query($sql, false);

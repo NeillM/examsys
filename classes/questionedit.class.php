@@ -1943,9 +1943,9 @@ QUERY;
                     $opt_data['media_owner'] = '';
                 }
 
-                $opt_data = array_merge($opt_data, OptionsMetadata::getArray($opt_data['id'], $option_metafield_list));
+                $opt_data_combined = array_merge($opt_data, OptionsMetadata::getArray($opt_data['id'], $option_metafield_list));
 
-                $this->options[$opt_data['id']] = OptionEdit::option_factory($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, $opt_data);
+                $this->options[$opt_data['id']] = OptionEdit::option_factory($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, $opt_data_combined);
                 $i++;
             }
             $result->close();

@@ -93,19 +93,23 @@ class QuestionsMetadata
         $configObject = Config::get_instance();
         $current = self::get($qid, $type);
         if ($value != $current) {
-            if ($current === '') {
-                $sql = $configObject->db->prepare(
-                    'INSERT INTO questions_metadata (id, questionID, type, value) VALUES (NULL, ?, ?, ?)'
-                );
-                $sql->bind_param('iss', $qid, $type, $value);
+            if ($value === '') {
+                self::delete($qid, $type);
             } else {
-                $sql = $configObject->db->prepare(
-                    'UPDATE questions_metadata SET value = ? WHERE questionID = ? AND type = ?'
-                );
-                $sql->bind_param('sis', $value, $qid, $type);
+                if ($current === '') {
+                    $sql = $configObject->db->prepare(
+                        'INSERT INTO questions_metadata (id, questionID, type, value) VALUES (NULL, ?, ?, ?)'
+                    );
+                    $sql->bind_param('iss', $qid, $type, $value);
+                } else {
+                    $sql = $configObject->db->prepare(
+                        'UPDATE questions_metadata SET value = ? WHERE questionID = ? AND type = ?'
+                    );
+                    $sql->bind_param('sis', $value, $qid, $type);
+                }
+                $sql->execute();
+                $sql->close();
             }
-            $sql->execute();
-            $sql->close();
         }
     }
 
@@ -119,5 +123,27 @@ class QuestionsMetadata
         foreach ($typesAndValues as $type => $value) {
             self::set($qid, $type, $value);
         }
+    }
+
+    /**
+     * Delete question metadata entries
+     * @param int $qid question ID
+     * @param string[]|string|null $types keys to delete, or blank for all
+     */
+    public static function delete(int $qid, $types = [])
+    {
+        $configObject = Config::get_instance();
+        $sql = 'DELETE FROM questions_metadata WHERE questionID = ?';
+        $bind_params = [$qid];
+        if (!empty($types)) {
+            if (!is_array($types)) {
+                $types = [$types];
+            }
+            $sql .= ' AND type IN (' . implode(',', array_fill(0, count($types), '?')) . ')';
+            $bind_params = array_merge($bind_params, $types);
+        }
+        $result = $configObject->db->prepare($sql);
+        $result->bind_param('i' . str_repeat('s', count($types)), ...$bind_params);
+        $result->execute();
     }
 }

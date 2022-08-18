@@ -96,6 +96,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
             ],
         ];
         $this->assertEquals($expected, $actual);
+
         // Update.
         OptionsMetadata::set($this->option['id_num'], 'testtype', 'newvalue');
         $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
@@ -111,6 +112,19 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
             ],
         ];
         $this->assertEquals($expected, $actual);
+
+        // Set the test value to empty, confirm deleted
+        OptionsMetadata::set($this->option['id_num'], 'testtype', '');
+        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
+        $expected = [
+            [
+                'type' => 'longtest',
+                'value' => str_repeat('testvalue1', 100),
+                'optionID' => $this->option['id_num'],
+            ],
+        ];
+        $this->assertEquals($expected, $actual);
+
         // Update and check that exception occurs attempting to set to >2500 characters
         $this->expectExceptionMessage('Maximum metadata size exceeded');
         OptionsMetadata::set($this->option['id_num'], 'longtest', str_repeat('9876543210', 251));
