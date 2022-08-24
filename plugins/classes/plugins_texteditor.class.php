@@ -298,7 +298,7 @@ abstract class plugins_texteditor extends \plugins\plugins
     {
         $renderpath = array($this->get_header_path());
         // Always get plain text editor.
-        $renderpath[] = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'texteditor';
+        $renderpath[] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'texteditor';
         return $renderpath;
     }
 

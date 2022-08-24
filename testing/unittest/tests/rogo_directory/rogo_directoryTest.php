@@ -699,7 +699,7 @@ class rogo_directorytest extends unittestdatabase
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/files/');
         $this->rogodirectory->expects($this->any())->method('base_directory')->willReturn($this->config->get('cfg_rogo_data') . '/');
         // Setup the default location.
-        $fixtures = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'rogo_directory' . DIRECTORY_SEPARATOR;
+        $fixtures = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'rogo_directory' . DIRECTORY_SEPARATOR;
         $this->rogodirectory->expects($this->any())->method('default_base_directory')->willReturn($fixtures);
         // Setup the data directory, with no files in it.
         $structure = array(

@@ -25,7 +25,7 @@
  * @package
  */
 
-require_once dirname(dirname(__DIR__)) . '/LTI/ims-lti/UoN_LTI.php';
+require_once dirname(__DIR__, 2) . '/LTI/ims-lti/UoN_LTI.php';
 require_once 'outline_authentication.class.php';
 
 class ltilogin_auth extends outline_authentication

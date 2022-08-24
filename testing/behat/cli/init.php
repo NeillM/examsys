@@ -25,7 +25,7 @@
  */
 
 ini_set('display_errors', 1);
-require_once dirname(dirname(dirname(__DIR__))) . '/include/autoload.inc.php';
+require_once dirname(__DIR__, 3) . '/include/autoload.inc.php';
 autoloader::init();
 
 use testing\behat\help,

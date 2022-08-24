@@ -112,7 +112,7 @@ abstract class unittestdatabase extends TestCase
      */
     private function setup_suite(): void
     {
-        $this->fixture_base = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR;
+        $this->fixture_base = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR;
         $this->config = RogoConfig::get_instance();
         $this->default_config = clone($this->config);
         $db = $this->get_db_connection();

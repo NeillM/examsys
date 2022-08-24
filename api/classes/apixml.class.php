@@ -64,7 +64,7 @@ class apixml extends \api\apiabstract
         // Load dom object.
         $this->data = new \DOMDocument();
         @$this->data->loadXML($this->xml);
-        $schema = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'schema' . DIRECTORY_SEPARATOR . $folder
+        $schema = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'schema' . DIRECTORY_SEPARATOR . $folder
             . DIRECTORY_SEPARATOR . $type . '.xsd';
         $errorresp = array();
         if (!$this->data->schemaValidate($schema)) {

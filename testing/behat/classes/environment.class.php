@@ -215,6 +215,6 @@ class environment
      */
     protected static function get_rogo_basedir()
     {
-        return dirname(dirname(dirname(__DIR__)));
+        return dirname(__DIR__, 3);
     }
 }
