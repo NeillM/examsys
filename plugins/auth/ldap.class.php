@@ -132,7 +132,7 @@ class ldap_auth extends outline_authentication
         $this->retdata =& $authobj;
         $this->savetodebug('Authing');
         extract($this->settings);
-        if (!isset($this->form['std']->username) or !isset($this->form['std']->username) or $this->form['std']->username == '' or $this->form['std']->password == '') {
+        if (!isset($this->form['std']->username) or $this->form['std']->username == '' or $this->form['std']->password == '') {
             //return not sucessfull do not try
             $this->savetodebug('Check 1 blank entries');
             $authobj->fail($this->number);

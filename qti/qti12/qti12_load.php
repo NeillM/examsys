@@ -459,7 +459,7 @@ class IE_qti12_Load extends IE_Main
             }
 
             // hack to ensure Rogo fill in the blanks are imported as such
-            if ($question->qmd_itemtype == 'Select a Blank' || $question->qmd_itemtype == 'Select a Blank') {
+            if ($question->qmd_itemtype == 'Select a Blank') {
                 return 'blank';
             }
 
