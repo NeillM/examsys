@@ -2848,7 +2848,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
 /**
  * Generate mapped objectives html
- * @param string $moduleID the module code
+ * @param array $moduleID the module code
  * @param integer $calendar_year the calendat year
  * @param integer $paperID the paper identifier
  * @param integer $q_id the question identifier

@@ -1429,7 +1429,7 @@ class PaperProperties
     }
 
     /**
-     * @return string $externals
+     * @return string[] $externals
      */
     public function get_externals()
     {
@@ -1686,7 +1686,7 @@ class PaperProperties
     }
 
     /**
-     * @return string $internal_reviewers
+     * @return string[] $internal_reviewers
      */
     public function get_internal_reviewers()
     {

@@ -804,7 +804,7 @@ class PaperUtils
      * area) on a particular screen of a paper. Speeds system up if not loading
      * unnecessary HTML5/Flash include files.
      * @param  array      $screen_data Array of screen/question information
-     * @param  array      $screen      The screen number to check
+     * @param  int      $screen      The screen number to check
      * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
      */
     public function need_interactiveQ($screen_data, $screen, $db)

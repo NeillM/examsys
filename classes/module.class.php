@@ -559,7 +559,7 @@ class module
 
     /**
      * The database ID of a module given its Module ID (code)
-     * @param  string  $module_id Module ID (code) of the module
+     * @param  array|string  $module_id Module ID (code) of the module
      * @param  mysqli  $db        Database link object
      * @return string             Database ID of the module or false if not found
      */
