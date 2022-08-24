@@ -39,7 +39,7 @@ $new_password = $generated_password['password'];
 $display_password = $generated_password['display_password'];
 $success = UserUtils::update_password($username, $new_password, $userid, $mysqli);
 if (!$success) {
-    display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/exclamation_red_bg.png', '#C00000', true, true, true);
+    display_error($string['resetfailed'], $string['failuremsg'], true, true, true);
 }
 $mysqli->close();
 $render = new render($configObject);

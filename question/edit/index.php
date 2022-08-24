@@ -435,9 +435,9 @@ if ($critical_error == '') {
                         // For likert, save the scale to a state to ease creation of multiple questions with same scale
                         if ($mode == $string['add'] and $question->get_type() == 'likert') {
                             $scale_type = $question->get_scale_type();
-                            $stateutil->setState($userObject->get_user_ID(), 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
+                            $stateutil->setState('likert_format', $scale_type, '/question/edit/index.php');
                             if ($scale_type == 'custom') {
-                                $stateutil->setState($userObject->get_user_ID(), 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
+                                $stateutil->setState('likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php');
                             }
                         }
 

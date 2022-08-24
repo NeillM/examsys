@@ -376,10 +376,10 @@ foreach ($table_order as $display => $col_width) {
     $search_results->close();
 
     if (isset($_GET['sortby'])) {
-        $stateutil->setState($userObject->get_user_ID(), 'sortby', $_GET['sortby'], $_SERVER['PHP_SELF'], $mysqli);
+        $stateutil->setState('sortby', $_GET['sortby'], $_SERVER['PHP_SELF']);
     }
     if (isset($_GET['ordering'])) {
-        $stateutil->setState($userObject->get_user_ID(), 'ordering', $_GET['ordering'], $_SERVER['PHP_SELF'], $mysqli);
+        $stateutil->setState('ordering', $_GET['ordering'], $_SERVER['PHP_SELF']);
     }
 
     $mysqli->close();
