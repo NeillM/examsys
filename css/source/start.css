@@ -131,11 +131,11 @@ pre {
   float: left;
 }
 .scr_arrow {
-  width: 0; 
-	height: 0; 
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
-	border-top: 8px solid #C00000;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 8px solid #C00000;
   float: left;
 }
 .scr_spacer {
@@ -230,21 +230,19 @@ pre {
 }
 #saveError {
   display: none;
-  margin-left: 25%;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 5px;
   width: 600px;
-  height: 60px;
-	padding: 0;
+  padding: 0;
   border: 2px solid #C42828;
   background-color: #FFC0C0;
   background-color: var(--paper-unanswered, '#FFC0C0');
 }
-#saveError div { 
+#saveError div {
   font-size: 110%;
   margin-top: -58px;
   margin-left: 80px;
-  height:60px;
-  width: 80%;
   text-align: left;
   line-height:150%;
 }
