@@ -27,7 +27,7 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 require_once 'ims-lti/UoN_LTI.php';
 
-$lti = new UoN_LTI($mysqli);
+$lti = new UoN_LTI();
 $lti->init_lti0($mysqli);
 $LTIkeysid = check_var('LTIkeysid', 'GET', true, false, true);
 

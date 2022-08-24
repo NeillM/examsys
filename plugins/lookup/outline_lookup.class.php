@@ -109,7 +109,7 @@ class outline_lookup
         $context1 = array();
         if (is_null($context)) {
             // if no array set get currently define variables in this object
-                $context = get_defined_vars($this);
+            $context = get_defined_vars();
         }
 
         $context1 = error_handling($context);

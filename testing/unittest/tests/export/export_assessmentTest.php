@@ -453,7 +453,7 @@ class export_assessmentTest extends unittestdatabase
             )
         );
         $answer_parts = explode(';', $useranswer);
-        $this->question8['question']['options1']['expected']['area'] = export_assessment::hex_to_dec($this->question8['question']['options1']['correct'], ',');
+        $this->question8['question']['options1']['expected']['area'] = export_assessment::hex_to_dec($this->question8['question']['options1']['correct']);
         $this->question8['question']['options1']['expected']['answer'] = export_assessment::hex_to_dec($answer_parts[1]);
         $datagenerator->add_question_to_paper(array('paper' => $this->pid1['id'], 'question' => $this->question8['question']['id'], 'screen' => 8, 'displaypos' => 8));
         $this->question9['question'] = $datagenerator->create_question(

@@ -129,7 +129,7 @@ trait pages
                 $this->visit_user_profile($data, $section);
                 break;
             case 'Paper Details':
-                $this->visitPaperDetails($data, $section);
+                $this->visitPaperDetails($data);
                 break;
             case 'Calendar':
                 $this->visitCalendar($data, $section);

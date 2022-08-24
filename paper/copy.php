@@ -159,7 +159,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 
     // If option set, copy standard settings from old to new paper
     if (param::optional('copy_std_setting', false, param::BOOLEAN, param::FETCH_POST)) {
-        StandardSetting::copy_std_setting_to_paper_linked($paperid, $new_paper_id, $mysqli);
+        StandardSetting::copy_std_setting_to_paper_linked($paperid, $new_paper_id);
     }
 } else {    // Copy the paper and the questions.
     $mediadirectory = rogo_directory::get_directory('media');
@@ -575,7 +575,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 
     // If option set, copy standard settings from old to new paper
     if (param::optional('copy_std_setting', false, param::BOOLEAN, param::FETCH_POST)) {
-        StandardSetting::copy_std_setting_to_paper_copied($paperid, $new_paper_id, $old_qids, $new_qids, $mysqli);
+        StandardSetting::copy_std_setting_to_paper_copied($paperid, $new_paper_id, $old_qids, $new_qids);
     }
 }
 ?>

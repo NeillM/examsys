@@ -182,8 +182,7 @@ class StandardSetting
                 $std_setting_data['method'],
                 $std_setting_data['group_review'],
                 $std_setting_data['pass_score'],
-                $std_setting_data['distinction_score'],
-                $db
+                $std_setting_data['distinction_score']
             );
             self::copy_std_set_ratings_linked($old_std_id, $new_std_id);
         }

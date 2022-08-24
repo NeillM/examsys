@@ -50,7 +50,7 @@ class access_denied_logsTest extends unittestdatabase
      */
     public function test_get_access_denied_logs()
     {
-        $log_obj = new access_denied_logs($this->db);
+        $log_obj = new access_denied_logs();
         $this->assertEquals(2, count($log_obj->get_access_denied_logs()));
     }
 
@@ -60,7 +60,7 @@ class access_denied_logsTest extends unittestdatabase
      */
     public function test_delete_a_access_denied_log()
     {
-        $log_obj = new access_denied_logs($this->db);
+        $log_obj = new access_denied_logs();
         $this->assertTrue($log_obj->delete_a_access_denied_log($this->denied1['id']));
     }
 
@@ -70,7 +70,7 @@ class access_denied_logsTest extends unittestdatabase
      */
     public function test_delete_access_denied_logs()
     {
-        $log_obj = new access_denied_logs($this->db);
+        $log_obj = new access_denied_logs();
         $this->assertTrue($log_obj->delete_access_denied_logs());
     }
 }
