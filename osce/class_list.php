@@ -41,9 +41,7 @@ $modules                = $properties->get_modules();
 
 function quick_links($string)
 {
-    $html = '';
-
-    $html .= "<table style=\"width:100%; text-align:center\">\n<tr>\n";
+    $html = "<table style=\"width:100%; text-align:center\">\n<tr>\n";
     $html .= "<td class=\"qlink\"><a href='#' class=\"qlink td\" data-val=\"All\">" . $string['all'] . '</a> </td>';
     for ($i = 1; $i <= 26; $i++) {
         $html .= '<td class="qlink"><a href="#' . chr($i + 64) . '" class="qlink td" data-val =' . chr($i + 64) . '>' . chr($i + 64) . '</a></td>';
