@@ -92,7 +92,6 @@ class outline_lookup
 
     public function init($object)
     {
-        $this->db = new mysqli();
         $this->db = & $object->db;
         $this->calling_object = & $object->calling_object;
         //    $this->returndata = & $object->returndata;

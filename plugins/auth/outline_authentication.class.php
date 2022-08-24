@@ -88,7 +88,6 @@ class outline_authentication
 
     public function init($object)
     {
-        $this->db = new mysqli();
         $this->db = & $object->db;
         $this->calling_object = & $object->calling_object;
         $this->form = & $object->form;
