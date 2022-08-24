@@ -16,11 +16,11 @@ Feature: Cleaning variables
       | 4.2 | null |
       | 0xF | xF |
       | www.example.com | wwwexamplecom |
-      | Test <script><!-- alert(\'Test\') --></script> text | Test  text |
+      | Test <script><!-- alert(\'Test\') --></script> text | Test script alertTest script text |
       | Test > text | Test  text |
       | Café | Café |
       | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
-      | n < 20 and x > 10 boo | n   boo |
+      | n < 20 and x > 10 boo | n   and x   boo |
 
   Scenario Outline: Verifying alpha numeric input
     Given I clean "<input>" as "ALPHANUM"
@@ -34,12 +34,12 @@ Feature: Cleaning variables
       | 4.2 | 42 |
       | 0xF | 0xF |
       | www.example.com | wwwexamplecom |
-      | Test <script><!-- alert(\'Test\') --></script> text | Test  text |
+      | Test <script><!-- alert(\'Test\') --></script> text | Test script alertTest script text |
       | Test > text | Test  text |
       | Café | Café |
       | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
-      | n < 20 and x > 10 | n  10 |
-      | n > 20 and x< 10 | n  20 and x |
+      | n < 20 and x > 10 | n  20 and x  10 |
+      | n > 20 and x< 10 | n  20 and x 10 |
 
   Scenario Outline: Verifying boolean input
     Given I clean "<input>" as "BOOLEAN"
