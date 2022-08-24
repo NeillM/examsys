@@ -117,8 +117,8 @@ function _rserve_make_packet($cmd, $string) {
 
 /**
  * Make a data packet
- * @param unknown_type $type
- * @param unknown_type $string NULL terminated string
+ * @param int $type
+ * @param string $string NULL terminated string
  */
 function _rserve_make_data($type, $string) {
 	$s = '';

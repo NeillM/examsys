@@ -690,7 +690,7 @@ class ClassTotals
      * @param int $userID                               - ID of the user (student)
      * @param int $tmp_user_answer          - Answer of the user.
      * @param int $tmp_user_mark                - The 'original' mark as stored in logX.
-     * @param int $tmp_user_mark_array  - An array of marks for all the questions on the paper.
+     * @param float[] $tmp_user_mark_array  - An array of marks for all the questions on the paper.
      * @return int - The mark the user got for the question.
      */
     private function getUserMark($q_id, $userID, $tmp_user_answer, $tmp_user_mark, &$tmp_user_mark_array)
