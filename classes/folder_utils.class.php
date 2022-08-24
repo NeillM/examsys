@@ -75,7 +75,7 @@ class folder_utils
      * @param string $folder_name  - The name of the folder
      * @param object $userObj      - The userObject of the currently logged in user
      * @param object $db           - MySQL object
-     * @return string the name of the folder.
+     * @return void
      */
     public static function create_folder($folder_name, $userObj, $db)
     {

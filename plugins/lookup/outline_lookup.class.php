@@ -181,7 +181,7 @@ class outline_lookup
      * @param $name string the name this object is
      * @param $insert bool to insert rather than append
      *
-     * @return bool
+     * @return void
      */
     public function register_callback($callback, $section, $number, $name, $insert = false)
     {

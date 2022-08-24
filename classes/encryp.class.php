@@ -47,12 +47,14 @@ class encryp
     }
     /**
      * Load dictionary into memory.
+     *
+     * @return void
      */
     private function load()
     {
         // Return if already in memory.
         if (isset($this->dictionary)) {
-            return $this->dictionary;
+            return;
         }
         // Revert to default password generation if no dictionary.
         if (!file_exists($this->file)) {

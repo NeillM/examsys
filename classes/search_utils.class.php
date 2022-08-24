@@ -63,7 +63,7 @@ class search_utils
      * @param object $userObj - the current user object
      * @param string $string  - language translations.
      * @param object $db      - database connection
-     * @return string HTML of the dropdown menu
+     * @return void
      */
     public static function display_staff_modules_dropdown($userObj, $string, $db)
     {
@@ -143,7 +143,7 @@ class search_utils
      * @param string $string    - language translations.
      * @param array $state      - the store state of the interface.
      * @param string $font_size - size of font to use.
-     * @return string HTML of the dropdown menu
+     * @return void
      */
     public static function display_owners_dropdown($userObj, $db, $type, $string, $state, $font_size = 90)
     {
@@ -179,7 +179,7 @@ class search_utils
      * Display status options for a question.
      * @param array $status_array - array of question statuses
      * @param array $state        - the store state of the interface.
-     * @return string HTML of the status dropdown menu
+     * @return void
      */
     public static function display_status($status_array, $state)
     {
@@ -209,7 +209,7 @@ STATUS;
      * Display a dropdown menu of Bloom's Taxonomy options for a question.
      * @param string $string  - language translations.
      * @param array $state    - the store state of the interface.
-     * @return string HTML of the Bloom's Taxonomy dropdown menu
+     * @return void
      */
     public static function display_blooms_dropdown($string, $state)
     {

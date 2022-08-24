@@ -94,6 +94,7 @@ class LabFactory
             return $lab;
         }
         $lab_results->close();
+        return false;
     }
 
     /**

@@ -1968,7 +1968,7 @@ function get_exam_options(\mysqli $mysqli, $paperID, $qids = false)
  * @param $user_total       int       Total user count
  * @param $mysqli           \mysqli   MySQL object
  *
- * @return false|array[]  False for nobody taking the paper, otherwise top/bottom cohorts
+ * @return void
  */
 function capture_log_data(
     int $cohort_percent,

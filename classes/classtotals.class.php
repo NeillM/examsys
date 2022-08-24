@@ -1031,7 +1031,7 @@ class ClassTotals
      * Check if a record exists in the student cohort array created when showing absent candidates. If found, remove the entry
      * @param array $student_cohort - All (remaining) students in the cohort
      * @param string $username      - Username to look for
-     * @return array                - Cohort array with current user removed if found
+     * @return void
      */
     private function check_and_clear_cohort($username)
     {
@@ -1177,6 +1177,7 @@ class ClassTotals
         }
 
         $this->question_no = $question_no;
+        return true;
     }
 
     /**
@@ -1572,6 +1573,7 @@ class ClassTotals
             $this->db->commit();
             $this->db->autocommit(true);
         }
+        return true;
     }
 
     /**

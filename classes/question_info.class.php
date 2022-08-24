@@ -27,10 +27,11 @@
 class question_info
 {
     /**
-     * Get the question information
+     * Print the question information.
+     *
      * @param integer $q_id
      * @param object $db
-     * @return formated HTML for display of question information
+     * @return void
      */
     public static function full_question_information($q_id, $db, $userObj, $string, $notice)
     {

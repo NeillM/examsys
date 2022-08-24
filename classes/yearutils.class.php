@@ -316,6 +316,7 @@ class yearutils
         $result->bind_param('ii', $user, $calendar_year);
         $result->execute();
         $result->close();
+        return true;
     }
 
     /**

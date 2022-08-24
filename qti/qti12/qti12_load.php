@@ -98,7 +98,7 @@ class IE_qti12_Load extends IE_Main
 
         if (!$xml) {
             $this->AddError(sprintf($string['invalidxml'], $file));
-            return;
+            return null;
         }
         $rt = '';
 
@@ -2294,7 +2294,7 @@ class IE_qti12_Load extends IE_Main
 
         foreach ($question->responses as $response) {
             if ($response->id != $rid) {
-                return;
+                return null;
             }
 
             foreach ($response->labels as $label) {

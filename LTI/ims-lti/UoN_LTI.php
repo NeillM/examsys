@@ -95,7 +95,7 @@ class UoN_LTI extends BLTI
      * Function to initilise the lti class
      * @param bool $usesession
      * @param bool $doredirect
-     * @return
+     * @return void
      */
     public function init_lti($usesession = true, $doredirect = false)
     {

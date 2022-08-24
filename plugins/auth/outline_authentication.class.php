@@ -179,7 +179,7 @@ class outline_authentication
      * @param string $name the name this object is
      * @param bool $insert to insert rather than append
      *
-     * @return bool
+     * @return void
      */
     public function register_callback($callback, $section, $number, $name, $insert = false)
     {

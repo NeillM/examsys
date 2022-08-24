@@ -97,7 +97,7 @@ class oauth
      * Delete ALL permissions for client.
      * @param string $action
      * @param string $client
-     * @return bool
+     * @return void
      */
     private function delete_permissions($client)
     {

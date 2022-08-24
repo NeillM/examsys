@@ -57,7 +57,7 @@ class QuestionMATRIX extends QuestionEdit
 
     /**
      * Compound the stems into a single string and set as the scenario
-     * @return multitype:
+     * @return void
      */
     public function set_all_stems($value)
     {

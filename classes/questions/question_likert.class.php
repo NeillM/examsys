@@ -129,7 +129,7 @@ class QuestionLIKERT extends QuestionEdit
 
     /**
      * Compound the scale items into a string and set as scale type (and hence display method)
-     * @return multitype:
+     * @return void
      */
     public function set_all_custom_scales($value)
     {

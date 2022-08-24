@@ -68,7 +68,7 @@ class ims_enterprise_settings
 
     /**
      * Update settings
-     * @return boolean True if successful, otherwise False
+     * @return void
      */
     protected function insert_settings()
     {
@@ -123,7 +123,7 @@ class ims_enterprise_settings
 
     /**
      * Insert a IMS settings row (Should be updated immediately by update_settings()
-     * @return boolean
+     * @return void
      */
     private function delete_settings()
     {

@@ -595,6 +595,8 @@ class Authentication
             header('Location: ' . $_SERVER['REQUEST_URI'], true, 303);
             exit();
         }
+
+        return true;
     }
 
     /**

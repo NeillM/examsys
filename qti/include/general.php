@@ -250,7 +250,7 @@ function FindQuestion(&$questions, $id)
         }
     }
     echo "<H1>Unable to find $id</H1>";
-    //print_p($questions,false);
+    return null;
 }
 
 function ConvertType($type)

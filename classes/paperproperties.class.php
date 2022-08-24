@@ -143,7 +143,7 @@ class PaperProperties
     * @param object $db                     - Link to MySQL db.
     * @param array $string              - Language translations
     * @param bool $exit_on_false    - If true then exist if the paper does not exist.
-    * @return PaperProperties object
+    * @return PaperProperties|bool object
     */
     public static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true)
     {
@@ -155,14 +155,11 @@ class PaperProperties
         $paper_property->set_property_id($p_id);
         if ($paper_property->load() !== false) {
             return $paper_property;
-        } else {
-            if ($exit_on_false) {
-                $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-                $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-            } else {
-                return false;
-            }
+        } else if ($exit_on_false) {
+            $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+            $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
         }
+        return false;
     }
 
     /*
@@ -171,7 +168,7 @@ class PaperProperties
     * @param object $db                 - Link to MySQL db.
     * @param array $string              - Language translations
     * @param bool $exit_on_false    - If true then exist if the paper does not exist.
-    * @return PaperProperties object
+    * @return PaperProperties|bool object
     */
     public static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true)
     {
@@ -183,14 +180,11 @@ class PaperProperties
         $paper_property->set_crypt_name($crypt_name);
         if ($paper_property->load() !== false) {
             return $paper_property;
-        } else {
-            if ($exit_on_false) {
-                $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-                $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-            } else {
-                return false;
-            }
+        } else if ($exit_on_false) {
+            $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+            $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
         }
+        return false;
     }
 
     /**
@@ -440,6 +434,7 @@ class PaperProperties
         $this->load_summative_lock();
 
         $this->papersettings = new PaperSettings($this->get_property_id(), $this->get_paper_type());
+        return true;
     }
 
     /*
@@ -819,11 +814,12 @@ class PaperProperties
 
     /**
      * @param string $paper_title
+     * @return void
      */
     public function set_paper_title($paper_title)
     {
         if ($paper_title == '') {
-            return false;
+            return;
         }
 
         $old_paper_title = $this->paper_title;

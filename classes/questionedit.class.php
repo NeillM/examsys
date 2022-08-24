@@ -2009,7 +2009,7 @@ QUERY;
 
     /**
      * Put all the extra data fields into an array and encode as JSON
-     * @return string JSON encoded string containing extra data fields
+     * @return void
      */
     protected function serialize_settings()
     {

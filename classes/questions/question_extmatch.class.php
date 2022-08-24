@@ -143,7 +143,7 @@ class QuestionEXTMATCH extends QuestionEdit
 
     /**
      * Get the question media as an array containing filename, width and height
-     * @return array
+     * @return void
      */
     public function set_all_media($value)
     {

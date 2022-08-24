@@ -82,11 +82,12 @@ class ExamAnnouncements
      * @param int $q_number  - The number of the question on the paper.
      * @param int $screen    - The number of the screen the question belongs to.
      * @param string $msg    - The content of the announcement message.
+     * @return void
      */
     public function replace_announcement($q_id, $q_number, $screen, $msg)
     {
         if ($msg == '') {
-            return false;
+            return;
         }
 
         $result = $this->db->prepare('REPLACE INTO exam_announcements (paperID, q_id, q_number, screen, msg, created) VALUES (?, ?, ?, ?, ?, NOW())');

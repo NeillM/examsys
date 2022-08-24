@@ -126,7 +126,7 @@ class UserObject extends RogoStaticSingleton
      * @param $db is a mysqli link to db
      * @param $configObject a Rogo config object populated from config.inc
      *
-     * @return none
+     * @return void
      */
     public function __construct($configObject, $db)
     {
@@ -140,6 +140,7 @@ class UserObject extends RogoStaticSingleton
         $langpack = new \langpack();
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);
     }
+
     /**
      * Destory UserObject
      *
@@ -922,7 +923,7 @@ class UserObject extends RogoStaticSingleton
         $record_no = $stmt->num_rows();
         $stmt->close();
         if ($record_no == 0) {
-            return false;
+            return;
         }
 
         // Get special needs data. Any user can set their own settings for these.
