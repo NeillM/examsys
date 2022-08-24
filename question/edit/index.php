@@ -572,8 +572,8 @@ if ($question != null and file_exists($cfg_web_root . 'plugins/questions/' . $qu
 <?php
 if ($critical_error == '') {
     $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
-    $creation_date = ($mode == $string['edit']) ? strftime($configObject->get('cfg_short_date'), $question->get_created('timestamp')) : strftime($configObject->get('cfg_short_date'), time());
-    $modified_date = ($question->get_last_edited('timestamp')) ? strftime($configObject->get('cfg_short_date'), $question->get_last_edited('timestamp')) : $string['na'];
+    $creation_date = ($mode == $string['edit']) ? date($configObject->get('cfg_short_date_php'), $question->get_created('timestamp')) : date($configObject->get('cfg_short_date_php'), time());
+    $modified_date = ($question->get_last_edited('timestamp')) ? date($configObject->get('cfg_short_date_php'), $question->get_last_edited('timestamp')) : $string['na'];
     ?>
     <div class="tab-bar">
       <div class="tab-holder">
