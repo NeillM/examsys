@@ -27,7 +27,7 @@ require '../../include/sysadmin_auth.inc';
 require '../../include/toprightmenu.inc';
 $startdate = date('Y-m-d H:i:s', strtotime('-' . Audit::getRententionPeriod() . ' day'));
 
-$limit = param::optional('limit', AuditSearch::DEFAULT_LIMIT, param::INT, param::FETCH_GET);
+$limit = param::optional('limit', Search::DEFAULT_LIMIT, param::INT, param::FETCH_GET);
 $page = param::optional('page', 1, param::INT, param::FETCH_GET);
 $audit = Audit::getEvents($startdate, $limit, $page);
 
