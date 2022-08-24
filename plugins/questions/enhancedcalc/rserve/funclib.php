@@ -48,25 +48,25 @@ function mkint8($i) {
  * @return string
  */
 function mkint32($i) {
-	$r = chr($i & 255); 
-	$i >>= 8; 
-	$r .= chr($i & 255); 
-	$i >>=8; 
-	$r .= chr($i & 255); 
-	$i >>=8; 
+	$r = chr($i & 255);
+	$i >>= 8;
+	$r .= chr($i & 255);
+	$i >>=8;
+	$r .= chr($i & 255);
+	$i >>=8;
 	$r .= chr($i & 255);
 	return $r;
 }
 
 /*
  * Create a 24 bit integer
- * @return string binary representation of the int using 24 bits 
+ * @return string binary representation of the int using 24 bits
  */
 function mkint24($i) {
-	$r = chr($i & 255); 
-	$i >>= 8; 
-	$r .= chr($i & 255); 
-	$i >>=8; 
+	$r = chr($i & 255);
+	$i >>= 8;
+	$r .= chr($i & 255);
+	$i >>=8;
 	$r .= chr($i & 255);
 	return $r;
 }
@@ -74,7 +74,7 @@ function mkint24($i) {
 /**
  * Create a binary representation of float to 64bits
  * TODO: works only for intel endianess, should be adapted for no big endian proc
- * @param double $v 
+ * @param double $v
  */
 function mkfloat64($v) {
 	return pack('d', $v);
@@ -88,12 +88,12 @@ function mkfloat64($v) {
 function flt64($buf, $o = 0) {
 	$ss = substr($buf, $o, 8);
 	if (Rserve_Connection::$machine_is_bigendian) {
-		for ($k = 0; $k < 7; $k++) { 
+		for ($k = 0; $k < 7; $k++) {
 			$ss[7 - $k] = $buf[$o + $k];
-		}	
-	} 
-	$r = unpack('d', substr($buf, $o, 8)); 
-	return $r[1]; 
+		}
+	}
+	$r = unpack('d', substr($buf, $o, 8));
+	return $r[1];
 }
 
 /**
@@ -102,11 +102,11 @@ function flt64($buf, $o = 0) {
  * @param string $string contents of the message
  */
 function _rserve_make_packet($cmd, $string) {
-	$n = strlen($string) + 1; 
+	$n = strlen($string) + 1;
 	$string .= chr(0);
-	while (($n & 3) != 0) { 
-		$string .= chr(1); 
-		$n++; 
+	while (($n & 3) != 0) {
+		$string .= chr(1);
+		$n++;
 	}
 	// [0]  (int) command
   	// [4]  (int) length of the message (bits 0-31)
@@ -125,15 +125,15 @@ function _rserve_make_data($type, $string) {
 	$len = strlen($string); // Length of the binary string
 	$is_large = $len > 0xfffff0;
 	$pad = 0; // Number of padding needed
-	while( ($len & 3) != 0) { 
+	while( ($len & 3) != 0) {
 		// ensure the data packet size is divisible by 4
 		++$len;
 		++$pad;
-	} 
+	}
 	$s .= chr($type & 255) | ($is_large ? Rserve_Connection::DT_LARGE : 0);
 	$s .= chr($len & 255);
 	$s .= chr( ($len & 0xff00) >> 8);
-	$s .= chr( ($len & 0xff0000) >> 16); 	
+	$s .= chr( ($len & 0xff0000) >> 16);
 	if($is_large) {
 		$s .= chr(($len & 0xff000000) >> 24).chr(0).chr(0).chr(0);
 	}
@@ -150,18 +150,18 @@ function _rserve_make_data($type, $string) {
 function _rserve_get_response($socket) {
 	$n = socket_recv($socket, $buf, 16, 0);
 	if ($n != 16) {
-		return FALSE;		
+		return FALSE;
 	}
 	$len = int32($buf, 4);
 	$ltg = $len;
 	while ($ltg > 0) {
 		$n = socket_recv($socket, $b2, $ltg, 0);
 		if ($n > 0) {
-			$buf .= $b2; 
-			unset($b2); 
-			$ltg -= $n; 
+			$buf .= $b2;
+			unset($b2);
+			$ltg -= $n;
 		} else {
-			 break;	
+			 break;
 		}
 	}
 	return $buf;
