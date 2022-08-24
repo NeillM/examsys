@@ -31,8 +31,12 @@ class DICHOTOMOUSCorrector extends Corrector
 {
     /**
      * Change the correct answer after the question has been locked. Update user marks in summative log table
-     * @param integer $new_correct new correct answer
-     * @param integer $paper_id
+     *
+     * @param array $new_correct fields that are relevant for post-exam corrections
+     * @param int $paper_id paper identifier
+     * @param bool $prev_changes Set to true if there are previous changes detected.
+     * @param int $paper_type The paper type.
+     * @return array An array of error messages
      */
     public function execute($new_correct, $paper_id, &$prev_changes, $paper_type)
     {
