@@ -25,7 +25,7 @@ class ParserNativeTest extends PHPUnit_Framework_TestCase {
      *
      * @access protected
      */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->rserve = new Rserve_Connection(RSERVE_HOST);
     }
     
