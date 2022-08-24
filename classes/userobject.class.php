@@ -375,14 +375,14 @@ class UserObject extends RogoStaticSingleton
     /**
      * get the staff modules
      *
-     * @return false if not staff else an array of the modules by id & CODE
+     * @return array if not staff else an array of the modules by id & CODE
      */
     public function get_staff_modules()
     {
 
         if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-            //this is not a staff user so it cant be on any modules
-            return false;
+            // This is not a staff user, so they cannot be on any modules.
+            return [];
         }
 
         if (empty($this->staffModules)) {
