@@ -1636,7 +1636,7 @@ class PaperProperties
 
         $this->display_feedback = $display_feedback;
 
-        if ($old_display_feedback != $old_display_feedback) {
+        if ($display_feedback != $old_display_feedback) {
             $this->changes[] = array('old' => $old_display_feedback, 'new' => $display_feedback, 'part' => 'textfeedback');
         }
     }
