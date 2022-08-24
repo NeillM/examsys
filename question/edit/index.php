@@ -627,7 +627,6 @@ if ($critical_error != '') {
         $query_string = '?q_id=' . $question->id;
     } else {
         $query_string .= '?type=' . $question->get_type();
-        ;
     }
     $query_string .= ($paper_id != -1) ? '&amp;paperID=' . $paper_id : '';
     $query_string .= ($module != '') ? '&amp;module=' . $module : '';

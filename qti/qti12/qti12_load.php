@@ -2140,7 +2140,6 @@ class IE_qti12_Load extends IE_Main
                     }
 
                     $rankopt->order = RemoveStNdRd($optionmapping[$cond->value]);
-                    ;
                 }
             }
 

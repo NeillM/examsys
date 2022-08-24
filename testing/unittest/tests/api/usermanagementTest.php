@@ -524,7 +524,6 @@ class usermanagementtest extends unittestdatabase
     {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        ;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;

@@ -153,7 +153,7 @@ if (!empty($hosts)) {
     if ($memcacheerror == count($servers)) {
         echo "ERROR::Memcache server failure\n";
         $error = true;
-    };
+    }
 }
 if (!$error) {
     echo 'Tickety-Boo';

@@ -865,7 +865,7 @@ SQL;
                 $logger->record_application_warning($userObject->get_user_ID(), 'Question Lineage', sprintf($string['history_exceeded_parent_limit'], $limit), __FILE__, __LINE__ - 3, array('qID' => $qID));
                 break;
             }
-        };
+        }
         return $parents;
     }
 

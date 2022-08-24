@@ -329,7 +329,6 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '', true);
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
-            ;
         }
         echo $question['leadin'];
         $li_set = 1;

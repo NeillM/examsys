@@ -608,7 +608,6 @@ class export_assessment extends exporter
                             } else {
                                 if ($mode == 'numeric') {
                                     $csvdata[0][] = ltrim($question['correct'], ',');
-                                    ;
                                 } else {
                                     $corr_index = ltrim($question['correct'], ',');
                                     $correct_text_parts = explode("\t", $question['correct_text']);

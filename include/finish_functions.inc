@@ -1861,7 +1861,6 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             echo '<option value="' . $a . '" selected>' . StringUtils::ordinal_suffix($a, $language) . "</option>\n";
                         } else {
                             echo '<option value="' . $a . '">' . StringUtils::ordinal_suffix($a, $language) . "</option>\n";
-                            ;
                         }
                     }
                     echo '</select></td>';

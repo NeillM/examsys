@@ -40,7 +40,6 @@ class dbutilstest extends unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('labs', 'core');
         $this->campus = $datagenerator->create_campus(array('name' => 'Main Campus', 'isdefault' => 1));
-        ;
     }
 
     /**
