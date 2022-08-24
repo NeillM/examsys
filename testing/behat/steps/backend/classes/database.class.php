@@ -41,7 +41,7 @@ trait database
      * @Given /^there are "([^"]*)" records in the "([^"]*)" table$/
      * @param int $count The expected number of records
      * @param string $table The name odf the table to check
-     * @throws Exception
+     * @throws \Exception
      */
     public function there_are_records_in_the_table($count, $table)
     {

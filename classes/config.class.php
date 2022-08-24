@@ -725,7 +725,7 @@ class Config extends RogoStaticSingleton
      * @param string $parent name of xml node
      * @param string $child xml child node name
      * @param string $grandchild xml grandchild node name
-     * @return value of xml node
+     * @return mixed of xml node
      */
     public function getxml($parent, $child = '', $grandchild = '')
     {
@@ -786,7 +786,7 @@ class Config extends RogoStaticSingleton
     /**
      * Check if value is of the expected type
      * @param string $value value to check
-     * @param const $type constant config type
+     * @param string $type constant config type
      * @return bool true if value is of expected type, false otherwise
      */
     public static function check_type($value, $type)

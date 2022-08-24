@@ -123,8 +123,8 @@ class UserObject extends RogoStaticSingleton
     /**
      * constructor
      *
-     * @param $db is a mysqli link to db
-     * @param $configObject a Rogo config object populated from config.inc
+     * @param mysqli $db is a mysqli link to db
+     * @param Config $configObject a Rogo config object populated from config.inc
      *
      * @return void
      */
@@ -282,10 +282,10 @@ class UserObject extends RogoStaticSingleton
     /**
      * checks if user has role(s) specified
      *
-     * @param $roles either a string or an array of strings
-     * @param $exclusive if this should only have this role
+     * @param array|string $roles either a string or an array of strings
+     * @param int $exclusive if this should only have this role
      *
-     * @return true if has role(s)
+     * @return bool true if has role(s)
      */
     public function has_role($roles, $exclusive = 0)
     {
@@ -343,7 +343,7 @@ class UserObject extends RogoStaticSingleton
     /**
      * returns the year of the user
      *
-     * @return the year of the user
+     * @return int the year of the user
      */
     public function get_year()
     {
@@ -353,7 +353,7 @@ class UserObject extends RogoStaticSingleton
     /**
      * returns the userID
      *
-     * @return userID
+     * @return int userID
      */
     public function &get_user_ID()
     {
@@ -477,7 +477,7 @@ class UserObject extends RogoStaticSingleton
     /**
      * loads the staff modules
      *
-     * @return the staff module list //TODO probably dont need the return
+     * @return array the staff module list //TODO probably dont need the return
      */
     public function load_staff_modules()
     {
@@ -760,8 +760,8 @@ class UserObject extends RogoStaticSingleton
     /**
      * checks to see is user is on a student module
      *
-     * @param $moduleID an integer or string of a module
-     * @param $calendar_year the calendar year being looked for
+     * @param int|string $moduleID an integer or string of a module
+     * @param int $calendar_year the calendar year being looked for
      *
      * @return bool true if student member is on a module
      */
@@ -807,9 +807,9 @@ class UserObject extends RogoStaticSingleton
     /**
      * Enrole the student on a module.
      *
-     * @param $idMod moduleID of module
-     * @param $attempt
-     * @param $session session of module
+     * @param int $idMod moduleID of module
+     * @param int $attempt
+     * @param int $session session of module
      * @param int $auto_update if system add
      *
      * @return bool return true if successful.

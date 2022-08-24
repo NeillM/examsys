@@ -54,7 +54,7 @@ class papers extends generator
      * - value string The value of the metadata a student must have
      *
      * @param int $paperid The database id of the paper.
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @return array
      * @throws data_error
      */
@@ -86,7 +86,7 @@ class papers extends generator
      * - value string The value of the metadata a student must have
      *
      * @param int $paperid The database id of the paper.
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @return array
      * @throws data_error
      */
@@ -251,7 +251,7 @@ class papers extends generator
 
             // Set the management type back to the correct state.
             $conf->set_setting('cfg_summative_mgmt', $management, $conf->get_setting_type('core', 'cfg_summative_mgmt'));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Set the management type back to the correct state.
             $conf->set_setting('cfg_summative_mgmt', $management, $conf->get_setting_type('core', 'cfg_summative_mgmt'));
 
@@ -358,7 +358,7 @@ class papers extends generator
      * Get module id by name
      *
      * @param string $modulename
-     * @param obj $db
+     * @param \mysqli $db
      * @return int moduleid
      */
     public static function test_get_moduleidbyname($modulename, $db)
@@ -466,7 +466,7 @@ class papers extends generator
         // Ensure academic session exists.
         $supported = $yearutils->get_supported_years();
         if (!array_key_exists($settings['session'], $supported)) {
-            $generator = new \academic_year();
+            $generator = loader::get('academic_year');
             $parameters['calendar_year'] = $settings['session'];
             $parameters['academic_year'] = $settings['session'] . '/' . (date('y') + 1);
             $generator->create_academic_year($parameters);
@@ -499,7 +499,7 @@ class papers extends generator
                 null,
                 $settings['remote'],
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
             echo $message;
             throw new data_error('Error: ' . $message);
@@ -518,7 +518,7 @@ class papers extends generator
                 $settings['sittings'],
                 $settings['campus']
             );
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $message = $e->getMessage();
             echo $message;
             throw new data_error('Error: ' . $message);

@@ -29,13 +29,13 @@ class render
 {
     /**
      * Twig object
-     * @var twig
+     * @var \Twig\Environment
      */
     protected $twig;
 
     /**
      * Config object
-     * @var config
+     * @var Config
      */
     protected $config;
 

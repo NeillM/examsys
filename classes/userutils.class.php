@@ -806,7 +806,10 @@ class UserUtils
      *
      * @param int $userID ID of the student to be enroled.
      * @param int $idMod Module ID for the enrolement.
-     * @param object $db $mysqli database connection.
+     * @param int $attempt
+     * @param int $session
+     * @param mysqli $db $mysqli database connection.
+     * @param int $auto_update
      *
      * @return int|bool enrolement id, 0 if already enrolled, false on error
      */

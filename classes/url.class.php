@@ -335,7 +335,7 @@ class Url
      * @param string $name
      * @param string $value
      *
-     * @return Uri
+     * @return Url
      */
     public function setQueryValue($name, $value)
     {

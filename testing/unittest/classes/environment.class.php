@@ -86,7 +86,7 @@ class environment
         $codeversion = Config::get_instance()->getxml('version');
         $file = self::get_version_location();
         if (!file_put_contents($file, $codeversion)) {
-            throw new Exception('Could not write version file.');
+            throw new \Exception('Could not write version file.');
         }
     }
 

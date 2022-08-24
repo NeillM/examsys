@@ -145,7 +145,7 @@ function _rserve_make_data($type, $string) {
 
 /**
  * Parse a Rserve packet from socket connection
- * @param unknown_type $socket
+ * @param Socket $socket
  */
 function _rserve_get_response($socket) {
 	$n = socket_recv($socket, $buf, 16, 0);

@@ -268,9 +268,9 @@ $vle_api_cache = array(); // Cache the vle api to save some queries
 /**
  * Get any mapped objectives for a question.
  *
- * @global type $objsBySession_cache
+ * @global array $objsBySession_cache
  * @global array $vle_api_cache
- * @global type $configObject
+ * @global Config $configObject
  * @param int $thisModuleid
  * @param int $session The year in which the academic year starts
  * @param int $paperID

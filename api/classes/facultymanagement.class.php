@@ -171,7 +171,7 @@ class facultymanagement extends \api\abstractmanagement
      * Delete faculty
      * @param array $parms delete faculty parameters
      * @param integer $userid rogo user id linked to web service client
-     * @return success status and faculty id
+     * @return array success status and faculty id
      */
     public function delete($params, $userid)
     {

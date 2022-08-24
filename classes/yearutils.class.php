@@ -71,7 +71,7 @@ class yearutils
 
     /**
      * Constructor
-     * @param rogo db $mysqli
+     * @param mysqli $mysqli
      */
     public function __construct($mysqli)
     {
@@ -137,7 +137,7 @@ class yearutils
     /**
      * Create options list for a drop down menu of sessions.
      *
-     * @param char $paper_type type of paper
+     * @param int $paper_type type of paper
      * @param string $calendar_year - current calendar year
      * @param array $string - language sting array
      * @param string $yeartype - supported year search type.

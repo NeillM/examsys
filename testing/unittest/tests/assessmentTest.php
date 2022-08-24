@@ -51,7 +51,7 @@ class assessmenttest extends unittestdatabase
      * Create a paper
      * @param string $papertitle paper title
      * @param integer $papertype paper type
-     * @return paperid
+     * @return int|bool The paperid or potentially false on an error
      */
     private function create_paper($papertitle, $papertype)
     {

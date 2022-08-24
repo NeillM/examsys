@@ -84,7 +84,7 @@ function clearMSOtags($sHTML)
  * @param string $replace - id for editor
  * @param string $content - current content
  * @param string $type - TinyMCE only - type of editor i.e. standard
- * @return html of editor
+ * @return string html of editor
  */
 function wysiwyg_editor($name, $replace, $content = '', $type = '')
 {

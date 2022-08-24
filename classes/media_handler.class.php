@@ -306,7 +306,7 @@ class media_handler
 
     /**
      * Extract files in archive ignoring files not supported by Rogo.
-     * @param $fullpath path to archive
+     * @param string $fullpath path to archive
      * @return bool
      * @throws directory_not_found
      */

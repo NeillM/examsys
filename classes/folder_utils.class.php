@@ -91,10 +91,10 @@ class folder_utils
     /**
      * Returns whether a personal staff folder exists or not.
      *
-     * @param $folder_name The name of the folder
-     * @param $folder_name - The name of the folder to be searched for.
-     * @param $userObj         - Currently logged in user object.
-     * @param $db                  - Mysqli object
+     * @param string $folder_name The name of the folder
+     * @param string $folder_name - The name of the folder to be searched for.
+     * @param UserObject $userObj         - Currently logged in user object.
+     * @param mysqli $db                  - Mysqli object
      * @return bool                - True = folder exists, False = it does not exist.
      */
     public static function folder_exists($folder_name, $userObj, $db)

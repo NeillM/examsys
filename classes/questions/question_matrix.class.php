@@ -47,7 +47,7 @@ class QuestionMATRIX extends QuestionEdit
 
     /**
      * Get an array of stems for the compounded scenarios
-     * @return multitype:
+     * @return array multitype:
      */
     public function get_all_stems()
     {

@@ -29,7 +29,7 @@ namespace plugins\ims;
  */
 class ims_enterprise_roles
 {
-    /** @var imscode => ims role name. Role name mapping. */
+    /** @var array imscode => ims role name. Role name mapping. */
     private $imsroles;
     /** $var The code for the Learner role as defined by the IMS Enterprise specification */
     public const ROLE_LEARNER = '01';
@@ -54,14 +54,14 @@ class ims_enterprise_roles
     public function __construct()
     {
         $this->imsroles = array(
-        self::ROLE_LEARNER => 'Learner',
-        self::ROLE_INSTRUCTOR => 'Instructor',
-        self::ROLE_CONTENT_DEVELOPER => 'Content Developer',
-        self::ROLE_MEMBER => 'Member',
-        self::ROLE_MANAGER => 'Manager',
-        self::ROLE_MENTOR => 'Mentor',
-        self::ROLE_ADMINISTRATOR => 'Administrator',
-        self::ROLE_TEACHINGASSISTANT => 'TeachingAssistant'
+            self::ROLE_LEARNER => 'Learner',
+            self::ROLE_INSTRUCTOR => 'Instructor',
+            self::ROLE_CONTENT_DEVELOPER => 'Content Developer',
+            self::ROLE_MEMBER => 'Member',
+            self::ROLE_MANAGER => 'Manager',
+            self::ROLE_MENTOR => 'Mentor',
+            self::ROLE_ADMINISTRATOR => 'Administrator',
+            self::ROLE_TEACHINGASSISTANT => 'TeachingAssistant'
         );
         // PLEASE NOTE: It may seem odd that "Content Developer" has a space in it
         // but "TeachingAssistant" doesn't. That's what the spec says though!!!

@@ -64,7 +64,7 @@ abstract class file_handler
      * Move upload file to tmp dir
      * @param string $from upload file
      * @param string $to temp file location
-     * @throws csv_load_exception
+     * @throws \csv\csv_load_exception
      * @return string
      */
     abstract public static function move_upload_to_temp($from, $to);

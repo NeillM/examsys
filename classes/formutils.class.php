@@ -196,7 +196,7 @@ class FormUtils
     /**
      * Get a unique version of a given file name
      * @param string $base Filesystem location of the file within which it must be unique
-     * @param unknown_type $name File name
+     * @param string $name File name
      * @return string Unique filename
      */
     public function get_unique_name($base, $name)

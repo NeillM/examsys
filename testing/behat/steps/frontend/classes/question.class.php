@@ -142,7 +142,7 @@ trait Question
      * Check questions are displayed in paper list.
      * @param TableNode $table table of question leadins
      * @Then /^I should see questions:$/
-     * @throws Exception
+     * @throws \Exception
      */
     public function iSeeQuestions(TableNode $table): void
     {
@@ -151,7 +151,7 @@ trait Question
             $question = array_shift($row);
             $found = $this->find('paper_question_leadin', $question);
             if (empty($found)) {
-                throw new Exception('the question "' . $question . '" could not been found');
+                throw new \Exception('the question "' . $question . '" could not been found');
             }
         }
     }

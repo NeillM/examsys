@@ -940,7 +940,7 @@ QUERY;
 
     /**
      * How many summative papers, apart from the current paper, is this question on?
-     * @param $paper_id ID of current paper, if any
+     * @param int $paper_id ID of current paper, if any
      * @return int
      */
     public function get_other_summative_count($paper_id)
@@ -965,7 +965,7 @@ QUERY;
 
     /**
      * The the array of fields (properties) for this class
-     * @return multitype:string
+     * @return array multitype:string
      */
     public function get_editable_fields()
     {
@@ -974,7 +974,7 @@ QUERY;
 
     /**
      * The the array of unified fields (properties) for this class
-     * @return multitype:string
+     * @return array multitype:string
      */
     public function get_unified_fields()
     {
@@ -982,8 +982,8 @@ QUERY;
     }
 
     /**
-     * The the array of fields (properties) that are relevant for post-exam corrections for this class
-     * @return multitype:string
+     * The array of fields (properties) that are relevant for post-exam corrections for this class
+     * @return array multitype:string
      */
     public function get_change_fields()
     {
@@ -1646,7 +1646,7 @@ QUERY;
 
     /**
      * Set the keywords for the question
-     * @param unknown_type $value
+     * @param array $value
      */
     public function set_keywords($value)
     {
@@ -1656,7 +1656,7 @@ QUERY;
 
     /**
      * Get external examiner comments on the question. Lazily loaded.
-     * @param unknown_type $paper_id
+     * @param int $paper_id
      * @return array Array of comments indexed by comment ID and containing paper ID, category,  comment text, date, reviewer name, action, response and type
      */
     public function get_comments($paper_id = -1)
@@ -1700,7 +1700,7 @@ QUERY;
 
     /**
      * Set the comments list for the question
-     * @param unknown_type $value
+     * @param array $value
      */
     public function set_comments($value)
     {

@@ -155,10 +155,10 @@ function display_response($show_response, $type)
 
 /**
  * Replace a variable with the calculated value in leadin and feedback
- * @param $varname Name of variable to replace
- * @param $value
- * @param $leadin
- * @param $feedback
+ * @param string $varname Name of variable to replace
+ * @param string $value
+ * @param string $leadin
+ * @param string $feedback
  * @return mixed Returns back the value which can be used to set the actual variable
  */
 function populate_variable($varname, $value, &$leadin, &$feedback, $string)

@@ -37,7 +37,7 @@ trait testcasetrait
      * load data generators
      * @param string $name The name of the generator.
      * @param string $component The component the generator is from (optional).
-     * @return generator
+     * @return \testing\datagenerator\generator
      */
     abstract public function get_datagenerator(string $name, string $component = 'core'): \testing\datagenerator\generator;
 
@@ -65,7 +65,7 @@ trait testcasetrait
 
     /**
      * Generate data for test.
-     * @throws Exception
+     * @throws \Exception
      */
     protected function base_datageneration(): void
     {

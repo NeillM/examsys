@@ -955,8 +955,8 @@ class EnhancedCalc extends Question implements questionInterface
 
     /**
      * Split the q_id from a linked answer
-     * @param type $varval
-     * @return type rogo q_id
+     * @param string $varval
+     * @return int rogo q_id
      */
     public function parse_linked_ans($varval)
     {
@@ -1007,8 +1007,8 @@ class EnhancedCalc extends Question implements questionInterface
 
     /**
      * Split the q_id and varname from a linked question var
-     * @param type $varval
-     * @return type array(varname, q_id)
+     * @param string $varval
+     * @return array array(varname, q_id)
      */
     public function parse_linked_question_var($varval)
     {

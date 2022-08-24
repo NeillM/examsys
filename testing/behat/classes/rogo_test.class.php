@@ -44,7 +44,7 @@ class rogo_test extends MinkContext
      *
      * @param string $name The name of the generator.
      * @param string $component The component the generator is from (optional).
-     * @return \testing\datagenerator\datagenerator
+     * @return \testing\datagenerator\generator
      * @throws \testing\datagenerator\not_found
      */
     protected function get_datagenerator($name, $component = 'core')
@@ -215,7 +215,7 @@ class rogo_test extends MinkContext
     /**
      * Waits for an action to be true.
      *
-     * @param function $lambda
+     * @param callable $lambda
      * @return boolean
      * @throws Exception
      */

@@ -87,9 +87,9 @@ class ims_enterprise
     protected $createprogrammes;
     /** @var bool Whether to create new faculties or not */
     protected $createfaculties;
-    /**  @var stdClass @var stdClass */
+    /**  @var \stdClass @var stdClass */
     protected $ims_settings;
-    /** @var stdClass IMS settings */
+    /** @var \stdClass IMS settings */
     protected $ims;
     /** @var $logfp resource file pointer for writing log data to. */
     protected $logfp;
@@ -97,7 +97,7 @@ class ims_enterprise
     protected $continueprocessing;
     /** @var $validatexml bool Validate XML against local DTD. */
     protected $validatexml;
-    /** @var stdClass DB Object */
+    /** @var \mysqli DB Object */
     protected $db;
     /** @var $modulemappings array of mappings between IMS data fields and Rogō module fields. */
     protected $modulemappings;
@@ -115,7 +115,7 @@ class ims_enterprise
     protected $restricttarget;
     /**
      * Constructor
-     * @param stdClass $mysqli
+     * @param \stdClass $mysqli
      */
     public function __construct($mysqli)
     {
@@ -255,7 +255,7 @@ class ims_enterprise
 
     /**
      * Get the group type of a group node
-     * @param DOMNode $node
+     * @param \DOMNode $node
      * @return boolean|string
      */
     protected function get_group_type($node)
@@ -270,7 +270,7 @@ class ims_enterprise
     /**
      * Process the FACULTY group nodes
      * @param string $faculty
-     * @return void|stdClass
+     * @return void|\stdClass
      */
     protected function process_group_faculties()
     {
@@ -356,7 +356,7 @@ class ims_enterprise
 
     /**
      * Process group nodes of FACULTY group type.
-     * @param stdClass $node
+     * @param \stdClass $node
      */
     protected function process_group_faculty($node)
     {
@@ -370,7 +370,7 @@ class ims_enterprise
 
     /**
      * Process group nodes of SCHOOL group type.
-     * @param stdClass $node
+     * @param \stdClass $node
      * @return void
      */
     protected function process_group_school($node)
@@ -458,7 +458,7 @@ class ims_enterprise
 
     /**
      * Process group nodes of PROGRAMME group type.
-     * @param stdClass $node
+     * @param \stdClass $node
      * @return void
      */
     protected function process_group_programme($node)
@@ -502,7 +502,7 @@ class ims_enterprise
     /**
      * Get related node according to configured IMS setting
      * @param string $source
-     * @param stdClass $node
+     * @param \stdClass $node
      * @param string $grouptype
      * @return string The node short name
      */
@@ -525,7 +525,7 @@ class ims_enterprise
 
     /**
      * Process group nodes of CLASSES group type.
-     * @param stdClass $node
+     * @param \stdClass $node
      * @return void
      */
     protected function process_group_module($node)
@@ -642,7 +642,7 @@ class ims_enterprise
 
     /**
      * Create a new module or update it if it already exists
-     * @param stdClass $group
+     * @param \stdClass $group
      * @param int $recstatus
      * @return int|void Return moduleid if module was created or updated.  Return void if the module was deleted.
      */
@@ -750,8 +750,8 @@ class ims_enterprise
 
     /**
      * Get a SimleXML element from a DOMNode
-     * @param DOMNode $domnode
-     * @return SimpleXMLElement
+     * @param \DOMNode $domnode
+     * @return \SimpleXMLElement
      */
     protected function get_xml_element($domnode)
     {
@@ -767,7 +767,7 @@ class ims_enterprise
      * Get DOMNodelist via xpath query
      * @param string $xml
      * @param string $path
-     * @return DOMNodelist
+     * @return \DOMNodelist
      */
     protected function get_xpath_nodelist($xml, $path)
     {
@@ -823,7 +823,7 @@ class ims_enterprise
     /**
      * Get the first value in a node list
      * @param string $xml
-     * @param path $path
+     * @param string $path
      * @return boolean|string
      */
     protected function get_nodelist_value($xml, $path)
@@ -881,7 +881,7 @@ class ims_enterprise
      * Process the person tag. This defines a Rogō user.
      *
      * @param string $node The raw contents of the XML element
-     * @param stdClass $xml
+     * @param string $xml
      * @return void
      */
     protected function process_person($node, $xml)
@@ -1006,7 +1006,7 @@ class ims_enterprise
 
     /**
      * Check whether the recstatus is valid
-     * @param SimpleXMLElement $node xml node
+     * @param \SimpleXMLElement $node xml node
      * @return string status code
      */
     protected function detect_recstatus($node)
@@ -1023,7 +1023,7 @@ class ims_enterprise
 
     /**
      * Delete a user
-     * @param stdClass $person
+     * @param \stdClass $person
      */
     protected function delete_user($person)
     {
@@ -1093,7 +1093,7 @@ class ims_enterprise
 
     /**
      * Process an individual member
-     * @param stdClass $node
+     * @param \stdClass $node
      */
     protected function process_member($member, $modulecode)
     {
@@ -1151,7 +1151,7 @@ class ims_enterprise
      * Process the INNER contents of a <timeframe> tag, to return beginning/ending dates.
      *
      * @param string $string tag to decode.
-     * @return stdClass beginning and/or ending is returned, in unix time, zero indicating not specified.
+     * @return \stdClass beginning and/or ending is returned, in unix time, zero indicating not specified.
      */
     protected static function decode_timeframe($string)
     {

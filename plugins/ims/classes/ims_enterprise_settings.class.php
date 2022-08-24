@@ -38,7 +38,7 @@ class ims_enterprise_settings
     /**
      * Get IMS settings
      *
-     * @return stdClass Object containing IMS settings as properties and property values
+     * @return \stdClass Object containing IMS settings as properties and property values
      */
     public function get_ims_settings($mysqli)
     {

@@ -273,7 +273,7 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
 
 /**
  * Check if a labelling question has any labels added to the canvas
- * @param $correct Correct answer string for the question
+ * @param string $correct Correct answer string for the question
  * @return bool
  */
 function have_valid_labels($correct)

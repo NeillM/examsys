@@ -69,7 +69,7 @@ class ViewHelper
 
     /**
      * Determine if an array is associative. It does this by camparing array_keys($a) with array_keys(array_keys($a)), which will always be 0,1,2 etc.
-     * @param unknown_type $a
+     * @param array $a
      * @return boolean
      */
     private static function is_assoc(array $a)

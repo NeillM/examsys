@@ -38,7 +38,7 @@ class environment
      *
      * This function should be modified if we wish to change the config that is used.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public static function build_config()
     {
@@ -100,7 +100,7 @@ class environment
         );
 
         if (!file_put_contents(self::get_yml_location(), Yaml::dump($config, 10, 2))) {
-            throw new Exception('Could not write the behat.yml page.');
+            throw new \Exception('Could not write the behat.yml page.');
         }
     }
 
@@ -188,7 +188,7 @@ class environment
         $codeversion = Config::get_instance()->getxml('version');
         $file = self::get_version_location();
         if (!file_put_contents($file, $codeversion)) {
-            throw new Exception('Could not write version file.');
+            throw new \Exception('Could not write version file.');
         }
     }
 

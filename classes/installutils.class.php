@@ -214,7 +214,7 @@ class InstallUtils
      * @param string $parent name of xml node
      * @param string $child xml child node name
      * @param string $grandchild xml grandchild node name
-     * @return value of xml node
+     * @return mixed value of xml node
      */
     public static function getSettings($type, $required, $parent, $child = '', $grandchild = '')
     {
@@ -245,7 +245,7 @@ class InstallUtils
      * @param integer $type type of setting
      * @param boolean $required is setting required
      * @param string $setting xml path of setting
-     * @return cleaned settings
+     * @return mixed cleaned settings
      */
     private static function check_setting($value, $type, $required, $setting)
     {

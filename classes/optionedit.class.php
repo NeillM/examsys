@@ -444,7 +444,7 @@ QUERY;
 
     /**
      * The the array of fields (properties) for this class
-     * @return multitype:string
+     * @return array multitype:string
      */
     public function get_editable_fields()
     {
@@ -656,7 +656,7 @@ QUERY;
     /**
      * Get a list of options for the given question
      * @param int $question_id
-     * @return multitype: an array of option objects
+     * @return array multitype: an array of option objects
      */
     public static function get_options($question_id)
     {

@@ -50,7 +50,7 @@ abstract class abstractpublish
 
     /**
      * Constructor
-     * @param mysqli $mysqli the database connection
+     * @param \mysqli $mysqli the database connection
      */
     public function __construct($mysqli)
     {

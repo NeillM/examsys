@@ -30,7 +30,7 @@ class config extends generator
     /**
      * Changes a Rogo setting.
      *
-     * @param array|stdClass $data
+     * @param array|\stdClass $data
      * @throws data_error
      */
     public function change_setting($data)
