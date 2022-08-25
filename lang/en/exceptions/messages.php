@@ -15,6 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['filenotfound'] = 'File % was not found.';
-$string['directorynotfound'] = 'Directory % was not found.';
+$string['filenotfound'] = 'File %s was not found.';
+$string['directorynotfound'] = 'Directory %s was not found.';
 $string['invalidfilepath'] = 'Invalid file path.';
