@@ -905,7 +905,7 @@ $properties->renderSettings('general');
 
 <table id="prologue" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/prologue_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['prologueheading']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('paper_prologue', 'paper_prologue', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_prologue()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
+<tr><td><?php $texteditorplugin->get_textarea('paper_prologue', 'paper_prologue', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_prologue() ?? ''), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
 <?php
 $properties->renderSettings('prologue');
 ?>
@@ -913,7 +913,7 @@ $properties->renderSettings('prologue');
 
 <table id="postscript" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/postscript_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['postscriptheading']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('paper_postscript', 'paper_postscript', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_postscript()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
+<tr><td><?php $texteditorplugin->get_textarea('paper_postscript', 'paper_postscript', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_postscript() ?? ''), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
 <?php
 $properties->renderSettings('postscript');
 ?>
