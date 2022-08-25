@@ -158,15 +158,15 @@ class Invigilation
         $data['surname'] = $surname;
         $data['endtime'] = $endtime;
         $data['special'] = '';
-        if ($special_needs_extra_time_mins != '') {
+        if (!empty($special_needs_extra_time_mins)) {
             $data['special'] = $special_needs_extra_time_mins;
         }
         $data['specialextra'] = '';
         $data['specialextratime'] = '';
-        if ($special_needs_extra_time_mins != '' and $extra_time_mins != '') {
+        if (!empty($special_needs_extra_time_mins) and !empty($extra_time_mins)) {
             $data['specialextra'] = ' + ';
         }
-        if ($extra_time_mins != '') {
+        if (!empty($extra_time_mins)) {
             $data['specialextratime'] = $extra_time_mins;
         }
         $data['accessibility'] = 0;
