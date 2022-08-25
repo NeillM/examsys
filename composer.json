@@ -1,20 +1,30 @@
 {
     "name": "uon/rogo",
+    "config": {
+        "platform": {
+            "php": "7.4"
+        }
+    },
     "description": "Rogo e-assessment",
     "license": "GPL-3.0",
     "authors": [
         {
             "name": "Joseph Baxter",
             "email": "joseph.baxter@nottingham.ac.uk"
+        },
+        {
+            "name": "Neill Magill",
+            "email": "neill.magill@nottingham.ac.uk"
         }
     ],
     "require": {
+        "php": ">=7.4 <=8.1",
         "slim/slim": "^4.0",
         "bshaffer/oauth2-server-php": "^1.10",
         "twig/twig": "^2.0",
         "ezyang/htmlpurifier": "^v4.13.0",
         "james-heinrich/getid3": "^1.9",
-        "slim/psr7": "^0.5.0",
+        "slim/psr7": "^1.5.0",
         "phpmailer/phpmailer": "^6.5"
     },
     "require-dev": {
