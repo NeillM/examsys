@@ -122,7 +122,7 @@ function exceptionHandler($exception)
             }
         }
     }
-    $variables = 'exception handler: therefore unknown';
+    $variables = base64_encode(serialize('exception handler: therefore unknown'));
     $error_type = 'Application Error';
     $errstr = $msg;
     $userid = 0;
