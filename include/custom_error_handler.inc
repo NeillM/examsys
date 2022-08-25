@@ -212,7 +212,19 @@ function error_handling($context = null)
     return $context1;
 }
 
-function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
+/**
+ * The custom error handler for Rogo
+ *
+ * It stores errors in the Rogo database.
+ *
+ * @param int $errno
+ * @param string $errstr
+ * @param string $errfile
+ * @param int $errline
+ * @param array $context This parameter is no longer used in PHP 8.0 and above.
+ * @return bool
+ */
+function customErrorHandler($errno, $errstr, $errfile, $errline, $context = [])
 {
     global $debug_pagestart, $mysqli;
 
