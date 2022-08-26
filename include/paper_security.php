@@ -133,13 +133,14 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
  * @param object $userObj user object
  * @param array $string tranlsations
  * @param object $db database object
+ * @return void
  */
 function check_finished($propertyObj, $userObj, $string, $db)
 {
     $notice = UserNotices::get_instance();
 
     if ($propertyObj->get_paper_type() != '2' and $propertyObj->get_paper_type() != '1') {
-        return true;
+        return;
     }
 
     $userID = $userObj->get_user_ID();

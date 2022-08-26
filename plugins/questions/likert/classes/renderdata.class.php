@@ -109,7 +109,6 @@ class renderdata extends \questiondata
             $this->displaylikertnotes = true;
             $this->likertnotescolspan = $this->scale_size + 1;
         } else {
-            $this->displaylikertnotes = true;
             $this->displaylikertnotes = false;
         }
         if ($this->scenario != '') {

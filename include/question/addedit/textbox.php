@@ -104,7 +104,7 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
           <h2 class="midblue_header"><?php echo $string['assessmentdata'] ?></h2>
         </div>
         <?php
-        $renderpath[] = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . 'textbox' . DIRECTORY_SEPARATOR . 'templates';
+        $renderpath[] = dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . 'textbox' . DIRECTORY_SEPARATOR . 'templates';
         $termsrender = new render($configObject, $renderpath);
         $renderdata['disclass'] = $dis_class;
         $renderdata['locked'] = true;

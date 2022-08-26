@@ -92,7 +92,6 @@ class outline_lookup
 
     public function init($object)
     {
-        $this->db = new mysqli();
         $this->db = & $object->db;
         $this->calling_object = & $object->calling_object;
         //    $this->returndata = & $object->returndata;
@@ -109,7 +108,7 @@ class outline_lookup
         $context1 = array();
         if (is_null($context)) {
             // if no array set get currently define variables in this object
-                $context = get_defined_vars($this);
+            $context = get_defined_vars();
         }
 
         $context1 = error_handling($context);
@@ -181,7 +180,7 @@ class outline_lookup
      * @param $name string the name this object is
      * @param $insert bool to insert rather than append
      *
-     * @return bool
+     * @return void
      */
     public function register_callback($callback, $section, $number, $name, $insert = false)
     {

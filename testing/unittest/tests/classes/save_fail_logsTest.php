@@ -58,7 +58,7 @@ class save_fail_logsTest extends unittestdatabase
      */
     public function test_get_save_fail_logs()
     {
-        $log_obj = new save_fail_logs($this->db);
+        $log_obj = new save_fail_logs();
         $this->assertEquals(2, count($log_obj->get_save_fail_logs()));
     }
 
@@ -68,7 +68,7 @@ class save_fail_logsTest extends unittestdatabase
      */
     public function test_delete_a_save_fail_log()
     {
-        $log_obj = new save_fail_logs($this->db);
+        $log_obj = new save_fail_logs();
         $log_obj->delete_a_save_fail_log('1');
         $this->assertTrue($log_obj->delete_a_save_fail_log(1));
     }
@@ -79,7 +79,7 @@ class save_fail_logsTest extends unittestdatabase
      */
     public function test_delete_save_fail_logs()
     {
-        $log_obj = new save_fail_logs($this->db);
+        $log_obj = new save_fail_logs();
         $this->assertTrue($log_obj->delete_save_fail_logs());
     }
 }

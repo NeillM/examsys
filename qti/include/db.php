@@ -23,7 +23,7 @@
  * @package
  */
 
-require_once dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'errors.php';
+require_once dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'errors.php';
 
 class Database
 {
@@ -85,6 +85,7 @@ class Database
         } else {
             $this->fields[] = $fieldname;
         }
+        return '';
     }
 
     public function AddLeftJoin($table, $alias, $sourcekey, $destkey)
@@ -104,6 +105,7 @@ class Database
         $join['dk'] = $destkey;
 
         $this->leftjoins[] = $join;
+        return '';
     }
 
     public function AddInnerJoin($table, $alias, $sourcekey, $destkey)
@@ -123,6 +125,7 @@ class Database
         $join['dk'] = $destkey;
 
         $this->innerjoins[] = $join;
+        return '';
     }
 
     public function AddWhere($field, $value, $type, $wheretype = '=')
@@ -138,6 +141,7 @@ class Database
         $where['wheretype'] = $wheretype;
 
         $this->wheres[] = $where;
+        return '';
     }
 
     public function AddOrder($field, $asc = '')
@@ -151,6 +155,7 @@ class Database
         $order['dir'] = $asc;
 
         $this->orders[] = $order;
+        return '';
     }
 
     public function AddValue($field, $value, $type)
@@ -165,6 +170,7 @@ class Database
         $valuea['type'] = $type;
 
         $this->values[] = $valuea;
+        return '';
     }
 
     public function AddGroup($field)
@@ -174,6 +180,7 @@ class Database
         }
 
         $this->groups[] = $field;
+        return '';
     }
 
     public function AddLimit($limit, $offset = 0)
@@ -184,6 +191,7 @@ class Database
 
         $this->limit = $limit;
         $this->limitoffset = $offset;
+        return '';
     }
 
     public function AddSet($field, $value, $type)
@@ -199,6 +207,7 @@ class Database
         $set['type'] = $type;
 
         $this->sets[] = $set;
+        return '';
     }
 
     public function _BuildQuery()

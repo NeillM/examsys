@@ -243,6 +243,7 @@ function format_method($method, $string)
     } elseif ($method == '6') {
         return $string['overallclass4'];
     }
+    return '';
 }
 
 function format_review($method, $string)

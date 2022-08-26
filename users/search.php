@@ -65,7 +65,7 @@ $counter = 0;
 if (!is_null($submit)) {
     $search = new UserSearch();
     // max number of results per page
-    $limit = param::optional('limit', UserSearch::DEFAULT_LIMIT, param::INT, param::FETCH_GET);
+    $limit = param::optional('limit', Search::DEFAULT_LIMIT, param::INT, param::FETCH_GET);
     $search->setLimit($limit);
 
     // current page of results

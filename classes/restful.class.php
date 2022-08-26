@@ -27,12 +27,12 @@
 class restful
 {
     /**
-     * @var DB connection
+     * @var mysqli connection
      */
     private $db;
 
     /**
-     * @var The last recevied http code
+     * @var int The last received http code
      */
     private $http_code;
 

@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 //HTML5 part
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/question/edit/hotspot_correct.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/question/edit/area.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/paper/hotspot_answer.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/paper/hotspot_question.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/paper/label_answer.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/include/months.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/question/sct_shared.php';
-require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/include/paper_security.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/question/edit/hotspot_correct.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/question/edit/area.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/paper/hotspot_answer.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/paper/hotspot_question.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/paper/label_answer.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/include/months.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/question/sct_shared.php';
+require_once dirname(__DIR__, 3) . '/lang/' . $language . '/include/paper_security.php';
 
 $string['survey'] = 'Survey';
 $string['assessment'] = 'Assessment';

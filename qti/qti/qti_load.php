@@ -104,7 +104,7 @@ class IE_qti_Load extends IE_Main
                 }
                 print 'Zip Error Message: ' . $ErrMsg . "\r\n";
                 $this->AddError($string['invalidzip']);
-                return;
+                return null;
             }
         }
 
@@ -120,7 +120,7 @@ class IE_qti_Load extends IE_Main
 
         if (count($files['qti12']) == 0) {
             $this->AddError($string['noqtiinzip']);
-            return;
+            return null;
         }
 
         $result = new stdClass();
@@ -195,5 +195,6 @@ class IE_qti_Load extends IE_Main
         }
 
         echo $basenode . '<br />';
+        return '';
     }
 }

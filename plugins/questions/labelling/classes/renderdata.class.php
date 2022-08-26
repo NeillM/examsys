@@ -51,7 +51,7 @@ class renderdata extends \questiondata
 
     /**
      * marks incorrect
-     * @var flost
+     * @var float
      */
     public $marksincorrect;
 

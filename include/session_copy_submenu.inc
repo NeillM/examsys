@@ -25,7 +25,7 @@
 
 /**
  * Get a list of years for which the module has mapped objectives
- * @param debug_mysqli $db
+ * @param mysqli $db
  * @param int $idMod The DB ID of the module
  * @return array List of years
  */

@@ -25,7 +25,7 @@
  * @package
  */
 
-require_once dirname(dirname(dirname(__DIR__))) . '/plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
+require_once dirname(__DIR__, 3) . '/plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
 class ENHANCEDCALCCorrector extends Corrector
 {

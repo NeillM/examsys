@@ -35,7 +35,7 @@ class database
     /**
      * Creates a Rogo database for behat testing.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public static function install_database()
     {
@@ -46,7 +46,7 @@ class database
         // Check that the php environment is setup correctly.
         try {
             \requirements::check();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
         // Setup the InstallUtils class for installation.

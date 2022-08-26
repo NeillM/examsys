@@ -27,10 +27,11 @@
 class question_info
 {
     /**
-     * Get the question information
+     * Print the question information.
+     *
      * @param integer $q_id
      * @param object $db
-     * @return formated HTML for display of question information
+     * @return void
      */
     public static function full_question_information($q_id, $db, $userObj, $string, $notice)
     {
@@ -189,7 +190,7 @@ class question_info
 
     /**
      * Determine if a question type can have multiple parts.
-     * @param text $type
+     * @param string $type
      * @return true or false
      */
     public static function multi_part_question($type)
@@ -204,8 +205,8 @@ class question_info
     /**
      * If question is multipart then Roman numerals will be returned.
      * @param array $perform_data
-     * @param text $q_type
-     * @return formatted HTML
+     * @param string $q_type
+     * @return string formatted HTML
      */
     public static function display_parts($perform_data, $q_type)
     {
@@ -223,8 +224,8 @@ class question_info
     /**
      * Format and output P values for a question.
      * @param array $perform_data
-     * @param text $q_type
-     * @return formatted value for P.
+     * @param string $q_type
+     * @return string formatted value for P.
      */
     public static function display_p($perform_data, $q_type)
     {
@@ -243,8 +244,8 @@ class question_info
 
     /**
      * Check and add a warning to P values.
-     * @param real $value
-     * @return the original number or a warning if less than 0.2
+     * @param float $value
+     * @return string|float the original number or a warning if less than 0.2
      */
     public static function p_warning($value)
     {
@@ -258,8 +259,8 @@ class question_info
     /**
      * Format and output D values for a question.
      * @param array $perform_data
-     * @param text $q_type
-     * @return formatted value for D.
+     * @param string $q_type
+     * @return string formatted value for D.
      */
     public static function display_d($perform_data, $q_type)
     {
@@ -278,8 +279,8 @@ class question_info
 
     /**
      * Check and add a warning to D values.
-     * @param real $value
-     * @return the original number or a warning if less than 0.15
+     * @param float $value
+     * @return string|float the original number or a warning if less than 0.15
      */
     public static function d_warning($value)
     {

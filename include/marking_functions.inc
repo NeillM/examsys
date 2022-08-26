@@ -949,8 +949,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
  * Check if any of the variables used in a formula evaluates to ERROR (a student answer from a previous question that
  * hasn't been answered), in which case it cannot be processed
  *
- * @param $formula Formula to be evaluated
- * @param $variables Array of variable values
+ * @param string $formula Formula to be evaluated
+ * @param array $variables Array of variable values
  *
  * @return bool
  */

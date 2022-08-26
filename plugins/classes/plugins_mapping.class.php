@@ -38,7 +38,7 @@ abstract class plugins_mapping extends \plugins\plugins
     /**
      * Do mapping
      * Get mapping plugin and map
-     * @param mysqli $db db object
+     * @param \mysqli $db db object
      * @param string $type type of mapping
      * @param string $source variable to map
      * @return string $target mapped variable

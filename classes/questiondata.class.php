@@ -889,6 +889,7 @@ abstract class questiondata
     /**
      * Get data store class if it exists
      * @param string $qtype question type
+     * @return \questiondata
      */
     public static function get_datastore($qtype)
     {

@@ -487,7 +487,7 @@ class PaperUtils
      * @param int $paperID - The id of the paper or property_id
      * @param object $db - Database connection
      * @param object $userObject - user object
-     * @param strting $modulefilter - 'all' or a specfic module
+     * @param string $modulefilter - 'all' or a specfic module
      * @return void
      */
     public function remove_modules($paper_modules, $paperID, $db, $userObject, $modulefilter = '')
@@ -525,8 +525,8 @@ class PaperUtils
 
     /**
      * Determine if a paper title (name) is unique - in the database already.
-     * @param $title the title to be tested
-     * @param $db Database connection
+     * @param string $title the title to be tested
+     * @param \mysqli $db Database connection
      * @return $unique true if the name does not already exist
      */
     public function is_paper_title_unique($title, $db)
@@ -568,9 +568,9 @@ class PaperUtils
 
     /**
      * Delete a paper (Note: sets the deleted field we don't actuality delete the row form the papers table)
-     * @param $paperID the id of the paper or property_id
-     * @param $owner the owner we want to set the deleted paper to
-     * @param $db Database connection
+     * @param string $paperID the id of the paper or property_id
+     * @param int owner the owner we want to set the deleted paper to
+     * @param \mysqli $db Database connection
      * @return void
      */
     public function delete_paper($paperID, $owner, $db)
@@ -804,7 +804,7 @@ class PaperUtils
      * area) on a particular screen of a paper. Speeds system up if not loading
      * unnecessary HTML5/Flash include files.
      * @param  array      $screen_data Array of screen/question information
-     * @param  array      $screen      The screen number to check
+     * @param  int      $screen      The screen number to check
      * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
      */
     public function need_interactiveQ($screen_data, $screen, $db)
@@ -1486,7 +1486,7 @@ class PaperUtils
 
     /**
      * Get marking overrides for a user on a paper
-     * @param enum $log_type type of paper
+     * @param int $log_type type of paper
      * @param integer $temp_userID user id
      * @param integer $paperID paper id
      * @return array
@@ -1514,7 +1514,7 @@ class PaperUtils
 
     /**
      * Get list of question ids for parents of linked questions.
-     * @param $questions questions array from paper
+     * @param array $questions questions array from paper
      * @return array
      */
     public static function get_linked_question_parents($questions)

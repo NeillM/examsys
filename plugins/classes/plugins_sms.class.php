@@ -87,7 +87,7 @@ abstract class plugins_sms extends \plugins\plugins
      * @param array $moduleimport module import data from plugin
      * @param integer $moduleid internal id for module
      * @param string $externalid external id for module
-     * @return bool
+     * @return void
      */
     public static function render_module_sync_options($moduleimport, $moduleid, $externalid)
     {

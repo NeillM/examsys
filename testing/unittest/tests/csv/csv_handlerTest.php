@@ -37,7 +37,7 @@ class csv_handlerTest extends unittestdatabase
 
     /**
      * Get test dir
-     * @return csv_handler
+     * @return string
      */
     public function get_test_dir()
     {

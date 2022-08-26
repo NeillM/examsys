@@ -217,7 +217,7 @@ class schoolmanagement extends \api\abstractmanagement
      * Delete school
      * @param array $parms delete school parameters
      * @param integer $userid rogo user id linked to web service client
-     * @return success status and school id
+     * @return array success status and school id
      */
     public function delete($params, $userid)
     {

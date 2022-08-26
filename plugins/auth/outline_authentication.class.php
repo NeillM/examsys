@@ -88,7 +88,6 @@ class outline_authentication
 
     public function init($object)
     {
-        $this->db = new mysqli();
         $this->db = & $object->db;
         $this->calling_object = & $object->calling_object;
         $this->form = & $object->form;
@@ -102,7 +101,7 @@ class outline_authentication
         $context1 = array();
         if (is_null($context)) {
             // if no array set get currently define variables in this object
-                $context = get_defined_vars($this);
+            $context = get_defined_vars();
         }
 
         $context1 = error_handling($context);
@@ -179,7 +178,7 @@ class outline_authentication
      * @param string $name the name this object is
      * @param bool $insert to insert rather than append
      *
-     * @return bool
+     * @return void
      */
     public function register_callback($callback, $section, $number, $name, $insert = false)
     {

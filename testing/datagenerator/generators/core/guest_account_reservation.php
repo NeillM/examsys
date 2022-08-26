@@ -38,7 +38,7 @@ class guest_account_reservation extends generator
      * - assigned_account string The username of the account that is reserved (required)
      * - reserved string|int The time of reservation as either a UNIX timestamp, or date n the form: 'Y-m-d H:i:s'
      *
-     * @param array|stadClass $parameters
+     * @param array|\stdClass $parameters
      * @return array
      */
     public function createReservation($parameters): array

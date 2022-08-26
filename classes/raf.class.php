@@ -265,7 +265,7 @@ class RAF
 
     /**
      * Check Media is not empty and added to media array
-     * @param $media_string the media file name
+     * @param string $media_string the media file name
      */
     private function checkMedia($media_string): void
     {

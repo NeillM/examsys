@@ -127,7 +127,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     /**
      * Set the units for the question
-     * @param unknown_type $value
+     * @param string $value
      */
     public function set_units($value)
     {
@@ -235,7 +235,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     /**
      * Get the possible labels for variables
-     * @return arar List of variable labels
+     * @return array List of variable labels
      */
     public function get_variable_labels()
     {
@@ -362,7 +362,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     /**
      * Set the full marks tolerance for the question
-     * @param unknown_type $value
+     * @param string $value
      */
     public function set_tolerance_full($value)
     {
@@ -383,7 +383,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     /**
      * Set the partial marks tolerance for the question
-     * @param unknown_type $value
+     * @param string $value
      */
     public function set_tolerance_partial($value)
     {
@@ -549,7 +549,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     /**
      * Set the full marks tolerance for the question
-     * @param unknown_type $value
+     * @param string $value
      */
     private function set_tolerance_value($value, $type_string, &$val_target, &$type_target)
     {

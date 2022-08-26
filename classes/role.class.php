@@ -132,7 +132,7 @@ class Role
     /**
      * Gets a list of roles in Rogo.
      *
-     * @return Roles[]
+     * @return Role[]
      */
     public static function list(): array
     {
@@ -318,7 +318,7 @@ class Role
     /**
      * Validates that the role name is correct.
      *
-     * @param $name The name of the role to validate.
+     * @param string name The name of the role to validate.
      * @return int The id of the role.
      * @throws \InvalidRole If the role does not exist
      */

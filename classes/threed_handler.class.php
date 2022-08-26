@@ -27,7 +27,7 @@ class threed_handler extends media_handler
 {
     /**
      * Render three js files
-     * @param $string translation array
+     * @param array $string translation array
      */
     public static function render_js($string)
     {

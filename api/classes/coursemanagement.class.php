@@ -220,7 +220,7 @@ class coursemanagement extends \api\abstractmanagement
      * Delete course
      * @param array $parms delete course parameters
      * @param integer $userid rogo user id linked to web service client
-     * @return success status and course id
+     * @return array success status and course id
      */
     public function delete($params, $userid)
     {

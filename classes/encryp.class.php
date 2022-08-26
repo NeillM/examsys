@@ -47,12 +47,14 @@ class encryp
     }
     /**
      * Load dictionary into memory.
+     *
+     * @return void
      */
     private function load()
     {
         // Return if already in memory.
         if (isset($this->dictionary)) {
-            return $this->dictionary;
+            return;
         }
         // Revert to default password generation if no dictionary.
         if (!file_exists($this->file)) {
@@ -135,7 +137,7 @@ class encryp
      *
      * Falls back to random password if a dictionary file is unavailable.
      *
-     * @param boo $readable flag to generate a readable password or a random string
+     * @param bool $readable flag to generate a readable password or a random string
      * @param int $len Length of generated password (only used by non readable password
      * @return array the password and the password to display - e.g. "monkeyhorseapple" and "monkey horse apple"
      */

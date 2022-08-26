@@ -184,4 +184,5 @@ function get_question_no($qid, $questions)
             return $problem_qid;
         }
     }
+    return null;
 }

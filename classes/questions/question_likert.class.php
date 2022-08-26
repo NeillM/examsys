@@ -58,7 +58,7 @@ class QuestionLIKERT extends QuestionEdit
 
     /**
      * Get the range of available scale types for the question
-     * @return multitype
+     * @return array multitype
      */
     public function get_scale_types()
     {
@@ -77,7 +77,7 @@ class QuestionLIKERT extends QuestionEdit
 
     /**
      * Set the scale type for the question
-     * @param unknown_type $value
+     * @param string $value
      */
     public function set_scale_type($value)
     {
@@ -100,7 +100,7 @@ class QuestionLIKERT extends QuestionEdit
 
     /**
      * Set whether 'not applicable' should be applied to scales for this question
-     * @param unknown_type $value
+     * @param string $value
      */
     public function set_not_applicable($value)
     {
@@ -115,7 +115,7 @@ class QuestionLIKERT extends QuestionEdit
     /**
      * Get the custom scale values for this question. This is the same as scale_type if set. Compound field is required to
      * allow values to be saved using the same model as other question types
-     * @return multitype:string
+     * @return array multitype:string
      */
     public function get_all_custom_scales()
     {
@@ -129,7 +129,7 @@ class QuestionLIKERT extends QuestionEdit
 
     /**
      * Compound the scale items into a string and set as scale type (and hence display method)
-     * @return multitype:
+     * @return void
      */
     public function set_all_custom_scales($value)
     {
@@ -156,7 +156,7 @@ class QuestionLIKERT extends QuestionEdit
 
     /**
      * Set the display method for the question - this is a composite of decimals, tolerance and units
-     * @param unknown_type $value
+     * @param unknown_type $value This value is unused.
      */
     public function set_display_method($value)
     {

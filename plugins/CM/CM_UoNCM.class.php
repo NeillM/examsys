@@ -176,10 +176,10 @@ class CM_UoNCM implements iCMAPI
     }
 
     /**
-     * @param $sessions List of sessions with objectives
-     * @param $session The current session
-     * @param $calendar_year
-     * @param $count
+     * @param array $sessions List of sessions with objectives
+     * @param array $session The current session
+     * @param int $calendar_year
+     * @param int $count
      */
     private function process_session(&$sessions, $session, $calendar_year, &$count)
     {
@@ -222,10 +222,10 @@ class CM_UoNCM implements iCMAPI
     }
 
     /**
-     * @param $sessions List of sessions with objectives
-     * @param $session The current session
-     * @param $calendar_year
-     * @param $count
+     * @param array $sessions List of sessions with objectives
+     * @param array $session The current session
+     * @param int $calendar_year
+     * @param int $count
      */
     private function process_learning_act(&$sessions, $learning_act, $calendar_year, &$count)
     {

@@ -38,7 +38,7 @@ class ims_enterprise_settings
     /**
      * Get IMS settings
      *
-     * @return stdClass Object containing IMS settings as properties and property values
+     * @return \stdClass Object containing IMS settings as properties and property values
      */
     public function get_ims_settings($mysqli)
     {
@@ -68,7 +68,7 @@ class ims_enterprise_settings
 
     /**
      * Update settings
-     * @return boolean True if successful, otherwise False
+     * @return void
      */
     protected function insert_settings()
     {
@@ -123,7 +123,7 @@ class ims_enterprise_settings
 
     /**
      * Insert a IMS settings row (Should be updated immediately by update_settings()
-     * @return boolean
+     * @return void
      */
     private function delete_settings()
     {

@@ -25,10 +25,10 @@ class ParserNativeTest extends PHPUnit_Framework_TestCase {
      *
      * @access protected
      */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->rserve = new Rserve_Connection(RSERVE_HOST);
     }
-    
+
     /**
     * Provider for test cases
     */
@@ -57,21 +57,21 @@ class ParserNativeTest extends PHPUnit_Framework_TestCase {
 
             // factors
             array('factor(c("toto","titi","toto","tutu"))',NULL, array("toto","titi","toto","tutu")),
-            
-            // data.frame : Caution with data.frame, use stringsAsFactors=F 
-            array('data.frame("toto"=c(1,2,3),"titi"=c(2,2,3),"tutu"=c("foo","bar","i need some sleep"), stringsAsFactors =F)', NULL, 
+
+            // data.frame : Caution with data.frame, use stringsAsFactors=F
+            array('data.frame("toto"=c(1,2,3),"titi"=c(2,2,3),"tutu"=c("foo","bar","i need some sleep"), stringsAsFactors =F)', NULL,
                 array('toto'=>array(1,2,3),'titi'=>array(2,2,3),'tutu'=>array('foo','bar','i need some sleep')) ),
-                
+
             array('chisq.test(as.matrix(c(12,58,79,52),ncol=2))[c("statistic","p.value","expected")]',NULL, array('statistic'=>46.8209, 'p.value'=>3.794258e-10,'expected'=>array(50.25,50.25,50.25,50.25)), array('statistic'=>'round|4','p.value'=>'round|16')),
         );
-    
+
     }
-      
-    
+
+
     /**
     * @dataProvider providerSimpleTests
     * @param string $cmd R command
-    * @param string $type expected type 
+    * @param string $type expected type
     * @param array $expected expected php structure
     * @param array $filters filters to apply to the R result to fit the tests values, each filter is array(funcname, param1,...), or a string funcname|param1|param2...
     * @covers Rserve_Parser::parse

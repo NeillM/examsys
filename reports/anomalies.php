@@ -36,7 +36,7 @@ $folder = param::optional('folder', null, param::INT, param::FETCH_GET);
 $startdate  = param::optional('startdate', null, param::INT, param::FETCH_GET);
 $enddate    = param::optional('enddate', null, param::INT, param::FETCH_GET);
 $studentsonly    = param::optional('studentsonly', 0, param::BOOLEAN, param::FETCH_GET);
-$limit = param::optional('limit', AnomalySearch::DEFAULT_LIMIT, param::INT, param::FETCH_GET);
+$limit = param::optional('limit', Search::DEFAULT_LIMIT, param::INT, param::FETCH_GET);
 $page = param::optional('page', 1, param::INT, param::FETCH_GET);
 
 // If no start date provided default to the start of today.

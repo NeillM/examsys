@@ -31,7 +31,7 @@ class enhancedcalculationTest extends \testing\unittest\UnitTest
      */
     public function test_process_user_answer_valid()
     {
-        require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/plugins/questions/enhancedcalc/enhancedcalc.class.php';
+        require_once dirname(__DIR__, 4) . '/plugins/questions/enhancedcalc/enhancedcalc.class.php';
         $emptyarray = array();
         $post1 = array(
             'uans' => '10',

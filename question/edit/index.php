@@ -435,9 +435,9 @@ if ($critical_error == '') {
                         // For likert, save the scale to a state to ease creation of multiple questions with same scale
                         if ($mode == $string['add'] and $question->get_type() == 'likert') {
                             $scale_type = $question->get_scale_type();
-                            $stateutil->setState($userObject->get_user_ID(), 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
+                            $stateutil->setState('likert_format', $scale_type, '/question/edit/index.php');
                             if ($scale_type == 'custom') {
-                                $stateutil->setState($userObject->get_user_ID(), 'likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php', $mysqli);
+                                $stateutil->setState('likert_format', implode('|', $question->get_all_custom_scales()), '/question/edit/index.php');
                             }
                         }
 
@@ -572,8 +572,8 @@ if ($question != null and file_exists($cfg_web_root . 'plugins/questions/' . $qu
 <?php
 if ($critical_error == '') {
     $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
-    $creation_date = ($mode == $string['edit']) ? strftime($configObject->get('cfg_short_date'), $question->get_created('timestamp')) : strftime($configObject->get('cfg_short_date'), time());
-    $modified_date = ($question->get_last_edited('timestamp')) ? strftime($configObject->get('cfg_short_date'), $question->get_last_edited('timestamp')) : $string['na'];
+    $creation_date = ($mode == $string['edit']) ? date($configObject->get('cfg_short_date_php'), $question->get_created('timestamp')) : date($configObject->get('cfg_short_date_php'), time());
+    $modified_date = ($question->get_last_edited('timestamp')) ? date($configObject->get('cfg_short_date_php'), $question->get_last_edited('timestamp')) : $string['na'];
     ?>
     <div class="tab-bar">
       <div class="tab-holder">
@@ -627,7 +627,6 @@ if ($critical_error != '') {
         $query_string = '?q_id=' . $question->id;
     } else {
         $query_string .= '?type=' . $question->get_type();
-        ;
     }
     $query_string .= ($paper_id != -1) ? '&amp;paperID=' . $paper_id : '';
     $query_string .= ($module != '') ? '&amp;module=' . $module : '';

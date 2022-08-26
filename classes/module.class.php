@@ -176,8 +176,8 @@ class module
      * Update any part of a modules DB record.
      *
      * @param integer $orig_moduleid  - the code of the module to update
-     * @param type $updateData        - an array of key value pairs to update e.g 'fullname'=>'New full Name'
-     * @param object $db              - MySQLi database connection.
+     * @param array $updateData        - an array of key value pairs to update e.g 'fullname'=>'New full Name'
+     * @param mysqli $db              - MySQLi database connection.
      * @return boolean
      */
     public function update_module_by_code($orig_moduleid, $updateData, $db)
@@ -559,7 +559,7 @@ class module
 
     /**
      * The database ID of a module given its Module ID (code)
-     * @param  string  $module_id Module ID (code) of the module
+     * @param  array|string  $module_id Module ID (code) of the module
      * @param  mysqli  $db        Database link object
      * @return string             Database ID of the module or false if not found
      */
@@ -896,7 +896,7 @@ class module
      * Get the modules whose final grade for a student is affected by a paper
      * @param integer $paperid paper identifier
      * @param integer $userid student identifier
-     * @param mylsqi $db db connection
+     * @param mysqli $db db connection
      * @return array list of module details
      */
     public static function get_modules_for_paper($paperid, $userid, $db)

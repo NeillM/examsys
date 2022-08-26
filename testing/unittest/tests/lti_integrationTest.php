@@ -17,7 +17,7 @@
 
 use testing\unittest\unittestdatabase;
 
-require_once dirname(dirname(dirname(__DIR__))) . '/LTI/ims-lti/UoN_LTI.php';
+require_once dirname(__DIR__, 3) . '/LTI/ims-lti/UoN_LTI.php';
 
 /**
  * Test lti integration class

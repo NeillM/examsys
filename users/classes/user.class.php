@@ -34,10 +34,10 @@ class User
     /** @var int The database id of the user. */
     public $id;
 
-    /** @var The last name of the user. */
+    /** @var string The last name of the user. */
     public $lastname;
 
-    /** @var The role(s) of the user. */
+    /** @var string The role(s) of the user. */
     public $role;
 
     /** @var string The student id of the user. */

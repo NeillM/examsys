@@ -24,8 +24,8 @@
  * @package
  */
 
-require_once dirname(dirname(__DIR__)) . '/include/finish_functions.inc';
-require_once dirname(dirname(__DIR__)) . '/plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
+require_once dirname(__DIR__, 2) . '/include/finish_functions.inc';
+require_once dirname(__DIR__, 2) . '/plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
 /**
  * Class for class_totals functions used in summative exam check test.

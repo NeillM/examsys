@@ -224,7 +224,7 @@ XPATH
     /**
      * Adds the custom Rogo selectors to behat.
      *
-     * @param \testing\behat\Behat\Mink\Session $session The mink session
+     * @param \Behat\Mink\Session $session The mink session
      * @return void
      */
     public static function register_rogo_selectors(Session $session)

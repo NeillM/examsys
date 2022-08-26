@@ -249,7 +249,7 @@ trait basic
      * Checks a popup was not found.
      *
      * @And I should not see popup page with title :title
-     * @param type $title
+     * @param string $title
      */
     public function i_should_not_see_popup($title)
     {

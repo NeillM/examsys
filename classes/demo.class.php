@@ -45,7 +45,7 @@ class demo
      *
      * @param string $text the string to be obscured
      * @param string $demo_on whether demo mode is on or off
-     * @return the string obscured as 'Abcde' for as long as the original string was
+     * @return string the string obscured as 'Abcde' for as long as the original string was
      *
      */
     public static function demo_replace($text, $demo_on = true, $capitalise = true, $start_on = 'a')
@@ -90,7 +90,7 @@ class demo
      *
      * @param integer $number the number to be obscured
      * @param string $demo_on whether demo mode is on or off
-     * @return the number obscured as '12345678'
+     * @return int the number obscured as '12345678'
      *
      */
     public static function demo_replace_number($number, $demo_on = true)
@@ -108,7 +108,7 @@ class demo
      *
      * @param string $username the username to be obscured
      * @param string $demo_on whether demo mode is on or off
-     * @return the string obscured as a number of hashes
+     * @return string the string obscured as a number of hashes
      *
      */
     public static function demo_replace_username($username, $demo_on = true)
@@ -129,7 +129,7 @@ class demo
      * Useful for demonstrating Rogo at conferences and other meetings.
      *
      * @param string $no the array element number to select for the name
-     * @return the string selected name is returned for display
+     * @return string the string selected name is returned for display
      *
      */
     public static function demo_replace_name($no)

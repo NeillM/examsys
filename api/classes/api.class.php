@@ -69,7 +69,7 @@ class api
     /**
      * Constructor
      * @param object $app the slim application
-     * @param mysqli $db db connection
+     * @param \mysqli $db db connection
      * @param object $configObject configurations
      */
     public function __construct($app, $db, $configObject)

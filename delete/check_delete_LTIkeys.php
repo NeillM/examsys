@@ -31,7 +31,7 @@ require_once '../LTI/ims-lti/UoN_LTI.php';
 
 $LTIkeysid = check_var('LTIkeysID', 'GET', true, false, true);
 
-$lti = new UoN_LTI($mysqli);
+$lti = new UoN_LTI();
 $lti->init_lti0($mysqli);
 
 if (!$lti->lti_key_exists($LTIkeysid)) {
@@ -47,7 +47,7 @@ $mysqli->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -63,6 +63,6 @@ $mysqli->close();
     <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>"/><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();"/>
   </form>
 </div>
-    
+
 </body>
 </html>

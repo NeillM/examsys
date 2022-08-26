@@ -329,7 +329,7 @@ function disable_locked($question, &$dis_class, &$dis_readonly)
  * @param string $field - id for editor
  * @param string $value - current content
  * @param string $type TinyMCE only - type of editor i.e. simple
- * @return html of editor
+ * @return string html of editor
  */
 function wysywig_or_non_editable($dis_class, $id, $field, $value, $type = '')
 {

@@ -114,7 +114,7 @@ class QuestionEXTMATCH extends QuestionEdit
 
     /**
      * Get an array of stems for the compounded scenarios
-     * @return multitype:
+     * @return array multitype:
      */
     public function get_all_stems()
     {
@@ -143,7 +143,7 @@ class QuestionEXTMATCH extends QuestionEdit
 
     /**
      * Get the question media as an array containing filename, width and height
-     * @return array
+     * @return void
      */
     public function set_all_media($value)
     {

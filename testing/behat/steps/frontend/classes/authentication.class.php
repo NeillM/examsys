@@ -35,7 +35,7 @@ trait authentication
      * Log into Rogo.
      *
      * @Given /^I login as "([^"]*)"$/
-     * @param $username The username to be logged in.
+     * @param string $username The username to be logged in.
      */
     public function i_login_as($username)
     {
@@ -58,7 +58,7 @@ trait authentication
      * Log out Rogo.
      *
      * @Then /^I log out$/
-     * @param $username The username to be logged in.
+     * @param string $username The username to be logged in.
      */
     public function i_log_out()
     {
@@ -81,7 +81,7 @@ trait authentication
      * Re-log into Rogo from the current page.
      *
      * @Given /^I relogin as "([^"]*)"$/
-     * @param $username The username to be logged in.
+     * @param string $username The username to be logged in.
      */
     public function i_relogin_as($username)
     {

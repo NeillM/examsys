@@ -557,8 +557,8 @@ class UserUtils
                 $tmp_userID,
                 module_utils::get_moduleid_from_id($idMod, $db)
             );
-            return true;
         }
+        return true;
     }
 
     /**
@@ -760,7 +760,7 @@ class UserUtils
     }
 
     /**
-     * Enrole a student on a module.
+     * Enrol a student on a module.
      *
      * @param int $userID ID of the student to be enroled.
      * @param string $idMod Module code for the enrolement.
@@ -780,6 +780,7 @@ class UserUtils
         if ($moduleid !== false) {
             return self::add_student_to_module($tmp_userID, $moduleid, $attempt, $session, $db, $auto_update);
         }
+        return false;
     }
 
     /**
@@ -805,7 +806,10 @@ class UserUtils
      *
      * @param int $userID ID of the student to be enroled.
      * @param int $idMod Module ID for the enrolement.
-     * @param object $db $mysqli database connection.
+     * @param int $attempt
+     * @param int $session
+     * @param mysqli $db $mysqli database connection.
+     * @param int $auto_update
      *
      * @return int|bool enrolement id, 0 if already enrolled, false on error
      */

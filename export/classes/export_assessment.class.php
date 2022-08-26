@@ -73,9 +73,9 @@ class export_assessment extends exporter
 
     /**
      * Swap array indicies
-     * @param $array the array
-     * @param $ix1 index 1
-     * @param $ix2 index 2
+     * @param array $array the array
+     * @param string|int $ix1 index 1
+     * @param string|int $ix2 index 2
      * @return array
      */
     private static function array_swap($array, $ix1, $ix2)
@@ -608,7 +608,6 @@ class export_assessment extends exporter
                             } else {
                                 if ($mode == 'numeric') {
                                     $csvdata[0][] = ltrim($question['correct'], ',');
-                                    ;
                                 } else {
                                     $corr_index = ltrim($question['correct'], ',');
                                     $correct_text_parts = explode("\t", $question['correct_text']);
@@ -629,7 +628,7 @@ class export_assessment extends exporter
 
     /**
      * Create data row
-     * @param $log_array paper log data
+     * @param array $log_array paper log data
      * @param array $paper paer info
      * @param \Exclusion $exclusions paper exclusions
      * @param string $mode the display mode

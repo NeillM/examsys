@@ -155,10 +155,10 @@ function display_response($show_response, $type)
 
 /**
  * Replace a variable with the calculated value in leadin and feedback
- * @param $varname Name of variable to replace
- * @param $value
- * @param $leadin
- * @param $feedback
+ * @param string $varname Name of variable to replace
+ * @param string $value
+ * @param string $leadin
+ * @param string $feedback
  * @return mixed Returns back the value which can be used to set the actual variable
  */
 function populate_variable($varname, $value, &$leadin, &$feedback, $string)
@@ -1861,7 +1861,6 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             echo '<option value="' . $a . '" selected>' . StringUtils::ordinal_suffix($a, $language) . "</option>\n";
                         } else {
                             echo '<option value="' . $a . '">' . StringUtils::ordinal_suffix($a, $language) . "</option>\n";
-                            ;
                         }
                     }
                     echo '</select></td>';
@@ -2849,7 +2848,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
 /**
  * Generate mapped objectives html
- * @param string $moduleID the module code
+ * @param array $moduleID the module code
  * @param integer $calendar_year the calendat year
  * @param integer $paperID the paper identifier
  * @param integer $q_id the question identifier

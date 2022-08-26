@@ -27,7 +27,7 @@ namespace testing\datagenerator;
  */
 class generator
 {
-    /** @var mysqli Store the database connection object to be used by data generators. */
+    /** @var \mysqli Store the database connection object to be used by data generators. */
     public $db = null;
 
     /**

@@ -169,7 +169,7 @@ class users extends generator
      *
      * @param int $userid Internal id of a Rogo user.
      * @param int $moduleid Internal id of a module.
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @return array Contains the values that were inserted into the database for the metadata.
      * @throws data_error
      */
@@ -213,7 +213,7 @@ class users extends generator
      * - password_clear: plain text password
      * If neither is set then the username will be used as the password.
      *
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @throws data_error If passed parameter is invalid
      * @return array Contains the values that were inserted into the database for the user.
      */
@@ -331,7 +331,7 @@ class users extends generator
     /**
      * Inserts metadata into the database.
      *
-     * @param Array $data
+     * @param array $data
      * @return void
      * @throws data_error
      */

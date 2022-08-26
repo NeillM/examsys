@@ -131,8 +131,8 @@ class QuestionUtils
 
     /**
      * returns an array of id/keywords that the question is on
-     * @param intager $q_id the id of the questions
-     * @param resource $db the database connection.
+     * @param int $q_id the id of the questions
+     * @param mysqli $db the database connection.
      * @return array of keywords
      */
     public static function get_keywords($q_id, $db)
@@ -231,10 +231,10 @@ SQL;
 
     /**
      * Updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
-     * @param $modules an array of modules keyed on idMod
-     * @param $q_id the id of the question
-     * @param resource $db the database connection.
-     * @param object $userObj the currently authenticated user object.
+     * @param array $modules an array of modules keyed on idMod
+     * @param int $q_id the id of the question
+     * @param mysqli $db the database connection.
+     * @param UserObject $userObj the currently authenticated user object.
      * @return void
      */
     public static function update_modules($modules, $q_id, $db, $userObj)
@@ -257,9 +257,9 @@ SQL;
 
     /**
      * Add modules to a question ignoring any duplicates
-     * @param $modules an array of modules keyed on idMod
-     * @param $q_id the id of the question
-     * @param resource $db the database connection.
+     * @param array $modules an array of modules keyed on idMod
+     * @param int $q_id the id of the question
+     * @param mysqli $db the database connection.
      * @return void
      */
     public static function add_modules($modules, $q_id, $db)
@@ -274,9 +274,9 @@ SQL;
 
     /**
      * add keywords to a question
-     * @param $keywords an array of keywords keyed on IDs
-     * @param $q_id the id of the question
-     * @param resource $db the database connection.
+     * @param array $keywords an array of keywords keyed on IDs
+     * @param int $q_id the id of the question
+     * @param mysqli $db the database connection.
      * @return void
      */
     public static function add_keywords($keywords, $q_id, $db)
@@ -291,9 +291,9 @@ SQL;
 
     /**
      * remove a module from a question
-     * @param $idMod an array of modules to remove keyed on idMod
-     * @param $q_id the id of the question or property_id
-     * @param resource $db the database connection.
+     * @param array $idMod an array of modules to remove keyed on idMod
+     * @param int $q_id the id of the question or property_id
+     * @param mysqli $db the database connection.
      * @return void
      */
     public static function remove_modules($modules, $q_id, $db)
@@ -310,8 +310,8 @@ SQL;
      * remove a question from rogo
      * Normal Questions - sets the deleted field we don't actuality delete the row form the questions table
      * Random Questions - deletes the rows in random_link to ensure random questions cannot use the deleted question
-     * @param $q_id the id of the question or property_id
-     * @param resource $db the database connection.
+     * @param int $q_id the id of the question or property_id
+     * @param mysqli $db the database connection.
      * @return void
      */
     public static function delete_question($q_id, $db)
@@ -865,7 +865,7 @@ SQL;
                 $logger->record_application_warning($userObject->get_user_ID(), 'Question Lineage', sprintf($string['history_exceeded_parent_limit'], $limit), __FILE__, __LINE__ - 3, array('qID' => $qID));
                 break;
             }
-        };
+        }
         return $parents;
     }
 

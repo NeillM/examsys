@@ -463,7 +463,7 @@ function display_question(render $render, array $question_data, array $string, s
                     . '<td>t=' . number_format($part['t']) . '%</td>'
                     . '<td>u=' . number_format($part['u']) . '%</td>'
                     . '<td>l=' . number_format($part['l']) . '%</td>'
-                    . '<td>' . format_xStats($part['x_stats'], $string) . '</td>';
+                    . '<td>' . format_xStats($part['x_stats']) . '</td>';
 
                     if (isset($part['std'])) {
                         echo '<td class="std">' . $part['std'] . '</td>';

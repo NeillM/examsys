@@ -58,7 +58,7 @@ class SQLFragment
     /**
      * Add a value to be used in an SQL fragment placeholder.
      *
-     * @param $parameter The value for a placeholder in the SQL fragment.
+     * @param string|int|float $parameter The value for a placeholder in the SQL fragment.
      * @param string $type One of the TYPE_ constants
      */
     public function addParameter($parameter, string $type): void

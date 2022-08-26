@@ -83,7 +83,7 @@ class UoN_LTI extends BLTI
 
     /**
      * Function to get context title
-     * @return lti context title
+     * @return string lti context title
      */
     public function get_context_title()
     {
@@ -95,7 +95,7 @@ class UoN_LTI extends BLTI
      * Function to initilise the lti class
      * @param bool $usesession
      * @param bool $doredirect
-     * @return
+     * @return void
      */
     public function init_lti($usesession = true, $doredirect = false)
     {
@@ -440,8 +440,8 @@ class UoN_LTI extends BLTI
      * Deletes the link between an user of an external system and Rogo.
      *
      * @param int $userid The id of a Rogo user.
-     * @param type $consumer_key The consumer key for an external system.
-     * @param type $externalid The id of the user in the external system.
+     * @param string $consumer_key The consumer key for an external system.
+     * @param string $externalid The id of the user in the external system.
      * @throws Exception
      */
     public function delete_user_link($userid, $consumer_key, $externalid)
@@ -585,7 +585,7 @@ class UoN_LTI extends BLTI
      * @param string $internal_id is the internal id
      * @param string $internal_type is the internal type
      * @param bool|string $lti_resource_key optional is the lti resource key
-     * @return record id
+     * @return int record id
      */
     public function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false)
     {
@@ -627,7 +627,7 @@ class UoN_LTI extends BLTI
      * Function to add lti context association
      * @param string $c_internal_id is the internal context id
      * @param bool|string $lti_context_key optional is the lti context key
-     * @return new row id
+     * @return int new row id
      */
     public function add_lti_context($c_internal_id, $lti_context_key = false)
     {

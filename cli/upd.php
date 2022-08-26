@@ -231,15 +231,8 @@ $updater_utils->execute_query('FLUSH PRIVILEGES', false);
 $updater_utils->execute_query('TRUNCATE sys_errors', false);
 $mysqli->close();
 cli_utils::prompt('Ended at ' . date('H:i:s'));
-$filter = FILTER_SANITIZE_STRING;
-$options = array(
-  'options' => array(
-    'default' => null,
-   ),
-  'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
-);
 cli_utils::prompt($string['finished']);
 cli_utils::prompt($string['actionrequired']);
-cli_utils::prompt(filter_var($string['readonly'], $filter, $options));
+cli_utils::prompt(htmlspecialchars_decode($string['readonly']));
 
 exit(0);

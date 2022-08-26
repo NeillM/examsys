@@ -97,17 +97,11 @@ class param
         // Setup the parameters for the filter_var function.
         switch ($type) {
             case self::ALPHA:
-                $filter = FILTER_SANITIZE_STRING;
-                $options = array(
-                    'options' => $opt,
-                    'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
-                );
-                break;
             case self::ALPHANUM:
-                $filter = FILTER_SANITIZE_STRING;
+                $filter = FILTER_UNSAFE_RAW;
                 $options = array(
                     'options' => $opt,
-                    'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
+                    'flags' => FILTER_FLAG_STRIP_LOW
                 );
                 break;
             case self::BOOLEAN:

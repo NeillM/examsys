@@ -48,7 +48,7 @@ class RogoObject
     /**
      * The the array of fields (properties) for this class
      * MUST be implemented by sub-classes
-     * @return multitype:string
+     * @return array multitype:string
      */
     public function get_editable_fields()
     {
@@ -57,7 +57,7 @@ class RogoObject
 
     /**
      * The the array of compound fields (properties) for this class
-     * @return multitype:string
+     * @return array multitype:string
      */
     public function get_compound_fields()
     {

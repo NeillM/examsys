@@ -56,13 +56,12 @@ class LogExtraTime
     }
 
     /**
-     * @return LogLabEndTime $log_lab_end_time
-     * @return array    $student_object
-     * @return mysqli        $db
+     * Constructs the lab object.
+     *
+     * @return void
      */
     public function __construct(LogLabEndTime $log_lab_end_time, $student_object, mysqli $db, $cached = false)
     {
-
         $this->log_lab_end_time = $log_lab_end_time;
         $this->student_object = $student_object;
         $this->db = $db;

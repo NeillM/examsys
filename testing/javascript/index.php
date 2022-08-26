@@ -27,11 +27,11 @@
 
 use testing\javascript\SuiteLoader;
 
-require_once dirname(dirname(__DIR__)) . '/include/sysadmin_auth.inc';
-require_once dirname(dirname(__DIR__)) . '/include/autoload.inc.php';
+require_once dirname(__DIR__, 2) . '/include/sysadmin_auth.inc';
+require_once dirname(__DIR__, 2) . '/include/autoload.inc.php';
 autoloader::init();
 
-if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunit/qunit/qunit.js')) {
+if (file_exists(dirname(__DIR__, 2) . '/node_modules/qunit/qunit/qunit.js')) {
     // Find the test files.
     $loader = new SuiteLoader();
     $loader->locate_all();

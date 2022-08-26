@@ -11,12 +11,12 @@ function testBinary($values, $type, $options = array(), $msg = '') {
 	echo 'Test '.$type.' '.$msg.'<br/>';
 	$cn = 'Rserve_REXP_'.$type;
 	$r = new $cn();
-	
+
 	$tt  = strtolower($type);
-	
+
 	if(is_subclass_of($r, 'Rserve_REXP_Vector')) {
 		if( is_subclass_of($r,'Rserve_REXP_List') AND @$options['named']) {
-			$r->setValues($values, TRUE);			
+			$r->setValues($values, TRUE);
 		} else {
 			$r->setValues($values);
 		}
@@ -30,7 +30,6 @@ function testBinary($values, $type, $options = array(), $msg = '') {
 	$cn2 = get_class($r2);
 	if( strtolower($cn2) != strtolower($cn)) {
 		echo 'Differentes classes';
-		return FALSE;
 	} else {
 		echo 'Class Type ok';
 	}

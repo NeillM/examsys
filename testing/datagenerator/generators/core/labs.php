@@ -42,7 +42,7 @@ class labs extends generator
     /**
      * Creates a campus.
      *
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @return array
      * @throws data_error
      */
@@ -69,7 +69,7 @@ class labs extends generator
     /**
      * Creates an entry for an exam PC.
      *
-     * @param type $parameters
+     * @param array|\stdClass $parameters
      * @return array
      * @throws data_error
      */
@@ -105,7 +105,7 @@ class labs extends generator
     /**
      * Creates a lab.
      *
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @return array
      * @throws data_error
      */
@@ -151,7 +151,7 @@ class labs extends generator
      * Optional parameters:
      * - extra_time: The amount of extra time granted to the user in minutes (default: 10)
      *
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @return array
      * @throws data_error
      */
@@ -205,7 +205,7 @@ class labs extends generator
     /**
      * Sets up a record for an exam lab setting the start and end time.
      *
-     * @param array|stdClass $parameters
+     * @param array|\stdClass $parameters
      * @return array
      */
     public function createLabTime($parameters): array

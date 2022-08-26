@@ -117,7 +117,6 @@ class renderdata extends \questiondata
         $this->areauseranswer =  $tmp_user_answer;
         $this->areafulluseranswer = $full_user_ans;
         $this->marks += $option['markscorrect'];
-        ;
     }
 
     /**

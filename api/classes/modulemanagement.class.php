@@ -403,7 +403,6 @@ class modulemanagement extends \api\abstractmanagement
             $params['sms'] = $this->get_external_system($params['sms']);
             // Try using external system id to update course.
             $params['id'] = \module_utils::get_id_from_externalid($params['externalid'], $params['sms'], $this->db);
-            ;
             $moduleid = (bool) $params['id'];
         }
 

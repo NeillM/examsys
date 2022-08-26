@@ -34,7 +34,7 @@ class questionrender
 
     /**
      * Question data class
-     * @var class
+     * @var \questiondata
      */
     public $questiondata;
 

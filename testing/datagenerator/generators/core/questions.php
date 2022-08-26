@@ -201,7 +201,7 @@ class questions extends generator
         } catch (Exception $e) {
             echo 'Error No: ' . $e->getCode() . ' - ' . $e->getMessage() . '<br />';
             echo nl2br($e->getTraceAsString());
-            throw new data_error('MySQL error ' . $this->_mysqli->error . "<br /> Query:<br /> $sqlquery", $this->_mysqli->errno);
+            throw new data_error('MySQL error ' . $this->_mysqli->error . "<br /> Query:<br /> $sqlquery");
         }
     }
 

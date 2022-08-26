@@ -39,7 +39,7 @@ class Timer
     /**
      * Constructor for the timer.
      *
-     * @param LogStartTime $log_start_time
+     * @param LogMetadata $log_metadata
      * @param int $exam_duration
      * @param int|null $special_needs_percentage
      */

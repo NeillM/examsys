@@ -64,7 +64,7 @@ class apixml extends \api\apiabstract
         // Load dom object.
         $this->data = new \DOMDocument();
         @$this->data->loadXML($this->xml);
-        $schema = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'schema' . DIRECTORY_SEPARATOR . $folder
+        $schema = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'schema' . DIRECTORY_SEPARATOR . $folder
             . DIRECTORY_SEPARATOR . $type . '.xsd';
         $errorresp = array();
         if (!$this->data->schemaValidate($schema)) {
@@ -84,7 +84,7 @@ class apixml extends \api\apiabstract
      * @param object $tasktype task object
      * @param array $fields expected fields
      * @param array $actions possible actions
-     * @param array $task user permissions
+     * @param array $perms user permissions
      * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */

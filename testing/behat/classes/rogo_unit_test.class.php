@@ -48,7 +48,7 @@ class rogo_unit_test implements Context
      *
      * @param string $name The name of the generator.
      * @param string $component The component the generator is from (optional).
-     * @return \testing\datagenerator\datagenerator
+     * @return \testing\datagenerator\generator
      * @throws \testing\datagenerator\not_found
      */
     protected function get_datagenerator($name, $component = 'core')

@@ -323,7 +323,7 @@ abstract class log
     /**
      * Get paper log class
      * @param string $papertype paper type
-     * @return class
+     * @return \log class
      */
     public static function get_paperlog($papertype)
     {

@@ -27,7 +27,7 @@ namespace testing\datagenerator;
  */
 class loader
 {
-    /** @var mysqli Store the database connection object to be used by data generators. */
+    /** @var \mysqli Store the database connection object to be used by data generators. */
     protected static $db = null;
 
     /**
@@ -68,7 +68,7 @@ class loader
      * Sets the database connection object that should be used by data generators.
      * This should only be set by test suites and not individual tests.
      *
-     * @param mysqli $database
+     * @param \mysqli $database
      */
     public static function set_database($database)
     {

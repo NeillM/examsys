@@ -26,29 +26,28 @@
  */
 class date_utils
 {
-
     /**
-     * @var MINUTESECS seconds in a minute
+     * @var int MINUTESECS seconds in a minute
      */
     public const MINUTESECS = 60;
 
     /**
-     * @var HOURSECS seconds in a hour
+     * @var int HOURSECS seconds in a hour
      */
     public const HOURSECS = 3600;
 
     /**
-     * @var DAYSECS seconds in a day
+     * @var int DAYSECS seconds in a day
      */
     public const DAYSECS = 86400;
 
     /**
-     * @var WEEKSECS seconds in a week
+     * @var int WEEKSECS seconds in a week
      */
     public const WEEKSECS = 604800;
 
     /**
-     * @var YEARSECS seconds in a year
+     * @var int YEARSECS seconds in a year
      */
     public const YEARSECS = 31557600;
 

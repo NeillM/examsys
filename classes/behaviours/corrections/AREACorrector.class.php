@@ -31,8 +31,8 @@ class AREACorrector extends Corrector
 {
     /**
      * Change the correct answer after the question has been locked. Update user marks in summative log table
-     * @param integer $new_correct new correct answer
-     * @param integer $paper_id
+     * @param array $new_correct new correct answer
+     * @param int $paper_id
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {

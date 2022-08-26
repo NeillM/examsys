@@ -33,7 +33,7 @@ abstract class plugins
 {
     /**
      * The database connection.
-     * @var mysqli
+     * @var \mysqli
      */
     protected $db;
     /**
