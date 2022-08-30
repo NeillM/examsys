@@ -195,6 +195,7 @@ class rogo_test extends MinkContext
         $error = "//*[contains(., 'Error: ') and contains(., ' on line ')]";
         $warning = "//*[contains(., 'Warning: ') and contains(., ' on line ')]";
         $notice = "//*[contains(., 'Notice: ') and contains(., ' on line ')]";
+        $deprecation = "//*[contains(., 'Deprecated: ') and contains(., ' on line ')]";
         try {
             if ($this->getSession()->getDriver()->find($error)) {
                 throw new Exception('Error found on page.');
@@ -204,6 +205,9 @@ class rogo_test extends MinkContext
             }
             if ($this->getSession()->getDriver()->find($notice)) {
                 throw new Exception('Notice found on page.');
+            }
+            if ($this->getSession()->getDriver()->find($deprecation)) {
+                throw new Exception('Deprecation found on page.');
             }
         } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
             // Nothing we can do about this.
