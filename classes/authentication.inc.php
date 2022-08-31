@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-if(!defined('SCT_AUTH_SUCCESS')) {
-        $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
-        $authentication->do_authentication($string);
-        define('SCT_AUTH_SUCCESS', 1); // User logged in
-}
+require_once $cfg_web_root . '/include/get_session.php'; // Get or start the session.
+$authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
+$authentication->do_authentication($string);
