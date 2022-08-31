@@ -468,7 +468,7 @@ class module
             'school' => $school,
             'active' => $active,
             'vle_api' => $vle_api,
-            'checklist' => $checklist,
+            'checklist' => $checklist ?? '',
             'sms' => $sms,
             'selfenroll' => $selfenroll,
             'schoolid' => $schoolid,
