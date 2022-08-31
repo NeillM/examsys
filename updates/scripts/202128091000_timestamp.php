@@ -75,11 +75,24 @@ if ($updater_utils->check_version('7.5.0')) {
         )';
         $updater_utils->execute_query($tempsql, false, true);
 
-        // Prepare the query that will insert data,
-        // this needs to be done before we start fetching the data to avoid an out of sync error.
+        // Prepare the query that will insert data.
         $insertsql = 'INSERT INTO properties_dates VALUES (?, ?, ?, ?, ?, ?)';
         $insertquery = $updater_utils->prepare_query($insertsql);
         $insertquery->bind_param('iiiiii', $insertid, $insertstart, $insertend, $insertdeleted, $insertcreated, $insertretired);
+
+        // We need to open a second database connection to use this prepared query at the same
+        // time as the insert one to avoid out of sync errors.
+        $read_mysqli = DBUtils::get_mysqli_link(
+            $configObject->get('cfg_db_host'),
+            $mysql_admin_user ?? $cfg_db_username, // The web upgrade and cli upgrade use different variables.
+            $mysql_admin_pass ?? $databasepassword, // The web upgrade and cli upgrade use different variables.
+            $configObject->get('cfg_db_database'),
+            $configObject->get('cfg_db_charset'),
+            $notice,
+            $configObject->get('dbclass'),
+            $configObject->get('cfg_db_port')
+        );
+        $read_utils = new UpdaterUtils($read_mysqli, $configObject->get('cfg_db_database'));
 
         // Migrate data in temp table.
         $sql = "SELECT
@@ -91,7 +104,7 @@ if ($updater_utils->check_version('7.5.0')) {
                     date_format(retired, '%Y-%m-%d %H:%i:%s'),
                     timezone
                 FROM properties";
-        $query = $updater_utils->prepare_query($sql);
+        $query = $read_utils->prepare_query($sql);
         $query->bind_result($property_id, $start_date, $end_date, $deleted, $created, $retired, $timezone);
         $query->execute();
 
@@ -109,6 +122,10 @@ if ($updater_utils->check_version('7.5.0')) {
 
         $insertquery->close();
         $query->close();
+
+        // Close the second connection.
+        $read_mysqli->close();
+        unset($read_utils);
 
         // Alter schema.
         $altersql = 'ALTER TABLE properties

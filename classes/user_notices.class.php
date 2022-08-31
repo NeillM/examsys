@@ -67,6 +67,13 @@ class user_notices extends RogoStaticSingleton
      */
     public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true)
     {
+        if (PHP_SAPI == 'cli') {
+            // On the command line we do not want to output html as it will make the message less clear.
+            echo "\n== $title ==\n";
+            echo "$msg\n";
+            return;
+        }
+
         $configObject = Config::get_instance();
         $root = str_replace('/classes', '/', str_replace('\\', '/', dirname(__FILE__)));
 
