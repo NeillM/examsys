@@ -51,8 +51,6 @@ $newauth = array(
   array('fixedlist', array('authusers' => array('sctreviewer' => $paper_password)), 'SCT Reviewer List')
 );
 $configObject->set('authentication', $newauth);
-session_name('RogoAuthentication');
-$return = session_start();
 require_once $cfg_web_root . 'classes/authentication.inc.php';
 
 if ($authentication->get_userid() != -9999) {
