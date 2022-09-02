@@ -212,7 +212,9 @@ class rogo_test extends MinkContext
         } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
             // Nothing we can do about this.
         } catch (\WebDriver\Exception\NoSuchWindow $e) {
-            // The action caused the window to close so we cannot see any errors.
+            // The action caused the window to close, so we cannot see any errors.
+        } catch (\Behat\Mink\Exception\DriverException $e) {
+            // The driver could not do a search for some reason, a browser may not be open right now.
         }
     }
 

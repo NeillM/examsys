@@ -413,7 +413,6 @@ return document.readyState === 'complete'
 JS;
                 if ($session->evaluateScript($js)) {
                     // The status code indicates the page is fully loaded.
-                    $this->lookForErrors();
                     return true;
                 }
             } catch (UnsupportedDriverActionException $ex) {
@@ -422,13 +421,11 @@ JS;
                     // Try testing for a response code of 200 (Any other code is not loaded)
                     if ($session->getStatusCode() === 200) {
                         // The status code indicates the page returned content successfully.
-                        $this->lookForErrors();
                         return true;
                     }
                 } catch (UnsupportedDriverActionException $ex) {
                     // All methods of determining if the page is fully loaded are not supported,
                     //  so we must assume it is and hope for the best.
-                    $this->lookForErrors();
                     return true;
                 }
             }
