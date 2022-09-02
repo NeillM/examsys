@@ -1427,7 +1427,7 @@ QUERY;
     public function get_checkout_time($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->checkout_time);
+            return strtotime($this->checkout_time ?? '');
         } else {
             return $this->checkout_time;
         }
@@ -1490,7 +1490,7 @@ QUERY;
     public function get_created($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->created);
+            return strtotime($this->created ?? '');
         } else {
             return $this->created;
         }
@@ -1503,7 +1503,7 @@ QUERY;
     public function get_last_edited($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->last_edited);
+            return strtotime($this->last_edited ?? '');
         } else {
             return $this->last_edited;
         }
@@ -1516,7 +1516,7 @@ QUERY;
     public function get_locked($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->locked);
+            return strtotime($this->locked ?? '');
         } else {
             return $this->locked;
         }
@@ -1529,7 +1529,7 @@ QUERY;
     public function get_deleted($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->deleted);
+            return strtotime($this->deleted ?? '');
         } else {
             return $this->deleted;
         }
