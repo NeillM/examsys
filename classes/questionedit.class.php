@@ -209,13 +209,13 @@ class QuestionEdit extends RogoObject
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
-        } elseif (ctype_digit($data)) {
+        } elseif (!is_null($data) and ctype_digit($data)) {
             // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_question()) {
                 throw new DatabaseException($this->_lang_strings['questionloaderror']);
             }
-        } elseif ($data !== null) {
+        } elseif (!is_null($data)) {
             throw new DataTypeException($this->_lang_strings['questioninvalid']);
         }
 
