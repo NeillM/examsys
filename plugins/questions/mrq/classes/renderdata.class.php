@@ -135,12 +135,12 @@ class renderdata extends \questiondata
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
-        if (mb_substr($useranswer, $option['position'] - 1, 1) === 'y') {
+        if (!is_null($useranswer) and mb_substr($useranswer, $option['position'] - 1, 1) === 'y') {
             $option['selected'] = true;
         } else {
             $option['selected'] = false;
         }
-        if (mb_substr($userdismissed, $option['position'] - 1, 1) === '1') {
+        if (!is_null($userdismissed) and mb_substr($userdismissed, $option['position'] - 1, 1) === '1') {
             $option['inact'] = true;
         } else {
             $option['inact'] = false;

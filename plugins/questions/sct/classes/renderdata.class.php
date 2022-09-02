@@ -143,7 +143,7 @@ class renderdata extends \questiondata
         } else {
             $option['selected'] = false;
         }
-        if (mb_substr($userdismissed, $option['position'] - 1, 1) == '1') {
+        if (!is_null($userdismissed) and mb_substr($userdismissed, $option['position'] - 1, 1) == '1') {
             $option['inact'] = true;
         } else {
             $option['inact'] = false;

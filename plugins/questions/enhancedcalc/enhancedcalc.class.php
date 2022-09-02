@@ -1101,7 +1101,7 @@ class EnhancedCalc extends Question implements questionInterface
             $questiondata['assignednumber'] = $extra['assignednumber'];
         }
         // Make sure data is arrays not encoded
-        if (!is_array($this->useranswer)) {
+        if (!is_null($this->useranswer) and !is_array($this->useranswer)) {
             $this->useranswer = json_decode($this->useranswer, true);
         }
         $this->decode_settings();
