@@ -300,7 +300,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         case 'extmatch':
             $matching_answers = explode('|', $options[0]['correct']);
 
-            if ($matching_media[0]['source'] != '') {
+            if (!empty($matching_media[0]['source'])) {
                 echo '<div class="mediadiv">';
                 $questiondata->set_media(
                     $matching_media[0]['source'],
@@ -340,7 +340,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                     }
                     echo '>' . $matching_scenarios[$part_id - 1] . '</div>';
                 }
-                if (isset($matching_media[$part_id]['source']) and $matching_media[$part_id]['source'] != '') {
+                if (!empty($matching_media[$part_id]['source'])) {
                     echo '<p>';
                     $questiondata->set_media(
                         $matching_media[$part_id]['source'],
@@ -469,7 +469,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             break;
         case 'matrix':
             $part_id = 1;
-            if ($matching_media[0]['source'] != '') {
+            if (!empty($matching_media[0]['source'])) {
                 echo '<div class="mediadiv">';
                 $questiondata->set_media(
                     $matching_media[0]['source'],

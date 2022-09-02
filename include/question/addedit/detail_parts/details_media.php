@@ -36,7 +36,7 @@ if ($dis_class != '') {
     $disabled = '';
     $locked = false;
 }
-if ($current_media['filename'] != '' and $current_media['num'] == 0) {
+if (!empty($current_media['filename']) and $current_media['num'] == 0) {
     $configObj = Config::get_instance();
     $questiondata = \questiondata::get_datastore($question->get_type());
     $render = new render($configObj);

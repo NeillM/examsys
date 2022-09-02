@@ -312,7 +312,7 @@ while ($stmt->fetch()) {
             echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
             $li_set = 1;
         }
-        if ($q_media != '' and $q_media != null and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
+        if (!empty($q_media) and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
             if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
                 if ($li_set == 0) {
                     echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';

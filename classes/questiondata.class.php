@@ -679,7 +679,9 @@ abstract class questiondata
         }
         $this->question = $question;
         $this->useranswers = $user_answers;
-        $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '');
+        if (!empty($question['q_media'])) {
+            $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '');
+        }
 
         // Set question header.
         $this->set_question_head();
@@ -725,7 +727,9 @@ abstract class questiondata
             'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
             'position' => $tmp_part_id
             ));
-            $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', false, -1, false, $part_id);
+            if (!empty($display_option['o_media'])) {
+                $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', false, -1, false, $part_id);
+            }
 
             // Set question options.
             $this->set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted);

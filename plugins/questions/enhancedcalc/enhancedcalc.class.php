@@ -733,7 +733,7 @@ class EnhancedCalc extends Question implements questionInterface
         if ($this->scenario != '') {
             echo '<p>' . $this->scenario . "</p>\n";
         }
-        if ($this->q_media != '') {
+        if (!empty($this->q_media)) {
             $questiondata = new plugins\questions\enhancedcalc\renderdata();
             $configObject = Config::get_instance();
             $render = new render($configObject);

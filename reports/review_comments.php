@@ -175,7 +175,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             if ($scenario != '') {
                 echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
                 echo $leadin;
-                if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
+                if (!empty($q_media) and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
                     echo '<div class="mediadiv">';
                     $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
                     $render->render($questiondata, $string, 'paper/media.html');
@@ -186,7 +186,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 }
             } else {
                 echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
-                if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
+                if (!empty($q_media) and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
                     echo '<div class="mediadiv">';
                     $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
                     $render->render($questiondata, $string, 'paper/media.html');
@@ -485,7 +485,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
 
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
-        if ($matching_media[0]['source'] != '') {
+        if (!empty($matching_media[0]['source'])) {
             echo '<div class="mediadiv">';
             $questiondata->set_media(
                 $matching_media[0]['source'],
@@ -500,7 +500,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         for ($i = 1; $i <= $scenario_no; $i++) {
             echo "<li>\n";
-            if (isset($matching_media[$i]['source']) and $matching_media[$i]['source'] != '') {
+            if (!empty($matching_media[$i]['source'])) {
                 echo '<div>';
                 $questiondata->set_media(
                     $matching_media[$i]['source'],
