@@ -192,11 +192,15 @@ class rogo_test extends MinkContext
     public function lookForErrors(): void
     {
         // Regular expressions for detecting errors, notices and the like.
+        $fatal = "//*[contains(., 'Fatal error: ') and contains(., ' on line ')]";
         $error = "//*[contains(., 'Error: ') and contains(., ' on line ')]";
         $warning = "//*[contains(., 'Warning: ') and contains(., ' on line ')]";
         $notice = "//*[contains(., 'Notice: ') and contains(., ' on line ')]";
         $deprecation = "//*[contains(., 'Deprecated: ') and contains(., ' on line ')]";
         try {
+            if ($this->getSession()->getDriver()->find($fatal)) {
+                throw new Exception('Fatal error found on page.');
+            }
             if ($this->getSession()->getDriver()->find($error)) {
                 throw new Exception('Error found on page.');
             }
