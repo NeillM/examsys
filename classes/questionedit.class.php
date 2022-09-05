@@ -453,18 +453,18 @@ QUERY;
 
                 \QuestionsMetadata::setArray($this->id, $this->_metadata);
 
-                $media = explode('|', $this->_qmdata['media']);
-                $source = explode('|', $this->_mdata['media_source']);
+                $media = explode('|', $this->_qmdata['media'] ?? '');
+                $source = explode('|', $this->_mdata['media_source'] ?? '');
                 if (!isset($this->currentmedia['num'])) {
                     $current_num = array();
                 } else {
                     $current_num = explode('|', $this->currentmedia['num']);
                 }
-                $num = explode('|', $this->_qmdata['media_num']);
-                $width = explode('|', $this->_mdata['media_width']);
-                $height = explode('|', $this->_mdata['media_height']);
-                $alt = explode('|', $this->_mdata['media_alt']);
-                $owner = explode('|', $this->_mdata['media_owner']);
+                $num = explode('|', $this->_qmdata['media_num'] ?? '');
+                $width = explode('|', $this->_mdata['media_width'] ?? '');
+                $height = explode('|', $this->_mdata['media_height']?? '');
+                $alt = explode('|', $this->_mdata['media_alt'] ?? '');
+                $owner = explode('|', $this->_mdata['media_owner'] ?? '');
 
                 $insertmediaparams = array();
                 $updatemediaparams = array();
