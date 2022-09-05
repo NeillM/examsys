@@ -32,7 +32,7 @@ class directory_not_found extends Exception
     public function __construct($directory)
     {
         $strings = LangUtils::loadlangfile('exceptions/messages.php', array());
-        $message = sprintf($strings['directorynotfound'], array($directory));
+        $message = sprintf($strings['directorynotfound'], $directory);
         parent::__construct($message);
     }
 }
