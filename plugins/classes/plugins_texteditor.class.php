@@ -154,6 +154,11 @@ abstract class plugins_texteditor extends \plugins\plugins
      */
     public function clean_leadin($leadin)
     {
+        if (!is_string($leadin)) {
+            // We do not need to clean in this case.
+            return false;
+        }
+
         if (
             mb_strpos($leadin, 'class="mee"') === false and mb_strpos($leadin, 'class=mee') === false
             and preg_match_all('#\[tex\](.*?)\[/tex\]#si', $leadin) === 0
@@ -179,6 +184,11 @@ abstract class plugins_texteditor extends \plugins\plugins
      */
     public function prepare_text_for_save($text)
     {
+        if (!is_string($text)) {
+            // No preparation needed.
+            return $text;
+        }
+
         // Replace deprecated mee maths
         preg_match_all('#<div class="mee">(.*?)\</div>#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
@@ -204,6 +214,10 @@ abstract class plugins_texteditor extends \plugins\plugins
      */
     public function get_text_for_display($text)
     {
+        if (!is_string($text)) {
+            return $text;
+        }
+
         // Support deprecated mee maths
         preg_match_all('#\[tex\](.*?)\[/tex\]#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
