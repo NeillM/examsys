@@ -1911,7 +1911,7 @@ QUERY;
             $result->bind_param('i', $this->id);
             $result->execute();
             $result->store_result();
-            call_user_func_array(array($result, 'bind_result'), $opt_data);
+            call_user_func_array(array($result, 'bind_result'), $params);
             // TODO: handle 'correctness' more nicely
             $i = 1;
             if ($result->num_rows > 0) {
