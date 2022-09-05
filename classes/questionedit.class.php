@@ -892,7 +892,7 @@ QUERY;
     {
         $number = '';
 
-        if (ctype_digit($paper_id)) {
+        if (is_int($paper_id) or ctype_digit($paper_id)) {
             $pos = 0;
 
             $pos_query = <<< QUERY
