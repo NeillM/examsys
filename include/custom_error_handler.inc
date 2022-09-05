@@ -414,7 +414,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context = [])
  * @param int $querystring    - The query string passed to the script.
  * @param int $requestmethod  - What request method was used.
  */
-function log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = '', $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null)
+function log_error($userid, $username, $error_type, $errstr, $errfile, $errline, $paperID = null, $post_data = '', $variables = '', $backtrace = '', $page = null, $querystring = null, $requestmethod = null)
 {
     if (is_null($backtrace)) {
         $backtrace = '';
@@ -475,6 +475,11 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
             $_SERVER['REQUEST_METHOD'] = 'GET';
         }
         $requestmethod = $_SERVER['REQUEST_METHOD'];
+    }
+
+    if ($paperID < 0) {
+        // An id less than 0 should be recorded as null, since we cannot store negative numbers in the database.
+        $paperID = null;
     }
 
     $configObject = Config::get_instance();
