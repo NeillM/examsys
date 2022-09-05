@@ -95,11 +95,7 @@ trait datageneration
      */
     private function getBlankOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         $defaults = [
             'blanks' => '',
@@ -118,7 +114,7 @@ trait datageneration
 
         $options = (object)array_merge($defaultoption, $values);
 
-        return json_encode($options);
+        return $this->encodeOptions($options);
     }
 
     /**
@@ -128,11 +124,7 @@ trait datageneration
      */
     private function getTextBoxOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         $defaults = [
             'correct' => 'placeholder',
@@ -151,7 +143,7 @@ trait datageneration
 
         $options = (object)array_merge($defaultoption, $values);
 
-        return json_encode($options);
+        return $this->encodeOptions($options);
     }
 
     /**
@@ -161,11 +153,7 @@ trait datageneration
      */
     private function getTrueFalseOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         if ($row['correct'] == 'false') {
             $row['correct'] = 'f';
@@ -190,7 +178,7 @@ trait datageneration
 
         $options = (object)array_merge($defaultoption, $values);
 
-        return json_encode($options);
+        return $this->encodeOptions($options);
     }
 
     /**
@@ -200,11 +188,7 @@ trait datageneration
      */
     private function getMCQOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         $defaults = [
             'num_options' => 2,
@@ -227,7 +211,7 @@ trait datageneration
             $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
 
-        return json_encode($values);
+        return $this->encodeOptions($values);
     }
 
     /**
@@ -237,11 +221,7 @@ trait datageneration
      */
     private function getMRQOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         $defaults = [
             'num_options' => 2,
@@ -275,7 +255,7 @@ trait datageneration
             $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
 
-        return json_encode($values);
+        return $this->encodeOptions($values);
     }
 
     /**
@@ -285,11 +265,7 @@ trait datageneration
      */
     private function getRankOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         $defaults = [
             'num_options' => 3,
@@ -314,7 +290,7 @@ trait datageneration
             $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
 
-        return json_encode($values);
+        return $this->encodeOptions($values);
     }
 
     /**
@@ -324,11 +300,7 @@ trait datageneration
      */
     private function getSCTOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         $defaults = [
             'experts' => '1,2,10,3,1',
@@ -359,7 +331,7 @@ trait datageneration
             $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
 
-        return json_encode($values);
+        return $this->encodeOptions($values);
     }
 
     /**
@@ -369,11 +341,7 @@ trait datageneration
      */
     private function getExtMatchOptions(array $row): string
     {
-        if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
-        } else {
-            $values = [];
-        }
+        $values = $this->decodeOptions($row);
 
         $defaults = [
             'num_options' => 3,
@@ -404,7 +372,78 @@ trait datageneration
             $values[$i] = (object)array_merge($defaultoption, $values[$i] ?? []);
         }
 
-        return json_encode($values);
+        return $this->encodeOptions($values);
+    }
+
+    /**
+     * Generates the options for a generic question.
+     *
+     * @param array $row
+     * @return string
+     */
+    private function getQuestionOptions(array $row): string
+    {
+        $values = $this->decodeOptions($row);
+
+        $defaults = [
+            'correct' => '',
+            'marks_correct' => 1,
+            'marks_incorrect' => 0,
+            'marks_partial' => 0,
+            'feedback_right' => '',
+            'feedback_wrong' => '',
+            'option_text' => '',
+        ];
+
+        $row = $this->set_defaults_and_clean($defaults, $row);
+
+        foreach ($values as $key => $value) {
+            $optiondefaults = [
+                'correct' => $row['correct'],
+                'marks_correct' => $row['marks_correct'],
+                'marks_incorrect' => $row['marks_incorrect'],
+                'marks_partial' => $row['marks_partial'],
+                'feedback_right' => $row['feedback_right'],
+                'feedback_wrong' => $row['feedback_wrong'],
+                'option_text' => $row['option_text'],
+            ];
+            $value = $this->set_defaults_and_clean($optiondefaults, $value);
+            $values[$key] = (object)$value;
+        }
+
+        if (empty($values)) {
+            $values = (object) $row;
+        }
+
+        return $this->encodeOptions($values);
+    }
+
+    /**
+     * Decodes the options passed to a question generator.
+     *
+     * @param $row
+     * @return array
+     */
+    private function decodeOptions($row): array
+    {
+        if (!empty($row['options'])) {
+            $values = json_decode($row['options'], true);
+        } else {
+            $values = [];
+        }
+
+        return $values;
+    }
+
+    /**
+     * Encodes the options in a way that will be understood by the data generator.
+     *
+     * @param mixed $options
+     * @return string
+     */
+    private function encodeOptions($options): string
+    {
+        return json_encode($options);
     }
 
     /**
@@ -625,6 +664,7 @@ trait datageneration
                 $row['options'] = $this->getExtMatchOptions($row);
                 break;
             default:
+                $row['options'] = $this->getQuestionOptions($row);
                 break;
         }
         // Generate scenario.
