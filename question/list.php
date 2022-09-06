@@ -332,7 +332,7 @@ foreach ($table_order as $display => $col_width) {
         echo ' data-qid="' . $q_id . '"';
         echo ' data-qtype="' . $q_type . '"';
         echo ' data-dispno="' . $display_no . '"';
-        echo ' data-selftype="' . (($locked != '') ? 'Q' : 'L') .'">';
+        echo ' data-selftype="' . (($locked != '') ? 'Q' : 'L') . '">';
 
         if ($q_type == 'sct') {
             $parts = explode('~', $leadin);
