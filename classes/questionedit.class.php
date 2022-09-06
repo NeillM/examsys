@@ -462,7 +462,7 @@ QUERY;
                 }
                 $num = explode('|', $this->_qmdata['media_num'] ?? '');
                 $width = explode('|', $this->_mdata['media_width'] ?? '');
-                $height = explode('|', $this->_mdata['media_height']?? '');
+                $height = explode('|', $this->_mdata['media_height'] ?? '');
                 $alt = explode('|', $this->_mdata['media_alt'] ?? '');
                 $owner = explode('|', $this->_mdata['media_owner'] ?? '');
 
