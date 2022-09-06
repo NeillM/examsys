@@ -679,9 +679,7 @@ abstract class questiondata
         }
         $this->question = $question;
         $this->useranswers = $user_answers;
-        if (!empty($question['q_media'])) {
-            $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '');
-        }
+        $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '');
 
         // Set question header.
         $this->set_question_head();
@@ -719,17 +717,15 @@ abstract class questiondata
             $this->partid = $part_id;
             $tmp_part_id = $question['option_order'][$part_id - 1] + 1;
             $this->set_opt($part_id, array(
-            'optiontext' => $display_option['option_text'],
-            'omedia' => $display_option['o_media'],
-            'markscorrect' => $display_option['marks_correct'],
-            'marksincorrect' => $display_option['marks_incorrect'],
-            'correct' => $display_option['correct'],
-            'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
-            'position' => $tmp_part_id
+                'optiontext' => $display_option['option_text'],
+                'omedia' => $display_option['o_media'],
+                'markscorrect' => $display_option['marks_correct'],
+                'marksincorrect' => $display_option['marks_incorrect'],
+                'correct' => $display_option['correct'],
+                'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
+                'position' => $tmp_part_id
             ));
-            if (!empty($display_option['o_media'])) {
-                $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', false, -1, false, $part_id);
-            }
+            $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', false, -1, false, $part_id);
 
             // Set question options.
             $this->set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
@@ -770,7 +766,7 @@ abstract class questiondata
     public function set_media($filename, $width, $height, $alt, $border_color, $delay = false, $imageid = -1, $locked = false, $part_id = null)
     {
         $mediadirectory = rogo_directory::get_directory('media');
-        $fn_parts = pathinfo($filename);
+        $fn_parts = pathinfo($filename ?? '');
         $mediaedit = false;
         $mediadelete = false;
         $mediatype = null;
