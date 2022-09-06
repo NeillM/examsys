@@ -29,7 +29,6 @@ use yearutils;
  */
 class academic_year extends generator
 {
-
     /**
      * Create academic_year
      *

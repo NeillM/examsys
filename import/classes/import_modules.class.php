@@ -27,7 +27,6 @@ use csv\csv_load_exception;
  */
 class import_modules extends importer
 {
-
     /**
      * The list of modules where school was not found.
      * @var array

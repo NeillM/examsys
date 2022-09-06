@@ -28,7 +28,6 @@ namespace api;
  */
 class usermanagement extends \api\abstractmanagement
 {
-
     /**
      * Language pack component.
      */

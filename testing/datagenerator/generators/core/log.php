@@ -27,7 +27,6 @@ namespace testing\datagenerator;
  */
 class log extends generator
 {
-
     /**
      * Create metadata log
      *

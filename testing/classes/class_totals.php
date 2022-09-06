@@ -32,7 +32,6 @@ require_once dirname(__DIR__, 2) . '/plugins/questions/enhancedcalc/helpers/enha
  */
 class class_totals
 {
-
     /**
      * Function to parse marks in display_feedback
      *

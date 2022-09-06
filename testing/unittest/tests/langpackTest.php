@@ -27,7 +27,6 @@ namespace testing\unittest;
  */
 class langpacktest extends UnitTest
 {
-
     /**
      * Test get_string
      * @group lang

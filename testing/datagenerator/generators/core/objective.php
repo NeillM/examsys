@@ -30,7 +30,6 @@ use mappingutils;
  */
 class objective extends generator
 {
-
     /**
      * Create a new module
      *

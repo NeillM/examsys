@@ -26,7 +26,6 @@ use plugins\ims\ims_enterprise;
  */
 class Audit
 {
-
     /**
      * @var string Language pack component.
      */

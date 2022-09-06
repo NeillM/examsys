@@ -31,7 +31,6 @@ use UserUtils;
  */
 class modules extends generator
 {
-
     /**
      * Create a new module
      *

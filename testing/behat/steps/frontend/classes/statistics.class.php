@@ -32,7 +32,6 @@ use Exception;
  */
 trait Statistics
 {
-
     /**
      * Check for school statistic items.
      *

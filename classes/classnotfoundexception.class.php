@@ -25,5 +25,4 @@
  */
 class ClassNotFoundException extends Exception
 {
-
 }

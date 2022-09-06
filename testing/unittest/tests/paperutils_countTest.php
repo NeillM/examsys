@@ -27,7 +27,6 @@ use testing\unittest\unittestdatabase;
  */
 class paperutils_counttest extends unittestdatabase
 {
-
     /**
      * @var integer Storage for user id in tests
      */

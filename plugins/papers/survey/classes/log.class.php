@@ -28,7 +28,6 @@ namespace plugins\papers\survey;
  */
 class log extends \log
 {
-
     /**
      * Constructor
      */

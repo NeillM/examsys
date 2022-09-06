@@ -32,7 +32,6 @@ use Exception;
  */
 trait menu
 {
-
     /**
      * Check for menu items.
      *

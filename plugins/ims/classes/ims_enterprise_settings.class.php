@@ -34,7 +34,6 @@ namespace plugins\ims;
  */
 class ims_enterprise_settings
 {
-
     /**
      * Get IMS settings
      *

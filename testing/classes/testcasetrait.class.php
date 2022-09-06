@@ -27,7 +27,6 @@ use mysqli;
  */
 trait testcasetrait
 {
-
     /**
      * Load/Generate test data
      */

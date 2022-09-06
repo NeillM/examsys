@@ -28,7 +28,6 @@ namespace api;
  */
 class gradebook extends \api\abstractpublish
 {
-
     // Language pack component.
     private $langcomponent = 'api/gradebook';
 

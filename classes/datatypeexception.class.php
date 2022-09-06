@@ -25,5 +25,4 @@
  */
 class DataTypeException extends Exception
 {
-
 }

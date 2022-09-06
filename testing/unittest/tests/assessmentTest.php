@@ -27,7 +27,6 @@ use testing\unittest\unittestdatabase;
  */
 class assessmenttest extends unittestdatabase
 {
-
     /**
      * @var integer Storage for module id in tests
      */

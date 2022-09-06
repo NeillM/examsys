@@ -32,7 +32,6 @@ namespace api;
  */
 abstract class abstractmanagement
 {
-
     /**
      * Abstract create function
      *

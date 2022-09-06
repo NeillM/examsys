@@ -29,7 +29,6 @@ require_once dirname(__DIR__, 3) . '/plugins/questions/enhancedcalc/helpers/enha
 
 class ENHANCEDCALCCorrector extends Corrector
 {
-
     /**
      * Change the correct answer after the question has been locked. Update user marks in summative log table
      * @param mixed $new_correct Array of new values for fields that can be corrected

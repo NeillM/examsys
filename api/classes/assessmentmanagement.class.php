@@ -28,7 +28,6 @@ namespace api;
  */
 class assessmentmanagement extends \api\abstractmanagement
 {
-
     /**
      * Language pack component.
      */

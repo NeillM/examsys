@@ -28,7 +28,6 @@ namespace plugins\papers\summative;
  */
 class log extends \log
 {
-
     /**
      * Constructor
      */

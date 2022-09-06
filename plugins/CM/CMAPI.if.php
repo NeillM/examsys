@@ -27,7 +27,6 @@
 
 class UnsupportedMappingLevelException extends Exception
 {
-
 }
 
 interface iCMAPI

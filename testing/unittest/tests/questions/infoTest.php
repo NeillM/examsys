@@ -27,7 +27,6 @@ use testing\unittest\unittest;
  */
 class infotest extends unittest
 {
-
     /**
      * Test question setter
      * @group question

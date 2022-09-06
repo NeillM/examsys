@@ -28,7 +28,6 @@ namespace plugins\papers\progressive;
  */
 class log extends \log
 {
-
     /**
      * Constructor
      */

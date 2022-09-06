@@ -29,7 +29,6 @@ use testing\unittest\unittestdatabase;
  */
 class ModuleManagementTest extends unittestdatabase
 {
-
     /**
      * @var integer Storage for user id in test
      */

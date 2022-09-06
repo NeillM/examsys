@@ -28,7 +28,6 @@ namespace plugins\ims;
  */
 class ims_enterprise_modules
 {
-
     /** @var array IMS group description names */
     private $imsnames;
 

@@ -27,7 +27,6 @@ use testing\unittest\unittest;
  */
 class scttest extends unittest
 {
-
     /**
      * Test question header setter
      * @group question

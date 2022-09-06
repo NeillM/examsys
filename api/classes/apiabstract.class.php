@@ -30,7 +30,6 @@ namespace api;
  */
 abstract class apiabstract
 {
-
     /**
      * Abstract constructor
      * @param string $request api request

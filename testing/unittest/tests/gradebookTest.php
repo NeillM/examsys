@@ -27,7 +27,6 @@ use testing\unittest\unittestdatabase;
  */
 class gradebooktest extends unittestdatabase
 {
-
     /**
      * @var array Storage for paper data in tests
      */

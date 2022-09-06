@@ -30,7 +30,6 @@ use users\PaperList;
  */
 class log extends \log
 {
-
     /**
      * Constructor
      */

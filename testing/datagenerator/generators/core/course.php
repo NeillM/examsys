@@ -29,7 +29,6 @@ use CourseUtils;
  */
 class course extends generator
 {
-
     /** @var int Stores how many courses have been created. */
     protected static $coursescreated = 0;
 

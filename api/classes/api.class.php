@@ -28,7 +28,6 @@ namespace api;
  */
 class api
 {
-
     /**
      * The slim application.
      */

@@ -27,7 +27,6 @@ namespace testing\datagenerator;
  */
 class api extends generator
 {
-
     /**
      * Create a new gradebook paper entry
      *
