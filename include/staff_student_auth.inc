@@ -36,25 +36,7 @@ if (!InstallUtils::config_exists()) {
     exit();
 }
 
-// Cookie sessions only.
-ini_set('session.use_only_cookies', 1);
-// Use secure cookie if on secure conenction.
-if ($configObject->get('cfg_secure_connection')) {
-    ini_set('session.cookie_secure', 1);
-    ini_set('session.cookie_httponly', 1);
-}
-//start the session early as the lang class looks in the session
-if ($configObject->get('cfg_session_name') != '') {
-    session_name($configObject->get('cfg_session_name'));
-} else {
-    session_name('RogoAuthentication');
-}
-
-if (ini_get('session.save_handler') === 'memcache' or ini_get('session.save_handler') === 'memcached') {
-    $sessionhandler = new memcachesessionhandler();
-    session_set_save_handler($sessionhandler);
-}
-$return = session_start();
+require_once __DIR__ . '/get_session.php'; // Get or start the session.
 
 $language = LangUtils::getLang($cfg_web_root);
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
@@ -81,9 +63,7 @@ if ($configObject->get('cfg_secure_connection')) {
         $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '/artwork/secure_connection.png', $title_color = '#C00000', true, true);
     }
 }
-
-$authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
-$authentication->do_authentication($string);
+require_once $cfg_web_root . 'classes/authentication.inc.php';
 $getauthobj = new auth_obj();
 $authentication->get_auth_obj($getauthobj);
 

@@ -355,6 +355,7 @@ abstract class rogo_directory
         }
         // Generate and return the url.
         $url = $webroot . $this->downloadfile . $get;
+
         if ($escaped) {
             $url = htmlentities($url, ENT_HTML5);
         }

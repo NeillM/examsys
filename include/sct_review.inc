@@ -51,10 +51,8 @@ $newauth = array(
   array('fixedlist', array('authusers' => array('sctreviewer' => $paper_password)), 'SCT Reviewer List')
 );
 $configObject->set('authentication', $newauth);
-session_name('RogoAuthentication');
-$return = session_start();
-$authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
-$authentication->do_authentication($string);
+require_once $cfg_web_root . 'classes/authentication.inc.php';
+
 if ($authentication->get_userid() != -9999) {
     $notice->access_denied($mysqli, $string, $string['authfailed'], true, true);
 }
