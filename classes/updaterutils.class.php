@@ -224,7 +224,7 @@ class UpdaterUtils
      * @param string $ref_columnname - The name of the column the key linked to.
      * @param string $keyname   - The name of the key.
      *
-     * @return int - number of key found
+     * @return boolean - if the key found
      */
     public function does_foreign_key_exist($tablename, $columnname, $ref_tablename, $ref_columnname, $keyname) {
         $result = $this->mysqli->prepare("
@@ -237,7 +237,10 @@ class UpdaterUtils
         $result->bind_result($count);
         $result->fetch();
         $result->close();
-        return $count;
+        if ($count === 1){
+            return true;
+        }
+        return false;
     }
 
     /**
