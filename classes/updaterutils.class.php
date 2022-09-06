@@ -216,6 +216,40 @@ class UpdaterUtils
     }
 
     /**
+     * Determines if a foreign key exists.
+     *
+     * @param string $tablename - The name of the table to be tested.
+     * @param string $columnname - The name of the column has the key.
+     * @param string $ref_tablename - The name of the linked table.
+     * @param string $ref_columnname - The name of the column the key linked to.
+     * @param string $keyname - The name of the key.
+     *
+     * @return boolean - if the key found
+     */
+    public function foreignKeyExists(
+            string $tablename,
+            string $columnname,
+            string $ref_tablename,
+            string $ref_columnname,
+            string $keyname
+    ): bool {
+        $result = $this->mysqli->prepare("
+            SELECT count(*)
+            FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+            WHERE TABLE_SCHEMA  =? AND TABLE_NAME = ? AND  COLUMN_NAME = ?  AND CONSTRAINT_NAME = ? AND REFERENCED_TABLE_NAME = ? AND REFERENCED_COLUMN_NAME = ? 
+        ");
+        $result->bind_param('ssssss', $this->db_name, $tablename, $columnname, $keyname, $ref_tablename, $ref_columnname);
+        $result->execute();
+        $result->bind_result($count);
+        $result->fetch();
+        $result->close();
+        if ($count === 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Determines if an index exists for a given table.
      *
      * @param string $table_name   - The name of the table to be tested.

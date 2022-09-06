@@ -16,9 +16,17 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 if ($updater_utils->check_version('7.5.0') and !$updater_utils->has_updated('ROGO-3233')) {
-    $sql1 = 'ALTER TABLE questions_modules ADD CONSTRAINT `questions_modules_fk1` FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)';
-    $sql2 = 'ALTER TABLE questions_modules ADD CONSTRAINT `questions_modules_fk2` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)';
-    $updater_utils->execute_query($sql1, false);
-    $updater_utils->execute_query($sql2, false);
+    if ($updater_utils->foreignKeyExists('questions_modules', 'q_id', 'questions', 'q_id', 'questions_modules_fk1') === 0) {
+        $sql1 = 'ALTER TABLE questions_modules 
+                 ADD CONSTRAINT `questions_modules_fk1` 
+                 FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)';
+        $updater_utils->execute_query($sql1, false);
+    }
+    if ($updater_utils->foreignKeyExists('questions_modules', 'idMod', 'modules', 'id', 'questions_modules_fk2') === 0) {
+        $sql2 = 'ALTER TABLE questions_modules 
+                 ADD CONSTRAINT `questions_modules_fk2` 
+                 FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)';
+        $updater_utils->execute_query($sql2, false);
+    }
     $updater_utils->record_update('ROGO-3233');
 }
