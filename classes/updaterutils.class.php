@@ -218,15 +218,16 @@ class UpdaterUtils
     /**
      * Determines if a foreign key exists.
      *
-     * @param string $tablename   - The name of the table to be tested.
-     * @param string $columnname   - The name of the column has the key.
-     * @param string $ref_tablename   - The name of the linked table.
+     * @param string $tablename - The name of the table to be tested.
+     * @param string $columnname - The name of the column has the key.
+     * @param string $ref_tablename - The name of the linked table.
      * @param string $ref_columnname - The name of the column the key linked to.
-     * @param string $keyname   - The name of the key.
+     * @param string $keyname - The name of the key.
      *
      * @return boolean - if the key found
      */
-    public function foreignKeyExists($tablename, $columnname, $ref_tablename, $ref_columnname, $keyname) {
+    public function foreignKeyExists(string $tablename, string $columnname, string $ref_tablename, string $ref_columnname,
+            string $keyname): bool {
         $result = $this->mysqli->prepare("
             SELECT count(*)
             FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
@@ -237,7 +238,7 @@ class UpdaterUtils
         $result->bind_result($count);
         $result->fetch();
         $result->close();
-        if ($count === 1){
+        if ($count === 1) {
             return true;
         }
         return false;
