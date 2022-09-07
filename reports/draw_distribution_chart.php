@@ -142,15 +142,30 @@ if ($negative > 10) {
 ImageLine($Image, 50, 20, 50, 260, $dkgrey);
 ImageLine($Image, 50, 260, 740 + $negative, 260, $dkgrey);
 
+// Style definition for a dashed line.
+$dashedline = [
+    $blue,
+    $blue,
+    $blue,
+    $blue,
+    IMG_COLOR_TRANSPARENT,
+    IMG_COLOR_TRANSPARENT,
+    IMG_COLOR_TRANSPARENT,
+    IMG_COLOR_TRANSPARENT,
+];
+
 // Add quartile lines
 if (isset($_GET['q1']) and isset($_GET['q2']) and isset($_GET['q3'])) {
     for ($i = 1; $i <= 3; $i++) {
         $quartile = round($_GET["q$i"], 2);
-        imagedashedline($Image, ($quartile * 7) + 40 + $negative, 20, ($quartile * 7) + 40 + $negative, 260, $blue);
+        imagesetstyle($Image, $dashedline);
+        imageline($Image, ($quartile * 7) + 40 + $negative, 20, ($quartile * 7) + 40 + $negative, 260, IMG_COLOR_STYLED);
     }
 }
-imagedashedline($Image, ($min_mark * 7) + 38 + $negative, 20, ($min_mark * 7) + 38 + $negative, 260, $blue);
-imagedashedline($Image, ($max_mark * 7) + 43 + $negative, 20, ($max_mark * 7) + 43 + $negative, 260, $blue);
+imagesetstyle($Image, $dashedline);
+imageline($Image, ($min_mark * 7) + 38 + $negative, 20, ($min_mark * 7) + 38 + $negative, 260, IMG_COLOR_STYLED);
+imagesetstyle($Image, $dashedline);
+imageline($Image, ($max_mark * 7) + 43 + $negative, 20, ($max_mark * 7) + 43 + $negative, 260, IMG_COLOR_STYLED);
 ImageRectangle($Image, (round($_GET['q1'], 2) * 7) + 40 + $negative, 1, (round($_GET['q3'], 2) * 7) + 40 + $negative, 13, $blue);
 
 ImageLine($Image, (round($_GET['q2'], 2) * 7) + 40 + $negative, 1, (round($_GET['q2'], 2) * 7) + 40 + $negative, 12, $blue);                // Median vertical
