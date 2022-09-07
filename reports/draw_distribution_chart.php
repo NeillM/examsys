@@ -219,6 +219,7 @@ for ($label = 0; $label <= $points; $label += $label_inc) {
     ImageLine($Image, 45, 260 - ($label * $gap), 50, 260 - ($label * $gap), $dkgrey);
 }
 
+header('Content-Type: image/png');
 ImagePNG($Image);
 
 ImageDestroy($Image);
