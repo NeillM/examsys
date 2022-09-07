@@ -27,6 +27,15 @@
 
 require '../include/staff_auth.inc';
 
+// Check for parameters.
+$passmark = param::required('pmk', param::INT, param::FETCH_GET);
+$distinction_mark = param::required('distinction_mark', param::INT, param::FETCH_GET);
+$adjust = param::optional('adjust', false, param::BOOLEAN, param::FETCH_GET);
+$plotuser = param::optional('plotuser', null, param::INT, param::FETCH_GET);
+$quartile1 = param::optional('q1', 0, param::INT, param::FETCH_GET);
+$quartile2 = param::optional('q2', 0, param::INT, param::FETCH_GET);
+$quartile3 = param::optional('q3', 0, param::INT, param::FETCH_GET);
+
 $mydata = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat');
 $mydata = unserialize($mydata[0]);
 
@@ -115,7 +124,7 @@ $font      = dirname(__dir__) . DIRECTORY_SEPARATOR . 'fonts' . DIRECTORY_SEPARA
 $bold_font = dirname(__dir__)  . DIRECTORY_SEPARATOR . 'fonts' . DIRECTORY_SEPARATOR . 'SourceSansPro-Semibold.ttf';
 
 // Label x axis
-if (!isset($_GET['plotuser'])) {
+if (is_null($plotuser)) {
     for ($label = $scale_start; $label <= 100; $label += 10) {
         if ($label > 0 and $label < 100) {
             imagettftext($Image, 10, 0, ($label * 7) + 34 + $negative, 280, $black, $font, $label);
@@ -155,9 +164,9 @@ $dashedline = [
 ];
 
 // Add quartile lines
-if (isset($_GET['q1']) and isset($_GET['q2']) and isset($_GET['q3'])) {
+if ($quartile1 and $quartile2 and $quartile3) {
     for ($i = 1; $i <= 3; $i++) {
-        $quartile = round($_GET["q$i"], 2);
+        $quartile = round(${'quartile' . $i}, 2);
         imagesetstyle($Image, $dashedline);
         imageline($Image, ($quartile * 7) + 40 + $negative, 20, ($quartile * 7) + 40 + $negative, 260, IMG_COLOR_STYLED);
     }
@@ -166,33 +175,33 @@ imagesetstyle($Image, $dashedline);
 imageline($Image, ($min_mark * 7) + 38 + $negative, 20, ($min_mark * 7) + 38 + $negative, 260, IMG_COLOR_STYLED);
 imagesetstyle($Image, $dashedline);
 imageline($Image, ($max_mark * 7) + 43 + $negative, 20, ($max_mark * 7) + 43 + $negative, 260, IMG_COLOR_STYLED);
-ImageRectangle($Image, (round($_GET['q1'], 2) * 7) + 40 + $negative, 1, (round($_GET['q3'], 2) * 7) + 40 + $negative, 13, $blue);
+ImageRectangle($Image, (round($quartile1, 2) * 7) + 40 + $negative, 1, (round($quartile3, 2) * 7) + 40 + $negative, 13, $blue);
 
-ImageLine($Image, (round($_GET['q2'], 2) * 7) + 40 + $negative, 1, (round($_GET['q2'], 2) * 7) + 40 + $negative, 12, $blue);                // Median vertical
+ImageLine($Image, (round($quartile2, 2) * 7) + 40 + $negative, 1, (round($quartile2, 2) * 7) + 40 + $negative, 12, $blue);                // Median vertical
 
 ImageLine($Image, ($min_mark * 7) + 38 + $negative, 1, ($min_mark * 7) + 38 + $negative, 13, $blue);                // Min vertical
-ImageLine($Image, ($min_mark * 7) + 38 + $negative, 7, (round($_GET['q1'], 2) * 7) + 40 + $negative, 7, $blue);   // Min whisker
+ImageLine($Image, ($min_mark * 7) + 38 + $negative, 7, (round($quartile1, 2) * 7) + 40 + $negative, 7, $blue);   // Min whisker
 
 ImageLine($Image, ($max_mark * 7) + 43 + $negative, 1, ($max_mark * 7) + 43 + $negative, 13, $blue);                // Max vertical
-ImageLine($Image, ($max_mark * 7) + 43 + $negative, 7, (round($_GET['q3'], 2) * 7) + 40 + $negative, 7, $blue);   // Max whisker
+ImageLine($Image, ($max_mark * 7) + 43 + $negative, 7, (round($quartile3, 2) * 7) + 40 + $negative, 7, $blue);   // Max whisker
 
 for ($i = $scale_start; $i <= 100; $i++) {
     if (isset($mydata[$i]) and $mydata[$i] > 0) {
-        if ($i < $_GET['pmk']) {
+        if ($i < $passmark) {
             ImageFilledRectangle($Image, ($i * 7) + 38 + $negative, 260 - ($mydata[$i] * $gap), ($i * 7) + 43 + $negative, 260, $red);
-        } elseif ($i >= $_GET['pmk'] and $i < $_GET['distinction_mark']) {
+        } elseif ($i >= $passmark and $i < $distinction_mark) {
             ImageFilledRectangle($Image, ($i * 7) + 38 + $negative, 260 - ($mydata[$i] * $gap), ($i * 7) + 43 + $negative, 260, $black);
         } else {
             ImageFilledRectangle($Image, ($i * 7) + 38 + $negative, 260 - ($mydata[$i] * $gap), ($i * 7) + 43 + $negative, 260, $dkgreen);
         }
     }
 }
-if (isset($_GET['plotuser'])) {
+if (!is_null($plotuser)) {
     ImageString($Image, 2, 50, 260, 'Worst', $black);
     ImageString($Image, 2, 700, 260, 'Best', $black);
     ImageString($Image, 3, 345, 278, 'Performance', $black);
 } else {
-    if ($_GET['adjust'] == '0') {
+    if (!$adjust) {
         imagettftext($Image, 12, 0, 375 + (abs($scale_start) * 5), 296, $black, $bold_font, $string['percent']);
     } else {
         imagettftext($Image, 12, 0, 342 + (abs($scale_start) * 5), 296, $black, $bold_font, $string['adjustedpercent']);
@@ -200,13 +209,13 @@ if (isset($_GET['plotuser'])) {
 }
 imagettftext($Image, 12, 90, 12, 182, $black, $bold_font, $string['occurrance']);
 
-if (isset($_GET['plotuser']) and $_GET['plotuser'] != '') {
+if (!is_null($plotuser)) {
     if ($label < 100) {
-        ImageString($Image, 2, ($_GET['plotuser'] * 7) + 32, 0, 'You', $blue);
+        ImageString($Image, 2, ($plotuser * 7) + 32, 0, 'You', $blue);
     } else {
-        ImageString($Image, 2, ($_GET['plotuser'] * 7) + 26, 0, 'You', $blue);
+        ImageString($Image, 2, ($plotuser * 7) + 26, 0, 'You', $blue);
     }
-    ImageLine($Image, ($_GET['plotuser'] * 7) + 40, 12, ($_GET['plotuser'] * 7) + 40, 250, $blue);
+    ImageLine($Image, ($plotuser * 7) + 40, 12, ($plotuser * 7) + 40, 250, $blue);
 }
 
 // Label y axis
