@@ -209,13 +209,13 @@ class QuestionEdit extends RogoObject
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
-        } elseif (ctype_digit($data)) {
+        } elseif (!is_null($data) and ctype_digit($data)) {
             // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_question()) {
                 throw new DatabaseException($this->_lang_strings['questionloaderror']);
             }
-        } elseif ($data !== null) {
+        } elseif (!is_null($data)) {
             throw new DataTypeException($this->_lang_strings['questioninvalid']);
         }
 
@@ -453,18 +453,18 @@ QUERY;
 
                 \QuestionsMetadata::setArray($this->id, $this->_metadata);
 
-                $media = explode('|', $this->_qmdata['media']);
-                $source = explode('|', $this->_mdata['media_source']);
+                $media = explode('|', $this->_qmdata['media'] ?? '');
+                $source = explode('|', $this->_mdata['media_source'] ?? '');
                 if (!isset($this->currentmedia['num'])) {
                     $current_num = array();
                 } else {
                     $current_num = explode('|', $this->currentmedia['num']);
                 }
-                $num = explode('|', $this->_qmdata['media_num']);
-                $width = explode('|', $this->_mdata['media_width']);
-                $height = explode('|', $this->_mdata['media_height']);
-                $alt = explode('|', $this->_mdata['media_alt']);
-                $owner = explode('|', $this->_mdata['media_owner']);
+                $num = explode('|', $this->_qmdata['media_num'] ?? '');
+                $width = explode('|', $this->_mdata['media_width'] ?? '');
+                $height = explode('|', $this->_mdata['media_height'] ?? '');
+                $alt = explode('|', $this->_mdata['media_alt'] ?? '');
+                $owner = explode('|', $this->_mdata['media_owner'] ?? '');
 
                 $insertmediaparams = array();
                 $updatemediaparams = array();
@@ -892,7 +892,7 @@ QUERY;
     {
         $number = '';
 
-        if (ctype_digit($paper_id)) {
+        if (is_int($paper_id) or ctype_digit($paper_id)) {
             $pos = 0;
 
             $pos_query = <<< QUERY
@@ -1427,7 +1427,7 @@ QUERY;
     public function get_checkout_time($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->checkout_time);
+            return strtotime($this->checkout_time ?? '');
         } else {
             return $this->checkout_time;
         }
@@ -1490,7 +1490,7 @@ QUERY;
     public function get_created($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->created);
+            return strtotime($this->created ?? '');
         } else {
             return $this->created;
         }
@@ -1503,7 +1503,7 @@ QUERY;
     public function get_last_edited($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->last_edited);
+            return strtotime($this->last_edited ?? '');
         } else {
             return $this->last_edited;
         }
@@ -1516,7 +1516,7 @@ QUERY;
     public function get_locked($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->locked);
+            return strtotime($this->locked ?? '');
         } else {
             return $this->locked;
         }
@@ -1529,7 +1529,7 @@ QUERY;
     public function get_deleted($format = 'string')
     {
         if ($format == 'timestamp') {
-            return strtotime($this->deleted);
+            return strtotime($this->deleted ?? '');
         } else {
             return $this->deleted;
         }
@@ -1911,7 +1911,7 @@ QUERY;
             $result->bind_param('i', $this->id);
             $result->execute();
             $result->store_result();
-            call_user_func_array(array($result, 'bind_result'), $opt_data);
+            call_user_func_array(array($result, 'bind_result'), $params);
             // TODO: handle 'correctness' more nicely
             $i = 1;
             if ($result->num_rows > 0) {

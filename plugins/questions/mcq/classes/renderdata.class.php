@@ -115,7 +115,7 @@ class renderdata extends \questiondata
             $option['displayoptionmedia'] = true;
         }
         if ($this->displaymethod === 'vertical' or $this->displaymethod === 'vertical_other') {
-            if (mb_substr($userdismissed, $option['position'] - 1, 1) == '1') {
+            if (!is_null($userdismissed) and mb_substr($userdismissed, $option['position'] - 1, 1) == '1') {
                 $option['inact'] = true;
             } else {
                 $option['inact'] = false;

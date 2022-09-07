@@ -505,7 +505,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             if ($display_option['option_text'] != '') {
                 echo $display_option['option_text'];
             }
-            if ($display_option['o_media'] != '') {
+            if (!empty($display_option['o_media'])) {
                 if ($display_option['option_text'] != '') {
                     echo '<br />';
                 }
@@ -541,7 +541,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                         }
                         echo '>' . $display_option['option_text'] . "</td></tr>\n";
                     }
-                } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
+                } elseif ($display_option['option_text'] != '' and !empty($display_option['o_media'])) {  // Text and media
                     if ($part_id == $display_option['correct']) {
                         echo '<tr><td><input type="radio" name="q' . $question_no . "\" value=\"$part_id\" checked=\"checked\" /></td><td";
                         if ($qn_excluded) {
@@ -561,7 +561,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                         $render->render($questiondata, $string, 'paper/media.html');
                         echo "</td></tr>\n";
                     }
-                } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
+                } elseif ($display_option['option_text'] == '' and !empty($display_option['o_media'])) {  // No Text and media
                     if ($part_id == $display_option['correct']) {
                         echo '<tr><td><input type="radio" name="q' . $question_no . "\" value=\"$part_id\" checked=\"checked\" /></td><td>";
                         $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', true);
@@ -589,7 +589,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                         }
                         echo '>' . $display_option['option_text'] . '&nbsp;&nbsp;';
                     }
-                } elseif ($display_option['option_text'] != '' and $display_option['o_media'] != '') {  // Text and media
+                } elseif ($display_option['option_text'] != '' and !empty($display_option['o_media'])) {  // Text and media
                     if ($part_id == $display_option['correct']) {
                         echo '<input type="radio" name="q' . $question_no . '" value="' . $part_id . '" checked="checked" />&nbsp;' . $display_option['option_text'] . '<br />';
                         $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', true);
@@ -601,7 +601,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                         $render->render($questiondata, $string, 'paper/media.html');
                         echo '&nbsp;&nbsp;';
                     }
-                } elseif ($display_option['option_text'] == '' and $display_option['o_media'] != '') {  // No Text and media
+                } elseif ($display_option['option_text'] == '' and !empty($display_option['o_media'])) {  // No Text and media
                     if ($part_id == $display_option['correct']) {
                         echo '<input type="radio" name="q' . $question_no . '" value="' . $part_id . '" checked="checked" />&nbsp;';
                         $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', true);

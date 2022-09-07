@@ -47,7 +47,7 @@ $locked = ($dis_class != '');
 <?php
 for ($i = 0; $i < count($all_media); $i++) {
     if (isset($all_media['nums'][$i]) and $all_media['nums'][$i] == $index) {
-        if (isset($all_media['filenames'][$i]) and $all_media['filenames'][$i] != '') {
+        if (!empty($all_media['filenames'][$i])) {
             $configObj = Config::get_instance();
             $questiondata = new plugins\questions\extmatch\renderdata();
             $render = new render($configObj);

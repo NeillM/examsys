@@ -342,7 +342,7 @@ switch ($_GET['method']) {
               echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
               $li_set = 1;
           }
-          if ($q_media != '' and $q_media != null and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'area') {
+          if (!empty($q_media) and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'area') {
               if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
                   if ($li_set == 0) {
                       echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';

@@ -57,7 +57,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         if ($scenario != '' and $q_type != 'likert') {
             echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br /><br />\n";
             echo $leadin;
-            if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
+            if (!empty($q_media) and $q_type != 'hotspot' and $q_type != 'labelling') {
                 echo '<div class="mediadiv">';
                 $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '');
                 $render->render($questiondata, $string, 'paper/media.html');
@@ -68,7 +68,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             }
         } elseif ($q_type != 'likert') {
             echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
-            if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling') {
+            if (!empty($q_media) and $q_type != 'hotspot' and $q_type != 'labelling') {
                 echo '<div class="mediadiv">';
                 $questiondata->set_media($q_media, $q_media_width, $q_media_height, $q_media_alt, '');
                 $render->render($questiondata, $string, 'paper/media.html');
@@ -399,7 +399,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $correct_buf[0]);
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n<ol type=\"i\">";
-        if ($tmp_media_array[0]['source'] != '') {
+        if (!empty($tmp_media_array[0]['source'])) {
             echo '<div class="mediadiv">';
             $questiondata->set_media(
                 $tmp_media_array[0]['source'],
@@ -413,7 +413,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
             echo "<li>\n";
-            if ($tmp_media_array[$i]['source'] != '') {
+            if (!empty($tmp_media_array[$i]['source'])) {
                 echo '<p>';
                 $questiondata->set_media(
                     $tmp_media_array[$i]['source'],

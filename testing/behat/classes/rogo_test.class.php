@@ -191,24 +191,50 @@ class rogo_test extends MinkContext
      */
     public function lookForErrors(): void
     {
+        $message = '';
+        // First look for system errors recorded in the database.
+        /* @var Config $config */
+        $config = \Config::get_instance();
+        $result = $config->db->query('SELECT id, errtype, errstr, errfile, errline, backtrace FROM sys_errors');
+        if ($result->num_rows > 0) {
+            $message .= "The following errors have been found:\n";
+            while ($row = $result->fetch_assoc()) {
+                $message .= "{$row['errtype']} {$row['errstr']} in {$row['errfile']} on line {$row['errline']}:\n{$row['backtrace']}\n\n";
+            }
+        }
+
         // Regular expressions for detecting errors, notices and the like.
+        $fatal = "//*[contains(., 'Fatal error: ') and contains(., ' on line ')]";
         $error = "//*[contains(., 'Error: ') and contains(., ' on line ')]";
         $warning = "//*[contains(., 'Warning: ') and contains(., ' on line ')]";
         $notice = "//*[contains(., 'Notice: ') and contains(., ' on line ')]";
+        $deprecation = "//*[contains(., 'Deprecated: ') and contains(., ' on line ')]";
         try {
+            if ($this->getSession()->getDriver()->find($fatal)) {
+                $message .= "Fatal error found on page.\n";
+            }
             if ($this->getSession()->getDriver()->find($error)) {
-                throw new Exception('Error found on page.');
+                $message .= "Error found on page.\n";
             }
             if ($this->getSession()->getDriver()->find($warning)) {
-                throw new Exception('Warning found on page.');
+                $message .= "Warning found on page.\n";
             }
             if ($this->getSession()->getDriver()->find($notice)) {
-                throw new Exception('Notice found on page.');
+                $message .= "Notice found on page.\n";
+            }
+            if ($this->getSession()->getDriver()->find($deprecation)) {
+                $message .= "Deprecation found on page.\n";
             }
         } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
             // Nothing we can do about this.
         } catch (\WebDriver\Exception\NoSuchWindow $e) {
-            // The action caused the window to close so we cannot see any errors.
+            // The action caused the window to close, so we cannot see any errors.
+        } catch (\Behat\Mink\Exception\DriverException $e) {
+            // The driver could not do a search for some reason, a browser may not be open right now.
+        }
+
+        if (!empty($message)) {
+            throw new Exception($message);
         }
     }
 

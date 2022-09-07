@@ -288,7 +288,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             echo $question['scenario'] . "<br />\n<br />";
             $li_set = 1;
         }
-        if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
+        if (!empty($question['q_media']) and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
             if ($li_set == 0) {
                 echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
                 if ($calculator == 1) {
@@ -324,7 +324,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         if ($li_set == 0) {
             echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
         }
-        if ($question['q_media'] != '') {
+        if (!empty($question['q_media'])) {
             echo '<div class="mediadiv">';
             $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '', true);
             $render->render($questiondata, $string, 'paper/media.html');
@@ -484,7 +484,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 echo $question['scenario'] . "<br />\n<br />";
                 $li_set = 1;
             }
-            if ($question['q_media'] != '') {
+            if (!empty($question['q_media'])) {
                 if ($li_set == 0) {
                     echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
                     if ($calculator == 1) {
@@ -609,7 +609,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if ($display_option['option_text'] != '') {
                     echo $display_option['option_text'];
                 }
-                if ($display_option['o_media'] != '') {
+                if (!empty($display_option['o_media'])) {
                     if ($display_option['option_text'] != '') {
                         echo '<br />';
                     }
@@ -675,7 +675,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     if ($display_option['option_text'] != '') {
                         echo "<span class=\"$class_type\" id=\"$question_no" . '_' . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
                     }
-                    if ($display_option['o_media'] != '') {
+                    if (!empty($display_option['o_media'])) {
                         if ($display_option['option_text'] != '') {
                             echo '<br />';
                         }
@@ -693,7 +693,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     if ($display_option['option_text'] != '') {
                         echo '&nbsp;' . $display_option['option_text'];
                     }
-                    if ($display_option['o_media'] != '') {
+                    if (!empty($display_option['o_media'])) {
                         $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $question['q_media_alt'], '', true);
                         echo '&nbsp;';
                         $render->render($questiondata, $string, 'paper/media.html');
@@ -736,7 +736,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if ($display_option['option_text'] != '') {
                     echo "<span class=\"$class_type\" id=\"$question_no" . '_' . "$part_id\">" . $display_option['option_text'] . '</span>';
                 }
-                if ($display_option['o_media'] != '') {
+                if (!empty($display_option['o_media'])) {
                     if ($display_option['option_text'] != '') {
                         echo '<br />';
                     }

@@ -717,13 +717,13 @@ abstract class questiondata
             $this->partid = $part_id;
             $tmp_part_id = $question['option_order'][$part_id - 1] + 1;
             $this->set_opt($part_id, array(
-            'optiontext' => $display_option['option_text'],
-            'omedia' => $display_option['o_media'],
-            'markscorrect' => $display_option['marks_correct'],
-            'marksincorrect' => $display_option['marks_incorrect'],
-            'correct' => $display_option['correct'],
-            'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
-            'position' => $tmp_part_id
+                'optiontext' => $display_option['option_text'],
+                'omedia' => $display_option['o_media'],
+                'markscorrect' => $display_option['marks_correct'],
+                'marksincorrect' => $display_option['marks_incorrect'],
+                'correct' => $display_option['correct'],
+                'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
+                'position' => $tmp_part_id
             ));
             $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', false, -1, false, $part_id);
 
@@ -766,7 +766,7 @@ abstract class questiondata
     public function set_media($filename, $width, $height, $alt, $border_color, $delay = false, $imageid = -1, $locked = false, $part_id = null)
     {
         $mediadirectory = rogo_directory::get_directory('media');
-        $fn_parts = pathinfo($filename);
+        $fn_parts = pathinfo($filename ?? '');
         $mediaedit = false;
         $mediadelete = false;
         $mediatype = null;

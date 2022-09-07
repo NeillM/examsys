@@ -48,7 +48,7 @@ $locked = ($dis_class != '');
 
 if ($option->id != -1) {
     $media = $option->get_media();
-    if ($media['filename'] != '') {
+    if (!empty($media['filename'])) {
         $configObj = Config::get_instance();
         $questiondata = new plugins\questions\mcq\renderdata();
         $render = new render($configObj);

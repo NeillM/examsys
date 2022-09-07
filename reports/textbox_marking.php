@@ -357,7 +357,7 @@ while ($question_data->fetch()) {
             $questiondata = new plugins\questions\textbox\renderdata();
             $render = new render($configObject);
             for ($i = 0; $i < count($media_list); $i++) {
-                if ($media_list[$i] != '') {
+                if (!empty($media_list[$i])) {
                     $questiondata->set_media($media_list[$i], $media_list_width[$i], $media_list_height[$i], $media_list_alt[$i], '', true);
                     echo '<div class="mediadiv">';
                     $render->render($questiondata, $string, 'paper/media.html');

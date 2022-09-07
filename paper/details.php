@@ -703,11 +703,12 @@ if ($properties->get_deleted() != '') {
             checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
       }
 
-
-      if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
+      $random_mark_diff = round($total_random_mark ?? 0.0, 4) != round($properties->get_random_mark() ?? 0.0, 4);
+      $total_mark_diff = $total_marks != $properties->get_total_mark();
+      if (($random_mark_diff or $total_mark_diff) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
           $update_params = array(
-          'random_mark' => array('d', $total_random_mark),
-          'total_mark' => array('i', $total_marks)
+              'random_mark' => array('d', $total_random_mark),
+              'total_mark' => array('i', $total_marks),
           );
           $assessment->db_update_assessment($paperID, $update_params);
 

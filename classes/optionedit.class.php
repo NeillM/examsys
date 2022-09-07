@@ -122,13 +122,13 @@ class OptionEdit extends RogoObject
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
-        } elseif (ctype_digit($data)) {
+        } elseif (!is_null($data) and ctype_digit($data)) {
             // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_option()) {
                 throw new DatabaseException($this->_lang_strings['optionloaderror']);
             }
-        } elseif ($data !== null) {
+        } elseif (!is_null($data)) {
             throw new DataTypeException($this->_lang_strings['optioninvalid']);
         }
 
@@ -692,7 +692,13 @@ QUERY;
             $classname = 'OptionEdit';
         }
 
-        if ($data != -1 and ctype_digit($data)) {
+        if (is_array($data)) {
+            try {
+                $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings, $data);
+            } catch (Exception $ex) {
+                throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
+            }
+        } elseif ($data != -1 and ctype_digit($data)) {
             try {
                 $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings, $data);
             } catch (Exception $ex) {
@@ -700,11 +706,7 @@ QUERY;
             }
         } else {
             try {
-                if (is_array($data)) {
-                    $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings, $data);
-                } else {
-                    $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings);
-                }
+                $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings);
             } catch (Exception $ex) {
                 throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
             }

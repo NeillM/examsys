@@ -137,7 +137,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             echo $question['scenario'] . "<br />\n<br />";
             $li_set = 1;
         }
-        if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area') {
+        if (!empty($question['q_media']) and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area') {
             if ($li_set == 0) {
                 echo '<tr class="question-' . $question['q_type'] . '"><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
                 if ($calculator == 1) {
@@ -173,7 +173,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         if ($li_set == 0) {
             echo '<tr class="question-' . $question['q_type'] . '"><td colspan="2" style="padding-left:10px; padding-right:10px">';
         }
-        if ($question['q_media'] != '') {
+        if (!empty($question['q_media'])) {
             echo '<div class="mediadiv">';
             $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], $question['q_media_alt'], '');
             $render->render($questiondata, $string, 'paper/media.html');
@@ -317,7 +317,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 echo $question['scenario'] . "<br />\n<br />";
                 $li_set = 1;
             }
-            if ($question['q_media'] != '') {
+            if (!empty($question['q_media'])) {
                 if ($li_set == 0) {
                     echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;';
                     if ($calculator == 1) {
@@ -451,7 +451,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if ($display_option['option_text'] != '') {
                     echo $display_option['option_text'];
                 }
-                if ($display_option['o_media'] != '') {
+                if (!empty($display_option['o_media'])) {
                     if ($display_option['option_text'] != '') {
                         echo '<br />';
                     }
@@ -504,7 +504,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     if ($display_option['option_text'] != '') {
                         echo "<span class=\"act\" id=\"$question_no" . '_' . "$part_id\">" . $display_option['option_text'] . '</span>';
                     }
-                    if ($display_option['o_media'] != '') {
+                    if (!empty($display_option['o_media'])) {
                         if ($display_option['option_text'] != '') {
                             echo '<br />';
                         }
@@ -524,7 +524,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     if ($display_option['option_text'] != '') {
                         echo '&nbsp;' . $display_option['option_text'];
                     }
-                    if ($display_option['o_media'] != '') {
+                    if (!empty($display_option['o_media'])) {
                         echo '&nbsp;';
                         $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '');
                         $render->render($questiondata, $string, 'paper/media.html');
@@ -567,7 +567,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if ($display_option['option_text'] != '') {
                     echo "<span class=\"act\" id=\"$question_no" . '_' . "$part_id\">" . $display_option['option_text'] . '</span>';
                 }
-                if ($display_option['o_media'] != '') {
+                if (!empty($display_option['o_media'])) {
                     if ($display_option['option_text'] != '') {
                         echo '<br />';
                     }
@@ -1015,7 +1015,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     } elseif ($question['q_type'] == 'extmatch') {
         $matching_answers = explode('|', $question['options'][0]['correct']);
 
-        if (isset($matching_media[0]) and $matching_media[0]['source'] != '') {
+        if (!empty($matching_media[0])) {
             echo '<div class="mediadiv">';
             $questiondata->set_media(
                 $matching_media[0]['source'],
@@ -1060,7 +1060,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
                 echo '<div>' . $matching_scenarios[$part_id] . '</div>';
             }
-            if (isset($matching_media[$part_id]['source']) and $matching_media[$part_id]['source'] != '') {
+            if (!empty($matching_media[$part_id]['source'])) {
                 echo '<div>';
                 $questiondata->set_media(
                     $matching_media[$part_id]['source'],
@@ -1133,7 +1133,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
     } elseif ($question['q_type'] == 'matrix') {
         $part_id = 1;
-        if (isset($matching_media[0]) and $matching_media[0]['source'] != '') {
+        if (!empty($matching_media[0])) {
             echo '<div class="mediadiv">';
             $questiondata->set_media(
                 $matching_media[0]['source'],

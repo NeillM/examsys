@@ -64,7 +64,7 @@ function display_question($question, &$question_no, $answers, $string)
         echo $question['scenario'] . "<br />\n<br />";
         $li_set = 1;
     }
-    if ($question['q_media'] != '') {
+    if (!empty($question['q_media'])) {
         if ($li_set == 0) {
             echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         }

@@ -55,7 +55,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db)
         echo $question['scenario'] . "<br />\n<br />";
         $li_set = 1;
     }
-    if ($question['q_media'] != '') {
+    if (!empty($question['q_media'])) {
         if ($li_set == 0) {
             echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         }
@@ -229,6 +229,6 @@ foreach ($questions_array as &$question) {
 <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['savetobank'] ?>" class="ok" style="width:250px" /></div>
 </form>
 </div>
-    
+
 </body>
 </html>

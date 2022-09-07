@@ -78,6 +78,9 @@ trait testcasetrait
             $data = Yaml::parseFile($yamlfile);
             $this->insert_into_db($data);
         }
+        // We need to ensure that the software version is properly stored to avoid errors.
+        $config = \Config::get_instance();
+        $config->set_setting('rogo_version', $config->getxml('version'), \Config::VERSION);
         // Always need this academic year.
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         // Which year is the current academic year depends on the time of the year.

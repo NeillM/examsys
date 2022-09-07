@@ -194,7 +194,7 @@ class renderdata extends \questiondata
             }
             $matchstem[$id - 1]['display'] = false;
 
-            if (isset($matching_media[$id]['source']) and $matching_media[$id]['source'] != '') {
+            if (!empty($matching_media[$id]['source'])) {
                 $matchstem[$id - 1]['display'] = true;
                 $this->set_media(
                     $matching_media[$id]['source'],

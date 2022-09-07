@@ -211,7 +211,6 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
                 }
             }
             if ($tmp_exclude[0] == '0') {
-                $correct++;
                 if ($score_method == 'Mark per Option') {
                     $marks += count($option_text) * $question_marks;
                 } elseif ($score_method == 'Mark per Question') {
@@ -405,7 +404,6 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
                 }
             }
             if ($tmp_exclude[0] == '0') {
-                $correct++;
                 if ($score_method == 'Mark per Option') {
                     if ($correct_no == $option_no) {
                         $random_mark += $marks_correct;
