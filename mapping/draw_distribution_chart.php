@@ -23,11 +23,11 @@
  * @package
  */
 
-  $mydata = array();
-  $mydata = unserialize(urldecode($_GET['disdata']));
-  $max_frequency = 0;
-  $TotalMarks = 0;
-  $TotalStudents = 0;
+$mydata = array();
+$mydata = unserialize(urldecode($_GET['disdata']));
+$max_frequency = 0;
+$TotalMarks = 0;
+$TotalStudents = 0;
 for ($i = 1; $i <= 100; $i++) {
     if ($mydata[$i] > $max_frequency) {
         $max_frequency = $mydata[$i];
@@ -42,9 +42,9 @@ for ($i = 1; $i <= 100; $i++) {
     }
 }
 
-  $mean = round($TotalMarks / $TotalStudents, 0);
+$mean = round($TotalMarks / $TotalStudents, 0);
 
-  // Calculate y axis scaling.
+// Calculate y axis scaling.
 if ($max_frequency <= 10) {
     $gap = 24;
     $points = 10;
@@ -87,24 +87,24 @@ if ($max_frequency <= 10) {
     $label_inc = 10;
 }
 
-  $Image = ImageCreate(800, 300);
+$Image = ImageCreate(800, 300);
 
-  $color = ImageColorAllocate($Image, 255, 255, 255);
-  $red = ImageColorAllocate($Image, 255, 0, 0);
-  $ltgrey = ImageColorAllocate($Image, 234, 234, 234);
-  $dkgrey = ImageColorAllocate($Image, 128, 128, 128);
-  $black = ImageColorAllocate($Image, 0, 0, 0);
-  $dkgreen = ImageColorAllocate($Image, 0, 128, 0);
-  $blue =  ImageColorAllocate($Image, 0, 192, 192);
+$color = ImageColorAllocate($Image, 255, 255, 255);
+$red = ImageColorAllocate($Image, 255, 0, 0);
+$ltgrey = ImageColorAllocate($Image, 234, 234, 234);
+$dkgrey = ImageColorAllocate($Image, 128, 128, 128);
+$black = ImageColorAllocate($Image, 0, 0, 0);
+$dkgreen = ImageColorAllocate($Image, 0, 128, 0);
+$blue =  ImageColorAllocate($Image, 0, 192, 192);
 
-  //caculate Xaxis reduction for anon feedback
+//caculate Xaxis reduction for anon feedback
 if (isset($_GET['plotuser'])) {
     $reduction_factor = ($minMark * 7) - 40;
 } else {
     $reduction_factor = 0;
 }
 
-  // Label x axis
+// Label x axis
 if (!isset($_GET['plotuser'])) {
     for ($label = 0; $label <= 100; $label += 10) {
         if ($label > 0 and $label < 100) {
@@ -142,11 +142,7 @@ for ($label = $label_inc; $label <= $points; $label += $label_inc) {
 
 for ($i = 1; $i <= 100; $i++) {
     if ($mydata[$i] > 0) {
-        //if ($i < $_GET['pmk']) {
-        //  ImageFilledRectangle($Image, ($i * 7) + 38 - $reduction_factor, 250 - ($mydata[$i] * $gap), ($i * 7) + 43 - $reduction_factor, 250, $red);
-        //} else {
         ImageFilledRectangle($Image, ($i * 7) + 38 - $reduction_factor, 250 - ($mydata[$i] * $gap), ($i * 7) + 43 - $reduction_factor, 250, $dkgreen);
-        //}
     }
 }
 if (isset($_GET['plotuser'])) {
@@ -160,7 +156,7 @@ if (isset($_GET['plotuser'])) {
         ImageString($Image, 3, 355, 278, 'Percentage Mark', $black);
     }
 }
-  ImageStringUp($Image, 3, 0, 166, 'Occurrance', $black);
+ImageStringUp($Image, 3, 0, 166, 'Occurrance', $black);
 
 if ($_GET['plotuser'] != '') {
     if ($label < 100) {
@@ -174,6 +170,6 @@ if ($_GET['plotuser'] != '') {
     ImageLine($Image, ($mean * 7) + 40 - $reduction_factor, 12, ($mean * 7) + 40 - $reduction_factor, 250, $red);
 }
 
-  ImagePNG($Image);
+ImagePNG($Image);
 
-  ImageDestroy($Image);
+ImageDestroy($Image);
