@@ -28,7 +28,6 @@ namespace api;
  */
 class modulemanagement extends \api\abstractmanagement
 {
-
     /**
      * Language pack component.
      */

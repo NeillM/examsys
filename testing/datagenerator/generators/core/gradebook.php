@@ -27,7 +27,6 @@ namespace testing\datagenerator;
  */
 class gradebook extends generator
 {
-
     /**
      * Create a new gradebook paper entry
      *

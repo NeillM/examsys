@@ -27,7 +27,6 @@ use testing\unittest\unittestdatabase;
  */
 class plugin_managertest extends unittestdatabase
 {
-
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found

@@ -28,7 +28,6 @@ namespace api;
  */
 class facultymanagement extends \api\abstractmanagement
 {
-
     /**
      * Language pack component.
      */

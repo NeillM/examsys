@@ -699,7 +699,6 @@ class ST_QTI12_CondVar // <conditionvar>
 // feedback storage
 class ST_QTI12_Itemfeedback // <itemfeedback>
 {
-
     public $id; // <itemfeedback ident=
     public $material; // <material>
 

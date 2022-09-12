@@ -28,7 +28,6 @@ namespace api;
  */
 class coursemanagement extends \api\abstractmanagement
 {
-
     /**
      * Language pack component.
      */

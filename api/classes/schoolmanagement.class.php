@@ -28,7 +28,6 @@ namespace api;
  */
 class schoolmanagement extends \api\abstractmanagement
 {
-
     /**
      * Language pack component.
      */

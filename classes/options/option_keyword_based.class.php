@@ -25,7 +25,6 @@
 
 class OptionKEYWORD_BASED extends OptionEdit
 {
-
     /**
      * Persist the object to the database
      * @return boolean Success or failure of the save operation

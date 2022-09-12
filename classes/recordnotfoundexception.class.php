@@ -25,5 +25,4 @@
  */
 class RecordNotFoundException extends Exception
 {
-
 }

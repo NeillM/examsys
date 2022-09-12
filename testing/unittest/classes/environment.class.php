@@ -31,7 +31,6 @@ use Config;
  */
 class environment
 {
-
     /**
      * Get the fully qualified path of the testing/unittest directory.
      *

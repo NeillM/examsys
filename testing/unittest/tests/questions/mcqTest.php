@@ -27,7 +27,6 @@ use testing\unittest\unittest;
  */
 class mcqtest extends unittest
 {
-
     /**
      * Test question header setter
      * @group question

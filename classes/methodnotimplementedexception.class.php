@@ -25,5 +25,4 @@
  */
 class MethodNotImplementedException extends Exception
 {
-
 }

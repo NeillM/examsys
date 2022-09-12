@@ -28,7 +28,6 @@ use testing\unittest\UnitTest;
  */
 class UrlTest extends UnitTest
 {
-
     /**
      * Test for Url::fromGlobals.
      *

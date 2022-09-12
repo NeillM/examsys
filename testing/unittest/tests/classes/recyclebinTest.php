@@ -27,7 +27,6 @@ use testing\unittest\unittestdatabase;
  */
 class recyclebinTest extends unittestdatabase
 {
-
     /**
      * @var integer Storage for school id in tests
      */

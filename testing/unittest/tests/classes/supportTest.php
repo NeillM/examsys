@@ -27,7 +27,6 @@ use testing\unittest\unittestdatabase;
  */
 class supporttest extends unittestdatabase
 {
-
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found

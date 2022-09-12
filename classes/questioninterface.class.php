@@ -27,7 +27,6 @@
 
 interface questionInterface
 {
-
     /*
     * Mark the users answer
     *

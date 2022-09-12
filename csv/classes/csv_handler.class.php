@@ -28,7 +28,6 @@ namespace csv;
  */
 class csv_handler extends \file_handler
 {
-
     /**
      * The header that is required by the file.
      * @var array

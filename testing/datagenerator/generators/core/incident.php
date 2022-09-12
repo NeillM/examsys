@@ -27,7 +27,6 @@ namespace testing\datagenerator;
  */
 class incident extends generator
 {
-
     /**
      * Create a new fail log
      *

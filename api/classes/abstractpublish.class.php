@@ -31,7 +31,6 @@ namespace api;
  */
 abstract class abstractpublish
 {
-
     /**
      * Abstract get function
      *

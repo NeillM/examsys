@@ -28,7 +28,6 @@ use testing\unittest\unittestdatabase;
  */
 class pageTest extends unittestdatabase
 {
-
     /**
      * @var string Storage for system install type
      */

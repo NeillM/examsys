@@ -105,9 +105,9 @@ class yearutils
         } elseif ($state == self::BOTH) {
             $filter = 'WHERE a.cal_status = 1 AND a.stat_status = 1 AND a.deleted is NULL ORDER BY a.calendar_year ASC';
         } elseif ($state == self::USERS) {
-            $filter = "WHERE a.deleted is NULL
+            $filter = 'WHERE a.deleted is NULL
                        AND a.calendar_year IN (SELECT calendar_year FROM modules_student m WHERE m.calendar_year = a.calendar_year)
-                       ORDER BY a.calendar_year ASC";
+                       ORDER BY a.calendar_year ASC';
         } else {
             $filter = 'WHERE a.deleted is NULL ORDER BY a.calendar_year ASC';
         }

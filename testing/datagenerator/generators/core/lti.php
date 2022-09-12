@@ -29,7 +29,6 @@ use yearutils;
  */
 class lti extends generator
 {
-
     /**
      * Create a new lti key
      *

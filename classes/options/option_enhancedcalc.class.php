@@ -27,7 +27,6 @@
 
 class OptionENHANCEDCALC extends OptionEdit
 {
-
     // Option level pseudo-properties for Calculation
     private $variable = '';
     protected $min = '';
