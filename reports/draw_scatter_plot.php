@@ -109,6 +109,7 @@ if ($_GET['adjust'] == '0') {
 }
 imagettftext($Image, 12, 90, 13, 162, $black, $bold_font, $string['time']);
 
+header('Content-Type: image/png');
 ImagePNG($Image);
 
 ImageDestroy($Image);

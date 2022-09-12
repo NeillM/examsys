@@ -170,6 +170,7 @@ if ($_GET['plotuser'] != '') {
     ImageLine($Image, ($mean * 7) + 40 - $reduction_factor, 12, ($mean * 7) + 40 - $reduction_factor, 250, $red);
 }
 
+header('Content-Type: image/png');
 ImagePNG($Image);
 
 ImageDestroy($Image);
