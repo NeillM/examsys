@@ -23,8 +23,7 @@
  * @package core
  */
 
-require_once './include/load_config.php';
-require_once './include/get_session.php';
+require_once './include/staff_student_auth.inc';
 require_once './include/errors.php';
 
 // End the session now so that it no longer blocks other files being loaded.
@@ -40,11 +39,6 @@ try {
     $directory = rogo_directory::get_directory($type);
 } catch (directory_not_found $e) {
     send_404();
-}
-if($directory->authentication_required()){
-    $newauth = array();
-    $configObject->set('authentication', $newauth);
-    require_once $cfg_web_root . 'classes/authentication.inc.php';
 }
 
 try {
