@@ -1,19 +1,19 @@
 <?php
 
-// This file is part of Rogō
+// This file is part of ExamSys
 //
-// Rogō is free software: you can redistribute it and/or modify
+// ExamSys is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogō is distributed in the hope that it will be useful,
+// ExamSys is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+// along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['externalexaminerarea'] = 'External Examiner Area';
 $string['expired'] = '&lt;expired&gt; - you may still view the paper and read %s actions/reponses to your comments.';
@@ -26,8 +26,8 @@ $string['msg3'] = 'Below are a list of exams available for you to review the per
 $string['nopapersfound'] = 'No papers found!';
 $string['copyrightmsg'] = '&copy; Questions stored in Rog&#333; are protected by UK copyright law and are held by %s.';
 $string['helpandsupport'] = 'Help and Support';
-$string['helpandsupportext'] = 'Help and support for external examiners reviewing papers in Rogō.';
-$string['rogodetails'] = 'Rogō %s is an open source e-assessment system lead by the University of Nottingham.<br />The software can be downloaded and adapted for local use from:';
+$string['helpandsupportext'] = 'Help and support for external examiners reviewing papers in ExamSys.';
+$string['rogodetails'] = 'ExamSys %s is an open source e-assessment system lead by the University of Nottingham.<br />The software can be downloaded and adapted for local use from:';
 $string['onlinesupportsystem'] = 'Online support system for students';
 $string['email'] = 'Email';
 $string['deadline'] = 'Deadline:';

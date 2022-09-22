@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ruleset name="Rogo">
-    <description>The Rogō coding standard</description>
+    <description>The ExamSys coding standard</description>
     <!-- Skip 3rd party code-->
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>

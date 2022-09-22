@@ -1,19 +1,19 @@
 <?php
 
-// This file is part of Rogō
+// This file is part of ExamSys
 //
-// Rogō is free software: you can redistribute it and/or modify
+// ExamSys is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogō is distributed in the hope that it will be useful,
+// ExamSys is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+// along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['administrativetools'] = 'Administrative Tools';
 $string['helpsupport'] = 'Help &amp; Support';
@@ -55,10 +55,10 @@ $string['as'] = 'as';
 $string['localtsauthfailed'] = 'Local Rog&#333; authentication failed.';
 $string['notsaccount'] = 'No Rog&#333; account found!';
 $string['tempaccount'] = 'Temporary Account';
-$string['authenticationfailed'] = 'Authentication with Rogō has failed, please remember:';
+$string['authenticationfailed'] = 'Authentication with ExamSys has failed, please remember:';
 $string['usernamecasesensitive'] = 'Usernames/passwords are case-sensitive';
 $string['pressf5'] = "Press 'F5' on the keyboard to try logging in again";
-$string['tsonldap'] = 'Rogō uses the LDAP passwords';
+$string['tsonldap'] = 'ExamSys uses the LDAP passwords';
 $string['ifstuckinvigilator'] = 'If you are still stuck ask an invigilator for a';
 $string['forgottenpassword'] = 'Forgotten Password';
 $string['warning'] = 'Warning';
@@ -66,7 +66,7 @@ $string['secureconnection'] = 'Secure Connection Required';
 $string['secureconnectionmsg'] = 'Rog&#333; can only be accessed through a secure web connection. Instead use:';
 $string['errormsg'] = 'If you repeatedly get this error please contact:';
 $string['ltifirstlogin'] = 'Rog&#333; Authorisation';
-$string['ltifirstlogindesc'] = 'Rogō e-assessment system needs to confirm your identity to ensure you have the correct permissions.  This will only happen on your first visit and at infrequent intervals afterwards to ensure security.<br /><br /><input type="button" value=" Log In " onclick="window.location=\'./\'" />';
+$string['ltifirstlogindesc'] = 'ExamSys e-assessment system needs to confirm your identity to ensure you have the correct permissions.  This will only happen on your first visit and at infrequent intervals afterwards to ensure security.<br /><br /><input type="button" value=" Log In " onclick="window.location=\'./\'" />';
 $string['ltinotconfigured'] = 'The link you have followed has not yet been configured.';
 $string['LTIFAILURE'] = 'LTI Failure';
 $string['expiredtimestamp'] = 'Timestamp has now expired. Please go back and relaunch the link (do not hit refresh in the browser).';
