@@ -45,7 +45,7 @@ header('Status: 503 Service Temporarily Unavailable');
     <div class="box">
     <img src="/artwork/lrg_maintenance.png" width="128" height="128" alt="Under maintenance" style="float:left" />
     <h1>Undergoing Maintenance</h1>
-    <div>Rog&#333; is currently undergoing routine maintenance. Please try again later.</div>
+    <div>ExamSys is currently undergoing routine maintenance. Please try again later.</div>
   </div>
 </body>
 </html>

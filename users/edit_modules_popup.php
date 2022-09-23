@@ -103,7 +103,7 @@ $display_year = $yearutils->get_academic_session($session);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: <?php echo $display_year; ?> Modules</title>
+  <title>ExamSys: <?php echo $display_year; ?> Modules</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />

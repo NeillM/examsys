@@ -44,7 +44,7 @@ $central_mgmt = $configObject->get_setting('core', 'cfg_summative_mgmt');
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['createnewpaper']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['createnewpaper']); ?></title>
 <?php
 
   // Setup the new paper.

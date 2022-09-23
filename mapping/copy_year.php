@@ -52,7 +52,7 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['copy']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['copy']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />

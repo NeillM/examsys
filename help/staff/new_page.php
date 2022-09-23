@@ -48,7 +48,7 @@ if (isset($_POST['save_changes'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title><?php echo page::title('Rog&#333;: ' . $string['help']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['help']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
@@ -56,7 +56,7 @@ if (isset($_POST['save_changes'])) {
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
-  <script type="text/javascript" src="../../js/helpinit.min.js"></script>  
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
     <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();

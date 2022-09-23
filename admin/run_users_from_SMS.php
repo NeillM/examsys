@@ -43,7 +43,7 @@ $academic_year = $yearutils->get_academic_session($session);
 <!DOCTYPE html>
 <html>
   <head>
-    <title><?php echo page::title('Rog&#333;:'); ?></title>
+    <title><?php echo page::title('ExamSys:'); ?></title>
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <link rel="stylesheet" type="text/css" href="../css/submenu.css" />

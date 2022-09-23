@@ -17,7 +17,7 @@
 
 require_once '../lang/' . $language . '/module/index.php';
 
-$string['staffmsg'] = 'This is the Rog&#333; student landing page. Were you looking for the <a href="../staff/">staff management screens</a>?';
+$string['staffmsg'] = 'This is the ExamSys student landing page. Were you looking for the <a href="../staff/">staff management screens</a>?';
 $string['nopapers'] = 'You have no papers available at this time.';
 $string['to'] = 'to';
 $string['objectivesbased'] = 'Objectives-based feedback<br />on assessment at';

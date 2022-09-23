@@ -37,7 +37,7 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['feedbackstats']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['feedbackstats']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

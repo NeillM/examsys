@@ -33,7 +33,7 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 
- <title>Rog&#333;: Online Help gaps</title>
+ <title>ExamSys: Online Help gaps</title>
 
     <style>
         .content {font-size:80%}

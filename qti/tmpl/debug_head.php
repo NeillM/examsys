@@ -30,7 +30,7 @@ require_once '../include/staff_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-    <title>Rog&#333; Import to QTI</title>
+    <title>ExamSys Import to QTI</title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
     <style type="text/css">

@@ -17,8 +17,8 @@
 
 $string['administrativetools'] = 'Administrative Tools';
 $string['helpsupport'] = 'Help &amp; Support';
-$string['aboutrogo'] = 'About Rog&#333; %s';
-$string['html5warn'] = 'Rog&#333; needs HTML5 support, please upgrade your browser to a newer version.';
+$string['aboutrogo'] = 'About ExamSys %s';
+$string['html5warn'] = 'ExamSys needs HTML5 support, please upgrade your browser to a newer version.';
 $string['furtherassistance'] = 'For further assistance contact: <a href="mailto:%s">%s</a>';
 $string['pagenotfound'] = 'Page not Found';
 $string['papertypenotenabled'] = 'Paper type is not enabled';
@@ -52,8 +52,8 @@ $string['noldapaccount'] = 'No LDAP account found!';
 $string['ldapservernosearch'] = 'LDAP Server Unavailable: unable to search';
 $string['nodatabaseconnection'] = 'Could not connect to the database please contact your administrator';
 $string['as'] = 'as';
-$string['localtsauthfailed'] = 'Local Rog&#333; authentication failed.';
-$string['notsaccount'] = 'No Rog&#333; account found!';
+$string['localtsauthfailed'] = 'Local ExamSys authentication failed.';
+$string['notsaccount'] = 'No ExamSys account found!';
 $string['tempaccount'] = 'Temporary Account';
 $string['authenticationfailed'] = 'Authentication with ExamSys has failed, please remember:';
 $string['usernamecasesensitive'] = 'Usernames/passwords are case-sensitive';
@@ -63,9 +63,9 @@ $string['ifstuckinvigilator'] = 'If you are still stuck ask an invigilator for a
 $string['forgottenpassword'] = 'Forgotten Password';
 $string['warning'] = 'Warning';
 $string['secureconnection'] = 'Secure Connection Required';
-$string['secureconnectionmsg'] = 'Rog&#333; can only be accessed through a secure web connection. Instead use:';
+$string['secureconnectionmsg'] = 'ExamSys can only be accessed through a secure web connection. Instead use:';
 $string['errormsg'] = 'If you repeatedly get this error please contact:';
-$string['ltifirstlogin'] = 'Rog&#333; Authorisation';
+$string['ltifirstlogin'] = 'ExamSys Authorisation';
 $string['ltifirstlogindesc'] = 'ExamSys e-assessment system needs to confirm your identity to ensure you have the correct permissions.  This will only happen on your first visit and at infrequent intervals afterwards to ensure security.<br /><br /><input type="button" value=" Log In " onclick="window.location=\'./\'" />';
 $string['ltinotconfigured'] = 'The link you have followed has not yet been configured.';
 $string['LTIFAILURE'] = 'LTI Failure';

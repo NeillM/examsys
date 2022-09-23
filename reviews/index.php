@@ -77,7 +77,7 @@ if ($userObject->has_role(array('External Examiner'))) {
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div style="padding:6px 6px 6px 16px">
     <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
-    <div class="logo_lrg_txt">Rog&#333;</div>
+    <div class="logo_lrg_txt">ExamSys</div>
     <div class="logo_small_txt"><?php echo $string['externalexamineraccess']; ?> (<?php echo $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname(); ?>)</div>
   </div>
 </div>

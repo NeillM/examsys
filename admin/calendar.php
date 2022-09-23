@@ -143,7 +143,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['calendar']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['calendar']); ?></title>
 
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>

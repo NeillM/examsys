@@ -42,7 +42,7 @@ if (!Paper_utils::is_paper_title_unique($new_paper_title, $mysqli)) {           
 <html>
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Rog&#333;</title>
+  <title>ExamSys</title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   </head>
   <body>
@@ -584,7 +584,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['copypaper']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['copypaper']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../body.css" />
   <link rel="stylesheet" type="text/css" href="../submenu.css" />

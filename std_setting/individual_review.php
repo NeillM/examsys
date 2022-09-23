@@ -92,7 +92,7 @@ function check_ebel_distinction_type($reviewID, $db)
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['standardssetting']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['standardssetting']); ?></title>
   <?php
     // Get any questions to exclude.
     $exclusions = new Exclusion($paperID, $mysqli);

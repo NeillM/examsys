@@ -18,7 +18,7 @@
 require '../lang/' . $language . '/include/paper_options.php';
 require '../lang/' . $language . '/paper/new_paper2.php';
 
-$string['importraf'] = 'Import Rog&#333; Assessment Format';
+$string['importraf'] = 'Import ExamSys Assessment Format';
 $string['file'] = 'File';
 $string['importfile'] = 'Import File';
 $string['invalidzip'] = 'This is an invalid ZIP file.';

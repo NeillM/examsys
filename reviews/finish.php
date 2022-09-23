@@ -60,7 +60,7 @@ if (isset($_POST['close'])) {
 function close_window($fullscreen)
 {
     if ($fullscreen == 1) {
-        $html = "<html>\n<head>\n<title>Rog&#333;</title>\n</head>\n<body onload=\"window.close(); window.opener.location.reload();\"></body>\n</html>";
+        $html = "<html>\n<head>\n<title>ExamSys</title>\n</head>\n<body onload=\"window.close(); window.opener.location.reload();\"></body>\n</html>";
     } else {
         header('location: index.php', true, 303);
         exit();
@@ -75,7 +75,7 @@ function close_window($fullscreen)
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
 
-  <title>Rog&#333;</title>
+  <title>ExamSys</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/reviews.css" />

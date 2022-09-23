@@ -46,13 +46,13 @@ require '../include/staff_student_auth.inc';
 
 <div style="position:absolute; top:12px; left:25px; width:300px">
   <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
-  <div class="logo_lrg_txt">Rog&#333;</div>
+  <div class="logo_lrg_txt">ExamSys</div>
   <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem'] ?></div>
 </div>
 
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:10px">
 <br />
-<p>Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version') . ' ' . $string['msg']; ?></p>
+<p>ExamSys <?php echo $configObject->get_setting('core', 'rogo_version') . ' ' . $string['msg']; ?></p>
 <table cellpadding="0" cellspacing="0" border="0" style="width:660px">
 <tr><td style="width:240px">
 <strong><?php echo $string['designprogramming'] ?></strong><br />

@@ -48,7 +48,7 @@ if (count($keyword_names) < mb_substr_count($keywordIDs, ',')) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['confirmdelete']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['confirmdelete']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />

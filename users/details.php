@@ -587,7 +587,7 @@ if ($userObject->has_role('SysAdmin')) {
   echo "</tr>\n";
   echo '<tr><td class="field">' . $string['gender'] . '</td><td>' . $user_details['gender'] . '</td>';
 if ($userObject->has_role('SysAdmin')) {
-    echo "<td class=\"field\">Rog&#333; ID</td><td>$userID</td></tr>\n";
+    echo "<td class=\"field\">ExamSys ID</td><td>$userID</td></tr>\n";
 } else {
     echo "<td class=\"field\"></td><td></td></tr>\n";
 }

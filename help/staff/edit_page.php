@@ -65,7 +65,7 @@ if (isset($_POST['save_changes'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=7,9,10" >
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title><?php echo page::title('Rog&#333;: ' . $string['help']); ?></title>
+  <title><?php echo page::title('ExamSys: ' . $string['help']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />

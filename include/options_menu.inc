@@ -59,7 +59,7 @@ if (!$userObject->has_role('Standards Setter')) {
     echo '</ul>';
 }
 ?>
-<div id="displaycredits">Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version') ?> - &copy; 2018</div>
+<div id="displaycredits">ExamSys <?php echo $configObject->get_setting('core', 'rogo_version') ?> - &copy; 2018</div>
 
 </div>
 

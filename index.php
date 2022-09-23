@@ -55,7 +55,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;:'); ?></title>
+  <title><?php echo page::title('ExamSys:'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
@@ -111,7 +111,7 @@ if (isset($_POST['submit'])) {
   <div><img src="./artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div style="padding:6px 6px 6px 16px">
     <img src="./artwork/r_logo.gif" alt="logo" class="logo_img" />
-    <div class="logo_lrg_txt">Rog&#333;</div>
+    <div class="logo_lrg_txt">ExamSys</div>
     <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem'] ?></div>
   </div>
 </div>

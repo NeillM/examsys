@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333; - <?php echo $string['authorise'] ?></title>
+  <title>ExamSys - <?php echo $string['authorise'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="<?php echo $configObject->get('cfg_root_path') ?>/css/body.css" />
   <link rel="stylesheet" type="text/css" href="<?php echo $configObject->get('cfg_root_path') ?>/css/rogo_logo.css" />
@@ -85,7 +85,7 @@ if (isset($_POST['submit'])) {
 
         <img src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/r_logo.gif" alt="logo" class="logo_img" />
 
-        <div class="logo_lrg_txt">Rog&#333;</div>
+        <div class="logo_lrg_txt">ExamSys</div>
         <div class="logo_small_txt"><?php echo $string['eassessmentmanagementsystem']; ?></div>
         <div style="margin-left:65px">
             <table>
@@ -101,7 +101,7 @@ if (isset($_POST['submit'])) {
             </tr>
             <tr><td><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"></td></tr>
             </table>
-        <div class="versionno">Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
+        <div class="versionno">ExamSys <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
     </div>
     <input type="hidden" id="client_id" name="client_id" value ="<?php echo $client_id; ?>">
     <input type="hidden" id="response_type" name="response_type" value ="code">
