@@ -54,7 +54,7 @@ abstract class apiabstract
      * @param array $fields expected fields
      * @param array $actions possible actions
      * @param string $task the task to be carried out
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return string - successful operation response or error response
      */
     abstract protected function parse($tasktype, $fields, $actions, $task, $userid);

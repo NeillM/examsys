@@ -307,7 +307,7 @@ SQL;
     }
 
     /**
-     * remove a question from rogo
+     * remove a question from ExamSys
      * Normal Questions - sets the deleted field we don't actuality delete the row form the questions table
      * Random Questions - deletes the rows in random_link to ensure random questions cannot use the deleted question
      * @param int $q_id the id of the question or property_id

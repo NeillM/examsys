@@ -840,7 +840,7 @@ class PaperPropertiesTest extends unittestdatabase
     }
 
     /**
-     * Test rogo formatted dates
+     * Test ExamSys formatted dates
      * @group paper
      */
     public function testGetRogoFormattedDates(): void

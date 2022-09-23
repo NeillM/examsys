@@ -219,7 +219,7 @@ class ldap_auth extends outline_authentication
                 }
 
                 if ($result->num_rows() == 0) {
-                    //lookup ok but no association to rogo
+                    //lookup ok but no association to ExamSys
 
                     $this->savetodebug('LDAP Record found but no local account');
                     $data = new stdClass();

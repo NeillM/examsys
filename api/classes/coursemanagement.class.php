@@ -53,7 +53,7 @@ class coursemanagement extends \api\abstractmanagement
     /**
      * Update course
      * @param array $params course update parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and course id
      */
     public function update($params, $userid)
@@ -63,7 +63,7 @@ class coursemanagement extends \api\abstractmanagement
             'course_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'course_nothing_to_update', 'external_school_invalid'));
         $faculty = true;
         if (isset($params['id']) and $params['id'] !== '') {
-            // Using internal rogo id to update course.
+            // Using internal ExamSys id to update course.
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
             // What external system is the client mapped to.
@@ -153,7 +153,7 @@ class coursemanagement extends \api\abstractmanagement
     /**
      * Create course
      * @param array $params course creation parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and course id
      */
     public function create($params, $userid)
@@ -218,7 +218,7 @@ class coursemanagement extends \api\abstractmanagement
     /**
      * Delete course
      * @param array $parms delete course parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array success status and course id
      */
     public function delete($params, $userid)
@@ -227,7 +227,7 @@ class coursemanagement extends \api\abstractmanagement
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_deleted_inuse', 'course_not_deleted'
             , 'course_does_not_exist'));
         if (isset($params['id']) and $params['id'] !== '') {
-            // Try using rogo internal id to delete course.
+            // Try using ExamSys internal id to delete course.
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
             // What external system is the client mapped to.

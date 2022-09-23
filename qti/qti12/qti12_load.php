@@ -2399,7 +2399,7 @@ class IE_qti12_Load extends IE_Main
         }
 
         // Fix for webCT output where it gives output as a percentage and as this is upto 100 and and doesnt include the
-        // question mark and rogo doesnt support above 20 fix it to 1 to allow user editing
+        // question mark and ExamSys doesnt support above 20 fix it to 1 to allow user editing
 
         //$max=round($max);
         //$min=round($min); // min can be fractional marks so dont round (especially when negative)

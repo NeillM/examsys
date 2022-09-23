@@ -56,7 +56,7 @@ class oauth
 
     /**
      * Constructor
-     * @param object $configObject - rogo configuration object
+     * @param object $configObject - ExamSys configuration object
      * @return void
      */
     public function __construct($configObject)
@@ -268,7 +268,7 @@ class oauth
     }
 
     /**
-     * get the rogo user id of the oauth client
+     * get the ExamSys user id of the oauth client
      * @param string $client - oauth client
      * @return int|bool - user id if one exists, false otherwise
      */
@@ -289,7 +289,7 @@ class oauth
     }
 
     /**
-     * get the rogo user id from the access token.
+     * get the ExamSys user id from the access token.
      * @param string $access - the accesstoken
      * @return int|bool - user id if one exists, false otherwise
      */

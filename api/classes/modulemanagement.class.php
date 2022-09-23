@@ -58,7 +58,7 @@ class modulemanagement extends \api\abstractmanagement
     /**
      * Enrol student on a Module.
      * @param array $params module enrol parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array - success status and enrolment id
      */
     public function enrol($params, $userid)
@@ -151,7 +151,7 @@ class modulemanagement extends \api\abstractmanagement
     /**
      * UnEnrol student on a Module.
      * @param array $params module enrol parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array - success status and enrolment id
      */
     public function unenrol($params, $userid)
@@ -239,7 +239,7 @@ class modulemanagement extends \api\abstractmanagement
     /**
      * Create module
      * @param array $params module creation parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array - success status and module id
      */
     public function create($params, $userid)
@@ -372,7 +372,7 @@ class modulemanagement extends \api\abstractmanagement
     /**
      * Update module
      * @param array $params module update parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array - success status and module id
      */
     public function update($params, $userid)
@@ -555,7 +555,7 @@ class modulemanagement extends \api\abstractmanagement
     /**
      * Delete module
      * @param array $params delete module parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array - success status and module id
      */
     public function delete($params, $userid)

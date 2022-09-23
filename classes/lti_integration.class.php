@@ -89,7 +89,7 @@ abstract class lti_integration
      * @param mysqli $mysqli db connection
      * @param string $moduleshortcode VLE module shortcode
      * @param string $course_title VLE module title
-     * @return array rogo module information
+     * @return array ExamSys module information
      */
     abstract public function module_code_translate($mysqli, $c_internal_id, $course_title = '');
 
@@ -101,7 +101,7 @@ abstract class lti_integration
     abstract public function sms_api($data);
 
     /**
-     * Translate source id in rogo external id.
+     * Translate source id in ExamSys external id.
      * @param string $sourceid source id from VLE
      * @return mixed module external id or null
      */

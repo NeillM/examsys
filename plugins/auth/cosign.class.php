@@ -117,7 +117,7 @@ class cosign_auth extends outline_authentication
         }
 
         $this->savetodebug('cosign block reports auth as SUCCEEDED');
-        // Bit below looks username up in the rogo table to get an id.
+        // Bit below looks username up in the ExamSys table to get an id.
 
         extract($this->settings);
 

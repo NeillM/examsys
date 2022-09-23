@@ -44,13 +44,13 @@ class gradebook
     public const EXTMODULE = 'extmodule';
 
     /**
-     * Internal paper - rogo id used to referece paper
+     * Internal paper - ExamSys id used to referece paper
      * @var string
      */
     public const PAPER = 'paper';
 
     /**
-     * Internal module - rogo id used to referece module
+     * Internal module - ExamSys id used to referece module
      * @var string
      */
     public const MODULE = 'module';

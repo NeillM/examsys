@@ -97,7 +97,7 @@ class rogo_test extends MinkContext
             }
             $name = $locator[0];
             if (!selectors::is_allowed_named($name)) {
-                throw new Exception("The named selector $name is not enabled in rogo behat tests");
+                throw new Exception("The named selector $name is not enabled in ExamSys behat tests");
             }
         }
     }

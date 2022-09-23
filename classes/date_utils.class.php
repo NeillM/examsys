@@ -222,7 +222,7 @@ class date_utils
     }
 
     /**
-     * Get the date time object from rogo date time selctors
+     * Get the date time object from ExamSys date time selctors
      *
      * @param integer $year year set
      * @param integer $month month set

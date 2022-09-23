@@ -105,7 +105,7 @@ define(['rogoconfig', 'jquery'], function(config, $) {
         };
 
         /**
-         * Open a window with the rogo credits.
+         * Open a window with the ExamSys credits.
          */
         this.opencredits = function () {
             var notice = window.open(config.cfgrootpath + "/credits/index.php", "credits", "width=696,innerwidth=708,height=510,innerheight=560,scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=0,menubar=0");

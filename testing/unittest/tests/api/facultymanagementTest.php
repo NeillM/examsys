@@ -41,7 +41,7 @@ class facultymanagementtest extends unittestdatabase
     {
         $this->faculty2 = $this->get_faculty_id('Administrative and Support Units');
         $datagenerator = $this->get_datagenerator('faculty', 'core');
-        $faculty = $datagenerator->create_faculty(array('externalid' => 'abcdef', 'externalsys' => 'rogo test api', 'code' => 'TEST'));
+        $faculty = $datagenerator->create_faculty(array('externalid' => 'abcdef', 'externalsys' => 'ExamSys test api', 'code' => 'TEST'));
         $this->faculty3 = $faculty['id'];
     }
 

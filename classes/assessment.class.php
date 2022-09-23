@@ -306,7 +306,7 @@ class assessment
      * @param string $session - Academic session the paper is relevant to
      * @param array $modules - Modules that have the paper available to them
      * @param string $timezone - timezone paper is being taken in
-     * @param integer $userid - rogo user id of change implementor
+     * @param integer $userid - ExamSys user id of change implementor
      * @param string $externalid - External system id
      * @param string $externalsys - External system name
      * @return bool - true on success

@@ -110,7 +110,7 @@ class usermanagement extends \api\abstractmanagement
     /**
      * Create user
      * @param array $params create user params
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and user id
      */
     public function create($params, $userid)
@@ -173,7 +173,7 @@ class usermanagement extends \api\abstractmanagement
     /**
      * Update user
      * @param array $params update user params
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and user id
      */
     public function update($params, $userid)
@@ -271,7 +271,7 @@ class usermanagement extends \api\abstractmanagement
     /**
      * Delete user
      * @param array $parms delete user parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return
      */
     public function delete($params, $userid)

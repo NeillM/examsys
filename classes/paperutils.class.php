@@ -1134,11 +1134,11 @@ class PaperUtils
     }
 
     /**
-     * Get internal rogo properties id from external id
+     * Get internal ExamSys properties id from external id
      * @param string $externalid external system id
      * @param string $externalsys external system source
      * @param mysqli $db db connection
-     * @return integer|bool rogo id or false on error
+     * @return integer|bool ExamSys id or false on error
      */
     public static function get_id_from_externalid($externalid, $externalsys, $db)
     {
@@ -1162,7 +1162,7 @@ class PaperUtils
      * @param integer $session academic session
      * @param string $type paper type
      * @param mysqli $db db connection
-     * @return array rogo ids
+     * @return array ExamSys ids
      */
     public static function get_papers_by_session($session, $type, $db)
     {

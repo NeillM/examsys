@@ -99,7 +99,7 @@ class lti_uon_integration_extended extends lti_integration
      * @param mysqli $mysqlidb connection
      * @param string $moduleshortcode module shortcode from VLE
      * @param string $course_title module title from VLE
-     * @return array rogo module information
+     * @return array ExamSys module information
      */
     private function process_cs_naming_convention($mysqli, $moduleshortcode, $course_title = ' ')
     {
@@ -163,7 +163,7 @@ class lti_uon_integration_extended extends lti_integration
      * @param mysqli $mysqlidb connection
      * @param string $moduleshortcode module shortcode from VLE
      * @param string $course_title module title from VLE
-     * @return array|bool rogo module information or false on invalid module short code
+     * @return array|bool ExamSys module information or false on invalid module short code
      */
     private function process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title = ' ')
     {
@@ -304,7 +304,7 @@ class lti_uon_integration_extended extends lti_integration
     }
 
     /**
-     * Translate source id in rogo external id.
+     * Translate source id in ExamSys external id.
      * @param string $sourceid source id from VLE
      * @return mixed module external id or null
      */
@@ -324,7 +324,7 @@ class lti_uon_integration_extended extends lti_integration
      * @param mysqli $mysqli db connection
      * @param string $moduleshortcode VLE module shortcode
      * @param string $course_title VLE module title
-     * @return array rogo module information or false on invalid module short code
+     * @return array ExamSys module information or false on invalid module short code
      */
     public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ')
     {

@@ -840,7 +840,7 @@ class PaperProperties
     }
 
     /**
-     * Get the rogo formatted start date
+     * Get the ExamSys formatted start date
      * Used by log tables until they are migrated to bigint
      * @return string $start_date
      */
@@ -850,7 +850,7 @@ class PaperProperties
     }
 
     /**
-     * Set the rogo formatted start date
+     * Set the ExamSys formatted start date
      * Used by log tables until they are migrated to bigint
      */
     public function setRogoFormatStartDate()
@@ -924,7 +924,7 @@ class PaperProperties
 
 
     /**
-     * Get the rogo formatted end date
+     * Get the ExamSys formatted end date
      * Used by log tables until they are migrated to bigint
      * @return string $end_date
      */
@@ -934,7 +934,7 @@ class PaperProperties
     }
 
     /**
-     * Set the rogo formatted end date
+     * Set the ExamSys formatted end date
      * Used by log tables until they are migrated to bigint
      */
     public function setRogoFormatEndDate()

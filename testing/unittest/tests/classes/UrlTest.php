@@ -137,7 +137,7 @@ class UrlTest extends UnitTest
      *
      * @dataProvider dataGetRogoPath
      * @param string $input The URL to be parsed
-     * @param string $rogobase The rogo base path in config
+     * @param string $rogobase The ExamSys base path in config
      * @param string $expected The expected result
      */
     public function testGetRogoPath(string $input, string $rogobase, string $expected)

@@ -690,7 +690,7 @@ class InstallUtils
     }
 
     /**
-     * Load default data needed for rogo to function
+     * Load default data needed for ExamSys to function
      */
     public static function loadData()
     {
@@ -1921,7 +1921,7 @@ class InstallUtils
     }
 
     /**
-     * Ensures that the rogo user directories are created.
+     * Ensures that the ExamSys user directories are created.
      */
     public static function createDirectories()
     {

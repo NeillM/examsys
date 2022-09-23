@@ -296,7 +296,7 @@ class CourseUtils
     /**
      * Get the course id given external id
      *
-     * @param string $externalid externalid of the course rogo id
+     * @param string $externalid externalid of the course ExamSys id
      * @param string $externalsys external system source
      * @param object $db database connection
      *
@@ -319,11 +319,11 @@ class CourseUtils
     }
 
     /**
-     * Compare the courses in the external system and rogo
+     * Compare the courses in the external system and ExamSys
      * @param array $external list of external system courses
      * @param string $sms the external student management system that is the source of the courses
      * @param mysqli $db db connection
-     * @return array list of courses in rogo but not in external system
+     * @return array list of courses in ExamSys but not in external system
      */
     public static function diff_external_courses_to_internal_courses($external, $sms, $db)
     {
@@ -351,7 +351,7 @@ class CourseUtils
     /**
      * Restore course from recycle bin
      * @param mysqli $db db connection
-     * @param integer $id rogo id of course
+     * @param integer $id ExamSys id of course
      * @return boolean true on success, false otherwise
      */
     public static function restore_course($db, $id)

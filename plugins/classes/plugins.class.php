@@ -308,7 +308,7 @@ abstract class plugins
                 return 'ALREADY_INSTALLED';
             }
         } else {
-            // Cannot install requires higher rogo version.
+            // Cannot install requires higher ExamSys version.
             return 'REQUIRES_ROGO_HIGHER';
         }
         return true;
@@ -380,7 +380,7 @@ abstract class plugins
         return $this->version;
     }
     /**
-     * Get rogo required version from version file
+     * Get ExamSys required version from version file
      * @return string value of required version
      */
     public function get_file_requires()

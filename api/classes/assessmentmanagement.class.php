@@ -125,7 +125,7 @@ class assessmentmanagement extends \api\abstractmanagement
     /**
      * Create assessment
      * @param array $parms create assessment parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array assessment id and status
      */
     public function create($params, $userid)
@@ -230,7 +230,7 @@ class assessmentmanagement extends \api\abstractmanagement
     /**
      * Update assessment
      * @param array $parms update assessment parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array assessment id and status
      */
     public function update($params, $userid)
@@ -242,7 +242,7 @@ class assessmentmanagement extends \api\abstractmanagement
         $configObject = \Config::get_instance();
         $paper = new \assessment($this->db, $configObject);
         if (isset($params['id']) and $params['id'] !== '') {
-            // Try internal rogo id.
+            // Try internal ExamSys id.
             $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
             // What external system is the client mapped to.
@@ -411,7 +411,7 @@ class assessmentmanagement extends \api\abstractmanagement
     /**
      * Schedule a summative assessment
      * @param array $parms schedule summative parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array summative assessment id and status
      */
     public function schedule($params, $userid)
@@ -523,7 +523,7 @@ class assessmentmanagement extends \api\abstractmanagement
     /**
      * Delete assessment
      * @param array $parms delete assessment parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array assessment id and status
      */
     public function delete($params, $userid)

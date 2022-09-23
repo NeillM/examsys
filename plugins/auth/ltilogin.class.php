@@ -167,7 +167,7 @@ class ltilogin_auth extends outline_authentication
         if (!isset($_SESSION['authenticationobj']['ltilogin']['needsuserlookup']) or $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] === false) {
             return $postauthsuccessobj;
         }
-        $this->savetodebug('storing rogo userid against lti user');
+        $this->savetodebug('storing ExamSys userid against lti user');
         $rogoid = $postauthsuccessobj->userid;
         $this->lti->add_lti_user($rogoid);
         $_SESSION['authenticationobj']['ltilogin']['needsuserlookup'] = false;

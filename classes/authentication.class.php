@@ -381,7 +381,7 @@ class Authentication
                     $this->debug[] = '******* ExamSys ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
                     $this->successfullauthmodule[] = $objid;
                 } elseif ($authobj->returned === ROGO_AUTH_OBJ_LOOKUPONLY) {
-                    $this->debug[] = '* User authenticated but no matching rogo id found, attempting to lookup the user with info supplied from module *';
+                    $this->debug[] = '* User authenticated but no matching ExamSys id found, attempting to lookup the user with info supplied from module *';
 
                     //lookupuser
                     $lookup = Lookup::get_instance($this->configObj, $this->db);

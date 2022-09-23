@@ -144,7 +144,7 @@ if (count($vle_apis) > 0) {
             echo "<option value=\"$value\">$key</option>\n";
         }
     }
-    // SMS might be IMS enterprise, rogo web service or a plugin.
+    // SMS might be IMS enterprise, ExamSys web service or a plugin.
     $externalsys = new \external_systems();
     $extsys = $externalsys->get_all_externalsystems();
     foreach ($extsys as $key => $value) {
