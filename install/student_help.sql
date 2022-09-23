@@ -1,6 +1,6 @@
 -- MySQL dump 10.19  Distrib 10.3.29-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db    Database: rogo
+-- Host: db    Database: examsys
 -- ------------------------------------------------------
 -- Server version	5.7.34
 
