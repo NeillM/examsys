@@ -37,7 +37,7 @@ abstract class UnitTest extends TestCase
     /** @var object $default_config config object used to reset test. */
     public $default_config;
 
-    /** The name of the Rogo data directory in the virtual file system. */
+    /** The name of the ExamSys data directory in the virtual file system. */
     public const DATA_DIRECTORY = 'data';
 
     /**

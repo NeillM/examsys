@@ -433,7 +433,7 @@ class UpdaterUtils
             $checkcfg = (version::is_version_higher($version, $cfg_version) or $cfg_version == $version);
         } else {
             // Production systems should not run update files for versions that were built if the config file is
-            // for that version of Rogo, as they should have already been run.
+            // for that version of ExamSys, as they should have already been run.
             $checkcfg = version::is_version_higher($version, $cfg_version);
         }
         $run_update = ($checkcfg and $checkcode);
@@ -447,7 +447,7 @@ class UpdaterUtils
      * @param string $search              - A string to look for to see if the new lines already exist
      * @param array $new_lines        - An array of new lines to insert.
      * @param int $default_line       - Default line number to add to if no $target_line is found. Use -1 for end-of-file.
-     * @param string $cfg_web_root    - Path to the root of Rogo.
+     * @param string $cfg_web_root    - Path to the root of ExamSys.
      * @param string $target_line     - A string to find on a target line to act as a location for the new lines
      * @param int $offset                     - A plus or negative offset from $target_line to insert the new lines
      */
@@ -494,7 +494,7 @@ class UpdaterUtils
      * @param string $string              - Language translations.
      * @param string $replace             - A string to replace
      * @param string $new_line        - A  new line to insert.
-     * @param string $cfg_web_root    - Path to the root of Rogo.
+     * @param string $cfg_web_root    - Path to the root of ExamSys.
      */
     public function replace_line($string, $replace, $new_line, $cfg_web_root)
     {
@@ -524,8 +524,8 @@ class UpdaterUtils
     /**
      * Takes a backup of the configuration file.
      *
-     * @param string $cfg_web_root    - Path to the root of Rogo.
-     * @param string $old_version     - Uses the old version of Rogo to make the backup filename.
+     * @param string $cfg_web_root    - Path to the root of ExamSys.
+     * @param string $old_version     - Uses the old version of ExamSys to make the backup filename.
      */
     public function backup_file($cfg_web_root, $old_version)
     {
@@ -540,7 +540,7 @@ class UpdaterUtils
      * Safety checks in place in case there is other closing tag usage.
      *
      * @param string $string               - Language translations.
-     * @param string $cfg_web_root     - Path to the root of Rogo.
+     * @param string $cfg_web_root     - Path to the root of ExamSys.
      */
     public function clean_php_closing_tag($string, $cfg_web_root)
     {

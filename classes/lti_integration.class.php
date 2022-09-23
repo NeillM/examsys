@@ -85,7 +85,7 @@ abstract class lti_integration
     abstract public function user_time_check($time);
 
     /**
-     * Convert VLE module shortcode into Rogo moduleid
+     * Convert VLE module shortcode into ExamSys moduleid
      * @param mysqli $mysqli db connection
      * @param string $moduleshortcode VLE module shortcode
      * @param string $course_title VLE module title

@@ -21,7 +21,7 @@ use Symfony\Component\Yaml\Yaml;
 use Config;
 
 /**
- * This class is used to install and update behat in Rogo.
+ * This class is used to install and update behat in ExamSys.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -179,7 +179,7 @@ class environment
     }
 
     /**
-     * Writes a file that contains the version number of the Rogo code.
+     * Writes a file that contains the version number of the ExamSys code.
      *
      * @return void
      */
@@ -193,7 +193,7 @@ class environment
     }
 
     /**
-     * Get the version of Rogo that behat is initialised for.
+     * Get the version of ExamSys that behat is initialised for.
      *
      * @return string
      */
@@ -209,7 +209,7 @@ class environment
     }
 
     /**
-     * Returns the directory that Rogo is installed in.
+     * Returns the directory that ExamSys is installed in.
      *
      * @return string
      */

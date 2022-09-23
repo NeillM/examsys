@@ -14,7 +14,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A component to serve localised Rogo language strings in JavaScript
+ * A component to serve localised ExamSys language strings in JavaScript
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham

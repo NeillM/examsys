@@ -168,7 +168,7 @@ define(['jquery'], function($) {
   };
 
   /**
-   * All questions should implement the menthod that returns data to the Rogo page,
+   * All questions should implement the menthod that returns data to the ExamSys page,
    * that loaded the question.
    *
    * @returns {void}

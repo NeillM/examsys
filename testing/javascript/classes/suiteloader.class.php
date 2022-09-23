@@ -35,7 +35,7 @@ class SuiteLoader
      */
     public function locate_all()
     {
-        // Get the root location of Rogo.
+        // Get the root location of ExamSys.
         $config = \Config::get_instance();
         $rootpath = $config->get('cfg_web_root');
         // Get the test files.

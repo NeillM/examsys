@@ -20,7 +20,7 @@ namespace testing\datagenerator;
 use CourseUtils;
 
 /**
- * Generates Rogo course.
+ * Generates ExamSys course.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

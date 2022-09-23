@@ -53,7 +53,7 @@ if (!LangUtils::langPackInstalled($language)) {
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 
 if (!isset($string)) {
-    // The language files were not loaded. This means that either it is not configured for the Rogo root directory,
+    // The language files were not loaded. This means that either it is not configured for the ExamSys root directory,
     // or there is a differnece in case on a system that is not case sensitive.
     InstallUtils::displayError(['91' => 'Could not load language files. Please check the case of the cfg_web_root setting.']);
     die();

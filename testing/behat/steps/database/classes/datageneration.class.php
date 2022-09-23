@@ -33,7 +33,7 @@ use testing\datagenerator\data_error;
 use UserUtils;
 
 /**
- * Core steps that add data into the Rogo database.
+ * Core steps that add data into the ExamSys database.
  *
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @author Neill Magill <neill.magill@nottingham.ac.uk>

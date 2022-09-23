@@ -187,7 +187,7 @@ trait basic
     }
 
     /**
-     * Sets the focus to the main Rogo screen away from any popups.
+     * Sets the focus to the main ExamSys screen away from any popups.
      *
      * @And I focus main window
      */
@@ -392,7 +392,7 @@ trait basic
     }
 
     /**
-     * Waits for the Rogo page in the focused window to load.
+     * Waits for the ExamSys page in the focused window to load.
      *
      * @And I wait for page to load
      * @return void

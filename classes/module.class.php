@@ -844,7 +844,7 @@ class module
             if (!in_array($externalid, $external)) {
                 $diff[] = $externalid;
             } else {
-                // Restore if deleted in Rogo but found in external list.
+                // Restore if deleted in ExamSys but found in external list.
                 if (!is_null($deleted)) {
                     self::restore_module($db, $id);
                 }

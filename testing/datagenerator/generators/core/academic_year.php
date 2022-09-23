@@ -20,7 +20,7 @@ namespace testing\datagenerator;
 use yearutils;
 
 /**
- * Generates Rogo academic_year.
+ * Generates ExamSys academic_year.
  *
  * @author Yijun Xue <yijun.xue@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham

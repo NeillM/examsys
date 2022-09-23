@@ -20,7 +20,7 @@ namespace testing\behat;
 use Behat\Mink\Session;
 
 /**
- * Used to define things that behat can select in Rogo
+ * Used to define things that behat can select in ExamSys
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -53,7 +53,7 @@ class selectors
         'option' => 'option',
         'fieldset' => 'fieldset',
         'table' => 'table',
-        // Rogo selectors.
+        // ExamSys selectors.
         'menu' => 'menu', //<div class="sidebar
         'sub_menu' => 'sub_menu', //<div id="popup3" class="popup"
         'menu_section' => 'menu_section', //<div class="submenuheading"
@@ -89,7 +89,7 @@ class selectors
     );
 
     /**
-     * An array containing XPATH selectors for elements of Rogo that behat can select.
+     * An array containing XPATH selectors for elements of ExamSys that behat can select.
      * The key is the name of the selector, the value the XPATH string describing it.
      *
      * @var array
@@ -196,7 +196,7 @@ XPATH
     );
 
     /**
-     * Get the custom Rogo selector list or a selector.
+     * Get the custom ExamSys selector list or a selector.
      *
      * @param string $selectorname
      * @return array
@@ -211,7 +211,7 @@ XPATH
     }
 
     /**
-     * Checks if the the named selector is allowed in Rogo behat tests.
+     * Checks if the the named selector is allowed in ExamSys behat tests.
      *
      * @param string $namesselector
      * @return boolean
@@ -222,7 +222,7 @@ XPATH
     }
 
     /**
-     * Adds the custom Rogo selectors to behat.
+     * Adds the custom ExamSys selectors to behat.
      *
      * @param \Behat\Mink\Session $session The mink session
      * @return void

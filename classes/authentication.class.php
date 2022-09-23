@@ -268,7 +268,7 @@ class Authentication
     }
 
     /*
-     * Disply the standard Rogo login form
+     * Disply the standard ExamSys login form
      * @param string $string    - Language strings.
      */
     public function display_std_form($string)
@@ -305,7 +305,7 @@ class Authentication
     }
 
     /*
-     * Display the standard Rogo login form
+     * Display the standard ExamSys login form
      * @param bool $display - True = display form after failing to log in, False = no form displayed but still runs callback routines.
      */
     public function display_error_form($display = true)
@@ -378,7 +378,7 @@ class Authentication
                     if (isset($authobj->username) and $authobj->username != '') {
                         $this->username = $authobj->username;
                     }
-                    $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
+                    $this->debug[] = '******* ExamSys ID is:: ' . $this->userid . " from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
                     $this->successfullauthmodule[] = $objid;
                 } elseif ($authobj->returned === ROGO_AUTH_OBJ_LOOKUPONLY) {
                     $this->debug[] = '* User authenticated but no matching rogo id found, attempting to lookup the user with info supplied from module *';
@@ -416,19 +416,19 @@ class Authentication
                     }
 
                     if ($createuser and !empty($info->lookupdata->username)) {
-                        // The authentication plugin may not use the main Rogo users table, so we should check if the user already has an account.
+                        // The authentication plugin may not use the main ExamSys users table, so we should check if the user already has an account.
                         $existinguserid = UserUtils::username_exists($info->lookupdata->username, $this->db);
                     } else {
                         $existinguserid = false;
                     }
 
                     if ($existinguserid !== false) {
-                        // The user already exists in Rogo, but it was not in the table used by the authentication plugin.
-                        $this->debug[] = 'Matching user account found in Rogo';
+                        // The user already exists in ExamSys, but it was not in the table used by the authentication plugin.
+                        $this->debug[] = 'Matching user account found in ExamSys';
                         $authobj->success($objid, $existinguserid);
                         $this->success = true;
                         $this->userid = $authobj->rogoid;
-                        $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
+                        $this->debug[] = '******* ExamSys ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
                     } elseif ($createuser == true) {
                         $this->debug[] = 'Going to try and create new user';
                         $arraycheck = array('username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials');
@@ -444,7 +444,7 @@ class Authentication
                             $authobj->success($objid, $newuserid);
                             $this->success = true;
                             $this->userid = $authobj->rogoid;
-                            $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
+                            $this->debug[] = '******* ExamSys ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
                         }
                     } else {
                         // Log not creating user and why

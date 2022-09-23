@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Utility class to get information about Rogo qti/imports directory.
+ * Utility class to get information about ExamSys qti/imports directory.
  *
  * @author Neill Magill
  * @copyright Copyright (c) 2015 The University of Nottingham

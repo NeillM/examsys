@@ -23,7 +23,7 @@ use testing\behat\helpers\database\state;
 use testing\behat\helpers\rogo\Url;
 
 /**
- * Step definitions for navigating to pages in Rogo.
+ * Step definitions for navigating to pages in ExamSys.
  *
  * @copyright Copyright (c) 2020 The University of Nottingham
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
@@ -33,7 +33,7 @@ use testing\behat\helpers\rogo\Url;
 trait pages
 {
     /**
-     * Visit a Rogo page.
+     * Visit a ExamSys page.
      *
      * For valid page types and data @see visit_rogo_page()
      *
@@ -48,7 +48,7 @@ trait pages
     }
 
     /**
-     * Visit a Rogo page where the specific content is identified by a some data.
+     * Visit a ExamSys page where the specific content is identified by a some data.
      *
      * For valid page types and data @see visit_rogo_page()
      *
@@ -64,7 +64,7 @@ trait pages
     }
 
     /**
-     * Visit a Rogo report where the specific filters are identified by a some data.
+     * Visit a ExamSys report where the specific filters are identified by a some data.
      *
      * @Given I run report :name for :page with filters:
      *
@@ -92,7 +92,7 @@ trait pages
     }
 
     /**
-     * Visit a specific section of a Rogo page where the specific content is identified by a some data.
+     * Visit a specific section of a ExamSys page where the specific content is identified by a some data.
      *
      * For valid page types and data @see visit_rogo_page()
      *
@@ -109,7 +109,7 @@ trait pages
     }
 
     /**
-     * Visit a Rogo page
+     * Visit a ExamSys page
      *
      * Valid pages:
      *

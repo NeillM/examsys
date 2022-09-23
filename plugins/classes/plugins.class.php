@@ -57,7 +57,7 @@ abstract class plugins
      */
     protected $installedversion;
     /**
-     * Rogo version dependency of the plugin.
+     * ExamSys version dependency of the plugin.
      * @var string
      */
     protected $requires;

@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class that holds the SQL create statments for the Rogo database.
+ * Class that holds the SQL create statments for the ExamSys database.
  *
  * @author Anthony Brown
  * @version 1.0

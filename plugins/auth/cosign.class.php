@@ -160,7 +160,7 @@ class cosign_auth extends outline_authentication
 
             return $authobj;
         } elseif ($result->num_rows() == 0) {
-            // Cosign says OK but no association to Rogo
+            // Cosign says OK but no association to ExamSys
 
             $this->savetodebug('cosign authenticated but no local account');
             $data = new stdClass();

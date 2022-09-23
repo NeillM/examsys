@@ -20,7 +20,7 @@ namespace testing\datagenerator;
 use UserUtils;
 
 /**
- * Generates Rogo users.
+ * Generates ExamSys users.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -167,7 +167,7 @@ class users extends generator
      * - value string The value of the metadata.
      * - calendar_year int The id of the the year.
      *
-     * @param int $userid Internal id of a Rogo user.
+     * @param int $userid Internal id of a ExamSys user.
      * @param int $moduleid Internal id of a module.
      * @param array|\stdClass $parameters
      * @return array Contains the values that were inserted into the database for the metadata.
@@ -205,7 +205,7 @@ class users extends generator
     }
 
     /**
-     * Create a Rogo user based on the parameters passed. The parameters should
+     * Create a ExamSys user based on the parameters passed. The parameters should
      * correspond to fields in the users database table.
      *
      * Note there are two password paramters you can set:

@@ -4,7 +4,7 @@
 # makes the "works on my machine" excuse a relic of the past.
 #
 # For more details visit `https://www.vagrantup.com/` or just type `vagrant up`
-# to start your local Rogo environment.
+# to start your local ExamSys environment.
 #
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/ubuntu-18.04"

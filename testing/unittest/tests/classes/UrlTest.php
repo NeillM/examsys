@@ -133,7 +133,7 @@ class UrlTest extends UnitTest
     }
 
     /**
-     * Tests that the Rogo path of a page is detected correctly.
+     * Tests that the ExamSys path of a page is detected correctly.
      *
      * @dataProvider dataGetRogoPath
      * @param string $input The URL to be parsed

@@ -213,9 +213,9 @@ function error_handling($context = null)
 }
 
 /**
- * The custom error handler for Rogo
+ * The custom error handler for ExamSys
  *
- * It stores errors in the Rogo database.
+ * It stores errors in the ExamSys database.
  *
  * @param int $errno
  * @param string $errstr

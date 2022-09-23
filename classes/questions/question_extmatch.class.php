@@ -414,7 +414,7 @@ class QuestionEXTMATCH extends QuestionEdit
         }
 
         // The question requires that every scenario has either a stem or every scenario has media.
-        // Some with one and some with another breaks Rogo...
+        // Some with one and some with another breaks ExamSys...
         if ($used !== $stems and $used !== $media) {
             // Make this the first error.
             array_unshift($errors, $this->_lang_strings['stemdisplayerror']);

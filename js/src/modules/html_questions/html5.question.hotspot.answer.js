@@ -119,7 +119,7 @@ define(['log', 'hotspot', 'answer_hotspot', 'jquery'], function(Log, Hotspot, An
   };
 
   /**
-   * Modify the Rogo page with the current state of the question.
+   * Modify the ExamSys page with the current state of the question.
    *
    * @returns {void}
    */

@@ -23,7 +23,7 @@
  * @copyright Copyright (c) 2017 The University of Nottingham
  */
 
-// We cannot actually use any of the core Rogo authentication or users during an upgrade.
+// We cannot actually use any of the core ExamSys authentication or users during an upgrade.
 // Or we cannot change their structure!
 // This is probably ok as it is still locked behind the username and password for the database itself.
 require_once dirname(__DIR__) . '/include/load_config.php';

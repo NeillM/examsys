@@ -109,7 +109,7 @@ class cas_auth extends outline_authentication
             $result->fetch();
 
             if ($result->num_rows() == 0) {
-                $this->savetodebug('No Rogo account found for CAS user');
+                $this->savetodebug('No ExamSys account found for CAS user');
                 $authobj->fail($this->number);
             } else {
                 $this->savetodebug('successful CAS authentication');

@@ -14,7 +14,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file configures Grunt tasks for Rogo, such as mimification of JavaScript.
+ * This file configures Grunt tasks for ExamSys, such as mimification of JavaScript.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham

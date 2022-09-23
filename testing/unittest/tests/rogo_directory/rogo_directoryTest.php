@@ -40,7 +40,7 @@ class rogo_directorytest extends unittestdatabase
     /** @var rogo_directory Stores a mock version of the rogo_directory class. */
     protected $rogodirectory;
 
-    /** @var string The url we will use for Rogo for these tests. */
+    /** @var string The url we will use for ExamSys for these tests. */
     protected $webroot = 'htttp://www.example.com/';
 
     public function setUp(): void

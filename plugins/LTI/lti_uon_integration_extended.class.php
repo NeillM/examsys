@@ -17,7 +17,7 @@
 
 /**
  *
- * Handles UoN LTI Integration in Rogo
+ * Handles UoN LTI Integration in ExamSys
  *
  * @author Simon Atack
  * @version 1.0
@@ -320,7 +320,7 @@ class lti_uon_integration_extended extends lti_integration
     }
 
     /**
-     * Convert VLE module shortcode into Rogo moduleid
+     * Convert VLE module shortcode into ExamSys moduleid
      * @param mysqli $mysqli db connection
      * @param string $moduleshortcode VLE module shortcode
      * @param string $course_title VLE module title

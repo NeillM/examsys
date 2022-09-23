@@ -43,7 +43,7 @@ if ($updater_utils->check_version('7.5.0')) {
 
                 $path = $url['path'] ?? '/';
 
-                // Verify that the scheme is compatiable with the current Rogo setting.
+                // Verify that the scheme is compatiable with the current ExamSys setting.
                 if (!empty($url['scheme']) and $url['scheme'] != $protocol) {
                     if ($protocol == 'https') {
                         cli_utils::prompt('Warning: ExamSys is configured as to use secure connections, overriding your url');

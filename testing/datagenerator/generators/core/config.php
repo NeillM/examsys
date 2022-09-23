@@ -28,7 +28,7 @@ namespace testing\datagenerator;
 class config extends generator
 {
     /**
-     * Changes a Rogo setting.
+     * Changes a ExamSys setting.
      *
      * @param array|\stdClass $data
      * @throws data_error
@@ -62,7 +62,7 @@ class config extends generator
             $value = json_decode($value, true);
         }
         if (is_null($type)) {
-            throw new data_error("$component/$setting is not a valid Rogo setting");
+            throw new data_error("$component/$setting is not a valid ExamSys setting");
         }
         if (!$config->check_type($value, $type)) {
             throw new data_error("$value is not of the expected type ($type)");

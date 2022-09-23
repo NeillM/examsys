@@ -23,7 +23,7 @@ use testing\datagenerator\generator;
 use testing\testcasetrait;
 
 /**
- * Implements the PHP Unit database extension for Rogo Behat tests.
+ * Implements the PHP Unit database extension for ExamSys Behat tests.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -92,9 +92,9 @@ class Default_Loader extends Data_Loader
     }
 
     /**
-     * Gets the base data that should always be present in Rogo.
+     * Gets the base data that should always be present in ExamSys.
      *
-     * There should be a yml file for every database table in Rogo.
+     * There should be a yml file for every database table in ExamSys.
      */
     protected function setup_dataset(): void
     {

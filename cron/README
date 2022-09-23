@@ -1,7 +1,7 @@
-Rogo cron jobs
+ExamSys cron jobs
 ##############
 
-Scripts that are to be run via the crontab should be in this directory. 
+Scripts that are to be run via the crontab should be in this directory.
 
 This directory and the files within it should be readable/executable by the user running the cronjob.
 

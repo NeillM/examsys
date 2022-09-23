@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
         <table cellspaing="0" cellpadding="2" border="0" style="margin-top:15px; margin-bottom:15px">
 
             <?php
-            // Get a list of courses held by Rogo.
+            // Get a list of courses held by ExamSys.
             $course_list = array();
             $result = $mysqli->prepare('SELECT DISTINCT name FROM courses WHERE deleted IS NULL');
             $result->execute();
@@ -91,7 +91,7 @@ if (isset($_POST['submit'])) {
             }
             $result->close();
 
-            // Get a list of schools held by Rogo.
+            // Get a list of schools held by ExamSys.
             $unknown_schoolID = 0;
             $school_list = array();
             $result = $mysqli->prepare('SELECT DISTINCT id, school FROM schools WHERE deleted IS NULL');

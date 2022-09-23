@@ -18,7 +18,7 @@
 namespace testing\datagenerator;
 
 /**
- * Generates Rogo guest account reservations.
+ * Generates ExamSys guest account reservations.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2020 The University of Nottingham

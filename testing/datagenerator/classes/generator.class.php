@@ -18,7 +18,7 @@
 namespace testing\datagenerator;
 
 /**
- * All Rogo datagenerators must extend this class.
+ * All ExamSys datagenerators must extend this class.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham

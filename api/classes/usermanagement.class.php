@@ -33,7 +33,7 @@ class usermanagement extends \api\abstractmanagement
      */
     private $langcomponent = 'api/usermanagement';
     /**
-     * List of valid staff member courses within Rogo that the API can assign.
+     * List of valid staff member courses within ExamSys that the API can assign.
      * @var array $staffcourses
      */
     private static $staffcourses = array('University Lecturer', 'NHS Lecturer');

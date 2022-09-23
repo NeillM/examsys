@@ -38,7 +38,7 @@ require '../include/sysadmin_auth.inc';
 <?php
 if (isset($_POST['submit'])) {
     $to = trim($_POST['email']);
-    $subject = 'Test email from Rogo ' . $configObject->get_setting('core', 'rogo_version');
+    $subject = 'Test email from ExamSys ' . $configObject->get_setting('core', 'rogo_version');
     $message = 'This is a test email message sent at ' . date('F j, Y, g:i a') . ' from ' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . '.';
     if (Mailer::send($to, $subject, $message)) {
         echo 'Email sent, please check your inbox.';

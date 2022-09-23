@@ -41,7 +41,7 @@ class IE_Local_Save extends IE_Main
     public $db;
     public $statuses = array();
 
-    // Rogo save parameters:
+    // ExamSys save parameters:
     // for saving questions
     // ownerID
     // q_group

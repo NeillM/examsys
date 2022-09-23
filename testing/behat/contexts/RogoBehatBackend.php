@@ -15,14 +15,14 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-// Start Rogo autoloading.
+// Start ExamSys autoloading.
 require_once dirname(__DIR__, 3) . '/include/autoload.inc.php';
 autoloader::init();
 
 use testing\behat\rogo_unit_test;
 
 /**
- * This is the backend context for Rogo.
+ * This is the backend context for ExamSys.
  *
  * It is designed to be used by Behat tests that should be
  * performed as Unit tests rather than UI based tests. It is not suitiable

@@ -18,7 +18,7 @@
 namespace testing\behat\helpers\database;
 
 /**
- * Base class used to load data into the Rogo database for behat tests.
+ * Base class used to load data into the ExamSys database for behat tests.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
@@ -36,7 +36,7 @@ abstract class Data_Loader
     /** @var string The location that the help sql files are located in. */
     protected $help_base;
 
-    /** @var boolean Defines if the Rogo help files should be loaded. */
+    /** @var boolean Defines if the ExamSys help files should be loaded. */
     protected $load_help;
 
     public function __construct($load_help = false)

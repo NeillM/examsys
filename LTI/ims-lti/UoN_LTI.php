@@ -290,9 +290,9 @@ class UoN_LTI extends BLTI
     }
 
     /**
-     * Gets the eternal system ids attached to a Rogo user.
+     * Gets the eternal system ids attached to a ExamSys user.
      *
-     * @param string $username A Rogo user name
+     * @param string $username A ExamSys user name
      * @param int $linkid The id of an LTi ket record.
      * @return array
      * @throws Exception
@@ -437,9 +437,9 @@ class UoN_LTI extends BLTI
     }
 
     /**
-     * Deletes the link between an user of an external system and Rogo.
+     * Deletes the link between an user of an external system and ExamSys.
      *
-     * @param int $userid The id of a Rogo user.
+     * @param int $userid The id of a ExamSys user.
      * @param string $consumer_key The consumer key for an external system.
      * @param string $externalid The id of the user in the external system.
      * @throws Exception

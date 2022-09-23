@@ -52,7 +52,7 @@ class IE_qti12_Load extends IE_Main
 
         // values for likert scales
 
-        // from Rogo
+        // from ExamSys
         ExplodeToArray($this->likert_values, $string['failpass3']);
         ExplodeToArray($this->likert_values, $string['disagre3']);
 
@@ -458,12 +458,12 @@ class IE_qti12_Load extends IE_Main
                 return 'likert';
             }
 
-            // hack to ensure Rogo fill in the blanks are imported as such
+            // hack to ensure ExamSys fill in the blanks are imported as such
             if ($question->qmd_itemtype == 'Select a Blank') {
                 return 'blank';
             }
 
-            // hack to ensure Rogo likert are imported as such
+            // hack to ensure ExamSys likert are imported as such
             if ($question->qmd_itemtype == 'Likert Scale') {
                 return 'likert';
             }
@@ -688,7 +688,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Blank();
 
         $dest->load_id = $source->load_id;
@@ -1079,7 +1079,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Dichotomous();
 
         $dest->load_id = $source->load_id;
@@ -1234,7 +1234,7 @@ class IE_qti12_Load extends IE_Main
     // DONE
     public function LoadExtmatch(&$source)
     {
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Extmatch();
 
         $dest->load_id = $source->load_id;
@@ -1341,7 +1341,7 @@ class IE_qti12_Load extends IE_Main
     // NEW
     public function LoadHotspot(&$source)
     {
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Hotspot();
 
         $dest->load_id = $source->load_id;
@@ -1384,7 +1384,7 @@ class IE_qti12_Load extends IE_Main
         }
         unset($dest->hotspots[0]);
 
-        // load in any raw option data when a Rogo export
+        // load in any raw option data when a ExamSys export
         if (array_key_exists('RAW_HOTSPOT', $source->params)) {
             $dest->hotspots = array();
             $dest->raw_option = $source->params['RAW_HOTSPOT'];
@@ -1400,7 +1400,7 @@ class IE_qti12_Load extends IE_Main
     // DONE
     public function LoadInfo(&$source)
     {
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Info();
 
         $dest->load_id = $source->load_id;
@@ -1417,7 +1417,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Labelling();
 
         $dest->load_id = $source->load_id;
@@ -1520,7 +1520,7 @@ class IE_qti12_Load extends IE_Main
             $dest->labels[] = $destlabel;
         }
 
-        // load in any raw option data when a Rogo export
+        // load in any raw option data when a ExamSys export
         if (array_key_exists('RAW_LABELLING', $source->params)) {
             unset($dest->labels);
             $dest->raw_option = $source->params['RAW_LABELLING'];
@@ -1542,7 +1542,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Likert();
 
         $dest->load_id = $source->load_id;
@@ -2089,7 +2089,7 @@ class IE_qti12_Load extends IE_Main
     // DONE
     public function LoadRank(&$source)
     {
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Rank();
 
         $dest->load_id = $source->load_id;
@@ -2174,7 +2174,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question_Textbox();
 
         $dest->load_id = $source->load_id;
@@ -2223,7 +2223,7 @@ class IE_qti12_Load extends IE_Main
 
     public function LoadUnknown(&$source)
     {
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question();
 
         $dest->load_id = $source->load_id;
@@ -2237,7 +2237,7 @@ class IE_qti12_Load extends IE_Main
 
     public function LoadError(&$source)
     {
-        // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in ExamSys so goes the way of the dinosar
         $dest = new ST_Question();
 
         $dest->load_id = $source->load_id;

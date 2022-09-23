@@ -25,10 +25,10 @@
  */
 class PaperProperties
 {
-    /** @var mysqli The Rogo database connection. */
+    /** @var mysqli The ExamSys database connection. */
     private $db;
 
-    /** @var null @var ConfigObject The Rogo configuration. */
+    /** @var null @var ConfigObject The ExamSys configuration. */
     private $configObject;
 
     private $property_id;

@@ -20,7 +20,7 @@ namespace testing\behat\helpers\rogo;
 use rogo_directory;
 
 /**
- * Helpers for Rogo directories in Behat.
+ * Helpers for ExamSys directories in Behat.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -30,7 +30,7 @@ use rogo_directory;
 class directory
 {
     /**
-     * Clear the contents of the Rogo directories.
+     * Clear the contents of the ExamSys directories.
      */
     public static function reset_directories()
     {

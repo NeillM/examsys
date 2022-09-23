@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file is used to install and upgrade behat for Rogo.
+ * This file is used to install and upgrade behat for ExamSys.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -90,7 +90,7 @@ try {
     // Create the database.
     if (isset($optionslist['clean']) or environment::upgrade_needed()) {
         database::install_database();
-        // Store the version of Rogo that behat is initialised for.
+        // Store the version of ExamSys that behat is initialised for.
         environment::save_version();
     } else {
         cli_utils::prompt('Database does not need updating.');

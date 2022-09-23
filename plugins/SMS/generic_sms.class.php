@@ -186,7 +186,7 @@ class GENERIC_SMS extends SmsUtils
         $deletion_details = '';
 
 
-        // Get the currently enrolled students in Rogo for the module.
+        // Get the currently enrolled students in ExamSys for the module.
         $current_users = array();
         $sql = "
         SELECT 
@@ -272,7 +272,7 @@ class GENERIC_SMS extends SmsUtils
                     if (isset($current_users[$lookup_username]['delete'])) {
                         $current_users[$lookup_username]['delete'] = 0; // Mark as being legitimate
                     } else {
-                        // Student missing from Rogo module
+                        // Student missing from ExamSys module
                         $sql = "
                         SELECT 
                             u.id, u.yearofstudy, u.initials, u.grade, u.title, u.surname, u.first_names,
@@ -287,7 +287,7 @@ class GENERIC_SMS extends SmsUtils
                         GROUP BY u.id, sid.student_id
                         LIMIT 1
                         ";
-                        $student_data = $mysqli->prepare($sql); // Do they have a Rogo user record?
+                        $student_data = $mysqli->prepare($sql); // Do they have a ExamSys user record?
                         $student_data->bind_param('s', $lookup_username);
                         $student_data->execute();
                         $student_data->store_result();
@@ -398,7 +398,7 @@ class GENERIC_SMS extends SmsUtils
                     }
                 }
             }
-            // Check for any extra students in Rogo but not in SATURN for module
+            // Check for any extra students in ExamSys but not in SATURN for module
             foreach ($current_users as $username => $individual_user) {
                 if ($individual_user['delete'] == 1 and $individual_user['auto_update'] == 1) {
                     $result = $mysqli->prepare('DELETE FROM modules_student WHERE id = ?'); // Delete using primary key of 'modules_student'

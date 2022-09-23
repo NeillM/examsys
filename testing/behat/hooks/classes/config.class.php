@@ -22,7 +22,7 @@ use Exception;
 use testing\behat\helpers\database\state;
 
 /**
- * This class should define all the pre and post hooks for Rogo backend behat tests.
+ * This class should define all the pre and post hooks for ExamSys backend behat tests.
  *
  * This includes:
  * - cleaning up the database
@@ -38,9 +38,9 @@ use testing\behat\helpers\database\state;
  */
 trait config
 {
-    /** @var \Config A copy of the Rogo configuration object. */
+    /** @var \Config A copy of the ExamSys configuration object. */
     private static $rogo_config;
-    /** @var \Config A copy of the Rogo configuration object that is not setup for behat. */
+    /** @var \Config A copy of the ExamSys configuration object that is not setup for behat. */
     private static $default_config;
 
     /**

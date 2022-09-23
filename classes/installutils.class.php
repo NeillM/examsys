@@ -1633,7 +1633,7 @@ class InstallUtils
     }
 
     /**
-     * Creates the default set of faculties, schools and modules in the Rogo database.
+     * Creates the default set of faculties, schools and modules in the ExamSys database.
      *
      * @return void
      */
@@ -1736,7 +1736,7 @@ class InstallUtils
     }
 
     /**
-     * Creates the deafult Rogo users in the database:
+     * Creates the deafult ExamSys users in the database:
      * - The system admin
      * - The cron user
      * - 100 guest accounts

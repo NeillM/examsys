@@ -106,7 +106,7 @@ EMAIL;
 </html>
 EMAIL;
                 $mail_to = $email;
-                $subject = "Rogo {$string['passwordreset']}";
+                $subject = "ExamSys {$string['passwordreset']}";
                 if (!Mailer::send($mail_to, $subject, $email_body, '', '', '', '', true)) {
                     $errors[] = sprintf($string['couldntsendemail'], $email);
                 } else {

@@ -87,7 +87,7 @@ if (!$lti->valid) {
 
 list($lti_user, $user_updated) = $lti->lookup_lti_user();
 if ($lti_user !== $userObject->get_user_ID()) {
-    // The LTi request is not for the logged in user or the user has not had their external account properly connected to Rogo,
+    // The LTi request is not for the logged in user or the user has not had their external account properly connected to ExamSys,
     // so force a logout and display a message.
     session_unset();
     session_destroy();

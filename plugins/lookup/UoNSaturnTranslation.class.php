@@ -17,7 +17,7 @@
 
 /**
  *
- * The UoN Saturn Translation for XML to Rogo Internal format
+ * The UoN Saturn Translation for XML to ExamSys Internal format
  *
  * @author Simon Atack
  * @version 1.0

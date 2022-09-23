@@ -20,7 +20,7 @@ namespace testing\datagenerator;
 use yearutils;
 
 /**
- * Generates Rogo lti.
+ * Generates ExamSys lti.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

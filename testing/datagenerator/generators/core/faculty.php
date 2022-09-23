@@ -20,7 +20,7 @@ namespace testing\datagenerator;
 use FacultyUtils;
 
 /**
- * Generates Rogo faculty.
+ * Generates ExamSys faculty.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

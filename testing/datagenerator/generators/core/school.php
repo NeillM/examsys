@@ -20,7 +20,7 @@ namespace testing\datagenerator;
 use SchoolUtils;
 
 /**
- * Generates Rogo school.
+ * Generates ExamSys school.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

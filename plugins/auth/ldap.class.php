@@ -54,7 +54,7 @@ class ldap_auth extends outline_authentication
      * The object passed will have 3 parameters:
      * - authobj This is the object passed to the authentication callbacks
      * - postauthobj This is the object passed to the postathentication callbacks
-     * - userid The Rogo id of the user.
+     * - userid The ExamSys id of the user.
      *
      * @param stdClass $postauthsuccessobj
      * @return stdClass The object passed, with any modifications.
@@ -122,7 +122,7 @@ class ldap_auth extends outline_authentication
     /**
      * Checks if the user is valid.
      *
-     * @global string[] $string The language strings for the Rogo page.
+     * @global string[] $string The language strings for the ExamSys page.
      * @param authobjreturn $authobj
      * @return authobjreturn
      */

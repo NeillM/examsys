@@ -16,6 +16,6 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['exams'] = 'Exams';
-$string['cannotfind'] = 'Rogo cannot find any OSCE Stations';
+$string['cannotfind'] = 'ExamSys cannot find any OSCE Stations';
 $string['multiplestations'] = 'Multiple OSCE Stations Found';
 $string['pleaseselect'] = 'Please select the one you wish to examine:';

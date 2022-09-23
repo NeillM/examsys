@@ -15,16 +15,16 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-// Start Rogo autoloading.
+// Start ExamSys autoloading.
 require_once dirname(__DIR__, 3) . '/include/autoload.inc.php';
 autoloader::init();
 
 use testing\behat\rogo_test;
 
 /**
- * This is the frontend context for Rogo.
+ * This is the frontend context for ExamSys.
  *
- * It is designed to be used by Behat tests that test Rogo via it's own UI.
+ * It is designed to be used by Behat tests that test ExamSys via it's own UI.
  * It will use Mink to run the tests via a web browser.
  *
  * Please do not add setps to it directly.

@@ -21,7 +21,7 @@ use yearutils;
 use mappingutils;
 
 /**
- * Generates Rogo objective.
+ * Generates ExamSys objective.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

@@ -58,7 +58,7 @@ class updaterutilstest extends unittestdatabase
     }
 
     /**
-     * Test that the version check works when Rogo needs upgrading on a non-developer system.
+     * Test that the version check works when ExamSys needs upgrading on a non-developer system.
      *
      * @group update
      */
@@ -81,7 +81,7 @@ class updaterutilstest extends unittestdatabase
     }
 
     /**
-     * Test that the version check works when Rogo does not need upgrading on a non-developer system.
+     * Test that the version check works when ExamSys does not need upgrading on a non-developer system.
      *
      * @group update
      */
@@ -102,7 +102,7 @@ class updaterutilstest extends unittestdatabase
     }
 
     /**
-     * Test that the version check works when Rogo needs upgrading on a non-developer system.
+     * Test that the version check works when ExamSys needs upgrading on a non-developer system.
      *
      * @group update
      */
@@ -125,7 +125,7 @@ class updaterutilstest extends unittestdatabase
     }
 
     /**
-     * Test that the version check works when Rogo needs upgrading on a developer system.
+     * Test that the version check works when ExamSys needs upgrading on a developer system.
      *
      * @group update
      */
@@ -148,7 +148,7 @@ class updaterutilstest extends unittestdatabase
     }
 
     /**
-     * Test that the version check works when Rogo does not need upgrading on a developer system.
+     * Test that the version check works when ExamSys does not need upgrading on a developer system.
      *
      * @group update
      */
@@ -169,7 +169,7 @@ class updaterutilstest extends unittestdatabase
     }
 
     /**
-     * Test that the version check works when Rogo needs upgrading on a developer system.
+     * Test that the version check works when ExamSys needs upgrading on a developer system.
      *
      * @group update
      */
