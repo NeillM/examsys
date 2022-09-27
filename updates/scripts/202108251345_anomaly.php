@@ -1,19 +1,19 @@
 <?php
 
-// This file is part of Rogō
+// This file is part of ExamSys
 //
-// Rogō is free software: you can redistribute it and/or modify
+// ExamSys is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogō is distributed in the hope that it will be useful,
+// ExamSys is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+// along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 if ($updater_utils->check_version('7.5.0')) {
     if (!$updater_utils->has_updated('rogo_3062')) {
@@ -31,7 +31,7 @@ if ($updater_utils->check_version('7.5.0')) {
             // if the user kills the script here none of updates will have been run in, so restarting
             // it should not cause issues.
             do {
-                $address = cli_utils::user_response('Please enter the full url for Rogō:');
+                $address = cli_utils::user_response('Please enter the full url for ExamSys:');
                 $url = parse_url($address);
 
                 // Make up the host, with port if specified.
@@ -46,9 +46,9 @@ if ($updater_utils->check_version('7.5.0')) {
                 // Verify that the scheme is compatiable with the current Rogo setting.
                 if (!empty($url['scheme']) and $url['scheme'] != $protocol) {
                     if ($protocol == 'https') {
-                        cli_utils::prompt('Warning: Rogō is configured as to use secure connections, overriding your url');
+                        cli_utils::prompt('Warning: ExamSys is configured as to use secure connections, overriding your url');
                     } else {
-                        cli_utils::prompt('Warning: Rogō is configured to not use secure connection, overriding your url');
+                        cli_utils::prompt('Warning: ExamSys is configured to not use secure connection, overriding your url');
                     }
                 }
 

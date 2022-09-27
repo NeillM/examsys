@@ -1,19 +1,19 @@
 <?php
 
-// This file is part of Rogō
+// This file is part of ExamSys
 //
-// Rogō is free software: you can redistribute it and/or modify
+// ExamSys is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// Rogō is distributed in the hope that it will be useful,
+// ExamSys is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+// along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * This file is used to install Rogo.
@@ -52,7 +52,7 @@ $longoptions = array(
 
 $optionslist = getopt($options, $longoptions);
 
-$help = 'Rogō initialisation script options:'
+$help = 'ExamSys initialisation script options:'
     . PHP_EOL . " -h, --help \tDisplay help"
     . PHP_EOL . " -u \t\tDatabase username"
     . PHP_EOL . " -p \t\tDatabase password"
@@ -133,9 +133,9 @@ $old_version = $configObject->get_setting('core', 'rogo_version');
 $min_version = '7.2.0';
 if ($updater_utils->check_version($min_version)) {
     if ($version == $old_version) {
-        cli_utils::prompt("Rogō $version is already installed, nothing to update.");
+        cli_utils::prompt("ExamSys $version is already installed, nothing to update.");
     } else {
-        cli_utils::prompt("Rogō $version requires at least version $min_version is installed prior to upgrade.");
+        cli_utils::prompt("ExamSys $version requires at least version $min_version is installed prior to upgrade.");
     }
     exit(0);
 }
