@@ -22,7 +22,7 @@
  * @copyright Copyright (c) 2021 The University of Nottingham
  */
 
-if ($updater_utils->check_version('7.5.0')) {
+if ($updater_utils->check_version('7.6.0')) {
     if (!$updater_utils->has_updated('rogo_3166')) {
         $configObject->set_setting('mailer_host', '', Config::STRING);
         $configObject->set_setting('mailer_port', '', Config::STRING);

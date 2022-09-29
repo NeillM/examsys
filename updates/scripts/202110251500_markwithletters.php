@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.5.0') and !$updater_utils->has_updated('ROGO-3134')) {
+if ($updater_utils->check_version('7.6.0') and !$updater_utils->has_updated('ROGO-3134')) {
     $configObject->set_setting('rpt_letters_for_extmatch', false, Config::BOOLEAN);
     $configObject->set_setting('rpt_letters_for_hotspots', false, Config::BOOLEAN);
 

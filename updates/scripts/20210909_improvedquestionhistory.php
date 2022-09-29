@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.5.0') and !$updater_utils->has_updated('ROGO-2566')) {
+if ($updater_utils->check_version('7.6.0') and !$updater_utils->has_updated('ROGO-2566')) {
     // Data integrity fixes
     $sql = <<<'EOF'
     UPDATE `track_changes`

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.5.0')) {
+if ($updater_utils->check_version('7.6.0')) {
     if (!$updater_utils->has_updated('rogo_3062')) {
         if ($configObject->get('cfg_secure_connection')) {
             $protocol = 'https';
