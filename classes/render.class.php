@@ -41,7 +41,7 @@ class render
 
     /**
      * Constructor
-     * @param object $configObject - rogo configuration object
+     * @param object $configObject - ExamSys configuration object
      * @param string|array $templatedir - path to templates or list of paths to search for template
      * @return void
      */
@@ -66,9 +66,9 @@ class render
      * @param string $template The template filename
      * @param string $additionaljs additional javascript required
      * @param string $additionalcss additional css required
-     * @param string $path rogo root path
-     * @param string $charset rogo display charset
-     * @param string $language rogo display language
+     * @param string $path ExamSys root path
+     * @param string $charset ExamSys display charset
+     * @param string $language ExamSys display language
      */
     public function render(
         $data,
@@ -206,7 +206,7 @@ class render
     }
 
     /**
-     * Render admin update rogo pane.
+     * Render admin update ExamSys pane.
      * @param array $plugins - array of plugins available
      * @param array $header - headers for data
      * @param string $action - the form action

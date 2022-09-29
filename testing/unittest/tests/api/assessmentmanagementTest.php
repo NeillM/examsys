@@ -90,7 +90,7 @@ class assessmentmanagementtest extends unittestdatabase
             'labs' => "$this->labid1",
             'papertype' => '0',
             'externalid' => '123abc456',
-            'externalsys' => 'test rogo api',
+            'externalsys' => 'test ExamSys api',
             'modulename' => 'Training Module'));
         $this->pid3 = $datagenerator->create_paper(array('papertitle' => 'Test create osce 3',
             'startdate' => '2016-01-25 09:00:00',
@@ -120,7 +120,7 @@ class assessmentmanagementtest extends unittestdatabase
         $datagenerator->create_osceoverall(array('q_paper' => $this->pid3['id'], 'userID' => $this->student['id']));
         $datagenerator = $this->get_datagenerator('api', 'core');
         $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
-        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test rogo api', 'type' => 'api'));
+        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test ExamSys api', 'type' => 'api'));
     }
 
     /**
@@ -712,7 +712,7 @@ class assessmentmanagementtest extends unittestdatabase
                 'labs' => "$this->labid1",
                 'paper_type' => '0',
                 'externalid' =>  '123abc456',
-                'externalsys' => 'test rogo api'
+                'externalsys' => 'test ExamSys api'
             ),
             2 => array(
                 'paper_title' => 'Test osce 3 update',
@@ -914,7 +914,7 @@ class assessmentmanagementtest extends unittestdatabase
                 'labs' => "$this->labid1",
                 'paper_type' => '0',
                 'externalid' =>  '123abc456',
-                'externalsys' => 'test rogo api'
+                'externalsys' => 'test ExamSys api'
             ),
             2 => array(
                 'paper_title' => 'Test create osce 3',
@@ -1084,7 +1084,7 @@ class assessmentmanagementtest extends unittestdatabase
                 'labs' => "$this->labid1",
                 'paper_type' => '0',
                 'externalid' =>  '123abc456',
-                'externalsys' => 'test rogo api'
+                'externalsys' => 'test ExamSys api'
             ),
             1 => array(
                 'paper_title' => 'Test create osce 3',

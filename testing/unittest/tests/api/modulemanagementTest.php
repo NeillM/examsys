@@ -95,7 +95,7 @@ class ModuleManagementTest extends unittestdatabase
         $datagenerator->create_external(
             array(
                 'clientid' => $client['clientid'],
-                'name' => 'test rogo api',
+                'name' => 'test ExamSys api',
                 'type' => 'api'
             )
         );
@@ -345,7 +345,7 @@ class ModuleManagementTest extends unittestdatabase
         $responsearray['id'] = $this->module;
         $responsearray['externalid'] = 'abc123def';
         $params['externalid'] = 'abc123def';
-        $params['sms'] = 'test rogo api';
+        $params['sms'] = 'test ExamSys api';
         $this->assertEquals($responsearray, $module->create($params, $this->admin['id']));
     }
 
@@ -482,7 +482,7 @@ class ModuleManagementTest extends unittestdatabase
                 'active' => 1,
                 'schoolid' =>  $this->school2,
                 'externalid' => '87654321',
-                'sms' => 'test rogo api',
+                'sms' => 'test ExamSys api',
                 'academic_year_start' => '07/01'
             )
         );

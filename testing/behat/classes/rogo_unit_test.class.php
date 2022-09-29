@@ -24,7 +24,7 @@ use coding_exception;
 use Exception;
 
 /**
- * All Rogo behat test definitions should extend this class if they wish to do PHP Unit based tests.
+ * All ExamSys behat test definitions should extend this class if they wish to do PHP Unit based tests.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -44,7 +44,7 @@ class rogo_unit_test implements Context
     private $data = array();
 
     /**
-     * Get a data generator for adding information into the Rogo database.
+     * Get a data generator for adding information into the ExamSys database.
      *
      * @param string $name The name of the generator.
      * @param string $component The component the generator is from (optional).

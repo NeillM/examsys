@@ -25,10 +25,10 @@
  */
 class PaperProperties
 {
-    /** @var mysqli The Rogo database connection. */
+    /** @var mysqli The ExamSys database connection. */
     private $db;
 
-    /** @var null @var ConfigObject The Rogo configuration. */
+    /** @var null @var ConfigObject The ExamSys configuration. */
     private $configObject;
 
     private $property_id;
@@ -840,7 +840,7 @@ class PaperProperties
     }
 
     /**
-     * Get the rogo formatted start date
+     * Get the ExamSys formatted start date
      * Used by log tables until they are migrated to bigint
      * @return string $start_date
      */
@@ -850,7 +850,7 @@ class PaperProperties
     }
 
     /**
-     * Set the rogo formatted start date
+     * Set the ExamSys formatted start date
      * Used by log tables until they are migrated to bigint
      */
     public function setRogoFormatStartDate()
@@ -924,7 +924,7 @@ class PaperProperties
 
 
     /**
-     * Get the rogo formatted end date
+     * Get the ExamSys formatted end date
      * Used by log tables until they are migrated to bigint
      * @return string $end_date
      */
@@ -934,7 +934,7 @@ class PaperProperties
     }
 
     /**
-     * Set the rogo formatted end date
+     * Set the ExamSys formatted end date
      * Used by log tables until they are migrated to bigint
      */
     public function setRogoFormatEndDate()

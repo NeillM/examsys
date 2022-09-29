@@ -27,14 +27,14 @@ namespace api;
 /**
  * Abstract publish class.
  *
- * This class should be extend by classes used to publish rogo data such as the gradebook
+ * This class should be extend by classes used to publish ExamSys data such as the gradebook
  */
 abstract class abstractpublish
 {
     /**
      * Abstract get function
      *
-     * Operation to get published rogo data.
+     * Operation to get published ExamSys data.
      * @param string $filtername - component name
      * @param integer $filterid - component id
      * @param string $externalsys - external system

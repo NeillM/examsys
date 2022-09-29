@@ -44,7 +44,7 @@ define(['log', 'html5images', 'html5listener', 'hotspot_answer', 'hotspot_analys
     this.init_done = false;
 
     /**
-     * The web root config setting for Rogo.
+     * The web root config setting for ExamSys.
      *
      * @type {String}
      */
@@ -53,7 +53,7 @@ define(['log', 'html5images', 'html5listener', 'hotspot_answer', 'hotspot_analys
     /**
      * Finds all html5 question placeholders and initialises them.
      *
-     * @param {String} webroot The webroot config setting for Rogo.
+     * @param {String} webroot The webroot config setting for ExamSys.
      * @returns {void}
      */
     this.init = function (webroot) {

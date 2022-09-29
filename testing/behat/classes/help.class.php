@@ -27,7 +27,7 @@ namespace testing\behat;
  */
 class help
 {
-    /** The URL to documentation for behat in Rogo. */
+    /** The URL to documentation for behat in ExamSys. */
     public const DOCUMENTATION = 'https://rogo-eassessment-docs.atlassian.net/wiki/display/ROGO/Automatic+functional+testing';
 
     /**
@@ -41,7 +41,7 @@ class help
     }
 
     /**
-     * The command a user needs to type to run behat tests from the root of Rogo.
+     * The command a user needs to type to run behat tests from the root of ExamSys.
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class help
      */
     public static function run_help()
     {
-        $message = PHP_EOL . 'Behat is now installed and can be run from the root Rogo directory using:'
+        $message = PHP_EOL . 'Behat is now installed and can be run from the root ExamSys directory using:'
             . PHP_EOL . self::get_test_run_command();
         return $message;
     }
@@ -69,7 +69,7 @@ class help
      */
     public static function error()
     {
-        $message = PHP_EOL . 'For details about Behat testing in Rogo visit: ' . PHP_EOL . self::DOCUMENTATION;
+        $message = PHP_EOL . 'For details about Behat testing in ExamSys visit: ' . PHP_EOL . self::DOCUMENTATION;
         return $message;
     }
 
@@ -80,7 +80,7 @@ class help
      */
     public static function init_help()
     {
-        $message = 'Rogo Behat initialisation script options'
+        $message = 'ExamSys Behat initialisation script options'
             . PHP_EOL . PHP_EOL . "-h, --help \tDisplay help"
             . PHP_EOL . "--clean \tForce a database install"
             . PHP_EOL . "--update \tUpdate the composer dependancies.";

@@ -195,7 +195,7 @@ class moduleutilstest extends unittestdatabase
             'active' => 1,
             'vle_api' => '',
             'checklist' => 'mapping',
-            'sms' => 'test rogo api',
+            'sms' => 'test ExamSys api',
             'selfenroll' => 0,
             'schoolid' => $this->school2,
             'neg_marking' => null,
@@ -207,7 +207,7 @@ class moduleutilstest extends unittestdatabase
             'academic_year_start' => '07/01',
             'externalid' => 'abc123def',
             'syncpreviousyear' => 1);
-        $details = module_utils::get_full_details('external', 'abc123def', $this->db, 'test rogo api');
+        $details = module_utils::get_full_details('external', 'abc123def', $this->db, 'test ExamSys api');
         $this->assertEquals($detailsarray, $details);
     }
 
@@ -228,7 +228,7 @@ class moduleutilstest extends unittestdatabase
     public function test_get_sync_previous_year_modules()
     {
         $expected = array('abc123def');
-        $actual = module_utils::get_sync_previous_year_modules('test rogo api');
+        $actual = module_utils::get_sync_previous_year_modules('test ExamSys api');
         $this->assertEquals($expected, $actual);
     }
 

@@ -52,7 +52,7 @@ $string['authentication'] = 'Authentication';
 $string['allowlti'] = 'Allow via LTI';
 $string['allowltitip'] = 'Allow authentication from successful LTI launch';
 $string['allowintdb'] = 'Internal database';
-$string['allowintdbtip'] = 'Allow authentication from internal Rogo user database';
+$string['allowintdbtip'] = 'Allow authentication from internal ExamSys user database';
 $string['allowguest'] = 'Guest log in (for summative exams)';
 $string['allowguesttip'] = 'Allow guest temporary accouts for students who forget their normal log in details';
 $string['allowimpersonation'] = 'User impersonation (SysAdmin only)';
@@ -123,7 +123,7 @@ $string['errors20'] = 'ExamSys cannot connect to the database (%s)';
 $string['installscript'] = 'ExamSys Install script';
 $string['systeminstallation'] = 'System Installation';
 $string['labsecuritytype'] = 'Summative Exam Lab Security';
-$string['labsecuritytypetip'] = 'Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname.';
+$string['labsecuritytypetip'] = 'ExamSys can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname.';
 $string['IP'] = 'IP address';
 $string['hostname'] = 'Machine hostname';
 

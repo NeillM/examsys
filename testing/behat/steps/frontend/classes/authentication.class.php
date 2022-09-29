@@ -32,14 +32,14 @@ use Behat\Gherkin\Node\TableNode;
 trait authentication
 {
     /**
-     * Log into Rogo.
+     * Log into ExamSys.
      *
      * @Given /^I login as "([^"]*)"$/
      * @param string $username The username to be logged in.
      */
     public function i_login_as($username)
     {
-        // Goto the base Rogo path.
+        // Goto the base ExamSys path.
         $this->getSession()->visit($this->locatePath('/'));
         $this->lookForErrors();
         $this->i_set_field('ROGO_USER', $username);
@@ -55,7 +55,7 @@ trait authentication
     }
 
     /**
-     * Log out Rogo.
+     * Log out ExamSys.
      *
      * @Then /^I log out$/
      * @param string $username The username to be logged in.
@@ -67,7 +67,7 @@ trait authentication
     }
 
     /**
-     * Log out Rogo transparently without changing page
+     * Log out ExamSys transparently without changing page
      *
      * @Then /^I destroy the session$/
      */
@@ -78,7 +78,7 @@ trait authentication
     }
 
     /**
-     * Re-log into Rogo from the current page.
+     * Re-log into ExamSys from the current page.
      *
      * @Given /^I relogin as "([^"]*)"$/
      * @param string $username The username to be logged in.

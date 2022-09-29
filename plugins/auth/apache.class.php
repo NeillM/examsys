@@ -82,7 +82,7 @@ class apache_auth extends outline_authentication
 
             return $authobj;
         } elseif ($result->num_rows() == 0) {
-            //apache says ok but no association to rogo
+            //apache says ok but no association to ExamSys
 
             $this->savetodebug('Apache authenticated but no local account');
             $data = new stdClass();

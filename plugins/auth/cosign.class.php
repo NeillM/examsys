@@ -117,7 +117,7 @@ class cosign_auth extends outline_authentication
         }
 
         $this->savetodebug('cosign block reports auth as SUCCEEDED');
-        // Bit below looks username up in the rogo table to get an id.
+        // Bit below looks username up in the ExamSys table to get an id.
 
         extract($this->settings);
 
@@ -160,7 +160,7 @@ class cosign_auth extends outline_authentication
 
             return $authobj;
         } elseif ($result->num_rows() == 0) {
-            // Cosign says OK but no association to Rogo
+            // Cosign says OK but no association to ExamSys
 
             $this->savetodebug('cosign authenticated but no local account');
             $data = new stdClass();

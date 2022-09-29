@@ -18,7 +18,7 @@
 namespace testing\datagenerator;
 
 /**
- * Generates Rogo logs.
+ * Generates ExamSys logs.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

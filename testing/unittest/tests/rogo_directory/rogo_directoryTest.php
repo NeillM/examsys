@@ -40,7 +40,7 @@ class rogo_directorytest extends unittestdatabase
     /** @var rogo_directory Stores a mock version of the rogo_directory class. */
     protected $rogodirectory;
 
-    /** @var string The url we will use for Rogo for these tests. */
+    /** @var string The url we will use for ExamSys for these tests. */
     protected $webroot = 'htttp://www.example.com/';
 
     public function setUp(): void
@@ -64,7 +64,7 @@ class rogo_directorytest extends unittestdatabase
      */
     public function test_create()
     {
-        // Set the location of the rogo directory to be a sub direcotry called test.
+        // Set the location of the ExamSys directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild('test'));
         $this->rogodirectory->create();
@@ -94,7 +94,7 @@ class rogo_directorytest extends unittestdatabase
     public function test_create_not_writable()
     {
         parent::expectException(directory_not_found::class);
-        // Set the location of the rogo directory to be a sub direcotry called test.
+        // Set the location of the ExamSys directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0000); // Set the data directory to not be writable.
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild('test'));
@@ -108,7 +108,7 @@ class rogo_directorytest extends unittestdatabase
      */
     public function test_create_root_has_700_permissions()
     {
-        // Set the location of the rogo directory to be a sub direcotry called test.
+        // Set the location of the ExamSys directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0700);
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild('test'));
@@ -123,7 +123,7 @@ class rogo_directorytest extends unittestdatabase
      */
     public function test_create_when_directory_exists()
     {
-        // Set the location of the rogo directory to be a sub direcotry called test.
+        // Set the location of the ExamSys directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
         $structure = array(
@@ -539,7 +539,7 @@ class rogo_directorytest extends unittestdatabase
     }
 
     /**
-     * Tests that the url method generates a valid url for the rogo site, while using the default parameters.
+     * Tests that the url method generates a valid url for the ExamSys site, while using the default parameters.
      *
      * @group rogo_directory
      */
@@ -559,7 +559,7 @@ class rogo_directorytest extends unittestdatabase
     }
 
     /**
-     * Tests that the url method generates a valid url for the rogo site.
+     * Tests that the url method generates a valid url for the ExamSys site.
      *
      * @group rogo_directory
      */
@@ -579,7 +579,7 @@ class rogo_directorytest extends unittestdatabase
     }
 
     /**
-     * Tests that the url method generates a valid url for the rogo site.
+     * Tests that the url method generates a valid url for the ExamSys site.
      *
      * @group rogo_directory
      */

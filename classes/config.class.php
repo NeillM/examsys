@@ -29,7 +29,7 @@
 class Config extends RogoStaticSingleton
 {
     /**
-     * Areas of the Rogo system that can be configured.
+     * Areas of the ExamSys system that can be configured.
      * @var array list of areas
      */
     public static $config_area = array(
@@ -68,10 +68,10 @@ class Config extends RogoStaticSingleton
     /** @var bool Stores if the config object has been setup for phpunit. */
     protected $phpunitsetup = false;
 
-    /** The path to the behat config file relative to the root Rogo directory. */
+    /** The path to the behat config file relative to the root ExamSys directory. */
     public const BEHAT_CONFIG_FILE = '/config/behat.xml';
 
-    /** The path to the phpunit config file relative to the root Rogo directory. */
+    /** The path to the phpunit config file relative to the root ExamSys directory. */
     public const PHP_UNIT_CONFIG_FILE = '/config/phpunit.xml';
 
     /**
@@ -185,7 +185,7 @@ class Config extends RogoStaticSingleton
     }
 
     /**
-     * Loads the behat configuration for Rogo.
+     * Loads the behat configuration for ExamSys.
      *
      * @return void
      */
@@ -202,7 +202,7 @@ class Config extends RogoStaticSingleton
     }
 
     /**
-     * Loads the phpunit configuration for Rogo.
+     * Loads the phpunit configuration for ExamSys.
      *
      * @return void
      */
@@ -318,7 +318,7 @@ class Config extends RogoStaticSingleton
     }
 
     /**
-     * Test if Rogo is being accessed as a behat website.
+     * Test if ExamSys is being accessed as a behat website.
      *
      * @return boolean
      */
@@ -330,7 +330,7 @@ class Config extends RogoStaticSingleton
     }
 
     /**
-     * Test if Rogo is being accessed as a phpunit suite.
+     * Test if ExamSys is being accessed as a phpunit suite.
      *
      * @return boolean
      */
@@ -341,7 +341,7 @@ class Config extends RogoStaticSingleton
     }
 
     /**
-     * Setup Rogo site to use the the behat database.
+     * Setup ExamSys site to use the the behat database.
      *
      * @return void
      */
@@ -389,7 +389,7 @@ class Config extends RogoStaticSingleton
     }
 
     /**
-     * Setup Rogo site to use the the phpunit database.
+     * Setup ExamSys site to use the the phpunit database.
      *
      * @return void
      */

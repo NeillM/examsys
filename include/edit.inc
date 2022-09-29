@@ -269,9 +269,9 @@ HTML;
 /**
  * Inserts a question into a paper.
  *
- * @param int $p_id The id of the Rogo paper the question should be inserted into.
+ * @param int $p_id The id of the ExamSys paper the question should be inserted into.
  * @param int $q_id The id of the question that should be inserted.
- * @param mysqli $db The database connection for Rogo
+ * @param mysqli $db The database connection for ExamSys
  * @return int The id of the record that links the question to the paper.
  */
 function insert_into_papers($p_id, $q_id, $db)

@@ -62,7 +62,7 @@ class usermanagementtest extends unittestdatabase
             'paperowner' => 'admin',
             'papertype' => '0',
             'externalid' => '123abc456',
-            'externalsys' => 'test rogo api',
+            'externalsys' => 'test ExamSys api',
             'modulename' => 'Training Module'));
         $pid2 = $datagenerator->create_paper(array('papertitle' => 'Test create osce',
             'startdate' => '2016-01-25 09:00:00',

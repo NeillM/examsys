@@ -128,7 +128,7 @@ $import = new IE_QTI_Load();
 $load_params->sourcefile = $file;
 $load_params->original_filename = $_FILES['file']['name'];
 
-// setup Rogo save classes
+// setup ExamSys save classes
 $export = new IE_Local_Save();
 $save_params->paper = $paperID;
 $save_params->sourcefile = $file;

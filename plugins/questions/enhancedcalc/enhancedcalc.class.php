@@ -956,7 +956,7 @@ class EnhancedCalc extends Question implements questionInterface
     /**
      * Split the q_id from a linked answer
      * @param string $varval
-     * @return int rogo q_id
+     * @return int ExamSys q_id
      */
     public function parse_linked_ans($varval)
     {

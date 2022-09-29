@@ -23,7 +23,7 @@ use QuestionUtils;
 use random_utils;
 
 /**
- * Generates Rogo paper.
+ * Generates ExamSys paper.
  *
  * @author Yijun Xue <yijun.xue@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham

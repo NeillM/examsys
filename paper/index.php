@@ -17,7 +17,7 @@
 
 /**
  *
- * This script is the summative exam homepage of Rogo.
+ * This script is the summative exam homepage of ExamSys.
  * It takes the user details of the student together with the IP address
  * for the log and redirects to the correct paper.
  *

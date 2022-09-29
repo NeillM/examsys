@@ -34,5 +34,5 @@ $string['description1'] = 'Normally used for mid-term tests where feedback is no
 $string['description2'] = "High-stakes exams where marks contribute to a student's course.";
 $string['description3'] = 'A questionnaire used for eliciting views and feedback from students.';
 $string['description4'] = 'Objective Structured Clinical Examination (OSCE) assessment type used for medical and health sciences fields.';
-$string['description5'] = 'This paper type allows marks from offline papers to be loaded into Rogo.';
+$string['description5'] = 'This paper type allows marks from offline papers to be loaded into ExamSys.';
 $string['description6'] = 'Generates a form for students to review their peers.';

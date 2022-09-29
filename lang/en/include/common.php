@@ -71,7 +71,7 @@ $string['ltinotconfigured'] = 'The link you have followed has not yet been confi
 $string['LTIFAILURE'] = 'LTI Failure';
 $string['expiredtimestamp'] = 'Timestamp has now expired. Please go back and relaunch the link (do not hit refresh in the browser).';
 $string['UserMissing'] = 'Associated User Missing';
-$string['UserMissingDesc'] = 'Somehow the associated user is missing from the rogo user system this is a serious error and you need to contact support';
+$string['UserMissingDesc'] = 'Somehow the associated user is missing from the ExamSys user system this is a serious error and you need to contact support';
 $string['impersonatepriv'] = 'You do not have sufficient privileges to impersonate users.';
 
 $string['NoAuthenticationConfigured'] = 'No Authentication configured';

@@ -18,7 +18,7 @@
 /**
  *
  * This script will jumble up names in the user table. This is useful to anonymise
- * live data if taking Rogo, for example, on a laptop to a conference. Under no
+ * live data if taking ExamSys, for example, on a laptop to a conference. Under no
  * circumstances run this on a live installation.
  *
  * @author Simon Wilkinson

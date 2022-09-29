@@ -23,7 +23,7 @@ use cli_utils;
 use mysqli;
 
 /**
- * This class is used to manage the database used for Rogo behat testing.
+ * This class is used to manage the database used for ExamSys behat testing.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
@@ -33,7 +33,7 @@ use mysqli;
 class database
 {
     /**
-     * Creates a Rogo database for behat testing.
+     * Creates a ExamSys database for behat testing.
      *
      * @throws \Exception
      */
@@ -85,10 +85,10 @@ class database
         InstallUtils::$sysadmin_title = 'Miss';
         InstallUtils::$sysadmin_email = 'admin@example.com';
 
-        // Ensure that an existing Rogo behat database and users are deleted.
+        // Ensure that an existing ExamSys behat database and users are deleted.
         self::drop_db();
 
-        // Start installing the base Rogo database.
+        // Start installing the base ExamSys database.
         InstallUtils::checkDBUsers();
         InstallUtils::createDirectories();
         InstallUtils::createDatabase(
@@ -144,7 +144,7 @@ class database
     }
 
     /**
-     * Connect to the Rogo database.
+     * Connect to the ExamSys database.
      *
      * @param string $username
      * @param string $password

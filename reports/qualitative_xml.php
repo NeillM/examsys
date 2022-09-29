@@ -38,9 +38,9 @@ echo '<?mso-application progid="Word.Document"?><w:wordDocument xmlns:w="http://
 echo StringUtils::wordToUtf8($paper);
 $tmp_start = date_utils::rogoToDisplay($_GET['startdate']);
 $tmp_end = date_utils::rogoToDisplay($_GET['enddate']);
-echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author>';
+echo '</o:Title><o:Author>ExamSys ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author>';
 echo '<o:Description>' . sprintf($string['period'], $tmp_start, $tmp_end) . '</o:Description>';
-echo '<o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
+echo '<o:LastAuthor>ExamSys ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';

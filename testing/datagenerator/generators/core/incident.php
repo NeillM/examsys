@@ -18,7 +18,7 @@
 namespace testing\datagenerator;
 
 /**
- * Generates Rogo save fail / access denied logs.
+ * Generates ExamSys save fail / access denied logs.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

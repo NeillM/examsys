@@ -29,7 +29,7 @@ use testing\unittest\unittestdatabase;
  */
 class PaperPropertiesShouldLogLateTest extends unittestdatabase
 {
-    /** @var array Details of a lab in Rogo. */
+    /** @var array Details of a lab in ExamSys. */
     protected $lab;
 
     /** @var array Details of a module. */

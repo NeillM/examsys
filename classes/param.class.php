@@ -54,7 +54,7 @@ class param
     /** A IPv4 or IPv6 address. */
     public const IP_ADDRESS = 8;
 
-    /** A url for the current Rogo site. */
+    /** A url for the current ExamSys site. */
     public const LOCAL_URL = 6;
 
     /** Any input is valid. */
@@ -214,7 +214,7 @@ class param
                 break;
             case self::LOCAL_URL:
                 $rogo_url = Config::get_instance()->get('cfg_web_host');
-                // We now know if it is a valid URL or not, we just need to ensure it is for the local instance of Rogo.
+                // We now know if it is a valid URL or not, we just need to ensure it is for the local instance of ExamSys.
                 $filter = FILTER_VALIDATE_REGEXP;
                 $options = array(
                     'options' => array(

@@ -111,7 +111,7 @@ class hotspot_helper extends RogoStaticSingleton
     }
 
     /**
-     * Strips if the answer is correct from the answer stored in Rogo.
+     * Strips if the answer is correct from the answer stored in ExamSys.
      *
      * The result is the format needed by questions in answer mode.
      *

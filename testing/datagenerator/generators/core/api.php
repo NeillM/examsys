@@ -18,7 +18,7 @@
 namespace testing\datagenerator;
 
 /**
- * Generates Rogo api tables.
+ * Generates ExamSys api tables.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham

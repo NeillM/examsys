@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Utility class to get information about Rogo email_templates directory.
+ * Utility class to get information about ExamSys email_templates directory.
  *
  * @author Neill Magill
  * @copyright Copyright (c) 2015 The University of Nottingham

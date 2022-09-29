@@ -20,7 +20,7 @@ namespace testing\unittest;
 use Config;
 
 /**
- * This class is used to install and update phpunit in Rogo.
+ * This class is used to install and update phpunit in ExamSys.
  *
  * Based on /testing/behat/casses/environment.php by Neill Magill <neill.magill@nottingham.ac.uk>
  *
@@ -76,7 +76,7 @@ class environment
     }
 
     /**
-     * Writes a file that contains the version number of the Rogo code.
+     * Writes a file that contains the version number of the ExamSys code.
      *
      * @return void
      */
@@ -90,7 +90,7 @@ class environment
     }
 
     /**
-     * Get the version of Rogo that phpunit is initialised for.
+     * Get the version of ExamSys that phpunit is initialised for.
      *
      * @return string
      */
@@ -106,7 +106,7 @@ class environment
     }
 
     /**
-     * Returns the directory that Rogo is installed in.
+     * Returns the directory that ExamSys is installed in.
      *
      * @return string
      */

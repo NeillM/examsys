@@ -23,7 +23,7 @@
  * @package
  */
 
-/* Rogo Load params list
+/* ExamSys Load params list
  *
  * q_ids = list of question ids if type is batch_q or question
  * p_ids = list of paper types if type is batch_q or paper

@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file is used to install and upgrade phpunit for Rogo.
+ * This file is used to install and upgrade phpunit for ExamSys.
  *
  * Based on /testing/behat/cli/init.php by Neill Magill <neill.magill@nottingham.ac.uk>
  *
@@ -86,7 +86,7 @@ try {
     // Create the database.
     if (isset($optionslist['clean']) or environment::upgrade_needed()) {
         database::install_database();
-        // Store the version of Rogo that phpunit is initialised for.
+        // Store the version of ExamSys that phpunit is initialised for.
         environment::save_version();
     } else {
         cli_utils::prompt('Database does not need updating.');

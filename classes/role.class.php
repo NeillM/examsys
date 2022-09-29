@@ -130,7 +130,7 @@ class Role
     }
 
     /**
-     * Gets a list of roles in Rogo.
+     * Gets a list of roles in ExamSys.
      *
      * @return Role[]
      */

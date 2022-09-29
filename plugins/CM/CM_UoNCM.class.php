@@ -116,7 +116,7 @@ class CM_UoNCM implements iCMAPI
      * @param array $input data
      * @param integer $calendar_year year we are interested in
      * @param string $originalmodid the orginal (non mapped) module id
-     * @return array data converted to rogo structure
+     * @return array data converted to ExamSys structure
      */
     private function transformCMResponse($input, $calendar_year, $mod_id)
     {
@@ -152,7 +152,7 @@ class CM_UoNCM implements iCMAPI
      * @param array $input data
      * @param integer $calendar_year year we are interested in
      * @param string $originalmodid the orginal (non mapped) module id
-     * @return array data converted to rogo structure
+     * @return array data converted to ExamSys structure
      */
     private function transformCMResponseModule($input, $calendar_year, $mod_id)
     {

@@ -102,7 +102,7 @@ while ($testresult->fetch()) {
     $message .= 'Failure: user - ' . $user_id . ', paper - ' . $paper_id . ', error - ' . $errors . "\n";
 }
 $testresult->close();
-$subject = 'Rogo Summative Exam check';
+$subject = 'ExamSys Summative Exam check';
 if ($message != '') {
     echo $message;
     if (Mailer::send($support_email, $subject, $message)) {

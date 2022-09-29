@@ -37,7 +37,7 @@ abstract class abstractmanagement
      *
      * Operation to create an academic construct such as a module or school.
      * @param array $params - parametes in request
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array response to operation, id of construct or error message.
      */
     abstract public function create($params, $userid);
@@ -47,7 +47,7 @@ abstract class abstractmanagement
      *
      * Operation to delete an academic construct such as a module or school.
      * @param array $params - parametes in request
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array response to operation, id of construct or error message.
      */
     abstract public function delete($params, $userid);

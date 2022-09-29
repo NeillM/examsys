@@ -20,7 +20,7 @@ namespace import;
 use csv\csv_load_exception;
 
 /**
- * Import modules from csv format to rogo db format
+ * Import modules from csv format to ExamSys db format
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham

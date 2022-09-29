@@ -58,7 +58,7 @@ class UserObject extends RogoStaticSingleton
     private $staffTeamModules;
     private $studentModules;
 
-    /** @var \mysqli The Rogo database connection.*/
+    /** @var \mysqli The ExamSys database connection.*/
     private $db;
     private $configObj;
 
@@ -124,7 +124,7 @@ class UserObject extends RogoStaticSingleton
      * constructor
      *
      * @param mysqli $db is a mysqli link to db
-     * @param Config $configObject a Rogo config object populated from config.inc
+     * @param Config $configObject a ExamSys config object populated from config.inc
      *
      * @return void
      */

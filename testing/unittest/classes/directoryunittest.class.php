@@ -22,7 +22,7 @@ use rogo_directory;
 
 /**
  * Tests that should work for all rogo_directory sub-classes,
- * each rogo directory shoould have a testing class that extends this.
+ * each ExamSys directory shoould have a testing class that extends this.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @version 1.0

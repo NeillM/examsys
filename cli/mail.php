@@ -30,7 +30,7 @@ set_time_limit(0);
 
 $rogo_path = dirname(__DIR__);
 if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
-    echo 'Rogo is not installed.';
+    echo 'ExamSys is not installed.';
     exit(0);
 }
 
@@ -43,7 +43,7 @@ $longoptions = array(
 );
 
 $optionslist = getopt($options, $longoptions);
-$help = 'Rogo mail script options. Sends scheduled emails'
+$help = 'ExamSys mail script options. Sends scheduled emails'
     . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help";
 
 if ((isset($optionslist['h']) or isset($optionslist['help']))) {

@@ -599,7 +599,7 @@ define(['log', 'lang', 'hotspot', 'html5_chk', 'html5_filler', 'html5_group', 'h
   };
 
   /**
-   * Modify the Rogo page with the current state of the question.
+   * Modify the ExamSys page with the current state of the question.
    *
    * @returns {void}
    */

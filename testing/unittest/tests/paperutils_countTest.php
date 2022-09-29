@@ -108,7 +108,7 @@ class paperutils_counttest extends unittestdatabase
      */
     public function test_count_unassigned_papers()
     {
-        // Get the Rogo database connection.
+        // Get the ExamSys database connection.
         $db = $this->config->db;
         $paperutils = new PaperUtils();
         // Test a user who owns papers, where all are assigned or deleted.
@@ -127,7 +127,7 @@ class paperutils_counttest extends unittestdatabase
      */
     public function test_count_unassigned_questions()
     {
-        // Get the Rogo database connection.
+        // Get the ExamSys database connection.
         $db = $this->config->db;
         $paperutils = new PaperUtils();
         // Test a user who owns questions, where all are assigned or deleted.

@@ -18,7 +18,7 @@
 namespace testing\behat\helpers\rogo;
 
 /**
- * Helpers for generating URLs to Rogo pages for use in Behat.
+ * Helpers for generating URLs to ExamSys pages for use in Behat.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2020 The University of Nottingham

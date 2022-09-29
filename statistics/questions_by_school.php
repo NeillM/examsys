@@ -72,7 +72,7 @@ foreach ($types as $type) {
 <?php
 $master_array = array();
 
-// Get a list of all schools in Rogo.
+// Get a list of all schools in ExamSys.
 $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
 $result->execute();
 $result->bind_result($id, $code, $school, $faculty_code, $faculty);

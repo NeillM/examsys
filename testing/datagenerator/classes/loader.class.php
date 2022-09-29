@@ -18,7 +18,7 @@
 namespace testing\datagenerator;
 
 /**
- * Utility class to find and load Rogo data generators.
+ * Utility class to find and load ExamSys data generators.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham

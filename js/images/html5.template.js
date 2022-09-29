@@ -24,7 +24,7 @@
 define(['log'], function(Log) {
   return {
     /**
-     * The location of the combined image relative to the root Rogo directory.
+     * The location of the combined image relative to the root ExamSys directory.
      *
      * @type {String}
      */

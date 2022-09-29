@@ -21,7 +21,7 @@ use LogExtraTime;
 use PaperProperties;
 
 /**
- * Generates Rogo Campuses and Labs.
+ * Generates ExamSys Campuses and Labs.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham
@@ -282,7 +282,7 @@ class labs extends generator
     }
 
     /**
-     * Gets details of all the campuses in Rogo.
+     * Gets details of all the campuses in ExamSys.
      *
      * @return array
      */

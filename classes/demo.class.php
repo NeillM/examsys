@@ -40,7 +40,7 @@ class demo
     }
 
     /**
-     * This is function demo_replace takes a string and obscures it. Useful for demonstrating Rogo
+     * This is function demo_replace takes a string and obscures it. Useful for demonstrating ExamSys
      * at conferences and other meetings.
      *
      * @param string $text the string to be obscured
@@ -86,7 +86,7 @@ class demo
 
     /**
      * This is function demo_replace_number takes a number and obscures it. Useful for
-     * demonstrating Rogo at conferences and other meetings.
+     * demonstrating ExamSys at conferences and other meetings.
      *
      * @param integer $number the number to be obscured
      * @param string $demo_on whether demo mode is on or off
@@ -104,7 +104,7 @@ class demo
 
     /**
      * This is function demo_replace_username takes a username and obscures by replacing characters with hashes.
-     * Useful for demonstrating Rogo at conferences and other meetings.
+     * Useful for demonstrating ExamSys at conferences and other meetings.
      *
      * @param string $username the username to be obscured
      * @param string $demo_on whether demo mode is on or off
@@ -126,7 +126,7 @@ class demo
 
     /**
      * This is function demo_replace_name returns generic names so that real ones can be hidden.
-     * Useful for demonstrating Rogo at conferences and other meetings.
+     * Useful for demonstrating ExamSys at conferences and other meetings.
      *
      * @param string $no the array element number to select for the name
      * @return string the string selected name is returned for display

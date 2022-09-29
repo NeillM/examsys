@@ -92,7 +92,7 @@ class media_handler
     }
 
     /**
-     * Gets information about te file dimensions, and tests if is good for Rogo.
+     * Gets information about te file dimensions, and tests if is good for ExamSys.
      *
      * @param string $fullpath The full path to a file
      * @param int $filetype The type of the file
@@ -305,7 +305,7 @@ class media_handler
     }
 
     /**
-     * Extract files in archive ignoring files not supported by Rogo.
+     * Extract files in archive ignoring files not supported by ExamSys.
      * @param string $fullpath path to archive
      * @return bool
      * @throws directory_not_found

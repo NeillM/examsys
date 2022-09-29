@@ -18,7 +18,7 @@
 namespace testing\datagenerator;
 
 /**
- * Generates Rogo audit_access tables.
+ * Generates ExamSys audit_access tables.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2021 The University of Nottingham

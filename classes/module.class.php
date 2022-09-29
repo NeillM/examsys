@@ -801,7 +801,7 @@ class module
     /**
      * Get the module id given external id
      *
-     * @param string $externalid externalid of the module rogo id
+     * @param string $externalid externalid of the module ExamSys id
      * @param string $externalsys external system source of the module
      * @param object $db database connection
      *
@@ -825,11 +825,11 @@ class module
     }
 
     /**
-     * Compare the modules in the external system and rogo
+     * Compare the modules in the external system and ExamSys
      * @param array $external list of external system modules
      * @param string $sms the external student management system that is the source of the modules
      * @param mysqli $db db connection
-     * @return array list of modules in rogo but not in external system
+     * @return array list of modules in ExamSys but not in external system
      */
     public static function diff_external_modules_to_internal_modules($external, $sms, $db)
     {
@@ -844,7 +844,7 @@ class module
             if (!in_array($externalid, $external)) {
                 $diff[] = $externalid;
             } else {
-                // Restore if deleted in Rogo but found in external list.
+                // Restore if deleted in ExamSys but found in external list.
                 if (!is_null($deleted)) {
                     self::restore_module($db, $id);
                 }
@@ -877,7 +877,7 @@ class module
     /**
      * Restore module from recycle bin
      * @param mysqli $db db connection
-     * @param integer $id rogo id of module
+     * @param integer $id ExamSys id of module
      * @return boolean true on success, false otherwise
      */
     public static function restore_module($db, $id)

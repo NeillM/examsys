@@ -156,7 +156,7 @@ HTML;
 
 
 /**
- * This is function save_objective_mappings it saves mappings to the relationships table in the Rogo database
+ * This is function save_objective_mappings it saves mappings to the relationships table in the ExamSys database
  *
  * @param mysqli          $db           Database link
  * @param string          $modules      List of modules that are being mapped
@@ -349,7 +349,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
 
             $stmt->close();
             if (isset($objsBySession[$thisModuleid]) and count($objsBySession[$thisModuleid]) > 0) {
-                // Get internal objectives from Rogo.
+                // Get internal objectives from ExamSys.
                 $sql = 'SELECT obj_id, objective, sequence FROM objectives WHERE identifier=? AND calendar_year = ? ORDER BY sequence';
                 $stmt = $db->prepare($sql);
                 foreach ($objsBySession[$thisModuleid] as $identifier => $sess) {
@@ -370,7 +370,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
         }
     }
 
-    //START:: get the currently mapped objectives in Rogo.
+    //START:: get the currently mapped objectives in ExamSys.
     $mapped = array();
     if ($questionID != '') {
         $rels = Relationship::find($db, array_keys($original_thisModuleid), $session, $paperID, explode(',', $questionID));
@@ -382,7 +382,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
             echo 'Error: ' . $db->error;
         }
     }
-    //END:: get the currently mapped objetives in Rogo
+    //END:: get the currently mapped objetives in ExamSys
 
     // Get all the objetives
     foreach ($objsBySession as $moduleid => $sessions) {

@@ -17,7 +17,7 @@
 
 /**
  *
- * Rogo Assessment format for import/export of questions.
+ * ExamSys Assessment format for import/export of questions.
  *
  * @author Simon Wilkinson
  * @version 1.0
@@ -486,7 +486,7 @@ class RAF
             $q['score_method'] = 'Mark per Option';
         }
 
-        // The file may have been written in a version of Rogo that did not use rogo_directory classes.
+        // The file may have been written in a version of ExamSys that did not use rogo_directory classes.
         // So we must check and filter the leadin and scenario to clean them up.
         //
         // Regular expression to match the old media directory location.

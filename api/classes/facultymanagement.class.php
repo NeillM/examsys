@@ -51,7 +51,7 @@ class facultymanagement extends \api\abstractmanagement
     /**
      * Create faculty
      * @param array $params faculty creation parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and faculty id
      */
     public function create($params, $userid)
@@ -111,7 +111,7 @@ class facultymanagement extends \api\abstractmanagement
     /**
      * Update faculty
      * @param array $params faculty update parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and faculty id
      */
     public function update($params, $userid)
@@ -169,7 +169,7 @@ class facultymanagement extends \api\abstractmanagement
     /**
      * Delete faculty
      * @param array $parms delete faculty parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array success status and faculty id
      */
     public function delete($params, $userid)

@@ -17,7 +17,7 @@
 
 /**
  *
- * Handles Guest account access in Rogo
+ * Handles Guest account access in ExamSys
  *
  * @author Simon Atack
  * @version 1.0

@@ -17,7 +17,7 @@
 
 /**
  *
- * Handles UoN LTI Integration in Rogo
+ * Handles UoN LTI Integration in ExamSys
  *
  * @author Simon Atack
  * @version 1.0
@@ -38,11 +38,11 @@ class lti_default_integration_extended extends lti_integration
     }
 
     /**
-     * Convert VLE module shortcode into Rogo moduleid
+     * Convert VLE module shortcode into ExamSys moduleid
      * @param mysqli $mysqli db connection
      * @param string $moduleshortcode VLE module shortcode
      * @param string $course_title VLE module title
-     * @return array rogo module information
+     * @return array ExamSys module information
      */
     public function module_code_translate($mysqli, $c_internal_id, $course_title = '')
     {
@@ -50,7 +50,7 @@ class lti_default_integration_extended extends lti_integration
         // of an array containing string if Manual or SMS for sms ones,
         // the module code,
         // a campus code (text) ,
-        // school as a string (gets lookedup against rogo to get id later,
+        // school as a string (gets lookedup against ExamSys to get id later,
         // a 1 for self reg enable [0 for disable]
         // and the course title.
         return array(array('Manual', $c_internal_id, 'CampusTODO', 'UNKNOWN School', 0, "MISSING:$course_title"));
@@ -67,7 +67,7 @@ class lti_default_integration_extended extends lti_integration
     }
 
     /**
-     * Translate source id in rogo external id.
+     * Translate source id in ExamSys external id.
      * @param string $sourceid source id from VLE
      * @return mixed module external id or null
      */

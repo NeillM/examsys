@@ -43,7 +43,7 @@ class npm_utils
     {
         // We are going to chage the working directory and want to reset it later.
         $workingdir = getcwd();
-        // Change to the root Rogo directory.
+        // Change to the root ExamSys directory.
         chdir(__DIR__ . '/..');
         self::check_for_npm();
         if ($method === self::UPDATE) {

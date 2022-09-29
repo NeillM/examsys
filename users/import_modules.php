@@ -72,7 +72,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
         <td class="dialog_body">
 
               <?php
-                // Get a list of modules held by Rogo.
+                // Get a list of modules held by ExamSys.
                 $module_list = array();
                 $result = $mysqli->prepare('SELECT DISTINCT id, moduleid FROM modules');
                 $result->execute();

@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A Class to be used as a base class for Rogo Singleton utility classes.
+ * A Class to be used as a base class for ExamSys Singleton utility classes.
  * Also acts as a static wrapper to dynamic classes to enable unit testing
  * of statistic called code
  *

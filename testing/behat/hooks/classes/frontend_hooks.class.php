@@ -38,7 +38,7 @@ use Config as RogoConfig;
 use Exception;
 
 /**
- * This class should define all the pre and post hooks for Rogo behat tests.
+ * This class should define all the pre and post hooks for ExamSys behat tests.
  *
  * This includes:
  * - cleaning up the database
@@ -59,7 +59,7 @@ trait frontend_hooks
     /** Stores the dataloader used to initilise the data the  */
     private static $dataloader;
 
-    /** @var string the name of the main Rogo window. */
+    /** @var string the name of the main ExamSys window. */
     protected $mainwindow;
 
     /** @var int The timestamp when the suite started running. */
@@ -77,7 +77,7 @@ trait frontend_hooks
         $config = RogoConfig::get_instance();
         // Check version behat built for matches code version.
         if (environment::upgrade_needed()) {
-            $message = 'The version of the Rogo that the Behat database was built for does not match the version of the Rogo code (' . $config->getxml('version') . ')';
+            $message = 'The version of the ExamSys that the Behat database was built for does not match the version of the ExamSys code (' . $config->getxml('version') . ')';
             throw new Exception($message);
         }
         self::$default_config = clone($config);
@@ -235,7 +235,7 @@ trait frontend_hooks
     }
 
     /**
-     * Cleanup up Rogo after a scenario has been run.
+     * Cleanup up ExamSys after a scenario has been run.
      *
      * @AfterScenario
      */
@@ -278,7 +278,7 @@ trait frontend_hooks
     }
 
     /**
-     * Clean up Rogo after a feature file has been run.
+     * Clean up ExamSys after a feature file has been run.
      *
      * @AfterFeature
      */
@@ -293,7 +293,7 @@ trait frontend_hooks
     }
 
     /**
-     * Clean up Rogo after the suite has finished running.
+     * Clean up ExamSys after the suite has finished running.
      *
      * @AfterSuite
      */

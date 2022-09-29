@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file is used to install Rogo.
+ * This file is used to install ExamSys.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2017 The University of Nottingham
@@ -29,13 +29,13 @@ if (PHP_SAPI != 'cli') {
 
 set_time_limit(0);
 
-$error = PHP_EOL . 'For details about installing Rogo visit: ' . PHP_EOL . 'https://rogo-eassessment-docs.atlassian.net/wiki/pages/viewpage.action?pageId=491546';
+$error = PHP_EOL . 'For details about installing ExamSys visit: ' . PHP_EOL . 'https://rogo-eassessment-docs.atlassian.net/wiki/pages/viewpage.action?pageId=491546';
 
 $language = 'en';
 
 $rogo_path = dirname(__DIR__);
 if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
-    echo 'Rogo is not installed.' . $error;
+    echo 'ExamSys is not installed.' . $error;
     exit(0);
 }
 

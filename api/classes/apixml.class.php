@@ -85,7 +85,7 @@ class apixml extends \api\apiabstract
      * @param array $fields expected fields
      * @param array $actions possible actions
      * @param array $perms user permissions
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return string - successful operation response or error response
      */
     public function parse($tasktype, $fields, $actions, $perms, $userid)

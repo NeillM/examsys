@@ -17,7 +17,7 @@
 
 /**
  * An exception to let a programmer know they have done something wrong
- * while coding for Rogo.
+ * while coding for ExamSys.
  *
  * @author Neill Magill
  * @copyright Copyright (c) 2015 The University of Nottingham

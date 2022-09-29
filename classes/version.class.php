@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Rogo version helper functions
+ * ExamSys version helper functions
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  */
@@ -27,7 +27,7 @@
 class version
 {
     /**
-     * Rogo version format
+     * ExamSys version format
      * @var string
      */
     public const VERSION_FORMAT = '/^(?P<release>[0-9]{1,3}).(?P<major>[0-9]{1,3}).(?P<minor>[0-9]{1,3})$/';

@@ -19,7 +19,7 @@ require '../lang/' . $language . '/include/common.php';
 require '../lang/' . $language . '/question/sct_shared.php';
 
 $string['notallowed'] = 'Access to this paper is not currently allowed.';
-$string['authfailed'] = 'Authentication with Rogo has failed.';
+$string['authfailed'] = 'Authentication with ExamSys has failed.';
 $string['sctreview'] = 'SCT Review';
 $string['name'] = 'Name';
 $string['email'] = 'Email';

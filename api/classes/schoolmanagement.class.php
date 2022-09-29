@@ -52,7 +52,7 @@ class schoolmanagement extends \api\abstractmanagement
     /**
      * Create school
      * @param array $params school creation parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and school id
      */
     public function create($params, $userid)
@@ -121,7 +121,7 @@ class schoolmanagement extends \api\abstractmanagement
     /**
      * Update school
      * @param array $params school update parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return - success status and school id
      */
     public function update($params, $userid)
@@ -215,7 +215,7 @@ class schoolmanagement extends \api\abstractmanagement
     /**
      * Delete school
      * @param array $parms delete school parameters
-     * @param integer $userid rogo user id linked to web service client
+     * @param integer $userid ExamSys user id linked to web service client
      * @return array success status and school id
      */
     public function delete($params, $userid)

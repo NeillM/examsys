@@ -84,7 +84,7 @@ class NetworkUtils
     }
 
     /**
-     * Get the IP address of the web server Rogo is running on.
+     * Get the IP address of the web server ExamSys is running on.
      *
      * @return string The IP address of the webserver.
      */

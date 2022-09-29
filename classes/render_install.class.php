@@ -38,9 +38,9 @@ class render_install extends render
      * @param string $template The template filename
      * @param string $additionaljs additional javascript required
      * @param string $additionalcss additional css required
-     * @param string $path rogo root path
-     * @param string $charset rogo display charset
-     * @param string $language rogo display language
+     * @param string $path ExamSys root path
+     * @param string $charset ExamSys display charset
+     * @param string $language ExamSys display language
      */
     public function render(
         $data,

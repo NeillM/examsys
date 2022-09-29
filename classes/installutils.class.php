@@ -690,7 +690,7 @@ class InstallUtils
     }
 
     /**
-     * Load default data needed for rogo to function
+     * Load default data needed for ExamSys to function
      */
     public static function loadData()
     {
@@ -1633,7 +1633,7 @@ class InstallUtils
     }
 
     /**
-     * Creates the default set of faculties, schools and modules in the Rogo database.
+     * Creates the default set of faculties, schools and modules in the ExamSys database.
      *
      * @return void
      */
@@ -1736,7 +1736,7 @@ class InstallUtils
     }
 
     /**
-     * Creates the deafult Rogo users in the database:
+     * Creates the deafult ExamSys users in the database:
      * - The system admin
      * - The cron user
      * - 100 guest accounts
@@ -1921,7 +1921,7 @@ class InstallUtils
     }
 
     /**
-     * Ensures that the rogo user directories are created.
+     * Ensures that the ExamSys user directories are created.
      */
     public static function createDirectories()
     {

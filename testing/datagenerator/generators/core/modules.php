@@ -22,7 +22,7 @@ use yearutils;
 use UserUtils;
 
 /**
- * Generates Rogo module.
+ * Generates ExamSys module.
  *
  * @author Yijun Xue <yijun.xue@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham

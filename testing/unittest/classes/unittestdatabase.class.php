@@ -95,7 +95,7 @@ abstract class unittestdatabase extends TestCase
      */
     public $faculty;
 
-    /** The name of the Rogo data directory in the virtual file system. */
+    /** The name of the ExamSys data directory in the virtual file system. */
     public const DATA_DIRECTORY = 'data';
 
     /**

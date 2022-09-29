@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Utility class to get information about Rogo the staff help file directory.
+ * Utility class to get information about ExamSys the staff help file directory.
  *
  * @author Neill Magill
  * @copyright Copyright (c) 2016 The University of Nottingham
