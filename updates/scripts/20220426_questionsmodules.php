@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.5.0') and !$updater_utils->has_updated('ROGO-3233')) {
+if ($updater_utils->check_version('7.6.0') and !$updater_utils->has_updated('ROGO-3233')) {
     if ($updater_utils->foreignKeyExists('questions_modules', 'q_id', 'questions', 'q_id', 'questions_modules_fk1') === 0) {
         $sql1 = 'ALTER TABLE questions_modules 
                  ADD CONSTRAINT `questions_modules_fk1` 

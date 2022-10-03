@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-if ($updater_utils->check_version('7.5.0')) {
+if ($updater_utils->check_version('7.6.0')) {
     if (!$updater_utils->has_updated('ROGO-2551')) {
         $updater_utils->execute_query('SET foreign_key_checks = 0', false);
         $collation = $configObject->get('cfg_db_collation');
