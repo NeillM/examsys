@@ -235,10 +235,19 @@ class UpdaterUtils
     ): bool {
         $result = $this->mysqli->prepare(
             'SELECT count(*)
-            FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-            WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ? AND CONSTRAINT_NAME = ? AND REFERENCED_TABLE_NAME = ? AND REFERENCED_COLUMN_NAME = ?'
+                FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+                WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ? AND CONSTRAINT_NAME = ?
+                AND REFERENCED_TABLE_NAME = ? AND REFERENCED_COLUMN_NAME = ?'
         );
-        $result->bind_param('ssssss', $this->db_name, $tablename, $columnname, $keyname, $ref_tablename, $ref_columnname);
+        $result->bind_param(
+            'ssssss',
+            $this->db_name,
+            $tablename,
+            $columnname,
+            $keyname,
+            $ref_tablename,
+            $ref_columnname
+        );
         $result->execute();
         $result->bind_result($count);
         $result->fetch();
