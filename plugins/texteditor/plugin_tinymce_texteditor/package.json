@@ -8,11 +8,11 @@
     "url": "https://bitbucket.org/uonadmin/maths-equation-editor"
   },
   "bugs": {
-    "url": "https://rogo-eassessment.atlassian.net"
+    "url": "https://examsys.atlassian.net"
   },
   "author": "University of Nottingham",
   "license": "GPL-3.0",
-  "homepage": "http://rogo-oss.nottingham.ac.uk/",
+  "homepage": "http://examsys-oss.nottingham.ac.uk/",
   "dependencies": {
     "tinymce": "^5.7.1"
   }
