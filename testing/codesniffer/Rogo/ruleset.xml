@@ -65,6 +65,8 @@
         <type>error</type>
     </rule>
     <rule ref="Rogo.PHP.Param">
+        <!-- Exclude the param class which is the only place that should access the globals. -->
+        <exclude-pattern>*/classes/param.class.php</exclude-pattern>
         <type>warning</type>
     </rule>
     <rule ref="Rogo.Classes.AutoloadFilename">
