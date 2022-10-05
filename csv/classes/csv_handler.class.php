@@ -50,7 +50,7 @@ class csv_handler extends \file_handler
     public static function move_upload_to_temp($from, $to)
     {
         $langpack = new \langpack();
-        $string = $langpack->get_strings(parent::langcomponent, array('nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue'));
+        $string = $langpack->get_strings(parent::LANGCOMPONENT, array('nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue'));
         if ($from['name'] == '') {
             throw new csv_load_exception($string['nofilename']);
         }

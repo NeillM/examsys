@@ -32,7 +32,7 @@ class npm_utils
     /**
      * Language pack component.
      */
-    public const langcomponent = 'classes/npmutils';
+    public const LANGCOMPONENT = 'classes/npmutils';
 
     /**
      * Ensures that npm is installed, uptodate and has installed all the projects dependancies.
@@ -64,7 +64,7 @@ class npm_utils
         $langpack = new langpack();
         exec('npm -v', $output, $statuscode);
         if ($statuscode != 0) {
-            throw new Exception($langpack->get_string(self::langcomponent, 'npmmissing'));
+            throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'npmmissing'));
         }
     }
 
@@ -82,11 +82,11 @@ class npm_utils
         }
         passthru("npm install $devflag", $statuscode);
         if ($statuscode != 0) {
-            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotinstallnpm'));
+            throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'couldnotinstallnpm'));
         }
         passthru('npm install --prefix plugins/texteditor/plugin_tinymce_texteditor', $statuscode);
         if ($statuscode != 0) {
-            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotinstallnpmtiny'));
+            throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'couldnotinstallnpmtiny'));
         }
     }
 
@@ -100,11 +100,11 @@ class npm_utils
         $langpack = new langpack();
         passthru('npm update', $statuscode);
         if ($statuscode != 0) {
-            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotupdatenpm'));
+            throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'couldnotupdatenpm'));
         }
         passthru('npm update --prefix plugins/texteditor/plugin_tinymce_texteditor', $statuscode);
         if ($statuscode != 0) {
-            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotupdatenpmtiny'));
+            throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'couldnotupdatenpmtiny'));
         }
     }
 }

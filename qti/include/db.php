@@ -210,25 +210,25 @@ class Database
         return '';
     }
 
-    public function _BuildQuery()
+    public function BuildQuery()
     {
         if ($this->type == 'SELECT') {
-            $this->_BuildQuerySelect();
+            $this->BuildQuerySelect();
         }
         if ($this->type == 'UPDATE') {
-            $this->_BuildQueryUpdate();
+            $this->BuildQueryUpdate();
         }
         if ($this->type == 'INSERT') {
-            $this->_BuildQueryInsert();
+            $this->BuildQueryInsert();
         }
         if ($this->type == 'REPLACE') {
-            $this->_BuildQueryReplace();
+            $this->BuildQueryReplace();
         }
 
         //echo "<br>" . $this->query . "<br>";
     }
 
-    public function _BuildQuerySelect()
+    public function BuildQuerySelect()
     {
         $qry = 'SELECT ';
 
@@ -248,7 +248,7 @@ class Database
             $qry .= sprintf(' INNER JOIN %s AS %s ON %s.%s = %s.%s ', $innerjoin['table'], $innerjoin['alias'], $this->table_alias, $innerjoin['sk'], $innerjoin['alias'], $innerjoin['dk']);
         }
 
-        $qry .= $this->_BuildWhere();
+        $qry .= $this->BuildWhere();
 
         if (count($this->groups) > 0) {
             $qry .= ' GROUP BY ' . implode(', ', $this->groups);
@@ -276,7 +276,7 @@ class Database
         $this->query = $qry;
     }
 
-    public function _BuildWhere()
+    public function BuildWhere()
     {
         $qry = '';
 
@@ -303,15 +303,15 @@ class Database
         return $qry;
     }
 
-    public function _BuildQueryUpdate()
+    public function BuildQueryUpdate()
     {
     }
 
-    public function _BuildQueryInsert()
+    public function BuildQueryInsert()
     {
     }
 
-    public function _BuildQueryReplace()
+    public function BuildQueryReplace()
     {
     }
 
@@ -320,7 +320,7 @@ class Database
         $this->rawquery = $qry;
     }
 
-    public function _BindWhere($stmt)
+    public function BindWhere($stmt)
     {
         if (count($this->wheres) == 0) {
             return;
@@ -371,11 +371,11 @@ class Database
         @call_user_func_array('mysqli_stmt_bind_param', $params);
     }
 
-    public function _BindSet()
+    public function BindSet()
     {
     }
 
-    public function _BindInsert()
+    public function BindInsert()
     {
     }
 
@@ -387,12 +387,12 @@ class Database
     {
         global $mysqli;
 
-        $this->_BuildQuery();
+        $this->BuildQuery();
 
         //echo "QRY : " . $this->query . "<BR>";
         $stmt = $mysqli->prepare($this->query);
 
-        $this->_BindWhere($stmt);
+        $this->BindWhere($stmt);
 
         $stmt->execute();
 
@@ -420,12 +420,12 @@ class Database
     {
         global $mysqli;
 
-        $this->_BuildQuery();
+        $this->BuildQuery();
 
         //echo "QRY : " . $this->query . "<BR>";
         $stmt = $mysqli->prepare($this->query);
 
-        $this->_BindWhere($stmt);
+        $this->BindWhere($stmt);
 
         $stmt->execute();
 

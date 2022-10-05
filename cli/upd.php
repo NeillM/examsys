@@ -215,6 +215,7 @@ if ($update_langpacks) {
         switch ($e->getMessage()) {
             case 'CANNOT_DOWNLOAD_XML':
                 cli_utils::prompt($string['cannotdownloadxml']);
+                // This means that we also did not download the language files.
             case 'CANNOT_DOWNLOAD_ZIP':
                 cli_utils::prompt($string['cannotdownloadzip']);
                 break;

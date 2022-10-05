@@ -35,7 +35,7 @@ class composer_utils
     /**
      * Language pack component.
      */
-    public const langcomponent = 'classes/composerutils';
+    public const LANGCOMPONENT = 'classes/composerutils';
 
     /**
      * Ensures that composer is installed, uptodate and has installed all the projects dependancies.
@@ -69,13 +69,13 @@ class composer_utils
             // Composer needs to be installed.
             passthru('curl http://getcomposer.org/installer | php', $statuscode);
             if ($statuscode != 0) {
-                throw new Exception($langpack->get_string(self::langcomponent, 'cannotinstall'));
+                throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'cannotinstall'));
             }
         } else {
             // Composer needs to be updated.
             passthru('php composer.phar self-update', $statuscode);
             if ($statuscode != 0) {
-                throw new Exception($langpack->get_string(self::langcomponent, 'cannotupdate'));
+                throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'cannotupdate'));
             }
         }
     }
@@ -94,7 +94,7 @@ class composer_utils
         }
         passthru("php composer.phar install $devflag", $statuscode);
         if ($statuscode != 0) {
-            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotinstallcomp'));
+            throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'couldnotinstallcomp'));
         }
     }
 
@@ -112,7 +112,7 @@ class composer_utils
         }
         passthru("php composer.phar update $devflag", $statuscode);
         if ($statuscode != 0) {
-            throw new Exception($langpack->get_string(self::langcomponent, 'couldnotupdatecomp'));
+            throw new Exception($langpack->get_string(self::LANGCOMPONENT, 'couldnotupdatecomp'));
         }
     }
 }

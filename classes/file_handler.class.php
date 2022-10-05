@@ -28,7 +28,7 @@ abstract class file_handler
     /**
      * Language pack component.
      */
-    public const langcomponent = 'classes/filehandler';
+    public const LANGCOMPONENT = 'classes/filehandler';
 
     /**
      * The path to the file.
@@ -127,7 +127,7 @@ abstract class file_handler
         $this->filename = basename($file);
         $fullpath = realpath($directory);
         $langpack = new \langpack();
-        $this->string = $langpack->get_all_strings(self::langcomponent);
+        $this->string = $langpack->get_all_strings(self::LANGCOMPONENT);
         if ($fullpath === false) {
             throw new file_load_exception($file . $this->string['invalidpath']);
         }

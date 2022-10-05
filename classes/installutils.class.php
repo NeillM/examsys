@@ -528,6 +528,7 @@ class InstallUtils
                 switch ($e->getMessage()) {
                     case 'CANNOT_DOWNLOAD_XML':
                         self::logWarning(array('600' => $string['cannotdownloadxml']));
+                        // This means that we also did not download the language files.
                     case 'CANNOT_DOWNLOAD_ZIP':
                         self::logWarning(array('601' => $string['cannotdownloadzip']));
                         break;
