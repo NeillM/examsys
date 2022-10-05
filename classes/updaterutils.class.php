@@ -227,17 +227,17 @@ class UpdaterUtils
      * @return boolean - if the key found
      */
     public function foreignKeyExists(
-            string $tablename,
-            string $columnname,
-            string $ref_tablename,
-            string $ref_columnname,
-            string $keyname
+        string $tablename,
+        string $columnname,
+        string $ref_tablename,
+        string $ref_columnname,
+        string $keyname
     ): bool {
-        $result = $this->mysqli->prepare("
-            SELECT count(*)
+        $result = $this->mysqli->prepare(
+            'SELECT count(*)
             FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-            WHERE TABLE_SCHEMA  =? AND TABLE_NAME = ? AND  COLUMN_NAME = ?  AND CONSTRAINT_NAME = ? AND REFERENCED_TABLE_NAME = ? AND REFERENCED_COLUMN_NAME = ? 
-        ");
+            WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? AND COLUMN_NAME = ? AND CONSTRAINT_NAME = ? AND REFERENCED_TABLE_NAME = ? AND REFERENCED_COLUMN_NAME = ?'
+        );
         $result->bind_param('ssssss', $this->db_name, $tablename, $columnname, $keyname, $ref_tablename, $ref_columnname);
         $result->execute();
         $result->bind_result($count);
