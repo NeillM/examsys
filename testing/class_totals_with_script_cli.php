@@ -26,9 +26,10 @@
  * @package
  */
 
+use testing\class_totals;
+
 include_once dirname(__DIR__) . '/include/load_config.php';
 $language = LangUtils::getLang($cfg_web_root);
-require_once 'classes/class_totals.php';
 
 $cfg_cron_user = $configObject->get('cfg_cron_user');
 $cfg_cron_passwd = $configObject->get('cfg_cron_passwd');

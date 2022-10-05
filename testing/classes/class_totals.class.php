@@ -24,6 +24,18 @@
  * @package
  */
 
+namespace testing;
+
+use ClassTotals;
+use LogMetadata;
+use Paper_utils;
+use PaperProperties;
+use QuestionStatus;
+use QuestionUtils;
+
+// This is kinda rubbish - but it lets it autoload properly on the pages it was used on.
+global $string, $cfg_web_root, $language;
+
 require_once dirname(__DIR__, 2) . '/include/finish_functions.inc';
 require_once dirname(__DIR__, 2) . '/plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
 
@@ -64,7 +76,7 @@ class class_totals
      * Function to get all papers completed in time frame to scrape for marks,
      * and then compare the class_totals and finish reports.
      *
-     * @param mysqli $mysqli - database object
+     * @param \mysqli $mysqli - database object
      * @param int $userid - the user running the script
      * @param string $start_dateSQL - start date range of papers checked
      * @param string $end_dateSQL - end date range of papers checked
