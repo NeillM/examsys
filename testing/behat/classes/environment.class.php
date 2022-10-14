@@ -151,6 +151,7 @@ class environment
             $return = true;
         }
         curl_close($curl);
+        unset($curl);
         return $return;
     }
 

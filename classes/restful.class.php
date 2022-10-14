@@ -89,6 +89,7 @@ class restful
             $response = '';
         }
         curl_close($curl);
+        unset($curl);
         return $response;
     }
 
