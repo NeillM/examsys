@@ -42,6 +42,7 @@ class PaperList implements \Iterator
         $this->papers[] = $paper;
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @see \Iterator::current()
      * @link http://php.net/manual/en/iterator.current.php
@@ -61,6 +62,7 @@ class PaperList implements \Iterator
         return $this->papers;
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @see \Iterator::key()
      * @link http://php.net/manual/en/iterator.key.php

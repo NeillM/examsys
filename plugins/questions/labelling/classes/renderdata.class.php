@@ -183,7 +183,7 @@ class renderdata extends \questiondata
         $this->mediaheight = $tmp_height;
         $this->tmpcorrect = $tmp_correct;
         $this->marks = $marks;
-        $this->useranswer = trim($useranswer);
+        $this->useranswer = is_null($useranswer) ? '' : trim($useranswer);
         $this->markscorrect = $option['markscorrect'];
         $this->marksincorrect = $option['marksincorrect'];
     }

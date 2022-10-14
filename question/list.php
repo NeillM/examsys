@@ -355,7 +355,7 @@ foreach ($table_order as $display => $col_width) {
             echo ' extended-leadin" data-extended-leadin="' . htmlspecialchars($fullText);
         }
         echo '">';
-        if (trim($theme) != '') {
+        if (!is_null($theme) and trim($theme) != '') {
             echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         //sl change this from echo $leadin to below

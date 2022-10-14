@@ -93,7 +93,7 @@ class BLTI
             $result->execute();
             $result->store_result();
             $num_rows = $result->num_rows;
-      
+
             if ($num_rows != 1) {
                 $this->message = 'Your consumer is not authorized oauth_consumer_key=' . $oauth_consumer_key;
                 return;
@@ -564,6 +564,7 @@ function sendXmlOverPost($url, $xml, $header)
     $response['result'] = curl_exec($ch);
     $response['error'] = curl_error($ch);
     curl_close($ch);
+    unset($curl);
     return $response;
 }
 

@@ -109,5 +109,6 @@ if (mb_strlen($median) > 2) {
 ImageLine($Image, $g_x1, $g_y1, $g_x2, $g_y1, $dkgrey);
 ImageLine($Image, $g_x1, $g_y1, $g_x1, $g_y2, $dkgrey);
 
+header('Content-Type: image/png');
 ImagePNG($Image);
 ImageDestroy($Image);
