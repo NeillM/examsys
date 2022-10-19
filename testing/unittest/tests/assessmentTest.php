@@ -121,6 +121,79 @@ class assessmenttest extends unittestdatabase
     }
 
     /**
+     * Tests that creation handles dates properly.
+     *
+     * @param $start
+     * @param $end
+     * @param $timezone
+     * @param $expectedstart
+     * @param $expectedend
+     * @return void
+     * @dataProvider createDateData
+     */
+    public function testCreateDates($start, $end, $timezone, $expectedstart, $expectedend)
+    {
+        $assessment = new assessment($this->db, $this->config);
+        $paperowner = $this->admin['id'];
+        $modules = array($this->module);
+        $pid = $assessment->create(
+            'Test formative',
+            0,
+            $paperowner,
+            $start,
+            $end,
+            '1',
+            60,
+            2016,
+            $modules,
+            $timezone
+        );
+        $this->assertIsInt($pid);
+        // Test properties table is as expected.
+        $queryTable = $this->query(array('columns' => array('paper_title', 'start_date', 'end_date', 'exam_duration',
+            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'), 'table' => 'properties'));
+        $expectedTable = array(
+            0 => array(
+                'paper_title' => 'Test formative',
+                'start_date' => $expectedstart,
+                'end_date' => $expectedend,
+                'exam_duration' => 60,
+                'calendar_year' => 2016,
+                'timezone' => $timezone,
+                'paper_ownerID' => $this->admin['id'],
+                'labs' => '1',
+                'paper_type' => '0'
+            )
+        );
+        $this->assertEquals($expectedTable, $queryTable);
+    }
+
+    /**
+     * Data provider for testCreateDates.
+     *
+     * @return array[]
+     */
+    public function createDateData(): array
+    {
+        return [
+            'UK' => [
+                '2022-07-19 00:00:00',
+                '2022-12-19 00:00:00',
+                'Europe/London',
+                strtotime('2022-07-19 00:00:00 Europe/London'),
+                strtotime('2022-12-19 00:00:00 Europe/London'),
+            ],
+            'CN' => [
+                '2022-07-19 00:00:00',
+                '2022-12-19 00:00:00',
+                'Asia/Hong_Kong',
+                strtotime('2022-07-19 00:00:00 Asia/Hong_Kong'),
+                strtotime('2022-12-19 00:00:00 Asia/Hong_Kong'),
+            ],
+        ];
+    }
+
+    /**
      * Test unique paper title on paper creation
      * @group assessment
      */
