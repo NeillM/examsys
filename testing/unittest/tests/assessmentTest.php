@@ -355,7 +355,7 @@ class assessmenttest extends unittestdatabase
         $assessment = new assessment($this->db, $this->config);
         $paperowner = $this->admin['id'];
         $startdate = '2016-01-25 09:00:00';
-        $enddate = '2016-01-25 10:30:00';
+        $enddate = '2016-07-25 10:30:00';
         $labs = '1';
         $duration = 90;
         $session = 2016;
@@ -371,20 +371,21 @@ class assessmenttest extends unittestdatabase
         $expectedTable = array(
             0 => array(
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
-                'end_date' => strtotime('2016-01-25 10:30:00 Europe/London'),
+                'end_date' => strtotime('2016-07-25 10:30:00 Europe/London'),
                 'exam_duration' => 779
             )
         );
         $this->assertEquals($expectedTable, $queryTable);
         // Test update summative max duration too small - SUCCESS
         $duration = -1;
+        $timezone = 'Asia/Hong_Kong';
         $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test properties table is as expected.
         $queryTable = $this->query(array('columns' => array('start_date', 'end_date', 'exam_duration'), 'table' => 'properties'));
         $expectedTable = array(
             0 => array(
-                'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
-                'end_date' => strtotime('2016-01-25 10:30:00 Europe/London'),
+                'start_date' => strtotime('2016-01-25 09:00:00 Asia/Hong_Kong'),
+                'end_date' => strtotime('2016-07-25 10:30:00 Asia/Hong_Kong'),
                 'exam_duration' => 0
             )
         );
