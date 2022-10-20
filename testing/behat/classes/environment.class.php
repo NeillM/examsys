@@ -42,6 +42,26 @@ class environment
      */
     public static function build_config()
     {
+        $config = Config::get_instance();
+
+        // We allow Selenium to be configured via the behat.xml config file.
+        $seleniumconfig = array(
+            // Allow the browser used to be configured.
+            'browser' => $config->get('cfg_behat_browser') ?? 'chrome',
+            'capabilities' => array(
+                'extra_capabilities' => array(
+                    'chromeOptions' => array(
+                        'w3c' => false,
+                    ),
+                ),
+            ),
+        );
+
+        if ($wd_host = $config->get('cfg_behat_wd_host')) {
+            // We should allow some extra configuration of the location of selenium.
+            $seleniumconfig['wd_host'] = $wd_host;
+        }
+
         $basedir = self::get_basedir();
 
         $config = array(
@@ -84,16 +104,7 @@ class environment
                     'Behat\MinkExtension' => array(
                         'base_url' => self::get_behat_website(),
                         'goutte' => null,
-                        'selenium2' => array(
-                            'browser' => 'chrome',
-                            'capabilities' => array(
-                                'extra_capabilities' => array(
-                                    'chromeOptions' => array(
-                                        'w3c' => false,
-                                    ),
-                                ),
-                            ),
-                        ),
+                        'selenium2' => $seleniumconfig,
                     ),
                 ),
             ),

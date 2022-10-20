@@ -8,4 +8,14 @@
   <faildump></faildump>
   <db_engine></db_engine>
   <db_help_engine></db_help_engine>
+  <!--
+    It is also possible to define the browser that you wish the tests to be run with.
+    It will default to chrome.
+  -->
+  <!-- <browser>chrome</browser> -->
+  <!--
+    If you are running via examsys-docker you will want to uncomment the
+    wd_host setting, so that the selenium server will be used found.
+  -->
+  <!-- <wd_host>selenium:4444/wd/hub</wd_host> -->
 </rogo>
