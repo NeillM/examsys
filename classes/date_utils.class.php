@@ -222,7 +222,7 @@ class date_utils
     }
 
     /**
-     * Get the date time object from ExamSys date time selctors
+     * Get the date time object from ExamSys date time selectors
      *
      * @param integer $year year set
      * @param integer $month month set
@@ -241,7 +241,6 @@ class date_utils
         int $minute,
         string $timezone
     ): DateTime {
-        $utc_timezone = new DateTimeZone('UTC');
         $target_timezone = new DateTimeZone($timezone);
         $datetime = new DateTime('now', $target_timezone);
         $datetime->setDate(
@@ -253,7 +252,6 @@ class date_utils
             $hour,
             $minute
         );
-        $datetime->setTimezone($utc_timezone);
         return $datetime;
     }
 

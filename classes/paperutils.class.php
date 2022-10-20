@@ -701,6 +701,7 @@ class PaperUtils
         }
 
         $paper_no = 0;
+        $now = time();
         $paper_query = $db->prepare('
             SELECT
                 property_id,
@@ -725,9 +726,9 @@ class PaperUtils
             AND
                 deleted IS NULL
             AND
-                start_date < UNIX_TIMESTAMP() + 900
+                start_date < ' . ($now + 900) . '
             AND
-                end_date > UNIX_TIMESTAMP() ' . $exclude_sql . '
+                end_date > ' . $now . ' ' . $exclude_sql . '
             GROUP BY
                 calendar_year,
                 paper_type,
@@ -924,10 +925,11 @@ class PaperUtils
      */
     public static function paper_available_in_lab_now($lab, $db)
     {
+        $now = time();
         $results = $db->prepare("SELECT NULL 
       FROM properties 
-      WHERE start_date < UNIX_TIMESTAMP() + 900
-      AND end_date > UNIX_TIMESTAMP()
+      WHERE start_date < $now + 900
+      AND end_date > $now
       AND paper_type IN ('1','2')
       AND labs REGEXP ?");
         $lab_regexp = '(^|,)(' . $lab . ')(,|$)';

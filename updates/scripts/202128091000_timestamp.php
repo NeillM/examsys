@@ -108,15 +108,18 @@ if ($updater_utils->check_version('7.6.0')) {
         $query->bind_result($property_id, $start_date, $end_date, $deleted, $created, $retired, $timezone);
         $query->execute();
 
+        // ExamSys makes the assumption that the database timezone is the same as the one it is configured for.
+        $db_tz = new DateTimeZone($configObject->get('cfg_timezone'));
+
         while ($query->fetch()) {
             $insertid = $property_id;
             $format = 'Y-m-d H:i:s';
             $tz = new DateTimeZone($timezone);
-            $insertstart = is_null($start_date) ? null : DateTime::createFromFormat($format, $start_date, $tz)->getTimestamp();
-            $insertend = is_null($end_date) ? null : DateTime::createFromFormat($format, $end_date, $tz)->getTimestamp();
-            $insertdeleted = is_null($deleted) ? null : DateTime::createFromFormat($format, $deleted, $tz)->getTimestamp();
-            $insertcreated = is_null($created) ? null : DateTime::createFromFormat($format, $created, $tz)->getTimestamp();
-            $insertretired = is_null($retired) ? null : DateTime::createFromFormat($format, $retired, $tz)->getTimestamp();
+            $insertstart = is_null($start_date) ? null : DateTime::createFromFormat($format, $start_date, $db_tz)->setTimezone($tz)->getTimestamp();
+            $insertend = is_null($end_date) ? null : DateTime::createFromFormat($format, $end_date, $db_tz)->setTimezone($tz)->getTimestamp();
+            $insertdeleted = is_null($deleted) ? null : DateTime::createFromFormat($format, $deleted, $db_tz)->setTimezone($tz)->getTimestamp();
+            $insertcreated = is_null($created) ? null : DateTime::createFromFormat($format, $created, $db_tz)->setTimezone($tz)->getTimestamp();
+            $insertretired = is_null($retired) ? null : DateTime::createFromFormat($format, $retired, $db_tz)->setTimezone($tz)->getTimestamp();
             $insertquery->execute();
         }
 
