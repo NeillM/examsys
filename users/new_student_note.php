@@ -93,6 +93,7 @@ if (isset($_GET['paperID'])) {
       echo $string['papername'] . " <select name=\"paperID\" id=\"paperID\" required>\n<option value=\"\"></option>\n";
     if (count($module_IDs) > 0) {
         // Look up papers that have been live in the last 28 days.
+        $now = time();
         $result = $mysqli->prepare('
             SELECT DISTINCT
                 properties.property_id,
@@ -105,7 +106,7 @@ if (isset($_GET['paperID'])) {
             AND
                 idMod IN (' . implode(',', $module_IDs) . ')
             AND
-                end_date > UNIX_TIMESTAMP() - 2419200
+                end_date > ' . ($now - 2419200) . '
             AND
                 deleted IS NULL
             ORDER BY

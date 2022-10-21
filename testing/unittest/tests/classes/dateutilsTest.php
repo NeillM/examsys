@@ -136,7 +136,8 @@ class DateUtilsTest extends unittest
      * @param string $hour
      * @param string $minute
      * @param string $timezone
-     * @param string $expected
+     * @param string $expectedstring
+     * @param int $expectedtimestamp
      * @dataProvider dataDateTimeFromSelection
      * @group dbutils
      */
@@ -147,18 +148,24 @@ class DateUtilsTest extends unittest
         string $hour,
         string $minute,
         string $timezone,
-        string $expected
+        string $expectedstring,
+        int $expectedtimestamp
     ): void {
+        $date = date_utils::getDateTimeFromSelection(
+            $year,
+            $month,
+            $day,
+            $hour,
+            $minute,
+            $timezone
+        );
         $this->assertEquals(
-            $expected,
-            date_utils::getDateTimeFromSelection(
-                $year,
-                $month,
-                $day,
-                $hour,
-                $minute,
-                $timezone
-            )->format('Y-m-d H:i:s')
+            $expectedstring,
+            $date->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $expectedtimestamp,
+            $date->getTimestamp()
         );
     }
 
@@ -170,10 +177,10 @@ class DateUtilsTest extends unittest
     public function dataDateTimeFromSelection(): array
     {
         return [
-            'london' => ['2016', '01', '25', '09', '00', 'Europe/London', '2016-01-25 09:00:00'],
-            'Kuwait' => ['2016', '01', '25', '09', '00', 'Asia/Kuwait', '2016-01-25 06:00:00'],
-            'Honolulu' => ['2016', '01', '25', '09', '00', 'Pacific/Honolulu', '2016-01-25 19:00:00'],
-            'leapyear' => ['2017', '02', '29', '09', '00', 'Europe/London', '2017-03-01 09:00:00'],
+            'london' => ['2016', '01', '25', '09', '00', 'Europe/London', '2016-01-25 09:00:00', 1453712400],
+            'Kuwait' => ['2016', '01', '25', '09', '00', 'Asia/Kuwait', '2016-01-25 09:00:00', 1453701600],
+            'Honolulu' => ['2016', '01', '25', '09', '00', 'Pacific/Honolulu', '2016-01-25 09:00:00', 1453748400],
+            'leapyear' => ['2017', '02', '29', '09', '00', 'Europe/London', '2017-03-01 09:00:00', 1488358800],
         ];
     }
 

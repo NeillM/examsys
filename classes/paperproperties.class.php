@@ -212,20 +212,21 @@ class PaperProperties
             $from .= ', paper_settings';
         }
         // WHERE statement.
+        $now = time();
         if ($remote) {
             $where = "properties.property_id = paper_settings.paperid AND
                 properties.paper_type = '2' AND
                 paper_settings.setting = 'remote_summative' AND
                 paper_settings.value = 1 AND
                 properties.start_date IS NOT NULL AND
-                properties.end_date > UNIX_TIMESTAMP() AND
+                properties.end_date > $now AND
                 properties.deleted IS NULL
                 ORDER BY properties.property_id";
         } else {
             $where = "paper_type = '2' AND
                 labs REGEXP ? AND
-                start_date < UNIX_TIMESTAMP() + 1800 AND
-                end_date > UNIX_TIMESTAMP() AND
+                start_date < $now + 1800 AND
+                end_date > $now AND
                 deleted IS NULL";
         }
         $sql = 'SELECT ' . $select . ' FROM ' . $from . ' WHERE ' . $where;
