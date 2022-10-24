@@ -214,14 +214,14 @@ class logtest extends unittestdatabase
             'marks_correct' => 2,
             'marks_incorrect' => -2,
             'marks_partial' => 0));
-        $this->meta = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid['id'], 'started' => '2018-01-01 00:00:00'));
-        $this->meta2 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid2['id'], 'started' => '2018-01-01 00:00:00', 'year' => 2));
-        $this->meta3 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid2['id'], 'started' => '2018-01-04 00:00:00', 'year' => 1));
-        $this->meta4 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid3['id'], 'started' => '2018-01-01 00:00:00', 'year' => 2));
-        $this->meta5 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid3['id'], 'started' => '2017-01-01 00:00:00', 'year' => 2));
-        $this->meta6 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'year' => 1));
-        $this->meta7 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'year' => 1));
-        $this->meta8 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'year' => 1));
+        $this->meta = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid['id'], 'started' => '2018-01-01 00:00:00', 'completed' => '2018-01-01 02:00:00'));
+        $this->meta2 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid2['id'], 'started' => '2018-01-01 00:00:00', 'completed' => '2018-01-01 02:00:00', 'year' => 2));
+        $this->meta3 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid2['id'], 'started' => '2018-01-04 00:00:00', 'completed' => '2018-01-04 02:00:00', 'year' => 1));
+        $this->meta4 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid3['id'], 'started' => '2018-01-01 00:00:00', 'completed' => '2018-01-01 02:00:00', 'year' => 2));
+        $this->meta5 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid3['id'], 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-01 02:00:00', 'year' => 2));
+        $this->meta6 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'completed' => '2016-01-01 02:00:00', 'year' => 1));
+        $this->meta7 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'completed' => '2016-01-01 02:00:00', 'year' => 1));
+        $this->meta8 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'completed' => '2018-01-01 02:00:00', 'year' => 1));
         $this->log1 = $logdatagenerator->create_late(array('metadataID' => $this->meta['id'], 'screen' => 1, 'q_id' => $this->question['id'], 'user_answer' => '2', 'duration' => 10, 'dismiss' => '1000', 'option_order' => '0,1,2,3'));
         $this->log2 = $logdatagenerator->create_late(array('metadataID' => $this->meta8['id'], 'screen' => 2, 'q_id' => $this->question2['id'], 'user_answer' => '2', 'duration' => 10, 'dismiss' => '1000', 'option_order' => '0,1,2,3'));
         $this->log3 = $logdatagenerator->create_summative(array('q_id' => $this->question['id'], 'metadataID' => $this->meta['id'], 'screen' => 1, 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 1));
