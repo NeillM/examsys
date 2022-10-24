@@ -239,7 +239,6 @@ class logtest extends unittestdatabase
                 'userID' => $this->student['id'],
                 'paperID' => $this->pid2['id'],
                 'started' => '2018-01-01 00:00:00',
-                'completed' => '2018-01-01 02:00:00',
                 'year' => 2
             )
         );
@@ -293,7 +292,6 @@ class logtest extends unittestdatabase
                 'userID' => $this->user2['id'],
                 'paperID' => $this->pid3['id'],
                 'started' => '2016-01-01 00:00:00',
-                'completed' => '2018-01-01 02:00:00',
                 'year' => 1
             )
         );
@@ -856,6 +854,8 @@ class logtest extends unittestdatabase
     {
         // Has some previous attempts.
         $this->assertTrue(\log::hasPreviousAttempts($this->pid3['id'], $this->student['id']));
+        // Has an uncompleted attempt.
+        $this->assertFalse(\log::hasPreviousAttempts($this->pid2['id'], $this->student['id']));
         // Does not have any previous attempts.
         $this->assertFalse(\log::hasPreviousAttempts($this->pid['id'], $this->user2['id']));
     }
