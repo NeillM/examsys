@@ -456,7 +456,7 @@ class logtest extends unittestdatabase
      * Test retrieving previous answers - with restart
      * @group log
      */
-    public function test_get_previous_answers()
+    public function testGetPreviousAnswers()
     {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
@@ -476,7 +476,7 @@ class logtest extends unittestdatabase
      * Test retrieving previous answers from log late
      * @group log
      */
-    public function test_get_previous_answers_late()
+    public function testGetPreviousAnswersLate()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
@@ -499,7 +499,7 @@ class logtest extends unittestdatabase
      * Test retrieving previous answers from log late - multiple questions
      * @group log
      */
-    public function test_get_previous_answers_late_complex()
+    public function testGetPreviousAnswersLateComplex()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
@@ -535,7 +535,7 @@ class logtest extends unittestdatabase
      * Test retrieving users in log for survey (where it is not supported)
      * @group log
      */
-    public function test_get_log_users_survey()
+    public function testGetLogUsersSurvey()
     {
         $papertype = '3';
         $log = \log::get_paperlog($papertype);
@@ -546,7 +546,7 @@ class logtest extends unittestdatabase
      * Test retrieving users in log for summative
      * @group log
      */
-    public function test_get_log_users_summative()
+    public function testGetLogUsersSummative()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
@@ -596,7 +596,7 @@ class logtest extends unittestdatabase
      * Test retrieving users in log for formative
      * @group log
      */
-    public function test_get_log_users_formative()
+    public function testGetLogUsersFormative()
     {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
@@ -653,7 +653,7 @@ class logtest extends unittestdatabase
      * Test retrieving assessment data in log for survey (where it is not supported)
      * @group log
      */
-    public function test_get_assessment_data_survey()
+    public function testGetAssessmentDataSurvey()
     {
         $papertype = '3';
         $log = \log::get_paperlog($papertype);
@@ -664,7 +664,7 @@ class logtest extends unittestdatabase
      * Test retrieving assessment data in log for summative
      * @group log
      */
-    public function test_get_assessment_data_summative()
+    public function testGetAssessmentDataSummative()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
@@ -758,7 +758,7 @@ class logtest extends unittestdatabase
      * Test retrieving assessment data in log for formative
      * @group log
      */
-    public function test_get_assessment_data_formative()
+    public function testGetAssessmentDataFormative()
     {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
