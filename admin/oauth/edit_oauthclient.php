@@ -123,7 +123,7 @@ $lang['title'] = $string['editoauthclient'];
 $lang['create'] = $string['addoauthclient'];
 $lang['view'] = $string['editoauthclient'];
 $lang['delete'] = $string['deleteoauthclient'];
-$additionaljs = '<script type="text/javascript" src="js/oauthclientsinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<style type="text/css">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}
@@ -184,5 +184,8 @@ $render->render_admin_content($breadcrumb, $lang);
 </div>
 
 <?php
-    $render->render_admin_footer();
+$js = [
+    '/admin/oauth/js/oauthclientsinit.min.js',
+];
+$render->render_admin_footer($js);
 ?>

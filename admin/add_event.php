@@ -57,7 +57,6 @@ if (!is_null($default)) {
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script  src="../js/eventinit.min.js"></script>
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->display_header();
@@ -125,5 +124,6 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEME
   </table>
 
   </form>
+<script  src="../js/eventinit.min.js"></script>
 </body>
 </html>

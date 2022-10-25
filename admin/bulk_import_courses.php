@@ -33,7 +33,7 @@ $render = new render($configObject);
 
 ini_set('auto_detect_line_endings', true);
 $lang['title'] = $string['bulkcourseimport'];
-$additionaljs = '<script type="text/javascript" src="../js/bulkimportinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
                 <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
                 <style type="text/css">
@@ -190,5 +190,8 @@ if (isset($_POST['submit'])) {
 
     <?php
 }
-  $render->render_admin_footer();
+$js = [
+    '/js/bulkimportinit.min.js',
+];
+$render->render_admin_footer($js);
 ?>

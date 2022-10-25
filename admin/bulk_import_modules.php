@@ -31,7 +31,7 @@ require '../include/toprightmenu.inc';
 // Instantiate Twig renderer.
 $render = new render($configObject);
 $lang['title'] = $string['bulkmoduleimport'];
-$additionaljs = '<script type="text/javascript" src="../js/bulkimportinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
                 <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
                 <style type=\"text/css\">
@@ -85,4 +85,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
       $data['optional'] = \import\import_modules::OPTIONAL;
       $render->render($data, $string, 'admin/upload.html');
   }
-  $render->render_admin_footer();
+  $js = [
+      '/js/bulkimportinit.min.js',
+  ];
+  $render->render_admin_footer($js);

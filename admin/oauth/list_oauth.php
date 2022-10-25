@@ -56,4 +56,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('list_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options_list.html');
 $render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($oauth, $header);
-$render->render_admin_footer();
+$js = [
+    '/admin/oauth/js/oauthinit.min.js',
+];
+$render->render_admin_footer($js);
