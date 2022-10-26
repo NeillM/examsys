@@ -17,6 +17,7 @@
 
 namespace testing\behat;
 
+use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Element\NodeElement;
 use Behat\MinkExtension\Context\MinkContext;
 use Behat\Mink\Exception\DriverException;
@@ -186,10 +187,11 @@ class rogo_test extends MinkContext
     /**
      * Detects errors, notices and warnings on a page.
      *
+     * @param \Behat\Behat\Hook\Scope\AfterStepScope|null $event Should only be passed by the after step hook.
      * @throws \Exception
      * @throws \Behat\Mink\Exception\DriverException
      */
-    public function lookForErrors(): void
+    public function lookForErrors(?AfterStepScope $event = null): void
     {
         $message = '';
         // First look for system errors recorded in the database.
@@ -234,6 +236,10 @@ class rogo_test extends MinkContext
         }
 
         if (!empty($message)) {
+            if (!is_null($event)) {
+                // We need to take the screenshot here if called in the post step otherwise it is bypassed because of the exception.
+                $this->takeScreenshot($event);
+            }
             throw new Exception($message);
         }
     }
