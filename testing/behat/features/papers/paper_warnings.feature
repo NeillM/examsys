@@ -1,4 +1,4 @@
-@paper @questions @wip
+@paper @questions
 Feature: Paper warnings
   In order to avoid issues during exams
   As a teacher
