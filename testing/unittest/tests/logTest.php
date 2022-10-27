@@ -126,8 +126,20 @@ class logtest extends unittestdatabase
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2018, 'academic_year' => '2018/19'));
         $datagenerator = $this->get_datagenerator('users', 'core');
-        $this->user2 = $datagenerator->create_user(array('surname' => 'zstaff', 'username' => 'staff1', 'grade' => 'University Lecturer', 'initials' => 'a',
-            'title' => 'Dr', 'email' => 'staff1@example.com', 'gender' => 'Male', 'first_names' => 'a', 'yearofstudy' => 1, 'roles' => 'Staff'));
+        $this->user2 = $datagenerator->create_user(
+            array(
+                'surname' => 'zstaff',
+                'username' => 'staff1',
+                'grade' => 'University Lecturer',
+                'initials' => 'a',
+                'title' => 'Dr',
+                'email' => 'staff1@example.com',
+                'gender' => 'Male',
+                'first_names' => 'a',
+                'yearofstudy' => 1,
+                'roles' => 'Staff'
+            )
+        );
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->pid = $datagenerator->create_paper(array('papertitle' => 'Paper 1',
             'calendaryear' => 2018,
@@ -214,34 +226,235 @@ class logtest extends unittestdatabase
             'marks_correct' => 2,
             'marks_incorrect' => -2,
             'marks_partial' => 0));
-        $this->meta = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid['id'], 'started' => '2018-01-01 00:00:00'));
-        $this->meta2 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid2['id'], 'started' => '2018-01-01 00:00:00', 'year' => 2));
-        $this->meta3 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid2['id'], 'started' => '2018-01-04 00:00:00', 'year' => 1));
-        $this->meta4 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid3['id'], 'started' => '2018-01-01 00:00:00', 'year' => 2));
-        $this->meta5 = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid3['id'], 'started' => '2017-01-01 00:00:00', 'year' => 2));
-        $this->meta6 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'year' => 1));
-        $this->meta7 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'year' => 1));
-        $this->meta8 = $logdatagenerator->create_metadata(array('userID' => $this->user2['id'], 'paperID' => $this->pid3['id'], 'started' => '2016-01-01 00:00:00', 'year' => 1));
-        $this->log1 = $logdatagenerator->create_late(array('metadataID' => $this->meta['id'], 'screen' => 1, 'q_id' => $this->question['id'], 'user_answer' => '2', 'duration' => 10, 'dismiss' => '1000', 'option_order' => '0,1,2,3'));
-        $this->log2 = $logdatagenerator->create_late(array('metadataID' => $this->meta8['id'], 'screen' => 2, 'q_id' => $this->question2['id'], 'user_answer' => '2', 'duration' => 10, 'dismiss' => '1000', 'option_order' => '0,1,2,3'));
-        $this->log3 = $logdatagenerator->create_summative(array('q_id' => $this->question['id'], 'metadataID' => $this->meta['id'], 'screen' => 1, 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 1));
-        $this->log4 = $logdatagenerator->create_summative(array('q_id' => $this->question['id'], 'metadataID' => $this->meta2['id'], 'screen' => 1, 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 1));
-        $this->log5 =  $logdatagenerator->create_summative(array('q_id' => $this->question2['id'], 'metadataID' => $this->meta2['id'], 'screen' => 2, 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 2));
-        $this->log6 = $logdatagenerator->create_summative(array('q_id' => $this->question['id'], 'metadataID' => $this->meta3['id'], 'screen' => 1, 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 1));
-        $this->log7 = $logdatagenerator->create_summative(array('q_id' => $this->question2['id'], 'metadataID' => $this->meta3['id'], 'screen' => 2, 'user_answer' => '0', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 0));
-        $this->log8 = $logdatagenerator->create_summative(array('q_id' => $this->question['id'], 'metadataID' => $this->meta8['id'], 'screen' => 1, 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,3,2', 'mark' => 1));
-        $this->log9 = $logdatagenerator->create_progress(array('metadataID' => $this->meta5['id'], 'screen' => 1, 'q_id' => $this->question['id'], 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 1));
-        $this->log10 = $logdatagenerator->create_progress(array('metadataID' => $this->meta6['id'], 'screen' => 1, 'q_id' => $this->question['id'], 'user_answer' => '3', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 0));
-        $this->log11 = $logdatagenerator->create_formative(array('metadataID' => $this->meta2['id'], 'screen' => 2, 'q_id' => $this->question['id'], 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3'));
-        $this->log12 = $logdatagenerator->create_formative(array('metadataID' => $this->meta4['id'], 'screen' => 1, 'q_id' => $this->question['id'], 'user_answer' => '1', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 4));
-        $this->log13 = $logdatagenerator->create_formative(array('metadataID' => $this->meta7['id'], 'screen' => 1, 'q_id' => $this->question['id'], 'user_answer' => '4', 'duration' => 5, 'dismiss' => '0000', 'option_order' => '0,1,2,3', 'mark' => 2));
+        $this->meta = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->student['id'],
+                'paperID' => $this->pid['id'],
+                'started' => '2018-01-01 00:00:00',
+                'completed' => '2018-01-01 02:00:00'
+            )
+        );
+        $this->meta2 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->student['id'],
+                'paperID' => $this->pid2['id'],
+                'started' => '2018-01-01 00:00:00',
+                'year' => 2
+            )
+        );
+        $this->meta3 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->user2['id'],
+                'paperID' => $this->pid2['id'],
+                'started' => '2018-01-04 00:00:00',
+                'completed' => '2018-01-04 02:00:00',
+                'year' => 1
+            )
+        );
+        $this->meta4 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->student['id'],
+                'paperID' => $this->pid3['id'],
+                'started' => '2018-01-01 00:00:00',
+                'completed' => '2018-01-01 02:00:00',
+                'year' => 2
+            )
+        );
+        $this->meta5 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->student['id'],
+                'paperID' => $this->pid3['id'],
+                'started' => '2017-01-01 00:00:00',
+                'completed' => '2017-01-01 02:00:00',
+                'year' => 2
+            )
+        );
+        $this->meta6 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->user2['id'],
+                'paperID' => $this->pid3['id'],
+                'started' => '2016-01-01 00:00:00',
+                'completed' => '2016-01-01 02:00:00',
+                'year' => 1
+            )
+        );
+        $this->meta7 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->user2['id'],
+                'paperID' => $this->pid3['id'],
+                'started' => '2016-01-01 00:00:00',
+                'completed' => '2016-01-01 02:00:00',
+                'year' => 1
+            )
+        );
+        $this->meta8 = $logdatagenerator->create_metadata(
+            array(
+                'userID' => $this->user2['id'],
+                'paperID' => $this->pid3['id'],
+                'started' => '2016-01-01 00:00:00',
+                'year' => 1
+            )
+        );
+        $this->log1 = $logdatagenerator->create_late(
+            array(
+                'metadataID' => $this->meta['id'],
+                'screen' => 1,
+                'q_id' => $this->question['id'],
+                'user_answer' => '2',
+                'duration' => 10,
+                'dismiss' => '1000',
+                'option_order' => '0,1,2,3'
+            )
+        );
+        $this->log2 = $logdatagenerator->create_late(
+            array(
+                'metadataID' => $this->meta8['id'],
+                'screen' => 2,
+                'q_id' => $this->question2['id'],
+                'user_answer' => '2',
+                'duration' => 10,
+                'dismiss' => '1000',
+                'option_order' => '0,1,2,3'
+            )
+        );
+        $this->log3 = $logdatagenerator->create_summative(
+            array(
+                'q_id' => $this->question['id'],
+                'metadataID' => $this->meta['id'],
+                'screen' => 1,
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 1
+            )
+        );
+        $this->log4 = $logdatagenerator->create_summative(
+            array(
+                'q_id' => $this->question['id'],
+                'metadataID' => $this->meta2['id'],
+                'screen' => 1,
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 1
+            )
+        );
+        $this->log5 =  $logdatagenerator->create_summative(
+            array(
+                'q_id' => $this->question2['id'],
+                'metadataID' => $this->meta2['id'],
+                'screen' => 2,
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 2
+            )
+        );
+        $this->log6 = $logdatagenerator->create_summative(
+            array(
+                'q_id' => $this->question['id'],
+                'metadataID' => $this->meta3['id'],
+                'screen' => 1,
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 1
+            )
+        );
+        $this->log7 = $logdatagenerator->create_summative(
+            array(
+                'q_id' => $this->question2['id'],
+                'metadataID' => $this->meta3['id'],
+                'screen' => 2,
+                'user_answer' => '0',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 0
+            )
+        );
+        $this->log8 = $logdatagenerator->create_summative(
+            array(
+                'q_id' => $this->question['id'],
+                'metadataID' => $this->meta8['id'],
+                'screen' => 1,
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,3,2',
+                'mark' => 1
+            )
+        );
+        $this->log9 = $logdatagenerator->create_progress(
+            array(
+                'metadataID' => $this->meta5['id'],
+                'screen' => 1,
+                'q_id' => $this->question['id'],
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 1
+            )
+        );
+        $this->log10 = $logdatagenerator->create_progress(
+            array(
+                'metadataID' => $this->meta6['id'],
+                'screen' => 1,
+                'q_id' => $this->question['id'],
+                'user_answer' => '3',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 0
+            )
+        );
+        $this->log11 = $logdatagenerator->create_formative(
+            array(
+                'metadataID' => $this->meta2['id'],
+                'screen' => 2,
+                'q_id' => $this->question['id'],
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3'
+            )
+        );
+        $this->log12 = $logdatagenerator->create_formative(
+            array(
+                'metadataID' => $this->meta4['id'],
+                'screen' => 1,
+                'q_id' => $this->question['id'],
+                'user_answer' => '1',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 4
+            )
+        );
+        $this->log13 = $logdatagenerator->create_formative(
+            array(
+                'metadataID' => $this->meta7['id'],
+                'screen' => 1,
+                'q_id' => $this->question['id'],
+                'user_answer' => '4',
+                'duration' => 5,
+                'dismiss' => '0000',
+                'option_order' => '0,1,2,3',
+                'mark' => 2
+            )
+        );
     }
 
     /**
      * Test retrieving previous answers - with restart
      * @group log
      */
-    public function test_get_previous_answers()
+    public function testGetPreviousAnswers()
     {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
@@ -261,7 +474,7 @@ class logtest extends unittestdatabase
      * Test retrieving previous answers from log late
      * @group log
      */
-    public function test_get_previous_answers_late()
+    public function testGetPreviousAnswersLate()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
@@ -274,34 +487,53 @@ class logtest extends unittestdatabase
             'previous_duration' => $this->log1['duration'],
             'screen_pre_submitted' => $current_screen,
             'current_screen' => $this->log1['screen']);
-        $this->assertEquals($previous, $log->get_previous_answers($this->meta['id'], $do_restart, $current_screen, true));
+        $this->assertEquals(
+            $previous,
+            $log->get_previous_answers($this->meta['id'], $do_restart, $current_screen, true)
+        );
     }
 
     /**
      * Test retrieving previous answers from log late - multiple questions
      * @group log
      */
-    public function test_get_previous_answers_late_complex()
+    public function testGetPreviousAnswersLateComplex()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
         $do_restart = false;
         $current_screen = 1;
-        $previous = array('used_questions' => array($this->question2['id'] => $this->question2['id'], $this->question['id'] => $this->question['id']),
-            'user_answers' => array(1 => array($this->question['id'] => $this->log8['user_answer']), 2 => array($this->question2['id'] => $this->log2['user_answer'])),
-            'user_dismiss' => array(1 => array($this->question['id'] => $this->log8['dismiss']), 2 => array($this->question2['id'] => $this->log2['dismiss'])),
-            'user_order' => array(1 => array($this->question['id'] => $this->log8['option_order']), 2 => array($this->question2['id'] => $this->log2['option_order'])),
+        $previous = array(
+            'used_questions' => array(
+                $this->question2['id'] => $this->question2['id'],
+                $this->question['id'] => $this->question['id']
+            ),
+            'user_answers' => array(
+                1 => array($this->question['id'] => $this->log8['user_answer']),
+                2 => array($this->question2['id'] => $this->log2['user_answer'])
+            ),
+            'user_dismiss' => array(
+                1 => array($this->question['id'] => $this->log8['dismiss']),
+                2 => array($this->question2['id'] => $this->log2['dismiss'])
+            ),
+            'user_order' => array(
+                1 => array($this->question['id'] => $this->log8['option_order']),
+                2 => array($this->question2['id'] => $this->log2['option_order'])
+            ),
             'previous_duration' => $this->log8['duration'],
             'screen_pre_submitted' => $this->log8['screen'],
             'current_screen' => $current_screen);
-        $this->assertEquals($previous, $log->get_previous_answers($this->meta8['id'], $do_restart, $current_screen, true));
+        $this->assertEquals(
+            $previous,
+            $log->get_previous_answers($this->meta8['id'], $do_restart, $current_screen, true)
+        );
     }
 
     /**
      * Test retrieving users in log for survey (where it is not supported)
      * @group log
      */
-    public function test_get_log_users_survey()
+    public function testGetLogUsersSurvey()
     {
         $papertype = '3';
         $log = \log::get_paperlog($papertype);
@@ -312,7 +544,7 @@ class logtest extends unittestdatabase
      * Test retrieving users in log for summative
      * @group log
      */
-    public function test_get_log_users_summative()
+    public function testGetLogUsersSummative()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
@@ -321,21 +553,48 @@ class logtest extends unittestdatabase
         $expected[1]['userid'] = $this->student['id'];
         $expected[1]['totalmark'] = 3.0;
         // All users.
-        $this->assertEquals($expected, $log->get_log_users($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-05 01:00:00', array($this->student['id'], $this->user2['id']), false));
+        $this->assertEquals(
+            $expected,
+            $log->get_log_users(
+                $this->pid2['id'],
+                '2018-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                array($this->student['id'], $this->user2['id']),
+                false
+            )
+        );
         // Students only.
         $expected = array();
         $expected[0]['userid'] = $this->student['id'];
         $expected[0]['totalmark'] = 3.0;
-        $this->assertEquals($expected, $log->get_log_users($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-05 01:00:00', array($this->student['id'], $this->user2['id']), true));
+        $this->assertEquals(
+            $expected,
+            $log->get_log_users(
+                $this->pid2['id'],
+                '2018-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                array($this->student['id'], $this->user2['id']),
+                true
+            )
+        );
         // All users in timeframe
-        $this->assertEquals($expected, $log->get_log_users($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-01 01:00:00', array($this->student['id'], $this->user2['id']), false));
+        $this->assertEquals(
+            $expected,
+            $log->get_log_users(
+                $this->pid2['id'],
+                '2018-01-01 00:00:00',
+                '2018-01-01 01:00:00',
+                array($this->student['id'], $this->user2['id']),
+                false
+            )
+        );
     }
 
     /**
      * Test retrieving users in log for formative
      * @group log
      */
-    public function test_get_log_users_formative()
+    public function testGetLogUsersFormative()
     {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
@@ -349,23 +608,50 @@ class logtest extends unittestdatabase
         $expected[3]['totalmark'] = 4.0;
         // Progressive paper migrated to formative paper.
         // All users.
-        $this->assertEquals($expected, $log->get_log_users($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', array($this->student['id'], $this->user2['id']), false));
+        $this->assertEquals(
+            $expected,
+            $log->get_log_users(
+                $this->pid3['id'],
+                '2016-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                array($this->student['id'], $this->user2['id']),
+                false
+            )
+        );
         // Students only.
         $expected = array();
         $expected[0]['userid'] = $this->student['id'];
         $expected[0]['totalmark'] = 1.0;
         $expected[1]['userid'] = $this->student['id'];
         $expected[1]['totalmark'] = 4.0;
-        $this->assertEquals($expected, $log->get_log_users($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', array($this->student['id'], $this->user2['id']), true));
+        $this->assertEquals(
+            $expected,
+            $log->get_log_users(
+                $this->pid3['id'],
+                '2016-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                array($this->student['id'], $this->user2['id']),
+                true
+            )
+        );
         // All users in timeframe
-        $this->assertEquals($expected, $log->get_log_users($this->pid3['id'], '2017-01-01 00:00:00', '2018-01-05 01:00:00', array($this->student['id'], $this->user2['id']), false));
+        $this->assertEquals(
+            $expected,
+            $log->get_log_users(
+                $this->pid3['id'],
+                '2017-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                array($this->student['id'], $this->user2['id']),
+                false
+            )
+        );
     }
 
     /**
      * Test retrieving assessment data in log for survey (where it is not supported)
      * @group log
      */
-    public function test_get_assessment_data_survey()
+    public function testGetAssessmentDataSurvey()
     {
         $papertype = '3';
         $log = \log::get_paperlog($papertype);
@@ -376,7 +662,7 @@ class logtest extends unittestdatabase
      * Test retrieving assessment data in log for summative
      * @group log
      */
-    public function test_get_assessment_data_summative()
+    public function testGetAssessmentDataSummative()
     {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
@@ -407,11 +693,34 @@ class logtest extends unittestdatabase
         $expected[1]['screen'] = 2;
         $users = array($this->student['id'], $this->user2['id']);
         $userstring = implode(',', $users);
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-05 01:00:00', $userstring, '%', true));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data(
+                $this->pid2['id'],
+                '2018-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                $userstring,
+                '%',
+                true
+            )
+        );
         // All users in timeframe.
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-01 01:00:00', $userstring));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-01 01:00:00', $userstring)
+        );
         // All users in course.
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-05 01:00:00', $userstring, 'TEST2', false));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data(
+                $this->pid2['id'],
+                '2018-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                $userstring,
+                'TEST2',
+                false
+            )
+        );
         // All users.
         $expected[2]['username'] = $this->user2['username'];
         $expected[2]['uID'] = $this->user2['id'];
@@ -437,14 +746,17 @@ class logtest extends unittestdatabase
         $expected[3]['question_ID'] = $this->question2['id'];
         $expected[3]['user_answer'] = '0';
         $expected[3]['screen'] = 2;
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-05 01:00:00', $userstring));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data($this->pid2['id'], '2018-01-01 00:00:00', '2018-01-05 01:00:00', $userstring)
+        );
     }
 
     /**
      * Test retrieving assessment data in log for formative
      * @group log
      */
-    public function test_get_assessment_data_formative()
+    public function testGetAssessmentDataFormative()
     {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
@@ -475,11 +787,34 @@ class logtest extends unittestdatabase
         $expected[1]['screen'] = 1;
         $users = array($this->student['id'], $this->user2['id']);
         $userstring = implode(',', $users);
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', $userstring, '%', true));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data(
+                $this->pid3['id'],
+                '2016-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                $userstring,
+                '%',
+                true
+            )
+        );
         // All users in timeframe.
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid3['id'], '2017-01-01 00:00:00', '2018-01-05 01:00:00', $userstring));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data($this->pid3['id'], '2017-01-01 00:00:00', '2018-01-05 01:00:00', $userstring)
+        );
         // All users in course.
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', $userstring, 'TEST2', false));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data(
+                $this->pid3['id'],
+                '2016-01-01 00:00:00',
+                '2018-01-05 01:00:00',
+                $userstring,
+                'TEST2',
+                false
+            )
+        );
         // All users.
         $expected[2]['username'] = $this->user2['username'];
         $expected[2]['uID'] = $this->user2['id'];
@@ -505,7 +840,10 @@ class logtest extends unittestdatabase
         $expected[3]['question_ID'] = $this->question['id'];
         $expected[3]['user_answer'] = $this->log10['user_answer'];
         $expected[3]['screen'] = $this->log10['screen'];
-        $this->assertEquals($expected, $log->get_assessment_data($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', $userstring));
+        $this->assertEquals(
+            $expected,
+            $log->get_assessment_data($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', $userstring)
+        );
     }
 
     /**
@@ -516,6 +854,8 @@ class logtest extends unittestdatabase
     {
         // Has some previous attempts.
         $this->assertTrue(\log::hasPreviousAttempts($this->pid3['id'], $this->student['id']));
+        // Has an uncompleted attempt.
+        $this->assertFalse(\log::hasPreviousAttempts($this->pid2['id'], $this->student['id']));
         // Does not have any previous attempts.
         $this->assertFalse(\log::hasPreviousAttempts($this->pid['id'], $this->user2['id']));
     }
