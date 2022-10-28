@@ -52,17 +52,24 @@ $longoptions = array(
 
 $optionslist = getopt($options, $longoptions);
 
-$help = 'ExamSys initialisation script options:'
-    . PHP_EOL . " -h, --help \tDisplay help"
-    . PHP_EOL . " -u \t\tDatabase username"
-    . PHP_EOL . " -p \t\tDatabase password"
-    . PHP_EOL . " -s \t\tWeb server address. It should be in the form https://www.example.com/path/"
-    . PHP_EOL . "\t\tIt is only used on upgrades to version 7.5.0 to avoid a command line prompt (optional)"
-    . PHP_EOL . " -o \t\tLoad staff help (0/1, default 0)"
-    . PHP_EOL . " -q \t\tLoad student help (0/1, default 0)"
-    . PHP_EOL . " -l \t\tLoad language packs (0/1, default 0)";
+$help = 'ExamSys upgrade script options:'
+    . PHP_EOL  . "\t-h, --help \tDisplay help"
+    . PHP_EOL . "\t-u \t\tDatabase username (required)"
+    . PHP_EOL . "\t-p \t\tDatabase password (required)"
+    . PHP_EOL . "\t-s \t\tWeb server address. It should be in the form https://www.example.com/path/"
+    . PHP_EOL . "\t\t\tIt is only used on upgrades to version 7.6.0 to avoid a command line prompt (optional)"
+    . PHP_EOL . "\t-o \t\tLoad staff help (0/1, default 0)"
+    . PHP_EOL . "\t-q \t\tLoad student help (0/1, default 0)"
+    . PHP_EOL . "\t-l \t\tLoad language packs (0/1, default 0)";
 
-if (isset($optionslist['h']) or isset($optionslist['help'])) {
+$display_hep = false;
+
+if (!isset($optionslist['u']) or !isset($optionslist['p'])) {
+    // Missing required options.
+    $display_hep  = true;
+}
+
+if ($display_hep or isset($optionslist['h']) or isset($optionslist['help'])) {
     // Display some help information.
     cli_utils::prompt($help);
     exit(0);
