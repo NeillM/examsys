@@ -543,13 +543,6 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
 // Check if any 3d file types are enabled and render js.
 threed_handler::render_js($string);
 ?>
-<?php
-if ($question != null and file_exists($cfg_web_root . 'plugins/questions/' . $question->get_type() . '/js/editinit.min.js')) {
-    ?>
-<script src="../../plugins/questions/<?php echo $question->get_type() ?>/js/editinit.min.js"></script>
-    <?php
-}
-?>
 </head>
 <body>
 <?php
@@ -792,5 +785,12 @@ if ($question->requires_html5()) {
 }
 ?>
 <script src="../../js/questioneditinit.min.js"></script>
+<?php
+if ($question != null and file_exists($cfg_web_root . 'plugins/questions/' . $question->get_type() . '/js/editinit.min.js')) {
+    ?>
+    <script src="../../plugins/questions/<?php echo $question->get_type() ?>/js/editinit.min.js"></script>
+    <?php
+}
+?>
 </body>
 </html>
