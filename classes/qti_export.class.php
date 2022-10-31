@@ -24,7 +24,7 @@
  */
 class qti_export extends rogo_directory
 {
-    protected $filepermissions = 0755;
+    protected $filepermissions = 0775;
 
     public function location()
     {
