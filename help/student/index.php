@@ -46,7 +46,6 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
     <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../../js/require.js'></script>
     <script src='../../js/main.min.js'></script>
-    <script type="text/javascript" src="../../js/helpinit.min.js"></script>
   </head>
 
   <body>
@@ -72,6 +71,7 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['srcofy'] = param::optional('srcOfY', 0, param::FLOAT, param::FETCH_GET);
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
-  </body>  
-  
+    <script type="text/javascript" src="../../js/helpinit.min.js"></script>
+  </body>
+
 </html>
