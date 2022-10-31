@@ -79,7 +79,6 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="js/require.js"></script>
   <script src="js/main.min.js"></script>
-  <script src="js/staffindexinit.min.js"></script>
 </head>
 
 <body>
@@ -228,5 +227,6 @@ $jsmiscdataset['name'] = 'dataset';
 $jsmiscdataset['attributes']['duplicate'] = $duplicate_folder;
 $render->render($jsmiscdataset, array(), 'dataset.html');
 ?>
+<script src="js/staffindexinit.min.js"></script>
 </body>
 </html>
