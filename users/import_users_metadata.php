@@ -55,7 +55,6 @@ if (!$module_details) {
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/usersmetadatainit.min.js"></script>
 
   <style type="text/css">
     h1 {font-size:120%; font-weight:bold}
@@ -233,5 +232,6 @@ $miscdataset = [
   ];
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+<script src="../js/usersmetadatainit.min.js"></script>
 </body>
 </html>

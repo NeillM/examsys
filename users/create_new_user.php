@@ -31,7 +31,7 @@ require '../include/toprightmenu.inc';
 
 $render = new render($configObject);
 $lang['title'] = $string['createnewuser'];
-$additionaljs = '<script src="../js/createuserinit.min.js"></script>';
+$additionaljs = '';
 
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
         <link rel="stylesheet" type="text/css" href="../css/list.css" />
@@ -328,4 +328,7 @@ if (isset($new_password)) {
 }
 $mysqli->close();
 
-$render->render_admin_footer();
+$js = [
+    '/js/createuserinit.min.js',
+];
+$render->render_admin_footer($js);
