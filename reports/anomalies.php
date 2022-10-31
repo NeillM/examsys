@@ -63,7 +63,6 @@ $headerdata = array(
     'scripts' => array(
         '/js/require.js',
         '/js/main.min.js',
-        '/js/anomalyreportinit.min.js',
     ),
 );
 
@@ -140,4 +139,9 @@ if (count($data['anomalies']['items']) == 0) {
 }
 $data['userid'] = $userObject->get_user_ID();
 $render->render($data, $string, '/reports/anomalies.html');
-$render->render(array(), array(), 'footer.html');
+$data = [
+    'scripts' => [
+        '/js/anomalyreportinit.min.js',
+    ],
+];
+$render->render($data, array(), 'footer.html');
