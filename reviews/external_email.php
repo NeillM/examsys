@@ -59,7 +59,6 @@ $display_deadline = $external_review_deadline->format($configObject->get('cfg_lo
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/externalemailinit.min.js"></script>
 
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
@@ -170,5 +169,6 @@ if (isset($_POST['submit'])) {
 }
 $mysqli->close();
 ?>
+<script src="../js/externalemailinit.min.js"></script>
 </body>
 </html>

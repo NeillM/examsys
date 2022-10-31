@@ -90,10 +90,7 @@ ob_start();
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src='../js/classtotalsreviewinit.min.js'></script>
-
 </head>
-
 
 <body>
 <div id="noteDiv" class="studentnote">
@@ -540,5 +537,6 @@ if ($user_no > 0) {
   $mysqli->close();
 ?>
 </div>
+<script src='../js/classtotalsreviewinit.min.js'></script>
 </body>
 </html>
