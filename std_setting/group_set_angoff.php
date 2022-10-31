@@ -136,7 +136,6 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/stdsetgroupinit.min.js"></script>
   <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
@@ -410,5 +409,6 @@ $mysqli->close();
   $render->render($miscdataset, array(), 'dataset.html');
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
+<script src="../js/stdsetgroupinit.min.js"></script>
 </body>
 </html>
