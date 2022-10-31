@@ -148,13 +148,6 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../js/require.js"></script>
   <script src="../js/main.min.js"></script>
-<?php
-if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
-    ?>
-  <script src="../js/performanceinit.min.js"></script>
-    <?php
-}
-?>
 </head>
 
 <body>
@@ -284,5 +277,12 @@ if ($plots_output == 0) {
 <br />
 
 </div>
+<?php
+if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
+    ?>
+    <script src="../js/performanceinit.min.js"></script>
+    <?php
+}
+?>
 </body>
 </html>
