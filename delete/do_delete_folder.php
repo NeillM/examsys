@@ -105,9 +105,9 @@ $mysqli->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
+  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/deletefolderinit.min.js"></script>
 </head>
 
 <body>
@@ -133,5 +133,6 @@ $miscdataset['attributes']['parent'] = $parent;
 $miscdataset['attributes']['parentid'] = $parentID;
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+<script src="../js/deletefolderinit.min.js"></script>
 </body>
 </html>
