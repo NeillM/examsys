@@ -43,30 +43,22 @@ function format_space($space)
 
     return round($space, 1) . ' ' . $correct_units;
 }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>ExamSys: <?php echo $string['systeminformation']; ?></title>
-
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <style type="text/css">
+$render = new render($configObject);
+$lang = [
+    'title' => $string['systeminformation'],
+];
+$additionaljs = '';
+$addtionalcss = '<style type="text/css">
     .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
     a {color:#215DC6}
     a.heading {color:#215DC6; font-weight:bold}
     a.heading:hover {color:#428EFF; font-weight:bold}
         .on {width:30px; float:left; color:#008000; font-weight:bold}
         .off {width:30px; float:left; color:#C00000; font-weight:bold}
-  </style>
-
-  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
-  <script src='../js/require.js'></script>
-  <script src='../js/main.min.js'></script>
-</head>
+ </style>';
+$render->render_admin_header($lang, $additionaljs, $addtionalcss);
+?>
 
 <body>
 <?php
@@ -374,6 +366,5 @@ $mysqli->close();
 </td></tr>
 </table>
 </div>
-</div>
-</body>
-</html>
+<?php
+$render->render_admin_footer();
