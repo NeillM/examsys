@@ -49,14 +49,7 @@ $lang = [
     'title' => $string['systeminformation'],
 ];
 $additionaljs = '';
-$addtionalcss = '<style type="text/css">
-    .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
-    a {color:#215DC6}
-    a.heading {color:#215DC6; font-weight:bold}
-    a.heading:hover {color:#428EFF; font-weight:bold}
-        .on {width:30px; float:left; color:#008000; font-weight:bold}
-        .off {width:30px; float:left; color:#C00000; font-weight:bold}
- </style>';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/system_info.css"/>';
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
 require '../include/toprightmenu.inc';
