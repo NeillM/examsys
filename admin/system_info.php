@@ -58,13 +58,10 @@ $addtionalcss = '<style type="text/css">
         .off {width:30px; float:left; color:#C00000; font-weight:bold}
  </style>';
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
-?>
 
-<body>
-<?php
-  require '../include/toprightmenu.inc';
-
-    echo draw_toprightmenu();
+require '../include/toprightmenu.inc';
+$toprightmenu = draw_toprightmenu();
+$render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
 ?>
 
 <div id="content">
