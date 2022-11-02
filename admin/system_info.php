@@ -54,7 +54,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
 require '../include/toprightmenu.inc';
 $toprightmenu = draw_toprightmenu();
-$render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
+$render->render_admin_options('', '', $lang, $toprightmenu, 'admin/no_sidebar.html');
 
 $breadcrumb = [
     $string['home'] => '../index.php',
