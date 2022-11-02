@@ -28,7 +28,7 @@ abstract class rogo_directory
     protected $downloadfile = 'getfile.php';
 
     /** @var int The file permissions to be used by the directory. */
-    protected $filepermissions = 0744;
+    protected $filepermissions = 0774;
 
     /**
      * An array of rogo_directory objects, the key should match the type
