@@ -34,11 +34,13 @@ requirejs(['jsxls', 'form', 'jquery'], function (jsxls, FORM, $) {
                     window.location = 'lab_details.php?labID=' + data[1];
                 } else if (data[0] == 'INVALID') {
                     if (data[1].length > 0) {
-                        $('.invalidlab').html(jsxls.lang_string['badaddressesinvalid'].replace('%s', data[1].join(',')));
+                        var list = '<ul><li>' + data[1].join('</li><li>') + '</li></ul>';
+                        $('.invalidlab').html(jsxls.lang_string['badaddressesinvalid'].replace('%s', list));
                         $('.invalidlab').show();
                     }
                     if (data[2].length > 0) {
-                        $('.inuselab').html(jsxls.lang_string['badaddressesinuse'].replace('%s', data[2].join(',')));
+                        var list2 = '<ul><li>' + data[2].join('</li><li>') + '</li></ul>';
+                        $('.inuselab').html(jsxls.lang_string['badaddressesinuse'].replace('%s', list2));
                         $('.inuselab').show();
                     }
                 }
