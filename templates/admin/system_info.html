@@ -130,6 +130,8 @@ Required localised language strings -
                 </tr>
             {% endfor %}
         </table>
+    </div>
+    <div class="column">
         <section>
             <h2>{{lang.partitions}}</h2>
             {% for id,item in data.partitions %}{% if item[1] != 'OK' and item[5] != '' %}
@@ -146,6 +148,24 @@ Required localised language strings -
                 </div>
             </div>
             {% endif %}{% endfor %}
+        </section>
+        <section>
+            <h2>{{lang.directories}}</h2>
+            {% for id,item in data.directories %}
+                <div class="directory">
+                    <h3 class="directoryname">{{item.name}}</h3>
+                    <div class="location">
+                        {{ item.location }}
+                    </div>
+                    <div class="permissions">
+                        {% if item.permissions %}
+                            <span class="on">{{lang.permissions_good}}</span>
+                        {% else %}
+                            <span class="off">{{lang.permissions_bad}}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         </section>
     </div>
 </div>

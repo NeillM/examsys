@@ -86,7 +86,16 @@ a.heading:hover {
     padding-left: 52px;
 }
 
-.partitionname {
+.directory {
+    background-image: url("../artwork/yellow_folder.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    min-height: 50px;
+    padding-left: 52px;
+}
+
+.partitionname,
+.directoryname {
     font-size: 100%;
     margin-block-end: 0;
 }

@@ -293,9 +293,52 @@ $qtiimportdirectory = rogo_directory::get_directory('qti_import');
 $qtiexportdirectory = rogo_directory::get_directory('qti_export');
 $emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
 
+$directories = [
+    [
+        'name' => $string['dir_media'],
+        'permissions' => $mediadirectory->check_permissions(),
+        'location' => $mediadirectory->location(),
+    ],
+    [
+        'name' => $string['dir_theme'],
+        'permissions' => $themedirectory->check_permissions(),
+        'location' => $themedirectory->location(),
+    ],
+    [
+        'name' => $string['dir_student_help'],
+        'permissions' => $studenthelp->check_permissions(),
+        'location' => $studenthelp->location(),
+    ],
+    [
+        'name' => $string['dir_staff_help'],
+        'permissions' => $staffhelp->check_permissions(),
+        'location' => $staffhelp->location(),
+    ],
+    [
+        'name' => $string['dir_photo'],
+        'permissions' => $photodirectory->check_permissions(),
+        'location' => $photodirectory->location(),
+    ],
+    [
+        'name' => $string['dir_qti_import'],
+        'permissions' => $qtiimportdirectory->check_permissions(),
+        'location' => $qtiimportdirectory->location(),
+    ],
+    [
+        'name' => $string['dir_qti_export'],
+        'permissions' => $qtiexportdirectory->check_permissions(),
+        'location' => $qtiexportdirectory->location(),
+    ],
+    [
+        'name' => $string['dir_email'],
+        'permissions' => $emailtemplatesdirectory->check_permissions(),
+        'location' => $emailtemplatesdirectory->location(),
+    ],
+];
 
 $pagedata = [
     'application' => $application,
+    'directories' => $directories,
     'error_reporting' => $error_reporting,
     'late_log_count' => $latelogs,
     'late_log_warning' => ($latelogs > 0),
