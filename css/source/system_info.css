@@ -127,3 +127,13 @@ a.heading:hover {
 .column.wide {
     flex-grow: 2;
 }
+
+@media screen and (max-width: 960px) {
+    .column {
+        order: 2;
+    }
+    .column.wide {
+        order: 1;
+        width: 100%;
+    }
+}
