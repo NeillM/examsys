@@ -62,16 +62,16 @@ a.heading:hover {
 
 .drivespace {
     background-color: #EAEAEA;
-    border: 1px solid #808080;
+    border: 0.063rem solid #808080;
     display: block;
-    height: 11px;
-    width:150px
+    height: 0.688rem;
+    width: 9.375rem;
 }
 
 .useddrivespace {
     background-color: #26A0DA;
     display: block;
-    height: 11px;
+    height: 0.688rem;
 }
 
 .useddrivespace.spacewarning {
@@ -86,16 +86,16 @@ a.heading:hover {
     background-image: url("../artwork/drive_icon.png");
     background-repeat: no-repeat;
     background-position: left center;
-    min-height: 50px;
-    padding-left: 52px;
+    min-height: 3.125rem;
+    padding-left: 3.25rem;
 }
 
 .directory {
     background-image: url("../artwork/yellow_folder.png");
     background-repeat: no-repeat;
     background-position: left center;
-    min-height: 50px;
-    padding-left: 52px;
+    min-height: 3.125rem;
+    padding-left: 3.25rem;
 }
 
 .partitionname,
@@ -106,17 +106,17 @@ a.heading:hover {
 
 .columns,
 .column {
-    gap: 20px 90px;
+    gap: 1.25rem 5.625rem;
     display: flex;
     flex-direction: row;
 }
 
 .columns {
-    max-width: 1100px;
+    max-width: 68.75rem;
     margin-left: auto;
     margin-right: auto;
     flex-wrap: wrap;
-    margin-top: 30px;
+    margin-top: 1.875rem;
 }
 
 .column {
@@ -128,7 +128,7 @@ a.heading:hover {
     flex-grow: 2;
 }
 
-@media screen and (max-width: 960px) {
+@media screen and (max-width: 60rem) {
     .column {
         order: 2;
     }
