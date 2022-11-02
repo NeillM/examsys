@@ -1,0 +1,151 @@
+{#This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the system information page.
+
+author Neill Magill <neill.magill@nottingham.ac.uk>
+copyright 2022 onwards The University of Nottingham
+
+Required variables -
+    * data.data.application - an array containing title and value keys
+    * data.directories
+    * data.error_reporting - an array containing title, value and type keys
+    * data.late_log_count
+    * data.late_log_warning
+    * data.mysql_stats - an array containing title and value keys
+    * data.partitions
+    * data.serverinfo - an array containing title and value keys
+    * data.temp_user_count
+    * data.temp_user_warning
+
+Required localised language strings -
+    * lang.table
+    * lang.records
+    * lang.more_details
+    * lang.mysqlstatus
+    * lang.application
+    * lang.warning
+    * lang.rogoplugins
+    * lang.serverinformation
+    * lang.partitions
+#}
+<div class="columns">
+    <div class="column">
+        <table>
+            <thead>
+                <tr>
+                    <th>{{lang.table}}</th>
+                    <th>{{lang.records}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr {% if data.late_log_warning %}class="warning"{% endif %}>
+                    <td>
+                        log_late
+                        {% if data.late_log_warning %}
+                            <img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="{{lang.warning}}" />
+                            <a href="log_late_details.php">{{lang.more_details}}</a>
+                        {% endif %}
+                    </td>
+                    <td class="align-right">{{data.late_log_count}}</td>
+                </tr>
+                <tr {% if data.temp_user_warning %}class="warning"{% endif %}>
+                    <td>
+                        temp_users
+                        {% if data.late_log_warning %}
+                            <img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="{{lang.warning}}" />
+                            <a href="clear_guest_users.php">{{lang.more_details}}</a>
+                        {% endif %}
+                    </td>
+                    <td class="align-right">{{data.temp_user_count}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table>
+            <caption>{{lang.mysqlstatus}}</caption>
+            {% for id,item in data.mysql_stats %}
+                <tr>
+                    <th scope="row">{{item.title}}</th>
+                    <td class="align-right">{{item.value}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="column wide">
+        <table>
+            <caption>{{lang.application}}</caption>
+            {% for id,item in data.application %}
+                <tr>
+                    <th scope="row">{{item.title}}</th>
+                    <td>{{item.value}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table>
+            <caption>{{lang.ErrorLogSettings}}</caption>
+            {% for id,item in data.error_reporting %}
+                <tr>
+                    <th scope="row">{{item.title}}</th>
+                    <td>
+                        {% if item.type == 'onoff' and item.value  %}
+                            <span class="on">{{lang.on}}</span>
+                        {% elseif item.type == 'onoff' %}
+                            <span class="off">{{lang.off}}</span>
+                        {% else %}
+                            {{item.value}}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table>
+            <caption>{{lang.rogoplugins}}</caption>
+            {% for id,item in data.plugins %}
+                <tr>
+                    <th scope="row">{{item.title}}</th>
+                    <td>{{item.value|raw}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <table>
+            <caption>{{lang.serverinformation}}</caption>
+            {% for id,item in data.serverinfo %}
+                <tr>
+                    <th scope="row">{{item.title}}</th>
+                    <td>{{item.value|raw}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <section>
+            <h2>{{lang.partitions}}</h2>
+            {% for id,item in data.partitions %}{% if item[1] != 'OK' and item[5] != '' %}
+            <div class="partition">
+                <h3 class="partitionname">{{item[5]}}</h3>
+                <div class="spaceinfo">
+                        <span class="drivespace">
+                            <span
+                                    class="useddrivespace{% if item.percentage > 90 %} spacewarning{% endif %}"
+                                    style="width: calc(1.48 * {{item.percentage}}px)"
+                            ></span>
+                        </span>
+                    {{ lang.freespace | format(item.freespace, item.totalspace) }}
+                </div>
+            </div>
+            {% endif %}{% endfor %}
+        </section>
+    </div>
+</div>

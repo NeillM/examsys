@@ -1,34 +1,116 @@
-.sechead {
-    background-color:#295AAD;
-    color:white;
-    text-align:left;
-    font-weight:normal
+table {
+    border-spacing: 0;
+}
+
+.sechead,
+thead,
+thead th,
+caption,
+section h2 {
+    background-color: #295AAD;
+    color: white;
+    text-align: left;
+    font-size: 100%;
+    font-weight: normal;
+}
+
+section h2 {
+    margin: 0;
+}
+
+th[scope=row] {
+    text-align: left;
+    min-width: 25%;
+    max-width: 50%;
+}
+
+.align-right {
+    text-align: right;
 }
 
 a {
-    color:#215DC6
+    color: #215DC6;
 }
 
 a.heading {
-    color:#215DC6;
-    font-weight:bold
+    color: #215DC6;
+    font-weight: bold;
+}
+
+.warning {
+    color: #C00000;
 }
 
 a.heading:hover {
-    color:#428EFF;
-    font-weight:bold
+    color: #428EFF;
+    font-weight: bold;
 }
 
 .on {
-    width:30px;
-    float:left;
-    color:#008000;
-    font-weight:bold
+    color: #008000;
+    font-weight: bold;
 }
 
 .off {
-    width:30px;
-    float:left;
-    color:#C00000;
-    font-weight:bold
+    color: #C00000;
+    font-weight: bold;
+}
+
+.drivespace {
+    background-color: #EAEAEA;
+    border: 1px solid #808080;
+    display: block;
+    height: 11px;
+    width:150px
+}
+
+.useddrivespace {
+    background-color: #26A0DA;
+    display: block;
+    height: 11px;
+}
+
+.useddrivespace.spacewarning {
+    background-color: #DA2626;
+}
+
+.spaceinfo {
+    color: #808080;
+}
+
+.partition {
+    background-image: url("../artwork/drive_icon.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    min-height: 50px;
+    padding-left: 52px;
+}
+
+.partitionname {
+    font-size: 100%;
+    margin-block-end: 0;
+}
+
+.columns,
+.column {
+    gap: 20px 90px;
+    display: flex;
+    flex-direction: row;
+}
+
+.columns {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.column {
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.column.wide {
+    flex-grow: 2;
 }
