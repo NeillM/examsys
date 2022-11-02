@@ -504,7 +504,7 @@ for ($i = 0; $i < $user_no; $i++) {
             // Duration column
             echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
             if ($late_submissions == 'y') {
-                echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" title="' . $string['markingnotcomplete'] . '" alt="' . $string['markingnotcomplete'] . '"  width="12" height="11" />';
+                echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" title="' . $string['lateresults'] . '" alt="' . $string['lateresults'] . '"  width="12" height="11" />';
             }
             echo '</td>';
 

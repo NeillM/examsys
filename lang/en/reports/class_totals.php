@@ -105,6 +105,7 @@ $string['displaypaper'] = 'Display paper for';
 $string['notcompleted'] = 'Warning: not all screens completed';
 $string['unknown'] = '&nbsp;&lt;Unknown&gt;';
 $string['markingnotcomplete'] = 'Marking not complete';
+$string['lateresults'] = 'The details for this user will not be correct until late results for them have been accepted or rejected';
 $string['of'] = ' of ';
 $string['percentofcohort'] = '% of cohort';
 $string['marking'] = 'Marking...';
