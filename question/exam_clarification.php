@@ -81,7 +81,6 @@ $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>" data-editor="<?php echo $editor[0]; ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/examclarificationinit.min.js"></script>
 
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
@@ -101,5 +100,6 @@ $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 <input type="hidden" name="questionNo" value="<?php echo $questionNo ?>" />
 </form>
 
+<script src="../js/examclarificationinit.min.js"></script>
 </body>
 </html>

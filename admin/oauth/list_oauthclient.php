@@ -46,7 +46,7 @@ $header = array(array('class' => 'col10', 'style' => 'width:20%', 'value' => $st
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['client']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['secret']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['uri']));
-$additionaljs = '<script type="text/javascript" src="js/oauthclientsinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
 $breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
  $string['oauthkeys'] => 'list_oauth.php');
@@ -54,4 +54,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
 $render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($clients, $header);
-$render->render_admin_footer();
+$js = [
+    '/admin/oauth/js/oauthclientsinit.min.js',
+];
+$render->render_admin_footer($js);

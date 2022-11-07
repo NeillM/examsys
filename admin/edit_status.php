@@ -118,7 +118,6 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/statusinit.min.js"></script>
 </head>
 <body>
 <?php
@@ -172,5 +171,6 @@ if (isset($error) and $error = 'duplicate') {
     </form>
   </div>
   <div style="clear: both;"></div>
+<script src="../js/statusinit.min.js"></script>
 </body>
 </html>

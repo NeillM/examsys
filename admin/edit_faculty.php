@@ -48,7 +48,6 @@ if (is_null($details['name'])) {
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/editfacultyinit.min.js"></script>
 </head>
 
 <body>
@@ -66,6 +65,7 @@ if (is_null($details['name'])) {
 <div align="right"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" /></div>
 </form>
 
+<script src="../js/editfacultyinit.min.js"></script>
 </body>
 <?php
 // JS utils dataset.

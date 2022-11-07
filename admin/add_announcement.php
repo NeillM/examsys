@@ -40,7 +40,6 @@ require '../include/errors.php';
     <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
-    <script src="../js/announcementinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->display_header();
@@ -113,5 +112,6 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_add_announcement.php';
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+<script src="../js/announcementinit.min.js"></script>
 </body>
 </html>

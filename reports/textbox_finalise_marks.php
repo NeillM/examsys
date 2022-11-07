@@ -120,13 +120,10 @@ if (isset($_POST['submit'])) {
     $render = new render($configObject);
     $lang['title'] =  $string['finalisemarks'];
     $headerdata = array(
-    'css' => array(
-      '/css/header.css',
-      '/css/textbox_finalise_marks.css',
-    ),
-    'scripts' => array(
-      '/js/textboxfinaliseinit.min.js',
-    ),
+        'css' => array(
+            '/css/header.css',
+            '/css/textbox_finalise_marks.css',
+        ),
     );
     $headerdata['mathjax'] = false;
     if ($configObject->get_setting('core', 'paper_mathjax')) {
@@ -284,6 +281,11 @@ SQL;
 </div>
 
     <?php
-    $render->render(array(), array(), 'footer.html');
+    $data = [
+        'scripts' => array(
+            '/js/textboxfinaliseinit.min.js',
+        ),
+    ];
+    $render->render($data, array(), 'footer.html');
 }
 ?>

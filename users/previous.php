@@ -46,7 +46,6 @@ $headerdata = array(
         '/css/warnings.css',
         '/css/list.css',
     ],
-    'scripts' => ['/js/previousinit.min.js'],
 );
 $render->render($headerdata, $string, 'header.html');
 
@@ -62,4 +61,9 @@ $dataset['name'] = 'dataset';
 $dataset['attributes']['id'] = $id;
 $render->render($dataset, array(), 'dataset.html');
 
-$render->render([], [], 'footer.html');
+$data = [
+    'scripts' => [
+        '/js/previousinit.min.js',
+    ],
+];
+$render->render($data, [], 'footer.html');

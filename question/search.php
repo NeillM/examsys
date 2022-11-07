@@ -55,7 +55,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/questionsearchinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->display_header();
@@ -405,5 +404,6 @@ $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $render->render($dataset, array(), 'dataset.html');
 ?>
+<script src="../js/questionsearchinit.min.js"></script>
 </body>
 </html>

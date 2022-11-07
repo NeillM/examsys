@@ -101,7 +101,6 @@ HTML;
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src='../js/textboxinit.min.js'></script>
   <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
@@ -469,5 +468,6 @@ $jsmiscdataset['name'] = 'dataset';
 $jsmiscdataset['attributes']['hash'] = 'q_id' . $_GET['q_id'];
 $render->render($jsmiscdataset, array(), 'dataset.html');
 ?>
+<script src='../js/textboxinit.min.js'></script>
 </body>
 </html>

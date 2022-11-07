@@ -119,7 +119,6 @@ if (isset($_POST['submit'])) {
 
   <script src="../js/require.js"></script>
   <script src="../js/main.min.js"></script>
-  <script src="../js/guestaccountinit.min.js"></script>
 </head>
 
 <body>
@@ -145,6 +144,7 @@ if (isset($_POST['submit'])) {
 <input type="hidden" name="username" value="<?php echo $account->username; ?>" />
 <input type="hidden" name="password" value="<?php echo $account->password; ?>" />
 </form>
+<script src="../js/guestaccountinit.min.js"></script>
 </body>
 </html>
     <?php

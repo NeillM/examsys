@@ -141,7 +141,6 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../js/require.js"></script>
   <script src="../js/main.min.js"></script>
-  <script src="../js/resetpasswordinit.min.js"></script>
 </head>
 
 <body>
@@ -236,5 +235,6 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 ?>
+<script src="../js/resetpasswordinit.min.js"></script>
 </body>
 </html>

@@ -127,7 +127,6 @@ echo $css;
 </script>
 <script src='../js/require.js'></script>
 <script src='../js/main.min.js'></script>
-<script src='../js/reviewinit.min.js'></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -358,5 +357,6 @@ $render->render($dataset, array(), 'dataset.html');
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 <input type="hidden" name="refpane" id="refpane" value="<?php echo $refpane; ?>" />
+<script src='../js/reviewinit.min.js'></script>
 </body>
 </html>

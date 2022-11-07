@@ -51,11 +51,14 @@ $lang['view'] = $string['editplugins'];
 $lang['link'] = $string['addpluginlink'];
 $header = array(array('class' => 'col10', 'style' => 'width:80%', 'value' => $string['plugins']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['enabled']));
-$additionaljs = '<script type="text/javascript" src="js/pluginsinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
 $breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php');
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('../../plugins/index.php', 'plugins.svg', $lang, $toprightmenu, 'admin/options_link.html');
 $render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($pluginstatus, $header);
-$render->render_admin_footer();
+$js = [
+    '/admin/plugins/js/pluginsinit.min.js',
+];
+$render->render_admin_footer($js);

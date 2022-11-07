@@ -85,7 +85,6 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/questionbankinit.min.js"></script>
 </head>
 
 <body>
@@ -213,5 +212,6 @@ $mysqli->close();
 ?>
 </div>
 
+<script src="../js/questionbankinit.min.js"></script>
 </body>
 </html>

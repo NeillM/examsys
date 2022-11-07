@@ -33,7 +33,7 @@ $audit = Audit::getEvents($startdate, $limit, $page);
 
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
-$additionaljs = '<script type="text/javascript" src="js/auditinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/audit_list.css"/>';
 $breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php');
@@ -53,4 +53,7 @@ if (isset($audit['pages'])) {
 }
 $render->render_admin_content($breadcrumb, $string, 'admin/audit/content.html', $audit);
 $render->render($audit, $string, 'admin/audit/list.html');
-$render->render_admin_footer();
+$js = [
+    '/admin/audit/js/auditinit.min.js',
+];
+$render->render_admin_footer($js);

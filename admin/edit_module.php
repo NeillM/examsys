@@ -56,7 +56,6 @@ $cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/moduleeditinit.min.js"></script>
 <?php
   $vle_apis = $configObject->get('vle_apis');
   $mu = module_utils::get_instance();
@@ -241,5 +240,6 @@ $miscdataset['attributes']['moduleid'] = $_GET['moduleid'];
 $miscdataset['attributes']['posturl'] = 'do_edit_module.php?moduleid=' . $_GET['moduleid'];
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+  <script src="../js/moduleeditinit.min.js"></script>
 </body>
 </html>

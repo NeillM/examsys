@@ -78,7 +78,7 @@ if (isset($_POST['submit'])) {
 
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
-$additionaljs = '<script type="text/javascript" src="../js/config.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/config.css"/>';
 $breadcrumb = array($string['home'] => '../index.php', $string['administrativetools'] => 'index.php');
 $render->render_admin_header($string, $additionaljs, $addtionalcss);
@@ -177,4 +177,7 @@ foreach ($displayconfigs as $area => $conf) {
 }
 
 $render->render(array(), $string, 'admin/config/config_footer.html');
-$render->render_admin_footer();
+$js = [
+    '/js/config.min.js',
+];
+$render->render_admin_footer($js);

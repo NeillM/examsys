@@ -263,7 +263,6 @@ if ($userObject->is_special_needs()) {
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src='../js/studentinit.min.js'></script>
 
   <?php require_once '../include/toprightmenu.inc'; ?>
 </head>
@@ -410,5 +409,6 @@ if (!$userObject->has_role('Student')) {
 }
 ?>
 </div>
+<script src='../js/studentinit.min.js'></script>
 </body>
 </html>

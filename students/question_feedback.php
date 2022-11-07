@@ -116,9 +116,6 @@ $headerdata = array(
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
     ),
-    'scripts' => array(
-        '/js/questionfeedback.min.js',
-    ),
 );
 $lang['title'] = $string['examscript'];
 $headerdata['mathjax'] = false;
@@ -204,4 +201,9 @@ $render = new render($configObject);
 $render->render($miscdataset, array(), 'dataset.html');
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 $mysqli->close();
-$render->render(array(), array(), 'footer.html');
+$data = [
+    'scripts' => array(
+        '/js/questionfeedback.min.js',
+    ),
+];
+$render->render($data, array(), 'footer.html');

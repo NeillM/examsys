@@ -53,7 +53,6 @@ $result->close();
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/announcementinit.min.js"></script>
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->display_header();
@@ -127,6 +126,7 @@ if (mb_substr($startdate, 0, 4) < date('Y')) {
 </form>
 </div>
 
+<script src="../js/announcementinit.min.js"></script>
 </body>
 <?php
 // JS utils dataset.

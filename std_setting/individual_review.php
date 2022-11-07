@@ -122,7 +122,6 @@ function check_ebel_distinction_type($reviewID, $db)
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/stdsetreviewinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -552,5 +551,6 @@ $render->render($miscdataset, array(), 'dataset.html');
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 
 ?>
+<script src="../js/stdsetreviewinit.min.js"></script>
 </body>
 </html>
