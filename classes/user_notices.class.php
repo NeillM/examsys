@@ -76,6 +76,7 @@ class user_notices extends RogoStaticSingleton
 
         $configObject = Config::get_instance();
         $root = str_replace('/classes', '/', str_replace('\\', '/', dirname(__FILE__)));
+        $noticedata = [];
 
         if (!file_exists($root . 'config/config.inc.php')) {
             // If we have not installed there is no config.inc.php file.
@@ -97,14 +98,20 @@ class user_notices extends RogoStaticSingleton
             );
         }
         $render = new render($configObject);
+
+        $lang = [
+            'title' => $title,
+        ];
+
         if ($output_header == true) {
-            $lang['title'] = $title;
             $render->render($headerdata, $lang, 'header.html');
-            $noticedata['titlecolour'] = $title_color;
-            $noticedata['msg'] = $msg;
-            $noticedata['icon'] = $icon;
-            $render->render($noticedata, $lang, 'notice.html');
         }
+
+        $noticedata['titlecolour'] = $title_color;
+        $noticedata['msg'] = $msg;
+        $noticedata['icon'] = $icon;
+        $render->render($noticedata, $lang, 'notice.html');
+
         if ($output_footer == true) {
             $render->render(array(), array(), 'footer.html');
         }
