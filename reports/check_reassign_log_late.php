@@ -89,6 +89,21 @@ if ($propertyObj->is_live()) {
       }
   }
   $result->close();
+
+  // Get an estimated duration for the exam based on the information stored in the late log.
+  // It may not be the same as the final duration since that is calculated from all the duration fields in the log
+  // we cannot do that here since there may not be a full set of entries in the late log for the paper.
+  $sql = 'SELECT TIME_TO_SEC(TIMEDIFF(MAX(l.updated), MIN(lm.started)))
+          FROM log_late l INNER JOIN log_metadata lm ON l.metadataID = lm.id 
+          WHERE lm.userID = ? AND lm.paperID = ? AND lm.id = ?
+          GROUP BY lm.id';
+  $result = $mysqli->prepare($sql);
+  $result->bind_param('iis', $userID, $paperID, $metadataID);
+  $result->execute();
+  $result->bind_result($duration);
+  $result->fetch();
+  $result->close();
+
   // Get any questions which have gone into log_late
   $missing = array();
   $missing_no = 0;
@@ -117,6 +132,7 @@ if ($propertyObj->is_live()) {
   // Display which records are in log_late for the current student.
   $student_details = UserUtils::get_user_details($userID, $mysqli);
   echo '<p style="font-size:120%">' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'] . "</p>\n";
+  echo '<p>' . sprintf($string['duration'], date_utils::formatDuration($duration)) . '</p>';
   echo "<div style=\"font-size:100%; background-color:#295AAD\"><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%\">\n";
   echo '<tr><th style="width:80px">' . $string['question'] . '</th><th style="width:70px">' . $string['screen'] . '</th><th style="width:150px">' . $string['saved'] . '</th><th>' . $string['ipaddress'] . "</th></tr>\n";
   echo "</table></div>\n";
