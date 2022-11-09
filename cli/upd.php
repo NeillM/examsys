@@ -175,6 +175,7 @@ $mysqli->autocommit(false);
 
 // Run individual update files
 $files = scandir($migration_path);
+$oldmask = umask(0);
 foreach ($files as $file) {
     if (StringUtils::ends_with($file, '.php')) {
         cli_utils::prompt($migration_path . '/' . $file);
@@ -182,6 +183,7 @@ foreach ($files as $file) {
         $mysqli->commit();
     }
 }
+umask($oldmask);
 
 $mysqli->commit();
 
@@ -216,9 +218,12 @@ $mysqli->commit();
 // Update language packs.
 if ($update_langpacks) {
     try {
+        $oldmask = umask(0);
         InstallUtils::download_langpacks();
+        umask($oldmask);
         cli_utils::prompt($string['langsuccess']);
     } catch (Exception $e) {
+        umask($oldmask);
         switch ($e->getMessage()) {
             case 'CANNOT_DOWNLOAD_XML':
                 cli_utils::prompt($string['cannotdownloadxml']);

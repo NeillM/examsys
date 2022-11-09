@@ -79,6 +79,7 @@ if (function_exists('opcache_reset')) {
 chdir(__DIR__);
 
 try {
+    $oldmask = umask(0);
     // Ensure composer and it's dependancies are installed and upto date.
     composer_utils::setup($composer_method);
     // Ensure npm and it's dependancies are installed and upto date.
@@ -97,7 +98,9 @@ try {
     }
     // Display the command to run tests.
     cli_utils::prompt(help::run_help());
+    umask($oldmask);
 } catch (Exception $e) {
+    umask($oldmask);
     cli_utils::prompt($e->getMessage());
     cli_utils::prompt(help::error());
 }
