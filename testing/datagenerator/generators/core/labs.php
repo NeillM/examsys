@@ -368,7 +368,16 @@ class labs extends generator
     {
         $sql = 'INSERT INTO labs (name, campus, building, room_no, timetabling, it_support, plagarism) VALUES (?, ?, ?, ?, ?, ?, ?)';
         $query = $this->db->prepare($sql);
-        $query->bind_param('sisssss', $values['name'], $values['campus'], $building, $room_no, $timetabling, $it_support, $plagarism);
+        $query->bind_param(
+            'sisssss',
+            $values['name'],
+            $values['campus'],
+            $values['building'],
+            $values['room'],
+            $values['timetabling'],
+            $values['support'],
+            $values['plagarism']
+        );
         if (!$query->execute()) {
             // The lab was not successfully inserted.
             throw new data_error("Lab {$values['name']} not inserted into database");

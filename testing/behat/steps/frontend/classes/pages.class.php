@@ -115,6 +115,7 @@ trait pages
      *
      * || Page            || Section                                       || Data                  ||
      * | User profile     | Log, Teams, Admin, Roles, Modules, Notes, ect  | A username              |
+     * | Lab              |                                                | The name of a lab       |
      *
      * @param string $page
      * @param string $data
@@ -134,12 +135,33 @@ trait pages
             case 'Calendar':
                 $this->visitCalendar($data, $section);
                 break;
+            case 'Lab':
+                $this->visitLab($data);
+                break;
             default:
                 // Unsupported page type.
                 throw new PendingException("A handler for the '$page' page has not been implemented.");
                 break;
         }
         $this->lookForErrors();
+    }
+
+    /**
+     * Loads the admin page for a lab.
+     *
+     * @param string $lab
+     * @return void
+     */
+    protected function visitLab(string $lab)
+    {
+        if (empty($lab)) {
+            $url = Url::labList();
+        } else {
+            $helper = new \LabFactory(state::get_db());
+            $labid = $helper->get_lab_id($lab);
+            $url = Url::lab($labid);
+        }
+        $this->visit($url);
     }
 
     /**
