@@ -97,6 +97,7 @@ if (function_exists('opcache_reset')) {
 }
 
 try {
+    $oldmask = umask(0);
     InstallUtils::$cli = true;
     // Check if already installed.
     InstallUtils::checkDirPermissionsPre();
@@ -110,19 +111,22 @@ try {
         requirements::check();
     } catch (Exception $e) {
         cli_utils::prompt($e->getMessage());
+        umask($oldmask);
         exit(0);
     }
     // Install.
     InstallUtils::checkDirPermissionsPost();
     $args = array(
-    'mysql_admin_user' => $databaseuser,
-    'mysql_admin_pass' => $databasepassword,
-    'mysql_db_host' => $databasehost,
-    'mysql_db_port' => $databaseport,
-    'mysql_db_name' => $databasename
+        'mysql_admin_user' => $databaseuser,
+        'mysql_admin_pass' => $databasepassword,
+        'mysql_db_host' => $databasehost,
+        'mysql_db_port' => $databaseport,
+        'mysql_db_name' => $databasename
     );
     InstallUtils::processForm($args);
+    umask($oldmask);
 } catch (Exception $e) {
+    umask($oldmask);
     cli_utils::prompt($e->getMessage());
     cli_utils::prompt($error);
 }
