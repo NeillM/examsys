@@ -86,6 +86,7 @@ class selectors
         'tab' => 'tab',
         'papers_by_school' => 'papers_by_school',
         'clock_anomaly' => 'clock_anomaly',
+        'text' => 'text',
     );
 
     /**
@@ -95,103 +96,104 @@ class selectors
      * @var array
      */
     protected static $rogoselectors = array(
-    'menu_item' => <<<XPATH
+        'menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]
 XPATH
-     ,'mainmenuicon' => <<<XPATH
+        ,'mainmenuicon' => <<<XPATH
 //img[contains(@id,'toprightmenu_icon')]
 XPATH
-     ,'admin_tool_link' => <<<XPATH
+        ,'admin_tool_link' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' container ') and contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'sub_menu' => <<<XPATH
+        ,'sub_menu' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' popup ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'menu_section' => <<<XPATH
+        ,'menu_section' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-
-    ,'pagetitle ' => <<<XPATH
+        ,'pagetitle ' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-
-    ,'navigation' => <<<XPATH
+        ,'navigation' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' breadcrumb ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'main_content' => <<<XPATH
+        ,'main_content' => <<<XPATH
 //table[contains(concat(' ', normalize-space(@id), ' '), ' content ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'paper_title' => <<<XPATH
+        ,'paper_title' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' page_title ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-     ,'pop_page_title' => <<<XPATH
+        ,'pop_page_title' => <<<XPATH
 //title[contains(concat(' ', normalize-space(.), ' '), %locator%)]
 XPATH
-     ,'menu' => <<<XPATH
+        ,'menu' => <<<XPATH
 //div[contains(@class, 'sidebar')]
 XPATH
-      ,'main_menu' => <<<XPATH
+        ,'main_menu' => <<<XPATH
 //div[contains(@id, 'toprightmenu')]
 XPATH
-      ,'main_menu_item' => <<<XPATH
+        ,'main_menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' trm_div ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-      ,'main_menu_icon' => <<<XPATH
+        ,'main_menu_icon' => <<<XPATH
 //img[@id='toprightmenu_icon']
 XPATH
-    ,'search_menu' => <<<XPATH
+        ,'search_menu' => <<<XPATH
 //div[contains(@id, 'popup0') and contains(@style, 'display: block;')]
 XPATH
-    ,'sub_search_menu_item' => <<<XPATH
+        ,'sub_search_menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' popupitem ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'content_section' => <<<XPATH
+        ,'content_section' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' subsect_title ')]/nobr
 XPATH
-    ,'folder' => <<<XPATH
+        ,'folder' => <<<XPATH
     //div[contains(concat(' ', normalize-space(@class), ' '), ' f_details ') and contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'paper_type' => <<<XPATH
+        ,'paper_type' => <<<XPATH
 //td[contains(concat(' ', normalize-space(@class), ' '), ' icon ') and contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'question_type' => <<<XPATH
+        ,'question_type' => <<<XPATH
 //tr[contains(concat(' ', normalize-space(@class), ' '), 'q') and contains(@data-qtype , %locator%)]
 XPATH
-    ,'paper_question_leadin' => <<<XPATH
+        ,'paper_question_leadin' => <<<XPATH
 //td[contains(@class, 'l') and contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'bank_question_leadin' => <<<XPATH
+        ,'bank_question_leadin' => <<<XPATH
 //*[contains(@class, 'viewq') and contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'summary_mark' => <<<XPATH
+        ,'summary_mark' => <<<XPATH
 //td[contains(text(),'Your mark')]/following-sibling::td[contains(normalize-space(.), %locator%)]
 XPATH
-    ,'classification_button' => <<<XPATH
+        ,'classification_button' => <<<XPATH
 //td[contains(@class, 'overall') and contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'class_totals_menu_item' => <<<XPATH
+        ,'class_totals_menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' popup_title ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'class_totals_student' => <<<XPATH
+        ,'class_totals_student' => <<<XPATH
 //td[contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'question_bank_item' => <<<XPATH
+        ,'question_bank_item' => <<<XPATH
 //tr[contains(@class, 'q') and contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'audit_object' => <<<XPATH
+        ,'audit_object' => <<<XPATH
 //td[contains(@id, 'object')]//a[contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'audit_user' => <<<XPATH
+        ,'audit_user' => <<<XPATH
 //td[contains(@id, 'user')]//a[contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'audit_source' => <<<XPATH
+        ,'audit_source' => <<<XPATH
 //td[contains(@id, 'source')]//a[contains(normalize-space(.) , %locator%)]
 XPATH
-    ,'tab' => <<<XPATH
+        ,'tab' => <<<XPATH
 //td[contains(@class, 'tabon') or contains(@class, 'taboff') and contains(normalize-space(.) , %locator%)]  
 XPATH
-    ,'clock_anomaly' => <<<XPATH
+        ,'clock_anomaly' => <<<XPATH
 //td[contains(normalize-space(.), %locator%)]/following-sibling::td[contains(text(), 'User System Clock Anomaly')]
+XPATH
+        ,'text' => <<<XPATH
+//body[contains(normalize-space(.) , %locator%)]
 XPATH
     );
 

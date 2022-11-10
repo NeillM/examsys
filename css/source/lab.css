@@ -11,3 +11,8 @@
     margin-left: 10px;
     display: none;
 }
+
+.inuselab a {
+    color: #f90;
+    text-decoration: underline;
+}

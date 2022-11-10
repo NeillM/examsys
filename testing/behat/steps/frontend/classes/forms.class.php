@@ -17,6 +17,7 @@
 
 namespace testing\behat\steps\frontend;
 
+use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 
 /**
@@ -45,6 +46,25 @@ trait forms
             throw new \Exception("The form field $field could not be found");
         }
         $element->setValue($value);
+    }
+
+    /**
+     * Fills in multiple fields in a form.
+     *
+     * Requires the following values:
+     * - field
+     * - value
+     *
+     * @When /^I set the fields:$/
+     *
+     * @param TableNode $fields
+     * @return void
+     */
+    public function iSetFields(TableNode $fields)
+    {
+        foreach ($fields->getHash() as $row) {
+            $this->i_set_field($row['field'], $row['value']);
+        }
     }
 
     /**

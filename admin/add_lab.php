@@ -38,7 +38,7 @@ $low_bandwidth = param::optional('low_bandwidth', 0, param::INT, param::FETCH_PO
 $timetabling = param::optional('timetabling', null, param::TEXT, param::FETCH_POST);
 $it_support = param::optional('it_support', null, param::TEXT, param::FETCH_POST);
 $plagarism = param::optional('plagarism', null, param::TEXT, param::FETCH_POST);
-$addresses = explode(PHP_EOL, trim(param::optional('addresses', null, param::TEXT, param::FETCH_POST)));
+$addresses = explode(PHP_EOL, trim(param::optional('addresses', '', param::TEXT, param::FETCH_POST)));
 
 $campusobj = new campus($mysqli);
 $campuses = $campusobj->get_all_campus_details();
@@ -91,18 +91,18 @@ if (null === $campus) {
                 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin-left:10px; margin-right:10px">
                     <tr>
                         <td style="vertical-align:top; width:200px">
-                            <div><?php echo $string['ipaddresses'] ?></div>
+                            <div><label for="addresses"><?php echo $string['ipaddresses'] ?></label></div>
                             <textarea cols="20" rows="28" style="width:200px; height:590px" name="addresses" id="addresses" required><?= implode(PHP_EOL, $addresses); ?></textarea>
                         </td>
                         <td style="width:50px"></td>
                         <td style="vertical-align:top">
-                            <div><?php echo $string['name'] ?></div>
+                            <div><label for="lab_name"><?php echo $string['name'] ?></label></div>
                             <div><input type="text" size="40" maxlength="255" name="lab_name" id="lab_name" value="<?= $lab_name; ?>" required /></div>
                             <br />
 
-                            <div><?= $string['campus'] ?></div>
+                            <div><label for="campus"><?= $string['campus'] ?></label></div>
                             <div>
-                                <select name="campus">
+                                <select name="campus" id="campus">
                                     <?php foreach ($campuses as $key => $campusarray) : ?>
                                         <option value="<?= $key; ?>"<?php if ($campus == $key) :
                                             ?> selected<?php
@@ -112,41 +112,41 @@ if (null === $campus) {
                             </div>
                             <br />
 
-                            <div><?php echo $string['building'] ?></div>
-                            <div><input type="text" size="40" maxlength="255" name="building" value="<?= $building; ?>" required /></div>
+                            <div><label for="building"><?php echo $string['building'] ?></label></div>
+                            <div><input type="text" size="40" maxlength="255" name="building" id="building" value="<?= $building; ?>" required /></div>
                             <br />
 
-                            <div><?php echo $string['roomnumber'] ?></div>
-                            <div><input type="text" size="10" maxlength="255" name="room_no" value="<?= $room_no; ?>" required /></div>
+                            <div><label for="room_no"><?php echo $string['roomnumber'] ?></label></div>
+                            <div><input type="text" size="10" maxlength="255" name="room_no" id="room_no" value="<?= $room_no; ?>" required /></div>
                             <br />
 
                             <div><?php echo $string['bandwidth'] ?></div>
                             <div>
-                                <input type="radio" name="low_bandwidth" value="1"<?php if ($low_bandwidth) :
+                                <input type="radio" name="low_bandwidth" id="low_bandwidth_1" value="1"<?php if ($low_bandwidth) :
                                     ?> checked<?php
-                                                                                  endif; ?> /><?php echo $string['low'] ?>
+                                                                                                       endif; ?> /><label for="low_bandwidth_1"><?php echo $string['low'] ?></label>
                                 &nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="low_bandwidth" value="0"<?php if (!$low_bandwidth) :
+                                <input type="radio" name="low_bandwidth" id="low_bandwidth_2" value="0"<?php if (!$low_bandwidth) :
                                     ?> checked<?php
-                                                                                  endif; ?> /><?php echo $string['high'] ?>
+                                                                                                       endif; ?> /><label for="low_bandwidth_2"><?php echo $string['high'] ?></label>
                             </div>
                             <br />
 
-                            <div><?php echo $string['timetabling'] ?></div>
+                            <div><label for="timetabling"><?php echo $string['timetabling'] ?></label></div>
                             <div>
-                                <textarea name="timetabling" rows="3" cols="100"><?= $timetabling; ?></textarea>
+                                <textarea name="timetabling" id="timetabling" rows="3" cols="100"><?= $timetabling; ?></textarea>
                             </div>
                             <br />
 
-                            <div><?php echo $string['itsupport'] ?></div>
+                            <div><label for="it_support"><?php echo $string['itsupport'] ?></label></div>
                             <div>
-                                <textarea name="it_support" rows="3" cols="100"><?= $it_support; ?></textarea>
+                                <textarea name="it_support" id="it_support" rows="3" cols="100"><?= $it_support; ?></textarea>
                             </div>
                             <br />
 
-                            <div><?php echo $string['plagarism'] ?></div>
+                            <div><label for="plagarism"><?php echo $string['plagarism'] ?></label></div>
                             <div>
-                                <textarea name="plagarism" rows="3" cols="100"><?= $plagarism; ?></textarea>
+                                <textarea name="plagarism" id="plagarism" rows="3" cols="100"><?= $plagarism; ?></textarea>
                             </div>
                             <br />
                             <br />
