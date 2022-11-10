@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['announcement', 'form', 'jquery'], function (ANNOUNCEMENT, FORM, $) {
+requirejs(['announcement', 'form', 'editor', 'jquery'], function (ANNOUNCEMENT, FORM, EDITOR, $) {
     var form = new FORM();
     form.init();
 
@@ -37,6 +37,7 @@ requirejs(['announcement', 'form', 'jquery'], function (ANNOUNCEMENT, FORM, $) {
 
     $('#theform').submit(function (e) {
         e.preventDefault();
+        EDITOR.triggerSave();
         $.ajax({
             url: $('#dataset').attr('data-posturl'),
             type: "post",
