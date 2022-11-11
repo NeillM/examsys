@@ -270,13 +270,15 @@ if (php_uname('s') == 'Windows NT') {
                     $master_array[$row_no][] = $individual_col;
                 }
             }
-        }
-        $master_array[$row_no]['totalspace'] = format_space($master_array[$row_no][1] * 1024);
-        $master_array[$row_no]['freespace'] = format_space($master_array[$row_no][3] * 1024);
-        if ($master_array[$row_no][1] > 0) {
-            $master_array[$row_no]['percentage'] = 100 - (($master_array[$row_no][3] / $master_array[$row_no][1]) * 100);
-        } else {
-            $master_array[$row_no]['percentage'] = 0;
+            if (isset($master_array[$row_no][1]) and isset($master_array[$row_no][3])) {
+                $master_array[$row_no]['totalspace'] = format_space($master_array[$row_no][1] * 1024);
+                $master_array[$row_no]['freespace'] = format_space($master_array[$row_no][3] * 1024);
+                if ($master_array[$row_no][1] > 0) {
+                    $master_array[$row_no]['percentage'] = 100 - (($master_array[$row_no][3] / $master_array[$row_no][1]) * 100);
+                } else {
+                    $master_array[$row_no]['percentage'] = 0;
+                }
+            }
         }
         $row_no++;
     }
