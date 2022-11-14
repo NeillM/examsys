@@ -2330,60 +2330,59 @@ class PaperProperties
     public function build_paper($is_question_preview_mode, $get_qid, $q_number, $hide_notes = false)
     {
         $paperID = $this->get_property_id();
-        $questioninfo = "q_type,
-                          q_id,
-                          score_method,
-                          display_method,
-                          settings,
-                          marks_correct,
-                          marks_incorrect,
-                          marks_partial,
-                          theme,
-                          scenario,
-                          leadin,
-                          correct,
-                          correct_fback,
-                          REPLACE(option_text,'\t','') AS option_text,
-                          source,
-                          width,
-                          height,
-                          alt,
-                          notes,
-                          display_pos,
-                          q_option_order";
-        $from = 'papers, questions LEFT JOIN options ON questions.q_id = options.o_id 
-            LEFT JOIN options_media ON options.id_num = options_media.oid
-            LEFT JOIN media m on options_media.mediaid = m.id';
-        $orderby = 'display_pos, id_num';
+        $q_select = 'q_type,
+                     q_id,
+                     score_method,
+                     display_method,
+                     settings,
+                     theme,
+                     scenario,
+                     leadin,
+                     correct_fback,
+                     notes,
+                     display_pos,
+                     q_option_order';
+
+        $o_select = "o_id,
+                     id_num,
+                     marks_correct,
+                     marks_incorrect,
+                     marks_partial,
+                     correct,
+                     REPLACE(option_text,'\t','') AS option_text,
+                     source,
+                     width,
+                     height,
+                     alt";
+
+        $q_from = 'papers JOIN questions ON papers.question = questions.q_id';
+        $o_from = 'options LEFT JOIN (options_media JOIN media m ON options_media.mediaid = m.id)
+            ON options.id_num = options_media.oid';
+        $q_orderby = 'display_pos';
         if ($is_question_preview_mode) {
-            $where = 'paper = ? AND
-                    q_id = ? AND
-                    papers.question = questions.q_id';
-            $question_data = $this->db->prepare("SELECT
-                                              1,
-                                              $questioninfo
-                                            FROM
-                                              $from
-                                            WHERE
-                                              $where
-                                            ORDER BY
-                                              $orderby");
+            $where = 'paper = ? AND q_id = ?';
+            $q_sql = "SELECT 1, $q_select FROM $q_from WHERE $where ORDER BY $q_orderby";
+            $question_data = $this->db->prepare($q_sql);
             $question_data->bind_param('ii', $paperID, $get_qid);
+
+            $o_where = "o_id IN (SELECT q_id FROM $q_from WHERE $where) ";
+            $o_sql = "SELECT $o_select FROM $o_from WHERE $o_where";
+            $option_data = $this->db->prepare($o_sql);
+            $option_data->bind_param('ii', $paperID, $get_qid);
         } else {
-            $where = 'paper = ? AND
-                    papers.question = questions.q_id';
-            $question_data = $this->db->prepare("SELECT
-                                                screen,
-                                                $questioninfo
-                                              FROM
-                                                $from
-                                              WHERE
-                                                $where
-                                              ORDER BY
-                                                $orderby");
+            $where = 'paper = ?';
+            $q_sql = "SELECT screen, $q_select FROM $q_from WHERE $where ORDER BY $q_orderby";
+            $question_data = $this->db->prepare($q_sql);
             $tmp_pid = $paperID;
             $question_data->bind_param('i', $tmp_pid);
+
+            $o_where = "o_id IN (SELECT q_id FROM $q_from WHERE $where) ";
+            $o_sql = "SELECT $o_select FROM $o_from WHERE $o_where";
+            $option_data = $this->db->prepare($o_sql);
+            $option_data->bind_param('i', $tmp_pid);
         }
+
+        // Get the data for each question.
         $question_data->execute();
         $question_data->store_result();
         $question_data->bind_result(
@@ -2393,19 +2392,10 @@ class PaperProperties
             $score_method,
             $display_method,
             $settings,
-            $marks_correct,
-            $marks_incorrect,
-            $marks_partial,
             $theme,
             $scenario,
             $leadin,
-            $correct,
             $correct_fback,
-            $option_text,
-            $option_media,
-            $option_media_width,
-            $option_media_height,
-            $option_media_alt,
             $notes,
             $display_pos,
             $q_option_order
@@ -2418,62 +2408,108 @@ class PaperProperties
         // Build the questions_array
         $tmp_questions_array = array();
         while ($question_data->fetch()) {
-            if ($q_no == 0 or $tmp_questions_array[$q_no]['q_id'] != $q_id or $tmp_questions_array[$q_no]['display_pos'] != $display_pos) {
-                $q_no++;
-                if ($screen != $old_screen) {
-                    $no_on_screen = 0;
-                }
-                if ($q_type != 'info') {
-                    $assigned_number++;
-                    $no_on_screen++;
-                }
-                if (!is_null($q_number)) {
-                    $tmp_questions_array[$q_no]['assigned_number'] = $q_number;   // Preview mode, use the number that is passed in.
-                } else {
-                    $tmp_questions_array[$q_no]['assigned_number'] = $assigned_number;
-                }
-                $tmp_questions_array[$q_no]['no_on_screen'] = $no_on_screen;
-                $tmp_questions_array[$q_no]['screen'] = $screen;
-                $tmp_questions_array[$q_no]['theme'] = trim($theme);
-                $tmp_questions_array[$q_no]['scenario'] = trim($scenario);
-                $tmp_questions_array[$q_no]['leadin'] = trim($leadin);
-                $tmp_questions_array[$q_no]['notes'] = $hide_notes ? '' : trim($notes);
-                $tmp_questions_array[$q_no]['q_type'] = $q_type;
-                $tmp_questions_array[$q_no]['q_id'] = $q_id;
-                $tmp_questions_array[$q_no]['display_pos'] = $display_pos;
-                $tmp_questions_array[$q_no]['score_method'] = $score_method;
-                $tmp_questions_array[$q_no]['display_method'] = $display_method;
-                $tmp_questions_array[$q_no]['settings'] = $settings;
-                $tmp_questions_array[$q_no]['q_option_order'] = $q_option_order;
-                $tmp_questions_array[$q_no]['dismiss'] = '';
-                $tmp_questions_array[$q_no]['correct_fback'] = $correct_fback;
-                $used_questions[$q_id] = 1;
+            $q_no++;
+            if ($screen != $old_screen) {
+                $no_on_screen = 0;
             }
-            $tmp_questions_array[$q_no]['options'][] = array(
-              'correct' => $correct,
-              'option_text' => $option_text,
-              'o_media' => $option_media,
-              'o_media_width' => $option_media_width,
-              'o_media_height' => $option_media_height,
-              'o_media_alt' => $option_media_alt,
-              'marks_correct' => $marks_correct,
-              'marks_incorrect' => $marks_incorrect,
-              'marks_partial' => $marks_partial);
+            if ($q_type != 'info') {
+                $assigned_number++;
+                $no_on_screen++;
+            }
+            if (!is_null($q_number)) {
+                $tmp_questions_array[$q_id]['assigned_number'] = $q_number;   // Preview mode, use the number that is passed in.
+            } else {
+                $tmp_questions_array[$q_id]['assigned_number'] = $assigned_number;
+            }
+            $tmp_questions_array[$q_id]['no_on_screen'] = $no_on_screen;
+            $tmp_questions_array[$q_id]['screen'] = $screen;
+            $tmp_questions_array[$q_id]['theme'] = trim($theme);
+            $tmp_questions_array[$q_id]['scenario'] = trim($scenario);
+            $tmp_questions_array[$q_id]['leadin'] = trim($leadin);
+            $tmp_questions_array[$q_id]['notes'] = $hide_notes ? '' : trim($notes);
+            $tmp_questions_array[$q_id]['q_type'] = $q_type;
+            $tmp_questions_array[$q_id]['q_id'] = $q_id;
+            $tmp_questions_array[$q_id]['display_pos'] = $display_pos;
+            $tmp_questions_array[$q_id]['score_method'] = $score_method;
+            $tmp_questions_array[$q_id]['display_method'] = $display_method;
+            $tmp_questions_array[$q_id]['settings'] = $settings;
+            $tmp_questions_array[$q_id]['q_option_order'] = $q_option_order;
+            $tmp_questions_array[$q_id]['dismiss'] = '';
+            $tmp_questions_array[$q_id]['correct_fback'] = $correct_fback;
+            $tmp_questions_array[$q_id]['options'] = [];
+            $used_questions[$q_id] = 1;
+
+            // Get question media.
+            $media = QuestionUtils::getMediaAsString($q_id);
+            $tmp_questions_array[$q_id]['q_media'] = $media['source'];
+            $tmp_questions_array[$q_id]['q_media_width'] = $media['width'];
+            $tmp_questions_array[$q_id]['q_media_height'] = $media['height'];
+            $tmp_questions_array[$q_id]['q_media_alt'] = $media['alt'];
+            $tmp_questions_array[$q_id]['q_media_num'] = $media['num'];
+
             $old_screen = $screen;
         }
         $question_data->free_result();
         $question_data->close();
 
-        // Get Media.
-        for ($i = 1; $i <= $q_no; $i++) {
-            $media = QuestionUtils::getMediaAsString($tmp_questions_array[$i]['q_id']);
-            $tmp_questions_array[$i]['q_media'] = $media['source'];
-            $tmp_questions_array[$i]['q_media_width'] = $media['width'];
-            $tmp_questions_array[$i]['q_media_height'] = $media['height'];
-            $tmp_questions_array[$i]['q_media_alt'] = $media['alt'];
-            $tmp_questions_array[$i]['q_media_num'] = $media['num'];
+        // Add in the option data.
+        $option_data->execute();
+        $option_data->store_result();
+        $option_data->bind_result(
+            $q_id,
+            $id_num,
+            $marks_correct,
+            $marks_incorrect,
+            $marks_partial,
+            $correct,
+            $option_text,
+            $option_media,
+            $option_media_width,
+            $option_media_height,
+            $option_media_alt
+        );
+
+        while ($option_data->fetch()) {
+            $tmp_questions_array[$q_id]['options'][$id_num] = array(
+                'correct' => $correct,
+                'option_text' => $option_text,
+                'o_media' => $option_media,
+                'o_media_width' => $option_media_width,
+                'o_media_height' => $option_media_height,
+                'o_media_alt' => $option_media_alt,
+                'marks_correct' => $marks_correct,
+                'marks_incorrect' => $marks_incorrect,
+                'marks_partial' => $marks_partial
+            );
         }
-        return $tmp_questions_array;
+        $option_data->free_result();
+        $option_data->close();
+
+        // Now renumber the array so that the keys start at 1, and order the options by id_num.
+        $return_array = [];
+        $q_no = 0;
+        foreach ($tmp_questions_array as $qid => $question) {
+            $q_no++;
+            $options = $question['options'];
+            ksort($options);
+            if (empty($options)) {
+                // We must always have at least one set of options.
+                $options[] = array(
+                    'correct' => '',
+                    'option_text' => '',
+                    'o_media' => '',
+                    'o_media_width' => '',
+                    'o_media_height' => '',
+                    'o_media_alt' => '',
+                    'marks_correct' => '',
+                    'marks_incorrect' => '',
+                    'marks_partial' => '',
+                );
+            }
+            $question['options'] = array_values($options);
+            $return_array[$q_no] = $question;
+        }
+        return $return_array;
     }
 
     /**
