@@ -205,19 +205,33 @@ class PaperUtils
      */
     public function count_unassigned_papers($user_id, $db)
     {
-        $query = $db->prepare('SELECT count(properties.property_id)'
-            . ' FROM properties'
-            . ' LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id'
-            . ' WHERE paper_ownerID = ?'
-            . ' AND idMod is NULL'
-            . ' AND deleted IS NULL');
-        $query->bind_param('i', $user_id);
-        $query->execute();
-        $query->bind_result($count);
-        $query->fetch();
-        $query->close();
+        // Are using 2 queries here to avoid a left JOIN which has awful performance on NDB.
+        $all_papers_sql = <<<SQL
+SELECT COUNT(p.property_id) 
+FROM properties p 
+WHERE p.paper_ownerID = ? AND p.deleted IS NULL
+SQL;
+        $all_papers_query = $db->prepare($all_papers_sql);
+        $all_papers_query->bind_param('i', $user_id);
+        $all_papers_query->execute();
+        $all_papers_query->bind_result($all_papers_count);
+        $all_papers_query->fetch();
+        $all_papers_query->close();
 
-        return $count;
+        $papers_on_modules_sql = <<<SQL
+SELECT count(DISTINCT p.property_id) 
+FROM properties p 
+INNER JOIN properties_modules pm ON (p.property_id = pm.property_id)
+WHERE p.paper_ownerID = ? AND p.deleted IS NULL
+SQL;
+        $papers_on_modules_query = $db->prepare($papers_on_modules_sql);
+        $papers_on_modules_query->bind_param('i', $user_id);
+        $papers_on_modules_query->execute();
+        $papers_on_modules_query->bind_result($papers_on_modules_count);
+        $papers_on_modules_query->fetch();
+        $papers_on_modules_query->close();
+
+        return ($all_papers_count - $papers_on_modules_count);
     }
 
     /**
