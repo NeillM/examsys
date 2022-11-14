@@ -388,6 +388,8 @@ abstract class log
     /**
      * Check if user has previous attempts on ths paper.
      *
+     * An attempt should be completed for it to be a previous attempt.
+     *
      * @param int $paperid the paper identifier
      * @param int $userid the user identifier
      * @return bool
@@ -396,7 +398,8 @@ abstract class log
     {
         $configObj = Config::get_instance();
         $found = false;
-        $result = $configObj->db->prepare('SELECT NULL FROM log_metadata WHERE paperID = ? AND userID = ? LIMIT 1');
+        $sql = 'SELECT NULL FROM log_metadata WHERE paperID = ? AND userID = ? AND completed IS NOT NULL LIMIT 1';
+        $result = $configObj->db->prepare($sql);
         $result->bind_param('ii', $paperid, $userid);
         $result->execute();
         $result->store_result();

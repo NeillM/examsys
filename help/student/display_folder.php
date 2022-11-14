@@ -51,7 +51,6 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
-  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 <body>
   <div id="wrapper">
@@ -67,5 +66,6 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
   </div>
 </div>
 
+<script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </body>
 </html>

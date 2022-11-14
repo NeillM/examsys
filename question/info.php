@@ -47,7 +47,6 @@ $q_id = check_var('q_id', 'GET', true, false, true);
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/questioninfoinit.min.js"></script>
 </head>
 
 <body>
@@ -62,5 +61,6 @@ $q_id = check_var('q_id', 'GET', true, false, true);
 <input type="button" style="width:120px" name="ok" class="cancel" value="<?php echo $string['close']; ?>" />
 </form>
 </div>
+<script src="../js/questioninfoinit.min.js"></script>
 </body>
 </html>

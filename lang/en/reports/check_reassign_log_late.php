@@ -18,6 +18,7 @@
 $string['latesubmission'] = 'Late Submission';
 $string['question'] = 'Question';
 $string['screen'] = 'Screen';
+$string['duration'] = 'Duration: %s';
 $string['saved'] = 'Saved';
 $string['ipaddress'] = 'IP Address';
 $string['reject'] = 'Reject';

@@ -22,6 +22,16 @@ requirejs(['jsxls', 'form', 'jquery'], function (jsxls, FORM, $) {
     var form = new FORM();
     form.init();
 
+    /**
+     * Converts an IP address into a link that will go to a lab.
+     *
+     * @param {string} element
+     * @returns {string}
+     */
+    function make_lab_link(element) {
+        return '<a href="redirect_to_lab.php?ip=' + element + '">' + element + '</a>';
+    }
+
     $('#theform').submit(function(e){
         e.preventDefault();
         $.ajax({
@@ -34,11 +44,14 @@ requirejs(['jsxls', 'form', 'jquery'], function (jsxls, FORM, $) {
                     window.location = 'lab_details.php?labID=' + data[1];
                 } else if (data[0] == 'INVALID') {
                     if (data[1].length > 0) {
-                        $('.invalidlab').html(jsxls.lang_string['badaddressesinvalid'].replace('%s', data[1].join(',')));
+                        var list = '<ul><li>' + data[1].join('</li><li>') + '</li></ul>';
+                        $('.invalidlab').html(jsxls.lang_string['badaddressesinvalid'].replace('%s', list));
                         $('.invalidlab').show();
                     }
                     if (data[2].length > 0) {
-                        $('.inuselab').html(jsxls.lang_string['badaddressesinuse'].replace('%s', data[2].join(',')));
+                        var links = data[2].map(make_lab_link);
+                        var list2 = '<ul><li>' + links.join('</li><li>') + '</li></ul>';
+                        $('.inuselab').html(jsxls.lang_string['badaddressesinuse'].replace('%s', list2));
                         $('.inuselab').show();
                     }
                 }

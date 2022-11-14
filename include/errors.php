@@ -29,7 +29,7 @@ require $cfg_web_root . 'lang/' . $language . '/include/errors.php';
  * Display an error to the screen.
  * @param string $error_title - brief title or summary of the error
  * @param string $error_description - detailed description of what has happed to cause the error
- * @param bool $headers - if true output HTML header code
+ * @param bool $headers - Have the headers already been sent? If false output HTML header code.
  * @param bool $stop_execution - if true exit the script
  * @param bool $display_support_email - if true display the support email address (if it is set)
  */

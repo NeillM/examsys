@@ -59,7 +59,7 @@ $lang['title'] = $string['addcampus'];
 $lang['create'] = $string['createnewcampus'];
 $lang['view'] = $string['viewcampus'];
 $lang['delete'] = $string['deletecampus'];
-$additionaljs = '<script type="text/javascript" src="js/campusesinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<style type="text/css">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}
@@ -98,5 +98,8 @@ if (isset($_POST['submit']) and $duplicate) {
 </div>
 
 <?php
-    $render->render_admin_footer();
+$js = [
+    '/admin/campus/js/campusesinit.min.js',
+];
+$render->render_admin_footer($js);
 ?>

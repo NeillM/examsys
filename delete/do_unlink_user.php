@@ -61,7 +61,6 @@ $headerdata = array(
   'scripts' => array(
     '/js/require.js',
     '/js/main.min.js',
-    '/LTI/js/unlink_user.min.js',
   ),
 );
 $data = array(
@@ -71,4 +70,7 @@ $data = array(
 
 $render->render($headerdata, $string, 'header.html');
 $render->render($data, $string, 'message.html');
-$render->render_admin_footer();
+$js = [
+    '/LTI/js/unlink_user.min.js',
+];
+$render->render_admin_footer($js);

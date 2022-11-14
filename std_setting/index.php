@@ -91,7 +91,6 @@ function displayReview($review, $userObj)
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src='../js/stdsetinit.min.js'></script>
 </head>
 
 <body>
@@ -164,5 +163,6 @@ $dataset['attributes']['module'] = $module;
 $dataset['attributes']['folder'] = $folder;
 $render->render($dataset, array(), 'dataset.html');
 ?>
+<script src='../js/stdsetinit.min.js'></script>
 </body>
 </html>

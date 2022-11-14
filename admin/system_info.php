@@ -43,82 +43,43 @@ function format_space($space)
 
     return round($space, 1) . ' ' . $correct_units;
 }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>ExamSys: <?php echo $string['systeminformation']; ?></title>
+$render = new render($configObject);
+$lang = [
+    'title' => $string['systeminformation'],
+];
+$additionaljs = '';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/system_info.css"/>';
+$render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <style type="text/css">
-    .sechead {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
-    a {color:#215DC6}
-    a.heading {color:#215DC6; font-weight:bold}
-    a.heading:hover {color:#428EFF; font-weight:bold}
-        .on {width:30px; float:left; color:#008000; font-weight:bold}
-        .off {width:30px; float:left; color:#C00000; font-weight:bold}
-  </style>
+require '../include/toprightmenu.inc';
+$toprightmenu = draw_toprightmenu();
+$render->render_admin_options('', '', $lang, $toprightmenu, 'admin/no_sidebar.html');
 
-  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
-  <script src='../js/require.js'></script>
-  <script src='../js/main.min.js'></script>
-</head>
+$breadcrumb = [
+    $string['home'] => '../index.php',
+    $string['administrativetools'] => 'index.php',
+];
+$render->render_admin_content($breadcrumb, $lang);
 
-<body>
-<?php
-  require '../include/toprightmenu.inc';
+// Get information about important database tables.
+$sub_result = $mysqli->prepare('SELECT COUNT(id) FROM log_late');   // Query to get an accurate figure for log_late.
+$sub_result->execute();
+$sub_result->store_result();
+$sub_result->bind_result($latelogs);
+$sub_result->fetch();
+$sub_result->close();
 
-    echo draw_toprightmenu();
-?>
+$sub_result = $mysqli->prepare('SELECT COUNT(id) FROM temp_users');   // Query to get an accurate figure for temp_users.
+$sub_result->execute();
+$sub_result->store_result();
+$sub_result->bind_result($tempusers);
+$sub_result->fetch();
+$sub_result->close();
 
-<div id="content">
+// Get the MySQL stats.
+$mysql_stats = [];
 
-<div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['systeminformation'] ?></div>
-</div>
-
-<br />
-<div align="center">
-<table cellspacing="0" cellpadding="0" border="0" style="font-size:100%; text-align:left">
-<tr><td style="vertical-align:top">
-<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; text-align:left; width:360px">
-<tr><td style="width:180px" class="sechead"><?php echo $string['table']; ?></td><td class="sechead"><?php echo $string['records']; ?></td>
-</tr>
-<?php
-  // Get info about some database tables
-  $sub_result = $mysqli->prepare('SELECT COUNT(id) FROM log_late');   // Query to get an accurate figure for log_late.
-  $sub_result->execute();
-  $sub_result->store_result();
-  $sub_result->bind_result($Rows);
-  $sub_result->fetch();
-  $sub_result->close();
-if ($Rows > 0) {
-    echo '<tr><td style="color:#C00000">log_late&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;<a href="log_late_details.php">' . $string['More details'] . '</a></td>';
-    echo '<td style="text-align:right; color:#C00000">' . number_format($Rows) . '</td>';
-} else {
-    echo '<tr><td>log_late</td><td style="text-align:right">' . number_format($Rows) . '</td>';
-}
-  $sub_result = $mysqli->prepare('SELECT COUNT(id) FROM temp_users');   // Query to get an accurate figure for temp_users.
-  $sub_result->execute();
-  $sub_result->store_result();
-  $sub_result->bind_result($Rows);
-  $sub_result->fetch();
-  $sub_result->close();
-if ($Rows > 0) {
-    echo '<tr><td style="color:#C00000">temp_users&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . '" />&nbsp;<a href="clear_guest_users.php">' . $string['More details'] . '</a></td>';
-    echo '<td style="text-align:right; color:#C00000">' . number_format($Rows) . '</td>';
-} else {
-    echo '<tr><td>temp_users</td><td style="text-align:right">' . number_format($Rows) . '</td>';
-}
-
-echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-echo '<tr><td colspan="3" class="sechead">' . $string['mysqlstatus'] . "</td><td colspan=\"2\"></td></tr>\n";
 $status = explode('  ', $mysqli->stat());
 for ($i = 0; $i <= 7; $i++) {
     $parts = explode(': ', $status[$i]);
@@ -133,75 +94,19 @@ for ($i = 0; $i <= 7; $i++) {
             $hours = ($hours / 24);
             $units = 'days';
         }
-        echo '<tr><td>' . $string[mb_strtolower($parts[0])] . '</td><td style="text-align:right">' . number_format($hours) . '</td><td colspan="2">' . $string[$units] . "</td></tr>\n";
+        $value = number_format($hours) . ' ' . $string[$units];
     } elseif ($i < 7) {
-        echo '<tr><td>' . $string[mb_strtolower($parts[0])] . '</td><td style="text-align:right">' . number_format($parts[1]) . "</td><td colspan=\"2\"></td></tr>\n";
+        $value = number_format($parts[1]);
     } else {
-        echo '<tr><td>' . $string[mb_strtolower($parts[0])] . '</td><td style="text-align:right">' . $parts[1] . "</td><td colspan=\"2\"></td></tr>\n";
+        $value = $parts[1];
     }
-}
-echo "</table>\n<br />\n";
-
-// Get info on authentication stack
-$authinfo = $authentication->version_info(true, false);
-
-// Get info about enhanced calculation plugin
-$enhancedc1 = $configObject->get_setting('core', 'cfg_calc_type');
-$enhancedc2 = $configObject->get_setting('core', 'cfg_calc_settings');
-if (empty($enhancedc1)) {
-    $enhancedc1 = 'BLANK therefore phpEval';
-}
-$enhancedc3 = '';
-foreach ($enhancedc2 as $key => $value) {
-    $enhancedc3 .= "$key => $value<br />";
+    $mysql_stats[] = [
+        'title' => $string[mb_strtolower($parts[0])],
+        'value' => $value,
+    ];
 }
 
-$enhancedPlugininfo = "Type: $enhancedc1<br />$enhancedc3";
-// TODO really need a lookup plugin info section
-// Get info on error handling
-$ErrorLogSettings = '';
-$e1 = $configObject->get('display_auth_debug');
-$e2 = $configObject->get('debug_lang_string');
-$e3 = $configObject->get('displayerrors');
-$e4 = $configObject->get('displayallerrors');
-$e5 = $configObject->get('errorshutdownhandling');
-$e6 = $configObject->get('errorcontexthandling');
-$e7 = $configObject->get('logerrors');
-
-function onoff($status, $html)
-{
-    if ($status) {
-        $html .= '<br /><div class="on">On</div>';
-    } else {
-        $html .= '<br /><div class="off">Off</div>';
-    }
-    return $html;
-}
-
-$ErrorLogSettings = onoff(($e1 === true), $ErrorLogSettings);
-$ErrorLogSettings .= $string['authdebug'];
-
-$ErrorLogSettings = onoff(($e3 === true), $ErrorLogSettings);
-$ErrorLogSettings .= $string['errorsonscreen'];
-
-$ErrorLogSettings = onoff(($e7 === true), $ErrorLogSettings);
-$ErrorLogSettings .= $string['errorslogged'];
-
-$ErrorLogSettings = onoff(($e4 === true), $ErrorLogSettings);
-$ErrorLogSettings .= $string['phpnotices'];
-
-$ErrorLogSettings = onoff(($e5 === true), $ErrorLogSettings);
-$ErrorLogSettings .= $string['errorshutdown'];
-
-$ErrorLogSettings .= '<br />' . $string['varcapturemethod'] . ' ';
-if ($e6 == 'improved') {
-    $ErrorLogSettings .= $string['improved'];
-} elseif ($e6 == 'basic') {
-    $ErrorLogSettings .= $string['basic'];
-} else {
-    $ErrorLogSettings .= $string['none'];
-}
-
+// Get some details about the application.
 $yearutils = new yearutils($mysqli);
 
 if ($configObject->get_setting('core', 'system_hostname_lookup')) {
@@ -209,38 +114,59 @@ if ($configObject->get_setting('core', 'system_hostname_lookup')) {
 } else {
     $hostname_lookup = $string['ipaddress'];
 }
-?>
-</td>
-<td style="width:50px">&nbsp;</td>
-<td style="vertical-align:top">
-<table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:550px">
-<tr><td colspan="2" class="sechead"><?php echo $string['application']; ?></td></tr>
-<tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get_setting('core', 'rogo_version'); ?></td></tr>
-<?php
+
+$application = [
+    ['title' => $string['version'], 'value' => $configObject->get_setting('core', 'rogo_version')],
+    ['title' => $string['webroot'], 'value' => $configObject->get('cfg_web_root')],
+    ['title' => $string['database'], 'value' => $configObject->get('cfg_db_database')],
+    ['title' => $string['company'], 'value' => $configObject->get_setting('core', 'misc_company')],
+    ['title' => $string['lookups'], 'value' => $hostname_lookup],
+    ['title' => $string['Session'], 'value' => $yearutils->get_academic_session($yearutils->get_current_session())],
+];
 
 $build = $configObject->getxml('build');
 if (!is_null($build)) {
-    echo '<tr><td>' . $string['build'] . '</td><td>' . $build . '</td></tr>';
+    $start = array_slice($application, 0, 1);
+    $end = array_slice($application, 1);
+    $application = array_merge($start, [['title' => $string['build'], 'value' => $build]], $end);
 }
 
-?>
-<tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
-<tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
-<tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get_setting('core', 'misc_company'); ?></td></tr>
-<tr><td><?php echo $string['lookups']; ?></td><td><?php echo $hostname_lookup ?></td></tr>
-<tr><td><?php echo $string['Session']; ?></td><td><?php echo $yearutils->get_academic_session($yearutils->get_current_session()); ?></td></tr>
-<tr><td><?php echo $string['ErrorLogSettings']; ?></td><td><?php echo $ErrorLogSettings ?></td></tr>
+// Error reporting details.
+$contexthandling = $configObject->get('errorcontexthandling');
+$varcapture = $contexthandling ? $string[$contexthandling] : $string['none'];
 
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" class="sechead"><?php echo $string['rogoplugins']; ?></td></tr>
+$error_reporting = [
+    ['title' => $string['authdebug'], 'value' => $configObject->get('display_auth_debug'), 'type' => 'onoff'],
+    ['title' => $string['errorsonscreen'], 'value' => $configObject->get('displayerrors'), 'type' => 'onoff'],
+    ['title' => $string['errorslogged'], 'value' => $configObject->get('logerrors'), 'type' => 'onoff'],
+    ['title' => $string['phpnotices'], 'value' => $configObject->get('displayallerrors'), 'type' => 'onoff'],
+    ['title' => $string['errorshutdown'], 'value' => $configObject->get('errorshutdownhandling'), 'type' => 'onoff'],
+    ['title' => $string['varcapturemethod'], 'value' => $varcapture  , 'type' => 'string'],
+];
 
-<tr><td><?php echo $string['authentication']; ?></td><td><?php echo $authinfo; ?> <a href="./detailed_authentication_info.php"><?php echo $string['More details']; ?></a></td></tr>
-<tr><td><?php echo $string['EnhancedCalcPlugin']; ?></td><td><?php echo $enhancedPlugininfo ?></td></tr>
+// Information about plugins
 
-<tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" class="sechead"><?php echo $string['serverinformation']; ?></td></tr>
-<?php
+// Get info on authentication stack
+ob_start();
+$render->render($authentication->version_info(), $string, 'admin/system_info_auth.html');
+$authinfo = ob_get_clean();
 
+// Get info about enhanced calculation plugin
+$calc_data = [
+    'type' => $configObject->get_setting('core', 'cfg_calc_type'),
+    'settings' => $configObject->get_setting('core', 'cfg_calc_settings'),
+];
+ob_start();
+$render->render($calc_data, $string, 'admin/system_info_calc.html');
+$enhancedPlugininfo = ob_get_clean();
+
+$plugins = [
+    ['title' => $string['authentication'], 'value' => $authinfo],
+    ['title' => $string['EnhancedCalcPlugin'], 'value' => $enhancedPlugininfo],
+];
+
+// Get server details.
+$processorinfo = [];
 if (php_uname('s') != 'Windows NT') {
     // Try Linux command first
     $results = shell_exec('cat /proc/cpuinfo');
@@ -255,8 +181,11 @@ if (php_uname('s') != 'Windows NT') {
                 $processor = trim($components[1]);
             }
         }
-        echo '<tr><td>' . $string['processor'] . "</td><td>$processor</td></tr>\n";
-        echo '<tr><td>' . $string['cores'] . "</td><td>$core_no</td></tr>\n";
+
+        $processorinfo = [
+            ['title' => $string['processor'], 'value' => $processor],
+            ['title' => $string['cores'], 'value' => $core_no],
+        ];
     } else {
         // Try Solaris command
         $results = shell_exec('psrinfo -pv');
@@ -277,44 +206,51 @@ if (php_uname('s') != 'Windows NT') {
                 $speed = str_replace(')', '', $speed_parts[1]);
             }
         }
-    }
 
-    if (isset($processor_parts[0])) {
-        echo '<tr><td>' . $string['processor'] . '</td><td>' . $processor_parts[0] . "($speed)</td></tr>\n";
-        echo '<tr><td>' . $string['cpus'] . "</td><td>$physical ($virtual virtual)</td></tr>\n";
+        if (isset($processor_parts[0])) {
+            $processorinfo = [
+                ['title' => $string['processor'], 'value' => $processor_parts[0] . "($speed)"],
+                ['title' => $string['cpus'], 'value' => "$physical ($virtual virtual)"],
+            ];
+        }
     }
 } else {
     $results = shell_exec('wmic cpu get name');
     $lines = explode('<br />', nl2br($results));
-    echo '<tr><td>' . $string['processor'] . '</td><td>' . $lines[1] . "</td></tr>\n";
+    $processorinfo = [
+        ['title' => $string['processor'], 'value' => $lines[1]],
+    ];
 }
 
-echo '<tr><td style="width:90px">' . $string['servername'] . '</td><td>' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
-echo '<tr><td>' . $string['hostname'] . '</td><td>' . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
-echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_server_address() . "</td></tr>\n";
-echo '<tr><td>' . $string['clock'] . '</td><td>' . date($configObject->get('cfg_long_datetime_php')) . "</td></tr>\n";
+$serverinfo = [
+    ['title' => $string['servername'], 'value' => gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME']))],
+    ['title' => $string['hostname'] , 'value' => $_SERVER['HTTP_HOST']],
+    ['title' => $string['ipaddress'], 'value' => NetworkUtils::get_server_address()],
+    ['title' => $string['clock'], 'value' => date($configObject->get('cfg_long_datetime_php'))],
+    ['title' => $string['os'], 'value' => php_uname('s')],
+    ['title' => $string['webserver'], 'value' => $_SERVER['SERVER_SOFTWARE']],
+    ['title' => $string['php'], 'value' => phpversion()],
+    ['title' => $string['mysql'], 'value' => $mysqli->server_info],
+];
 
-echo '<tr><td>' . $string['os'] . '</td><td>' . php_uname('s') . "</td></tr>\n";
-
-echo '<tr><td>' . $string['webserver'] . '</td><td>' . $_SERVER['SERVER_SOFTWARE'] . "</td></tr>\n";
-echo '<tr><td>' . $string['php'] . '</td><td>' . phpversion() . "</td></tr>\n";
-echo '<tr><td>' . $string['mysql'] . '</td><td>' . $mysqli->server_info . "</td></tr>\n";
-
-echo '<tr><td colspan="2">&nbsp;</td></tr>';
-echo '<tr><td colspan="2" class="sechead">' . $string['partitions'] . '</td></tr>';
-
-echo '<tr><td colspan="2" rowspan="18" valign="top" align="left"><table cellspacing="0" cellpadding="2" border="0" style="font-size:90%">';
-
+// Partition information.
 if (php_uname('s') == 'Windows NT') {
     $disks = array('A:\\', 'B:\\', 'C:\\', 'D:\\', 'E:\\', 'F:\\', 'G:\\', 'H:\\', 'I:\\',
-    'J:\\', 'K:\\', 'L:\\', 'M:\\', 'N:\\', 'O:\\', 'P:\\', 'Q:\\', 'R:\\', 'S:\\', 'T:\\',
-    'U:\\', 'V:\\', 'W:\\', 'X:\\', 'Y:\\', 'Z:\\');
+        'J:\\', 'K:\\', 'L:\\', 'M:\\', 'N:\\', 'O:\\', 'P:\\', 'Q:\\', 'R:\\', 'S:\\', 'T:\\',
+        'U:\\', 'V:\\', 'W:\\', 'X:\\', 'Y:\\', 'Z:\\');
     $i = 1;
     foreach ($disks as $disk) {
         if (file_exists($disk)) {
             $master_array[$i][3] = @disk_free_space($disk);
             $master_array[$i][1] = @disk_total_space($disk);
             $master_array[$i][5] = $disk;
+            $master_array[$i]['totalspace'] = format_space($master_array[$i][1]);
+            $master_array[$i]['freespace'] = format_space($master_array[$i][3]);
+            if ($master_array[$i][1] > 0) {
+                $master_array[$i]['percentage'] = 100 - (($master_array[$i][3] / $master_array[$i][1]) * 100);
+            } else {
+                $master_array[$i]['percentage'] = 0;
+            }
             $i++;
         }
     }
@@ -334,46 +270,87 @@ if (php_uname('s') == 'Windows NT') {
                     $master_array[$row_no][] = $individual_col;
                 }
             }
+            if (isset($master_array[$row_no][1]) and isset($master_array[$row_no][3])) {
+                $master_array[$row_no]['totalspace'] = format_space($master_array[$row_no][1] * 1024);
+                $master_array[$row_no]['freespace'] = format_space($master_array[$row_no][3] * 1024);
+                if ($master_array[$row_no][1] > 0) {
+                    $master_array[$row_no]['percentage'] = 100 - (($master_array[$row_no][3] / $master_array[$row_no][1]) * 100);
+                } else {
+                    $master_array[$row_no]['percentage'] = 0;
+                }
+            }
         }
         $row_no++;
     }
 }
-for ($i = 1; $i < ($row_no - 1); $i++) {
-    if ($master_array[$i][5] != '' and $master_array[$i][1] != '0K') {
-        echo '<tr><td><img src="../artwork/drive_icon.png" width="48" height="48" alt="' . $string['driveicon'] . '" /></td><td>' . $master_array[$i][5] . '<br />';
-        echo '<span style="border: 1px solid #808080; display:block; height:11px; background-color:#EAEAEA; width:150px">';
 
-        if ($master_array[$i][1] > 0) {
-            $bar_width = round((1 - (intval($master_array[$i][3]) / intval($master_array[$i][1]))) * 148);
+// Get information about the directories.
 
+$mediadirectory = rogo_directory::get_directory('media');
+$themedirectory = rogo_directory::get_directory('theme');
+$studenthelp = rogo_directory::get_directory('help_student');
+$staffhelp = rogo_directory::get_directory('help_staff');
+$photodirectory = rogo_directory::get_directory('user_photo');
+$qtiimportdirectory = rogo_directory::get_directory('qti_import');
+$qtiexportdirectory = rogo_directory::get_directory('qti_export');
+$emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
 
-            $free_percent = ($master_array[$i][3] / $master_array[$i][1]) * 100;
-            $used_percent = 100 - $free_percent;
-            $bar_width = 1.48 * $used_percent;
+$directories = [
+    [
+        'name' => $string['dir_media'],
+        'permissions' => $mediadirectory->check_permissions(),
+        'location' => $mediadirectory->location(),
+    ],
+    [
+        'name' => $string['dir_theme'],
+        'permissions' => $themedirectory->check_permissions(),
+        'location' => $themedirectory->location(),
+    ],
+    [
+        'name' => $string['dir_student_help'],
+        'permissions' => $studenthelp->check_permissions(),
+        'location' => $studenthelp->location(),
+    ],
+    [
+        'name' => $string['dir_staff_help'],
+        'permissions' => $staffhelp->check_permissions(),
+        'location' => $staffhelp->location(),
+    ],
+    [
+        'name' => $string['dir_photo'],
+        'permissions' => $photodirectory->check_permissions(),
+        'location' => $photodirectory->location(),
+    ],
+    [
+        'name' => $string['dir_qti_import'],
+        'permissions' => $qtiimportdirectory->check_permissions(),
+        'location' => $qtiimportdirectory->location(),
+    ],
+    [
+        'name' => $string['dir_qti_export'],
+        'permissions' => $qtiexportdirectory->check_permissions(),
+        'location' => $qtiexportdirectory->location(),
+    ],
+    [
+        'name' => $string['dir_email'],
+        'permissions' => $emailtemplatesdirectory->check_permissions(),
+        'location' => $emailtemplatesdirectory->location(),
+    ],
+];
 
-            if ($used_percent > 90) {
-                echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#DA2626"></span>';  // Red bar
-            } else {
-                echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
-            }
-        }
-        // linux resutls are in kbyte blocks
-        if (php_uname('s') != 'Windows NT') {
-            $master_array[$i][3] = $master_array[$i][3] * 1024;
-            $master_array[$i][1] = $master_array[$i][1] * 1024;
-        }
-        echo '</span><span style="color:#808080">' . sprintf($string['freespace'], format_space($master_array[$i][3]), format_space($master_array[$i][1])) . '</span></td></tr>';
-    }
-}
-echo '</table></td></tr>';
+$pagedata = [
+    'application' => $application,
+    'directories' => $directories,
+    'error_reporting' => $error_reporting,
+    'late_log_count' => $latelogs,
+    'late_log_warning' => ($latelogs > 0),
+    'mysql_stats' => $mysql_stats,
+    'partitions' => $master_array,
+    'plugins' => $plugins,
+    'serverinfo' => array_merge($processorinfo, $serverinfo),
+    'temp_user_count' => $tempusers,
+    'temp_user_warning' => ($tempusers > 0),
+];
 
-echo "</table>\n<br />\n";
-$mysqli->close();
-
-?>
-</td></tr>
-</table>
-</div>
-</div>
-</body>
-</html>
+$render->render($pagedata, $string, 'admin/system_info.html');
+$render->render_admin_footer();

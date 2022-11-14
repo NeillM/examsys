@@ -53,13 +53,12 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
- <script src="../js/questionlinkinit.min.js"></script>
 </head>
 
 <?php
 if (!isset($_POST['submit'])) {
     echo "<body class='submit'><form method=\"post\" id=\"theForm\" name=\"theForm\" action=\"" . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] . "\" autocomplete=\"off\">\n";
-    ?>  
+    ?>
 
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/link_to_paper.png" width="32" height="32" alt="<?php echo $string['linktopaper']; ?>" /></td><td class="midblue_header" style="background-color:white; font-size:150%; font-weight:bold; border-bottom:1px solid #CCD9EA"><?php echo $string['linktopaper']; ?></td></tr>
@@ -179,5 +178,6 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 ?>
+<script src="../js/questionlinkinit.min.js"></script>
 </body>
 </html>

@@ -83,7 +83,7 @@ if (isset($_POST['submit'])) {
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['editplugins'];
-$additionaljs = '<script type="text/javascript" src="js/pluginsinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/config.css"/>';
 $breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['rogoplugins'] => '../plugins/list_plugins.php');
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
@@ -128,5 +128,8 @@ $render->render_admin_content($breadcrumb, $lang);
 </div>
 
 <?php
-    $render->render_admin_footer();
+$js = [
+    '/admin/plugins/js/pluginsinit.min.js',
+];
+$render->render_admin_footer($js);
 ?>

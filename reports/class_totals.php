@@ -90,7 +90,6 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
     <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
-    <script src='../js/classtotalsinit.min.js'></script>
   </head>
   <body>
     <?php
@@ -130,6 +129,7 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render->render($jsdataset, array(), 'dataset.html');
     ?>
+  <script src='../js/classtotalsinit.min.js'></script>
   </body>
   </html>
     <?php
@@ -155,8 +155,6 @@ ob_start();
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src='../js/classtotalsinit.min.js'></script>
-
 </head>
 
 
@@ -506,7 +504,7 @@ for ($i = 0; $i < $user_no; $i++) {
             // Duration column
             echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
             if ($late_submissions == 'y') {
-                echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" title="' . $string['markingnotcomplete'] . '" alt="' . $string['markingnotcomplete'] . '"  width="12" height="11" />';
+                echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" title="' . $string['lateresults'] . '" alt="' . $string['lateresults'] . '"  width="12" height="11" />';
             }
             echo '</td>';
 
@@ -885,5 +883,6 @@ if ($user_no > 0) {
   $render->render($dataset, array(), 'dataset.html');
   $mysqli->close();
 ?>
+  <script src='../js/classtotalsinit.min.js'></script>
 </body>
 </html>

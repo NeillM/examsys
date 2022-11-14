@@ -99,7 +99,6 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/questionlistinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -397,5 +396,6 @@ $miscdataset = [
 ];
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+<script src="../js/questionlistinit.min.js"></script>
 </body>
 </html>

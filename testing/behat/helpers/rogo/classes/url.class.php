@@ -181,4 +181,25 @@ class Url
             . '&folder=' . $settings['folder']
             . '&studentsonly=' . $settings['studentsonly'];
     }
+
+    /**
+     * Generates the url to a lab admin page.
+     *
+     * @param int $id
+     * @return string
+     */
+    public static function lab(int $id): string
+    {
+        return '/admin/lab_details.php?labID=' . $id;
+    }
+
+    /**
+     * Generates the url to the lab admin page.
+     *
+     * @return string
+     */
+    public static function labList(): string
+    {
+        return '/admin/list_labs.php';
+    }
 }

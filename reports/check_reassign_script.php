@@ -103,7 +103,6 @@ if (isset($_POST['submit'])) {
     <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
-    <script src="../js/reassignuserinit.min.js"></script>
 </head>
 
 <body>
@@ -216,5 +215,6 @@ if (count($target_student) == 0) {
 <br />
 <div style="text-align:center"><input type="button" id="cancel" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" /></div>
 
+<script src="../js/reassignuserinit.min.js"></script>
 </body>
 </html>

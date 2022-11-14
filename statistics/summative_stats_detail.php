@@ -33,7 +33,7 @@ $current_month = check_var('month', 'GET', true, false, true);
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu(744);
 $lang['title'] = $string['summativeexamstats'];
-$additionaljs = '<script type="text/javascript" src="../js/statisticsinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/statistics.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/tabs.css"/>';
 $breadcrumb = array(
@@ -78,4 +78,7 @@ $renderdata['totalstudentno'] = number_format($total_student_no);
 $renderdata['uniquestudents'] = sprintf($string['uniquestudents'], number_format(count($distinct_users)));
 $stats->renderStatsHeader($current_year, $current_month);
 $stats->renderSummativeDetail($renderdata);
-$render->render_admin_footer();
+$js = [
+    '/js/statisticsinit.min.js',
+];
+$render->render_admin_footer($js);

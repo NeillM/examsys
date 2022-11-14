@@ -993,38 +993,7 @@ class ClassTotals
      */
     public function formatsec($seconds)
     {
-        $diff_hour = ($seconds / 60) / 60;
-        $tmp_position = mb_strpos($diff_hour, '.');
-        if ($tmp_position > 0) {
-            $diff_hour = mb_substr($diff_hour, 0, $tmp_position);
-        }
-        if ($diff_hour > 0) {
-            $seconds -= ($diff_hour * 60) * 60;
-        }
-        $diff_min = $seconds / 60;
-        $tmp_position = mb_strpos($diff_min, '.');
-        if ($tmp_position > 0) {
-            $diff_min = mb_substr($diff_min, 0, $tmp_position);
-        }
-        if ($diff_min > 0) {
-            $seconds -= $diff_min * 60;
-        }
-        $diff_sec = $seconds;
-        $timestring = '';
-        if ($diff_hour < 10) {
-            $timestring = '0';
-        }
-        $timestring .= "$diff_hour:";
-        if ($diff_min < 10) {
-            $timestring .= '0';
-        }
-        $timestring .= "$diff_min:";
-        if ($diff_sec < 10) {
-            $timestring .= '0';
-        }
-        $timestring .= $diff_sec;
-
-        return $timestring;
+        return date_utils::formatDuration($seconds);
     }
 
     /**

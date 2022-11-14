@@ -133,9 +133,6 @@ $headerdata = array(
         '/css/studentsettings.css',
         '/css/accessiblity.css',
     ),
-    'scripts' => array(
-        '/js/studentsettingsinit.min.js',
-    ),
 );
 $additionalcss = '<style type="text/css">body {padding-left:0; font-size:' . $textsize  . '%; font-family:' . $font . '}</style>';
 $render->render($headerdata, $string, 'header.html', '', $additionalcss);
@@ -230,4 +227,9 @@ $accessibilitydata['userid'] = $userObject->get_user_ID();
 $accessibilitydata['username'] = $userObject->get_username();
 $render->render($accessibilitydata, $string, 'students/settings.html');
 
-$render->render(array(), array(), 'footer.html');
+$data = [
+    'scripts' => array(
+        '/js/studentsettingsinit.min.js',
+    ),
+];
+$render->render($data, array(), 'footer.html');

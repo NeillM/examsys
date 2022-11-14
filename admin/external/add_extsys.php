@@ -40,7 +40,7 @@ $toprightmenu = draw_toprightmenu(741);
 $lang['title'] = $string['addextsys'];
 $lang['view'] = $string['addextsys'];
 $lang['delete'] = $string['deleteextsys'];
-$additionaljs = '<script type="text/javascript" src="js/extsysinit.min.js"></script>';
+$additionaljs = '';
 $addtionalcss = '<style type="text/css">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}
@@ -71,5 +71,8 @@ $render->render_admin_content($breadcrumb, $lang);
 </div>
 
 <?php
-    $render->render_admin_footer();
+$js = [
+    '/admin/external/js/extsysinit.min.js'
+];
+$render->render_admin_footer($js);
 ?>

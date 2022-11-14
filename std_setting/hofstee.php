@@ -180,7 +180,6 @@ if (isset($_POST['submit'])) {
     <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
-    <script src='../js/hofsteeinit.min.js'></script>
 <body>
 <?php
   require '../include/toprightmenu.inc';
@@ -285,5 +284,6 @@ $miscdataset['attributes']['marks'] = json_encode($marks);
 $miscdataset['attributes']['stats'] = json_encode($stats);
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+<script src='../js/hofsteeinit.min.js'></script>
 </body>
 </html>

@@ -43,7 +43,6 @@ $enddate        = check_var('enddate', 'GET', true, false, true);
   <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
-  <script src="../js/qualitativeinit.min.js"></script>
 </head>
 
 <body>
@@ -189,5 +188,6 @@ $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
 $render->render($jsdataset, array(), 'dataset.html');
 ?>
+<script src="../js/qualitativeinit.min.js"></script>
 </body>
 </html>
