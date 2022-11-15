@@ -1,6 +1,6 @@
 {
   "name": "examsys-oss",
-  "version": "7.2.0",
+  "version": "7.6.0",
   "private": true,
   "description": "eAssessment Management System",
   "repository": {
@@ -14,19 +14,19 @@
   "license": "GPL-3.0",
   "homepage": "http://examsys-oss.nottingham.ac.uk/",
   "devDependencies": {
-    "qunit": "^2.16.0"
+    "qunit": "^2.19.3"
   },
   "dependencies": {
     "eslint": "^3.6.1",
-    "grunt": "^1.4.1",
+    "grunt": "^1.5.3",
     "grunt-contrib-cssmin": "^3.0.0",
-    "grunt-contrib-uglify": "^5.0.1",
+    "grunt-contrib-uglify": "^5.2.2",
     "grunt-eslint": "^19.0.0",
-    "grunt-spritesmith": "^6.9.0",
-    "jquery": "^3.6.0",
+    "grunt-spritesmith": "^6.10.0",
+    "jquery": "^3.6.1",
     "mathjax": "^2.7.9",
-    "mediaelement": "^4.2.16",
-    "micromodal": "^0.4.6",
+    "mediaelement": "^4.2.17",
+    "micromodal": "^0.4.10",
     "three": "^0.126.1"
   }
 }
