@@ -37,7 +37,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     eslint: {
       options: {
-        configFile: 'testing/eslint/eslint.json'
+        overrideConfigFile: 'testing/eslint/eslint.json'
       },
       admin: {
         src: ['admin/**/js/src/*.js']

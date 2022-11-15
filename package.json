@@ -17,11 +17,11 @@
     "qunit": "^2.19.3"
   },
   "dependencies": {
-    "eslint": "^3.6.1",
+    "eslint": "^8.27.0",
     "grunt": "^1.5.3",
     "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-uglify": "^5.2.2",
-    "grunt-eslint": "^19.0.0",
+    "grunt-eslint": "^24.0.0",
     "grunt-spritesmith": "^6.10.0",
     "jquery": "^3.6.1",
     "mathjax": "^2.7.9",
