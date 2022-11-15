@@ -244,7 +244,7 @@ if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
 }
 ?>
 </div>
-
+<input type="hidden" id="userID" name="userID" value="<?php echo $userID; ?>" />
 <input type="hidden" id="userID" name="userID" value="" />
 <input type="hidden" id="roles" name="roles" value="<?php if (isset($user_details['roles'])) {
     echo $user_details['roles'];
