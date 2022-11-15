@@ -1035,8 +1035,10 @@ class InstallUtils
         }
         $res->close();
 
-        self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $dbcollation"); //have to use query here oldvers of php throw an error
-        if (self::$db->errno != 0) {
+        try {
+            // Have to use query here oldvers of php throw an error.
+            self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $dbcollation");
+        } catch (mysqli_sql_exception $e) {
             self::displayError(array('011' => $string['displayerror2']));
         }
 
@@ -1047,11 +1049,12 @@ class InstallUtils
         $tables = new databaseTables($dbcharset, $dbengine, $dbhelpengine);
         self::$db->autocommit(false);
         while ($sql = $tables->next()) {
-            $res = self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "<br /> $sql"));
+            try {
+                $res = self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('012' => $string['displayerror3'] . $e->getMessage() . "<br /> $sql"));
                 self::$db->rollback();
             }
         }
@@ -1092,11 +1095,13 @@ class InstallUtils
 
         $priv_SQL = array();
         //create 'database user authentication user' and grant permissions
-        self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".admin_access TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".courses TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".client_identifiers TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
@@ -1126,11 +1131,12 @@ class InstallUtils
         $priv_SQL[] = 'FLUSH PRIVILEGES';
 
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
@@ -1139,11 +1145,13 @@ class InstallUtils
 
         $priv_SQL = array();
         //create 'database user student user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".announcements TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".cache_median_question_marks TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".cache_paper_stats TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
@@ -1227,22 +1235,25 @@ class InstallUtils
         $priv_SQL[] = 'FLUSH PRIVILEGES';
 
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
         self::$db->commit();
         $priv_SQL = array();
         //create 'database user external user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_log TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_searches TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".keywords_question TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
@@ -1313,11 +1324,12 @@ class InstallUtils
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
@@ -1325,11 +1337,13 @@ class InstallUtils
 
         $priv_SQL = array();
         //create 'database user internal user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_internal_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_internal_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotcreated'] . ' ' . self::$db->error));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_log TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_searches TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".keywords_question TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
@@ -1367,11 +1381,12 @@ class InstallUtils
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
@@ -1379,11 +1394,13 @@ class InstallUtils
 
         $priv_SQL = array();
         //create 'database user staff user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".* TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".cache_median_question_marks TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".cache_paper_stats TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
@@ -1480,11 +1497,12 @@ class InstallUtils
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
@@ -1492,11 +1510,13 @@ class InstallUtils
 
         $priv_SQL = array();
         //create 'database user SCT user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".options TO '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".paper_metadata_security TO '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".paper_notes TO '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "'";
@@ -1518,9 +1538,10 @@ class InstallUtils
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
@@ -1528,11 +1549,13 @@ class InstallUtils
 
         $priv_SQL = array();
         //create 'database user Invigilator user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".exam_announcements TO '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".client_identifiers TO '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".labs TO '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "'";
@@ -1570,11 +1593,12 @@ class InstallUtils
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
@@ -1582,16 +1606,22 @@ class InstallUtils
 
         $priv_SQL = array();
         //create 'database user sysadmin user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
-        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON ' . $dbname . ".* TO '" . self::$cfg_db_sysadmin_user . "'@'" . self::$cfg_web_host . "'";
+
         //create 'database user webservice user' and grant permissions
-        self::$db->query("CREATE USER  '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_webservice_passwd . "'");
-        if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
-            self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+        try {
+            self::$db->query("CREATE USER  '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_webservice_passwd . "'");
+        } catch (mysqli_sql_exception $e) {
+            if (!self::$behat_install && !self::$phpunit_install) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+            }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".* TO '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE ON ' . $dbname . ".faculty TO '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "'";
@@ -1614,19 +1644,21 @@ class InstallUtils
 
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
-            self::$db->query($sql);
-            @ob_flush();
-            @flush();
-            if (self::$db->errno != 0) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+            try {
+                self::$db->query($sql);
+                @ob_flush();
+                @flush();
+            } catch (mysqli_sql_exception $e) {
+                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
                 self::$db->rollback();
             }
         }
         self::$db->commit();
 
         //FLUSH PRIVILEGES
-        self::$db->query('FLUSH PRIVILEGES');
-        if (self::$db->errno != 0) {
+        try {
+            self::$db->query('FLUSH PRIVILEGES');
+        } catch (mysqli_sql_exception $e) {
             self::logWarning(array('014' => $string['logwarning20']));
         }
         self::$db->commit();

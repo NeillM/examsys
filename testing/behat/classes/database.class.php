@@ -138,7 +138,11 @@ class database
         foreach ($usernames as $username => $err_code) {
             $test_username = $basedb . '_' . $username;
             if (InstallUtils::does_user_exist($test_username)) {
-                InstallUtils::$db->query("REVOKE ALL PRIVILEGES ON $dbname.* FROM '$test_username'@'$dbaccesspoint'");
+                try {
+                    InstallUtils::$db->query("REVOKE ALL PRIVILEGES ON $dbname.* FROM '$test_username'@'$dbaccesspoint'");
+                } catch (\mysqli_sql_exception $e) {
+                    // The user already had no privileges, so we can ignore this.
+                }
             }
         }
     }
