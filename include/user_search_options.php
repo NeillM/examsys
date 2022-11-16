@@ -29,7 +29,7 @@ require_once 'errors.php';
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/search.php');
 $calendar_year = check_var('calendar_year', 'GET', false, false, true);
-$userID = check_var('userID', 'GET', true, false, true);
+$userID = check_var('userID', 'GET', false, false, true);
 
 ?>
 
