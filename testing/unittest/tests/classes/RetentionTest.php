@@ -137,8 +137,12 @@ class RetentionTest extends unittestdatabase
     public function testDeleteDataByRetentionPolicyBigInt(): void
     {
         Retention::deleteDataByRetentionPolicy('anomaly');
-        $queryTable = $this->query(array('columns' => array('id', 'type', 'time', 'details', 'userID',
-            'paperID', 'screen'), 'table' => 'anomaly'));
+        $queryTable = $this->query(
+            array(
+                'columns' => array('id', 'type', 'time', 'details', 'userID', 'paperID', 'screen'),
+                'table' => 'anomaly',
+            )
+        );
         $expectedTable = array(
             0 => array(
                 'id' => $this->anomaly2['id'],
