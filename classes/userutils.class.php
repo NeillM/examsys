@@ -451,7 +451,7 @@ class UserUtils
         $stmt->fetch();
         $stmt->close();
 
-        $roles_list = explode(',', $roles);
+        $roles_list = explode(',', $roles ?? '');
         $match = false;
         foreach ($roles_list as $individual_role) {
             if ($individual_role == $test_role) {
