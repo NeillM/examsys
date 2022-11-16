@@ -288,13 +288,12 @@ class Audit
         $configObject = Config::get_instance();
         if (!is_null($userObj)) {
             $sourceid = $userObj->get_user_ID();
-        } else {
-            if (isset($query['access_token'])) {
-                $oauth = new \oauth($configObject);
-                $sourceid = $oauth->getClientFromAccess($query['access_token']);
-            } else {
-                $sourceid = -1;
-            }
+        } elseif (isset($query['access_token'])) {
+            $oauth = new \oauth($configObject);
+            $sourceid = $oauth->getClientFromAccess($query['access_token']);
+        }
+        if (!isset($sourceid) or is_null($sourceid)) {
+            $sourceid = -1;
         }
         $sql = 'INSERT INTO audit_log (userID, action, details, time, sourceID, source)
             VALUES (?, ?, ?, ?, ?, ?)';
