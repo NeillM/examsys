@@ -271,15 +271,13 @@ class DBUtils
             $config->get('cfg_db_port')
         );
         $sql = file_get_contents($file);
-        if ($link->multi_query($sql)) {
+        try {
+            $link->multi_query($sql);
             while ($link->more_results()) {
-                if (!$link->next_result()) {
-                    $link->close();
-                    return false;
-                }
+                $link->next_result();
             }
             $link->close();
-        } else {
+        } catch (mysqli_sql_exception $e) {
             $link->close();
             return false;
         }
