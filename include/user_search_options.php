@@ -29,6 +29,7 @@ require_once 'errors.php';
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/search.php');
 $calendar_year = check_var('calendar_year', 'GET', false, false, true);
+$userID = check_var('userID', 'GET', false, false, true);
 
 ?>
 
@@ -243,8 +244,7 @@ if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
 }
 ?>
 </div>
-
-<input type="hidden" id="userID" name="userID" value="" />
+<input type="hidden" id="userID" name="userID" value="<?php echo $userID; ?>" />
 <input type="hidden" id="roles" name="roles" value="<?php if (isset($user_details['roles'])) {
     echo $user_details['roles'];
                                                     } ?>" />

@@ -1311,6 +1311,7 @@ echo '</td></tr>';
 </table>
 </div>
 <script src="../js/userdetailsinit.min.js"></script>
+<script src="../js/usersearchinit.min.js"></script>
 <?php
 
 $mysqli->close();
