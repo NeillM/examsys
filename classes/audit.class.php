@@ -335,4 +335,16 @@ class Audit
     {
         return \Retention::deleteDataByRetentionPolicy('audit_log');
     }
+
+    /**
+     * Empties the audit log.
+     *
+     * This method is for use by Unit tests that want to ensure that only a known set of logs are stored.
+     *
+     * @return void
+     */
+    public static function clearLogs()
+    {
+        Config::get_instance()->db->query('TRUNCATE TABLE audit_log');
+    }
 }

@@ -45,6 +45,9 @@ class RetentionTest extends unittestdatabase
      */
     public function datageneration(): void
     {
+        // Clear any audit logs that may have been created by the standard data generation.
+        Audit::clearLogs();
+
         $datagenerator = $this->get_datagenerator('audit', 'core');
         $time = new \DateTime('91 days ago');
         $this->audit = $datagenerator->create(

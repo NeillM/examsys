@@ -34,6 +34,9 @@ class AuditSearchTest extends testing\unittest\unittestdatabase
      */
     public function datageneration(): void
     {
+        // Clear any audit logs that may have been created by the standard data generation.
+        Audit::clearLogs();
+
         $datagenerator = $this->get_datagenerator('audit', 'core');
         $this->audit[] = $datagenerator->create(
             array(
