@@ -576,7 +576,7 @@ abstract class questiondata
      */
     public function setup_question_data($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers)
     {
-        global $used_questions, $user_dismiss, $user_order, $language;
+        global $used_questions, $user_dismiss, $user_order;
 
         $paper_properties = PaperUtils::get_paper_properties($pid, $this->db);
 
@@ -670,7 +670,7 @@ abstract class questiondata
         $this->qmediaalt = $question['q_media_alt'];
         $this->qmedianum = $question['q_media_num'];
         $this->leadin = $question['leadin'];
-        $this->language = $language;
+        $this->language = $this->getLang();
         if (isset($question['settings'])) {
             $this->settings = $question['settings'];
         }
@@ -748,6 +748,20 @@ abstract class questiondata
             }
         }
         $used_questions[$q_id] = $q_id;
+    }
+
+    /**
+     * Gets the language of ExamSys.
+     *
+     * @return string
+     */
+    protected function getLang(): string
+    {
+        if (!isset($this->language)) {
+            // Cache the language.
+            $this->language = \LangUtils::getLang('');
+        }
+        return $this->language;
     }
 
     /**

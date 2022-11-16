@@ -127,7 +127,7 @@ class renderdata extends \questiondata
             }
         }
         $option['totalrank'] = $total_rank_no;
-        $nf = new \NumberFormatter($this->language, \NumberFormatter::ORDINAL);
+        $nf = new \NumberFormatter($this->getLang(), \NumberFormatter::ORDINAL);
         for ($i = 1; $i <= $total_rank_no; $i++) {
             $ordinal = $nf->format($i);
             if (isset($rank_answers[$option['position'] - 1]) and $i == $rank_answers[$option['position'] - 1]) {
