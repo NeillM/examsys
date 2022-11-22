@@ -962,6 +962,9 @@ SQL;
      */
     public static function numbersToLetters($data)
     {
+        if (is_object($data)) {
+            throw new coding_exception('Input datatype incorrect');
+        }
         if (is_array($data)) {
             $letters = [];
             foreach ($data as $value) {

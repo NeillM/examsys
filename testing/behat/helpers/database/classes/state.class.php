@@ -284,7 +284,7 @@ class state
      */
     public static function rollback_transaction($name = null)
     {
-        $rolledback = self::$db->rollback(null, $name);
+        $rolledback = self::$db->rollback(0, $name);
         if ($rolledback === false) {
             throw new Exception("Failed to rollback to $name");
         }

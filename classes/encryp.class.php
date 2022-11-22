@@ -57,7 +57,7 @@ class encryp
             return;
         }
         // Revert to default password generation if no dictionary.
-        if (!file_exists($this->file)) {
+        if (is_null($this->file) or !file_exists($this->file)) {
             $this->dictionary = array();
         } else {
             $words = array();

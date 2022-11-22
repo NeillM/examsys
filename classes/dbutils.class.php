@@ -256,30 +256,31 @@ class DBUtils
      */
     public static function run_sql($file, $dbuser, $dbpasswd)
     {
-        $sql = file_get_contents($file);
-        // Check charset of sql.
-        $charset = mb_detect_encoding($sql, mb_list_encodings(), true);
         $config = Config::get_instance();
         $link = DBUtils::get_mysqli_link(
             $config->get('cfg_db_host'),
             $dbuser,
             $dbpasswd,
             $config->get('cfg_db_database'),
-            $charset,
+            'utf8mb4',
             UserNotices::get_instance(),
             $config->get('dbclass'),
             $config->get('cfg_db_port')
         );
         $sql = file_get_contents($file);
-        if ($link->multi_query($sql)) {
+        // Check charset of sql.
+        $charset = mb_detect_encoding($sql, mb_list_encodings(), true);
+        if ($charset !== 'UTF-8') {
+            // Ensure we have a UTF-8 string.
+            $sql = mb_convert_encoding($sql, 'UTF-8', $charset);
+        }
+        try {
+            $link->multi_query($sql);
             while ($link->more_results()) {
-                if (!$link->next_result()) {
-                    $link->close();
-                    return false;
-                }
+                $link->next_result();
             }
             $link->close();
-        } else {
+        } catch (mysqli_sql_exception $e) {
             $link->close();
             return false;
         }

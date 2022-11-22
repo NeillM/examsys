@@ -4,23 +4,24 @@
     "jquery": true
   },
   "globals": {
-    "_comment": "All intended global variables in ExamSys should be listed here",
+    // All intended global variables in ExamSys should be listed here.
     "ROGO": false,
-    "_comment": "Require JS globals",
+    // Require JS globals
     "requirejs": false,
     "define": false,
-    "_comment": "Globals we create in RequireJS",
+    // Globals we create in RequireJS
     "tinyMCE": false,
     "MathJax": false,
-    "_comment": "JS types we use but ESLint seems to not like",
+    // JS types we use but ESLint seems to not like.
     "ArrayBuffer": false,
     "DataView": false,
     "Int32Array": false,
     "Uint8Array": false
   },
-  "_comment": "For a list of rules see: http://eslint.org/docs/rules/",
+  // For a list of rules see: http://eslint.org/docs/rules/
   "extends": "eslint:recommended",
   "rules": {
-    "no-unused-vars": "error"
+    "no-unused-vars": "error",
+    "no-prototype-builtins": "warn"
   }
 }
