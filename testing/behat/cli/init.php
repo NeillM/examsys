@@ -68,7 +68,7 @@ try {
 } catch (Exception $e) {
     cli_utils::prompt($e->getMessage());
     cli_utils::prompt(help::error());
-    exit(0);
+    exit(1);
 }
 
 // Ensure any caches are cleared.
@@ -103,6 +103,7 @@ try {
     umask($oldmask);
     cli_utils::prompt($e->getMessage());
     cli_utils::prompt(help::error());
+    exit(1);
 }
 
 exit(0);
