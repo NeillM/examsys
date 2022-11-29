@@ -342,7 +342,7 @@ abstract class rogo_directory
             self::verify_file($filename);
         }
         $config = Config::get_instance();
-        $webroot = $config->get('cfg_root_path');
+        $webroot = $config->get('cfg_root_path') ?? '';
         // Ensure there is a trailing slash.
         if (mb_substr($webroot, -1) !== '/') {
             $webroot .= '/';

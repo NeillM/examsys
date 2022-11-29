@@ -42,12 +42,11 @@ class UserList implements \Iterator
         $this->users[] = $user;
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * @see \Iterator::current()
      * @link http://php.net/manual/en/iterator.current.php
      */
-    public function current()
+    public function current(): mixed
     {
         return ($this->valid()) ? $this->users[$this->position] : null;
     }
@@ -62,12 +61,11 @@ class UserList implements \Iterator
         return $this->users;
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * @see \Iterator::key()
      * @link http://php.net/manual/en/iterator.key.php
      */
-    public function key()
+    public function key(): mixed
     {
         return ($this->valid()) ? $this->position : null;
     }

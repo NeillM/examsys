@@ -712,7 +712,7 @@ class OnlineHelp
     {
         set_time_limit(0);
         $configObject = Config::get_instance();
-        $webroot = $configObject->get('cfg_root_path');
+        $webroot = $configObject->get('cfg_root_path') ?? '';
         // Ensure there is a trailing slash.
         if (mb_substr($webroot, -1) !== '/') {
             $webroot .= '/';
@@ -747,7 +747,7 @@ class OnlineHelp
     {
         set_time_limit(0);
         $configObject = Config::get_instance();
-        $webroot = $configObject->get('cfg_root_path');
+        $webroot = $configObject->get('cfg_root_path') ?? '';
         // Ensure there is a trailing slash.
         if (mb_substr($webroot, -1) !== '/') {
             $webroot .= '/';

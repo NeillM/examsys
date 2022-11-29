@@ -267,7 +267,7 @@ class param
     protected static function strip_tags($text)
     {
         $text = self::cleanBadChars($text);
-        if ($text === '' or preg_match('#<.*>#', $text) === 0) {
+        if (is_null($text) or $text === '' or preg_match('#<.*>#', $text) === 0) {
             // No html.
             return $text;
         }
@@ -286,7 +286,7 @@ class param
      * @param string $text String to sanitize
      * @return string
      */
-    public static function cleanBadChars($text)
+    public static function cleanBadChars(string $text): string
     {
         // Removes all unicode spacing, odd characters and control characters, replacing with a regular space
         $text = preg_replace('/[\pZ\pC]+/u', ' ', $text);
