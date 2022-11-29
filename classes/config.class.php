@@ -295,11 +295,10 @@ class Config extends RogoStaticSingleton
         $parsedurl['port'] = isset($parsedurl['port']) ? $parsedurl['port'] : 80;
         $parsedurl['path'] = rtrim($parsedurl['path'], '/');
 
-        $pos = mb_strpos($_SERVER['HTTP_HOST'], ':');
+        $requestedhost = $_SERVER['HTTP_HOST'] ?? '';
+        $pos = mb_strpos($requestedhost, ':');
         if ($pos !== false) {
             $requestedhost = mb_substr($_SERVER['HTTP_HOST'], 0, $pos);
-        } else {
-            $requestedhost = $_SERVER['HTTP_HOST'];
         }
 
         // The path should also match.

@@ -250,6 +250,11 @@ class InstallUtils
     private static function check_setting($value, $type, $required, $setting)
     {
         global $string;
+        if (is_object($value)) {
+            // If an object is passed convert it into an array.
+            $value = (array) $value;
+        }
+
         if (is_array($value)) {
             $clean = param::clean_array($value, $type, $required);
         } else {
@@ -2179,8 +2184,7 @@ class InstallUtils
         $config = <<<CONFIG
 <?php
 /**
-*
-* config file
+* Config file
 *
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
@@ -2195,103 +2199,103 @@ class InstallUtils
 \$cfg_tmpdir = '{cfg_tmpdir}';
 \$cfg_site_address = '{cfg_site_address}';
 
-  \$cfg_web_host = '{cfg_web_host}';
-  \$cfg_rogo_data = '{cfg_rogo_data}';
+\$cfg_web_host = '{cfg_web_host}';
+\$cfg_rogo_data = '{cfg_rogo_data}';
 
 // Local database
-  \$cfg_db_username = '{cfg_db_username}';
-  \$cfg_db_passwd   = '{cfg_db_passwd}';
-  \$cfg_db_database = '{cfg_db_database}';
-  \$cfg_db_host = '{cfg_db_host}';
-  \$cfg_db_port = '{cfg_db_port}';
-  \$cfg_db_charset = '{cfg_db_charset}';
-  \$cfg_db_collation = '{cfg_db_collation}';
-  \$cfg_db_engine = '{cfg_db_engine}';
-  \$cfg_db_help_engine = '{cfg_db_help_engine}';
+\$cfg_db_username = '{cfg_db_username}';
+\$cfg_db_passwd   = '{cfg_db_passwd}';
+\$cfg_db_database = '{cfg_db_database}';
+\$cfg_db_host = '{cfg_db_host}';
+\$cfg_db_port = '{cfg_db_port}';
+\$cfg_db_charset = '{cfg_db_charset}';
+\$cfg_db_collation = '{cfg_db_collation}';
+\$cfg_db_engine = '{cfg_db_engine}';
+\$cfg_db_help_engine = '{cfg_db_help_engine}';
 //student db user
-  \$cfg_db_student_user = '{cfg_db_student_user}';
-  \$cfg_db_student_passwd = '{cfg_db_student_passwd}';
+\$cfg_db_student_user = '{cfg_db_student_user}';
+\$cfg_db_student_passwd = '{cfg_db_student_passwd}';
 //staff db user
-  \$cfg_db_staff_user = '{cfg_db_staff_user}';
-  \$cfg_db_staff_passwd = '{cfg_db_staff_passwd}';
+\$cfg_db_staff_user = '{cfg_db_staff_user}';
+\$cfg_db_staff_passwd = '{cfg_db_staff_passwd}';
 //external examiner db user
-  \$cfg_db_external_user = '{cfg_db_external}';
-  \$cfg_db_external_passwd = '{cfg_db_external_passwd}';
+\$cfg_db_external_user = '{cfg_db_external}';
+\$cfg_db_external_passwd = '{cfg_db_external_passwd}';
 //internal reviewer db user
-  \$cfg_db_internal_user = '{cfg_db_internal}';
-  \$cfg_db_internal_passwd = '{cfg_db_internal_passwd}';
+\$cfg_db_internal_user = '{cfg_db_internal}';
+\$cfg_db_internal_passwd = '{cfg_db_internal_passwd}';
 //sysadmin db user
-  \$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
-  \$cfg_db_sysadmin_passwd = '{cfg_db_sysadmin_passwd}';
+\$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
+\$cfg_db_sysadmin_passwd = '{cfg_db_sysadmin_passwd}';
 //sct db user
-  \$cfg_db_sct_user = '{cfg_db_sct_user}';
-  \$cfg_db_sct_passwd = '{cfg_db_sct_passwd}';
+\$cfg_db_sct_user = '{cfg_db_sct_user}';
+\$cfg_db_sct_passwd = '{cfg_db_sct_passwd}';
 //invigilator db user
-  \$cfg_db_inv_user = '{cfg_db_inv_user}';
-  \$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
+\$cfg_db_inv_user = '{cfg_db_inv_user}';
+\$cfg_db_inv_passwd = '{cfg_db_inv_passwd}';
 //webservice db user
-  \$cfg_db_webservice_user = '{cfg_db_webservice_user}';
-  \$cfg_db_webservice_passwd = '{cfg_db_webservice_passwd}';
+\$cfg_db_webservice_user = '{cfg_db_webservice_user}';
+\$cfg_db_webservice_passwd = '{cfg_db_webservice_passwd}';
 // Date formats in MySQL DATE_FORMAT format
-  \$cfg_short_date = '{cfg_short_date}';
-  \$cfg_long_date = '{cfg_long_date}';
-  \$cfg_long_date_time = '{cfg_long_date_time}';
-  \$cfg_tablesorter_date_time = '{cfg_tablesorter_date_time}';
-  \$cfg_short_date_time = '{cfg_short_date_time}';
-  \$cfg_long_date_php = '{cfg_long_date_php}';
-  \$cfg_short_date_php = '{cfg_short_date_php}';
-  \$cfg_long_datetime_php = '{cfg_long_datetime_php}';
-  \$cfg_short_datetime_php = '{cfg_short_datetime_php}';
-  \$cfg_very_short_datetime_php = '{cfg_very_short_datetime_php}';
-  \$cfg_long_time_php = '{cfg_long_time_php}';
-  \$cfg_short_time_php = '{cfg_short_time_php}';
-  \$cfg_long_full_datetime_php = '{cfg_long_full_datetime_php}';
-  \$cfg_timezone = '{cfg_timezone}';
-  date_default_timezone_set(\$cfg_timezone);
+\$cfg_short_date = '{cfg_short_date}';
+\$cfg_long_date = '{cfg_long_date}';
+\$cfg_long_date_time = '{cfg_long_date_time}';
+\$cfg_tablesorter_date_time = '{cfg_tablesorter_date_time}';
+\$cfg_short_date_time = '{cfg_short_date_time}';
+\$cfg_long_date_php = '{cfg_long_date_php}';
+\$cfg_short_date_php = '{cfg_short_date_php}';
+\$cfg_long_datetime_php = '{cfg_long_datetime_php}';
+\$cfg_short_datetime_php = '{cfg_short_datetime_php}';
+\$cfg_very_short_datetime_php = '{cfg_very_short_datetime_php}';
+\$cfg_long_time_php = '{cfg_long_time_php}';
+\$cfg_short_time_php = '{cfg_short_time_php}';
+\$cfg_long_full_datetime_php = '{cfg_long_full_datetime_php}';
+\$cfg_timezone = '{cfg_timezone}';
+date_default_timezone_set(\$cfg_timezone);
 // cron user
-  \$cfg_cron_user = '{cfg_cron_user}';
-  \$cfg_cron_passwd = '{cfg_cron_passwd}';
+\$cfg_cron_user = '{cfg_cron_user}';
+\$cfg_cron_passwd = '{cfg_cron_passwd}';
 
 // SMS Imports
-  \$cfg_sms_api = '';
+\$cfg_sms_api = '';
 
 \$authentication_fields_required_to_create_user = array('username', 'title', 'firstname', 'surname', 'email', 'role');
 
 //Authentication settings
 \$authentication = array(
-  {cfg_authentication_arrays}
+    {cfg_authentication_arrays}
 );
 
 //Lookup settings
 \$lookup = array(
-  {cfg_lookup_arrays}
+    {cfg_lookup_arrays}
 );
 
 // Objectives mapping
 \$vle_apis = array();
 
 if(!isset(\$_SERVER['HTTP_HOST'])) {
-  \$_SERVER['HTTP_HOST']='';
+    \$_SERVER['HTTP_HOST']='';
 }
 
 //Global DEBUG OUTPUT
-  \$dbclass = 'mysqli';
+\$dbclass = 'mysqli';
 
-  \$display_auth_debug = false; // set this to display debug on failed authentication
+\$display_auth_debug = false; // set this to display debug on failed authentication
 
-  \$displayerrors = false;  // overrides settings in php for errors not to be shown to screen (true enables)
+\$displayerrors = false;  // overrides settings in php for errors not to be shown to screen (true enables)
 
-  \$displayallerrors = false; // display/logs any error the system has including notices (true enables)
+\$displayallerrors = false; // display/logs any error the system has including notices (true enables)
 
-  \$errorshutdownhandling=true; //enables log at shutdown (allows you to catch reasons behind fatal errors etc including mysqli errors (true enables)
+\$errorshutdownhandling=true; //enables log at shutdown (allows you to catch reasons behind fatal errors etc including mysqli errors (true enables)
 
-  \$errorcontexthandling = 'improved'; //improved gives a good capture of context variables while filtering for security of display/saved data, basic captures all but doesnt run and security routines, none doesnt capture any context variables
+\$errorcontexthandling = 'improved'; //improved gives a good capture of context variables while filtering for security of display/saved data, basic captures all but doesnt run and security routines, none doesnt capture any context variables
 
-  //used for debugging
-  \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
+//used for debugging
+\$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
 
-  // Override db config settings with configs in this file?
-  \$file_config_override = true;
+// Override db config settings with configs in this file?
+\$file_config_override = true;
 CONFIG;
 
         $cfg_web_root = get_root_path();
@@ -2301,7 +2305,7 @@ CONFIG;
         }
         $config = str_replace('{cfg_web_root}', $cfg_web_root, $config);
         if (self::$cli) {
-            self::$cfg_root_path = self::getSettings(param::TEXT, false, 'server', 'root');
+            self::$cfg_root_path = self::getSettings(param::TEXT, false, 'server', 'root') ?? '';
         }
         $config = str_replace('{cfg_root_path}', self::$cfg_root_path, $config);
         $config = str_replace('{SysAdmin_username}', 'USERNMAE_FOR_DEBUG', $config);
