@@ -118,7 +118,8 @@ class Url
         $this->parts = parse_url($this->url);
 
         // Get the base url with no trailing space.
-        $base = rtrim(Config::get_instance()->get('cfg_root_path'), '/');
+        $path = Config::get_instance()->get('cfg_root_path') ?? '';
+        $base = rtrim($path, '/');
 
         // Calculate the URL relative to the base of ExamSys.
         if (!empty($base) and mb_strpos($this->parts[static::PATH], $base) === 0) {
