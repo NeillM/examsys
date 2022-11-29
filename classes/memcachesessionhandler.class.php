@@ -28,9 +28,9 @@ class memcachesessionhandler extends SessionHandler
     /**
      * Read session data
      * @param string $id The session id to read data for.
-     * @return string
+     * @return string|false
      */
-    public function read($id)
+    public function read(string $id): string|false
     {
         $data = parent::read($id);
         if (empty($data)) {
