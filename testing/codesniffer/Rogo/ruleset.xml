@@ -5,7 +5,7 @@
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/plugins/texteditor/plugin_tinymce_texteditor/mee/mee/tools/include/*</exclude-pattern>
-    <exclude-pattern>*/plugins/questions/enhancedcalc/rserve/*</exclude-pattern>
+    <exclude-pattern>*/plugins/questions/enhancedcalc/engine/rrserve/rserve/*</exclude-pattern>
     <exclude-pattern>*/LTI/classes/*</exclude-pattern>
     <exclude-pattern>*/LTI/ims-lti/lti_util.php</exclude-pattern>
     <exclude-pattern>*/qti/include/simpleimage.php</exclude-pattern>

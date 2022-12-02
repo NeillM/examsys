@@ -55,14 +55,12 @@ class EnhancedCalc extends Question implements questionInterface
         $this->configObj = $configObj;
         $this->enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
         $this->enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
-        if (!empty($this->enhancedcalcType)) {
-            require_once $this->enhancedcalcType . '.php';
-            $name = 'enhancedcalc_' . $this->enhancedcalcType;
-            $this->enhancedcalcObj = new $name($this->enhancedcalcSettings);
-        } else {
-            require_once 'phpEval.php';
-            $this->enhancedcalcObj = new EnhancedCalc_phpEval($this->enhancedcalcSettings);
+        $name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($this->enhancedcalcType) . '\\Engine';
+        if (empty($this->enhancedcalcType) or !class_exists($name)) {
+            $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
         }
+
+        $this->enhancedcalcObj = new $name($this->enhancedcalcSettings);
     }
 
     public function set_settings($data)

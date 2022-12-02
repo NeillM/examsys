@@ -38,14 +38,11 @@ echo 'Starting<br><br>';
 $enhancedcalcType = $configObject->get_setting('core', 'cfg_calc_type');
 $enhancedcalcSettings = $configObject->get_setting('core', 'cfg_calc_settings');
 
-if (!empty($enhancedcalcType)) {
-    require_once $cfg_web_root . 'plugins/questions/enhancedcalc/' . $enhancedcalcType . '.php';
-    $name = 'enhancedcalc_' . $enhancedcalcType;
-    $enhancedcalcObj1 = new $name($enhancedcalcSettings);
-} else {
-    require_once $cfg_web_root . 'plugins/questions/enhancedcalc/' . 'phpEval.php';
-    $enhancedcalcObj1 = new EnhancedCalc_phpEval($enhancedcalcSettings);
+$name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($enhancedcalcType) . '\\Engine';
+if (empty($enhancedcalcType) or !class_exists($name)) {
+    $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
 }
+$enhancedcalcObj1 = new $name($enhancedcalcSettings);
 
 if (empty($enhancedcalcType)) {
     $enhancedcalcType = 'BLANK or MISSING setting that means it defaults to phpEval';
