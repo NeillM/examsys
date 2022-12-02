@@ -36,6 +36,12 @@ class Engine
     protected $toStrDefined;
     protected $powDefined;
 
+    /** @var int The default rounding mode of engine. */
+    protected $default_rounding_mode = PHP_ROUND_HALF_UP;
+
+    /** @var int The rounding mode the question is configured to use. */
+    protected $rounding_mode;
+
     public $error = false;
     public $error_msg = '';
 
@@ -49,6 +55,43 @@ class Engine
     public function error_handling($context = null)
     {
         return error_handling($this);
+    }
+
+    /**
+     * Gets the default rounding mode for the engine.
+     *
+     * @return int
+     */
+    public function getDefaultRoundingMode(): int
+    {
+        return $this->default_rounding_mode;
+    }
+
+    /**
+     * Sets the rounding mode that should be used by the question type.
+     *
+     * Should be one of:
+     * - PHP_ROUND_HALF_UP
+     * - PHP_ROUND_HALF_DOWN
+     * - PHP_ROUND_HALF_EVEN
+     * - PHP_ROUND_HALF_ODD
+     *
+     * @param int $mode
+     * @return void
+     */
+    public function setRoundingMode(int $mode)
+    {
+        $this->rounding_mode = $mode;
+    }
+
+    /**
+     * Gets the rounding mode that will be used by the engine.
+     *
+     * @return int
+     */
+    public function getRoundingMode(): int
+    {
+        return $this->rounding_mode ?? $this->default_rounding_mode;
     }
 
     public function connect()
@@ -83,7 +126,7 @@ class Engine
                 return($number);
             } $i++;
         }
-        return round($number, $sigdigs) * $multiplier;
+        return round($number, $sigdigs, $this->getRoundingMode()) * $multiplier;
     }
 
     public function calculate_correct_ans($vars, $formula)
@@ -107,7 +150,7 @@ class Engine
                 $correctanswer = $this->RoundSigDigs($correctanswer, $stundent_precision);
             } else {
                 $stundent_precision = $this->calc_dp($useranswer);
-                $correctanswer = round($correctanswer, $stundent_precision);
+                $correctanswer = round($correctanswer, $stundent_precision, $this->getRoundingMode());
             }
         }
 
@@ -128,7 +171,7 @@ class Engine
             return 'ERROR';
         }
 
-        $res = abs(round(abs($useranswer - $correctanswer) / $correctanswer * 100, 3));
+        $res = abs(round(abs($useranswer - $correctanswer) / $correctanswer * 100, 3, $this->getRoundingMode()));
         return $res;
     }
 
@@ -209,7 +252,7 @@ class Engine
             return false;
         }
 
-        if (round($useranswer, $dp) == $useranswer) {
+        if (round($useranswer, $dp, $this->getRoundingMode()) == $useranswer) {
             return true;
         } else {
             return false;
@@ -281,7 +324,7 @@ class Engine
 
     public function format_number_dp($num, $dp)
     {
-        return round($num, $dp);
+        return round($num, $dp, $this->getRoundingMode());
     }
 
     public function format_number_dp_strict_zeros($num, $dp)

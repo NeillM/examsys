@@ -34,10 +34,13 @@ require_once(dirname(__DIR__) . '/rserve/Connection.php');
  */
 class Engine extends \plugins\questions\enhancedcalc\Engine
 {
+    /** @var Rserve_Connection|false */
     protected static $cnx = false;
 
     public function __construct($config)
     {
+        // RServe uses a different rounding mode to PHPEval.
+        $this->default_rounding_mode = PHP_ROUND_HALF_EVEN;
         parent::__construct($config);
     }
 
