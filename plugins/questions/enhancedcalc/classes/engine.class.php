@@ -306,13 +306,13 @@ class Engine
         }
     }
 
-    private function set_error($msg)
+    protected function set_error($msg)
     {
         $this->error = true;
         $this->error_msg = $msg;
     }
 
-    private function reset_error()
+    protected function reset_error()
     {
         $this->error = false;
         $this->error_msg = '';
