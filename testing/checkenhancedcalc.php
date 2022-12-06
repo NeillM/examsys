@@ -41,12 +41,10 @@ $enhancedcalcSettings = $configObject->get_setting('core', 'cfg_calc_settings');
 $name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($enhancedcalcType) . '\\Engine';
 if (empty($enhancedcalcType) or !class_exists($name)) {
     $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
+    $enhancedcalcType = 'BLANK, MISSING or invalid setting that means it defaults to phpEval';
 }
 $enhancedcalcObj1 = new $name($enhancedcalcSettings);
 
-if (empty($enhancedcalcType)) {
-    $enhancedcalcType = 'BLANK or MISSING setting that means it defaults to phpEval';
-}
 $sets = var_export($enhancedcalcSettings, true);
 echo "<li>Enhanced Calc is set to <b>$enhancedcalcType</b></li>";
 echo "<li>Settings are $sets</li>";
