@@ -297,20 +297,37 @@ class Engine
         return $end - ($dotpos + 1);
     }
 
+    /**
+     * Calculate the number of significant figures the number is using.
+     *
+     * @param string $num
+     * @return int
+     */
     public function calc_sf($num)
     {
         $epos = mb_strpos($num, 'e');
-        if ($epos === false) {
-            $epos = mb_strlen($num);
+        if ($epos !== false) {
+            // Remove the exponential.
+            $num = mb_substr($num, 0, $epos);
         }
 
-        if (mb_strpos($num, '0.') === 0) {
-            $epos = $epos - 2;
-        } elseif (mb_strpos($num, '.') !== false) {
-            $epos = $epos - 1;
+        // Leading and trailing zeros are not significant.
+        $num = trim($num, '0');
+
+        // If we now start with a decimal place we need to trim off the remaining zeros.
+        if (mb_strpos($num, '.') === 0) {
+            $num = mb_substr($num, 1);
+            $num = trim($num, '0');
         }
 
-        return $epos;
+        $count = mb_strlen($num);
+
+        if (mb_strpos($num, '.') !== false) {
+            // Take one for a decimal place.
+            $count = $count - 1;
+        }
+
+        return $count;
     }
 
     public function is_engineering_format($num)
