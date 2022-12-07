@@ -330,7 +330,7 @@ class Engine
     public function format_number_dp_strict_zeros($num, $dp)
     {
         $str = '%.' . $dp . 'f';
-        return sprintf($str, $num);
+        return sprintf($str, $this->format_number_dp($num, $dp));
     }
 
     public function format_number_sf($num, $sf)
