@@ -31,7 +31,7 @@ class EnhancedCalc extends Question implements questionInterface
     public $alluseranswers;
     /**
      * Calculation object,
-     * @var object
+     * @var \plugins\questions\enhancedcalc\Engine
      */
     private $enhancedcalcObj;
     /**

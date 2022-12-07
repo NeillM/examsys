@@ -43,6 +43,7 @@ if (empty($enhancedcalcType) or !class_exists($name)) {
     $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
     $enhancedcalcType = 'BLANK, MISSING or invalid setting that means it defaults to phpEval';
 }
+/** @var \plugins\questions\enhancedcalc\Engine $enhancedcalcObj1 */
 $enhancedcalcObj1 = new $name($enhancedcalcSettings);
 
 $sets = var_export($enhancedcalcSettings, true);
