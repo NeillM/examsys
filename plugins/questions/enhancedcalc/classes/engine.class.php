@@ -112,6 +112,14 @@ class Engine
         if ($number === 0) {
             return $number;
         }
+
+        $negative = false;
+        if ($number < 0) {
+            // This method does not handle negative numbers well.
+            $negative = true;
+            $number = abs($number);
+        }
+
         $multiplier = 1;
         while ($number < 0.1) {
             $number *= 10;
@@ -128,6 +136,12 @@ class Engine
                 return($number);
             } $i++;
         }
+
+        if ($negative) {
+            // Make it negative again.
+            $number = $number * -1;
+        }
+
         return round($number, $sigdigs, $this->getRoundingMode()) * $multiplier;
     }
 
