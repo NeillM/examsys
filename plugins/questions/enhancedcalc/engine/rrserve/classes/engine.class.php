@@ -77,6 +77,18 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
         }
     }
 
+    /**
+     * Resets the stored connection so that a different connection can be attempted.
+     *
+     * This should only be used in automatic testing.
+     *
+     * @return void
+     */
+    public static function resetConnection()
+    {
+        self::$cnx = false;
+    }
+
     public function setup_R()
     {
         self::$cnx->evalString('options(digits=15); 1==1;');
