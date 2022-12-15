@@ -135,16 +135,21 @@ class Engine
      */
     public function RoundSigDigs($number, $sigdigs): string
     {
+        if ($this->is_engineering_format($number)) {
+            $format = \NumberFormatter::SCIENTIFIC;
+        } else {
+            $format = \NumberFormatter::DECIMAL;
+        }
         $formatter = new \NumberFormatter(
             '',
-            \NumberFormatter::DECIMAL
+            $format
         );
         $formatter->setAttribute(\NumberFormatter::MAX_SIGNIFICANT_DIGITS, $sigdigs);
         $formatter->setAttribute(\NumberFormatter::MIN_SIGNIFICANT_DIGITS, $sigdigs);
         $formatter->setAttribute(\NumberFormatter::ROUNDING_MODE, $this->getNumFormatterRoundingMode());
         $formatter->setSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL, '');
         $formatter->setSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL, '.');
-        return $formatter->format($number);
+        return strtolower($formatter->format($number));
     }
 
     public function calculate_correct_ans($vars, $formula)
