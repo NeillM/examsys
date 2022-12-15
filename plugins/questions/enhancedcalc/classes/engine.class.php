@@ -223,7 +223,7 @@ class Engine
         $result[1] = $correctanswer * (1 + ($percentage / 100));
         $result[2] = $correctanswer * (1 - ($percentage / 100));
 
-        $res['tolerance'] = $result[0];
+        $res['tolerance'] = abs($result[0]);
 
         //
         // Make sure the min and max are correct tolerances on negative numbers causes problems
