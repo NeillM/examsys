@@ -17,6 +17,8 @@
 
 namespace plugins\questions\enhancedcalc;
 
+use NumberFormatter;
+
 require_once(dirname(__DIR__) . '/enhancedcalc.class.php');
 
 /**
@@ -98,13 +100,13 @@ class Engine
     {
         switch ($this->getRoundingMode()) {
             case PHP_ROUND_HALF_UP:
-                return \NumberFormatter::ROUND_HALFUP;
+                return NumberFormatter::ROUND_HALFUP;
             case PHP_ROUND_HALF_DOWN:
-                return \NumberFormatter::ROUND_HALFDOWN;
+                return NumberFormatter::ROUND_HALFDOWN;
             case PHP_ROUND_HALF_EVEN:
-                return \NumberFormatter::ROUND_HALFEVEN;
+                return NumberFormatter::ROUND_HALFEVEN;
         }
-        return \NumberFormatter::ROUND_HALFUP;
+        return NumberFormatter::ROUND_HALFUP;
     }
 
     /**
@@ -136,19 +138,19 @@ class Engine
     public function RoundSigDigs($number, $sigdigs): string
     {
         if ($this->is_engineering_format($number)) {
-            $format = \NumberFormatter::SCIENTIFIC;
+            $format = NumberFormatter::SCIENTIFIC;
         } else {
-            $format = \NumberFormatter::DECIMAL;
+            $format = NumberFormatter::DECIMAL;
         }
-        $formatter = new \NumberFormatter(
+        $formatter = new NumberFormatter(
             '',
             $format
         );
-        $formatter->setAttribute(\NumberFormatter::MAX_SIGNIFICANT_DIGITS, $sigdigs);
-        $formatter->setAttribute(\NumberFormatter::MIN_SIGNIFICANT_DIGITS, $sigdigs);
-        $formatter->setAttribute(\NumberFormatter::ROUNDING_MODE, $this->getNumFormatterRoundingMode());
-        $formatter->setSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL, '');
-        $formatter->setSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL, '.');
+        $formatter->setAttribute(NumberFormatter::MAX_SIGNIFICANT_DIGITS, $sigdigs);
+        $formatter->setAttribute(NumberFormatter::MIN_SIGNIFICANT_DIGITS, $sigdigs);
+        $formatter->setAttribute(NumberFormatter::ROUNDING_MODE, $this->getNumFormatterRoundingMode());
+        $formatter->setSymbol(NumberFormatter::GROUPING_SEPARATOR_SYMBOL, '');
+        $formatter->setSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL, '.');
         return strtolower($formatter->format($number));
     }
 
@@ -261,7 +263,6 @@ class Engine
 
     public function calculate_tolerance_absolute($correctanswer, $value)
     {
-
         $result[0] = $correctanswer + $value;
         $result[1] = $correctanswer - $value;
 
