@@ -76,6 +76,9 @@ class Engine
      * - PHP_ROUND_HALF_UP
      * - PHP_ROUND_HALF_DOWN
      * - PHP_ROUND_HALF_EVEN
+     *
+     * Unfortunately the following rounding method cannot be supported as
+     * it is not also part of the intl NumberFormat class:
      * - PHP_ROUND_HALF_ODD
      *
      * @param int $mode
@@ -84,6 +87,24 @@ class Engine
     public function setRoundingMode(int $mode)
     {
         $this->rounding_mode = $mode;
+    }
+
+    /**
+     * Gets the format in a way that is suitable for the number formatter.
+     *
+     * @return int
+     */
+    protected function getNumFormatterRoundingMode(): int
+    {
+        switch ($this->getRoundingMode()) {
+            case PHP_ROUND_HALF_UP:
+                return \NumberFormatter::ROUND_HALFUP;
+            case PHP_ROUND_HALF_DOWN:
+                return \NumberFormatter::ROUND_HALFDOWN;
+            case PHP_ROUND_HALF_EVEN:
+                return \NumberFormatter::ROUND_HALFEVEN;
+        }
+        return \NumberFormatter::ROUND_HALFUP;
     }
 
     /**
@@ -105,44 +126,25 @@ class Engine
     {
     }
 
-    // from php manual http://php.net/round
-    public function RoundSigDigs($number, $sigdigs)
+    /**
+     * Round the number to use a set number of significant figures.
+     *
+     * @param $number The number to be rounded.
+     * @param $sigdigs The number of significant figures.
+     * @return string
+     */
+    public function RoundSigDigs($number, $sigdigs): string
     {
-        $i = 0;
-        if ($number === 0) {
-            return $number;
-        }
-
-        $negative = false;
-        if ($number < 0) {
-            // This method does not handle negative numbers well.
-            $negative = true;
-            $number = abs($number);
-        }
-
-        $multiplier = 1;
-        while ($number < 0.1) {
-            $number *= 10;
-            $multiplier /= 10;
-            if ($i > 30) {
-                return($number);
-            } $i++;
-        }
-        $i = 0;
-        while ($number >= 1) {
-            $number /= 10;
-            $multiplier *= 10;
-            if ($i > 30) {
-                return($number);
-            } $i++;
-        }
-
-        if ($negative) {
-            // Make it negative again.
-            $number = $number * -1;
-        }
-
-        return round($number, $sigdigs, $this->getRoundingMode()) * $multiplier;
+        $formatter = new \NumberFormatter(
+            '',
+            \NumberFormatter::DECIMAL
+        );
+        $formatter->setAttribute(\NumberFormatter::MAX_SIGNIFICANT_DIGITS, $sigdigs);
+        $formatter->setAttribute(\NumberFormatter::MIN_SIGNIFICANT_DIGITS, $sigdigs);
+        $formatter->setAttribute(\NumberFormatter::ROUNDING_MODE, $this->getNumFormatterRoundingMode());
+        $formatter->setSymbol(\NumberFormatter::GROUPING_SEPARATOR_SYMBOL, '');
+        $formatter->setSymbol(\NumberFormatter::DECIMAL_SEPARATOR_SYMBOL, '.');
+        return $formatter->format($number);
     }
 
     public function calculate_correct_ans($vars, $formula)
