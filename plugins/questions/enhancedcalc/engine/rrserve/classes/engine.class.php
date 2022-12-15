@@ -98,6 +98,7 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
             return false;
         }
 
+        $formula = $this->substituteMethodCalls($formula);
         $formula_vars_subed = EnhancedCalc::substitute_vars($vars, $formula);
         $correctanswer = $this->eval_string($formula_vars_subed);
 
@@ -159,5 +160,15 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
     public function get_error()
     {
         return $this->error_msg;
+    }
+
+    /**
+     * The formula used for getting pi in this engine.
+     *
+     * @return string
+     */
+    protected function piFormula(): string
+    {
+        return 'pi';
     }
 }

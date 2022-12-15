@@ -17,6 +17,8 @@
 
 namespace plugins\questions\enhancedcalc;
 
+require_once(dirname(__DIR__) . '/enhancedcalc.class.php');
+
 /**
  * The base calculation engine class.
  *
@@ -131,10 +133,46 @@ class Engine
 
     public function calculate_correct_ans($vars, $formula)
     {
+        $formula = $this->substituteMethodCalls($formula);
         $formula_vars_subed = \EnhancedCalc::substitute_vars($vars, $formula);
         $correctanswer = eval('return (' . $formula_vars_subed . ');');
 
         return (string)$correctanswer;
+    }
+
+    /**
+     * This method allows us to fix formulas that have different names in different engines.
+     *
+     * @param string $formula
+     * @return string
+     */
+    protected function substituteMethodCalls(string $formula): string
+    {
+        $formula = $this->substitutePi($formula);
+        return $formula;
+    }
+
+    /**
+     * Fixes the formula for pi to work in the engine.
+     *
+     * @param string $formula
+     * @return string
+     */
+    protected function substitutePi(string $formula): string
+    {
+        $regexp = '#(^|[ *+/\-(])(pi(\(\))?)([ *,+/\-)]|$)#m';
+        $replace = '$1' . $this->piFormula() . '$4';
+        return preg_replace($regexp, $replace, $formula);
+    }
+
+    /**
+     * The formula used for getting pi in this engine.
+     *
+     * @return string
+     */
+    protected function piFormula(): string
+    {
+        return 'pi()';
     }
 
     public function is_useranswer_correct($useranswer, $correctanswer, $round_to_stundent_precision)
