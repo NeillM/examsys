@@ -14,6 +14,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+use plugins\questions\enhancedcalc\Engine;
 
 /**
  *
@@ -35,16 +36,6 @@ class EnhancedCalc extends Question implements questionInterface
      */
     private $enhancedcalcObj;
     /**
-     * Calculation type,
-     * @var string
-     */
-    private $enhancedcalcType;
-    /**
-     * Calculation settings,
-     * @var array
-     */
-    private $enhancedcalcSettings;
-    /**
      * Flag to state if question is a parent of a linekd question.
      * @var boolean
      */
@@ -53,14 +44,7 @@ class EnhancedCalc extends Question implements questionInterface
     public function __construct($configObj)
     {
         $this->configObj = $configObj;
-        $this->enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
-        $this->enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
-        $name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($this->enhancedcalcType) . '\\Engine';
-        if (empty($this->enhancedcalcType) or !class_exists($name)) {
-            $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
-        }
-
-        $this->enhancedcalcObj = new $name($this->enhancedcalcSettings);
+        $this->enhancedcalcObj = Engine::getEngine();
     }
 
     public function set_settings($data)

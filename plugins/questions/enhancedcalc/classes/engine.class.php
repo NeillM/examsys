@@ -56,6 +56,25 @@ class Engine
         $this->powDefined = false;
     }
 
+    /**
+     * Gets the enhanced calculation engine ExamSys is configured to use.
+     *
+     * @return \plugins\questions\enhancedcalc\Engine
+     */
+    public static function getEngine(): Engine
+    {
+        $config = \Config::get_instance();
+        $enhancedcalcType = $config->get_setting('core', 'cfg_calc_type');
+        $enhancedcalcSettings = $config->get_setting('core', 'cfg_calc_settings');
+
+        $name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($enhancedcalcType) . '\\Engine';
+        if (empty($enhancedcalcType) or !class_exists($name)) {
+            $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
+        }
+
+        return new $name($enhancedcalcSettings);
+    }
+
     public function error_handling($context = null)
     {
         return error_handling($this);
