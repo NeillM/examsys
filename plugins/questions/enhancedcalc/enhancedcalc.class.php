@@ -47,9 +47,44 @@ class EnhancedCalc extends Question implements questionInterface
         $this->enhancedcalcObj = Engine::getEngine();
     }
 
+    /**
+     * Loads data for the question and sets the calculation engine mode.
+     *
+     * @param $array
+     * @return void
+     */
+    public function load($array)
+    {
+        parent::load($array);
+        // Sets the rounding mode of the question.
+        $this->enhancedcalcObj->setRoundingMode($this->get_rounding());
+    }
+
+    /**
+     * Gets the rounding mode of the question.
+     *
+     * @return int
+     */
+    public function get_rounding(): int
+    {
+        $this->decode_settings();
+        // If no rounding mode has been explicitly set use the engine default.
+        $mode = $this->settings['rounding'] ?? $this->enhancedcalcObj->getDefaultRoundingMode();
+        return $mode;
+    }
+
+    /**
+     * Set the settings for the question.
+     *
+     * @param string|array $data An array of settings or json encoded settings.
+     * @return void
+     */
     public function set_settings($data)
     {
         $this->settings = $data;
+
+        // If the settings are updated we need to ensure that the rounding mode is properly set on the calculation object.
+        $this->enhancedcalcObj->setRoundingMode($this->get_rounding());
     }
 
     public function error_handling($context = null)

@@ -48,14 +48,16 @@ class QuestionENHANCEDCALC extends QuestionEdit
     protected $marks_unit = 'N/A';
     public $max_options = 10;
     public $max_stems = 10;
+    /** @var int The rounding method used for answers. */
+    protected $rounding;
     protected $variable_labels = array();
     protected $_allow_partial_marks = true;
     protected $_allow_change_marking_method = false;
     protected $_allow_new_options = true;
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status', 'staffnotes');
-    protected $_fields_change = array('option_formula', 'option_units', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_precision', 'marks_unit', 'tolerance_full', 'tolerance_partial');
-    protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
+    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'rounding', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status', 'staffnotes');
+    protected $_fields_change = array('option_formula', 'option_units', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_precision', 'rounding', 'marks_unit', 'tolerance_full', 'tolerance_partial');
+    protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'rounding', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
     protected $_fields_force = array('show_units');
 
     protected $_answer_negative = false;
@@ -134,6 +136,71 @@ class QuestionENHANCEDCALC extends QuestionEdit
         if ($value != $this->units) {
             $this->set_modified_field('units', $this->units);
             $this->units = $value;
+        }
+    }
+
+    /**
+     * Gets the rounding method for the question.
+     *
+     * Expect the value to be one of the PHP_ROUNDING_* constants.
+     *
+     * @return int
+     */
+    public function get_rounding(): int
+    {
+        if (!isset($this->rounding)) {
+            $engine = \plugins\questions\enhancedcalc\Engine::getEngine();
+            $this->rounding = $engine->getDefaultRoundingMode();
+        }
+
+        return $this->rounding;
+    }
+
+    /**
+     * Sets the rounding mode.
+     *
+     * It must be one of the PHP_ROUNDING_* constants.
+     *
+     * @param int $value
+     * @return void
+     */
+    public function set_rounding(int $value)
+    {
+        if ($value != $this->rounding) {
+            $this->set_modified_field('rounding', $this->rounding);
+            $this->rounding = $value;
+        }
+    }
+
+    /**
+     * Gets a localised string that describes the rounding setting.
+     *
+     * @param int|null $value
+     * @return string
+     */
+    public function localise_rounding(?int $value): string
+    {
+        // We want to ensure we always have the required strings, but only load them a
+        // single time since this method could be run many times when a page is generated.
+        static $string;
+        if (!isset($string)) {
+            $string = LangUtils::loadlangfile('question/edit/index.php', []);
+        }
+
+        if (empty($value)) {
+            $engine = \plugins\questions\enhancedcalc\Engine::getEngine();
+            $value = $engine->getDefaultRoundingMode();
+        }
+
+        switch ($value) {
+            case PHP_ROUND_HALF_UP:
+                return $string['roundhalfup'];
+            case PHP_ROUND_HALF_DOWN:
+                return $string['roundhalfdown'];
+            case PHP_ROUND_HALF_EVEN:
+                return $string['roundhalfeven'];
+            default:
+                return $string['roundunsupported'];
         }
     }
 

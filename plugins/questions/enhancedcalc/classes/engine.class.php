@@ -111,6 +111,22 @@ class Engine
     }
 
     /**
+     * Return a list of supported rounding methods.
+     *
+     * The key is the mode, the value the key for the language string.
+     *
+     * @return string[]
+     */
+    public function getSupportedRoundingModeForSelects(): array
+    {
+        return [
+            PHP_ROUND_HALF_UP => 'roundhalfup',
+            PHP_ROUND_HALF_DOWN => 'roundhalfdown',
+            PHP_ROUND_HALF_EVEN => 'roundhalfeven',
+        ];
+    }
+
+    /**
      * Gets the format in a way that is suitable for the number formatter.
      *
      * @return int

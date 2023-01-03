@@ -292,6 +292,11 @@ $string['enforcedisplay'] = 'Enforce precision of student answer';
 $string['includetrailing0'] = 'Including trailing 0s';
 $string['notenforced'] = 'Not enforced';
 $string['tooltip_formula'] = 'Click link for more details in the online help.';
+$string['rounding'] = 'Answer rounding method';
+$string['roundhalfup'] = 'Half up';
+$string['roundhalfdown'] = 'Half down';
+$string['roundhalfeven'] = 'Half even';
+$string['roundunsupported'] = 'Unsupported rounding method';
 // Textbox
 $string['reminders'] = 'Reminders';
 $string['reminder_no'] = 'Reminder #%d';

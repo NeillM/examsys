@@ -203,6 +203,21 @@ echo ViewHelper::render_options($sf_opts, $question->get_answer_precision(), 4);
                 </select>
               </td>
             </tr>
+            <tr>
+                <th><?php echo $string['rounding'] ?></th>
+                <td>
+                    <select name="rounding" id="answer_rounding">
+<?php
+$calc_engine = \plugins\questions\enhancedcalc\Engine::getEngine();
+$defaultmode = $question->get_rounding();
+foreach ($calc_engine->getSupportedRoundingModeForSelects() as $key => $value) {
+    $selected = ($key == $defaultmode) ? ' selected="selected"' : '';
+    echo '<option value="' . $key . '"' . $selected . '>' . $string[$value] . '</option>';
+}
+?>
+                    </select>
+                </td>
+            </tr>
           </tbody>
         </table>
 
