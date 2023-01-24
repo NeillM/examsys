@@ -438,8 +438,9 @@ class ST_QTI12_Response // <response_
 
         $this->id = (string) $xml->attributes()->ident;
         $this->type = $type;
-        // should we allow multiple answers, ie check instead of radio
-        $this->ismulti = mb_strtolower($xml->attributes()->rcardinality) == 'multiple' ? 1 : 0;
+        // should we allow multiple answers, ie check instead of radio.
+        $cardinality = $xml->attributes()->rcardinality ?? '';
+        $this->ismulti = mb_strtolower($cardinality) == 'multiple' ? 1 : 0;
 
         $this->material = new ST_QTI12_Material();
         // get material if available
@@ -450,7 +451,8 @@ class ST_QTI12_Response // <response_
         // as far as i can tell only ever 1 choice for each response_lid
         if ($xml->render_choice) {
             $render = 'choice';
-            $this->shuffle = mb_strtolower($xml->render_choice->attributes()->shuffle) == 'no' ? 0 : 1;
+            $shuffle = $xml->render_choice->attributes()->shuffle ?? '';
+            $this->shuffle = mb_strtolower($shuffle) == 'no' ? 0 : 1;
             $this->minnumber = (string) $xml->render_choice->attributes()->minnumber;
             $this->maxnumber = (string) $xml->render_choice->attributes()->maxnumber;
 
@@ -540,7 +542,8 @@ class ST_QTI12_Label // <response_label
     public function __construct($xml)
     {
         $this->id = (string) $xml->attributes()->ident;
-        $this->shuffle = mb_strtolower($xml->attributes()->shuffle) == 'no' ? 0 : 1;
+        $shuffle = $xml->attributes()->shuffle ?? '';
+        $this->shuffle = mb_strtolower($shuffle) == 'no' ? 0 : 1;
         if ($xml->attributes()->orderid) {
             $this->orderid = (int)$xml->attributes()->orderid;
         }
@@ -599,11 +602,13 @@ class ST_QTI12_RespCondition // <respcondition>
             }
         }
 
-        $this->continue = mb_strtolower($xml->attributes()->continue) == 'yes' ? 1 : 0;
+        $continue = $xml->attributes()->continue ?? '';
+        $this->continue = mb_strtolower($continue) == 'yes' ? 1 : 0;
         if ($xml->setvar) {
             $this->action = (string) $xml->setvar->attributes()->action;
             $this->mark = (string) $xml->setvar;
-            if (mb_strtolower($this->action) == 'subtract') {
+            $action = $this->action ?? '';
+            if (mb_strtolower($action) == 'subtract') {
                 $this->action = 'Add';
                 $this->mark = -$this->mark;
             }

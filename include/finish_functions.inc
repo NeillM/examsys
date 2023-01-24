@@ -2744,7 +2744,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 				 data-qno='" . $question_no . "'
 				 data-qmedia='" . $paper[$question]['q_media'] . "'
 				 data-qcorrect='" . trim($paper[$question]['correct'][0])   . "'
-				 data-user='" . trim($paper[$question]['user_answer']) . "'
+				 data-user='" . trim($paper[$question]['user_answer'] ?? '') . "'
 				 data-marking='" . $extra . "'
 				 width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
                 echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
