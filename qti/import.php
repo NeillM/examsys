@@ -82,7 +82,7 @@ $paper_title = $properties->get_paper_title();
 $paper_type = $properties->get_paper_type();
 $start_date = $properties->get_start_date();
 
-if ($paper_type == '2' and time() > $start_date and $start_date != '') {
+if ($paper_type == '2' and !is_null($start_date) and time() > $start_date) {
     $summative_lock = 1;
     include 'tmpl/import_locked.php';
     exit;

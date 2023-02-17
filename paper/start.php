@@ -213,7 +213,7 @@ $allow_timing = $propertyObj->display_timer();
 * If a summative exam session has been started  then record late answers in log_late
 */
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
-if (!$remote and $propertyObj->get_exam_duration() != null and $papertype == '2' and !$is_question_preview_mode) {
+if (!$remote and $propertyObj->get_exam_duration() != null and $papertype == '2' and !$is_question_preview_mode and $paper_scheduled) {
     // Has this lab had an end time set?
     $log_lab_end_time = $propertyObj->getLogLabEndTime($lab_id);
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();

@@ -303,7 +303,7 @@ if ($properties->get_paper_type() == '2') {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['session'] . '</a></td><td>' . $string['mismatch'] . "</td></tr>\n";
     }
     // Times
-    if (date('His', $properties->get_start_date()) == date('His', $properties->get_end_date()) or date('His', $properties->get_start_date()) == '000000' or date('His', $properties->get_start_date()) == '000000') {
+    if ($properties->get_start_date() == $properties->get_end_date() or is_null($properties->get_start_date()) or is_null($properties->get_end_date())) {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['examtime'] . '</a></td><td>' . $string['incorrect'] . "</td></tr>\n";
     }
 

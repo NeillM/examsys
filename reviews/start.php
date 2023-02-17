@@ -207,7 +207,7 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
     echo '</td>';
     echo $logo_html;
 
-    if (($start_of_day_ts > $review_deadline or time() > $start_date) and $start_date != '') {
+    if (!is_null($start_date) and ($start_of_day_ts > $review_deadline or time() > $start_date)) {
         echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%\"><tr><td class=\"redwarn\" style=\"width:40px; line-height:0\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Clock\" /></td><td class=\"redwarn\"><strong>{$string['deadlineexpired']}</strong>&nbsp;&nbsp;&nbsp;{$string['deadlinepassed']}</td></tr></table>\n";
     }
 

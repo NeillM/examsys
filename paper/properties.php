@@ -387,14 +387,14 @@ $textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
 $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
 $target_timezone = new DateTimeZone($properties->get_timezone());
 
-if ($properties->get_start_date() != '') {
+if (!is_null($properties->get_start_date())) {
     $start_date = DateTime::createFromFormat('U', $properties->get_start_date(), $local_time);
     $start_date->setTimezone($target_timezone);
 } else {
     $start_date = '';
 }
 
-if ($properties->get_end_date() != '') {
+if (!is_null($properties->get_end_date())) {
     $end_date = DateTime::createFromFormat('U', $properties->get_end_date(), $local_time);
     $end_date->setTimezone($target_timezone);
 } else {

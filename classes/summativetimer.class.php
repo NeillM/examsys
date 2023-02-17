@@ -119,7 +119,7 @@ class SummativeTimer
     }
 
     /*
-    * return int
+    * return DateTime|bool
     */
     private function get_session_end_datetime()
     {
@@ -127,7 +127,7 @@ class SummativeTimer
     }
 
     /*
-    * return int
+    * return DateTime|null
     */
     private function get_default_session_end_datetime()
     {

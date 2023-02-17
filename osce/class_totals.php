@@ -265,7 +265,8 @@ for ($i = 0; $i < $user_no; $i++) {
     echo "</table>\n";
 
     $finished = false;
-    if ($propertyObj->get_end_date() <= time()) {
+    $end_date = $propertyObj->get_end_date();
+    if (!is_null($end_date) and $end_date <= time()) {
         $finished = true;
     }
     if ($configObject->get_setting('core', 'cfg_gradebook_enabled') and $finished and !$report->paper_graded()) {

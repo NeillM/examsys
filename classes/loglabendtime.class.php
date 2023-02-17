@@ -72,7 +72,7 @@ class LogLabEndTime
     /**
      * Gets the exam session's current end time stored when the invigilator clicked 'Start'
      *
-     * @return DateTime
+     * @return DateTime|bool
      */
     public function get_session_end_date_datetime()
     {
@@ -210,11 +210,14 @@ class LogLabEndTime
     /**
      * This is called if there is no record in log_lab_end_time
      * It then defaults to using paper's start time and then adds the exam duration to get the end time
-     * @return DateTime
+     * @return DateTime|null
      */
     public function calculate_default_session_end_datetime()
     {
         $start_datetime = $this->property_object->get_start_date();
+        if ($start_datetime === false) {
+            return null;
+        }
         $duration = $this->property_object->get_exam_duration() * 60;
         $end_timestamp = $start_datetime + $duration;
         return DateTime::createFromFormat('U', $end_timestamp);
@@ -253,11 +256,14 @@ class LogLabEndTime
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|bool The start time of the paper or false if it is unscheduled.
      */
     public function get_paper_start_datetime()
     {
         $start_date = $this->property_object->get_start_date();
+        if (is_null($start_date)) {
+            return false;
+        }
         return DateTime::createFromFormat('U', $start_date);
     }
 
@@ -267,12 +273,14 @@ class LogLabEndTime
     public function get_paper_end_datetime()
     {
         $end_date = $this->property_object->get_end_date();
-
+        if (is_null($end_date)) {
+            return false;
+        }
         return DateTime::createFromFormat('U', $end_date);
     }
 
     /**
-     * @return int
+     * @return int|bool
      */
     public function get_paper_end_timestamp()
     {
@@ -280,13 +288,12 @@ class LogLabEndTime
         if ($paper_end_datetime === false) {
             return false;
         }
-
         return $paper_end_datetime->getTimestamp();
     }
 
     /**
      * Get the date/time of when the paper was started or paper default start time if not already started
-     * @return DateTime When the exam was started for this lab
+     * @return DateTime|null When the exam was started for this lab
      */
     public function get_started_timestamp()
     {

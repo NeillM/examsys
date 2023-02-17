@@ -38,15 +38,13 @@ $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
 $date_array = getdate();
 $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
 $now_time = date('U', strtotime($now_data));
-if ($properties->get_start_date() > $now_time) {
+$target_start_date = $properties->get_start_date();
+if (!is_null($target_start_date) and $target_start_date > $now_time) {
     $target_start_date = $properties->get_created();
-} else {
-    $target_start_date = $properties->get_start_date();
 }
-if ($properties->get_end_date() > $now_time) {
+$target_end_date = $properties->get_end_date();
+if (!is_null($target_end_date) and $target_end_date > $now_time) {
     $target_end_date = $now_time;
-} else {
-    $target_end_date = $properties->get_end_date();
 }
 
 $start_year = date('Y', $target_start_date);
