@@ -198,7 +198,6 @@ class LogLabEndTime
     {
         $exam_duration_mins = $this->get_paper_exam_duration();
         $exam_duration_secs = $exam_duration_mins * 60;
-        $paper_end_datetime = $this->get_paper_end_datetime();
 
         // Add extra time
         $date_interval = new DateInterval('PT' . $exam_duration_secs . 'S');
