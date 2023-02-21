@@ -443,7 +443,7 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
   $user_details = UserUtils::get_user_details($properties->get_paper_ownerid(), $mysqli);
   $paper_owner = $user_details['title']  . ' ' . $user_details['initials'] . ', ' . $user_details['surname'];
 
-if (date('U', time()) >= $properties->get_start_date() and date('U', time()) <= $properties->get_end_date()) {
+if (time() >= $properties->get_start_date() and time() <= $properties->get_end_date()) {
     $active_date = 1;
 } else {
     $active_date = 0;
@@ -818,7 +818,7 @@ if ($userObject->has_role('Demo')) {
     $paper_owner = 'Mr J, Bloggs';
 }
   echo '<th colspan="3" style="font-size:90%;padding-left:10px"><strong>' . $string['start'] . ':</strong> ';
-if ($properties->get_start_date() == '') {
+if (is_null($properties->get_start_date())) {
     echo '<span style="color:#808080">&lt;unscheduled&gt;</span>';
 } else {
     echo $properties->get_display_start_date();

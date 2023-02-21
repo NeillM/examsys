@@ -213,6 +213,24 @@ class Invigilation
             $lab_session_end_datetime = $log_lab_end_time->calculate_default_session_end_datetime();
         }
 
+        if (is_null($lab_session_end_datetime)) {
+            // For some reason there is no end time for the paper,
+            // it means we cannot really do any of the other calculations.
+            // It should be unlikely this web service will be called when
+            // it is in this state, but we should handle it.
+            return $this->getStudentRenderData(
+                $student_object,
+                $property_object,
+                false,
+                $allow_timing,
+                '',
+                0,
+                0,
+                $notes_array,
+                $toilet_break_array
+            );
+        }
+
         $exam_duration_mins = $this->getExamDuration($property_object);
         $exam_duration_interval = new DateInterval('PT' . $exam_duration_mins . 'M');
         $lab_session_start_datetime = clone $lab_session_end_datetime;

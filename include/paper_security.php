@@ -101,8 +101,8 @@ function check_paper_password($paperID, $password, $string, $db, $show_form = fa
 /**
  * Check if the assessment can be taken at the current time. This time window is relaxed: 1 min
  * before the set start time and 60 mins after the end.
- * @param string $start_date  - Start date/time of the assessment.
- * @param string $end_date    - End date/time of the assessment.
+ * @param string|null $start_date  - Start date/time of the assessment.
+ * @param string|null $end_date    - End date/time of the assessment.
  * @param array $string       - Language translation strings.
  * @param object $db          - The MySQL connection.
  * @param boolean $first_start - If the exam is being started, rather than continued.
@@ -118,7 +118,8 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
         $end_comparison -= 3600;
     }
     // Allow 1 minute before the start time of the assessment.
-    if ((time() + 60) < $start_date or $end_comparison > $end_date) {
+    // This check should also fail if the start or end time have not been set.
+    if (is_null($start_date) or is_null($end_date) or (time() + 60) < $start_date or $end_comparison > $end_date) {
         $configObject = Config::get_instance();
         $format = $configObject->get('cfg_short_datetime_php');
         $msg = sprintf($string['error_time'], date($format, $start_date), date($format, $end_date));

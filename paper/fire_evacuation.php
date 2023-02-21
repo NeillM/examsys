@@ -112,7 +112,7 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
     $lab_id = $lab_object->get_id();
 }
 
-if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
+if (!is_null($end_date) and time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
     $paper_type = '_late';
 }
 

@@ -102,7 +102,7 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
 
 $summative_exam_session_started = false;
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
-if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
+if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2' and $paper_scheduled) {
     // Has this lab had an end time set?
     $log_lab_end_time = $propertyObj->getLogLabEndTime($lab_id);
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();

@@ -185,6 +185,9 @@ class LogExtraTime
         return $this->log_lab_end_time->get_paper_exam_duration();
     }
 
+    /**
+     * @return \DateTime|bool
+     */
     public function get_paper_exam_start_time()
     {
         return $this->log_lab_end_time->get_paper_start_datetime();
@@ -247,7 +250,7 @@ class LogExtraTime
     }
 
     /**
-     * @return int
+     * @return DateTime|bool
      */
     public function get_session_end_datetime()
     {
@@ -255,7 +258,7 @@ class LogExtraTime
     }
 
     /**
-     * @return int
+     * @return DateTime|null
      */
     public function get_default_session_end_datetime()
     {

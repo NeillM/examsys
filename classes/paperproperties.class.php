@@ -833,7 +833,9 @@ class PaperProperties
     }
 
     /**
-     * @return string $start_date
+     * Gets the paper start date.
+     *
+     * @return string|null $start_date Unix timestamp or null if no start date is set.
      */
     public function get_start_date()
     {
@@ -944,7 +946,9 @@ class PaperProperties
     }
 
     /**
-     * @return string $end_date
+     * Get the end date of the paper.
+     *
+     * @return string|null $end_date Unix timestamp or null if no date has been set.
      */
     public function get_end_date()
     {
@@ -3223,7 +3227,11 @@ class PaperProperties
      */
     protected function shouldProgressLogLate(): bool
     {
-        return (time() > $this->get_end_date());
+        $end_date = $this->get_end_date();
+        if (is_null($end_date)) {
+            return false;
+        }
+        return (time() > $end_date);
     }
 
     /**
