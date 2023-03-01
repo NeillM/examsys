@@ -65,7 +65,7 @@ if (isset($_POST['submit'])) {
             }
         }
         // Check value is of expected type. No change if not expected type.
-        if ((Config::check_type($new_value, $type)) && ($value != $new_value)){
+        if ((Config::check_type($new_value, $type)) && ($value != $new_value)) {
             $configObject->set_setting($setting, $new_value, $type);
         }
     }
