@@ -31,7 +31,7 @@ class configTest extends unittest {
      * @dataProvider dataCheckType
      */
     public function testCheckType(string $input, bool $expected) {
-        $datatype =Config::check_type($input, "boolean");
+        $datatype = Config::check_type($input, Config::BOOLEAN);
         $this->assertEquals($expected, Config::check_type($input, $datatype));
     }
 
