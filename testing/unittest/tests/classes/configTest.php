@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of ExamSys
 //
 // ExamSys is free software: you can redistribute it and/or modify
@@ -27,11 +26,11 @@ use testing\unittest\unittest;
  */
 class configTest extends unittest {
     /**
-     * Tests check_type function in config class
+     * Tests check_type function in config class.
      *
-     * @dataProvider dataToChecktype
+     * @dataProvider dataCheckType
      */
-    public function testRogoToTimestamp(string $input, bool $expected) {
+    public function testCheckType(string $input, bool $expected) {
         $datatype =Config::check_type($input, "boolean");
         $this->assertEquals($expected, Config::check_type($input, $datatype));
     }
@@ -41,7 +40,7 @@ class configTest extends unittest {
      *
      * @return array
      */
-    public function dataToChecktype(): array {
+    public function dataCheckType(): array {
         return [
                 'default' => ['',  true],
                 'default' => ['somevalue', true],
