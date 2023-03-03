@@ -30,8 +30,8 @@ class configTest extends unittest {
      *
      * @dataProvider dataCheckType
      */
-    public function testCheckType(string $input, bool $expected) {
-        $datatype = Config::check_type($input, Config::BOOLEAN);
+    public function testCheckType(string $input, string $checktype, bool $expected) {
+        $datatype = Config::check_type($input, $checktype);
         $this->assertEquals($expected, Config::check_type($input, $datatype));
     }
 
@@ -42,10 +42,10 @@ class configTest extends unittest {
      */
     public function dataCheckType(): array {
         return [
-                'default' => ['',  true],
-                'default' => ['somevalue', true],
-                'default' => ['1', true],
-                'default' => ['0', true]
+                'default' => ['', Config::BOOLEAN,  true],
+                'default' => ['somevalue', Config::BOOLEAN, true],
+                'default' => ['1', Config::BOOLEAN, true],
+                'default' => ['0', Config::BOOLEAN,true]
         ];
     }
 }
