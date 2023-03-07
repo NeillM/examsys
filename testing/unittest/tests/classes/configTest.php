@@ -42,10 +42,10 @@ class configTest extends unittest {
      */
     public function dataCheckType(): array {
         return [
-            'default' => ['', Config::BOOLEAN, true],
-            'default' => ['somevalue', Config::BOOLEAN, true],
-            'default' => ['1', Config::BOOLEAN, true],
-            'default' => ['0', Config::BOOLEAN, true]
+            'empty' => ['', Config::BOOLEAN, true],
+            'somevalue' => ['somevalue', Config::BOOLEAN, false],
+            'one' => ['1', Config::BOOLEAN, true],
+            'zero' => ['0', Config::BOOLEAN, true]
         ];
     }
 }
