@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of ExamSys
 //
 // ExamSys is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @package tests
  * @group core
  */
-class configTest extends unittest {
+class ConfigTest extends unittest
+{
     /**
      * Tests check_type function in config class.
      *
      * @dataProvider dataCheckType
      */
-    public function testCheckType(string $input, string $checktype, bool $expected) {
+    public function testCheckType(string $input, string $checktype, bool $expected)
+    {
         $datatype = Config::check_type($input, $checktype);
         $this->assertEquals($expected, Config::check_type($input, $datatype));
     }
@@ -40,7 +43,8 @@ class configTest extends unittest {
      *
      * @return array
      */
-    public function dataCheckType(): array {
+    public function dataCheckType(): array
+    {
         return [
             'empty' => ['', Config::BOOLEAN, true],
             'somevalue' => ['somevalue', Config::BOOLEAN, false],
