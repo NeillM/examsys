@@ -588,7 +588,7 @@ function refresh_performance_stats(\mysqli $mysqli, int $paperID, string $starte
     $result->close();
 
     // Remove records from performance_main
-    $date_started = mb_substr($started, 0, 10); // this is a little worrying how it refers to the dates, also will only do exams done on a single day. Ticket being created to investigate.
+    $date_started = mb_substr($started, 0, 8); // this is a little worrying how it refers to the dates, also will only do exams done on a single day. Ticket being created to investigate.
     $remove = $mysqli->prepare('DELETE FROM performance_main WHERE paperID = ? AND taken = ?');
     $remove->bind_param('is', $paperID, $date_started);
     $remove->execute();
