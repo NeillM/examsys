@@ -22,6 +22,7 @@ use Behat\Gherkin\Node\TableNode;
 use testing\behat\rogo_test;
 use Behat\Mink\Exception\UnsupportedDriverActionException;
 use Exception;
+use WebDriver\Exception\StaleElementReference;
 
 /**
  * Basic core step definitions.
@@ -683,10 +684,14 @@ JS;
         if ($this->running_javascript()) {
             $this->spin(
                 function (rogo_test $context) use ($current_screen) {
-                    $screen = $this->find('id_or_name', 'current_screen');
-                    if ($screen->getValue() !== $current_screen) {
-                        $this->lookForErrors();
-                        return true;
+                    try {
+                        $screen = $this->find('id_or_name', 'current_screen');
+                        if ($screen->getValue() !== $current_screen) {
+                            $this->lookForErrors();
+                            return true;
+                        }
+                    } catch (StaleElementReference $e) {
+                        // We changed page in the middle of the check, so we will ignore and try again.
                     }
                     return false;
                 }
