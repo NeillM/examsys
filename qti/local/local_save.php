@@ -162,12 +162,14 @@ class IE_Local_Save extends IE_Main
             }
 
             // Store media row.
-            $this->m_row[0] = $this->db->GetBlankTableRow('media');
-            $this->m_row[0]['source'] = $question->media;
-            $this->m_row[0]['width'] = $question->media_width;
-            $this->m_row[0]['height'] = $question->media_height;
-            $this->m_row[0]['alt'] = $question->media_alt;
-            $this->m_row[0]['ownerid'] = $userID;
+            if (!empty($this->media)) {
+                $this->m_row[0] = $this->db->GetBlankTableRow('media');
+                $this->m_row[0]['source'] = $question->media;
+                $this->m_row[0]['width'] = $question->media_width;
+                $this->m_row[0]['height'] = $question->media_height;
+                $this->m_row[0]['alt'] = $question->media_alt;
+                $this->m_row[0]['ownerid'] = $userID;
+            }
 
             $oiii = print_r($question, true);
             $t = 8;
@@ -233,12 +235,14 @@ class IE_Local_Save extends IE_Main
             $question->save_id = $this->q_row['q_id'];
 
             // Insert Questions Media.
-            $this->db->InsertRow('media', 'id', $this->m_row[0]);
-            $qmed_row = $this->db->GetBlankTableRow('questions_media');
-            $qmed_row['qid'] = $this->q_row['q_id'];
-            $qmed_row['mediaid'] = $this->m_row[0]['id'];
-            $qmed_row['num'] = 0;
-            $this->db->InsertRow('questions_media', 'temp', $qmed_row);
+            if (!empty($this->m_row)) {
+                $this->db->InsertRow('media', 'id', $this->m_row[0]);
+                $qmed_row = $this->db->GetBlankTableRow('questions_media');
+                $qmed_row['qid'] = $this->q_row['q_id'];
+                $qmed_row['mediaid'] = $this->m_row[0]['id'];
+                $qmed_row['num'] = 0;
+                $this->db->InsertRow('questions_media', 'temp', $qmed_row);
+            }
 
             $this->qm_row = $this->db->GetBlankTableRow('questions_modules');
             $this->qm_row['q_id'] = $this->q_row['q_id'];
