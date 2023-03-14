@@ -65,7 +65,7 @@ require('header.php');
                     <or>
     <?php foreach ($optset as $option) : ?>
            <not>
-                        <varequal respident="1" case="No" index="<?php echo $respid ?>"><?php echo $option->display ?></varequal>
+                        <varequal respident="1" case="No" index="<?php echo $respid ?>"><![CDATA[<?php echo $option->display ?>]]></varequal>
            </not>
     <?php endforeach; ?>
                     </or>
@@ -81,7 +81,7 @@ require('header.php');
                 <conditionvar>
                     <or>
     <?php foreach ($optset as $option) : ?>
-                        <varequal respident="1" case="No" index="<?php echo $respid ?>"><?php echo $option->display ?></varequal>
+                        <varequal respident="1" case="No" index="<?php echo $respid ?>"><![CDATA[<?php echo $option->display ?>]]></varequal>
     <?php endforeach; ?>
                     </or>
                 </conditionvar>

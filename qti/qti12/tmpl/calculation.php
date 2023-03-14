@@ -39,7 +39,7 @@ require('header.php');
             </outcomes>
             <respcondition title="right">
                 <conditionvar>
-                    <varequal respident="1"><?php echo $answer ?></varequal>
+                    <varequal respident="1"><![CDATA[<?php echo $answer ?>]]></varequal>
                 </conditionvar>
                 <setvar action="Set"><?php echo $question->marks_correct ?></setvar>
                 <displayfeedback linkrefid="general"/>
@@ -68,7 +68,7 @@ require('header.php');
             <respcondition title="wrong">
                 <conditionvar>
                     <not>
-            <varequal respident="1"><?php echo $answer ?></varequal>
+            <varequal respident="1"><![CDATA[<?php echo $answer ?>]]></varequal>
           </not>
                 </conditionvar>
                 <setvar action="Set"><?php echo $question->marks_incorrect ?></setvar>
