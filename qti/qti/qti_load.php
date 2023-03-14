@@ -176,7 +176,7 @@ class IE_qti_Load extends IE_Main
         $xml = simplexml_load_string($xmlStr);
 
         if (!$xml) {
-            $this->AddError(sprintf($string['invalidzip2'], basename($filename)));
+            $this->AddError(sprintf($string['invalidxml'], basename($filename)));
             return '';
         }
 
