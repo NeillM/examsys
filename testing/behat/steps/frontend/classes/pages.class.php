@@ -138,12 +138,26 @@ trait pages
             case 'Lab':
                 $this->visitLab($data);
                 break;
+            case 'Configuration':
+                $this->visitConfig();
+                break;
             default:
                 // Unsupported page type.
                 throw new PendingException("A handler for the '$page' page has not been implemented.");
                 break;
         }
         $this->lookForErrors();
+    }
+
+    /**
+     * Loads the admin configuration page.
+     *
+     * @return void
+     */
+    protected function visitConfig()
+    {
+        $url = Url::configuration();
+        $this->visit($url);
     }
 
     /**

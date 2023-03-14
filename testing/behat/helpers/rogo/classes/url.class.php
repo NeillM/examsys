@@ -194,6 +194,16 @@ class Url
     }
 
     /**
+     * Generates the url to a configuration admin page.
+     *
+     * @return string
+     */
+    public static function configuration(): string
+    {
+        return '/admin/config.php';
+    }
+
+    /**
      * Generates the url to the lab admin page.
      *
      * @return string
