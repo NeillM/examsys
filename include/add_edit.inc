@@ -90,6 +90,8 @@ function wysiwyg_editor($name, $replace, $content = '', $type = '')
 {
     global $string;
     $html = '';
+    // Handle null being passed as content.
+    $content = $content ?? '';
     $content = htmlspecialchars($content);
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $html .=  $texteditorplugin->get_textarea($name, $replace, $content, $type);
