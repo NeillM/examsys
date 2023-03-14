@@ -4,7 +4,7 @@
         <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{attribute(lang, data.setting)}}" />
     </div>
     <div class="configvalue">
-        <input type="checkbox" name="{{data.setting}}" id="{{data.setting}}" {{data.checked}} {{data.disabled}} />
+        <input type="checkbox" name="{{data.setting}}" value="1" id="{{data.setting}}" {{data.checked}} {{data.disabled}} />
         {% if data.disabled != "" %}
         <div class="configextra">{{lang.fileoverride}}</div>
         {% endif %}
