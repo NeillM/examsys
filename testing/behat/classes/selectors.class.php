@@ -86,6 +86,7 @@ class selectors
         'tab' => 'tab',
         'papers_by_school' => 'papers_by_school',
         'clock_anomaly' => 'clock_anomaly',
+        'configarea' => 'configarea',
         'text' => 'text',
     );
 
@@ -188,6 +189,9 @@ XPATH
 XPATH
         ,'tab' => <<<XPATH
 //td[contains(@class, 'tabon') or contains(@class, 'taboff') and contains(normalize-space(.) , %locator%)]  
+XPATH
+        ,'configarea' => <<<XPATH
+//div[@class='configarea' and contains(text(), %locator%)]  
 XPATH
         ,'clock_anomaly' => <<<XPATH
 //td[contains(normalize-space(.), %locator%)]/following-sibling::td[contains(text(), 'User System Clock Anomaly')]
