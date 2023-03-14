@@ -59,7 +59,7 @@ class IE_Local_Save extends IE_Main
 
         $this->db = new Database();
 
-        if (count($data->questions) == 0) {
+        if (empty($data->questions)) {
             $this->AddError($string['noquestions']);
 
             return;
