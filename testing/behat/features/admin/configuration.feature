@@ -4,7 +4,7 @@ Feature: Editing configuration
   I need to be able to change configuration
 
   @edit_config_api
-  Scenario: Editing config API area then save
+  Scenario: Test changes in API area could be saved
     Given the following "config" exist:
       | setting | value |
       | api_allow_superuser | 0 |
@@ -25,7 +25,7 @@ Feature: Editing configuration
     And the "cfg_api_enabled" checkbox should be unchecked
 
   @edit_config_gradebook
-  Scenario: Editing config gradebook area then save
+  Scenario: Test checkbox changes in gradebook area then save
     Given the following "config" exist:
       | cfg_gradebook_enabled | 1 |
     When I login as "admin"
@@ -36,7 +36,7 @@ Feature: Editing configuration
     And the "cfg_gradebook_enabled" checkbox should be unchecked
 
   @edit_config_lti
-  Scenario: Editing config LTI integration area then save
+  Scenario: Test checkbox changes in LTI integration area could be saved
     Given the following "config" exist:
       | setting | value |
       | cfg_lti_allow_module_create | 1 |
@@ -54,7 +54,7 @@ Feature: Editing configuration
     And the "cfg_lti_allow_module_create" checkbox should be unchecked
 
   @edit_config_assessments
-  Scenario: Editing config assessments integration area then save
+  Scenario: Test changes in assessments integration area could be saved
     Given the following "config" exist:
       | setting | value |
       | paper_anomaly_detection | {"progress":0,"summative":0} |
@@ -81,7 +81,7 @@ Feature: Editing configuration
     And the "paper_anomaly_detection_summative" checkbox should be checked
 
   @edit_config_summative_assessments
-  Scenario: Editing config summative assessments integration area then save
+  Scenario: Test changes in summative assessments integration area could be saved
     Given the following "config" exist:
       | setting | value |
       | cfg_summative_mgmt | 0 |
@@ -100,7 +100,7 @@ Feature: Editing configuration
     Then the "summative_hour_warning" field should contain "2"
 
   @edit_config_miscellaneous
-  Scenario: Editing config miscellaneous area then save
+  Scenario: Test changes in miscellaneous area could be saved
     Given the following "config" exist:
       | setting | value |
       | misc_company | University of |
@@ -121,7 +121,7 @@ Feature: Editing configuration
     Then the "misc_full_question_history_display_limit" field should contain "123"
 
   @edit_config_calculation_questions
-  Scenario: Editing config calculation questions area then save
+  Scenario: Test changes in calculation questions area could be saved
     Given the following "config" exist:
       | setting | value |
       | cfg_calc_type | phpEval |
@@ -133,7 +133,7 @@ Feature: Editing configuration
     Then the "cfg_calc_type" field should contain "phpEvaluate"
 
   @edit_config_system_settings
-  Scenario: Editing config system settings area then save
+  Scenario: Test changes in system settings area could be saved
     Given the following "config" exist:
       | setting | value |
       | system_academic_year_start | 07/01 |
@@ -162,7 +162,7 @@ Feature: Editing configuration
     And the "system_mediatypes_doc" checkbox should be unchecked
 
   @edit_config_reports
-  Scenario: Editing config system settings area then save
+  Scenario: Test changes in system settings area could be saved
     Given the following "config" exist:
       | setting | value |
       | rpt_percent_decimals | 2 |
@@ -174,7 +174,7 @@ Feature: Editing configuration
     Then the "rpt_percent_decimals" field should contain "4"
 
   @edit_config_standard
-  Scenario: Editing config standard setting settings area then save
+  Scenario: Test changes in standard setting area could be saved
     Given the following "config" exist:
       | setting | value |
       | stdset_hofstee_distinction | {"min_pass":"median","max_pass":100,"min_fail":0,"max_fail":100} |
