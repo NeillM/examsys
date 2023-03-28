@@ -5,9 +5,6 @@ Feature: Editing configuration
 
   @edit_config_api
   Scenario: Editing config API area then save
-    Given I login as "admin"
-    And I am on "Configuration" page
-    And I should see "API" "configarea"
     Given the following "config" exist:
       | setting | value |
       | api_allow_superuser | 0 |
@@ -16,6 +13,9 @@ Feature: Editing configuration
       | api_oauth_refresh_token_lifetime | 1209600 |
       | apilogfile |  |
       | cfg_api_enabled | 1 |
+    And I login as "admin"
+    And I am on "Configuration" page
+    And I should see "API" "configarea"
     When I check "api_allow_superuser"
     And I set the field "api_oauth_access_lifetime" to "1209555"
     And I uncheck "cfg_api_enabled"
