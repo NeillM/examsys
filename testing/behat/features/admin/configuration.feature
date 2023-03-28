@@ -13,7 +13,7 @@ Feature: Editing configuration
       | api_oauth_refresh_token_lifetime | 1209600 |
       | apilogfile |  |
       | cfg_api_enabled | 1 |
-    And I login as "admin"
+    When I login as "admin"
     And I am on "Configuration" page
     And I should see "API" "configarea"
     When I check "api_allow_superuser"
@@ -26,20 +26,17 @@ Feature: Editing configuration
 
   @edit_config_gradebook
   Scenario: Editing config gradebook area then save
-    Given I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Gradebook" "configarea"
     Given the following "config" exist:
       | cfg_gradebook_enabled | 1 |
+    When I login as "admin"
+    And I am on "Configuration" page
+    Then I should see "Gradebook" "configarea"
     When I uncheck "cfg_gradebook_enabled"
     And I click "Save" "link_or_button"
     And the "cfg_gradebook_enabled" checkbox should be unchecked
 
   @edit_config_lti
   Scenario: Editing config LTI integration area then save
-    Given I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "LTI Integration" "configarea"
     Given the following "config" exist:
       | setting | value |
       | cfg_lti_allow_module_create | 1 |
@@ -47,6 +44,9 @@ Feature: Editing configuration
       | cfg_lti_allow_staff_module_register | 0 |
       | lti_auth_timeout | 9072000 |
       | lti_integration | default |
+    When I login as "admin"
+    And I am on "Configuration" page
+    Then I should see "LTI Integration" "configarea"
     When I uncheck "cfg_lti_allow_module_create"
     And I check "cfg_lti_allow_staff_module_register"
     And I click "Save" "link_or_button"
@@ -55,9 +55,6 @@ Feature: Editing configuration
 
   @edit_config_assessments
   Scenario: Editing config assessments integration area then save
-    Given I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "All Assessments" "configarea"
     Given the following "config" exist:
       | setting | value |
       | paper_anomaly_detection | {"progress":0,"summative":0} |
@@ -68,6 +65,9 @@ Feature: Editing configuration
       | paper_mathjax | 1 |
       | paper_max_duration | 779 |
       | paper_types | {"formative":1,"progress":1,"summative":1,"survey":1,"osce":1,"offline":1,"peer_review":1} |
+    When I login as "admin"
+    And I am on "Configuration" page
+    Then I should see "All Assessments" "configarea"
     And I uncheck "paper_mathjax"
     And I click "Save" "link_or_button"
     And the "paper_mathjax" checkbox should be unchecked
@@ -82,9 +82,6 @@ Feature: Editing configuration
 
   @edit_config_summative_assessments
   Scenario: Editing config summative assessments integration area then save
-    Given I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Summative Assessments" "configarea"
     Given the following "config" exist:
       | setting | value |
       | cfg_summative_mgmt | 0 |
@@ -92,6 +89,9 @@ Feature: Editing configuration
       | summative_hour_warning | 10 |
       | summative_max_sittings | 6 |
       | summative_warn_external | 0 |
+    When I login as "admin"
+    And I am on "Configuration" page
+    Then I should see "Summative Assessments" "configarea"
     And I check "cfg_summative_mgmt"
     And I click "Save" "link_or_button"
     And the "cfg_summative_mgmt" checkbox should be checked
@@ -101,9 +101,6 @@ Feature: Editing configuration
 
   @edit_config_miscellaneous
   Scenario: Editing config miscellaneous area then save
-    Given I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Miscellaneous" "configarea"
     Given the following "config" exist:
       | setting | value |
       | misc_company | University of |
@@ -113,6 +110,9 @@ Feature: Editing configuration
       | misc_logo_email | alt_logo.png |
       | misc_logo_main | logo.png |
       | misc_search_leadin_length | 160 |
+    When I login as "admin"
+    And I am on "Configuration" page
+    Then I should see "Miscellaneous" "configarea"
     And I set the field "misc_company" to "UoN"
     And I click "Save" "link_or_button"
     Then the "misc_company" field should contain "UoN"
@@ -122,12 +122,12 @@ Feature: Editing configuration
 
   @edit_config_calculation_questions
   Scenario: Editing config calculation questions area then save
-    Given I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Calculation Questions" "configarea"
     Given the following "config" exist:
       | setting | value |
       | cfg_calc_type | phpEval |
+    When I login as "admin"
+    And I am on "Configuration" page
+    Then I should see "Calculation Questions" "configarea"
     And I set the field "cfg_calc_type" to "phpEvaluate"
     And I click "Save" "link_or_button"
     Then the "cfg_calc_type" field should contain "phpEvaluate"
