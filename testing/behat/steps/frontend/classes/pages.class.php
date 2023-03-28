@@ -116,6 +116,9 @@ trait pages
      * || Page            || Section                                       || Data                  ||
      * | User profile     | Log, Teams, Admin, Roles, Modules, Notes, ect  | A username              |
      * | Lab              |                                                | The name of a lab       |
+     * | Paper Details    |                                                | The name of a paper     |
+     * | Calendar         | Calendar week                                  | Calendar Year           |
+     * | Configuration    |                                                |                         |
      *
      * @param string $page
      * @param string $data
