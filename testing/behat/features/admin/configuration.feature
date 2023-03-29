@@ -167,11 +167,11 @@ Feature: Editing configuration
       | setting | value |
       | rpt_percent_decimals | 2 |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Reports" "configarea"
+    Then I am on "Configuration" page
+    And I should see "Reports" "configarea"
     And I set the field "rpt_percent_decimals" to "4"
     And I click "Save" "link_or_button"
-    Then the "rpt_percent_decimals" field should contain "4"
+    And the "rpt_percent_decimals" field should contain "4"
 
   @edit_config_standard
   Scenario: Test changes in standard setting area could be saved
