@@ -14,13 +14,13 @@ Feature: Editing configuration
       | apilogfile |  |
       | cfg_api_enabled | 1 |
     When I login as "admin"
-    And I am on "Configuration" page
+    Then I am on "Configuration" page
     And I should see "API" "configarea"
-    When I check "api_allow_superuser"
+    And I check "api_allow_superuser"
     And I set the field "api_oauth_access_lifetime" to "1209555"
     And I uncheck "cfg_api_enabled"
     And I click "Save" "link_or_button"
-    Then the "api_oauth_access_lifetime" field should contain "1209555"
+    And the "api_oauth_access_lifetime" field should contain "1209555"
     And the "api_allow_superuser" checkbox should be checked
     And the "cfg_api_enabled" checkbox should be unchecked
 
@@ -29,9 +29,9 @@ Feature: Editing configuration
     Given the following "config" exist:
       | cfg_gradebook_enabled | 1 |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Gradebook" "configarea"
-    When I uncheck "cfg_gradebook_enabled"
+    Then I am on "Configuration" page
+    And I should see "Gradebook" "configarea"
+    And I uncheck "cfg_gradebook_enabled"
     And I click "Save" "link_or_button"
     And the "cfg_gradebook_enabled" checkbox should be unchecked
 
@@ -45,9 +45,9 @@ Feature: Editing configuration
       | lti_auth_timeout | 9072000 |
       | lti_integration | default |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "LTI Integration" "configarea"
-    When I uncheck "cfg_lti_allow_module_create"
+    Then I am on "Configuration" page
+    And I should see "LTI Integration" "configarea"
+    And I uncheck "cfg_lti_allow_module_create"
     And I check "cfg_lti_allow_staff_module_register"
     And I click "Save" "link_or_button"
     And the "cfg_lti_allow_staff_module_register" checkbox should be checked
@@ -66,14 +66,14 @@ Feature: Editing configuration
       | paper_max_duration | 779 |
       | paper_types | {"formative":1,"progress":1,"summative":1,"survey":1,"osce":1,"offline":1,"peer_review":1} |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "All Assessments" "configarea"
+    Then I am on "Configuration" page
+    And I should see "All Assessments" "configarea"
     And I uncheck "paper_mathjax"
     And I click "Save" "link_or_button"
     And the "paper_mathjax" checkbox should be unchecked
     And I set the field "paper_autosave_frequency" to "888"
     And I click "Save" "link_or_button"
-    Then the "paper_autosave_frequency" field should contain "888"
+    And the "paper_autosave_frequency" field should contain "888"
     And I check "paper_anomaly_detection_progress"
     And I check "paper_anomaly_detection_summative"
     And I click "Save" "link_or_button"
@@ -90,14 +90,14 @@ Feature: Editing configuration
       | summative_max_sittings | 6 |
       | summative_warn_external | 0 |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Summative Assessments" "configarea"
+    Then I am on "Configuration" page
+    And I should see "Summative Assessments" "configarea"
     And I check "cfg_summative_mgmt"
     And I click "Save" "link_or_button"
     And the "cfg_summative_mgmt" checkbox should be checked
     And I set the field "summative_hour_warning" to "2"
     And I click "Save" "link_or_button"
-    Then the "summative_hour_warning" field should contain "2"
+    And the "summative_hour_warning" field should contain "2"
 
   @edit_config_miscellaneous
   Scenario: Test changes in miscellaneous area could be saved
@@ -111,14 +111,14 @@ Feature: Editing configuration
       | misc_logo_main | logo.png |
       | misc_search_leadin_length | 160 |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Miscellaneous" "configarea"
+    Then I am on "Configuration" page
+    And I should see "Miscellaneous" "configarea"
     And I set the field "misc_company" to "UoN"
     And I click "Save" "link_or_button"
-    Then the "misc_company" field should contain "UoN"
+    And the "misc_company" field should contain "UoN"
     And I set the field "misc_full_question_history_display_limit" to "123"
     And I click "Save" "link_or_button"
-    Then the "misc_full_question_history_display_limit" field should contain "123"
+    And the "misc_full_question_history_display_limit" field should contain "123"
 
   @edit_config_calculation_questions
   Scenario: Test changes in calculation questions area could be saved
@@ -126,11 +126,11 @@ Feature: Editing configuration
       | setting | value |
       | cfg_calc_type | phpEval |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Calculation Questions" "configarea"
+    Then I am on "Configuration" page
+    And I should see "Calculation Questions" "configarea"
     And I set the field "cfg_calc_type" to "phpEvaluate"
     And I click "Save" "link_or_button"
-    Then the "cfg_calc_type" field should contain "phpEvaluate"
+    And the "cfg_calc_type" field should contain "phpEvaluate"
 
   @edit_config_system_settings
   Scenario: Test changes in system settings area could be saved
@@ -146,14 +146,14 @@ Feature: Editing configuration
       | system_recover_postdata | 0 |
       | system_user_accessibility | 1 |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "System settings" "configarea"
+    Then I am on "Configuration" page
+    And I should see "System settings" "configarea"
     And I set the field "system_academic_year_start" to "07/01"
     And I uncheck "system_mediatypes_png"
     And I uncheck "system_mediatypes_doc"
     And I check "system_user_accessibility"
-    When I click "Save" "link_or_button"
-    Then the "system_academic_year_start" field should contain "07/01"
+    And I click "Save" "link_or_button"
+    And the "system_academic_year_start" field should contain "07/01"
     And the "system_user_accessibility" checkbox should be checked
     And the "system_mediatypes_gif" checkbox should be checked
     And the "system_mediatypes_jpg" checkbox should be checked
@@ -182,10 +182,10 @@ Feature: Editing configuration
       | stdset_hofstee_whole_numbers | 1 |
       | cfg_ims_enabled | 0 |
     When I login as "admin"
-    And I am on "Configuration" page
-    Then I should see "Standard setting" "configarea"
+    Then I am on "Configuration" page
+    And I should see "Standard setting" "configarea"
     And I set the field "stdset_hofstee_distinction_max_pass" to "200"
     And I set the field "stdset_hofstee_pass_min_fail" to "4"
     And I click "Save" "link_or_button"
-    Then the "stdset_hofstee_distinction_max_pass" field should contain "200"
-    Then the "stdset_hofstee_pass_min_fail" field should contain "4"
+    And the "stdset_hofstee_distinction_max_pass" field should contain "200"
+    And the "stdset_hofstee_pass_min_fail" field should contain "4"
