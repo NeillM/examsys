@@ -116,6 +116,9 @@ trait pages
      * || Page            || Section                                       || Data                  ||
      * | User profile     | Log, Teams, Admin, Roles, Modules, Notes, ect  | A username              |
      * | Lab              |                                                | The name of a lab       |
+     * | Paper Details    |                                                | The name of a paper     |
+     * | Calendar         | Calendar week                                  | Calendar Year           |
+     * | Configuration    |                                                |                         |
      *
      * @param string $page
      * @param string $data
@@ -138,12 +141,26 @@ trait pages
             case 'Lab':
                 $this->visitLab($data);
                 break;
+            case 'Configuration':
+                $this->visitConfig();
+                break;
             default:
                 // Unsupported page type.
                 throw new PendingException("A handler for the '$page' page has not been implemented.");
                 break;
         }
         $this->lookForErrors();
+    }
+
+    /**
+     * Loads the admin configuration page.
+     *
+     * @return void
+     */
+    protected function visitConfig()
+    {
+        $url = Url::configuration();
+        $this->visit($url);
     }
 
     /**
