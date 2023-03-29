@@ -940,7 +940,7 @@ if ($properties->get_retired() == '') {
 
         $theme_class = '';
         $theme_str = '';
-        if (trim($temp_array[$x]['theme']) != '') {
+        if (isset($temp_array[$x]['theme']) and trim($temp_array[$x]['theme']) != '') {
             $theme_class = ' q_theme';
             $theme_str = '<h4 class="theme">' . trim($temp_array[$x]['theme']) . "</h4>\n";
         }

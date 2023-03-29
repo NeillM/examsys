@@ -79,7 +79,7 @@ require_once '../include/staff_auth.inc';
     <?php endforeach; ?>
 
 
-<?php elseif (count($result['load']['data']->questions) > 0) : ?>
+<?php elseif (!empty($result['load']['data']->questions)) : ?>
     <?php $qno = 1; ?>
     <?php foreach ($result['load']['data']->questions as $question) : ?>
     <tr>

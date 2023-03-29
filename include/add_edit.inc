@@ -90,6 +90,8 @@ function wysiwyg_editor($name, $replace, $content = '', $type = '')
 {
     global $string;
     $html = '';
+    // Handle null being passed as content.
+    $content = $content ?? '';
     $content = htmlspecialchars($content);
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $html .=  $texteditorplugin->get_textarea($name, $replace, $content, $type);
@@ -140,8 +142,9 @@ HTML;
 
         foreach ($changes as $change) {
             $alt = ($i++ % 2 == 1) ? ' class="alt"' : '';
-            $change['old'] = strip_tags($change['old']);
-            $change['new'] = strip_tags($change['new']);
+            // Ensure that old and new end up as a string here.
+            $change['old'] = strip_tags($change['old'] ?? '');
+            $change['new'] = strip_tags($change['new'] ?? '');
             $change_old = $change['old'];
             $change_old_more = '';
             $change_new = $change['new'];

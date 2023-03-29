@@ -27,6 +27,9 @@ class IE_qti_Load extends IE_Main
 {
     public $params;
 
+    /** @var string Debugging information. */
+    public $debug;
+
     public function Load($params)
     {
         global $string;
@@ -173,7 +176,7 @@ class IE_qti_Load extends IE_Main
         $xml = simplexml_load_string($xmlStr);
 
         if (!$xml) {
-            $this->AddError(sprintf($string['invalidzip2'], basename($filename)));
+            $this->AddError(sprintf($string['invalidxml'], basename($filename)));
             return '';
         }
 

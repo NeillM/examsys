@@ -24,7 +24,7 @@ $settingsdecoded = json_decode($question->settings, true);
             <qticomment><![CDATA[Question:<?php echo $question->origleadin ?>]]></qticomment>
             <qticomment><![CDATA[Formula:<?php echo $settingsdecoded['answers'][0]['formula']; ?>]]></qticomment>
             <qticomment><![CDATA[Units:<?php echo $settingsdecoded['answers'][0]['units']; ?>]]></qticomment>
-            <qticomment><![CDATA[Decimals:<?php echo $settingsdecoded['dp']; ?>]]></qticomment>
+            <qticomment><![CDATA[Decimals:<?php echo $settingsdecoded['dp'] ?? ''; ?>]]></qticomment>
             <qticomment><![CDATA[Tolerance:<?php echo $settingsdecoded['tolerance_full'];
             if ($settingsdecoded['fulltoltyp'] == '%') {
                 echo '%';

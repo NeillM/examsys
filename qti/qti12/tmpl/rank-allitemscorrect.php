@@ -35,7 +35,7 @@ require('header.php');
                     <response_label ident="<?php echo $this->ll[$oid] ?>">
         <?php endif; ?>
                         <material>
-                            <mattext texttype="text/plain"><?php echo $option ?></mattext>
+                            <mattext texttype="text/plain"><![CDATA[<?php echo $option ?>]]></mattext>
                         </material>
                     </response_label>
     <?php endforeach; ?>

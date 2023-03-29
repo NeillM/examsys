@@ -1408,7 +1408,12 @@ class IE_qti12_Load extends IE_Main
         $dest->type = 'info';
 
         $response = reset($source->responses);
-        $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
+        if (!empty($response->material)) {
+            $response_material = $response->material;
+        } else {
+            $response_material = '';
+        }
+        $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response_material);
 
         return $dest;
     }

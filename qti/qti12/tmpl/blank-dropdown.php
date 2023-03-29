@@ -74,7 +74,7 @@ require('header.php');
     <?php $oid = 1; ?>
     <?php foreach ($optset as $option) : ?>
         <?php if ($option->correct) : ?>
-                    <varequal respident="<?php echo $respid ?>" case="No"><?php echo $option->display ?></varequal>
+                    <varequal respident="<?php echo $respid ?>" case="No"><![CDATA[<?php echo $option->display ?>]]></varequal>
         <?php endif; ?>
         <?php $oid++; ?>
     <?php endforeach; ?>

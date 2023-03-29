@@ -153,6 +153,8 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function calculate_user_mark()
     {
+        $this->decode_settings();
+
         $returnstatus = null;
         if (is_null($this->useranswer)) {
             $this->error = 'No User Answer';
@@ -660,6 +662,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_strict_dp_enabled()
     {
+        $this->decode_settings();
         return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true and isset($this->settings['dp']));
     }
 
@@ -669,6 +672,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_strict_dp_strictzeros_enabled()
     {
+        $this->decode_settings();
         return (isset($this->settings['strictzeros']) and $this->settings['strictzeros'] === true);
     }
 
@@ -678,6 +682,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_strict_sf_enabled()
     {
+        $this->decode_settings();
         return (isset($this->settings['strictdisplay']) and $this->settings['strictdisplay'] === true) and isset($this->settings['sf']);
     }
 
@@ -709,6 +714,8 @@ class EnhancedCalc extends Question implements questionInterface
     public function render_feedback($extra = array())
     {
         global $string;
+
+        $this->decode_settings();
 
         // Make sure data is arrays not encoded
         if (!is_array($this->useranswer)) {
@@ -1023,6 +1030,8 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function generate_variables()
     {
+        $this->decode_settings();
+
         if (!isset($this->useranswer['vars']) or !is_array($this->useranswer['vars'])) {
             // Create an empty array to hold the generated variables
             $this->useranswer['vars'] = array();
@@ -1326,6 +1335,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function get_show_units()
     {
+        $this->decode_settings();
         return (isset($this->settings['show_units'])) ? ($this->settings['show_units'] == true) : false;
     }
 

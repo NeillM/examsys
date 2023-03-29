@@ -231,7 +231,10 @@ class IE_Local_Load extends IE_Main
         $db->AddInnerJoin('questions_media', 'qm', 'id', 'mediaid');
         $db->AddWhere('qm.qid', $q_row['q_id'], 'i');
         $m_rows = $db->GetSingleRow();
-        $this->AddMedia($store, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+        if (!empty($m_rows)) {
+            // Only attempt to add media where a question has some.
+            $this->AddMedia($store, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+        }
 
         $store->status = $this->statuses[$q_row['status']];
     }
