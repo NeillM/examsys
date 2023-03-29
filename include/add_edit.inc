@@ -35,8 +35,10 @@ require_once 'errors.php';
  */
 function clearMSOtags($sHTML)
 {
-
-    if (trim($sHTML) == '<p>&nbsp;</p>' or trim($sHTML) == '<p></p>' or trim($sHTML) == '<div>&nbsp;</div>' or trim($sHTML) == '<div></div>' or trim($sHTML) == '<br />') {
+    if (
+        is_null($sHTML) or trim($sHTML) == '<p>&nbsp;</p>' or trim($sHTML) == '<p></p>' or trim($sHTML) == '<div>&nbsp;</div>'
+        or trim($sHTML) == '<div></div>' or trim($sHTML) == '<br />'
+    ) {
         $sHTML = '';
     } else {
         if (mb_strpos($sHTML, 'mso-') !== false or mb_strpos($sHTML, 'MsoNormal') !== false or mb_strpos($sHTML, '<o:p>') !== false) {

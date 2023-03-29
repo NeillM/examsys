@@ -1057,7 +1057,7 @@ QUERY;
      */
     public function get_scenario_plain()
     {
-        $this->scenario_plain = trim(strip_tags($this->scenario));
+        $this->scenario_plain = trim(strip_tags($this->scenario ?? ''));
         return $this->scenario_plain;
     }
 
@@ -2026,9 +2026,16 @@ QUERY;
 
     /**
      * Unpack JSON string containing extra data into local fields
+     *
+     * @return void
      */
     protected function unserialize_settings()
     {
+        if (empty($this->settings)) {
+            // Return early as there are no settings.
+            return;
+        }
+
         $extra = json_decode($this->settings, true);
 
         if (is_array($extra)) {
