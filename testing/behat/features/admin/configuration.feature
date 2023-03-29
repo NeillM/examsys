@@ -171,7 +171,7 @@ Feature: Editing configuration
     And I should see "Reports" "configarea"
     When I set the field "rpt_percent_decimals" to "4"
     And I click "Save" "link_or_button"
-    And the "rpt_percent_decimals" field should contain "4"
+    Then the "rpt_percent_decimals" field should contain "4"
 
   @edit_config_standard
   Scenario: Test changes in standard setting area could be saved
