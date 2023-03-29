@@ -13,14 +13,14 @@ Feature: Editing configuration
       | api_oauth_refresh_token_lifetime | 1209600 |
       | apilogfile |  |
       | cfg_api_enabled | 1 |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "API" "configarea"
-    And I check "api_allow_superuser"
+    When I check "api_allow_superuser"
     And I set the field "api_oauth_access_lifetime" to "1209555"
     And I uncheck "cfg_api_enabled"
     And I click "Save" "link_or_button"
-    And the "api_oauth_access_lifetime" field should contain "1209555"
+    Then the "api_oauth_access_lifetime" field should contain "1209555"
     And the "api_allow_superuser" checkbox should be checked
     And the "cfg_api_enabled" checkbox should be unchecked
 
@@ -28,12 +28,12 @@ Feature: Editing configuration
   Scenario: Test checkbox changes in gradebook area then save
     Given the following "config" exist:
       | cfg_gradebook_enabled | 1 |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "Gradebook" "configarea"
-    And I uncheck "cfg_gradebook_enabled"
+    When I uncheck "cfg_gradebook_enabled"
     And I click "Save" "link_or_button"
-    And the "cfg_gradebook_enabled" checkbox should be unchecked
+    Then the "cfg_gradebook_enabled" checkbox should be unchecked
 
   @edit_config_lti
   Scenario: Test checkbox changes in LTI integration area could be saved
@@ -44,13 +44,13 @@ Feature: Editing configuration
       | cfg_lti_allow_staff_module_register | 0 |
       | lti_auth_timeout | 9072000 |
       | lti_integration | default |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "LTI Integration" "configarea"
-    And I uncheck "cfg_lti_allow_module_create"
+    When I uncheck "cfg_lti_allow_module_create"
     And I check "cfg_lti_allow_staff_module_register"
     And I click "Save" "link_or_button"
-    And the "cfg_lti_allow_staff_module_register" checkbox should be checked
+    Then the "cfg_lti_allow_staff_module_register" checkbox should be checked
     And the "cfg_lti_allow_module_create" checkbox should be unchecked
 
   @edit_config_assessments
@@ -65,10 +65,10 @@ Feature: Editing configuration
       | paper_mathjax | 1 |
       | paper_max_duration | 779 |
       | paper_types | {"formative":1,"progress":1,"summative":1,"survey":1,"osce":1,"offline":1,"peer_review":1} |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "All Assessments" "configarea"
-    And I uncheck "paper_mathjax"
+    When I uncheck "paper_mathjax"
     And I click "Save" "link_or_button"
     And the "paper_mathjax" checkbox should be unchecked
     And I set the field "paper_autosave_frequency" to "888"
@@ -77,7 +77,7 @@ Feature: Editing configuration
     And I check "paper_anomaly_detection_progress"
     And I check "paper_anomaly_detection_summative"
     And I click "Save" "link_or_button"
-    And the "paper_anomaly_detection_progress" checkbox should be checked
+    Then the "paper_anomaly_detection_progress" checkbox should be checked
     And the "paper_anomaly_detection_summative" checkbox should be checked
 
   @edit_config_summative_assessments
@@ -89,15 +89,15 @@ Feature: Editing configuration
       | summative_hour_warning | 10 |
       | summative_max_sittings | 6 |
       | summative_warn_external | 0 |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "Summative Assessments" "configarea"
-    And I check "cfg_summative_mgmt"
+    When I check "cfg_summative_mgmt"
     And I click "Save" "link_or_button"
     And the "cfg_summative_mgmt" checkbox should be checked
     And I set the field "summative_hour_warning" to "2"
     And I click "Save" "link_or_button"
-    And the "summative_hour_warning" field should contain "2"
+    Then the "summative_hour_warning" field should contain "2"
 
   @edit_config_miscellaneous
   Scenario: Test changes in miscellaneous area could be saved
@@ -110,27 +110,27 @@ Feature: Editing configuration
       | misc_logo_email | alt_logo.png |
       | misc_logo_main | logo.png |
       | misc_search_leadin_length | 160 |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "Miscellaneous" "configarea"
-    And I set the field "misc_company" to "UoN"
+    When I set the field "misc_company" to "UoN"
     And I click "Save" "link_or_button"
     And the "misc_company" field should contain "UoN"
     And I set the field "misc_full_question_history_display_limit" to "123"
     And I click "Save" "link_or_button"
-    And the "misc_full_question_history_display_limit" field should contain "123"
+    Then the "misc_full_question_history_display_limit" field should contain "123"
 
   @edit_config_calculation_questions
   Scenario: Test changes in calculation questions area could be saved
     Given the following "config" exist:
       | setting | value |
       | cfg_calc_type | phpEval |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "Calculation Questions" "configarea"
-    And I set the field "cfg_calc_type" to "phpEvaluate"
+    When I set the field "cfg_calc_type" to "phpEvaluate"
     And I click "Save" "link_or_button"
-    And the "cfg_calc_type" field should contain "phpEvaluate"
+    Then the "cfg_calc_type" field should contain "phpEvaluate"
 
   @edit_config_system_settings
   Scenario: Test changes in system settings area could be saved
@@ -145,15 +145,15 @@ Feature: Editing configuration
       | system_password_expire | 30 |
       | system_recover_postdata | 0 |
       | system_user_accessibility | 1 |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "System settings" "configarea"
-    And I set the field "system_academic_year_start" to "07/01"
+    When I set the field "system_academic_year_start" to "07/01"
     And I uncheck "system_mediatypes_png"
     And I uncheck "system_mediatypes_doc"
     And I check "system_user_accessibility"
     And I click "Save" "link_or_button"
-    And the "system_academic_year_start" field should contain "07/01"
+    Then the "system_academic_year_start" field should contain "07/01"
     And the "system_user_accessibility" checkbox should be checked
     And the "system_mediatypes_gif" checkbox should be checked
     And the "system_mediatypes_jpg" checkbox should be checked
@@ -166,10 +166,10 @@ Feature: Editing configuration
     Given the following "config" exist:
       | setting | value |
       | rpt_percent_decimals | 2 |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "Reports" "configarea"
-    And I set the field "rpt_percent_decimals" to "4"
+    When I set the field "rpt_percent_decimals" to "4"
     And I click "Save" "link_or_button"
     And the "rpt_percent_decimals" field should contain "4"
 
@@ -181,11 +181,11 @@ Feature: Editing configuration
       | stdset_hofstee_pass | {"min_pass":0,"max_pass":"median","min_fail":0,"max_fail":100} |
       | stdset_hofstee_whole_numbers | 1 |
       | cfg_ims_enabled | 0 |
-    When I login as "admin"
-    Then I am on "Configuration" page
+    And I login as "admin"
+    And I am on "Configuration" page
     And I should see "Standard setting" "configarea"
-    And I set the field "stdset_hofstee_distinction_max_pass" to "200"
+    When I set the field "stdset_hofstee_distinction_max_pass" to "200"
     And I set the field "stdset_hofstee_pass_min_fail" to "4"
     And I click "Save" "link_or_button"
-    And the "stdset_hofstee_distinction_max_pass" field should contain "200"
+    Then the "stdset_hofstee_distinction_max_pass" field should contain "200"
     And the "stdset_hofstee_pass_min_fail" field should contain "4"
