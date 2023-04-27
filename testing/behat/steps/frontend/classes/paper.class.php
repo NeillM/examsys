@@ -54,13 +54,14 @@ trait Paper
                 $content = 'next';
         }
         $screen = $this->find('id_or_name', 'current_screen');
+        $screennumber = $screen->getValue();
         $this->iWaitForElement($selector, $content);
         $element = $this->find($selector, $content);
         $element->click();
         if ($content === 'finish') {
             $this->i_click('OK', 'button');
         } else {
-            $this->iWaitForScreen($screen->getValue());
+            $this->iWaitForScreen($screennumber);
         }
     }
 
