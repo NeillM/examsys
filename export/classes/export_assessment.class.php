@@ -928,11 +928,15 @@ class export_assessment extends exporter
                                     $answer_parts = array_fill(0, count($correct_parts), '0,?');
                                 } elseif ($individual[$tmp_screen][$tmp_question_ID] == 'u') {
                                     $answer_parts = array_fill(0, count($correct_parts), '0,u');
-                                }
-                                if ($individual[$tmp_screen][$tmp_question_ID] == 'u') {
-                                    $answer_parts = array_fill(0, count($correct_parts), '0,u');
                                 } else {
-                                    $answer_parts = explode(\hotspot_helper::LAYER_SEPARATOR, \hotspot_helper::get_instance()->markWithLetters($individual[$tmp_screen][$tmp_question_ID], $question['correct'], $this->_hotspotIncorrect[$tmp_question_ID]));
+                                    $answer_parts = explode(
+                                        \hotspot_helper::LAYER_SEPARATOR,
+                                        \hotspot_helper::get_instance()->markWithLetters(
+                                            $individual[$tmp_screen][$tmp_question_ID],
+                                            $question['correct'],
+                                            $this->_hotspotIncorrect[$tmp_question_ID]
+                                        )
+                                    );
                                 }
 
                                 for ($partID = 0; $partID < count($correct_parts); $partID++) {
