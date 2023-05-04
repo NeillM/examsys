@@ -44,37 +44,26 @@ class RServeEngineTest extends EngineTest
             $this->markTestSkipped('RServe Not available');
         }
 
-        // Do we have a working connection.
+        // Check we have a working connection.
         if (!empty($this->engine)) {
             return $this->engine;
         }
 
+        // Get the RServe configuration, by default try to connect to the docker instance.
+        $config = Config::get_instance();
+        $host = $config->get('cfg_phpunit_rserve_host') ?? 'calc';
+        $port = $config->get('cfg_phpunit_rserve_port') ?? '6311';
+
         // Try connecting to localhost.
         $localhostconfig = [
-            'host' => 'localhost',
-            'port' => '6311',
+            'host' => $host,
+            'port' => $port,
             'timeout' => '5',
             'locale' => 'en_GB',
         ];
         $localengine = new Engine($localhostconfig);
         if ($localengine->connect()) {
             $this->engine = $localengine;
-            return $this->engine;
-        }
-
-        // Allow the new attempt to work.
-        Engine::resetConnection();
-
-        // Try using docker.
-        $dockerconfig = [
-            'host' => 'calc',
-            'port' => '6311',
-            'timeout' => '5',
-            'locale' => 'en_GB',
-        ];
-        $dockerengine = new Engine($dockerconfig);
-        if ($dockerengine->connect()) {
-            $this->engine = $dockerengine;
             return $this->engine;
         }
 
