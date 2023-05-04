@@ -33,6 +33,9 @@ require_once(dirname(__DIR__) . '/enhancedcalc.class.php');
  */
 class Engine
 {
+    /** @var string The default locale to use for formatting numbers. */
+    protected const DEFAULT_LOCALE = 'en_GB';
+
     protected $impliments_api_calc_version = 1;
     protected static $cnx = false;
 
@@ -88,6 +91,26 @@ class Engine
     public function getDefaultRoundingMode(): int
     {
         return $this->default_rounding_mode;
+    }
+
+    /**
+     * Gets the locale that should be used to format numbers by the calculation engine.
+     *
+     * @return string
+     */
+    public function getLocale(): string
+    {
+        if (!isset($this->config['locale'])) {
+            // No locale set.
+            return self::DEFAULT_LOCALE;
+        }
+
+        if (empty(locale_parse($this->config['locale']))) {
+            // An invalid local has been sent.
+            return self::DEFAULT_LOCALE;
+        }
+
+        return $this->config['locale'];
     }
 
     /**
@@ -178,7 +201,7 @@ class Engine
             $format = NumberFormatter::DECIMAL;
         }
         $formatter = new NumberFormatter(
-            '',
+            $this->getLocale(),
             $format
         );
         $formatter->setAttribute(NumberFormatter::MAX_SIGNIFICANT_DIGITS, $sigdigs);

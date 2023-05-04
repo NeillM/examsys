@@ -54,6 +54,7 @@ class RServeEngineTest extends EngineTest
             'host' => 'localhost',
             'port' => '6311',
             'timeout' => '5',
+            'locale' => 'en_GB',
         ];
         $localengine = new Engine($localhostconfig);
         if ($localengine->connect()) {
@@ -69,6 +70,7 @@ class RServeEngineTest extends EngineTest
             'host' => 'calc',
             'port' => '6311',
             'timeout' => '5',
+            'locale' => 'en_GB',
         ];
         $dockerengine = new Engine($dockerconfig);
         if ($dockerengine->connect()) {

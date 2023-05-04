@@ -46,7 +46,10 @@ class EngineTest extends \testing\unittest\UnitTest
             return $this->engine;
         }
 
-        $engine = new Engine([]);
+        $settings = [
+            'locale' => 'en_GB',
+        ];
+        $engine = new Engine($settings);
         $this->engine = $engine;
         return $this->engine;
     }

@@ -782,7 +782,11 @@ class InstallUtils
         $configObject->set_setting('misc_company', self::$cfg_company, Config::STRING);
         $configObject->set_setting('misc_dictionary_file', '', Config::STRING);
         $configObject->set_setting('cfg_calc_type', 'phpEval', Config::STRING);
-        $configObject->set_setting('cfg_calc_settings', array('host' => '', 'port' => '', 'timeout' => ''), Config::ASSOC);
+        $configObject->set_setting(
+            'cfg_calc_settings',
+            array('host' => '', 'port' => '', 'timeout' => '', 'locale' => 'en_GB'),
+            Config::ASSOC
+        );
         $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
         $configObject->set_setting('cfg_summative_mgmt', 0, Config::BOOLEAN);
         $configObject->set_setting('system_recover_postdata', 0, Config::BOOLEAN);
