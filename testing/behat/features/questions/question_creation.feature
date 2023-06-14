@@ -51,6 +51,7 @@ Feature: Question creation
       | notes | enhancedcalc notes |
       | scenario | enhancedcalc scenario |
       | leadin | enhancedcalc leadin $A+$B|
+      | rounding | Half even |
       | variable_min_1 | 1 |
       | variable_max_1 | 10 |
       | variable_decimal_1 | 2 |

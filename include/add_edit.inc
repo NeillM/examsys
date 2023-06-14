@@ -220,8 +220,8 @@ HTML;
 
         foreach ($changes as $change) {
             $alt = ($i++ % 2 == 1) ? ' class="alt"' : '';
-            $change['old'] = strip_tags($change['old']);
-            $change['new'] = strip_tags($change['new']);
+            $change['old'] = strip_tags($change['old'] ?? '');
+            $change['new'] = strip_tags($change['new'] ?? '');
             $change_old = $change['old'];
             $change_old_more = '';
             $change_new = $change['new'];

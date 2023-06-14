@@ -19,6 +19,7 @@ namespace testing\behat\steps\frontend;
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Mink\Exception\ExpectationException;
 
 /**
  * Question creation and manipulation step definitions.
@@ -225,6 +226,25 @@ trait Question
     {
         $fields = $data->getRowsHash();
         $this->genericfields($fields);
+
+        // Set the rounding method if the user specified it, otherwise we can leave it as the default.
+        if (!empty($fields['rounding'])) {
+            switch ($fields['rounding']) {
+                case 'Half down':
+                    $rounding = PHP_ROUND_HALF_DOWN;
+                    break;
+                case 'Half even':
+                    $rounding = PHP_ROUND_HALF_EVEN;
+                    break;
+                case 'Half up':
+                    $rounding = PHP_ROUND_HALF_UP;
+                    break;
+                default:
+                    throw new \Exception('Unknown rounding method');
+            }
+            $this->fillField('rounding', $rounding);
+        }
+
         $this->fillField('option_min1', $fields['variable_min_1']);
         $this->fillField('option_max1', $fields['variable_max_1']);
         $this->fillField('option_decimals1', $fields['variable_decimal_1']);

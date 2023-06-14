@@ -52,7 +52,7 @@ require_once 'detail_parts/details_general_feedback.php';
           <h2 class="midblue_header"><?php echo $string['variables'] ?></h2>
         </div>
 
-        <table id="q-options" class="form" summary="Edit question variables">
+        <table id="q-options" class="form" summary="<?php echo $string['variablesedit'] ?>">
           <thead>
             <tr>
               <th>&nbsp;</th>
@@ -99,7 +99,7 @@ if ($question->get_locked() == '') {
           <h2 class="midblue_header"><?php echo $string['answer'] ?></h2>
         </div>
 
-        <table id="q-options" class="form" summary="Edit question formulae">
+        <table id="q-options" class="form" summary="<?php echo $string['editformulae'] ?>">
           <thead>
             <tr>
               <th>&nbsp;</th>
@@ -165,10 +165,10 @@ echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
         <div class="form">
           <h2 class="midblue_header"><?php echo $string['tolerance'] ?></h2>
         </div>
-        <table id="q-options" class="form" summary="Edit question tolerances">
+        <table id="q-options" class="form" summary="<?php echo $string['toleranceedit'] ?>">
           <tbody>
             <tr>
-              <th class="spaced-top"><img src="../../artwork/tooltip_icon.gif" class="help_tip" alt="Information" title="<?php echo $string['percenttolerance'] ?>" /> <?php echo $string['tolerance'] ?></th>
+              <th class="spaced-top"><img src="../../artwork/tooltip_icon.gif" class="help_tip" alt="<?php echo $string['tolerancehelp'] ?>" title="<?php echo $string['percenttolerance'] ?>" /> <?php echo $string['tolerance'] ?></th>
               <td class="spaced-top"><label for="tolerance_full" class="spaced-right"><strong><?php echo $string['tolerance_full'] ?></strong></label><input type="text" id="tolerance_full" name="tolerance_full" value="<?php echo $question->get_tolerance_full() ?>" /></td>
               <td class="spaced-top"><span class="marks-partial<?php echo $show_partial ?>"><label for="tolerance_partial" class="spaced-right"><strong><?php echo $string['tolerance_partial'] ?></strong></label><input type="text" id="tolerance_partial" name="tolerance_partial" value="<?php echo $question->get_tolerance_partial() ?>" /></span></td>
             </tr>
@@ -178,7 +178,7 @@ echo ViewHelper::render_options($marks_unit, $question->get_marks_unit(), 3);
         <div class="form">
           <h2 class="midblue_header"><?php echo $string['precision'] ?></h2>
         </div>
-        <table class="form" summary="Edit question precision">
+        <table class="form" summary="<?php echo $string['precisionedit'] ?>">
           <tbody>
             <tr>
               <th><?php echo $string['enforceto'] ?></th>
@@ -202,6 +202,21 @@ echo ViewHelper::render_options($sf_opts, $question->get_answer_precision(), 4);
                   </optgroup>
                 </select>
               </td>
+            </tr>
+            <tr>
+                <th><?php echo $string['rounding'] ?></th>
+                <td>
+                    <select name="rounding" id="answer_rounding">
+<?php
+$calc_engine = \plugins\questions\enhancedcalc\Engine::getEngine();
+$defaultmode = $question->get_rounding();
+foreach ($calc_engine->getSupportedRoundingModeForSelects() as $key => $value) {
+    $selected = ($key == $defaultmode) ? ' selected="selected"' : '';
+    echo '<option value="' . $key . '"' . $selected . '>' . $string[$value] . '</option>';
+}
+?>
+                    </select>
+                </td>
             </tr>
           </tbody>
         </table>

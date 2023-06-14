@@ -38,18 +38,14 @@ echo 'Starting<br><br>';
 $enhancedcalcType = $configObject->get_setting('core', 'cfg_calc_type');
 $enhancedcalcSettings = $configObject->get_setting('core', 'cfg_calc_settings');
 
-if (!empty($enhancedcalcType)) {
-    require_once $cfg_web_root . 'plugins/questions/enhancedcalc/' . $enhancedcalcType . '.php';
-    $name = 'enhancedcalc_' . $enhancedcalcType;
-    $enhancedcalcObj1 = new $name($enhancedcalcSettings);
-} else {
-    require_once $cfg_web_root . 'plugins/questions/enhancedcalc/' . 'phpEval.php';
-    $enhancedcalcObj1 = new EnhancedCalc_phpEval($enhancedcalcSettings);
+$name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($enhancedcalcType) . '\\Engine';
+if (empty($enhancedcalcType) or !class_exists($name)) {
+    $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
+    $enhancedcalcType = 'BLANK, MISSING or invalid setting that means it defaults to phpEval';
 }
+/** @var \plugins\questions\enhancedcalc\Engine $enhancedcalcObj1 */
+$enhancedcalcObj1 = new $name($enhancedcalcSettings);
 
-if (empty($enhancedcalcType)) {
-    $enhancedcalcType = 'BLANK or MISSING setting that means it defaults to phpEval';
-}
 $sets = var_export($enhancedcalcSettings, true);
 echo "<li>Enhanced Calc is set to <b>$enhancedcalcType</b></li>";
 echo "<li>Settings are $sets</li>";
@@ -65,6 +61,36 @@ $data[] = array(array('$A' => 4, '$B' => 4),'$A*$B', '16');
 
 $data[] = array(array('$A' => 8, '$B' => 2),'$A/$B', '4');
 $data[] = array(array('$A' => 8, '$B' => 2),'$A-$B', '6');
+
+// Run test for each supported function.
+$data[] = [['$A' => 2], 'abs($A)', '2'];
+$data[] = [['$A' => -2], 'abs($A)', '2'];
+$data[] = [['$A' => 0.1], 'acos($A) - acos($A)', '0'];
+$data[] = [['$A' => 3], 'acosh($A) - acosh($A)', '0'];
+$data[] = [['$A' => 0.1], 'asin($A) - asin($A)', '0'];
+$data[] = [['$A' => 3], 'asinh($A) - asinh($A)', '0'];
+$data[] = [['$A' => 3, '$B' => 5], 'atan2($A, $B) - atan2($A, $B)', '0'];
+$data[] = [['$A' => 3], 'atan($A) - atan($A)', '0'];
+$data[] = [['$A' => 0.1], 'atanh($A) - atanh($A)', '0'];
+$data[] = [['$A' => 0.1], 'ceil($A)', '1'];
+$data[] = [['$A' => 0.1], 'cos($A) - cos($A)', '0'];
+$data[] = [['$A' => 5], 'cosh($A) - cosh($A)', '0'];
+$data[] = [['$A' => 180], 'deg2rad($A) - deg2rad($A)', '0'];
+$data[] = [['$A' => 2], 'exp($A) - exp($A)', '0'];
+$data[] = [['$A' => 2], 'expm1($A) - expm1($A)', '0'];
+$data[] = [['$A' => 2.9], 'floor($A)', '2'];
+$data[] = [['$A' => 2, '$B' => 5], 'fmod($A, $B)', '2'];
+$data[] = [['$A' => 10], 'log10($A)', '1'];
+$data[] = [['$A' => 10], 'log1p($A) - log1p($A)', '0'];
+$data[] = [['$A' => 10], 'log($A) - log($A)', '0'];
+$data[] = [['$A' => 5, '$B' => 10], 'max($A, $B)', '10'];
+$data[] = [['$A' => 5, '$B' => 10], 'min($A, $B)', '5'];
+$data[] = [['$A' => 5], 'round(pi, $A)', '3.14159'];
+$data[] = [['$A' => 10], 'sin($A) - sin($A)', '0'];
+$data[] = [['$A' => 10], 'sinh($A) - sinh($A)', '0'];
+$data[] = [['$A' => 10], 'sqrt($A) - sqrt($A)', '0'];
+$data[] = [['$A' => 10], 'tan($A) - tan($A)', '0'];
+$data[] = [['$A' => 10], 'tanh($A) - tanh($A)', '0'];
 
 foreach ($data as $individual) {
     $vars = $individual[0];

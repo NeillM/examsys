@@ -6,4 +6,6 @@
   <db_password></db_password>
   <db_engine></db_engine>
   <db_help_engine></db_help_engine>
+  <rserve_host></rserve_host>
+  <rserve_port></rserve_port>
 </rogo>

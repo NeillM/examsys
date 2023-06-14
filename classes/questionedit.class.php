@@ -1592,6 +1592,12 @@ QUERY;
             $result->execute();
             $result->bind_result($type, $part, $old, $new, $display_changed, $title, $initials, $surname);
             while ($result->fetch()) {
+                $localise_method = "localise_$part";
+                if (method_exists($this, $localise_method)) {
+                    $old = $this->$localise_method($old);
+                    $new = $this->$localise_method($new);
+                }
+
                 $this->_changes[] = array('date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname);
             }
             $result->close();
@@ -1616,6 +1622,15 @@ QUERY;
 
         if (!is_array($this->_changes)) {
             $this->_changes = \QuestionUtils::getFullHistory($this->id, $limit, $string);
+
+            foreach ($this->_changes as &$change) {
+                // Localise strings in the history.
+                $localise_method = 'localise_' . $change['section'];
+                if (method_exists($this, $localise_method)) {
+                    $change['old'] = $this->$localise_method($change['old']);
+                    $change['new'] = $this->$localise_method($change['new']);
+                }
+            }
         }
 
         return $this->_changes;
