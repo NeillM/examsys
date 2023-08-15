@@ -172,6 +172,7 @@ if (isset($_POST['submit'])) {
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render->render($jsdataset, array(), 'dataset.html');
+    echo "<script src='../js/ldaplookupinit.min.js'></script>";
     echo "</body>\n</html>\n";
     exit();
 }
