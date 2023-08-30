@@ -281,6 +281,9 @@ class IE_Local_Save extends IE_Main
             // Insert Option/Stem Media.
             $mediaidx = 0;
             for ($i = 1; $i < count($this->m_row); $i++) {
+                if (empty($this->m_row[$i]->source)) {
+                    continue;
+                }
                 $this->db->InsertRow('media', 'id', $this->m_row[$i]);
                 if ($question->type == 'extmatch') {
                     $qmed_row = $this->db->GetBlankTableRow('questions_media');
