@@ -497,8 +497,8 @@ if ($properties->get_deleted() != '') {
   $old_display_method = '';
   $old_score_method   = '';
   $old_q_media        = '';
-  $old_q_media_width  = '';
-  $old_q_media_height = '';
+  $old_q_media_width  = 0;
+  $old_q_media_height = 0;
   $old_scenario       = '';
   $total_random_mark  = 0;
   $total_marks        = 0;
@@ -526,7 +526,7 @@ if ($properties->get_deleted() != '') {
   while ($result->fetch()) {
       $media = QuestionUtils::getMediaAsString($q_id);
       $q_media = $media['source'];
-      $q_media_width = $media['width'];
+      $q_media_width = $media['width'] ;
       $q_media_height = $media['height'];
       if ($q_type == 'sct') {
           $parts = explode('~', $leadin);
