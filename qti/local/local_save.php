@@ -133,6 +133,7 @@ class IE_Local_Save extends IE_Main
         foreach ($data->questions as & $question) {
             $this->q_row = $this->db->GetBlankTableRow('questions');
             $this->o_row = $this->db->GetBlankTableRow('options');
+            $this->m_row = [];
             $this->o_rows = array();
 
             // stuff from parameters
