@@ -162,7 +162,7 @@ class IE_Local_Save extends IE_Main
             }
 
             // Store media row.
-            if (!empty($this->media)) {
+            if (!empty($question->media)) {
                 $this->m_row[0] = $this->db->GetBlankTableRow('media');
                 $this->m_row[0]['source'] = $question->media;
                 $this->m_row[0]['width'] = $question->media_width;
