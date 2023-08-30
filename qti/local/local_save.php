@@ -235,7 +235,7 @@ class IE_Local_Save extends IE_Main
             $question->save_id = $this->q_row['q_id'];
 
             // Insert Questions Media.
-            if (!empty($this->m_row)) {
+            if (!empty($this->m_row[0])) {
                 $this->db->InsertRow('media', 'id', $this->m_row[0]);
                 $qmed_row = $this->db->GetBlankTableRow('questions_media');
                 $qmed_row['qid'] = $this->q_row['q_id'];
