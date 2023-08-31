@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of ExamSys
 //
 // ExamSys is free software: you can redistribute it and/or modify
