@@ -526,7 +526,7 @@ if ($properties->get_deleted() != '') {
   while ($result->fetch()) {
       $media = QuestionUtils::getMediaAsString($q_id);
       $q_media = $media['source'];
-      $q_media_width = $media['width'] ;
+      $q_media_width = $media['width'];
       $q_media_height = $media['height'];
       if ($q_type == 'sct') {
           $parts = explode('~', $leadin);
