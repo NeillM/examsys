@@ -501,7 +501,12 @@ if ($demo == true) {
     $user_details['email'] = \demo::demo_replace_username($user_details['email'], $demo);
 }
 
-  $course_details = CourseUtils::get_course_details_by_name($user_details['grade'], $mysqli);
+$course_details = CourseUtils::get_course_details_by_name($user_details['grade'], $mysqli);
+
+if ($course_details === false) {
+    // This will happen for guest accounts who are not on a course.
+    $course_details = ['description' => ''];
+}
 
 if ($user_details['user_deleted'] == '') {
     $bg_color = '#EEF4FF';
