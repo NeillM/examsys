@@ -170,7 +170,7 @@ if ($student_no > 0) {
                 FROM 
                     log1 l, log_metadata lm, questions q, users u, user_roles ur JOIN roles r ON ur.roleid = r.id
                 WHERE 
-                    l.metadataID = lm.id AND log1.q_id = q.q_id AND lm.userID IN ($student_list) 
+                    l.metadataID = lm.id AND l.q_id = q.q_id AND lm.userID IN ($student_list) 
                     AND paperID = ? AND u.id = lm.userID 
                     AND u.id = ur.userid
                     AND r.name IN ('Student', 'graduate')

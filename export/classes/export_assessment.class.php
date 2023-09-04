@@ -934,7 +934,7 @@ class export_assessment extends exporter
                                         \hotspot_helper::get_instance()->markWithLetters(
                                             $individual[$tmp_screen][$tmp_question_ID],
                                             $question['correct'],
-                                            $this->_hotspotIncorrect[$tmp_question_ID]
+                                            $this->_hotspotIncorrect[$tmp_question_ID] ?? ''
                                         )
                                     );
                                 }
