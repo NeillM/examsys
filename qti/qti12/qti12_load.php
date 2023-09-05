@@ -2339,6 +2339,10 @@ class IE_qti12_Load extends IE_Main
     // 2nd parameter is type of round to apply.  1 for correct marks, 2 for parital marks, 3 for incorrect marks
     public function RoundFunction($number, $type = 1)
     {
+        if (!is_numeric($number)) {
+            return 0;
+        }
+
         if ($type == 1) {
             //correct marks
             if ($number < 1) {

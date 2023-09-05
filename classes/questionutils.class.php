@@ -689,8 +689,18 @@ SQL;
             $mediaarray['num'][] = $m->num;
         }
         $mediaarray['source'] = implode('|', $mediaarray['source']);
-        $mediaarray['width'] = implode('|', $mediaarray['width']);
-        $mediaarray['height'] = implode('|', $mediaarray['height']);
+        // Width and height are assumed to be an integer in many places in the ExamSys code,
+        // so we need to ensure that a number is sent in cases where there is no media.
+        if (empty($mediaarray['width'])) {
+            $mediaarray['width'] = 0;
+        } else {
+            $mediaarray['width'] = implode('|', $mediaarray['width']);
+        }
+        if (empty($mediaarray['height'])) {
+            $mediaarray['height'] = 0;
+        } else {
+            $mediaarray['height'] = implode('|', $mediaarray['height']);
+        }
         $mediaarray['alt'] = implode('|', $mediaarray['alt']);
         $mediaarray['owner'] = implode('|', $mediaarray['owner']);
         $mediaarray['num'] = implode('|', $mediaarray['num']);

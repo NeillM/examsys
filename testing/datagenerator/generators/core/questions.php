@@ -150,8 +150,8 @@ class questions extends generator
             } else {
                 // No media so set the values to be the ones that would be returned by the database.
                 $qdata['q_media_id'] = -1;
-                $qdata['q_media_width'] = '';
-                $qdata['q_media_height'] = '';
+                $qdata['q_media_width'] = 0;
+                $qdata['q_media_height'] = 0;
                 $qdata['q_media_alt'] = '';
                 $qdata['q_media_owner'] = '';
                 $qdata['q_media_num'] = '';

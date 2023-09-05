@@ -133,6 +133,7 @@ class IE_Local_Save extends IE_Main
         foreach ($data->questions as & $question) {
             $this->q_row = $this->db->GetBlankTableRow('questions');
             $this->o_row = $this->db->GetBlankTableRow('options');
+            $this->m_row = [];
             $this->o_rows = array();
 
             // stuff from parameters
@@ -162,7 +163,7 @@ class IE_Local_Save extends IE_Main
             }
 
             // Store media row.
-            if (!empty($this->media)) {
+            if (!empty($question->media)) {
                 $this->m_row[0] = $this->db->GetBlankTableRow('media');
                 $this->m_row[0]['source'] = $question->media;
                 $this->m_row[0]['width'] = $question->media_width;
@@ -235,7 +236,7 @@ class IE_Local_Save extends IE_Main
             $question->save_id = $this->q_row['q_id'];
 
             // Insert Questions Media.
-            if (!empty($this->m_row)) {
+            if (!empty($this->m_row[0])) {
                 $this->db->InsertRow('media', 'id', $this->m_row[0]);
                 $qmed_row = $this->db->GetBlankTableRow('questions_media');
                 $qmed_row['qid'] = $this->q_row['q_id'];
@@ -281,6 +282,9 @@ class IE_Local_Save extends IE_Main
             // Insert Option/Stem Media.
             $mediaidx = 0;
             for ($i = 1; $i < count($this->m_row); $i++) {
+                if (empty($this->m_row[$i]->source)) {
+                    continue;
+                }
                 $this->db->InsertRow('media', 'id', $this->m_row[$i]);
                 if ($question->type == 'extmatch') {
                     $qmed_row = $this->db->GetBlankTableRow('questions_media');
