@@ -501,7 +501,9 @@ class RAF
         $substitution = 'src="' . $webroot . 'getfile.php?type=media&amp;filename=$1"';
         // Fix the leadin and scenario.
         $q['leadin'] = preg_replace($regexp, $substitution, $q['leadin']);
-        $q['scenario'] = preg_replace($regexp, $substitution, $q['scenario']);
+        if (!empty($q['scenario'])) {
+            $q['scenario'] = preg_replace($regexp, $substitution, $q['scenario']);
+        }
 
         $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
         $guid = $server_ipaddress . uniqid('', true);
