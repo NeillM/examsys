@@ -2428,7 +2428,7 @@ class PaperProperties
             $tmp_questions_array[$q_id]['no_on_screen'] = $no_on_screen;
             $tmp_questions_array[$q_id]['screen'] = $screen;
             $tmp_questions_array[$q_id]['theme'] =  !empty($theme) ? trim($theme) : '';
-            $tmp_questions_array[$q_id]['$scenario'] = !empty($scenario) ? trim($scenario) : '';
+            $tmp_questions_array[$q_id]['scenario'] = !empty($scenario) ? trim($scenario) : '';
             $tmp_questions_array[$q_id]['leadin'] = trim($leadin);
             $tmp_questions_array[$q_id]['notes'] = !empty($hide_notes) ? trim($hide_notes) : '';
             $tmp_questions_array[$q_id]['q_type'] = $q_type;
