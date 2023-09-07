@@ -2430,7 +2430,7 @@ class PaperProperties
             $tmp_questions_array[$q_id]['theme'] = trim($theme ?? '');
             $tmp_questions_array[$q_id]['scenario'] = trim($scenario ?? '');
             $tmp_questions_array[$q_id]['leadin'] = trim($leadin);
-            $tmp_questions_array[$q_id]['notes'] = trim($hide_notes ?? '');
+            $tmp_questions_array[$q_id]['notes'] = $hide_notes ? '' : trim($notes ?? '');
             $tmp_questions_array[$q_id]['q_type'] = $q_type;
             $tmp_questions_array[$q_id]['q_id'] = $q_id;
             $tmp_questions_array[$q_id]['display_pos'] = $display_pos;
