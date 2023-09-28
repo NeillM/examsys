@@ -662,7 +662,7 @@ abstract class questiondata
 
         $this->papertype = $paper_properties['type'];
         $this->assignednumber =  $question['assigned_number'];
-        $this->scenario = $question['scenario'];
+        $this->scenario = !empty($question['scenario']) ? $question['scenario'] : '';
         $this->notes = $question['notes'];
         $this->qmedia = $question['q_media'];
         $this->qmediawidth = $question['q_media_width'];
