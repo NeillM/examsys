@@ -102,6 +102,7 @@ class EnhancedCalc extends Question implements questionInterface
         $input = trim($input);
 
         $this->decode_settings();
+
         // User selected the units from a ddl
         $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
         $out = preg_match($pattern, $input, $matches);
@@ -184,10 +185,6 @@ class EnhancedCalc extends Question implements questionInterface
             $this->qmark = 0;
 
             return Q_MARKING_UNCALC_ANSWER;
-        }
-
-        if (!is_array($this->useranswer)) {
-            $this->useranswer = json_decode($this->useranswer, true);
         }
 
         if (isset($this->useranswer['uans'])) {
@@ -735,9 +732,6 @@ class EnhancedCalc extends Question implements questionInterface
         $this->decode_settings();
 
         // Make sure data is arrays not encoded
-        if (!is_array($this->useranswer)) {
-            $this->useranswer = json_decode($this->useranswer, true);
-        }
         if (!is_array($this->settings)) {
             $this->settings = json_decode($this->settings, true);
         }
@@ -1127,9 +1121,6 @@ class EnhancedCalc extends Question implements questionInterface
             $questiondata['assignednumber'] = $extra['assignednumber'];
         }
         // Make sure data is arrays not encoded
-        if (!is_null($this->useranswer) and !is_array($this->useranswer)) {
-            $this->useranswer = json_decode($this->useranswer, true);
-        }
         $this->decode_settings();
 
         // Create array of units and functions
@@ -1425,7 +1416,6 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function get_answer_distance()
     {
-
         if (!isset($this->useranswer['cans_dist']) and isset($this->useranswer['cans'])) {
             if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
                 $this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
