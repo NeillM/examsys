@@ -729,12 +729,9 @@ class EnhancedCalc extends Question implements questionInterface
     {
         global $string;
 
+        // Make sure data is arrays not encoded
         $this->decode_settings();
 
-        // Make sure data is arrays not encoded
-        if (!is_array($this->settings)) {
-            $this->settings = json_decode($this->settings, true);
-        }
 
         if (isset($this->useranswer['vars'])) {
             $varname = array_keys($this->useranswer['vars']);
