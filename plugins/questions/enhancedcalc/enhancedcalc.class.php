@@ -820,7 +820,7 @@ class EnhancedCalc extends Question implements questionInterface
         $display_units = '';
 
         if ($marked) {
-            if ($this->useranswer['ans']['units_used'] != '') {
+            if (isset($this->useranswer['ans']['units_used']) and $this->useranswer['ans']['units_used'] != '') {
                 $display_units = ' ' . $this->useranswer['ans']['units_used'];
             }
         }
