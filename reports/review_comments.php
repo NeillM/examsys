@@ -95,10 +95,10 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
     foreach ($reviewer_data as $reviewerID => $rev_data) {
         $image = '';
         $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
-        $comment = '';
-
-        $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
-
+        $comment = $comments_data[$reviewerID]->get_comment($questionID) ?? '';
+        if ($comment !== '') {
+            $comment = nl2br($comment);
+        }
         if ($comments_data[$reviewerID]->get_category($questionID) === null) {
             $image = '';
             $status = '';
