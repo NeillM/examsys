@@ -298,6 +298,28 @@ class PaperPropertiesShouldLogLateTest extends unittestdatabase
     }
 
     /**
+     * Tests that answers from timed summative with a password rather than labs will be sent to the late log.
+     *
+     * @param string $paper_start
+     * @param string $paper_end
+     * @param string $user_start
+     * @param bool $expected
+     * @dataProvider dataSummativeRemote
+     */
+    public function testSummativeTimedPassword(string $paper_start, string $paper_end, string $user_start, bool $expected)
+    {
+        $this->configureSummatives();
+
+        // Create the paper and get the property.
+        $properties = $this->generatePaperProperties(assessment::TYPE_SUMMATIVE, $paper_start, $paper_end, $this->timedmodule['fullname'], '');
+        $metadata = $this->generateMetaDataForPaper($properties->get_property_id(), $this->user['id'], $user_start);
+
+        // Test that the late log is used correctly.
+        $this->set_active_user($this->user['id']);
+        $this->assertEquals($expected, $properties->shouldLogLate(null, $metadata));
+    }
+
+    /**
      * Tests that remote summative answers will be sent to the late log.
      *
      * @param string $paper_start
