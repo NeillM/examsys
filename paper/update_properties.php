@@ -190,19 +190,20 @@ if (!$title_unique) {
 
     $timezone = param::optional('timezone', $properties->get_timezone(), param::TEXT, param::FETCH_POST);
 
-    $fyear = check_var('fyear', 'POST', true, false, true);
-    $fmonth = check_var('fmonth', 'POST', true, false, true);
-    $fday = check_var('fday', 'POST', true, false, true);
-    $fhour = check_var('fhour', 'POST', true, false, true);
-    $fminute = check_var('fminute', 'POST', true, false, true);
-
-    $tyear = check_var('tyear', 'POST', true, false, true);
-    $tmonth = check_var('tmonth', 'POST', true, false, true);
-    $tday = check_var('tday', 'POST', true, false, true);
-    $thour = check_var('thour', 'POST', true, false, true);
-    $tminute = check_var('tminute', 'POST', true, false, true);
-
     if (($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == '2' and $userObject->has_role(array('SysAdmin', 'Admin'))) or !$configObject->get_setting('core', 'cfg_summative_mgmt') or $papertype != '2') {
+        // We should only attempt to fetch date values from the form if a user can edit them.
+        $fyear = check_var('fyear', 'POST', true, false, true);
+        $fmonth = check_var('fmonth', 'POST', true, false, true);
+        $fday = check_var('fday', 'POST', true, false, true);
+        $fhour = check_var('fhour', 'POST', true, false, true);
+        $fminute = check_var('fminute', 'POST', true, false, true);
+
+        $tyear = check_var('tyear', 'POST', true, false, true);
+        $tmonth = check_var('tmonth', 'POST', true, false, true);
+        $tday = check_var('tday', 'POST', true, false, true);
+        $thour = check_var('thour', 'POST', true, false, true);
+        $tminute = check_var('tminute', 'POST', true, false, true);
+
         if (isset($fyear) and isset($fmonth) and isset($fday) and isset($fhour) and isset($fminute)) {
             $null_start_date = false;
             if ($fyear == '' and $fmonth == '' and $fday == '' and $fhour == '' and $fminute == '') {
