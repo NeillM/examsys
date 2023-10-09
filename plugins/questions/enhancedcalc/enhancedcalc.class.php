@@ -102,6 +102,7 @@ class EnhancedCalc extends Question implements questionInterface
         $input = trim($input);
 
         $this->decode_settings();
+
         // User selected the units from a ddl
         $pattern = '/-?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?/';
         $out = preg_match($pattern, $input, $matches);
@@ -184,10 +185,6 @@ class EnhancedCalc extends Question implements questionInterface
             $this->qmark = 0;
 
             return Q_MARKING_UNCALC_ANSWER;
-        }
-
-        if (!is_array($this->useranswer)) {
-            $this->useranswer = json_decode($this->useranswer, true);
         }
 
         if (isset($this->useranswer['uans'])) {
@@ -732,15 +729,9 @@ class EnhancedCalc extends Question implements questionInterface
     {
         global $string;
 
+        // Make sure data is arrays not encoded
         $this->decode_settings();
 
-        // Make sure data is arrays not encoded
-        if (!is_array($this->useranswer)) {
-            $this->useranswer = json_decode($this->useranswer, true);
-        }
-        if (!is_array($this->settings)) {
-            $this->settings = json_decode($this->settings, true);
-        }
 
         if (isset($this->useranswer['vars'])) {
             $varname = array_keys($this->useranswer['vars']);
@@ -829,7 +820,7 @@ class EnhancedCalc extends Question implements questionInterface
         $display_units = '';
 
         if ($marked) {
-            if ($this->useranswer['ans']['units_used'] != '') {
+            if (isset($this->useranswer['ans']['units_used']) and $this->useranswer['ans']['units_used'] != '') {
                 $display_units = ' ' . $this->useranswer['ans']['units_used'];
             }
         }
@@ -862,7 +853,12 @@ class EnhancedCalc extends Question implements questionInterface
         echo "</td></tr>\n</table>\n";
         if ($tmp_fback != '' and $extra['tmp_display_feedback'] == '1') {
             foreach ($varname as $individual_varname) {
-                $tmp_fback = str_replace($individual_varname, $this->useranswer['vars'][$individual_varname], $tmp_fback);
+                if (is_null($individual_varname)) {
+                    // This really should not happen, but seems to have.
+                    continue;
+                }
+                $replacement_value = $this->useranswer['vars'][$individual_varname] ?? '';
+                $tmp_fback = str_replace($individual_varname, $replacement_value, $tmp_fback);
             }
             echo '<br /><div class="fback">' . nl2br($tmp_fback) . "</div>\n";
         }
@@ -1127,9 +1123,6 @@ class EnhancedCalc extends Question implements questionInterface
             $questiondata['assignednumber'] = $extra['assignednumber'];
         }
         // Make sure data is arrays not encoded
-        if (!is_null($this->useranswer) and !is_array($this->useranswer)) {
-            $this->useranswer = json_decode($this->useranswer, true);
-        }
         $this->decode_settings();
 
         // Create array of units and functions
@@ -1425,7 +1418,6 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function get_answer_distance()
     {
-
         if (!isset($this->useranswer['cans_dist']) and isset($this->useranswer['cans'])) {
             if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
                 $this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
