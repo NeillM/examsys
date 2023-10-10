@@ -75,7 +75,7 @@ if (!isset($_POST['submit'])) {
     $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
     $current_time = time();
     while ($result->fetch()) {
-        if (($paper_type == '2' or $paper_type == '4') and !is_null($end_date) and $current_time > $end_date) {
+        if (($paper_type == '2' or $paper_type == '4') and !is_null($start_date) and $current_time > $start_date) {
             //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"18\" height=\"18\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
         } elseif ($start_date < $current_time and $end_date > $current_time) {
             echo '<tr><td style="width:20px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
