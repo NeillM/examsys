@@ -1368,6 +1368,8 @@ class PaperProperties
     }
 
     /**
+     * Gets the labs that the paper is restricted to.
+     *
      * @return string $labs
      */
     public function get_labs()
@@ -3237,7 +3239,7 @@ class PaperProperties
     /**
      * Checks if summative exam answers should be logged late.
      *
-     * @param int|null $lab_id
+     * @param int|null $lab_id The id of the lab that the user is in, or null if they are in no labs.
      * @param \LogMetadata $metadata
      * @return bool
      */
@@ -3316,11 +3318,11 @@ class PaperProperties
     /**
      * Calculates the time remaining on a paper to the current user.
      *
-     * @param int|null $lab_id
+     * @param int|null $lab_id The id of the lab that the user is in, or null if they are in no labs.
      * @param \LogMetadata $log
-     * @param bool $preview
+     * @param bool $preview True if the paper is being viewed in preview mode.
      * @param bool $allow_negative If false the minimum value is zero (default: false)
-     * @return int|null
+     * @return int|null The time in seconds, or null if it has no end time yet.
      * @throws \coding_exception
      */
     public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview, bool $allow_negative = false): ?int
