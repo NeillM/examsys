@@ -1368,6 +1368,8 @@ class PaperProperties
     }
 
     /**
+     * Gets the labs that the paper is restricted to.
+     *
      * @return string $labs
      */
     public function get_labs()
@@ -3237,7 +3239,7 @@ class PaperProperties
     /**
      * Checks if summative exam answers should be logged late.
      *
-     * @param int|null $lab_id
+     * @param int|null $lab_id The id of the lab that the user is in, or null if they are in no labs.
      * @param \LogMetadata $metadata
      * @return bool
      */
@@ -3316,11 +3318,11 @@ class PaperProperties
     /**
      * Calculates the time remaining on a paper to the current user.
      *
-     * @param int|null $lab_id
+     * @param int|null $lab_id The id of the lab that the user is in, or null if they are in no labs.
      * @param \LogMetadata $log
-     * @param bool $preview
+     * @param bool $preview True if the paper is being viewed in preview mode.
      * @param bool $allow_negative If false the minimum value is zero (default: false)
-     * @return int|null
+     * @return int|null The time in seconds, or null if it has no end time yet.
      * @throws \coding_exception
      */
     public function calculateTimeRemaining(?int $lab_id, LogMetadata $log, bool $preview, bool $allow_negative = false): ?int
@@ -3329,8 +3331,13 @@ class PaperProperties
         /* @var UserObject $user */
         $user = UserObject::get_instance();
         $special_needs_percentage = $user->get_special_needs_percentage();
+        $is_remote = $this->getSetting('remote_summative');
+        $is_summative = $this->get_paper_type() == assessment::TYPE_SUMMATIVE;
+        $uses_labs = !empty($this->get_labs());
 
-        if (!$this->getSetting('remote_summative') and $this->get_paper_type() == assessment::TYPE_SUMMATIVE and !$preview) {
+        if (!$is_remote and $is_summative and $uses_labs and !$preview) {
+            // This timer path requires that labs are used and
+            // that invigilators are responsible for setting the start and end time of exams.
             $log_lab_end_time = $this->getLogLabEndTime($lab_id);
 
             // Has the student been allotted extra time by an invigilator?
@@ -3344,9 +3351,11 @@ class PaperProperties
                 $remaining_time = $summative_timer->calculate_remaining_time_secs($allow_negative);
             }
         } else {
-            if ($this->getSetting('remote_summative')) {
+            if ($is_remote) {
                 $timer = new RemoteSummativeTimer($log, $this->get_exam_duration(), $special_needs_percentage);
             } else {
+                // Used for all other types of exams including summative exams that do not have
+                // any labs assigned to them.
                 $timer = new Timer($log, $this->get_exam_duration(), $special_needs_percentage);
             }
 
