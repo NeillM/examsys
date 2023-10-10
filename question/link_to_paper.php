@@ -78,7 +78,7 @@ if (!isset($_POST['submit'])) {
         if (($paper_type == '2' or $paper_type == '4') and !is_null($start_date) and $current_time > $start_date) {
             // We intentionally do not show locked papers, as they can never have questions added again.
         } elseif ($start_date < $current_time and $end_date > $current_time) {
-            echo '<tr><td style="width:20px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
+            echo '<tr><td style="width:20px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled id=\"$property_id\" ><label for=\"$property_id\" style=\"color:#808080\">$paper_title</label></td></tr>\n";
         } else {
             echo "<tr><td style=\"width:20px\">&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"$property_id\" id=\"$property_id\"><label for=\"$property_id\">$paper_title</label></td></tr>\n";
         }
