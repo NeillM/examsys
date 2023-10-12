@@ -119,6 +119,7 @@ trait pages
      * | Paper Details    |                                                | The name of a paper     |
      * | Calendar         | Calendar week                                  | Calendar Year           |
      * | Configuration    |                                                |                         |
+     * | Properties       |                                                | The name of a paper     |
      *
      * @param string $page
      * @param string $data
@@ -143,6 +144,9 @@ trait pages
                 break;
             case 'Configuration':
                 $this->visitConfig();
+                break;
+            case 'Properties':
+                $this->visitProperties($data);
                 break;
             default:
                 // Unsupported page type.
@@ -221,6 +225,21 @@ trait pages
             throw new \Exception('Invalid paper title');
         }
         $this->visit(Url::paperDetails($paperid));
+    }
+
+    /**
+     * Visit the properties page of a paper.
+     *
+     * @param string $paper the paper name.
+     * @throws \Exception
+     */
+    protected function visitProperties(string $paper)
+    {
+        $paperid = \PaperUtils::getPaperId($paper);
+        if ($paperid === null) {
+            throw new \Exception('Invalid paper title');
+        }
+        $this->visit(Url::properties($paperid));
     }
 
     /**

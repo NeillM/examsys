@@ -80,6 +80,17 @@ class Url
     }
 
     /**
+     * Generates the URL to a paper properties page.
+     *
+     * @param int $paperid The id of the paper.
+     * @return string
+     */
+    public static function properties(int $paperid): string
+    {
+        return '/paper/properties.php?caller=detail&module=&folder=&paperID=' . $paperid;
+    }
+
+    /**
      * Generates the URL to a class totals report.
      *
      * @param int $paperid The id of the paper.
