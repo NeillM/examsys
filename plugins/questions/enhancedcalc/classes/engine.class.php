@@ -212,11 +212,28 @@ class Engine
         return strtolower($formatter->format($number));
     }
 
+    /**
+     * Calculates the correct answer for the question based.
+     *
+     * It uses the formula provided by the teacher, along with the values generated
+     * for the student answering the question.
+     *
+     * @param array $vars An array where the key is the variable and the value is
+     *                    the number used in the question, i.e. ['$A'=>15.2]
+     * @param string $formula The formula used in the question.
+     * @return string The answer returned by the calculation engine cast as a string.
+     */
     public function calculate_correct_ans($vars, $formula)
     {
         $formula = $this->substituteMethodCalls($formula);
         $formula_vars_subed = \EnhancedCalc::substitute_vars($vars, $formula);
-        $correctanswer = eval('return (' . $formula_vars_subed . ');');
+
+        try {
+            $correctanswer = eval('return (' . $formula_vars_subed . ');');
+        } catch (\DivisionByZeroError $e) {
+            // Return the same answer we would get from RServe when a division by 0 happens.
+            $correctanswer = 'Inf';
+        }
 
         return (string)$correctanswer;
     }
@@ -284,13 +301,30 @@ class Engine
         }
     }
 
+    /**
+     * Calculates the distance of the user's answer from the correct answer.
+     *
+     * Where the correct answer is not 0 this will be expressed as a percentage distance.
+     *
+     * Where the correct answer is 0 it will return an absolute value.
+     *
+     * @param float|int $useranswer The answer the user gave.
+     * @param float|int $correctanswer The correct answer for the question.
+     * @return float|int|string
+     */
     public function distance_from_correct_answer($useranswer, $correctanswer)
     {
         if ($useranswer == '') {
             return 'ERROR';
         }
 
-        $res = abs(round(abs($useranswer - $correctanswer) / $correctanswer * 100, 3, $this->getRoundingMode()));
+        if ($correctanswer == 0) {
+            // If the correct answer is 0 then we cannot calculate a percentage, so we will use an absolute value.
+            $res = abs(round(abs($useranswer), 3, $this->getRoundingMode()));
+        } else {
+            // When the correct answer is not 0 calculate the distance as a percentage.
+            $res = abs(round(abs($useranswer - $correctanswer) / $correctanswer * 100, 3, $this->getRoundingMode()));
+        }
         return $res;
     }
 

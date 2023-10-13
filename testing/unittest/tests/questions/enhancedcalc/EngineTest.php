@@ -60,11 +60,11 @@ class EngineTest extends \testing\unittest\UnitTest
      * @param array $variables An array with the key being the variable name and
      *                         the value being the value that should be used in the formula.
      * @param string $formula The formula used to calculate the answer.
-     * @param int|float $expected The expected result of the calculation.
+     * @param int|float|string $expected The expected result of the calculation.
      * @return void
      * @dataProvider dataCalculateCorrectAns
      */
-    public function testCalculateCorrectAns(array $variables, string $formula, int|float $expected)
+    public function testCalculateCorrectAns(array $variables, string $formula, int|float|string $expected)
     {
         $engine = $this->getEngine();
         if (is_float($expected)) {
@@ -143,6 +143,8 @@ class EngineTest extends \testing\unittest\UnitTest
             [[], '3+pi()-3', 3.1415926535898],
             [['$A' => 180], 'deg2rad($A) - deg2rad($A)', 0],
             [['$A' => 5], 'round(pi, $A)', 3.14159],
+            // Test that we can handle divide by zero well.
+            [['$A' => 4, '$B' => 0], '$A / $B', 'Inf'],
         ];
     }
 
@@ -214,6 +216,12 @@ class EngineTest extends \testing\unittest\UnitTest
             [PHP_ROUND_HALF_UP, '100.005', '100', 0.005],
             [PHP_ROUND_HALF_UP, '100.0006', '100', 0.001],
             [PHP_ROUND_HALF_UP, '100.0004', '100', 0],
+            // Where the correct answer is 0.
+            [PHP_ROUND_HALF_UP, '0', '0', 0],
+            [PHP_ROUND_HALF_UP, '2', '0', 2],
+            [PHP_ROUND_HALF_UP, '-5', '0', 5],
+            [PHP_ROUND_HALF_UP, '-9.99999', '0', 10],
+            [PHP_ROUND_HALF_UP, '-10.33333', '0', 10.333],
         ];
     }
 
@@ -254,6 +262,7 @@ class EngineTest extends \testing\unittest\UnitTest
             ['0.001', '1', 0.00001, 0.00099, 0.00101],
             ['-100', '1', 1, -101, -99],
             ['100', '0.01', 0.01, 99.99, 100.01],
+            ['100', '0', 0, 100, 100],
         ];
     }
 
@@ -288,6 +297,7 @@ class EngineTest extends \testing\unittest\UnitTest
             ['100', '1', 99, 101],
             ['100', '0.1', 99.9, 100.1],
             ['-100', '0.1', -100.1, -99.9],
+            ['-100', '0', -100, -100],
         ];
     }
 
@@ -321,6 +331,7 @@ class EngineTest extends \testing\unittest\UnitTest
             ['1', -1, 1, true],
             ['-1.0000000001', -1, 1, false],
             ['1.0000000001', -1, 1, false],
+            ['0', 0, 0, true],
         ];
     }
 
