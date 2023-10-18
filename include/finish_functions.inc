@@ -585,7 +585,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                         $paper[$i]['theme'] = $theme;
                         $paper[$i]['q_type'] = $q_type;
                         $paper[$i]['leadin'] = $leadin;
-                        $paper[$i]['notes'] = $notes;
+                        $paper[$i]['notes'] = $notes ?? '';
                         $paper[$i]['settings'] = $settings;
 
                         if ($q_type == 'enhancedcalc') {
