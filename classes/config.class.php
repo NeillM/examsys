@@ -809,7 +809,7 @@ class Config extends RogoStaticSingleton
                 $check = is_array($value);
                 break;
             case self::BOOLEAN:
-                if ($value == 1 or $value == false) {
+                if ($value == 1 or $value == 'on' or $value == false) {
                     $check = true;
                 }
                 break;

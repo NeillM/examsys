@@ -145,7 +145,11 @@ function exceptionHandler($exception)
         }
     }
 
-    log_error($userid, $username, $error_type, $errstr, $exception->getFile(), $exception->getLine(), $paperID, $post_data, $variables, $exception->getTraceAsString(), $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD']);
+    // The query string will not be available in a CLI script.
+    $query_string = $_SERVER['QUERY_STRING'] ?? null;
+    $request_method = $_SERVER['REQUEST_METHOD'] ?? null;
+
+    log_error($userid, $username, $error_type, $errstr, $exception->getFile(), $exception->getLine(), $paperID, $post_data, $variables, $exception->getTraceAsString(), $_SERVER['PHP_SELF'], $query_string, $request_method);
 }
 
 
