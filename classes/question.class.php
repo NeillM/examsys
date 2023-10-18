@@ -71,6 +71,9 @@ class Question
     public $q_media_height = '';
     public $q_media_width = '';
 
+    /** @var string Alt text for media. */
+    public $q_media_alt = '';
+
     public $uniqid;
 
     public $std;
@@ -125,6 +128,19 @@ class Question
         }
     }
 
+    /**
+     * Loads data into the question.
+     *
+     * Data in the array will be used it if the key matches
+     * a property of the question class being used.
+     *
+     * It will also match:
+     * - q_id
+     * - user_answer
+     *
+     * @param array $array
+     * @return void
+     */
     public function load($array)
     {
         foreach ($array as $key => $value) {

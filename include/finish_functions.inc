@@ -585,7 +585,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                         $paper[$i]['theme'] = $theme;
                         $paper[$i]['q_type'] = $q_type;
                         $paper[$i]['leadin'] = $leadin;
-                        $paper[$i]['notes'] = $notes;
+                        $paper[$i]['notes'] = $notes ?? '';
                         $paper[$i]['settings'] = $settings;
 
                         if ($q_type == 'enhancedcalc') {
@@ -2561,7 +2561,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
       data-image-width="<?php echo $paper[$question]['q_media_width']; ?>"
       data-image-height="<?php echo $paper[$question]['q_media_height']; ?>"
       data-setup="<?php echo htmlentities(trim($paper[$question]['correct'][0])); ?>"
-      data-answer="<?php echo htmlentities(trim($paper[$question]['user_answer'])); ?>"
+      data-answer="<?php echo htmlentities(trim($paper[$question]['user_answer'] ?? '')); ?>"
       data-exclusions="<?php echo $tmp_exclude; ?>"
       ></div>
   </div>
