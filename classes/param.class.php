@@ -304,6 +304,13 @@ class param
         // We use the html purifier library for this (http://htmlpurifier.org/)
         // First we setup the purifier.
         $config = HTMLPurifier_Config::createDefault();
+
+        // We want to configure the directories that html purifier writes its cache files to.
+        $temp_dir = Config::get_instance()->get('cfg_tmpdir');
+        // We need to have no trailing slashes on the path.
+        $temp_dir = rtrim($temp_dir, '\\/');
+        $config->set('Cache.SerializerPath', $temp_dir);
+
         $purifier = new HTMLPurifier($config);
         // Then we clean the text and return it.
         return $purifier->purify($html);
