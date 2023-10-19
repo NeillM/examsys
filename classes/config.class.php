@@ -325,6 +325,9 @@ class Config extends RogoStaticSingleton
     {
         $behaturl = $this->get('cfg_behat_website');
         $parsedurl = parse_url($behaturl . '/');
+        if (sizeof($parsedurl) <= 1) { // If $behaturl is not a URL string,
+            return false;
+        }
         return $this->checkurl($parsedurl);
     }
 
