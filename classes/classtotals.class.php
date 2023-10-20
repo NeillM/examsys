@@ -689,7 +689,7 @@ class ClassTotals
      * @param int $q_id                                 - ID of the question being marked.
      * @param int $userID                               - ID of the user (student)
      * @param int $tmp_user_answer          - Answer of the user.
-     * @param int $tmp_user_mark                - The 'original' mark as stored in logX.
+     * @param int|null $tmp_user_mark                - The 'original' mark as stored in logX.
      * @param float[] $tmp_user_mark_array  - An array of marks for all the questions on the paper.
      * @return int - The mark the user got for the question.
      */
@@ -857,7 +857,8 @@ class ClassTotals
                             $tmp_user_mark_array[$q_id][] = $settings['marks_incorrect'];
                         }
                     } else {
-                        $tmp_mark += $tmp_user_mark;
+                        // The user's mark will be null if the question is unmarked.
+                        $tmp_mark += $tmp_user_mark ?? 0;
                         $tmp_user_mark_array[$q_id][] = $tmp_user_mark;
                     }
                 }
@@ -975,8 +976,13 @@ class ClassTotals
         } else {
             // Marking per Question, or all other question types, simply return the original mark.
             if ($tmp_exclude[0] == '0') {
-                $round_tmp_user_mark = round($tmp_user_mark, 2);
-                $tmp_mark += $round_tmp_user_mark;
+                if (!is_null($tmp_user_mark)) {
+                    $round_tmp_user_mark = round($tmp_user_mark, 2);
+                    $tmp_mark += $round_tmp_user_mark;
+                } else {
+                    // The question is unmarked.
+                    $round_tmp_user_mark = null;
+                }
                 $tmp_user_mark_array[$q_id] = $round_tmp_user_mark;
             }
         }
