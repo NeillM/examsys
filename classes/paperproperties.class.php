@@ -1368,23 +1368,32 @@ class PaperProperties
     }
 
     /**
-     * Gets the labs that the paper is restricted to.
+     * Gets the labs that the paper is restricted to
      *
-     * @return string $labs
+     * If labs are set then students must be in one of the labs to take the paper.
+     *
+     * @return string A comma separated list of lab ids, if an empty string then no restrictions are in place.
      */
     public function get_labs()
     {
-        return $this->labs;
+        // It seems that historically null was allowed as the value of the labs,
+        // this does not appear to tbe the case in modern ExamSys. Later code also
+        // always assumes it iis a string.
+        return $this->labs ?? '';
     }
 
     /**
-     * @param string $labs
+     * Set the labs the paper is restricted to
+     *
+     * If labs are set then students must be in one of the labs to take the paper.
+     *
+     * @param string $labs A comma separated list of lab ids, if an empty string then no restrictions are in place.
      */
     public function set_labs($labs)
     {
         $old_labs = $this->labs;
 
-        $this->labs = $labs;
+        $this->labs = $labs ?? '';
 
         if ($old_labs != $labs) {
             $this->changes[] = array('old' => $old_labs, 'new' => $labs, 'part' => 'labs');
