@@ -149,7 +149,7 @@ class papers extends generator
         $default = array(
             'startdate' => null,
             'enddate' => null,
-            'labs' => null,
+            'labs' => '',
             'duration' => null,
             'session' => null,
             'timezone' => 'Europe/London',

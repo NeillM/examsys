@@ -1115,7 +1115,7 @@ SQL;
             'session' => $session,
             'startdatetime' => $startdatetime,
             'enddatetime' => $enddatetime,
-            'labs' => $labs,
+            'labs' => $labs ?? '',
             'duration' => $duration,
             'timezone' => $timezone,
             'externalid' => $externalid,
