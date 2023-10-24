@@ -1534,22 +1534,32 @@ class PaperProperties
     }
 
     /**
+     * Get the random mark for the paper.
+     *
+     * The random mark is statistically the mark a user will gain from randomly guessing answers.
+     *
      * @return float $random_mark
      */
     public function get_random_mark()
     {
-        return $this->random_mark;
+        return $this->random_mark ?? 0.0;
     }
 
     /**
+     * Set the random mark for the paper.
+     *
+     * The random mark is statistically the mark a user will gain from randomly guessing answers.
+     *
      * @param float $random_mark
      */
     public function set_random_mark($random_mark)
     {
-        $this->random_mark = $random_mark;
+        $this->random_mark = $random_mark ?? 0.0;
     }
 
     /**
+     * Get the total marks awarded by questions on the paper.
+     *
      * @return int $total_mark
      */
     public function get_total_mark()
@@ -1558,6 +1568,8 @@ class PaperProperties
     }
 
     /**
+     * Set the total marks available on the paper.
+     *
      * @param int $total_mark
      */
     public function set_total_mark($total_mark)

@@ -65,7 +65,7 @@ class ClassTotals
     private $repmodule;
     private $total_marks;
     private $orig_total_marks;
-    private $total_random_mark;
+    private $total_random_mark = 0;
     private $display_excluded;
     private $display_experimental;
     private $q_medians;
