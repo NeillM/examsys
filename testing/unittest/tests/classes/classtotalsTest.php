@@ -355,4 +355,210 @@ class ClassTotalsTest extends \testing\unittest\unittestdatabase
             ],
         ];
     }
+
+    /**
+     * Creates a paper with a textbox question.
+     *
+     * The paper will contain 1 textbox question.
+     *
+     * There will be answers for the following students:
+     * - Student 1: Fully answered.
+     * - Student 2: Started the paper no answer.
+     * - Student 3: Not started the paper.
+     * - Student 4: Fully answered.
+     * - Staff user: Previewed and completed the paper.
+     *
+     * The answers will not have been marked.
+     *
+     * This should only be called one time per test.
+     *
+     * @param int $paper_type The type of paper to generate.
+     * @throws \testing\datagenerator\no_database
+     * @throws \testing\datagenerator\not_found
+     */
+    protected function createPaperWithTextBox(int $paper_type = assessment::TYPE_SUMMATIVE)
+    {
+        // Create the paper that will be used by the tests.
+        $paper_generator = $this->get_datagenerator('papers', 'core');
+        $this->paper1 = $paper_generator->create_paper(
+            [
+                'papertitle' => 'Class totals testing paper',
+                'papertype' => $paper_type,
+                'paperowner' => $this->staff1['username'],
+                'modulename' => $this->module1['fullname'],
+            ]
+        );
+
+        // Add a question to the paper.
+        $question_generator = $this->get_datagenerator('questions', 'core');
+        $this->question1 = $question_generator->create_question(
+            [
+                'type' => 'textbox',
+                'user' => $this->staff1['username'],
+                'leadin' => 'Enter some text',
+            ]
+        );
+        $question_generator->add_options_to_question(
+            [
+                'question' => $this->question1['id'],
+                'option_text' => 'A reminder',
+                'correct' => 'placeholder',
+                'marks_correct' => 1,
+            ]
+        );
+        $question_generator->add_question_to_paper(
+            [
+                'paper' => $this->paper1['id'],
+                'question' => $this->question1['id'],
+                'screen' => 1,
+                'displaypos' => 1,
+            ]
+        );
+
+        $this->createUserAnswersTextBox();
+    }
+
+    /**
+     * Creates the user answers for the paper.
+     *
+     * It should only be called by createPaper()
+     */
+    protected function createUserAnswersTextBox()
+    {
+        $log_generator = $this->get_datagenerator('log', 'core');
+        // Started and completed the paper.
+        $metadata1 = $log_generator->create_metadata(
+            [
+                'userID' => $this->student1['id'],
+                'paperID' => $this->paper1['id'],
+                'started' => '2020-10-01 10:00:00',
+                'completed' => '2020-10-01 10:05:00',
+            ]
+        );
+        $log_generator->create_exam(
+            $this->paper1['papertype'],
+            [
+                'metadataID' => $metadata1['id'],
+                'q_id' => $this->question1['id'],
+                'mark' => null,
+                'adjmark' => null,
+                'totalpos' => 1,
+                'user_answer' => 't',
+                'screen' => 1,
+                'duration' => 180,
+                'updated' => '2020-10-01 10:03:00',
+            ]
+        );
+        $metadata2 = $log_generator->create_metadata(
+            [
+                'userID' => $this->student4['id'],
+                'paperID' => $this->paper1['id'],
+                'started' => '2020-10-01 10:00:00',
+                'completed' => '2020-10-01 10:05:00',
+            ]
+        );
+        $log_generator->create_exam(
+            $this->paper1['papertype'],
+            [
+                'metadataID' => $metadata2['id'],
+                'q_id' => $this->question1['id'],
+                'mark' => null,
+                'adjmark' => null,
+                'totalpos' => 1,
+                'user_answer' => 'f',
+                'screen' => 1,
+                'duration' => 180,
+                'updated' => '2020-10-01 10:03:00',
+            ]
+        );
+        // Started the paper, but did not complete it.
+        $log_generator->create_metadata(
+            [
+                'userID' => $this->student2['id'],
+                'paperID' => $this->paper1['id'],
+                'started' => '2020-10-01 10:00:00',
+            ]
+        );
+        // The staff user previewed the paper.
+        $metadata3 = $log_generator->create_metadata(
+            [
+                'userID' => $this->staff1['id'],
+                'paperID' => $this->paper1['id'],
+                'started' => '2020-09-30 10:00:00',
+                'completed' => '2020-09-30 10:05:00',
+            ]
+        );
+        $log_generator->create_exam(
+            $this->paper1['papertype'],
+            [
+                'metadataID' => $metadata3['id'],
+                'q_id' => $this->question1['id'],
+                'mark' => null,
+                'adjmark' => null,
+                'totalpos' => 1,
+                'user_answer' => 'f',
+                'screen' => 1,
+                'duration' => 180,
+                'updated' => '2020-09-30 10:03:00',
+            ]
+        );
+    }
+
+    /**
+     * Tests that if we have an unmarked textbox question that the results will be generated correctly.
+     *
+     * @param int $papertype The type of paper to be tested.
+     * @param bool $students If we only want student results
+     * @param bool $absent If we want absent students
+     * @param array $expected The expected return values from the method.
+     * @return void
+     *
+     * @dataProvider dataGetUserResults
+     */
+    public function testGetUserResultsUnmarkedTextbox(int $papertype, bool $students, bool $absent, array $expected): void
+    {
+        $this->createPaperWithTextBox($papertype);
+
+        $db = Config::get_instance()->db;
+        $this->set_active_user($this->admin['id']);
+        $paper_property = PaperProperties::get_paper_properties_by_id($this->paper1['id'], $db, []);
+        $order = 'asc';
+        $percentage = 100;
+        $sort = 'name';
+        $start = '20200930000000'; // Start of 3rd September 2020.
+        $end = '20201002000000'; // Start of 2nd September 2020.
+        $course = '%';
+        $module = $this->module1['id'];
+
+        $classtotals = new ClassTotals(
+            $students,
+            $percentage,
+            $order,
+            $absent,
+            $sort,
+            $this->userobject,
+            $paper_property,
+            $start,
+            $end,
+            $course,
+            $module,
+            $db,
+            []
+        );
+        $classtotals->compile_report(true);
+        $results = $classtotals->get_user_results();
+
+        // We expect the results to have the same number of entries as the expected array.
+        self::assertEquals(count($expected), count($results));
+
+        // The expected array is a partial of the results.
+        foreach ($expected as $key => $expectedrecord) {
+            self::assertArrayHasKey($key, $results);
+            foreach ($expectedrecord as $property => $value) {
+                $failmessage = 'Array key: ' . $key;
+                self::assertArrayHasKey($property, $results[$key], $failmessage);
+                self::assertEquals($value, $results[$key][$property], $failmessage);
+            }
+        }
+    }
 }
