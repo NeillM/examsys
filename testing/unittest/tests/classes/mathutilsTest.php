@@ -24,12 +24,12 @@ namespace testing\unittest;
  * @version 1.0
  * @copyright Copyright (c) 2019 onwards The University of Nottingham
  * @package tests
+ * @group math
  */
 class mathutilstest extends UnitTest
 {
     /**
      * Test percentile function
-     * @group math
      */
     public function test_percentile()
     {
@@ -42,7 +42,6 @@ class mathutilstest extends UnitTest
 
     /**
      * Test percentile function non numeric data
-     * @group math
      */
     public function test_percentile_nonnumeric()
     {
@@ -53,7 +52,6 @@ class mathutilstest extends UnitTest
 
     /**
      * Test percentile function out of range
-     * @group math
      */
     public function test_percentile_outofrange()
     {
@@ -64,7 +62,6 @@ class mathutilstest extends UnitTest
 
     /**
      * Test percentile function non float percentile
-     * @group math
      */
     public function test_percentile_nonfloat()
     {
