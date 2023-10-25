@@ -42,10 +42,10 @@ class MathsUtils
 
     /**
      * Generate a random number between $min and $max with a specified increment and number of decimal places
-     * @param mixed $min
-     * @param mixed $max
-     * @param mixed $increment
-     * @param int $decimals
+     * @param mixed $min The lowest number to be generated.
+     * @param mixed $max The highest number to be generated.
+     * @param mixed $increment The increment between numbers.
+     * @param int $decimals The number of decimal places that can be generated.
      * @return mixed Random number based on input parameters
      */
     public static function gen_random_no($min, $max, $increment, $decimals)
@@ -69,7 +69,12 @@ class MathsUtils
             }
         } else {
             $new_max = ($max - $min) / $increment;
-            $gen_no = rand(0, $new_max);
+            // We can only pass integers to the rand method.
+            // It is theoretically possible for the new max value to not be an integer, for example:
+            // (10 - 0) / 4 = 2.5
+            // In a case we need to discard the decimal place which means that the maximum will
+            // never be returned because it is mathematically impossible to generate.
+            $gen_no = rand(0, intval($new_max));
             $gen_no *= $increment;
             $gen_no += $min;
         }
