@@ -97,7 +97,7 @@ function getPaper($paperID)
             $info_count++;
         }
 
-        $temp_array['total_random_mark'] = $random_mark;
+        $temp_array['total_random_mark'] = $random_mark ?? 0.0;
         $temp_array['total_marks'] = $total_mark;
         $temp_array['temp_total_marks'] = $total_mark;
         $temp_array['questionID'] .= $q_id . ',';

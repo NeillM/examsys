@@ -76,7 +76,9 @@ for ($i = 0; $i < count($tmp_pIDs); $i++) {
 }
 
 if ($_POST['paperID'] != '') {
-    if ($result = $mysqli->prepare('UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?')) {
+    // Remove the marks and random mark from the paper as they are no longer valid.
+    // They will be regenerated when a member of staff visits the paper's detail page.
+    if ($result = $mysqli->prepare('UPDATE properties SET random_mark = 0.0, total_mark = NULL WHERE property_id = ?')) {
         $result->bind_param('i', $tmp_paperID);
         $result->execute();
         $result->close();

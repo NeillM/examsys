@@ -1134,7 +1134,7 @@ SQL;
             'folder' => $folder,
             'rubric' => $rubric,
             'calculator' => $calculator,
-            'random_mark' => $random_mark,
+            'random_mark' => $random_mark ?? 0.0,
             'total_mark' => $total_mark,
             'display_correct_answer' => $display_correct_answer,
             'display_question_mark' => $display_question_mark,
@@ -1403,11 +1403,11 @@ SQL;
         }
         $tmp_random_mark = $properties['random_mark'];
         if ($tmp_random_mark == '') {
-            $tmp_random_mark = null;
+            $tmp_random_mark = 0.0;
         }
         $tmp_total_mark = $properties['total_mark'];
         if ($tmp_total_mark == '') {
-            $tmp_total_mark = null;
+            $tmp_total_mark = 0;
         }
 
         $tmp_external_review_deadline = $properties['external_review_deadline'];
