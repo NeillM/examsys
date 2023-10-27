@@ -24,12 +24,14 @@ namespace testing\unittest;
  * @version 1.0
  * @copyright Copyright (c) 2019 onwards The University of Nottingham
  * @package tests
+ *
+ * @covers \MathsUtils
+ * @group math
  */
 class mathutilstest extends UnitTest
 {
     /**
      * Test percentile function
-     * @group math
      */
     public function test_percentile()
     {
@@ -42,7 +44,6 @@ class mathutilstest extends UnitTest
 
     /**
      * Test percentile function non numeric data
-     * @group math
      */
     public function test_percentile_nonnumeric()
     {
@@ -53,7 +54,6 @@ class mathutilstest extends UnitTest
 
     /**
      * Test percentile function out of range
-     * @group math
      */
     public function test_percentile_outofrange()
     {
@@ -64,12 +64,50 @@ class mathutilstest extends UnitTest
 
     /**
      * Test percentile function non float percentile
-     * @group math
      */
     public function test_percentile_nonfloat()
     {
         $data = array(100, 50, 25, 0);
         $test = \MathsUtils::percentile($data, 25);
         $this->assertEquals(62.5, $test);
+    }
+
+    /**
+     * Tests that the random number generator returns numbers within the expected bounds.
+     *
+     * @param mixed $min The lowest number to be generated.
+     * @param mixed $max The highest number to be generated.
+     * @param mixed $increment The increment between numbers.
+     * @param int $decimals The number of decimal places that can be generated.
+     *
+     * @dataProvider data_gen_random_no
+     */
+    public function test_gen_random_no($min, $max, $increment, int $decimals)
+    {
+        $result = \MathsUtils::gen_random_no($min, $max, $increment, $decimals);
+
+        // Test for the range.
+        $this->assertGreaterThanOrEqual($min, $result);
+        $this->assertLessThanOrEqual($max, $result);
+    }
+
+    /**
+     * Data used to test that we generate random numbers correctly.
+     *
+     * @return array
+     */
+    public function data_gen_random_no(): array
+    {
+        return [
+            'no increment' => [2, 2, 0, 0],
+            'increment by 1' => [1, 10, 1, 0],
+            'increment by integer' => [10, 100, 10, 0],
+            'negative numbers' => [-100, -10, 10, 0],
+            'increment by float' => [1, 9, 0.5, 1],
+            'increment by small number' => [0, 1, 0.01, 2],
+            'impossible max int' => [1, 6, 2, 0],
+            'impossible max float' => [0, 1, 0.03, 2],
+            'all floats' => [0.1, 0.8, 0.02, 2],
+        ];
     }
 }
