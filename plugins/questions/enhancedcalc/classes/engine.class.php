@@ -330,10 +330,6 @@ class Engine
 
     public function calculate_tolerance_percent($correctanswer, $percentage)
     {
-        $cmd[] = "$correctanswer * (" . $percentage . '/100)';
-        $cmd[] = "$correctanswer * (1 + (" . $percentage . '/100))';
-        $cmd[] = "$correctanswer * (1 - (" . $percentage . '/100))';
-
         $result[0] = $correctanswer * ($percentage / 100);
         $result[1] = $correctanswer * (1 + ($percentage / 100));
         $result[2] = $correctanswer * (1 - ($percentage / 100));
