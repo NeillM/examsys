@@ -232,6 +232,15 @@ class EnhancedCalc extends Question implements questionInterface
         try {
             // CALCULATE REQURED NUMERIC VALUES
             $this->useranswer['cans'] = $this->enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
+
+            if (!is_numeric($this->useranswer['cans'])) {
+                // It is possible to get a non-numeric answer from a question in certain circumstances.
+                // An example of this is if there is a divide by 0 then Inf will be returned.
+                $this->useranswer['status']['error'] = true;
+                $this->useranswer['ans']['error'] = 'Answer is not numeric: ' . $this->useranswer['cans'];
+                $this->useranswer['status']['e'] = 'Answer is not numeric: ' . $this->useranswer['cans'];
+                return Q_MARKING_UNCALC_ANSWER;
+            }
         } catch (Exception $e) {
             //TODO: catch different errors "no connection", "unable to evaluate"
             if (stripos($e->getMessage(), 'connect') !== false) {

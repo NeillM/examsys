@@ -328,12 +328,21 @@ class Engine
         return $res;
     }
 
+    /**
+     * Calculates minimum and maximum value a user answer can be considered correct
+     *
+     *  This method is used when the calculation question is configured to use a
+     *  percentage difference from the correct mark.
+     *
+     * This does mean that the amount of difference will be greater
+     * when the correct answer is larger.
+     *
+     * @param int|float $correctanswer The correct answer to the question
+     * @param int $percentage The percentage that the answer can be off by and still considered correct
+     * @return array
+     */
     public function calculate_tolerance_percent($correctanswer, $percentage)
     {
-        $cmd[] = "$correctanswer * (" . $percentage . '/100)';
-        $cmd[] = "$correctanswer * (1 + (" . $percentage . '/100))';
-        $cmd[] = "$correctanswer * (1 - (" . $percentage . '/100))';
-
         $result[0] = $correctanswer * ($percentage / 100);
         $result[1] = $correctanswer * (1 + ($percentage / 100));
         $result[2] = $correctanswer * (1 - ($percentage / 100));
@@ -353,6 +362,16 @@ class Engine
         return $res;
     }
 
+    /**
+     * Calculates minimum and maximum value a user answer can be considered correct
+     *
+     * This method is used when the calculation question is configured to use an
+     * absolute difference from the correct mark.
+     *
+     * @param int|float $correctanswer The calculated correct answer
+     * @param int|float $value The absolute difference the user is allowed to be away from the correct answer
+     * @return array
+     */
     public function calculate_tolerance_absolute($correctanswer, $value)
     {
         $result[0] = $correctanswer + $value;
