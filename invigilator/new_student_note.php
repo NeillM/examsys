@@ -67,6 +67,13 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
 
 $student_details = UserUtils::get_user_details($userID, $mysqli);
 $note_details = StudentNotes::get_note($paperID, $userID, $mysqli);
+if ($note_details === false) {
+    // The student does not have a note.
+    $note_details = [
+        'note_id' => 0,
+        'note' => '',
+    ];
+}
 ?>
 
 
