@@ -82,7 +82,7 @@ lang.extension_mins
     </thead>
     <tbody>
     {% for i, row in data %}
-    <tr class="student{% if row.warn %} redwarn{% endif %}" id="{{row.id}}" data-userid="{{row.userid}}" data-paperid="{{row.paperid}}" data-timing="{{row.timing}}" data-remote="{{info.remote}}">
+    <tr class="student{% if row.warn %} redwarn{% endif %}" id="{{row.id}}" data-userid="{{row.userid}}" data-username="{{row.username}}" data-paperid="{{row.paperid}}" data-timing="{{row.timing}}" data-remote="{{info.remote}}">
         <td>
             {% if row.completed %}
             <img src="{{path}}/artwork/finished.png" class="16icon" />

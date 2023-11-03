@@ -225,6 +225,7 @@ class InvigilationTest extends unittestdatabase
             'accessibility' => 1,
             'medical' => '',
             'breaks' => $this->user['breaks'],
+            'username' => $this->user['username'],
         );
         $expected[] = $data;
         $this->assertEquals($expected, $inv->getStudents(implode(',', $modules), $paper, $labend, $timing));
@@ -263,6 +264,7 @@ class InvigilationTest extends unittestdatabase
             'accessibility' => 1,
             'medical' => '',
             'breaks' => $this->user['breaks'],
+            'username' => $this->user['username'],
         );
         $expected[] = $data;
         $this->assertEquals($expected, $inv->getStudents(implode(',', $modules), $paper, $labend, $timing));
