@@ -758,9 +758,9 @@ SQL;
      * If parent ID is unset, this is assumed to be a new question.
      * @param int $qID      question ID
      * @param int $changeID track_changes ID
-     * @param int $parentID (optional) question parent copied from, same as question ID if a new question
+     * @param int|null $parentID (optional) question parent copied from, same as question ID if a new question
      */
-    public static function addLineage(int $qID, int $changeID, int $parentID = null)
+    public static function addLineage(int $qID, int $changeID, ?int $parentID = null)
     {
         $configObject = Config::get_instance();
         $lineagesql = $configObject->db->prepare(
@@ -776,6 +776,7 @@ SQL;
         $lineagesql->bind_param('iiii', $qID, $parentID, $rootID, $changeID);
         $lineagesql->execute();
         $lineagesql->free_result();
+        $lineagesql->close();
     }
 
     /**
@@ -797,38 +798,112 @@ SQL;
         $lineagesql->bind_result($rootID);
         $lineagesql->fetch();
         $lineagesql->free_result();
+        $lineagesql->close();
+
+        if (is_null($rootID)) {
+            // For some reason the question lineage has not been
+            // generated for this question, so we should create it now.
+            $rootID = self::generateLineage($qID);
+        }
+
+        return $rootID;
+    }
+
+    /**
+     * Creates a linage record if one does not already exist.
+     *
+     * This should only happen if ExamSys was upgraded to version 7.6.0,
+     * it could have happened because a question has no tracked changes.
+     *
+     * @param int $questionID The id of the question that lineage should be generated for.
+     * @return int
+     */
+    protected static function generateLineage(int $questionID): int
+    {
+        $configObject = Config::get_instance();
+
+        // First try to find if the question has a parent based on the information stored in the tracked changes for it.
+        $lookup_sql = "SELECT 
+                            l.questionID,
+                            CASE WHEN t.type = 'Copied question' THEN CAST(t.old AS UNSIGNED) ELSE NULL END AS parentID,
+                            t.id AS changeID
+                       FROM (SELECT q.q_id AS questionID, MIN(tc.id) AS changeID
+                             FROM questions q
+                             JOIN track_changes tc ON q.q_id = tc.typeID
+                             WHERE q.q_id = ?
+                             GROUP BY q.q_id) l
+                       JOIN track_changes t ON t.id = l.changeID";
+        $lookup = $configObject->db->prepare($lookup_sql);
+        $lookup->bind_param('i', $questionID);
+        $lookup->execute();
+        $lookup->bind_result($qid, $parentID, $changeID);
+        $lookup->fetch();
+        $lookup->free_result();
+        $lookup->close();
+
+        if (is_null($qid)) {
+            // The question does not have any tracked changes.
+            // The change id is not allowed to be null, so we will give it a value that will not exist instead.
+            // We will have to assume that this is the root question.
+            $changeID = 0;
+            $rootID = $questionID;
+        } elseif (!is_null($parentID)) {
+            // This question has a parent, it may already have a lineage record.
+            $rootID = self::getLineageRoot($parentID);
+        } else {
+            // This is the root question.
+            $rootID = $questionID;
+        }
+
+        // Add the lineage record.
+        $insert_sql = 'INSERT INTO questions_lineage (questionID, parentID, rootID, changeID) VALUES (?, ?, ?, ?)';
+        $insert = $configObject->db->prepare($insert_sql);
+        $insert->bind_param('iiii', $questionID, $parentID, $rootID, $changeID);
+        $insert->execute();
+        $insert->close();
+
         return $rootID;
     }
 
     /**
      * Get the parent question ID for a question
-     * @param int $qID question ID
      *
+     * @param int $qID question ID
+     * @param bool $generate Generate the lineage if it does not exist (optional, default: true)
      * @return int
      */
-    public static function getLineageParent(int $qID)
+    public static function getLineageParent(int $qID, bool $generate = true)
     {
         $configObject = Config::get_instance();
         $lineagesql = $configObject->db->prepare(
-            'SELECT parentID
+            'SELECT parentID, rootID
             FROM questions_lineage
             WHERE questionID = ?'
         );
         $lineagesql->bind_param('i', $qID);
         $lineagesql->execute();
-        $lineagesql->bind_result($parentID);
+        $lineagesql->bind_result($parentID, $rootID);
         $lineagesql->fetch();
         $lineagesql->free_result();
+        $lineagesql->close();
+
+        if ($generate && is_null($rootID)) {
+            // The lineage record is not present, so we will generate records for it.
+            self::generateLineage($qID);
+            $parentID = self::getLineageParent($qID, false);
+        }
+
         return $parentID;
     }
 
     /**
      * Get all parent lineage for a question including siblings
-     * @param int $qID question ID
      *
+     * @param int $qID question ID
+     * @param bool $generate Generate the lineage if it does not exist (optional, default: true)
      * @return array
      */
-    public static function getLineage(int $qID)
+    public static function getLineage(int $qID, bool $generate = true)
     {
         $configObject = Config::get_instance();
 
@@ -846,6 +921,14 @@ SQL;
             $questionList[$questionID] = $parentID;
         }
         $lineagesql->free_result();
+        $lineagesql->close();
+
+        if ($generate and is_null($questionID) and empty($questionList)) {
+            // We got no records for the lineage, this should not happen, so we should generate some.
+            self::generateLineage($qID);
+            $questionList = self::getLineage($qID, false);
+        }
+
         return $questionList;
     }
 

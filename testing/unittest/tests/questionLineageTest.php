@@ -249,7 +249,56 @@ class QuestionLineageTest extends unittestdatabase
      */
     public function testLineage()
     {
-        $this->assertEquals(QuestionUtils::getLineage($this->questions['primary']['id']), $this->lineage);
+        $this->assertEquals($this->lineage, QuestionUtils::getLineage($this->questions['primary']['id']));
+    }
+
+    /**
+     * Test that when lineage is missing it will be built up.
+     *
+     * Some question lineage did not get added during the upgrade, we have made changes to
+     * ensure that it will build up over time. This test shows how it should work.
+     *
+     * @group questionlineage
+     */
+    public function testLineageBrokenHistory()
+    {
+        // Delete the lineage of some questions.
+        $db = $this->get_db_connection();
+        $db->query('DELETE FROM questions_lineage WHERE rootID = ' . $this->questions['grandparent']['id']);
+
+        // Initially just the direct ancestors will be found.
+        $initialiniage = [
+            $this->questions['grandparent']['id'] => null,
+            $this->questions['parent']['id'] => $this->questions['grandparent']['id'],
+            $this->questions['primary']['id'] => $this->questions['parent']['id'],
+        ];
+        $this->assertEquals($initialiniage, QuestionUtils::getLineage($this->questions['primary']['id']));
+
+        // More records should get added when an ancestor is called.
+        $descendantadded = [
+            $this->questions['grandparent']['id'] => null,
+            $this->questions['parent']['id'] => $this->questions['grandparent']['id'],
+            $this->questions['primary']['id'] => $this->questions['parent']['id'],
+            $this->questions['child1']['id'] => $this->questions['primary']['id'],
+            $this->questions['grandchild1']['id'] => $this->questions['child1']['id'],
+        ];
+        $this->assertEquals($descendantadded, QuestionUtils::getLineage($this->questions['grandchild1']['id']));
+
+        // Adding in a sibling should also add more records.
+        $siblingadded = [
+            $this->questions['grandparent']['id'] => null,
+            $this->questions['parent']['id'] => $this->questions['grandparent']['id'],
+            $this->questions['primary']['id'] => $this->questions['parent']['id'],
+            $this->questions['sibling']['id'] => $this->questions['parent']['id'],
+            $this->questions['child1']['id'] => $this->questions['primary']['id'],
+            $this->questions['grandchild1']['id'] => $this->questions['child1']['id'],
+        ];
+        $this->assertEquals($siblingadded, QuestionUtils::getLineage($this->questions['sibling']['id']));
+
+        // Now if we call all the leaves and then call the history for the primary we should get it all.
+        QuestionUtils::getLineage($this->questions['child2']['id']);
+        QuestionUtils::getLineage($this->questions['parent_sibling']['id']);
+        $this->assertEquals($this->lineage, QuestionUtils::getLineage($this->questions['primary']['id']));
     }
 
     /**
@@ -259,13 +308,28 @@ class QuestionLineageTest extends unittestdatabase
      */
     public function testGetLineageRoot()
     {
-        $this->assertEquals(QuestionUtils::getLineageRoot($this->questions['grandparent']['id']), $this->questions['grandparent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageRoot($this->questions['parent']['id']), $this->questions['grandparent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageRoot($this->questions['primary']['id']), $this->questions['grandparent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageRoot($this->questions['child1']['id']), $this->questions['grandparent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageRoot($this->questions['child2']['id']), $this->questions['grandparent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageRoot($this->questions['grandchild1']['id']), $this->questions['grandparent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageRoot($this->questions['unrelated_child']['id']), $this->questions['unrelated']['id']);
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['grandparent']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['child1']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['child2']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['grandchild1']['id']));
+        $this->assertEquals($this->questions['unrelated']['id'], QuestionUtils::getLineageRoot($this->questions['unrelated_child']['id']));
+    }
+
+    /**
+     * Tests that lineage will be generated if it is not present.
+     *
+     * @group questionlineage
+     */
+    public function testGetLinageRootBrokenHistory()
+    {
+        // Delete the lineage of some questions.
+        $db = $this->get_db_connection();
+        $db->query('DELETE FROM questions_lineage WHERE rootID = ' . $this->questions['grandparent']['id']);
+
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['child2']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['child1']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['parent']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageRoot($this->questions['primary']['id']));
     }
 
     /**
@@ -275,13 +339,30 @@ class QuestionLineageTest extends unittestdatabase
      */
     public function testGetLineageParent()
     {
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['grandparent']['id']), null);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['parent']['id']), $this->questions['grandparent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['primary']['id']), $this->questions['parent']['id']);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['child1']['id']), $this->questions['primary']['id']);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['child2']['id']), $this->questions['primary']['id']);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['grandchild1']['id']), $this->questions['child1']['id']);
-        $this->assertEquals(QuestionUtils::getLineageParent($this->questions['unrelated_child']['id']), $this->questions['unrelated']['id']);
+        $this->assertEquals(null, QuestionUtils::getLineageParent($this->questions['grandparent']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageParent($this->questions['parent']['id']));
+        $this->assertEquals($this->questions['parent']['id'], QuestionUtils::getLineageParent($this->questions['primary']['id']));
+        $this->assertEquals($this->questions['primary']['id'], QuestionUtils::getLineageParent($this->questions['child1']['id']));
+        $this->assertEquals($this->questions['primary']['id'], QuestionUtils::getLineageParent($this->questions['child2']['id']));
+        $this->assertEquals($this->questions['child1']['id'], QuestionUtils::getLineageParent($this->questions['grandchild1']['id']));
+        $this->assertEquals($this->questions['unrelated']['id'], QuestionUtils::getLineageParent($this->questions['unrelated_child']['id']));
+    }
+
+    /**
+     * Test that we can correctly get the direct parents of a question
+     *
+     * @group questionlineage
+     */
+    public function testGetLineageParentBrokenHistory()
+    {
+        // Delete the lineage of some questions.
+        $db = $this->get_db_connection();
+        $db->query('DELETE FROM questions_lineage WHERE rootID = ' . $this->questions['grandparent']['id']);
+
+        $this->assertEquals($this->questions['primary']['id'], QuestionUtils::getLineageParent($this->questions['child1']['id']));
+        $this->assertEquals($this->questions['grandparent']['id'], QuestionUtils::getLineageParent($this->questions['parent']['id']));
+        $this->assertEquals($this->questions['parent']['id'], QuestionUtils::getLineageParent($this->questions['primary']['id']));
+        $this->assertEquals($this->questions['primary']['id'], QuestionUtils::getLineageParent($this->questions['child2']['id']));
     }
 
     /**
@@ -293,7 +374,7 @@ class QuestionLineageTest extends unittestdatabase
     {
         $string = ['history_exceeded_parent_limit' => 'Exceeded parent limit of %d when tracing lineage'];
         $parentLineage = QuestionUtils::filterParentLineage($this->questions['primary']['id'], $this->lineage, $string);
-        $this->assertEquals($parentLineage, $this->primaryParents);
+        $this->assertEquals($this->primaryParents, $parentLineage);
     }
 
     /**
@@ -319,12 +400,12 @@ class QuestionLineageTest extends unittestdatabase
         $fullHistory = \QuestionUtils::getFullHistory($this->questions['primary']['id'], 200, $string);
         $this->assertEquals(count($this->primaryExpectedHistory), count($fullHistory));
         for ($i = 0; $i < count($fullHistory); $i++) {
-            $this->assertEquals($fullHistory[$i]['qID'], $this->primaryExpectedHistory[$i]['qID']);
-            $this->assertEquals($fullHistory[$i]['action'], $this->primaryExpectedHistory[$i]['action']);
-            $this->assertEquals($fullHistory[$i]['old'], $this->primaryExpectedHistory[$i]['old']);
-            $this->assertEquals($fullHistory[$i]['new'], $this->primaryExpectedHistory[$i]['new']);
+            $this->assertEquals($this->primaryExpectedHistory[$i]['qID'], $fullHistory[$i]['qID']);
+            $this->assertEquals($this->primaryExpectedHistory[$i]['action'], $fullHistory[$i]['action']);
+            $this->assertEquals($this->primaryExpectedHistory[$i]['old'], $fullHistory[$i]['old']);
+            $this->assertEquals($this->primaryExpectedHistory[$i]['new'], $fullHistory[$i]['new']);
             if (isset($this->primaryExpectedHistory[$i]['section'])) {
-                $this->assertEquals($fullHistory[$i]['section'], $this->primaryExpectedHistory[$i]['section']);
+                $this->assertEquals($this->primaryExpectedHistory[$i]['section'], $fullHistory[$i]['section']);
             }
         }
     }
