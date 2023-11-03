@@ -120,6 +120,7 @@ trait pages
      * | Calendar         | Calendar week                                  | Calendar Year           |
      * | Configuration    |                                                |                         |
      * | Properties       |                                                | The name of a paper     |
+     * | Invigilation     | empty or remote                                |                         |
      *
      * @param string $page
      * @param string $data
@@ -147,6 +148,9 @@ trait pages
                 break;
             case 'Properties':
                 $this->visitProperties($data);
+                break;
+            case 'Invigilation':
+                $this->visitInvigilation($section);
                 break;
             default:
                 // Unsupported page type.
@@ -225,6 +229,25 @@ trait pages
             throw new \Exception('Invalid paper title');
         }
         $this->visit(Url::paperDetails($paperid));
+    }
+
+    /**
+     * Loads the invigilation page for a paper.
+     *
+     * @param string $section flags if we want to view remote summative exams or not.
+     * @return void
+     */
+    protected function visitInvigilation(string $section)
+    {
+        switch ($section) {
+            case 'remote':
+                $remote = true;
+                break;
+            default:
+                $remote = false;
+                break;
+        }
+        $this->visit(Url::invigilation($remote));
     }
 
     /**

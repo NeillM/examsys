@@ -88,6 +88,7 @@ class selectors
         'clock_anomaly' => 'clock_anomaly',
         'configarea' => 'configarea',
         'text' => 'text',
+        'invigilation_student' => 'invigilation_student',
     );
 
     /**
@@ -198,6 +199,9 @@ XPATH
 XPATH
         ,'text' => <<<XPATH
 //body[contains(normalize-space(.) , %locator%)]
+XPATH
+        ,'invigilation_student' => <<<XPATH
+//table[contains(@class, 'invigilator_cohort')]//tr[contains(@data-username , %locator%)]
 XPATH
     );
 

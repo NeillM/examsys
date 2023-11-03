@@ -41,4 +41,5 @@ trait include_frontend
     use ClassTotals;
     use Statistics;
     use Anomaly;
+    use Invigilation;
 }
