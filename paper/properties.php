@@ -689,12 +689,10 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo '<tr><td colspan="4" class="headbar">&nbsp;' . $string['marking'] . "</td></tr>\n";
     }
 
-    $gradebook = new gradebook($mysqli);
-    $graded = $gradebook->paper_graded($paperID);
     $published = '';
-    if ($graded) {
-        $sum_disabled = 'disabled="disabled"';
-        $published = 'disabled="disabled"';
+    if ($properties->isGraded()) {
+        $sum_disabled = ' disabled';
+        $published = ' disabled';
         echo '<tr><td style="padding-right:0"><div class="yellowwarn"><img src="../artwork/paper_locked_padlock.png" width="32" height="32" alt="Published" /></div></td><td colspan="3" style="vertical-align:middle; padding-left:0"><div class="yellowwarn">' . $string['paperpublishedwarning'] . "</div></td></tr>\n";
     }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";

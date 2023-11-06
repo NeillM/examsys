@@ -97,6 +97,9 @@ class PaperProperties
     private $enhancedcalc_questions;
     private $_date_timezone = null;
 
+    /** @var bool Stores if the paper is graded. */
+    protected $graded;
+
     /**
      * A static cache of LogLabEndTime objects indexed by the id of the lab.
      *
@@ -447,8 +450,7 @@ class PaperProperties
     {
         $configObject = Config::get_instance();
         $userObject   = UserObject::get_instance();
-        $gradebook = new gradebook($this->db);
-        $graded = $gradebook->paper_graded($this->property_id);
+        $graded = $this->isGraded();
         // Set common updates parameters.
         $params = array();
         $params['display_correct_answer'] = array('s', $this->display_correct_answer);
@@ -3522,5 +3524,21 @@ class PaperProperties
         }
 
         return true;
+    }
+
+    /**
+     * Check is the paper has had its grades finalised.
+     *
+     * @return bool
+     */
+    public function isGraded(): bool
+    {
+        if (!isset($this->graded)) {
+            // Cache if the paper is graded, so we do not need to go back to the database multiple times.
+            $gradebook = new gradebook($this->db);
+            $this->graded = $gradebook->paper_graded($this->property_id);
+        }
+
+        return $this->graded;
     }
 }
