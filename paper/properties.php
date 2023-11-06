@@ -401,9 +401,7 @@ if (!is_null($properties->get_end_date())) {
     $end_date = '';
 }
 
-if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
-    $sum_disabled = ' disabled';
-} elseif ($userObject->has_role('Admin') and $locked) {
+if (!$properties->canEditSecurity()) {
     $sum_disabled = ' disabled';
 } else {
     $sum_disabled = '';

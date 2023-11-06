@@ -190,7 +190,7 @@ if (!$title_unique) {
 
     $timezone = param::optional('timezone', $properties->get_timezone(), param::TEXT, param::FETCH_POST);
 
-    if (($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == '2' and $userObject->has_role(array('SysAdmin', 'Admin'))) or !$configObject->get_setting('core', 'cfg_summative_mgmt') or $papertype != '2') {
+    if ($properties->canEditSecurity()) {
         // We should only attempt to fetch date values from the form if a user can edit them.
         $fyear = check_var('fyear', 'POST', true, false, true);
         $fmonth = check_var('fmonth', 'POST', true, false, true);
