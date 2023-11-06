@@ -31,10 +31,10 @@ use PHPUnit\Framework\TestCase;
  */
 abstract class UnitTest extends TestCase
 {
-    /** @var object $default_config config object used during test. */
+    /** @var RogoConfig $default_config config object used during test. */
     public $config;
 
-    /** @var object $default_config config object used to reset test. */
+    /** @var RogoConfig $default_config config object used to reset test. */
     public $default_config;
 
     /** The name of the ExamSys data directory in the virtual file system. */
