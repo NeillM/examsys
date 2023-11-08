@@ -153,6 +153,7 @@ class Invigilation
         if (isset($toilet_break_array[$tmp_userID])) {
             $data['restbreak'] = count($toilet_break_array[$tmp_userID]);
         }
+        $data['username'] = $student_object['username'];
         $data['title'] = $title;
         $data['forname'] = $first_names;
         $data['surname'] = $surname;
@@ -391,7 +392,7 @@ class Invigilation
 
         // Merge in all students who have submitted records for this paper
         $sql = 'SELECT
-            DISTINCT sn.extra_time, sn.medical, sn.breaks, lm.userID, u.surname, u.first_names, u.title
+            DISTINCT sn.extra_time, sn.medical, sn.breaks, lm.userID, u.surname, u.first_names, u.title, u.username
             FROM log_metadata lm
             INNER JOIN users u ON lm.userID = u.id
             LEFT JOIN special_needs sn ON u.id = sn.userID
@@ -401,12 +402,13 @@ class Invigilation
         $results->bind_param('i', $paperID);
         $results->execute();
         $results->store_result();
-        $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title);
+        $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title, $username);
         while ($results->fetch()) {
             if ($first_names == 'Temporary Account') {
                 $username = strtolower($surname);
 
                 $student_object[$userID]['user_ID'] = $userID;
+                $student_object[$userID]['username'] = $username;
                 $student_object[$userID]['surname'] = $guest_accounts[$username]['surname'];
                 $student_object[$userID]['first_names'] = $guest_accounts[$username]['first_names'];
                 $student_object[$userID]['title'] = $guest_accounts[$username]['title'];
@@ -415,6 +417,7 @@ class Invigilation
                 $student_object[$userID]['breaks'] = '';
             } else {
                 $student_object[$userID]['user_ID'] = $userID;
+                $student_object[$userID]['username'] = $username;
                 $student_object[$userID]['surname'] = $surname;
                 $student_object[$userID]['first_names'] = $first_names;
                 $student_object[$userID]['title'] = $title;

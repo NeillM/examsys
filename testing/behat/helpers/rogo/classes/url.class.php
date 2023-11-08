@@ -80,6 +80,16 @@ class Url
     }
 
     /**
+     * Generates the URL to the invigilation page.
+     *
+     * @return string
+     */
+    public static function invigilation(bool $show_remotes = false): string
+    {
+        return '/invigilator/index.php?remote=' . $show_remotes;
+    }
+
+    /**
      * Generates the URL to a paper properties page.
      *
      * @param int $paperid The id of the paper.

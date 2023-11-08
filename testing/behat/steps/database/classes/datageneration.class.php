@@ -63,7 +63,7 @@ trait datageneration
         'config' => array('config', 'core', 'change_setting', null),
         'campuses' => array('labs', 'core', 'create_campus', null),
         'labs' => array('labs', 'core', 'create_lab', null),
-        'exam pcs' => array('labs', 'core', 'create_exam_pc', null),
+        'exam pcs' => array('labs', 'core', 'create_exam_pc', 'preProcessPC'),
         'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
         'module enrolment' => array('modules', 'core', 'create_enrolment', 'preProcessmoduleEnrolment'),
         'paper note' => array('users', 'core', 'addPaperNote', 'preProcessPaperNote'),
@@ -755,6 +755,21 @@ trait datageneration
             }
             $row['settings']  = json_encode($settings);
         }
+
+        // Convert Labs into database ids.
+        $helper = new \LabFactory(state::get_db());
+        if (isset($row['labs'])) {
+            $labs = explode(',', $row['labs']);
+            $labids = [];
+            foreach ($labs as $lab) {
+                $labid = $helper->get_lab_id($lab);
+                if ($labid !== false) {
+                    $labids[] = $labid;
+                }
+            }
+            $row['labs'] = implode(',', $labids);
+        }
+
         return $row;
     }
 
@@ -857,6 +872,51 @@ trait datageneration
         }
         unset($row['user']);
         unset($row['paper']);
+        return $row;
+    }
+
+    /**
+     * Ensure that we allow can allow behat to be treated as though it is in a lab.
+     *
+     * If a lab is defined as behat we should translate it into the address for behat.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessPC(array $row): array
+    {
+        if (!isset($row['address']) || $row['address'] !== 'behat') {
+            // We should do nothing when we are not trying to add a behat PC entry.
+            return $row;
+        }
+
+        // We will assume that there are two setups for behat:
+        // 1. Running on a dev PC directly, i.e. using localhost for access.
+        // 2. Using examsys-docker
+
+        $hostname = 'localhost';
+        $address = '127.0.0.1';
+
+        $docker_hostname = 'selenium';
+        $docker_ip = gethostbyname($docker_hostname);
+
+        if ($docker_ip !== $docker_hostname) {
+            // We seem to be running on examsys-docker.
+            $address = $docker_ip;
+            // We want the fully qualified hostname.
+            $hostname = gethostbyaddr($docker_ip);
+        }
+
+        // We need to handle ExamSys being configured for both IP address labs and hostname labs.
+        $config = \Config::get_instance();
+
+        if ($config->get_setting('core', 'system_hostname_lookup')) {
+            $address = $hostname;
+        }
+
+        $row['address'] = $address;
+        $row['hostname'] = $hostname;
+
         return $row;
     }
 

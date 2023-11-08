@@ -967,7 +967,7 @@ class module
     {
         $configObject = Config::get_instance();
         $sql = 'SELECT
-        DISTINCT extra_time, medical, breaks, modules_student.userID, surname, first_names, title
+        DISTINCT extra_time, medical, breaks, modules_student.userID, surname, first_names, title, username
         FROM modules_student, users
         LEFT JOIN special_needs ON users.id = special_needs.userID
         WHERE idMod IN ( ' . $modules . ')
@@ -978,11 +978,12 @@ class module
         $results->bind_param('s', $session);
         $results->execute();
         $results->store_result();
-        $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title);
+        $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title, $username);
         $student_object = array();
 
         while ($results->fetch()) {
             $student_object[$userID]['user_ID'] = $userID;
+            $student_object[$userID]['username'] = $username;
             $student_object[$userID]['surname'] = $surname;
             $student_object[$userID]['first_names'] = $first_names;
             $student_object[$userID]['title'] = $title;

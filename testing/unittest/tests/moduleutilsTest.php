@@ -262,6 +262,7 @@ class moduleutilstest extends unittestdatabase
         $expected[$this->student['id']]['extra_time_percentage'] = $et['extratime'];
         $expected[$this->student['id']]['medical'] = null;
         $expected[$this->student['id']]['breaks'] = 'yes';
+        $expected[$this->student['id']]['username'] = $this->student['username'];
         $expected[$this->user]['user_ID'] = $this->user;
         $expected[$this->user]['surname'] = 'User2';
         $expected[$this->user]['first_names'] = 'A';
@@ -269,6 +270,7 @@ class moduleutilstest extends unittestdatabase
         $expected[$this->user]['extra_time_percentage'] = null;
         $expected[$this->user]['medical'] = null;
         $expected[$this->user]['breaks'] = null;
+        $expected[$this->user]['username'] = 'test2';
         $this->assertEquals($expected, $actual);
     }
 
