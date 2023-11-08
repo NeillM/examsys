@@ -97,6 +97,9 @@ class PaperProperties
     private $enhancedcalc_questions;
     private $_date_timezone = null;
 
+    /** @var bool Stores if the paper is graded. */
+    protected $graded;
+
     /**
      * A static cache of LogLabEndTime objects indexed by the id of the lab.
      *
@@ -447,8 +450,7 @@ class PaperProperties
     {
         $configObject = Config::get_instance();
         $userObject   = UserObject::get_instance();
-        $gradebook = new gradebook($this->db);
-        $graded = $gradebook->paper_graded($this->property_id);
+        $graded = $this->isGraded();
         // Set common updates parameters.
         $params = array();
         $params['display_correct_answer'] = array('s', $this->display_correct_answer);
@@ -3480,5 +3482,63 @@ class PaperProperties
             . '; --paper-highlightbgcolour: ' . $highlight_bgcolour
             . '; --paper-fontsize: ' . $textsize . '%'
             . '; --paper-font: ' . $font . ',sans-sarif;}</style>';
+    }
+
+    /**
+     * Checks if the current user can edit the security settings of the paper.
+     *
+     * When summative management is enabled the Security settings on papers can only be edited by
+     * 1. SysAdmins
+     * 2. Admins, but only before the paper has been locked.
+     *
+     * @return bool
+     */
+    public function canEditSecurity(): bool
+    {
+        if ($this->get_paper_type() != assessment::TYPE_SUMMATIVE) {
+            // Security can be edited by all users who can access that page on non-summative papers.
+            return true;
+        }
+
+        $user = \UserObject::get_instance();
+
+        if ($user->has_role(['SysAdmin'])) {
+            // A SysAdmin can always edit the Security settings.
+            return true;
+        }
+
+        if ($this->get_summative_lock()) {
+            // User's can no longer change the security settings when a paper is locked.
+            return false;
+        }
+
+        if ($user->has_role(['Admin'])) {
+            // Admins can edit Security of summative papers when they are not locked.
+            return true;
+        }
+
+        if (\Config::get_instance()->get_setting('core', 'cfg_summative_mgmt')) {
+            // General users who can access the properties page cannot edit security settings
+            // when summative management is enabled.
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check is the paper has had its grades finalised.
+     *
+     * @return bool
+     */
+    public function isGraded(): bool
+    {
+        if (!isset($this->graded)) {
+            // Cache if the paper is graded, so we do not need to go back to the database multiple times.
+            $gradebook = new gradebook($this->db);
+            $this->graded = $gradebook->paper_graded($this->property_id);
+        }
+
+        return $this->graded;
     }
 }

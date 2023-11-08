@@ -852,4 +852,98 @@ class paperutilstest extends unittestdatabase
         );
         $this->assertEquals($expected, PaperUtils::get_paper_properties($this->pid3['id'], $this->db));
     }
+
+    /**
+     * Tests that we get the correct response when testing if we can edit security information.
+     *
+     * @param string $role The name of the user's role.
+     * @param int $papertype The paper type from one of the assessment class constants.
+     * @param string $start The start time of the paper.
+     * @param bool $management If summative management should be enabled.
+     * @param bool $expected
+     *
+     * @dataProvider dataCanEditSecurity
+     *
+     * @group assessment
+     * @group wip
+     */
+    public function testCanEditSecurity(string $role, int $papertype, string $start, bool $management, bool $expected): void
+    {
+        $config = $this->config;
+        $config->set_setting('cfg_summative_mgmt', $management, $config->get_setting_type('core', 'cfg_summative_mgmt'));
+
+        $userdata = [
+            'username' => 'testuser',
+            'roles' => $role,
+        ];
+        $user = $this->get_datagenerator('users')->create_user($userdata);
+
+        $paper_data = [
+            'papertitle' => 'Can edit security test',
+            'startdate' => $start,
+            'enddate' => '5 hours',
+            'created' => '12 hours ago',
+            'duration' => 90,
+            'paperowner' => 'staff1',
+            'papertype' => $papertype,
+            'modulename' => ['Training Module'],
+            'labs' => $this->labid1
+        ];
+        $paper = $this->get_datagenerator('papers')->create_paper($paper_data);
+
+        $this->set_active_user($user['id']);
+
+        $properties = PaperProperties::get_paper_properties_by_id($paper['id'], $this->db, []);
+        $this->assertEquals($expected, $properties->canEditSecurity());
+    }
+
+    /**
+     * @return array
+     */
+    public function dataCanEditSecurity(): array
+    {
+        return [
+            // In this part of the test the status of summative management should make no difference to the result.
+            'SysAdmin - Formative' => ['SysAdmin', assessment::TYPE_FORMATIVE, '1 hour ago', true, true],
+            'Admin - Formative' => ['Admin', assessment::TYPE_FORMATIVE, '1 hour ago', true, true],
+            'Staff - Formative' => ['Staff', assessment::TYPE_FORMATIVE, '1 hour ago', true, true],
+
+            'SysAdmin - Progress' => ['SysAdmin', assessment::TYPE_PROGRESS, '1 hour ago', false, true],
+            'Admin - Progress' => ['Admin', assessment::TYPE_PROGRESS, '1 hour ago', false, true],
+            'Staff - Progress' => ['Staff', assessment::TYPE_PROGRESS, '1 hour ago', false, true],
+
+            'SysAdmin - OSCE' => ['SysAdmin', assessment::TYPE_OSCE, '1 hour ago', true, true],
+            'Admin - OSCE' => ['Admin', assessment::TYPE_OSCE, '1 hour ago', true, true],
+            'Staff - OSCE' => ['Staff', assessment::TYPE_OSCE, '1 hour ago', true, true],
+
+            'SysAdmin - Survey' => ['SysAdmin', assessment::TYPE_SURVEY, '1 hour ago', false, true],
+            'Admin - Survey' => ['Admin', assessment::TYPE_SURVEY, '1 hour ago', false, true],
+            'Staff - Survey' => ['Staff', assessment::TYPE_SURVEY, '1 hour ago', false, true],
+
+            'SysAdmin - Peer review' => ['SysAdmin', assessment::TYPE_PEERREVIEW, '1 hour ago', true, true],
+            'Admin - Peer review' => ['Admin', assessment::TYPE_PEERREVIEW, '1 hour ago', true, true],
+            'Staff - Peer review' => ['Staff', assessment::TYPE_PEERREVIEW, '1 hour ago', true, true],
+
+            'SysAdmin - Offline' => ['SysAdmin', assessment::TYPE_OFFLINE, '1 hour ago', false, true],
+            'Admin - Offline' => ['Admin', assessment::TYPE_OFFLINE, '1 hour ago', false, true],
+            'Staff - Offline' => ['Staff', assessment::TYPE_OFFLINE, '1 hour ago', false, true],
+
+            // Summative management should now start to have an affect, these are also the types of paper that can lock..
+            'SysAdmin - Summative' => ['SysAdmin', assessment::TYPE_SUMMATIVE, '1 hour', false, true],
+            'Admin - Summative' => ['Admin', assessment::TYPE_SUMMATIVE, '1 hour', false, true],
+            'Staff - Summative' => ['Staff', assessment::TYPE_SUMMATIVE, '1 hour', false, true],
+
+            'SysAdmin - locked Summative' => ['SysAdmin', assessment::TYPE_SUMMATIVE, '1 hour ago', false, true],
+            'Admin - locked Summative' => ['Admin', assessment::TYPE_SUMMATIVE, '1 hour ago', false, false],
+            'Staff - locked Summative' => ['Staff', assessment::TYPE_SUMMATIVE, '1 hour ago', false, false],
+
+            'SysAdmin - Summative with management' => ['SysAdmin', assessment::TYPE_SUMMATIVE, '1 hour', true, true],
+            'Admin - Summative with management' => ['Admin', assessment::TYPE_SUMMATIVE, '1 hour', true, true],
+            'Staff - Summative with management' => ['Staff', assessment::TYPE_SUMMATIVE, '1 hour', true, false],
+
+            'SysAdmin - locked Summative with management' => ['SysAdmin', assessment::TYPE_SUMMATIVE, '1 hour ago', true, true],
+            'Admin - locked Summative with management' => ['Admin', assessment::TYPE_SUMMATIVE, '1 hour ago', true, false],
+            'Staff - locked Summative with management' => ['Staff', assessment::TYPE_SUMMATIVE, '1 hour ago', true, false],
+        ];
+    }
 }

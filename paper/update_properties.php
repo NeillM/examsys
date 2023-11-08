@@ -190,58 +190,60 @@ if (!$title_unique) {
 
     $timezone = param::optional('timezone', $properties->get_timezone(), param::TEXT, param::FETCH_POST);
 
-    if (($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == '2' and $userObject->has_role(array('SysAdmin', 'Admin'))) or !$configObject->get_setting('core', 'cfg_summative_mgmt') or $papertype != '2') {
-        // We should only attempt to fetch date values from the form if a user can edit them.
-        $fyear = check_var('fyear', 'POST', true, false, true);
-        $fmonth = check_var('fmonth', 'POST', true, false, true);
-        $fday = check_var('fday', 'POST', true, false, true);
-        $fhour = check_var('fhour', 'POST', true, false, true);
-        $fminute = check_var('fminute', 'POST', true, false, true);
+    if ($properties->canEditSecurity()) {
+        if (!$properties->isGraded()) {
+            // We should only attempt to fetch date values from the form if a user can edit them.
+            $fyear = check_var('fyear', 'POST', true, false, true);
+            $fmonth = check_var('fmonth', 'POST', true, false, true);
+            $fday = check_var('fday', 'POST', true, false, true);
+            $fhour = check_var('fhour', 'POST', true, false, true);
+            $fminute = check_var('fminute', 'POST', true, false, true);
 
-        $tyear = check_var('tyear', 'POST', true, false, true);
-        $tmonth = check_var('tmonth', 'POST', true, false, true);
-        $tday = check_var('tday', 'POST', true, false, true);
-        $thour = check_var('thour', 'POST', true, false, true);
-        $tminute = check_var('tminute', 'POST', true, false, true);
+            $tyear = check_var('tyear', 'POST', true, false, true);
+            $tmonth = check_var('tmonth', 'POST', true, false, true);
+            $tday = check_var('tday', 'POST', true, false, true);
+            $thour = check_var('thour', 'POST', true, false, true);
+            $tminute = check_var('tminute', 'POST', true, false, true);
 
-        if (isset($fyear) and isset($fmonth) and isset($fday) and isset($fhour) and isset($fminute)) {
-            $null_start_date = false;
-            if ($fyear == '' and $fmonth == '' and $fday == '' and $fhour == '' and $fminute == '') {
-                $null_start_date = true;
-                $tmp_start_date = null;
-            } else {
-                $fday = fix_leapyear_day($fyear, $fmonth, $fday);
-                $start_date = date_utils::getDateTimeFromSelection($fyear, $fmonth, $fday, $fhour, $fminute, $timezone);
-                $properties->set_start_date($start_date->getTimestamp());
-                $properties->setRogoFormatStartDate();
+            if (isset($fyear) and isset($fmonth) and isset($fday) and isset($fhour) and isset($fminute)) {
+                $null_start_date = false;
+                if ($fyear == '' and $fmonth == '' and $fday == '' and $fhour == '' and $fminute == '') {
+                    $null_start_date = true;
+                    $tmp_start_date = null;
+                } else {
+                    $fday = fix_leapyear_day($fyear, $fmonth, $fday);
+                    $start_date = date_utils::getDateTimeFromSelection($fyear, $fmonth, $fday, $fhour, $fminute, $timezone);
+                    $properties->set_start_date($start_date->getTimestamp());
+                    $properties->setRogoFormatStartDate();
+                }
             }
-        }
 
-        if (isset($tyear) and isset($tmonth) and isset($tday) and isset($thour) and isset($tminute)) {
-            $null_end_date = false;
-            if ($tyear == '' and $tmonth == '' and $tday == '' and $thour == '' and $tminute == '') {
-                $null_end_date = true;
-                $tmp_end_date = null;
-            } else {
-                $tday = fix_leapyear_day($tyear, $tmonth, $tday);
-                $end_date = date_utils::getDateTimeFromSelection($tyear, $tmonth, $tday, $thour, $tminute, $timezone);
-                $properties->set_end_date($end_date->getTimestamp());
-                $properties->setRogoFormatEndDate();
+            if (isset($tyear) and isset($tmonth) and isset($tday) and isset($thour) and isset($tminute)) {
+                $null_end_date = false;
+                if ($tyear == '' and $tmonth == '' and $tday == '' and $thour == '' and $tminute == '') {
+                    $null_end_date = true;
+                    $tmp_end_date = null;
+                } else {
+                    $tday = fix_leapyear_day($tyear, $tmonth, $tday);
+                    $end_date = date_utils::getDateTimeFromSelection($tyear, $tmonth, $tday, $thour, $tminute, $timezone);
+                    $properties->set_end_date($end_date->getTimestamp());
+                    $properties->setRogoFormatEndDate();
+                }
             }
-        }
-        $properties->set_timezone($timezone);
+            $properties->set_timezone($timezone);
 
-        if (isset($_POST['calendar_year'])) {
-            $calendar_year = ($_POST['calendar_year'] == '') ? null : $_POST['calendar_year'];
-            $properties->set_calendar_year($calendar_year);
-        }
+            if (isset($_POST['calendar_year'])) {
+                $calendar_year = ($_POST['calendar_year'] == '') ? null : $_POST['calendar_year'];
+                $properties->set_calendar_year($calendar_year);
+            }
 
-        // Set exam duration (in minutes).
-        $exam_duration = $exam_duration_hours * 60;
-        $exam_duration += $exam_duration_mins;
+            // Set exam duration (in minutes).
+            $exam_duration = $exam_duration_hours * 60;
+            $exam_duration += $exam_duration_mins;
 
-        if (!$locked) {
-            $properties->set_exam_duration($exam_duration);
+            if (!$locked) {
+                $properties->set_exam_duration($exam_duration);
+            }
         }
 
         $lab_string = '';
@@ -327,24 +329,25 @@ if (!$title_unique) {
         $properties->set_rubric(clearMSOtags($texteditorplugin->prepare_text_for_save($_POST['rubric_text'])));
     }
 
-    if (!isset($_POST['marking']) and $papertype == 4) {
-        // Do nothing, the marking method is locked.
-    } elseif (!isset($_POST['marking']) or $_POST['marking'] == '') {
-        $properties->set_marking(MARK_NO_ADJUSTMENT);
-    } elseif ($_POST['marking'] == MARK_STD_SET) {
-        $properties->set_marking($_POST['std_set']);
-    } else {
-        $properties->set_marking($_POST['marking']);
-    }
+    if (!$properties->isGraded()) {
+        if (!isset($_POST['marking']) and $papertype == 4) {
+            // Do nothing, the marking method is locked.
+        } elseif (!isset($_POST['marking']) or $_POST['marking'] == '') {
+            $properties->set_marking(MARK_NO_ADJUSTMENT);
+        } elseif ($_POST['marking'] == MARK_STD_SET) {
+            $properties->set_marking($_POST['std_set']);
+        } else {
+            $properties->set_marking($_POST['marking']);
+        }
+        $tmp_pass_mark = (isset($_POST['pass_mark'])) ? $_POST['pass_mark'] : 0;
+        if ($tmp_pass_mark == '') {
+            $tmp_pass_mark = 40;
+        }
+        $properties->set_pass_mark($tmp_pass_mark);
 
-    $tmp_pass_mark = (isset($_POST['pass_mark'])) ? $_POST['pass_mark'] : 0;
-    if ($tmp_pass_mark == '') {
-        $tmp_pass_mark = 40;
+        $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
+        $properties->set_distinction_mark($tmp_distinction_mark);
     }
-    $properties->set_pass_mark($tmp_pass_mark);
-
-    $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
-    $properties->set_distinction_mark($tmp_distinction_mark);
 
     if ($properties->get_summative_lock() === false or $userObject->has_role('SysAdmin')) {
         $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;

@@ -50,7 +50,7 @@ abstract class unittestdatabase extends TestCase
     public const USEROBJECT_IMPERSONATE = 3;
 
     /**
-     * @var object $default_config config object used during test.
+     * @var RogoConfig $default_config config object used during test.
      */
     public $config;
 
