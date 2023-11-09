@@ -116,6 +116,7 @@ $headerdata = array(
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
     ),
+    'scripts' => [],
 );
 $lang['title'] = $string['examscript'];
 $headerdata['mathjax'] = false;
