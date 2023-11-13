@@ -1423,11 +1423,11 @@ class EnhancedCalc extends Question implements questionInterface
 
     /**
      * Return the 'distance' of the user's answer from the correct answer as a percentage of the correct answer
-     * @return float Distance from the correct answer
+     * @return float|bool Distance from the correct answer or false if a distance cannot be calculated.
      */
     public function get_answer_distance()
     {
-        if (!isset($this->useranswer['cans_dist']) and isset($this->useranswer['cans'])) {
+        if (!isset($this->useranswer['cans_dist']) and is_numeric($this->useranswer['cans'] ?? null)) {
             if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
                 $this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
             } else {

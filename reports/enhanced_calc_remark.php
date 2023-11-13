@@ -193,7 +193,7 @@ $mark_types = array('correct', 'partial', 'incorrect');
 $log_answers2 = array();
 foreach ($log_answers as $id => $ans) {
     $dist = $ans['distance'];
-    $log_answers2[$dist][] = $id;
+    $log_answers2["$dist"][] = $id;
 }
 krsort($log_answers2, SORT_NUMERIC);
 
