@@ -333,11 +333,11 @@ switch ($_GET['method']) {
               echo '<tr><td colspan="2" class="theme">' . $theme . '</td></tr>';
           }
 
-          if (trim($notes) != '' and $q_type != 'likert') {
+          if (trim($notes ?? '') != '' and $q_type != 'likert') {
               echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $notes . '</td></tr>';
           }
 
-          if (trim($scenario) != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'enhancedcalc') {
+          if (trim($scenario ?? '') != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert' and $q_type != 'enhancedcalc') {
               echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td valign="top">' . $scenario . '<br /><br />';
               $li_set = 1;
           }
