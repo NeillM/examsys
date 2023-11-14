@@ -1299,7 +1299,7 @@ class EnhancedCalc extends Question implements questionInterface
             $questiondata['stdset'] = $extra['stdset'];
             $questiondata['showstdset'] = true;
         }
-        $questiondata['pagebreak'] = $extra['current_question']['pagebreak'];
+        $questiondata['pagebreak'] = !empty($extra['current_question']['pagebreak']);
         $render->render($questiondata, $string, 'enhancedcalc.html');
     }
 

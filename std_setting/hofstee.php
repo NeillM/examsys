@@ -32,7 +32,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 // Check if the exam could still be going on.
-$end_date = $propertyObj->get_end_date();
+$end_date = $properties->get_end_date();
 if (!is_null($end_date) and $end_date < time()) {
     $notice->display_notice($string['examnotfinished'], $string['notfinishedmsg'], '../artwork/summative_scheduling.png', '#C00000', true, true);
     exit;
