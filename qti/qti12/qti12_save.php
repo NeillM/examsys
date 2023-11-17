@@ -159,7 +159,7 @@ class IE_qti12_Save extends IE_Main
 			</material>';
         }
 
-        if (trim($question->notes)) {
+        if (trim($question->notes ?? '')) {
             $output .= "
 			<material label='notes'>
 				<matimage imagtype='image/gif' uri='notes_icon.gif'/>
