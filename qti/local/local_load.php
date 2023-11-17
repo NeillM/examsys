@@ -197,7 +197,7 @@ class IE_Local_Load extends IE_Main
         $store->notes = $q_row['notes'];
         $store->q_group = isset($q_row['q_group']) ? $q_row['q_group'] : '';
         $store->bloom = $q_row['bloom'];
-        $store->score_method = $q_row['score_method'];
+        $store->score_method = $q_row['score_method'] ?? '';
 
         if ($q_row['ownerID'] > 0) {
             $store->author = GetAuthorName($q_row['ownerID']);
