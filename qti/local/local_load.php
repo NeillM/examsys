@@ -381,7 +381,9 @@ class IE_Local_Load extends IE_Main
             $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
             $db->AddWhere('om.oid', $o_row['id_num'], 'i');
             $m_rows = $db->GetSingleRow();
-            $this->AddMedia($options, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+            if (!empty($m_rows)) {
+                $this->AddMedia($options, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+            }
 
             $options->marks_correct = $o_row['marks_correct'];
             $options->marks_incorrect = $o_row['marks_incorrect'];
@@ -680,7 +682,9 @@ class IE_Local_Load extends IE_Main
             $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
             $db->AddWhere('om.oid', $o_row['id_num'], 'i');
             $m_rows = $db->GetSingleRow();
-            $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height']);
+            if (!empty($m_rows)) {
+                $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height']);
+            }
 
             $store->options[$optionno] = $option;
             $optionno++;
@@ -715,7 +719,9 @@ class IE_Local_Load extends IE_Main
             $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
             $db->AddWhere('om.oid', $o_row['id_num'], 'i');
             $m_rows = $db->GetSingleRow();
-            $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+            if (!empty($m_rows)) {
+                $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+            }
 
             $store->options[$optionno] = $option;
             $optionno++;
@@ -761,7 +767,9 @@ class IE_Local_Load extends IE_Main
             $db->AddInnerJoin('options_media', 'om', 'id', 'mediaid');
             $db->AddWhere('om.oid', $o_row['id_num'], 'i');
             $m_rows = $db->GetSingleRow();
-            $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+            if (!empty($m_rows)) {
+                $this->AddMedia($option, $m_rows['source'], $m_rows['width'], $m_rows['height'], $m_rows['alt']);
+            }
             $store->options[$optionno] = $option;
             $optionno++;
         }
