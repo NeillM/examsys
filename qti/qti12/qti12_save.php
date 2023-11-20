@@ -152,14 +152,14 @@ class IE_qti12_Save extends IE_Main
         $cfg_web_root = $configObject->get('cfg_web_root');
         $output = '';
 
-        if (trim($question->theme)) {
+        if (trim($question->theme ?? '')) {
             $output .= "
 			<material label='theme'>
 				<mattext texttype='text/html'><![CDATA[<font size='+2' color='#316ac5'>" . $question->theme . '</font>]]></mattext>
 			</material>';
         }
 
-        if (trim($question->notes)) {
+        if (trim($question->notes ?? '')) {
             $output .= "
 			<material label='notes'>
 				<matimage imagtype='image/gif' uri='notes_icon.gif'/>
