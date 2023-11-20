@@ -243,7 +243,7 @@ class IE_Local_Load extends IE_Main
     {
         // basic things
         $store->displaymode = $q_row['score_method'];
-        $store->feedback = $q_row['correct_fback'];
+        $store->feedback = $q_row['correct_fback'] ?? '';
 
         // load option text
         $q = $o_rows[0]['option_text'];
@@ -315,8 +315,8 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionenhancedcalc($store, $q_row, $o_rows)
     {
         // fiarly sure this is ok
-        $store->scenario = $q_row['scenario'];
-        $store->feedback = $q_row['correct_fback'];
+        $store->scenario = $q_row['scenario'] ?? '';
+        $store->feedback = $q_row['correct_fback'] ?? '';
         $store->q_type = 'enhancedcalc';
 
         $settingsdecoded = json_decode($q_row['settings'], true);
@@ -330,8 +330,8 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionCalculation($store, $q_row, $o_rows)
     {
         // fiarly sure this is ok
-        $store->scenario = $q_row['scenario'];
-        $store->feedback = $q_row['correct_fback'];
+        $store->scenario = $q_row['scenario'] ?? '';
+        $store->feedback = $q_row['correct_fback'] ?? '';
         $store->formula = $o_rows[0]['correct'];
 
         list($store->decimals, $store->tolerance, $store->units) = explode(',', $q_row['display_method']);
@@ -355,8 +355,8 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionDichotomous($store, $q_row, $o_rows)
     {
         // basic stuff
-        $store->scenario = $q_row['scenario'];
-        $store->feedback = $q_row['correct_fback'];
+        $store->scenario = $q_row['scenario'] ?? '';
+        $store->feedback = $q_row['correct_fback'] ?? '';
         $store->score_method = $q_row['score_method'];
         $store->display_method = $q_row['display_method'];
 
@@ -467,8 +467,8 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionHotspot($store, $q_row, $o_rows)
     {
 
-        $store->scenario = $q_row['scenario'];
-        $store->feedback = $q_row['correct_fback'];
+        $store->scenario = $q_row['scenario'] ?? '';
+        $store->feedback = $q_row['correct_fback'] ?? '';
 
         $hotspots = $o_rows[0]['correct'];
 
@@ -528,8 +528,8 @@ class IE_Local_Load extends IE_Main
         $line_thicknesses[6] = 4.5;
         $line_thicknesses[7] = 6;
 
-        $store->scenario = $q_row['scenario'];
-        $store->feedback = $q_row['correct_fback'];
+        $store->scenario = $q_row['scenario'] ?? '';
+        $store->feedback = $q_row['correct_fback'] ?? '';
 
         $store->marks_correct = $o_rows[0]['marks_correct'];
         $store->marks_incorrect = $o_rows[0]['marks_incorrect'];
@@ -601,7 +601,7 @@ class IE_Local_Load extends IE_Main
 
     public function LoadQuestionLikert($store, $q_row, $o_rows)
     {
-        $store->scenario = $q_row['scenario'];
+        $store->scenario = $q_row['scenario'] ?? '';
 
         // options for likert in score method, along with has n/a
         $sm = $q_row['display_method'];
@@ -657,8 +657,8 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionMcq($store, $q_row, $o_rows)
     {
         // basic stuff
-        $store->scenario = $q_row['scenario'];
-        $store->fb_correct = $q_row['correct_fback'];
+        $store->scenario = $q_row['scenario'] ?? '';
+        $store->fb_correct = $q_row['correct_fback'] ?? '';
         $store->fb_incorrect = $q_row['incorrect_fback'];
         if (!$store->fb_incorrect) {
             $store->fb_incorrect = $store->fb_correct;
@@ -694,8 +694,8 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestiontrue_false($store, $q_row, $o_rows)
     {
         // basic stuff
-        $store->scenario = $q_row['scenario'];
-        $store->fb_correct = $q_row['correct_fback'];
+        $store->scenario = $q_row['scenario'] ?? '';
+        $store->fb_correct = $q_row['correct_fback'] ?? '';
         $store->fb_incorrect = $q_row['incorrect_fback'];
         if (!$store->fb_incorrect) {
             $store->fb_incorrect = $store->fb_correct;
@@ -731,14 +731,14 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionMrq($store, $q_row, $o_rows)
     {
         // basic stuff
-        $store->scenario = $q_row['scenario'];
+        $store->scenario = $q_row['scenario'] ?? '';
         // score method oddness, if type is other, the include other then
         // score method gets set to "1 Mark per True Option"
         $store->score_method = $q_row['score_method'];
         if ($store->score_method == 'other') {
             $store->include_other = true;
         }
-        $store->feedback = $q_row['correct_fback'];
+        $store->feedback = $q_row['correct_fback'] ?? '';
 
         // get a list of all the options
         $optionno = 1;
@@ -778,7 +778,7 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionRank($store, $q_row, $o_rows)
     {
         // basic stuff
-        $store->scenario = $q_row['scenario'];
+        $store->scenario = $q_row['scenario'] ?? '';
         $store->score_method = $q_row['score_method'];
         $store->fb_correct = $q_row['correct_fback'];
         $store->fb_incorrect = $q_row['incorrect_fback'];
@@ -803,7 +803,7 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionTextbox($store, $q_row, $o_rows)
     {
         // basic stuff
-        $store->scenario = $q_row['scenario'];
+        $store->scenario = $q_row['scenario'] ?? '';
 
         // size of text box stored as 100x30 in sm
         $settings = json_decode($q_row['settings']);
@@ -813,7 +813,7 @@ class IE_Local_Load extends IE_Main
         $store->editor = $o_rows[0]['option_text'];
         $store->marks_correct = $o_rows[0]['marks_correct'];
         $store->marks_incorrect = $o_rows[0]['marks_incorrect'];
-        $store->feedback = $q_row['correct_fback'];
+        $store->feedback = $q_row['correct_fback'] ?? '';
 
         // create a list of ; separated terms, stripping out any empty ones?
         // TODO: Should this happen? maybe they want to leave blank ones in?
