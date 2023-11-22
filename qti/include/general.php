@@ -53,16 +53,20 @@ function explode_no_empty($delimiter, $string)
     return $result;
 }
 
+/**
+ * Ensure that the title text is compatible being used in an xml attribute.
+ *
+ * @param string $in The text to be used for the title.
+ * @return string
+ */
 function StripForTitle($in)
 {
     $in = trim($in);
     $in = strip_tags($in);
-    $in = str_ireplace('"', '', $in);
-    $in = str_ireplace("'", '', $in);
-    $in = str_ireplace('&nbsp;', ' ', $in);
     $in = str_ireplace("\n", ' ', $in);
     $in = str_ireplace("\r", ' ', $in);
     $in = str_ireplace("\t", ' ', $in);
+    $in = htmlspecialchars($in, ENT_XML1 | ENT_QUOTES, 'UTF-8', false);
     while (mb_strpos($in, '  ') > 0) {
         $in = str_replace('  ', ' ', $in);
     }
