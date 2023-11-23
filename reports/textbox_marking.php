@@ -417,7 +417,7 @@ while ($result->fetch()) {
         echo '<div id="ans_' . $answer_no . '"><div class="student_ans">' . nl2br(render_user_answer($user_answer, $questionsettings[$textbox_q_id], $string)) . '</div><div class="student_marks">' . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
 
         if (count($reminders) > 0) {
-            $reminders_selected = explode('|', $reminders_selected);
+            $reminders_selected = explode('|', $reminders_selected ?? '');
             echo '<ul class="reminders">';
             foreach ($reminders as $reminder) {
                 $remindertext = trim($reminder['text']);
