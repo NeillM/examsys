@@ -1082,6 +1082,50 @@ function FindFileSub($basedir, $dir, $filename)
     return '';
 }
 
+/**
+ * This method parses tags and their attributes from html.
+ *
+ *
+ * It returns an array keyed by uppercase html tag names, for each instance there is
+ * an array containing each of the attributes on the tag.
+ *
+ * For example if the input was:
+ *
+ * <img scr="myimage.png">
+ *
+ * the output would be:
+ *
+ * [
+ *    'IMG' => [
+ *        [
+ *            'src' => 'myimage.png',
+ *        ],
+ *    ],
+ * ]
+ *
+ * WARNING:
+ * This method is only used to find src attribute values from img tags.
+ * It is quite likely to be broken if you attempt to use it for another purpose.
+ *
+ * If you tried to parse:
+ *
+ * <img scr="myimage.png" alt="Some text">
+ *
+ * You would get the following returned:
+ *
+ * [
+ *     'IMG' => [
+ *         [
+ *             'src' => 'myimage.png',
+ *             'alt' => 'Some',
+ *             'text"' => true,
+ *         ],
+ *     ],
+ *  ]
+ *
+ * @param string $s_str A html fragment
+ * @return array
+ */
 function parseHtml($s_str)
 {
     $i_indicatorL = 0;
@@ -1097,22 +1141,27 @@ function parseHtml($s_str)
         $s_temp = mb_substr($s_str, $i_indicatorL, ($i_indicatorR - $i_indicatorL));
         $a_tag = explode(' ', $s_temp);
         // Here we get the tag's name
-        list(, $s_tagName, , ) = $a_tag[0];
+        $s_tagName = $a_tag[0];
         $s_tagName = mb_strtoupper($s_tagName);
         // Well, I am not interesting in <br>, </font> or anything else like that...
         // So, this is false for tags without options.
-        $b_boolOptions = is_array(($s_tagOption = $a_tag[1])) && $s_tagOption[1];
+        $b_boolOptions = isset($a_tag[1]);
         if ($b_boolOptions) {
             // Without this, we will mess up the array
             $i_arrayCounter = 0;
             if (isset($a_html[$s_tagName])) {
                 $i_arrayCounter = (int) count($a_html[$s_tagName]);
             }
-            // get the tag options, like src="htt://". Here, s_tagTokOption is 'src' and s_tagTokValue is '"http://"'
-            $tagcount = 2;
-            do {
-                $s_tagTokOption = mb_strtolower(strtok($s_tagOption[1], '='));
+            // get the tag options, like src="http://". Here, s_tagTokOption is 'src' and s_tagTokValue is '"http://"'
+            for ($tagcount = 1; $tagcount < count($a_tag); $tagcount++) {
+                $s_tagTokOption = mb_strtolower(strtok($a_tag[$tagcount], '='));
                 $s_tagTokValue = trim(strtok('='));
+
+                if (empty($s_tagTokValue)) {
+                    // It is probably a boolean html5 attribute, for example enabled or default.
+                    $s_tagTokValue = true;
+                }
+
                 if (mb_substr($s_tagTokValue, 0, 1) == '"' && mb_substr($s_tagTokValue, mb_strlen($s_tagTokValue) - 1, 1) == '"') {
                     $s_tagTokValue = mb_substr($s_tagTokValue, 1, mb_strlen($s_tagTokValue) - 2);
                 }
@@ -1120,9 +1169,7 @@ function parseHtml($s_str)
                     $s_tagTokValue = mb_substr($s_tagTokValue, 1, mb_strlen($s_tagTokValue) - 2);
                 }
                 $a_html[$s_tagName][$i_arrayCounter][$s_tagTokOption] = $s_tagTokValue;
-                $b_boolOptions = is_array(($s_tagOption = $a_tag[$tagcount])) && $s_tagOption[1];
-                $tagcount++;
-            } while ($b_boolOptions);
+            }
         }
     }
     return $a_html;
