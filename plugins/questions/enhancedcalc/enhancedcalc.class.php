@@ -1369,10 +1369,8 @@ class EnhancedCalc extends Question implements questionInterface
         $units = $this->settings['answers'][0]['units'];
 
         // If we do not have the users answer set a bogus answer before marking.
-        if (!isset($this->useranswer['uansnumb'])) {
+        if (!isset($this->useranswer['uans'])) {
             $this->add_to_useranswer('uans', "1 $units");
-        } else {
-            $this->add_to_useranswer('uans', $this->useranswer['uansnumb'] . " $units");
         }
         $this->calculate_user_mark();
 
