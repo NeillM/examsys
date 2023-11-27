@@ -371,6 +371,16 @@ class EnhancedCalc extends Question implements questionInterface
             return $returnstatus;
         }
 
+        if (!is_numeric(trim($this->useranswer['uansnumb']))) {
+            // The users answer is not numeric so it must be wrong.
+            $this->qmark = $this->settings['marks_incorrect'];
+            $this->useranswer['status']['exact'] = false;
+            $returnstatus = Q_MARKING_WRONG;
+            $this->useranswer['status']['overall'] = $returnstatus;
+
+            return $returnstatus;
+        }
+
         if ($this->useranswer['status']['units'] === false) {
             // We can't mach the units so this question must be wrong!
             $this->qmark = $this->settings['marks_incorrect'];
