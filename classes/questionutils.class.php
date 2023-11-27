@@ -845,8 +845,11 @@ SQL;
             // The question does not have any tracked changes.
             // The change id is not allowed to be null, so we will give it a value that will not exist instead.
             // We will have to assume that this is the root question.
-            $changeID = 0;
-            $rootID = $questionID;
+            $changeID = null;
+            // We are returning here, and not creating a record for the root question so we can hotfix exceptions
+            // with this case, since we cannot insert null or 0 into the database at the moment.
+            // As a consequence any time the lineage for this question is checked it will attempt to find track changes.
+            return $questionID;
         } elseif (!is_null($parentID)) {
             // This question has a parent, it may already have a lineage record.
             $rootID = self::getLineageRoot($parentID);
