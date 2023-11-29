@@ -371,6 +371,16 @@ class EnhancedCalc extends Question implements questionInterface
             return $returnstatus;
         }
 
+        if (!is_numeric(trim($this->useranswer['uansnumb']))) {
+            // The users answer is not numeric so it must be wrong.
+            $this->qmark = $this->settings['marks_incorrect'];
+            $this->useranswer['status']['exact'] = false;
+            $returnstatus = Q_MARKING_WRONG;
+            $this->useranswer['status']['overall'] = $returnstatus;
+
+            return $returnstatus;
+        }
+
         if ($this->useranswer['status']['units'] === false) {
             // We can't mach the units so this question must be wrong!
             $this->qmark = $this->settings['marks_incorrect'];
@@ -1369,10 +1379,8 @@ class EnhancedCalc extends Question implements questionInterface
         $units = $this->settings['answers'][0]['units'];
 
         // If we do not have the users answer set a bogus answer before marking.
-        if (!isset($this->useranswer['uansnumb'])) {
+        if (!isset($this->useranswer['uans'])) {
             $this->add_to_useranswer('uans', "1 $units");
-        } else {
-            $this->add_to_useranswer('uans', $this->useranswer['uansnumb'] . " $units");
         }
         $this->calculate_user_mark();
 
@@ -1427,7 +1435,9 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function get_answer_distance()
     {
-        if (!isset($this->useranswer['cans_dist']) and is_numeric($this->useranswer['cans'] ?? null)) {
+        $numeric_user_answer = is_numeric($this->useranswer['uansnumb'] ?? null);
+        $numeric_correct_answer = is_numeric($this->useranswer['cans'] ?? null);
+        if (!isset($this->useranswer['cans_dist']) and $numeric_user_answer and $numeric_correct_answer) {
             if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
                 $this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
             } else {
