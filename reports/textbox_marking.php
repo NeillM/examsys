@@ -317,7 +317,7 @@ while ($question_data->fetch()) {
         if ($theme != '') {
             echo '<tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>';
         }
-        if (trim($notes) != '') {
+        if (isset($notes) && trim($notes) !== '') {
             echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . mb_strtoupper($string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
         }
 
@@ -366,11 +366,11 @@ while ($question_data->fetch()) {
         }
         echo "$leadin</td></tr>\n";
 
-        $questionsettings[$q_id] = json_decode($settings, true);
+        $questionsettings[$q_id] = isset($settings) ? json_decode($settings, true) : [];
 
         if ($q_type != 'info') {
             echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"mk\"><br />($marks_correct " . $string['marks'] . ")</td></tr>\n";
-            echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"fback\"><br />" . nl2br($correct_fback) . "</td></tr>\n";
+            echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"fback\"><br />" . (isset($correct_fback) ? nl2br($correct_fback) : '') . "</td></tr>\n";
         }
     }
     $old_q_id = $q_id;
