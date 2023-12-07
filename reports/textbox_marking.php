@@ -366,7 +366,8 @@ while ($question_data->fetch()) {
         }
         echo "$leadin</td></tr>\n";
 
-        $questionsettings[$q_id] = isset($settings) ? json_decode($settings, true) : [];
+        $questionsettings[$q_id] = json_decode($settings ?? '', true);
+
 
         if ($q_type != 'info') {
             echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"mk\"><br />($marks_correct " . $string['marks'] . ")</td></tr>\n";
