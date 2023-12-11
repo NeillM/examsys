@@ -85,6 +85,12 @@ define(['hotspot_shape', 'html5images', 'html5helper', 'log'], function(Hotspot_
       this.shapes.push(new Hotspot_shape(shape, coordinates, id, this));
     }
 
+    // The id of the hotspot layer should be the same as the id however this does not seem to
+    // always be the case, so we will force it here.
+    for (var i = 0; i < this.shapes.length; i++) {
+      this.shapes[i].id = i;
+    }
+
     /**
      * The number of shapes in the layer.
      *
