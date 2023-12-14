@@ -865,7 +865,6 @@ class paperutilstest extends unittestdatabase
      * @dataProvider dataCanEditSecurity
      *
      * @group assessment
-     * @group wip
      */
     public function testCanEditSecurity(string $role, int $papertype, string $start, bool $management, bool $expected): void
     {

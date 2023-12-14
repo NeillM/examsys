@@ -203,7 +203,7 @@ class hotspot_helper extends RogoStaticSingleton
         $number_of_shapes = floor(count($shapes) / 3);
         $correct = false;
         for ($i = 0; $i < $number_of_shapes; $i++) {
-            // The in_shape method will no longer be called if the answer was found in a preceeding shape.
+            // The in_shape method will no longer be called if the answer was found in a preceding shape.
             $correct = $correct || $this->in_shape($answer_parts, $shapes[$i * 3], $shapes[($i * 3) + 1]);
         }
         if ($correct) {
@@ -411,27 +411,46 @@ class hotspot_helper extends RogoStaticSingleton
                 }
             }
             if ($intersect === 0) {
-                // The answer would intersect the edge if it's length was infinate,
+                // The answer would intersect the edge if it's length was infinite,
                 // so we now need to test if the answer is between them.
-                // If we assume that the answer is between two points then the
-                // distance between those two points should equal the sum of the distance
-                // between the user answer and each of the points.
-                // This assumption fails if the start and end point are the same.
-                $x_distance = $start_point_x - $end_point_x;
-                $y_distance = $start_point_y - $end_point_y;
-                $x_sum = ($start_point_x - $answer[0]) + ($answer[0] - $end_point_x);
-                $y_sum = ($start_point_y - $answer[1]) + ($answer[1] - $end_point_y);
-                if ($x_distance === 0 and $y_distance === 0 and $start_point_x == $answer[0] and $start_point_y == $answer[1]) {
-                    // The answer is equal to the start and end point.
-                    $on_edge = true;
-                } elseif (($x_distance === $x_sum) and ($y_distance === $y_sum) and ($x_distance !== 0 or $y_distance !== 0)) {
-                    // Intercects and is between the two points. The start and end point are not the same.
+                // Since we already know the point intersects the edge we just need to make sure that
+                // both the x and y coordinates of the users answer are between the lines start and end points.
+
+                $x_distance = $end_point_x - $start_point_x;
+                $y_distance = $end_point_y - $start_point_y;
+
+                $good_x = false;
+                $good_y = false;
+
+                // Test if the x coordinate of the answer is between the two points.
+                if ($x_distance === 0 and $start_point_x == $answer[0]) {
+                    // The points all share the x coordinate.
+                    $good_x = true;
+                } elseif ($x_distance > 0 and $start_point_x <= $answer[0] and $end_point_x >= $answer[0]) {
+                    $good_x = true;
+                } elseif ($x_distance < 0 and $start_point_x >= $answer[0] and $end_point_x <= $answer[0]) {
+                    $good_x = true;
+                }
+
+                // Test if the y-coordinate is between the two points.
+                if ($y_distance === 0 and $start_point_y == $answer[1]) {
+                    // The points all share the x coordinate.
+                    $good_y = true;
+                } elseif ($y_distance > 0 and $start_point_y <= $answer[1] and $end_point_y >= $answer[1]) {
+                    $good_y = true;
+                } elseif ($y_distance < 0 and $start_point_y >= $answer[1] and $end_point_y <= $answer[1]) {
+                    $good_y = true;
+                }
+
+                // Since we know the point intersects the line if the x and y coordinates are
+                // between the points then we know that they are good.
+                if ($good_x and $good_y) {
                     $on_edge = true;
                 }
             }
             // Work out the distance in pixels from the line... if it is less than 1
         }
-        // If the counter is equal to 0 the point is outside of the polygon.
+        // If the counter is equal to 0 the point is outside the polygon.
         return (($winding_counter !== 0) or $on_edge);
     }
 

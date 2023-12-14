@@ -33,11 +33,11 @@ class html5hotspottest extends UnitTest
     /**
      * Test that correct answers have their coordinates removed by the correct_to_answer_mode method.
      *
-     * This tests mupliple shapes with 1 shape per layers.
+     * This tests multiple shapes with 1 shape per layers.
      */
     public function test_correct_to_answer_mode1()
     {
-        // Three layers are defined, the first contains an ellipse, the second a recangle, the third a polygon.
+        // Three layers are defined, the first contains an ellipse, the second a rectangle, the third a polygon.
         $input = 'Deer~16776960~ellipse~384,335,51b,3c3~0~|birds~45136~rectangle~fa,51,1db,121~0~|AT-AT~12582912~polygon~15d,154,167,150,18d,144,220,11e,2a1,13e,2a5,153,2e7,183~0~';
         $expected = 'Deer~16776960~|birds~45136~|AT-AT~12582912~';
         $result = hotspot_helper::get_instance()->correct_to_answer_mode($input);
@@ -51,7 +51,7 @@ class html5hotspottest extends UnitTest
      */
     public function test_correct_to_answer_mode2()
     {
-        // Three layers are defined, the first contains an ellipse, the second a recangle, the third a polygon.
+        // Three layers are defined, the first contains an ellipse, the second a rectangle, the third a polygon.
         $input = 'Deer~16776960~ellipse~384,335,51b,3c3~0~rectangle~fa,51,1db,121~1~polygon~15d,154,167,150,18d,144,220,11e,2a1,13e,2a5,153,2e7,183~2~';
         $expected = 'Deer~16776960~';
         $result = hotspot_helper::get_instance()->correct_to_answer_mode($input);
@@ -75,7 +75,7 @@ class html5hotspottest extends UnitTest
      */
     public function test_mark_ellipse_correct()
     {
-        // The bounding box coordinates are encoded as hexidecimal.
+        // The bounding box coordinates are encoded as hexadecimal.
         $correct = 'Deer~16776960~ellipse~384,335,51b,3c3~0~';
         $answer = '1115,891';
         $expected = '1,1115,891';
@@ -88,7 +88,7 @@ class html5hotspottest extends UnitTest
      */
     public function test_mark_ellipse_incorrect()
     {
-        // The bounding box coordinates are encoded as hexidecimal.
+        // The bounding box coordinates are encoded as hexadecimal.
         $correct = 'Deer~16776960~ellipse~384,335,51b,3c3~0~';
         // One pixel inside the bounding rectangle.
         $answer = '901,821';
@@ -102,7 +102,7 @@ class html5hotspottest extends UnitTest
      */
     public function test_mark_ellipse_one_dimensional_incorrect1()
     {
-        // The bounding box coordinates are encoded as hexidecimal.
+        // The bounding box coordinates are encoded as hexadecimal.
         $correct = 'Deer~16776960~ellipse~1,1,1,9~0~';
         // One pixel inside the bounding rectangle.
         $answer = '1,5';
@@ -116,7 +116,7 @@ class html5hotspottest extends UnitTest
      */
     public function test_mark_ellipse_one_dimensional_incorrect2()
     {
-        // The bounding box coordinates are encoded as hexidecimal.
+        // The bounding box coordinates are encoded as hexadecimal.
         $correct = 'Deer~16776960~ellipse~1,1,9,1~0~';
         // One pixel inside the bounding rectangle.
         $answer = '5,1';
@@ -130,7 +130,7 @@ class html5hotspottest extends UnitTest
      */
     public function test_mark_rectangle_correct()
     {
-        // The bounding box coordinates are encoded as hexidecimal.
+        // The bounding box coordinates are encoded as hexadecimal.
         $correct = 'birds~45136~rectangle~fa,51,1db,121~0~';
         // Top corner.
         $answer = '250,81';
@@ -144,7 +144,7 @@ class html5hotspottest extends UnitTest
      */
     public function test_mark_rectangle_incorrect()
     {
-        // The bounding box coordinates are encoded as hexidecimal.
+        // The bounding box coordinates are encoded as hexadecimal.
         $correct = 'birds~45136~rectangle~fa,51,1db,121~0~';
         // One pixel outside the top corner.
         $answer = '249,80';
@@ -169,48 +169,53 @@ class html5hotspottest extends UnitTest
 
     /**
      * Test that answers that intersect the polygon line count as inside.
+     *
+     * @param string $answer A user's answer to the question
+     * @param string $expected The expected marked value
+     *
+     * @dataProvider dataMarkPolygonCorrect2
      */
-    public function test_mark_polygon_correct2()
+    public function test_mark_polygon_correct2(string $answer, string $expected)
     {
         // A rectangular polygon, that is the same dimensions as the rectangle test shape.
         $correct = 'birds~45136~polygon~1,1,1,9,9,9,9,1~0~';
 
-        $answer = '0.9,0.9';
-        $expected = '0,0.9,0.9';
         $result = hotspot_helper::get_instance()->mark($answer, $correct);
         $this->assertEquals($expected, $result);
-        $answer = '9.1,9.1';
-        $expected = '0,9.1,9.1';
-        $result = hotspot_helper::get_instance()->mark($answer, $correct);
-        $this->assertEquals($expected, $result);
-        $answer = '1.1,1.1';
-        $expected = '1,1.1,1.1';
-        $result = hotspot_helper::get_instance()->mark($answer, $correct);
-        $this->assertEquals($expected, $result);
-        $answer = '8.9,8.9';
-        $expected = '1,8.9,8.9';
-        $result = hotspot_helper::get_instance()->mark($answer, $correct);
-        $this->assertEquals($expected, $result);
+    }
 
-        $answer = '1,1';
-        $expected = '1,1,1';
-        $result = hotspot_helper::get_instance()->mark($answer, $correct);
-        $this->assertEquals($expected, $result);
-
-        $answer = '9,9';
-        $expected = '1,9,9';
-        $result = hotspot_helper::get_instance()->mark($answer, $correct);
-        $this->assertEquals($expected, $result);
-
-        $answer = '1,9';
-        $expected = '1,1,9';
-        $result = hotspot_helper::get_instance()->mark($answer, $correct);
-        $this->assertEquals($expected, $result);
-
-        $answer = '9,1';
-        $expected = '1,9,1';
-        $result = hotspot_helper::get_instance()->mark($answer, $correct);
-        $this->assertEquals($expected, $result);
+    /**
+     * User answers and the expected marking.
+     *
+     * @return array
+     */
+    public function dataMarkPolygonCorrect2(): array
+    {
+        return [
+            // Test just in or out of the shape.
+            ['0.9,0.9', '0,0.9,0.9'],
+            ['9.1,9.1', '0,9.1,9.1'],
+            ['1.1,1.1', '1,1.1,1.1'],
+            ['8.9,8.9', '1,8.9,8.9'],
+            // Test it matches the vertices.
+            ['1,1', '1,1,1'],
+            ['9,9', '1,9,9'],
+            ['1,9', '1,1,9'],
+            ['9,1', '1,9,1'],
+            // Test it matches on the edges.
+            ['1,5', '1,1,5'],
+            ['1,10', '0,1,10'],
+            ['1,0', '0,1,0'],
+            ['9,8', '1,9,8'],
+            ['9,0', '0,9,0'],
+            ['9,10', '0,9,10'],
+            ['9,5', '1,9,5'],
+            ['0,9', '0,0,9'],
+            ['10,9', '0,10,9'],
+            ['5,1', '1,5,1'],
+            ['0,1', '0,0,1'],
+            ['10,1', '0,10,1'],
+        ];
     }
 
     /**
