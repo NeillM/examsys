@@ -445,7 +445,13 @@ abstract class log
             if ($log_paper_type == '0') {
                 if ($total_marks > 0) {
                     if ($marking_style == 1) {
-                        $adjPercent = number_format((($log_mark - $total_random_mark) / ($total_marks - $total_random_mark)) * 100, 1, '.', ',');
+                        if ($total_marks == $total_random_mark) {
+                            // This should never happen, but we have had errors that seem that suggest it does.
+                            // This is here to stop future divide by zero errors from happening.
+                            $adjPercent = 0;
+                        } else {
+                            $adjPercent = number_format((($log_mark - $total_random_mark) / ($total_marks - $total_random_mark)) * 100, 1, '.', ',');
+                        }
                         if ($adjPercent < 0) {
                             $adjPercent = 0;
                         }
