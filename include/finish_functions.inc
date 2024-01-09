@@ -795,7 +795,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<tr><td class="q_no">' . $display_no . '.</td><td>';
             }
         }
-        if (trim($paper[$question]['notes']) != '') {
+        if (trim($paper[$question]['notes'] ?? '') != '') {
             echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note']  . '" />&nbsp;<strong>' . $string['note']  . ':</strong>&nbsp;' . $paper[$question]['notes'] . "</p>\n";
         }
         $no_options = count($paper[$question]['option_text']);
@@ -2188,8 +2188,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 $matching_media = explode('|', $paper[$question]['q_media']);
                 $matching_media_width = explode('|', $paper[$question]['q_media_width']);
                 $matching_media_height = explode('|', $paper[$question]['q_media_height']);
-                $matching_media_correct_fback = explode('|', $paper[$question]['correct_fback']);
-                $matching_media_incorrect_fback = explode('|', $paper[$question]['incorrect_fback']);
+                $matching_media_correct_fback = explode('|', $paper[$question]['correct_fback'] ?? '');
+                $matching_media_incorrect_fback = explode('|', $paper[$question]['incorrect_fback'] ?? '');
                 if (isset($paper[$question]['user_answer'])) {
                     $user_answers = explode('|', $paper[$question]['user_answer']);
                 } else {
@@ -2277,7 +2277,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                     echo '<div style="color:#808080">' . $string['unanswered'] . "</div>\n";
                 }
 
-                if ($tmp_display_feedback == '1' and trim($paper[$question]['correct_fback']) != '') {
+                if ($tmp_display_feedback == '1' and trim($paper[$question]['correct_fback'] ?? '') != '') {
                     echo '<p class="fback">' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
                 }
 
