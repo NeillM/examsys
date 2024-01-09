@@ -312,9 +312,14 @@ class ClassTotals
 
         if ($this->marking == '1') {                              // Monkey mark
             if ($this->total_marks != $this->total_random_mark) {
-                // To avoid 'Divisionbyzero' error.
                 for ($i = 0; $i < $user_no; $i++) {
-                    $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
+                    // To prevent future divide by zero errors, this preventive measure has been implemented.
+                    if ($this->total_marks == $this->total_random_mark) {
+                        $this->user_results[$i]['percent'] = 0;
+                    }
+                    else{
+                        $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
+                    }
                 }
             }
         } elseif ($this->marking[0] == '2') {                     // Standards Setting
