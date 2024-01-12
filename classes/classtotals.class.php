@@ -311,8 +311,15 @@ class ClassTotals
         $user_no = count($this->user_results);
 
         if ($this->marking == '1') {                              // Monkey mark
-            for ($i = 0; $i < $user_no; $i++) {
-                $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
+            if ($this->total_marks != $this->total_random_mark) {
+                for ($i = 0; $i < $user_no; $i++) {
+                    // To prevent future divide by zero errors, this preventive measure has been implemented.
+                    if ($this->total_marks == $this->total_random_mark) {
+                        $this->user_results[$i]['percent'] = 0;
+                    } else {
+                        $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
+                    }
+                }
             }
         } elseif ($this->marking[0] == '2') {                     // Standards Setting
             $this->set_ss_pass();
