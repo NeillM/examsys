@@ -316,8 +316,7 @@ class ClassTotals
                     // To prevent future divide by zero errors, this preventive measure has been implemented.
                     if ($this->total_marks == $this->total_random_mark) {
                         $this->user_results[$i]['percent'] = 0;
-                    }
-                    else{
+                    } else {
                         $this->user_results[$i]['percent'] = (($this->user_results[$i]['mark'] - $this->total_random_mark) / ($this->total_marks - $this->total_random_mark)) * 100;
                     }
                 }
