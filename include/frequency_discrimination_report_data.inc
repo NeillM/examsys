@@ -746,7 +746,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
     }
 
     if ($q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'textbox') {
-        if ($q_type != 'info') {
+        // Check if the question type is not 'info' and $scenario is not null
+        if ($q_type != 'info' && $scenario !== null) {
+            // Remove '&nbsp;' from $scenario, trim the result, and check if it's not an empty string
             if (trim(str_replace('&nbsp;', '', $scenario)) != '') {
                 $question_data['scenario'] = $scenario;
             }
