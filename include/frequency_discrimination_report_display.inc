@@ -1147,10 +1147,11 @@ function display_question(render $render, array $question_data, array $string, s
                     if ($question_data['excluded'] and $option['excluded'] == '1') { // Moved this into the Mark per Option check, seemed to make sense, no bugs appear to have been introduced
                         $classes[] = 'excluded';
                     }
+                    $ex_No = isset($option['ex_no']) ? $option['ex_no'] : ''; // Check if 'ex_no' key exists
                     if (!empty($classes)) {
-                        echo '<td class="' . implode(',', $classes) . '" id="q_' . $option['ex_no'] . '_' . $option_no . '">';
+                        echo '<td class="' . implode(',', $classes) . '" id="q_' . $ex_No . '_' . $option_no . '">';
                     } else {
-                        echo '<td id="q_' . $option['ex_no'] . '_' . $option_no . '">';
+                        echo '<td id="q_' . $ex_No . '_' . $option_no . '">';
                     }
                 } elseif (!empty($classes)) {
                     echo '<td class="' . implode(',', $classes) . '">';
