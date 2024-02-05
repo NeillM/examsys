@@ -1144,7 +1144,7 @@ function display_question(render $render, array $question_data, array $string, s
                     . '<td></td>';
                 }
                 if ($question_data['score_method'] == 'Mark per Option') {
-                    if ($question_data['excluded'] and $option['excluded'] == '1') { // Moved this into the Mark per Option check, seemed to make sense, no bugs appear to have been introduced
+                    if ($question_data['excluded'] and isset($option['excluded']) and $option['excluded'] == '1') { // Moved this into the Mark per Option check, seemed to make sense, no bugs appear to have been introduced
                         $classes[] = 'excluded';
                     }
                     $ex_No = isset($option['ex_no']) ? $option['ex_no'] : $part['ex_no']; // Check if 'ex_no' key exists
