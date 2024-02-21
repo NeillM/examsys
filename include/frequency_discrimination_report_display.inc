@@ -1148,9 +1148,9 @@ function display_question(render $render, array $question_data, array $string, s
                         $classes[] = 'excluded';
                     }
                     if (!empty($classes)) {
-                        echo '<td class="' . implode(',', $classes) . '" id="q_' . $option['ex_no'] . '_' . $option_no . '">';
+                        echo '<td class="' . implode(',', $classes) . '" id="q_' . $part['ex_no'] . '_' . $option_no . '">';
                     } else {
-                        echo '<td id="q_' . $option['ex_no'] . '_' . $option_no . '">';
+                        echo '<td id="q_' . $part['ex_no'] . '_' . $option_no . '">';
                     }
                 } elseif (!empty($classes)) {
                     echo '<td class="' . implode(',', $classes) . '">';

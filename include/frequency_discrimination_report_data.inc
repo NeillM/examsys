@@ -746,7 +746,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
     }
 
     if ($q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'textbox') {
-        if ($q_type != 'info') {
+        // Check if the question type is not 'info' and $scenario is not null
+        if ($q_type != 'info' && $scenario !== null) {
+            // Remove '&nbsp;' from $scenario, trim the result, and check if it's not an empty string
             if (trim(str_replace('&nbsp;', '', $scenario)) != '') {
                 $question_data['scenario'] = $scenario;
             }
@@ -1781,6 +1783,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 if ($score_method == 'Mark per Option' and $question_data['excluded'] and $exclusions->get_exclusion_part_by_qid($q_id, $section) == '1') {
                     $question_data['parts'][$i]['options'][$option_no]['excluded'] = '1';
                     $question_data['parts'][$i]['options'][$option_no]['exclusions'] = $exclusions->get_exclusion_part_by_qid($q_id, $section);
+                } else { // To avoid the error Undefined array key "excluded" added 'excluded' key and value as zero.
+                    $question_data['parts'][$i]['options'][$option_no]['excluded'] = '0';
+                    $question_data['parts'][$i]['options'][$option_no]['exclusions'] = '';
                 }
                 $question_data['parts'][$i]['options'][$option_no]['option_text'] = $individual_option['option_text'];
                 if (in_array($option_no, $specific_answers)) {
