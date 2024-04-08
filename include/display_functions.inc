@@ -1137,8 +1137,6 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 break;
             case 'labelling':
                 $tmp_labels = 0;
-                $max_col1 = 0;
-                $max_col2 = 0;
                 $tmp_first_split = explode(';', $question['options'][0]['correct']);
                 $tmp_second_split = explode('|', $tmp_first_split[11]);
                 $label_width = $tmp_first_split[5];
@@ -1154,15 +1152,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         if ($label_parts[2] > 219) {
                             $marks += $display_option['marks_correct'];
                         }
-                        if ($label_parts[0] < 10) {
-                            $max_col1 = $label_parts[0];
-                        } else {
-                            $max_col2 = $label_parts[0];
-                        }
                     }
                 }
-                $max_col2 -= 10;
-                $max_label = max($max_col1, $max_col2);
 
                 if ($question['score_method'] == 'Mark per Question') {
                     $marks = $display_option['marks_correct'];
