@@ -105,9 +105,6 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
                         $count_tmp_second_split = count($tmp_second_split);
                         for ($label_no = 4; $label_no <= $count_tmp_second_split; $label_no += 4) {
                             if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
-                                $x = $tmp_second_split[$label_no - 2];
-                                $y = $tmp_second_split[$label_no - 1] - 25;
-                                $correct_labels[$x . 'x' . $y] = mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'));
                                 $placeholders++;
                             }
                         }
