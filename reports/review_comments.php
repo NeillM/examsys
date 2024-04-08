@@ -278,10 +278,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 }
                 break;
             case 'labelling':
-                $tmp_std_array = explode(',', $std);
-                $std_part = 0;
-                $tmp_std_array = explode(',', $std);
-                $std_part = 0;
                 $max_col1 = 0;
                 $max_col2 = 0;
                 $tmp_first_split = explode(';', $correct);
