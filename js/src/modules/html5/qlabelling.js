@@ -354,8 +354,16 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                         if (yes_to_add) {
                             var mli_combo = (myLabelInfo[1] != '' ? Number(myLabelInfo[1]) : 0); //combo indicator? >0
-                            var mli_pos_xa = Math.round(Number(myLabelInfo[2])); //pos_x
-                            var mli_pos_ya = Math.round(Number(myLabelInfo[3])); //pos_y
+                            var x_coord = Number(myLabelInfo[2]);
+                            var y_coord = Number(myLabelInfo[3]);
+                            if (isNaN(x_coord) || isNaN(y_coord)) {
+                                // It is possible that one of the coordinates may not be a number,
+                                // in this case we will make it a distractor.
+                                x_coord = 5;
+                                y_coord = 30;
+                            }
+                            var mli_pos_xa = Math.round(x_coord); //pos_x
+                            var mli_pos_ya = Math.round(y_coord); //pos_y
                             var mli_pos_xb = apx[mli_index - blank_count]; //pos_x
                             var mli_pos_yb = apy[mli_index - blank_count]; //pos_y
                             var mli_answr = myLabelInfo[4]; //answer
