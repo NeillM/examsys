@@ -1853,7 +1853,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.draw_limit[2];
                 }
                 if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] > this.draw_limit[3]) {
-                    this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.draw_limit[6];
+                    this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.draw_limit[3];
                 }
 
                 if (this.qmode == 'edit') {
