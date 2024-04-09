@@ -1822,10 +1822,12 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 }
                 this.labelWidth = dim[2] - dim[0];
                 this.labelHeight = dim[3] - dim[1];
-                if (this.labelWidthEffect < this.labelWidth)
+                if (this.labelWidthEffect < this.labelWidth) {
                     this.labelWidthEffect = this.labelWidth;
-                if (this.labelHeightEffect < this.labelHeight)
+                }
+                if (this.labelHeightEffect < this.labelHeight) {
                     this.labelHeightEffect = this.labelHeight;
+                }
             }
 
             if (this.dragging && this.drag_box_id > -1) { //this.dragging
@@ -1837,23 +1839,26 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                 //limits
                 this.draw_limit = new Array(1, (26 - this.yOffset), this.canvas.width - this.labelWidthEffect - 2, this.canvas.height - this.labelHeightEffect - 2);
-                if (this.qmode == 'edit')
+                if (this.qmode == 'edit') {
                     this.draw_limit = new Array(0, 26, this.canvas.width - this.labelWidthEffect - 2, this.canvas.height - this.labelHeightEffect - 2);
+                }
 
-
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] < this.draw_limit[0])
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] < this.draw_limit[0]) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.draw_limit[0];
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] < this.draw_limit[1])
+                }
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] < this.draw_limit[1]) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.draw_limit[1];
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] > this.draw_limit[2])
+                }
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] > this.draw_limit[2]) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.draw_limit[2];
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] > this.draw_limit[3])
+                }
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] > this.draw_limit[3]) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.draw_limit[6];
+                }
 
                 if (this.qmode == 'edit') {
                     this.pholderBox[this.answerBox[this.drag_box_id][this.drag_box_combo][0]][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][5];
                     this.pholderBox[this.answerBox[this.drag_box_id][this.drag_box_combo][0]][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][6];
-
                 }
             } else { //change of cursor
                 var drag_box_old = this.drag_box_id + ':' + this.drag_box_combo;
