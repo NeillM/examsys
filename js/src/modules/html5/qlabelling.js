@@ -354,8 +354,16 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                         if (yes_to_add) {
                             var mli_combo = (myLabelInfo[1] != '' ? Number(myLabelInfo[1]) : 0); //combo indicator? >0
-                            var mli_pos_xa = Math.round(Number(myLabelInfo[2])); //pos_x
-                            var mli_pos_ya = Math.round(Number(myLabelInfo[3])); //pos_y
+                            var x_coord = Number(myLabelInfo[2]);
+                            var y_coord = Number(myLabelInfo[3]);
+                            if (isNaN(x_coord) || isNaN(y_coord)) {
+                                // It is possible that one of the coordinates may not be a number,
+                                // in this case we will make it a distractor.
+                                x_coord = 5;
+                                y_coord = 30;
+                            }
+                            var mli_pos_xa = Math.round(x_coord); //pos_x
+                            var mli_pos_ya = Math.round(y_coord); //pos_y
                             var mli_pos_xb = apx[mli_index - blank_count]; //pos_x
                             var mli_pos_yb = apy[mli_index - blank_count]; //pos_y
                             var mli_answr = myLabelInfo[4]; //answer
@@ -1814,10 +1822,12 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 }
                 this.labelWidth = dim[2] - dim[0];
                 this.labelHeight = dim[3] - dim[1];
-                if (this.labelWidthEffect < this.labelWidth)
+                if (this.labelWidthEffect < this.labelWidth) {
                     this.labelWidthEffect = this.labelWidth;
-                if (this.labelHeightEffect < this.labelHeight)
+                }
+                if (this.labelHeightEffect < this.labelHeight) {
                     this.labelHeightEffect = this.labelHeight;
+                }
             }
 
             if (this.dragging && this.drag_box_id > -1) { //this.dragging
@@ -1829,23 +1839,26 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                 //limits
                 this.draw_limit = new Array(1, (26 - this.yOffset), this.canvas.width - this.labelWidthEffect - 2, this.canvas.height - this.labelHeightEffect - 2);
-                if (this.qmode == 'edit')
+                if (this.qmode == 'edit') {
                     this.draw_limit = new Array(0, 26, this.canvas.width - this.labelWidthEffect - 2, this.canvas.height - this.labelHeightEffect - 2);
+                }
 
-
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] < this.draw_limit[0])
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] < this.draw_limit[0]) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.draw_limit[0];
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] < this.draw_limit[1])
+                }
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] < this.draw_limit[1]) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.draw_limit[1];
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] > this.draw_limit[2])
+                }
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][5] > this.draw_limit[2]) {
                     this.answerBox[this.drag_box_id][this.drag_box_combo][5] = this.draw_limit[2];
-                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] > this.draw_limit[3])
-                    this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.draw_limit[6];
+                }
+                if (this.answerBox[this.drag_box_id][this.drag_box_combo][6] > this.draw_limit[3]) {
+                    this.answerBox[this.drag_box_id][this.drag_box_combo][6] = this.draw_limit[3];
+                }
 
                 if (this.qmode == 'edit') {
                     this.pholderBox[this.answerBox[this.drag_box_id][this.drag_box_combo][0]][5] = this.answerBox[this.drag_box_id][this.drag_box_combo][5];
                     this.pholderBox[this.answerBox[this.drag_box_id][this.drag_box_combo][0]][6] = this.answerBox[this.drag_box_id][this.drag_box_combo][6];
-
                 }
             } else { //change of cursor
                 var drag_box_old = this.drag_box_id + ':' + this.drag_box_combo;
