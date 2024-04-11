@@ -234,6 +234,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                             echo '<select>';
                             $options_array = array();
                             $options_array = explode(',', $blank_options);
+                            // Filter the options in the same way that user's answers are.
+                            $options_array = \param::clean_array($options_array, \param::TEXT);
                             $i = 0;
                             foreach ($options_array as $individual_blank_option) {
                                 $individual_blank_option = trim($individual_blank_option);

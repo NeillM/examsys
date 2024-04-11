@@ -685,6 +685,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                           $answer_options = explode('[/blank]', $blank_details[$blank_count]);
                           $answer_list = explode(',', str_replace('[blank]', '', $answer_options[0]));
 
+                          // Filter the options in the same way that user's answers are.
+                          $answer_list = \param::clean_array($answer_list, \param::TEXT);
+
                           $results = array();
                           $not_used = preg_match('|size="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
                         if (isset($results[1]) and $results[1] != '') {
