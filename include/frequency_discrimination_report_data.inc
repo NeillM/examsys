@@ -838,6 +838,8 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                     $tmp_top_no = 0;
                     $tmp_bottom_no = 0;
                     $blank_options = explode(',', $blank);
+                    // Filter the options in the same way that user's answers are.
+                    $blank_options = \param::clean_array($blank_options, \param::TEXT);
                     $question_data['parts'][$i]['answers'] = $blank_options; // Could be referenced as this all the way through?
 
                     if ($display_method == 'dropdown') {

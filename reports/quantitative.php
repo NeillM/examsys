@@ -96,6 +96,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                         echo '<span style="color:#800000; font-weight:bold">[blank]</span>';
                         $options_array = array();
                         $options_array = explode(',', $blank_options);
+                        // Filter the options in the same way that user's answers are.
+                        $options_array = \param::clean_array($options_array, \param::TEXT);
                         $i = 0;
                         foreach ($options_array as $individual_blank_option) {
                             if ($log[$screen][$q_id][$blank_count + 1][$individual_blank_option] == '') {

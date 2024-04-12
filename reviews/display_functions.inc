@@ -681,12 +681,15 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     $array_size = count($blank_details);
                     $blank_count = 1;
                     while ($blank_count < $array_size) {
-                          $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
-                          $answer_options = explode('[/blank]', $blank_details[$blank_count]);
-                          $answer_list = explode(',', str_replace('[blank]', '', $answer_options[0]));
+                        $blank_details[$blank_count] = '[blank' . $blank_details[$blank_count];
+                        $answer_options = explode('[/blank]', $blank_details[$blank_count]);
+                        $answer_list = explode(',', str_replace('[blank]', '', $answer_options[0]));
 
-                          $results = array();
-                          $not_used = preg_match('|size="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
+                        // Filter the options in the same way that user's answers are.
+                        $answer_list = \param::clean_array($answer_list, \param::TEXT);
+
+                        $results = array();
+                        $not_used = preg_match('|size="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
                         if (isset($results[1]) and $results[1] != '') {
                             $blank_size[$blank_count] = $results[1];
                         } else {
