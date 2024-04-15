@@ -75,6 +75,12 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
  */
 function pStats(float $value, int $qid, int $part_no, array &$pstats, array &$pstats_array)
 {
+    if ($value > 1) {
+        // The pstats of a question that has a total number of marks that is not a whole number can be wrong
+        // because the stored total truncates it to an integer, this means that sometimes we might get invalid values.
+        // Making the value something that is obviously wrong, but will not overflow the database.
+        $value = 1.1;
+    }
     if ($value >= 0.8) {
         $pstats['ve']++;
     } elseif ($value >= 0.6 and $value < 0.8) {
