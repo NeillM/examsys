@@ -127,7 +127,14 @@ $blanks = array_unique($new_blanks);
 $unique_list = array_fill_keys($blanks, 0);
 foreach ($log_answers as $log_type) {
     foreach ($log_type as $id => $log_answer) {
-        foreach ($log_answer as $word) {
+        foreach ($log_answer as $key => $word) {
+            if ($part !== 0 and $key !== ($part -1)) {
+                // The keys of the array start at 0.
+                // The part value passed starts at 1.
+                // We are assuming that if no blank value is being passed that all of the words should be displayed.
+                // We will ignore the word if it is not for the blank specified for the form.
+                continue;
+            }
             if ($word != 'u') {
                 if (isset($unique_list[$word])) {
                     $unique_list[$word]++;
