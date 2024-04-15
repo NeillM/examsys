@@ -31,6 +31,8 @@ require '../include/staff_auth.inc';
 require '../include/errors.php';
 $q_id     = check_var('q_id', 'GET', true, false, true);
 $paperID  = check_var('paperID', 'GET', true, false, true);
+// The number of the blank that is being considered, starting at 1.
+$part = param::optional('blank', 0, param::INT);
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 $paper_type = $propertyObj->get_paper_type();
@@ -68,7 +70,7 @@ for (
     $end_start_tag = mb_strpos($blank_details[$i], ']');
     $start_end_tag = mb_strpos($blank_details[$i], '[/blank]');
     $blank_options = mb_substr($blank_details[$i], ($end_start_tag + 1), ($start_end_tag - 1));
-    if ($i == $_GET['blank'] && $blank_options !== '') {
+    if ($i == $part && $blank_options !== '') {
         $blanks = explode(',', $blank_options);
     }
 }
@@ -161,7 +163,7 @@ foreach ($unique_list as $word => $occurrance) {
 
 <input type="hidden" name="word_count" value="<?php echo $word_count; ?>" />
 <input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
-<input type="hidden" name="blank" value="<?php echo $_GET['blank']; ?>" />
+<input type="hidden" name="blank" value="<?php echo $part; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
 <input type="hidden" name="startdate" value="<?php echo $_GET['startdate']; ?>" />
 <input type="hidden" name="enddate" value="<?php echo $_GET['enddate']; ?>" />
