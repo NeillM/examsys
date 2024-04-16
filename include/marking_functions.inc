@@ -825,7 +825,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 if (!is_array($settings)) {
                     $settings = json_decode($settings, true);
                 }
-                if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
+                $plain_editors = ['plain', 'mathjax'];
+                if (!isset($settings['editor']) or in_array($settings['editor'], $plain_editors)) {
                     $saved_response = htmlspecialchars(param::optional($qid, '', param::RAW, param::FETCH_POST));
                 } else {
                     $saved_response = param::optional($qid, '', param::HTML, param::FETCH_POST);
