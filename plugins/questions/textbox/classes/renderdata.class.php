@@ -186,7 +186,12 @@ class renderdata extends \questiondata
             } else {
                 $this->unanswered = false;
             }
-            $this->useranswer = $useranswer;
+
+            if ($this->editor == 'plain') {
+                $this->useranswer = htmlspecialchars_decode($useranswer);
+            } else {
+                $this->useranswer = $useranswer;
+            }
 
             $this->editortextarea = $this->editor . '_textarea.html';
             $this->type = $texteditorplugin->get_type($type);
