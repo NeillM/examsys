@@ -150,6 +150,36 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
     return $html;
 }
 
+/**
+ * Outputs the HTML required to display a question for review.
+ *
+ * @param int $q_no The number of the question on the paper.
+ * @param int $q_id The database id of the question.
+ * @param string $theme The theme text for the question.
+ * @param string $scenario The scenario text for the question.
+ * @param string $leadin The lead in text for the question.
+ * @param string $q_type The type of question to be displayed.
+ * @param string $correct The correct answer for the question.
+ * @param string $settings The settings for the question, often a json string.
+ * @param string $q_media The filename of the media, empty if the question has no media.
+ * @param int $q_media_width The width of the question media image.
+ * @param int $q_media_height The height of the question media.
+ * @param string $q_media_alt The alt text for the question media.
+ * @param string $q_media_num Used in extended matching questions only.
+ * @param array $options The option records for the question.
+ * @param array $comments
+ * @param array $correct_buf
+ * @param string $display_method Setting for how the question will be displayed.
+ * @param string $score_method
+ * @param string $labelcolor The colour the label should be displayed as (seems to be unused).
+ * @param string $themecolor The colour the theme of the question should be displayed as.
+ * @param string $std This is unused in the function.
+ * @param array $reviewer_data
+ * @param string $type Seems to be the type of comment.
+ * @param array $string Array of language strings for the page.
+ * @param string $language Passed to the displayComments function, where it appears to be unused.
+ * @return void
+ */
 function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $q_media_alt, $q_media_num, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language)
 {
     $configObject = Config::get_instance();
