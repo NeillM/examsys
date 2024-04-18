@@ -173,14 +173,13 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
  * @param string $score_method
  * @param string $labelcolor The colour the label should be displayed as (seems to be unused).
  * @param string $themecolor The colour the theme of the question should be displayed as.
- * @param string $std This is unused in the function.
  * @param array $reviewer_data
  * @param string $type Seems to be the type of comment.
  * @param array $string Array of language strings for the page.
  * @param string $language Passed to the displayComments function, where it appears to be unused.
  * @return void
  */
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $q_media_alt, $q_media_num, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language)
+function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $q_media_alt, $q_media_num, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $reviewer_data, $type, $string, $language)
 {
     $configObject = Config::get_instance();
 
@@ -290,8 +289,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             case 'calculation':
                 break;
             case 'dichotomous':
-                $tmp_std_array = explode(',', $std);
-                $std_part = 0;
                 if ($score_method == 'YN_Positive') {
                     $true_label = 'Yes';
                     $false_label = 'No';
@@ -395,7 +392,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 }
                 break;
             case 'mrq':
-                $tmp_std_array = explode(',', $std);
                 $i = 0;
                 $correct_stems = 0;
                 foreach ($options as $individual_option) {
@@ -408,8 +404,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 }
                 break;
             case 'rank':
-                $tmp_std_array = explode(',', $std);
-                $std_part = 0;
                 $rank_no = 0;
                 foreach ($correct_buf as $individual_correct) {
                     if ($individual_correct > $rank_no and $individual_correct < 9990) {
@@ -497,8 +491,6 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 'alt' => $matching_alt[$i],
             );
         }
-        $tmp_std_array = explode(',', $std);
-        $std_part = 0;
 
         array_unshift($matching_scenarios, '');
         $max_scenarios = max(count($matching_scenarios), count($matching_media));
@@ -737,11 +729,11 @@ foreach ($reviewer_data as $reviewerID => $reviewer_detail) {
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare('SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, correct, std, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
+  $result = $mysqli->prepare('SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, correct, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
-  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $correct, $std, $settings);
+  $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $correct, $settings);
 while ($result->fetch()) {
     // Get Media.
     $media = QuestionUtils::getMediaAsString($q_id);
@@ -755,7 +747,7 @@ while ($result->fetch()) {
         if ($old_q_type == 'info') {
             $question_no--;
         }
-        displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
+        displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $reviewer_data, $type, $string, $language);
         $options_buffer = array();
         $correct_buffer = array();
         if ($old_screen != $screen) {
@@ -811,7 +803,6 @@ while ($result->fetch()) {
     $old_settings = $settings;
     $old_display_method = $display_method;
     $old_score_method = $score_method;
-    $old_std = $std;
     $old_screen = $screen;
 }
   $result->close();
@@ -819,7 +810,7 @@ while ($result->fetch()) {
 if ($old_q_type == 'info') {
     $question_no--;
 }
-  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
+  displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $reviewer_data, $type, $string, $language);
   $mysqli->close();
 ?>
 </table>
