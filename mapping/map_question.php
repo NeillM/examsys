@@ -91,10 +91,10 @@ function display_q($configObject, $target_id, $db)
     $old_q_id  = 0;
     while ($question_data->fetch()) {
         if ($old_q_id != $q_id) {
-            $question['theme'] = trim($theme);
-            $question['scenario'] = trim($scenario);
+            $question['theme'] = trim($theme ?? '');
+            $question['scenario'] = trim($scenario ?? '');
             $question['leadin'] = trim($leadin);
-            $question['notes'] = trim($notes);
+            $question['notes'] = trim($notes ?? '');
             $question['q_type'] = $q_type;
             $question['q_id'] = $q_id;
             $question['score_method'] = $score_method;

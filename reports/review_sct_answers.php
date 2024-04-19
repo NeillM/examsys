@@ -198,10 +198,10 @@ $stmt->bind_result($q_id, $theme, $leadin, $scenario, $notes, $display_method, $
 while ($stmt->fetch()) {
     if ($old_q_id != $q_id) {
         $q_no++;
-        $questions_array[$q_no]['theme'] = trim($theme);
-        $questions_array[$q_no]['scenario'] = trim($scenario);
+        $questions_array[$q_no]['theme'] = trim($theme ?? '');
+        $questions_array[$q_no]['scenario'] = trim($scenario ?? '');
         $questions_array[$q_no]['leadin'] = trim($leadin);
-        $questions_array[$q_no]['notes'] = trim($notes);
+        $questions_array[$q_no]['notes'] = trim($notes ?? '');
         $questions_array[$q_no]['q_id'] = $q_id;
         $questions_array[$q_no]['display_method'] = $display_method;
         // Get media.

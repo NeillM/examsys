@@ -2618,10 +2618,10 @@ class PaperProperties
             if ($question_data->num_rows() > 0) {
                 while ($question_data->fetch()) {
                     if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
-                          $question['theme'] = $theme;
-                          $question['scenario'] = $scenario;
+                          $question['theme'] = $theme ?? '';
+                          $question['scenario'] = $scenario ?? '';
                           $question['leadin'] = $leadin;
-                          $question['notes'] = $hide_notes ? '' : trim($notes);
+                          $question['notes'] = $hide_notes ? '' : trim($notes ?? '');
                           $question['q_type'] = $q_type;
                           $question['q_id'] = $q_id;
                           $question['score_method'] = $score_method;
@@ -2771,10 +2771,10 @@ class PaperProperties
                     $question['assigned_number'] = $random_q_data['assigned_number'];
                     $question['no_on_screen'] = $q_no;
                     $question['screen'] = $random_q_data['screen'];
-                    $question['theme'] = $theme;
-                    $question['scenario'] = $scenario;
+                    $question['theme'] = $theme ?? '';
+                    $question['scenario'] = $scenario ?? '';
                     $question['leadin'] = $leadin;
-                    $question['notes'] = $hide_notes ? '' : trim($notes);
+                    $question['notes'] = $hide_notes ? '' : trim($notes ?? '');
                     $question['q_type'] = $q_type;
                     $question['q_id'] = $q_id;
                     $question['display_pos'] = $q_no;

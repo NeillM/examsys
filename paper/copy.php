@@ -404,10 +404,10 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                     $configObj = Config::get_instance();
                 }
 
-                $tmp_questions_array['theme']       = trim($theme);
-                $tmp_questions_array['scenario']    = trim($scenario);
+                $tmp_questions_array['theme']       = trim($theme ?? '');
+                $tmp_questions_array['scenario']    = trim($scenario ?? '');
                 $tmp_questions_array['leadin']      = trim($leadin);
-                $tmp_questions_array['notes']       = trim($notes);
+                $tmp_questions_array['notes']       = trim($notes ?? '');
                 $tmp_questions_array['q_type']      = $q_type;
                 $tmp_questions_array['q_id']        = $question_id; //the newly inserted question ID!
                 $tmp_questions_array['score_method']    = $score_method;
