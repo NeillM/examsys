@@ -197,10 +197,10 @@ while ($stmt->fetch()) {
         $q_media_width = $media['width'];
         $q_media_alt = $media['alt'];
         $q_no++;
-        $questions_array[$q_no]['theme'] = trim($theme);
-        $questions_array[$q_no]['scenario'] = trim($scenario);
+        $questions_array[$q_no]['theme'] = trim($theme ?? '');
+        $questions_array[$q_no]['scenario'] = trim($scenario ?? '');
         $questions_array[$q_no]['leadin'] = trim($leadin);
-        $questions_array[$q_no]['notes'] = trim($notes);
+        $questions_array[$q_no]['notes'] = trim($notes ?? '');
         $questions_array[$q_no]['q_id'] = $q_id;
         $questions_array[$q_no]['display_method'] = $display_method;
         $questions_array[$q_no]['q_media'] = $q_media;

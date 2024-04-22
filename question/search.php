@@ -375,7 +375,7 @@ if (isset($_GET['submit'])) {
             echo ' extended-leadin" data-extended-leadin="' . htmlspecialchars($fullText);
         }
         echo '">';
-        if (trim($theme) != '') {
+        if (trim($theme ?? '') != '') {
             echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         echo $tmp_leadin . '</td>';

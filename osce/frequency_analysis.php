@@ -133,11 +133,11 @@ if ($user_no == 0) {
             }
             echo "</tr>\n";
         }
-        if (trim($theme) != '') {
+        if (trim($theme ?? '') != '') {
             echo "<tr><td colspan=\"4\" class=\"theme\">$theme</td></tr>\n";
         }
         echo '<tr id="row_' . $question_no . '"><td class="question">';
-        if (trim($notes) != '') {
+        if (trim($notes ?? '') != '') {
             echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
         }
         echo "$leadin</td>";

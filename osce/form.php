@@ -212,7 +212,7 @@ if (isset($_POST) and count($_POST) > 0) {
     while ($result->fetch()) {
         $cols = mb_substr_count($display_method, '|');
 
-        if (trim($theme) != '') {
+        if (trim($theme ?? '') != '') {
             echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
         }
 
@@ -223,7 +223,7 @@ if (isset($_POST) and count($_POST) > 0) {
         }
 
         echo "<tr><td class=\"q {$killer}\">";
-        if (trim($notes) != '') {
+        if (trim($notes ?? '') != '') {
             echo '<span style="color:' . $propertyObj->get_labelcolor() . "\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" alt=\"note\" />&nbsp;$notes</span><br />\n";
         }
         echo strip_tags($leadin, '<b><i><strong><em><br><br />');

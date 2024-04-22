@@ -151,7 +151,7 @@ while ($max_cols_result->fetch()) {
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
 while ($result->fetch()) {
     $cols = mb_substr_count($display_method, '|');
-    if (trim($theme) != '') {
+    if (trim($theme ?? '') != '') {
         echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
     }
       echo '<tr id="row_' . $question_no . '">';
@@ -165,7 +165,7 @@ while ($result->fetch()) {
     } else {
         echo '<td class="q">';
     }
-    if (trim($notes) != '') {
+    if (trim($notes ?? '') != '') {
         echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
 
