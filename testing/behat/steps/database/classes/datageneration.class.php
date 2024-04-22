@@ -663,6 +663,10 @@ trait datageneration
             case 'extmatch':
                 $row['options'] = $this->getExtMatchOptions($row);
                 break;
+            case 'likert':
+                $row['display_method'] = $this->getLikertDisplayMethod($row);
+                $row['options'] = $this->getQuestionOptions($row);
+                break;
             default:
                 $row['options'] = $this->getQuestionOptions($row);
                 break;
@@ -706,6 +710,184 @@ trait datageneration
             $row['paper'] = '{"paper":"' . $row['paper'] . '","screen":"' . $row['screen'] . '","displaypos":"' . $row['position'] . '"}';
         }
         return $row;
+    }
+
+    /**
+     * Generates the display method string for Likert questions.
+     *
+     * @param array $row
+     * @return string
+     * @throws data_error
+     */
+    protected function getLikertDisplayMethod(array $row): string
+    {
+        // Default to a 4 Point scale if none is specified.
+        $scale_type = $row['scale type'] ?? '4 Point Scales';
+
+        switch ($scale_type) {
+            case 'OSCE Station Scales':
+                $display_options = $this->getScaleStringOSCE($row);
+                break;
+            case '3 Point Scales':
+                $display_options = $this->getScaleString3Point($row);
+                break;
+            case '4 Point Scales':
+                $display_options = $this->getScaleString4Point($row);
+                break;
+            case '5 Point Scales':
+                $display_options = $this->getScaleString5Point($row);
+                break;
+            case 'Custom':
+                // A valid scale was used.
+                $display_options = $this->getScaleStringCustom($row);
+                break;
+            default:
+                // An invalid scale was specified.
+                $message = "scale type of '$scale_type' is not supported, use OSCE Station Scales, "
+                    . '3 Point Scales, 4 Point Scales, 5 Point Scales, or Custom';
+                throw new data_error($message);
+        }
+
+        // Then add the data for N/A being displayed.
+        $na = $row['not applicable'] ?? 'false';
+        if ($na === 'true') {
+            $display_options .= '|true';
+        } else {
+            $display_options .= '|false';
+        }
+        return $display_options;
+    }
+
+    /**
+     * Gets the display method for supported OSCE scales.
+     *
+     * @param array $row
+     * @return string
+     * @throws data_error
+     */
+    protected function getScaleStringOSCE(array $row): string
+    {
+        $scale = $row['scale'] ?? '0, 1, 2, 3';
+
+        switch ($scale) {
+            case '0, 1':
+                return '0|1';
+            case '0, 1, 2':
+                return '0|1|2';
+            case '0, 1, 2, 3':
+                return '0|1|2|3';
+            case '0, 1, 2, 3, 4':
+                return '0|1|2|3|4';
+            case '0, 1, 2, 3, 4, 5':
+                return '0|1|2|3|4|5';
+        }
+
+        throw new data_error("An unsupported OSCE scale was specified: $scale");
+    }
+
+    /**
+     * Gets the display method for supported 3 point scales.
+     *
+     * @param array $row
+     * @return string
+     * @throws data_error
+     */
+    protected function getScaleString3Point(array $row): string
+    {
+        $scale = $row['scale'] ?? 'Low to High';
+        switch ($scale) {
+            case 'Low to High':
+                return 'Low|Medium|High';
+            case 'Never to Always':
+                return 'Never|Sometimes|Always';
+            case 'Disagree, Neutral, Agree':
+                return 'Disagree|Neutral|Agree';
+        }
+
+        throw new data_error("An unsupported 3 Point scale was specified: $scale");
+    }
+
+
+    /**
+     * Gets the display method for supported 4 point scales.
+     *
+     * @param array $row
+     * @return string
+     * @throws data_error
+     */
+    protected function getScaleString4Point(array $row): string
+    {
+        $scale = $row['scale'] ?? 'Low to High';
+        switch ($scale) {
+            case 'Low to High':
+                return 'Low|Tending Low|Tending High|High';
+            case 'Never to Always':
+                return 'Never|Hardly|Sometimes|Always';
+            case 'Strongly Disagree, Disagree, Agree, Strongly Agree':
+                return 'Strongly Disagree|Disagree|Agree|Strongly Agree';
+        }
+
+        throw new data_error("An unsupported 4 Point scale was specified: $scale");
+    }
+
+    /**
+     * Gets the display method for supported 5 point scales.
+     *
+     * @param array $row
+     * @return string
+     * @throws data_error
+     */
+    protected function getScaleString5Point(array $row): string
+    {
+        $scale = $row['scale'] ?? 'Low to High';
+        switch ($scale) {
+            case 'Low to High':
+                return 'Low|Tending Low|Medium|Tending High|High';
+            case 'Never to Always':
+                return 'Never|Hardly|Occasionally|Sometimes|Always';
+            case 'Strongly Disagree, Disagree, Neither Disagree nor Agree, Agree, Strongly Agree':
+                return 'Strongly Disagree|Disagree|Neither Disagree nor Agree|Agree|Strongly Agree';
+            case 'Strongly Disagree, Disagree, Uncertain, Agree, Strongly Agree':
+                return 'Strongly Disagree|Disagree|Uncertain|Agree|Strongly Agree';
+            case 'Strongly Disagree, Disagree, Neutral, Agree, Strongly Agree':
+                return 'Strongly Disagree|Disagree|Neutral|Agree|Strongly Agree';
+        }
+
+        throw new data_error("An unsupported 5 Point scale was specified: $scale");
+    }
+
+    /**
+     * Gets the display method for custom scales.
+     *
+     * If the scale contains $$ we will assume that the scales entries are split by those character,
+     * if no $$ is present we will split on space.
+     *
+     * Scale entries must contain text other than spaces.
+     *
+     * @param array $row
+     * @return string
+     * @throws data_error
+     */
+    protected function getScaleStringCustom(array $row): string
+    {
+        $scale = $row['scale'] ?? 'My custom scale';
+
+        if (str_contains($scale, '$$')) {
+            $scales = explode('$$', $scale);
+        } else {
+            $scales = explode(' ', $scale);
+        }
+
+        // Discard any prt that does not contain characters.
+        $validscales = [];
+        foreach ($scales as $item) {
+            $trimmeditem = trim($item);
+            if ($trimmeditem !== '') {
+                $validscales[] = $trimmeditem;
+            }
+        }
+
+        return implode('|', $validscales);
     }
 
     /**

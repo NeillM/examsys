@@ -35,6 +35,7 @@ data.leadin - question leadin
 data.scaleopt - scale options
 scaleopt.selected - flag to indicate if option has previously been selected
 data.id - question id
+data.questionno - the position of the question on the screen
 
 Required localised text -
 lang.note - note
@@ -75,12 +76,13 @@ lang.na - not applicable
             <li class="question-cell">{{data.leadin|raw}}</li>
 {% for i,selected in data.scaleopt %}
             <li class="question-cell likert_button">
-                <input {% if i == 0 %}
+                <input {% if i == 'n/a' %}
                     aria-label="{{lang.na}}"
                     {% else %}
                     aria-label="{{attribute(data.scale, i - 1)}}"
                     {% endif %} type="radio" name="q{{data.id}}" value="{{i}}"
-                    {% if selected %} checked=\"checked\" {% endif %}/>
+                    {% if selected %} checked=\"checked\" {% endif %}
+                    data-position="{{data.questionno}}"/>
             </li>
 {% endfor %}
         </ul>

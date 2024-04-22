@@ -90,6 +90,17 @@ trait Paper
     }
 
     /**
+     * Opens an exam preview.
+     *
+     * @Given I open the survey preview
+     */
+    public function iOpenTheSurveyPreview(): void
+    {
+        $this->i_click('Test & Preview', 'link');
+        $this->i_focus_popup('ExamSys: Survey');
+    }
+
+    /**
      * Opens an osce preview.
      *
      * @Given I open the osce preview
@@ -491,7 +502,9 @@ trait Paper
         if ($answer != 'u') {
             switch ($type) {
                 case 'likert':
-                    $select = $this->find('xpath', '//*[@id="c' . $position . '_' . $answer . '"]');
+                    $oscepath = '//*[@data-qid="' . $position . '" and contains(normalize-space(.), "' . $answer . '")]';
+                    $paperpath = '//input[@data-position="' . $position . '" and @aria-label="' . $answer . '"]';
+                    $select = $this->find('xpath', "$oscepath | $paperpath");
                     $select->click();
                     break;
                 case 'mrq':
