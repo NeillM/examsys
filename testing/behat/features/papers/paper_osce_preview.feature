@@ -18,9 +18,9 @@ Feature: OSCE Preview
       | type | papertitle | paperowner | modulename | marking |
       | osce | an osce paper | teacher | Test module | Pass \| Fail |
     And the following "questions" exist:
-      | type | user | leadin | scenario | paper | screen | position | display_method |
-      | likert | teacher | likert 1 | likert 1 | an osce paper | 1 | 1 | Low\|High\|false |
-      | likert |teacher | likert 2 | likert 2 | an osce paper | 1 | 2 | Low\|High\|false |
+      | type | user | leadin | scenario | paper | screen | position | scale type | scale |
+      | likert | teacher | likert 1 | likert 1 | an osce paper | 1 | 1 | OSCE Station Scales | 0, 1 |
+      | likert |teacher | likert 2 | likert 2 | an osce paper | 1 | 2 | OSCE Station Scales | 0, 1 |
 
   @paper_preview_osce @jsevaluation
   Scenario: Preview an existing exam
@@ -29,8 +29,8 @@ Feature: OSCE Preview
     And I open the osce preview
     And I answer the questions:
       | position | type | answer |
-      | 1 | likert | 1 |
-      | 2 | likert | 2 |
+      | 1 | likert | 0 |
+      | 2 | likert | 1 |
     And I answer overall with "Fail"
     And I enter the feedback "some feedback"
     And I close the osce preview
