@@ -146,6 +146,9 @@ class renderdata extends \questiondata
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         global $string;
+        // We want to stop errors with the user answer when they have never visited the exam page.
+        $useranswer = $useranswer ?? '';
+
         $option = $this->get_opt($part_id);
         $textboxes_seen = $this->textboxesseen;
         if (!in_array($this->questionno, $textboxes_seen)) {
