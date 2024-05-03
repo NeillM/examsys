@@ -1092,7 +1092,7 @@ class PaperProperties
      */
     public function get_paper_postscript()
     {
-        return $this->paper_postscript;
+        return $this->paper_postscript ?? ''; // Avoid return null
     }
 
     /**
