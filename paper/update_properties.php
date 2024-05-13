@@ -368,9 +368,8 @@ if (!$title_unique) {
         $properties->set_fullscreen($_POST['fullscreen']);
     }
 
-    // Before update, set to defult color if it is empty
-    $properties->set_bgcolor( !empty($_POST['bgcolor']) ? $_POST['bgcolor'] : UserObject::BGCOLOUR);
-    $properties->set_fgcolor(!empty($_POST['fgcolor']) ? $_POST['bgcolor'] : UserObject::FGCOLOUR);
+    $properties->set_bgcolor($_POST['background']);
+    $properties->set_fgcolor($_POST['foreground']);
     $properties->set_themecolor($_POST['themecolor']);
     $properties->set_labelcolor($_POST['labelcolor']);
     $properties->set_folder($_POST['folderID']);
