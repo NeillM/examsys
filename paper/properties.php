@@ -630,8 +630,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     if ($properties->get_paper_type() == '4') {
-        echo '<input type="hidden" name="bgcolor" value="' . $properties->get_bgcolor() . '" />';
-        echo '<input type="hidden" name="fgcolor" value="' . $properties->get_fgcolor() . '" />';
+        echo '<input type="hidden" name="background" value="' . $properties->get_bgcolor() . '" />';
+        echo '<input type="hidden" name="foreground" value="' . $properties->get_fgcolor() . '" />';
         echo '<input type="hidden" name="themecolor" value="' . $properties->get_themecolor() . '" />';
         echo '<input type="hidden" name="labelcolor" value="' . $properties->get_labelcolor() . '" />';
         echo '<input type="hidden" name="fullscreen" value="' . $properties->get_fullscreen() . '" />';
