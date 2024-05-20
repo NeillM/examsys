@@ -117,7 +117,7 @@ if ($user_no == 0) {
       // Get the questions.
     $question_no = 1;
     $sub_totals = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
-    $cell_colors = array('#FFCBCB', '#FFE3B3', '#C0FFC0');
+    $cell_colors = array('#FFCBCB', '#FFE3B3', '#C0FFC0', '#FFFFCC', '#80FFFF', '#CCE6FF', '#FFE6FF', '#CCFFE6', '#FFE6E6', '#CCFFEE');
     $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
