@@ -100,7 +100,7 @@ class UserUtils
 
             // Force valid value for gender or default to NULL
             $genders = array('male', 'female', 'other');
-            if (!in_array(mb_strtolower($gender), $genders)) {
+            if (!in_array(mb_strtolower($gender ?? ''), $genders)) {
                 $gender = null;
             }
 
