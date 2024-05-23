@@ -221,7 +221,7 @@ class UserUtils
         // If updating the gender. Force valid value for gender or default to NULL
         if ($current['gender'] != $gender) {
             $genders = array('male', 'female', 'other');
-            if (!in_array(mb_strtolower($gender), $genders)) {
+            if (!in_array(mb_strtolower($gender ?? ''), $genders)) {
                 $gender = null;
             }
         }
