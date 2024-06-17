@@ -85,9 +85,8 @@ class restful
                 $username = '';
             }
             $errorline = __LINE__ - 13;
-            $errorfile = dirname(__FILE__) . '\restful.class.php';
             $info = json_encode($details);
-            $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl) . ' -Details- ' . $info, $errorfile, $errorline);
+            $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl) . ' -Details- ' . $info, __FILE__, $errorline);
             $response = '';
         }
         curl_close($curl);
