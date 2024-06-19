@@ -86,7 +86,8 @@ class restful
             }
             $errorline = __LINE__ - 13;
             $info = json_encode($details);
-            $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl) . ' -Details- ' . $info, __FILE__, $errorline);
+            $backtrace = json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl) . ' -Details- ' . $info . '-Backtrace-' . $backtrace, __FILE__, $errorline);
             $response = '';
         }
         curl_close($curl);
