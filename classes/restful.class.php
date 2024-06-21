@@ -72,7 +72,8 @@ class restful
         $options += $requestoptions;
         curl_setopt_array($curl, $options);
         $response = curl_exec($curl);
-        $this->http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $details  = curl_getinfo($curl); // For error log
+        $this->http_code = $details['http_code'];
         if (curl_errno($curl)) {
             $log = new Logger($this->db);
             $userObj = \UserObject::get_instance();
@@ -83,9 +84,10 @@ class restful
                 $userid = 0;
                 $username = '';
             }
-            $errorfile = $_SERVER['PHP_SELF'];
-            $errorline = __LINE__ - 11;
-            $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl), $errorfile, $errorline);
+            $errorline = __LINE__ - 13;
+            $info = json_encode($details);
+            $backtrace = json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+            $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl) . ' -Details- ' . $info . '-Backtrace-' . $backtrace, __FILE__, $errorline);
             $response = '';
         }
         curl_close($curl);
