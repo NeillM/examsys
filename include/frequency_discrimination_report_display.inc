@@ -308,28 +308,28 @@ function format_xStats(array $values)
  * @param string $status      Current exclusion status
  * @param int    $parts       Question parts
  * @param float  $marks       Marks available
+ * @param int    $question_no Question number
  *
  * @return string
  */
-function excludeButton($buttonID, $question_id, $status, $parts, $marks)
+function excludeButton($buttonID, $question_id, $status, $parts, $marks, $question_no)
 {
-    if (mb_strpos($status, '1') !== false) {
-        $html = '<input type="hidden" name="status_' . $buttonID . '" id="status_' . $buttonID . '" value="';
-        for (
-            $i = 0; $i < $marks; $i++
-        ) {
-            $html .= '1';
-        }
-        $html .= '" /><input type="hidden" name="id_' . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" data-id=\"$buttonID\" data-parts=\"$parts\" data-marks=\"$marks\"  width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
-    } else {
-        $html = '<input type="hidden" name="status_' . $buttonID . '" id="status_' . $buttonID . '" value="';
-        for (
-            $i = 0; $i < $marks; $i++
-        ) {
-            $html .= '0';
-        }
-        $html .= '" /><input type="hidden" name="id_' . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" data-id=\"$buttonID\" data-parts=\"$parts\" data-marks=\"$marks\" width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
-    }
+    $string = LangUtils::loadlangfile('frequency_discrimination_analysis.php', []);
+    $isExcluded = mb_strpos($status, '1') !== false;
+    $status_number = $isExcluded ? '1' : '0';
+    $status_value = str_repeat($status_number, $marks);
+
+    $html = '<div class="exclude-wrapper">';
+    $html .= '<input type="checkbox" id="checkbox_' . $buttonID . '" class="in-exclusion" '
+        . 'data-id="' . $buttonID . '" data-parts="' . $parts . '" data-marks="' . $marks . '" '
+        . 'aria-label="' . sprintf($string['excludequestion'], $question_no) . '" '
+        . ($isExcluded ? 'checked' : '') . '>';
+    $html .= '<label for="checkbox_' . $buttonID . '" class="exclude-label"></label>';
+    $html .= '<input type="hidden" name="status_' . $buttonID . '" id="status_' . $buttonID . '" value="'
+        . $status_value . '">';
+    $html .= '<input type="hidden" name="id_' . $buttonID . '" value="' . $question_id . '">';
+    $html .= '<input type="hidden" name="marks_' . $buttonID . '" value="' . $marks . '">';
+    $html .= '</div>';
 
     return $html;
 }
@@ -398,9 +398,9 @@ function display_question(render $render, array $question_data, array $string, s
                 }
                 echo '>' . $question_data['leadin'] . "\n";
                 if ($question_data['excluded']) {
-                    echo excludeButton($question_data['ex_no'], $question_data['id'], '1', 1, 1);
+                    echo excludeButton($question_data['ex_no'], $question_data['id'], '1', 1, 1, $question_data['no']);
                 } else {
-                    echo excludeButton($question_data['ex_no'], $question_data['id'], '0', 1, 1);
+                    echo excludeButton($question_data['ex_no'], $question_data['id'], '0', 1, 1), $question_data['no'];
                 }
                 echo '</div><p>';
                 $question->set_media(...$question_data['media']);
@@ -429,9 +429,9 @@ function display_question(render $render, array $question_data, array $string, s
                 echo '<br />';
                 if ($question_data['score_method'] == 'Mark per Question') {
                     if ($question_data['excluded']) {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', (count($question_data['parts']))), 1, (count($question_data['parts'])));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', (count($question_data['parts']))), 1, (count($question_data['parts'])), $question_data['no']);
                     } else {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', (count($question_data['parts']))), 1, (count($question_data['parts'])));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', (count($question_data['parts']))), 1, (count($question_data['parts'])), $question_data['no']);
                     }
                 }
 
@@ -452,9 +452,9 @@ function display_question(render $render, array $question_data, array $string, s
                     echo '<tr><td>' . chr($i + 64) . '.</td>';
                     if ($question_data['score_method'] == 'Mark per Option') {
                         if ($question_data['excluded']) {
-                            echo '<td>' . excludeButton($part['ex_no'], $question_data['id'], $part['excluded'], 1, 1) . '</td>';
+                            echo '<td>' . excludeButton($part['ex_no'], $question_data['id'], $part['excluded'], 1, 1, $question_data['no']) . '</td>';
                         } else {
-                            echo '<td>' . excludeButton($part['ex_no'], $question_data['id'], 0, 1, 1) . '</td>';
+                            echo '<td>' . excludeButton($part['ex_no'], $question_data['id'], 0, 1, 1, $question_data['no']) . '</td>';
                         }
                     }
 
@@ -496,18 +496,18 @@ function display_question(render $render, array $question_data, array $string, s
             case 'dichotomous':
                 if ($question_data['score_method'] == 'Mark per Question') {
                     if ($question_data['excluded']) {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
                     } else {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
                     }
                 }
                 foreach ($question_data['parts'] as $i => $part) {
                     echo '<tr><td>';
                     if ($question_data['score_method'] == 'Mark per Option') {
                         if ($question_data['excluded']) {
-                            echo excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], 1, 1);
+                            echo excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], 1, 1, $question_data['no']);
                         } else {
-                            echo excludeButton($part['ex_no'], $question_data['id'], '', 1, 1);
+                            echo excludeButton($part['ex_no'], $question_data['id'], '', 1, 1, $question_data['no']);
                         }
                     }
                     echo '</td>'
@@ -542,9 +542,9 @@ function display_question(render $render, array $question_data, array $string, s
                 . '<table cellpadding="4" cellspacing="0" border="0">' . "\n"
                 . '<tr><td>';
                 if ($question_data['excluded']) {
-                    echo excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], 1, 1);
+                    echo excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], 1, 1, $question_data['no']);
                 } else {
-                    echo excludeButton($question_data['ex_no'], $question_data['id'], '', 1, 1);
+                    echo excludeButton($question_data['ex_no'], $question_data['id'], '', 1, 1, $question_data['no']);
                 }
                 echo '</td>'
                 . '<td style="width:60px"><strong>t=' . $question_data['t'] . '%</strong></td>'
@@ -567,9 +567,9 @@ function display_question(render $render, array $question_data, array $string, s
                 break;
             case 'true_false':
                 if ($question_data['excluded']) {
-                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], '11', 2, 2) . '</td></tr>' . "\n";
+                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], '11', 2, 2, $question_data['no']) . '</td></tr>' . "\n";
                 } else {
-                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], '00', 2, 2) . '</td></tr>' . "\n";
+                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], '00', 2, 2, $question_data['no']) . '</td></tr>' . "\n";
                 }
                 echo '<tr><td>t=' . number_format($question_data['p_true'] * 100) . '%</td>'
                 . '<td>u=' . number_format($question_data['p_top_true'] * 100) . '%</td>'
@@ -621,9 +621,9 @@ function display_question(render $render, array $question_data, array $string, s
             case 'labelling':
                 if ($question_data['score_method'] == 'Mark per Question') {
                     if ($question_data['excluded']) {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
                     } else {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
                     }
                 }
 
@@ -645,9 +645,9 @@ function display_question(render $render, array $question_data, array $string, s
                     foreach ($part['options'] as $option) {
                         if ($question_data['score_method'] == 'Mark per Option') {
                             if ($question_data['excluded']) {
-                                echo '<td>' . excludeButton($option['ex_no'], $question_data['id'], $option['exclusions'], 1, 1) . '</td>';
+                                echo '<td>' . excludeButton($option['ex_no'], $question_data['id'], $option['exclusions'], 1, 1, $question_data['no']) . '</td>';
                             } else {
-                                echo '<td>' . excludeButton($option['ex_no'], $question_data['id'], '', 1, 1) . '</td>';
+                                echo '<td>' . excludeButton($option['ex_no'], $question_data['id'], '', 1, 1, $question_data['no']) . '</td>';
                             }
                             echo '<td>' . format_pStats($option['p_stats'], $string) . '</td>'
                                 . '<td>' . format_dStats($option['d_stats'], $string) . '</td>'
@@ -683,9 +683,9 @@ function display_question(render $render, array $question_data, array $string, s
                 break;
             case 'flash':
                 if ($question_data['excluded']) {
-                    echo excludeButton($question_data['ex_no'], $question_data['id'], 1, 1, 1);
+                    echo excludeButton($question_data['ex_no'], $question_data['id'], 1, 1, 1, $question_data['no']);
                 } else {
-                    echo excludeButton($question_data['ex_no'], $question_data['id'], 0, 1, 1);
+                    echo excludeButton($question_data['ex_no'], $question_data['id'], 0, 1, 1, $question_data['no']);
                 }
                 echo $question_data['leadin'];
                 $flashrender = new render(
@@ -707,9 +707,9 @@ function display_question(render $render, array $question_data, array $string, s
             case 'hotspot':
                 if ($question_data['score_method'] == 'Mark per Question') {
                     if ($question_data['excluded']) {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
                     } else {
-                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']));
+                        echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
                     }
                 }
                 echo '<div id="coords' . $question_data['no'] . '" data-value="' . $question_data['coords'] . '"></div><div
@@ -728,9 +728,9 @@ function display_question(render $render, array $question_data, array $string, s
                     echo '<tr><td>' . chr($i + 64) . '.</td><td>';
                     if ($question_data['score_method'] == 'Mark per Option') {
                         if ($question_data['excluded']) {
-                            echo excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], 1, 1);
+                            echo excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], 1, 1, $question_data['no']);
                         } else {
-                            echo excludeButton($part['ex_no'], $question_data['id'], '', 1, 1);
+                            echo excludeButton($part['ex_no'], $question_data['id'], '', 1, 1, $question_data['no']);
                         }
                     }
                     echo '</td><td>' . format_pStats($part['p_stats'], $string) . '</td>'
@@ -767,9 +767,9 @@ function display_question(render $render, array $question_data, array $string, s
                 break;
             case 'mcq':
                 if ($question_data['excluded']) {
-                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], $question_data['option_count'], 1) . "</td></tr>\n";
+                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], $question_data['option_count'], 1, $question_data['no']) . "</td></tr>\n";
                 } else {
-                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], '', $question_data['option_count'], 1) . "</td></tr>\n";
+                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], '', $question_data['option_count'], 1, $question_data['no']) . "</td></tr>\n";
                 }
                 foreach ($question_data['parts'] as $i => $part) {
                     if ($part['correct'] == true) {
@@ -811,9 +811,9 @@ function display_question(render $render, array $question_data, array $string, s
                 break;
             case 'mrq':
                 if ($question_data['excluded']) {
-                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], count($question_data['parts']), count($question_data['parts'])) . "</td></tr>\n";
+                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], count($question_data['parts']), count($question_data['parts']), $question_data['no']) . "</td></tr>\n";
                 } else {
-                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], '', count($question_data['parts']), count($question_data['parts'])) . "</td></tr>\n";
+                    echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], '', count($question_data['parts']), count($question_data['parts']), $question_data['no']) . "</td></tr>\n";
                 }
                 foreach ($question_data['parts'] as $i => $part) {
                     if ($part['correct'] == true) {
@@ -855,9 +855,9 @@ function display_question(render $render, array $question_data, array $string, s
                 break;
             case 'rank':
                 if ($question_data['excluded']) {
-                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], count($question_data['parts']), count($question_data['parts']) + 1) . "</td></tr>\n";
+                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], count($question_data['parts']), count($question_data['parts']) + 1, $question_data['no']) . "</td></tr>\n";
                 } else {
-                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], '', count($question_data['parts']), count($question_data['parts']) + 1) . "</td></tr>\n";
+                    echo '<tr><td colspan="4">' . excludeButton($question_data['ex_no'], $question_data['id'], '', count($question_data['parts']), count($question_data['parts']) + 1, $question_data['no']) . "</td></tr>\n";
                 }
                 foreach ($question_data['parts'] as $i => $part) {
                     if ($question_data['excluded']) {
@@ -908,7 +908,7 @@ function display_question(render $render, array $question_data, array $string, s
                 . '<td colspan="3">' . format_dStats($question_data['d_stats'], $string) . '</td></tr>' . "\n";
                 break;
             case 'sct':
-                echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], count($question_data['parts']), 1) . '</td></tr>' . "\n";
+                echo '<tr><td colspan="3">' . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], count($question_data['parts']), 1, $question_data['no']) . '</td></tr>' . "\n";
                 foreach ($question_data['parts'] as $i => $part) {
                     if ($part['correct']) {
                         echo '<tr class="grey correct">';
@@ -939,10 +939,10 @@ function display_question(render $render, array $question_data, array $string, s
         echo '<td class="q_no">' . $question_data['no'] . '.&nbsp;</td><td>';
         if ($question_data['excluded']) {
             echo '<div class="excluded" id="q_' . $question_data['ex_no'] . '_1">'
-            . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], 1, 1);
+            . excludeButton($question_data['ex_no'], $question_data['id'], $question_data['exclusions'], 1, 1, $question_data['no']);
         } else {
             echo '<div id="q_' . $question_data['ex_no'] . '_1">'
-            . excludeButton($question_data['ex_no'], $question_data['id'], '', 1, 1);
+            . excludeButton($question_data['ex_no'], $question_data['id'], '', 1, 1, $question_data['no']);
         }
         echo '&nbsp;' . $question_data['leadin'] . '</div>'
         . '<table cellpadding="4" cellspacing="0" border="0">';
@@ -1021,9 +1021,9 @@ function display_question(render $render, array $question_data, array $string, s
                 echo '<div id="q_' . $question_data['ex_no'] . '_1">' . $question_data['leadin'] . '</div>';
             }
             if ($question_data['excluded']) {
-                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']));
+                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
             } else {
-                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']));
+                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
             }
         } else {
             echo '<div>' . $question_data['leadin'] . '</div>';
@@ -1043,9 +1043,9 @@ function display_question(render $render, array $question_data, array $string, s
                 if ($option_no == 1) {
                     if ($question_data['score_method'] == 'Mark per Option') {
                         if ($part['excluded']) {
-                            echo '<td>' .  excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], 1, 1) . '</td>';
+                            echo '<td>' .  excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], 1, 1, $question_data['no']) . '</td>';
                         } else {
-                            echo '<td>' .  excludeButton($part['ex_no'], $question_data['id'], '', 1, 1) . '</td>';
+                            echo '<td>' .  excludeButton($part['ex_no'], $question_data['id'], '', 1, 1, $question_data['no']) . '</td>';
                         }
                     }
 
@@ -1096,9 +1096,9 @@ function display_question(render $render, array $question_data, array $string, s
         echo $question_data['leadin'] . '</div>' . "\n";
         if ($question_data['score_method'] == 'Mark per Question') {
             if ($question_data['excluded']) {
-                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']));
+                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('1', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
             } else {
-                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']));
+                echo excludeButton($question_data['ex_no'], $question_data['id'], str_repeat('0', count($question_data['parts'])), 1, count($question_data['parts']), $question_data['no']);
             }
         }
         echo '<ol class="extmatch">';
@@ -1121,9 +1121,9 @@ function display_question(render $render, array $question_data, array $string, s
             }
             if ($question_data['score_method'] == 'Mark per Option') {
                 if ($question_data['excluded']) {
-                    echo '<div>' . excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], count($part['options']), $question_data['correct_stems']) . '</div>';
+                    echo '<div>' . excludeButton($part['ex_no'], $question_data['id'], $part['exclusions'], count($part['options']), $question_data['correct_stems'], $question_data['no']) . '</div>';
                 } else {
-                    echo '<div>' . excludeButton($part['ex_no'], $question_data['id'], '', count($part['options']), $question_data['correct_stems']) . '</div>';
+                    echo '<div>' . excludeButton($part['ex_no'], $question_data['id'], '', count($part['options']), $question_data['correct_stems'], $question_data['no']) . '</div>';
                 }
             }
             echo '<div><table cellpadding="4" cellspacing="0" border="0">' . "\n";

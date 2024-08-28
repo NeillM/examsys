@@ -49,7 +49,7 @@ requirejs(['media', 'html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery']
         freqdisc.blankCorrect($(this).attr('data-qid'), $(this).attr('data-i'));
     });
 
-    $('.in-exclusion').click(function() {
+    $('.in-exclusion').change(function() {
         freqdisc.toggle($(this).attr('data-id'), $(this).attr('data-parts'), $(this).attr('data-marks'));
     });
 });
