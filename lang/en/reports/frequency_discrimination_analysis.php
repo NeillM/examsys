@@ -80,3 +80,4 @@ $string['rank_other'] = 'th';
 $string['marks'] = 'marks';
 $string['mark'] = 'mark';
 $string['unmarked'] = 'unmarked';
+$string['excludequestion'] = 'Exclude question %s';

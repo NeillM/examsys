@@ -28,27 +28,26 @@ define(['jquery'], function ($) {
          * @param integer marks number of question marks
          */
         this.toggle = function(qID, parts, marks) {
-            for (var i = 1; i <= parts; i++) {
-                if ($('#status_' + qID).val().substr(0,1) == '1') {
-                    $('#q_' + qID + '_' + i).removeClass('excluded');
-                } else {
-                    $('#q_' + qID + '_' + i).addClass('excluded');
-                }
-            }
+            var $statusInput = $('#status_' + qID);
+            var $checkbox = $('#checkbox_' + qID);
+            var isExcluded = $statusInput.val().charAt(0) === '1';
 
-            var new_value = '';
-            if ($('#status_' + qID).val().substr(0,1) == '1') {
-                for (var j = 1; j <= marks; j++) {
-                    new_value += '0';
+            // Update the checkbox state
+            isExcluded = !isExcluded;
+            $checkbox.prop('checked', isExcluded);
+
+            // Update the hidden input containing marks
+            var new_value = isExcluded ? '1'.repeat(marks) : '0'.repeat(marks);
+            $statusInput.val(new_value);
+
+            // Update the excluded class on related elements
+            for (var i = 1; i <= parts; i++) {
+                var $part = $('#q_' + qID + '_' + i);
+                if (isExcluded) {
+                    $part.addClass('excluded');
+                } else {
+                    $part.removeClass('excluded');
                 }
-                $('#status_' + qID).val(new_value);
-                $('#button_' + qID).attr('src', '../artwork/exclude_off.gif');
-            } else {
-                for (var k = 1; k <= marks; k++) {
-                    new_value += '1';
-                }
-                $('#status_' + qID).val(new_value);
-                $('#button_' + qID).attr('src', '../artwork/exclude_on.gif');
             }
         };
 
