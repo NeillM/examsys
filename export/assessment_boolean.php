@@ -119,11 +119,46 @@ if (!isset($paper_type)) {
 
 // Get order of the class.
 $student_list = '';
-if ($paper_type == '0') {
-    $result = $mysqli->prepare("(SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? $user_sql GROUP BY log_metadata.userID, paperID, started) UNION ALL (SELECT log_metadata.userID, sum(mark) AS total_mark FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND paperID = ? AND started >= ? AND started <= ? $user_sql GROUP BY log_metadata.userID, paperID, started) ORDER BY total_mark");
+$time_int = \log::getStartInterval($paper_type);
+$progress_time_int = \log::getStartInterval(\assessment::TYPE_PROGRESS);
+if ($paper_type == \assessment::TYPE_FORMATIVE) {
+    $sql = "(
+                SELECT 
+                    log_metadata.userID, SUM(mark) AS total_mark 
+                FROM 
+                    log0, log_metadata 
+                WHERE 
+                    log0.metadataID = log_metadata.id AND paperID = ? 
+                    AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ? $user_sql 
+                GROUP BY 
+                    log_metadata.userID, paperID, started
+            ) UNION ALL (
+                SELECT
+                    log_metadata.userID, sum(mark) AS total_mark 
+                FROM 
+                    log1, log_metadata 
+                WHERE 
+                    log1.metadataID = log_metadata.id AND paperID = ? 
+                    AND DATE_ADD(started, INTERVAL $progress_time_int MINUTE) >= ? AND started <= ? $user_sql 
+                GROUP BY 
+                    log_metadata.userID, paperID, started
+            ) 
+            ORDER BY total_mark";
+    $result = $mysqli->prepare($sql);
     $result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
 } else {
-    $result = $mysqli->prepare("SELECT log_metadata.userID, SUM(mark) AS total_mark FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? $user_sql GROUP BY log_metadata.userID, paperID, started ORDER BY total_mark");
+    $sql = "SELECT
+                log_metadata.userID, SUM(mark) AS total_mark 
+            FROM
+                log$paper_type, log_metadata 
+            WHERE
+                log$paper_type.metadataID = log_metadata.id AND paperID = ? 
+                AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ? $user_sql 
+            GROUP BY
+                log_metadata.userID, paperID, started 
+            ORDER BY
+                total_mark";
+    $result = $mysqli->prepare($sql);
     $result->bind_param('iss', $paperID, $startdate, $enddate);
 }
 $result->execute();
@@ -149,7 +184,7 @@ if ($student_no > 0) {
     $hits = 0;
     $rowID = 0;
     // Capture the log data.
-    if ($paper_type == '0') {
+    if ($paper_type == \assessment::TYPE_FORMATIVE) {
         $sql = "
             (
                 SELECT DISTINCT 
@@ -162,7 +197,7 @@ if ($student_no > 0) {
                     AND paperID = ? AND u.id = lm.userID 
                     AND u.id = ur.userid
                     AND r.name IN ('Student', 'graduate')
-                    AND grade LIKE ? AND started >= ? AND started <= ?
+                    AND grade LIKE ? AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ?
             ) UNION ALL (
                  SELECT DISTINCT 
                     username, lm.userID, title, surname, first_names, grade, gender, year, started, 
@@ -174,7 +209,7 @@ if ($student_no > 0) {
                     AND paperID = ? AND u.id = lm.userID 
                     AND u.id = ur.userid
                     AND r.name IN ('Student', 'graduate')
-                    AND grade LIKE ? AND started >= ? AND started <= ?
+                    AND grade LIKE ? AND DATE_ADD(started, INTERVAL $progress_time_int MINUTE) >= ? AND started <= ?
             ) ORDER BY 
                 surname, first_names, started, userID
         ";
@@ -193,7 +228,7 @@ if ($student_no > 0) {
                 AND u.id = ur.userid
                 AND r.name IN ('Student', 'graduate')
                 AND grade LIKE ? 
-                AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? 
+                AND DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND started <= ? 
             ORDER BY
                 surname, first_names, started, userID
         ";

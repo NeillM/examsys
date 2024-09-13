@@ -198,6 +198,7 @@ abstract class log
             $from = 'log' . $this->papertype . ', log_metadata, users';
         }
         $userfilter = self::get_user_filter($userlist);
+        $time_int = self::getStartInterval($this->papertype);
         $sql = "SELECT
             log_metadata.userID,
             SUM(mark) AS total_mark 
@@ -206,7 +207,7 @@ abstract class log
           WHERE
             log$this->papertype.metadataID = log_metadata.id AND
             paperID = ? AND
-            DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND
+            DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND
             started <= ? $userfilter AND
             log_metadata.userID = users.id $rolefilter
           GROUP BY
@@ -251,6 +252,9 @@ abstract class log
             $rolefilter = '';
             $from = 'log' . $this->papertype . ', log_metadata, questions, users';
         }
+
+        $time_int = self::getStartInterval($this->papertype);
+
         $sql = "SELECT DISTINCT
         username,
         log_metadata.userID,
@@ -274,7 +278,7 @@ abstract class log
         paperID = ? AND
         users.id = log_metadata.userID $rolefilter AND
         grade LIKE ? AND
-        DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND 
+        DATE_ADD(started, INTERVAL $time_int MINUTE) >= ? AND 
         started <= ?
       ORDER BY 
         surname,
@@ -468,5 +472,22 @@ abstract class log
         $result->close();
 
         return $prev_attempts;
+    }
+
+    /**
+     * Gets the amount of time we consider attempts before the start of a paper to be current.
+     *
+     * Paper types that allow an invigilator to start them may start shortly before the actual start time
+     * since their clocks and the server time may not align exactly.
+     *
+     * @param int $papertype The type of paper
+     * @return int Number of minutes
+     */
+    public static function getStartInterval(int $papertype): int
+    {
+        return match ($papertype) {
+            \assessment::TYPE_SUMMATIVE, \assessment::TYPE_PROGRESS => 2,
+            default => 0,
+        };
     }
 }
