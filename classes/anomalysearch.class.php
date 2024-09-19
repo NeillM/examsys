@@ -73,7 +73,7 @@ class AnomalySearch extends Search
     /**
      * Returns the SQL for the start time filter
      *
-     * @return string
+     * @return SQLFragment
      */
     protected function generateStartTimeSQL(): SQLFragment
     {
@@ -87,7 +87,7 @@ class AnomalySearch extends Search
     /**
      * Returns the SQL for the end time filter
      *
-     * @return string
+     * @return SQLFragment
      */
     protected function generateEndTimeSQL(): SQLFragment
     {
@@ -100,7 +100,7 @@ class AnomalySearch extends Search
     /**
      * Returns the SQL for the start time filter
      *
-     * @return string
+     * @return SQLFragment
      */
     protected function generatePaperSQL(): SQLFragment
     {
@@ -113,16 +113,17 @@ class AnomalySearch extends Search
     /**
      * Returns the SQL user filter
      *
-     * @return string
+     * @return SQLFragment
      */
     protected function generateUserSQL(): SQLFragment
     {
         $sql = new SQLFragment();
-        $userjoin = 'LEFT JOIN';
+
+        $roles = '';
         if ($this->studentonly) {
-            $userjoin = 'JOIN';
+            $roles = \log::get_student_only('u.id');
         }
-        $sql->sql = $userjoin . ' sid s ON s.userID = u.id';
+        $sql->sql = $roles . 'LEFT JOIN sid s ON s.userID = u.id';
         return $sql;
     }
 
