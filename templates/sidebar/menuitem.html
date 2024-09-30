@@ -1,0 +1,15 @@
+<div class="menuitem {{ item.classes }}" role="menuitem" {% if item.disabled %}aria-disabled="true" {% endif %} {% if
+    item.hasPopup %}aria-haspopup="true" {% endif %} {% if item.id %}id="{{ item.id }}" {% endif %} {% if
+    item.data_attributes %} {% for key, value in item.data_attributes %} data-{{ key }}="{{ value }}" {% endfor %} {%
+    endif %}>
+    {% if not item.disabled and item.href %}
+    <a href="{{ item.href }}" tabindex="{{ item.tabindex|default(0) }}">
+        {% endif %}
+        {% if item.icon %}
+        <img class="sidebar_icon" src="{{ item.icon }}" alt="" />
+        {% endif %}
+        {{ item.text }}
+        {% if not item.disabled and item.href %}
+    </a>
+    {% endif %}
+</div>
