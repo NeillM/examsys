@@ -1,7 +1,7 @@
 <?php
 
 class MenuItemData {
-    private $configObject;
+
     private $string;
 
     public function __construct($configObject, $string) {
@@ -12,7 +12,7 @@ class MenuItemData {
     public function createMenuItem($text, $icon, $href = '#', $classes = '', $disabled = false, $id = '', $dataAttributes = [], $hasPopup = false, $tabindex = 0) {
         return [
             'text' => $text,
-            'icon' => $this->configObject->get('cfg_root_path') . '/artwork/' . $icon,
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . $icon,
             'href' => $href,
             'classes' => $classes,
             'disabled' => $disabled,
@@ -28,7 +28,7 @@ class MenuItemData {
             return [
                 'classes' => 'grey menuitem',
                 'disabled' => true,
-                'icon' => $this->configObject->get('cfg_root_path') . '/artwork/small_play_grey.png',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_play_grey.png',
                 'text' => $this->string['testpreview'],
                 'href' => '#',
                 'hasPopup' => false,
@@ -38,7 +38,7 @@ class MenuItemData {
             return [
                 'classes' => 'menuitem startpaper',
                 'disabled' => false,
-                'icon' => $this->configObject->get('cfg_root_path') . '/artwork/small_play.png',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_play.png',
                 'text' => $this->string['testpreview'],
                 'href' => '#',
                 'hasPopup' => false,
