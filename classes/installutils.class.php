@@ -1112,6 +1112,7 @@ class InstallUtils
             }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".admin_access TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT INSERT ON ' . $dbname . ".audit_log TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".courses TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".client_identifiers TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".labs TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
