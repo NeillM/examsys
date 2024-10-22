@@ -193,7 +193,10 @@ if ($properties->get_item_no() == 0) {
 }
 
 // Import/Export
-echo "<div class=\"menuitem cascade showmenu\" id=\"qti\" data-popupid=\"2\" data-popuptype=\"papertasks\" data-popupname=\"qti\" role=\"menuitem\" aria-haspopup=\"true\" tabindex=\"0\"><a href=\"#\" tabindex=\"-1\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ims_16.png\" alt=\"\" />" . $string['importexport'] . "</a></div>\n";
+$importExportItem = $menuItemData->getImportExportItem($properties, $paperID, $module);
+$render->render($importExportItem, $string, 'sidebar/submenuitem.html');
+
+// echo "<div class=\"menuitem cascade showmenu\" id=\"qti\" data-popupid=\"2\" data-popuptype=\"papertasks\" data-popupname=\"qti\" role=\"menuitem\" aria-haspopup=\"true\" tabindex=\"0\"><a href=\"#\" tabindex=\"-1\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ims_16.png\" alt=\"\" />" . $string['importexport'] . "</a></div>\n";
 
 // Student Cohort
 if ($properties->get_calendar_year()) {
