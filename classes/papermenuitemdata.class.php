@@ -39,6 +39,24 @@ class MenuItemData {
         ];
     }
 
+    public function createPopupMenuItem($id, $text, $icon, $popupType, $popupId, $template = 'sidebar/popupmenuitem.html') {
+        return [
+            'id' => $id,
+            'text' => $text,
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . $icon,
+            'classes' => 'menuitem cascade showmenu',
+            'disabled' => false,
+            'hasPopup' => true,
+            'href' => '#',
+            'tabindex' => -1,
+            'data_attributes' => [
+                'popupid' => $popupId,
+                'popuptype' => 'papertasks',
+                'popupname' => $popupType
+            ],
+            'template' => $template
+        ];
+    }
 
     public function getTestPreviewItem($properties) {
         if ($properties->get_paper_type() == '5' || $properties->get_item_no() == 0) {
@@ -103,5 +121,120 @@ class MenuItemData {
             ['popupid' => '2', 'popuptype' => 'papertasks', 'popupname' => 'qti'],
             $submenuItems
         );
+    }
+
+    public function getReportsItem($properties, $paperID, $module, $folder, $checklist, $graded = false) {
+        $paperType = $properties->get_paper_type();
+        
+        // Return early if no items for types 0,1,2,5,6
+        if (in_array($paperType, ['0', '1', '2', '5', '6']) && $properties->get_item_no() == 0) {
+            return [
+                'classes' => 'grey menuitem greycascade',
+                'disabled' => true,
+                'icon' => 'statistics_icon_grey.gif',
+                'text' => $this->string['reports'],
+                'hasPopup' => false
+            ];
+        }
+
+        // Create base reports menu item
+        $item = $this->createPopupMenuItem(
+            'reports',
+            $this->string['reports'],
+            'statistics_icon.gif',
+            'reports',
+            '4'
+        );
+
+        // Add submenu items based on paper type and conditions
+        $item['submenu_items'] = $this->getReportSubmenuItems(
+            $paperType,
+            $properties,
+            $paperID,
+            $module, 
+            $folder,
+            $checklist,
+            $graded
+        );
+
+        return $item;
+    }
+
+    private function getReportSubmenuItems($paperType, $properties, $paperID, $module, $folder, $checklist, $graded) {
+        $submenuItems = [];
+
+        // Handle mapping objectives for all applicable types
+        if (mb_strpos($checklist, 'mapping') !== false && 
+            !in_array($paperType, ['6']) && 
+            ($paperType <= 2 || $paperType == 4 || $paperType == 5)) {
+            $submenuItems[] = $this->getMappedObjectivesItem($properties, $paperID, $module, $folder);
+        }
+
+        // Add type-specific menu items
+        $typeSpecificItems = [
+            '5' => [
+                'text' => $this->string['importmarks'],
+                'icon' => 'import_16.gif',
+                'path' => "/import/offline_marks.php"
+            ],
+            '4' => [
+                'text' => $this->string['importoscemarks'],
+                'icon' => 'import_16.gif',
+                'path' => "/import/osce_marks.php",
+                'condition' => !$graded
+            ]
+        ];
+
+        if (isset($typeSpecificItems[$paperType])) {
+            $item = $typeSpecificItems[$paperType];
+            if (!isset($item['condition']) || $item['condition']) {
+                $submenuItems[] = [
+                    'classes' => 'menuitem',
+                    'text' => $item['text'],
+                    'icon' => $item['icon'],
+                    'href' => Config::get_instance()->get('cfg_root_path') . 
+                            $item['path'] . "?paperID=$paperID&module=$module&folder=$folder",
+                    'tabindex' => 0
+                ];
+            }
+        }
+
+        // Add standards setting for applicable types
+        if ($paperType != '6' && mb_strpos($checklist, 'stdset') !== false) {
+            $submenuItems[] = [
+                'classes' => 'menuitem',
+                'text' => $this->string['standardssetting'],
+                'icon' => 'std_set_icon_16.gif',
+                'href' => Config::get_instance()->get('cfg_root_path') . 
+                        "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
+                'tabindex' => 0
+            ];
+        }
+
+        return $submenuItems;
+    }
+
+    private function getMappedObjectivesItem($properties, $paperID, $module, $folder) {
+        if ($properties->get_calendar_year() == '') {
+            return [
+                'classes' => 'greymenuitem',
+                'disabled' => true,
+                'icon' => 'curriculum_map_small_grey.png',
+                'text' => $this->string['mappedobjectives']
+            ];
+        }
+        
+        return [
+            'classes' => 'menuitem',
+            'text' => $this->string['mappedobjectives'],
+            'icon' => 'curriculum_map_small.png',
+            'href' => Config::get_instance()->get('cfg_root_path') . 
+                    "/mapping/paper_by_session.php?paperID=$paperID&paper_title=" . 
+                    $properties->get_paper_title() . 
+                    "&sd=" . $properties->get_start_date() . 
+                    "&ed=" . $properties->get_end_date() . 
+                    "&module=$module&folder=$folder",
+            'tabindex' => 0
+        ];
     }
 }
