@@ -129,8 +129,21 @@ if ($properties->get_paper_type() == '2') {
 // Reports
 $reportsItem = $menuItemData->getReportsItem($properties, $paperID, $module, $folder, $checklist, isset($graded) ? $graded : false);
 if ($reportsItem) {
-    $render->render($reportsItem, $string, 'sidebar/popupmenuitem.html');
+    $render->render($reportsItem, $string, 'sidebar/menuitem.html');
 }
+
+    // Add Standard Settings item if applicable
+    if ($properties->get_paper_type() != '6' && mb_strpos($checklist, 'stdset') !== false) {
+        $standardSettingsItem = [
+            'classes' => 'menuitem',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/std_set_icon_16.gif',
+            'text' => $string['standardssetting'],
+            'href' => Config::get_instance()->get('cfg_root_path') . 
+                    "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
+            'tabindex' => 0
+        ];
+        $render->render($standardSettingsItem, $string, 'sidebar/menuitem.html');
+    }
 // if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5' or $properties->get_paper_type() == '6') {
 //     if ($properties->get_item_no() == 0) {
 //         echo "<div class=\"grey menuitem greycascade\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon_grey.gif\" alt=\"\" />" . $string['reports'] . "</div>\n";
