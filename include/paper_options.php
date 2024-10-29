@@ -96,16 +96,6 @@ $render = new render($configObject);
 $testPreviewItem = $menuItemData->getTestPreviewItem($properties);
 $render->render($testPreviewItem, $string,  'sidebar/menuitem.html');
 
-// if ($properties->get_paper_type() == '5') {      // Offline
-//     echo "<div class=\"grey menuitem\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_play_grey.png\" alt=\"\" />" . $string['testpreview'] . "</div>\n";
-// } else {
-//     if ($properties->get_item_no() > 0) {
-//         echo '<div class="menuitem startpaper" data-fullscreen="' . $properties->get_fullscreen() . '" data-preview="0" role="menuitem"><a href="#" tabindex="0"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/small_play.png" alt="" />' . $string['testpreview'] . "</a></div>\n";
-//     } else {
-//         echo "<div class=\"grey menuitem\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_play_grey.png\" alt=\"\" />" . $string['testpreview'] . "</div>\n";
-//     }
-// }
-
 // Add Questions to Paper
 if ($properties->get_summative_lock() == 1) {
     echo "<div class=\"grey menuitem\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"\" />" . $string['addquestionspaper'] . "</div>\n";
@@ -144,39 +134,6 @@ if ($reportsItem) {
         ];
         $render->render($standardSettingsItem, $string, 'sidebar/menuitem.html');
     }
-// if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5' or $properties->get_paper_type() == '6') {
-//     if ($properties->get_item_no() == 0) {
-//         echo "<div class=\"grey menuitem greycascade\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon_grey.gif\" alt=\"\" />" . $string['reports'] . "</div>\n";
-//     } else {
-//         echo "<div class=\"menuitem cascade stats\" role=\"menuitem\" aria-haspopup=\"true\"><a href=\"#\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"\" />" . $string['reports'] . "</a></div>\n";
-//     }
-//     if (mb_strpos($checklist, 'mapping') !== false and $properties->get_paper_type() != '6') {
-//         if ($properties->get_calendar_year() == '') {
-//               echo "<div class=\"greymenuitem\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/curriculum_map_small_grey.png\" alt=\"\" />" . $string['mappedobjectives'] . "</div>\n";
-//         } else {
-//             echo "<div class=\"menuitem\" role=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/mapping/paper_by_session.php?paperID=$paperID&paper_title=" . $properties->get_paper_title() . '&sd=' . $properties->get_start_date() . '&ed=' . $properties->get_end_date() . '&module=' . $module . '&folder=' . $folder . "\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/curriculum_map_small.png\" alt=\"\" />" . $string['mappedobjectives'] . "</a></div>\n";
-//         }
-//     }
-//     if ($properties->get_paper_type() == '5') {
-//         echo "<div class=\"menuitem\" role=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/import/offline_marks.php?paperID=$paperID&module=" . $module . '&folder=' . $folder . "\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/import_16.gif\" alt=\"\" />" . $string['importmarks'] . "</a></div>\n";
-//     } elseif ($properties->get_paper_type() != '6') {
-//         if (mb_strpos($checklist, 'stdset') !== false) {
-//             echo "<div class=\"menuitem\" role=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/std_setting/index.php?paperID=$paperID&module=" . $module . '&folder=' . $folder . "\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/std_set_icon_16.gif\" alt=\"\" />" . $string['standardssetting'] . "</a></div>\n";
-//         }
-//     }
-// } elseif ($properties->get_paper_type() == '3') {
-//     echo "<div class=\"menuitem cascade stats\" id=\"reports\" role=\"menuitem\" aria-haspopup=\"true\"><a href=\"#\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"\" />" . $string['reports'] . "</a></div>\n";
-// } elseif ($properties->get_paper_type() == '4') {
-//     echo "<div class=\"menuitem cascade stats\" id=\"reports\" role=\"menuitem\" aria-haspopup=\"true\"><a href=\"#\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/statistics_icon.gif\" alt=\"\" />" . $string['reports'] . "</a></div>\n";
-//     $gradebook = new gradebook($mysqli);
-//     $graded = $gradebook->paper_graded($paperID);
-//     if (!$graded) {
-//         echo "<div class=\"menuitem\" role=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/import/osce_marks.php?paperID=$paperID&module=" . $module . '&folder=' . $folder . "\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/import_16.gif\" alt=\"\" />" . $string['importoscemarks'] . "</a></div>\n";
-//     }
-//     if (mb_strpos($checklist, 'mapping') !== false) {
-//         echo "<div class=\"menuitem\" role=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/mapping/paper_by_session.php?paperID=$paperID&paper_title=" . $properties->get_paper_title() . '&sd=' . $properties->get_start_date() . '&ed=' . $properties->get_end_date() . '&module=' . $module . '&folder=' . $folder . "\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/curriculum_map_small.png\" alt=\"\" />" . $string['mappedobjectives'] . "</a></div>\n";
-//     }
-// }
 
 // Copy Paper
 echo "<div class=\"menuitem cascade\" id=\"copypaper\" role=\"menuitem\" aria-haspopup=\"true\"><a href=\"#\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/copy_icon.gif\" alt=\"\" />" . $string['copypaper'] . "</a></div>\n";
