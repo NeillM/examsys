@@ -125,93 +125,105 @@ class MenuItemData {
 
     public function getReportsItem($properties, $paperID, $module, $folder, $checklist, $graded = false) {
         $paperType = $properties->get_paper_type();
+        $iconRoot = Config::get_instance()->get('cfg_root_path') . '/artwork/';
         
-        // Return early if no items for types 0,1,2,5,6
-        if (in_array($paperType, ['0', '1', '2', '5', '6']) && $properties->get_item_no() == 0) {
+        // Handling type 0,1,2,5,6 papers
+        if (in_array($paperType, ['0', '1', '2', '5', '6'])) {
+            if ($properties->get_item_no() == 0) {
+                return [
+                    'classes' => 'grey menuitem greycascade',
+                    'disabled' => true,
+                    'icon' => $iconRoot . 'statistics_icon_grey.gif',
+                    'text' => $this->string['reports'],
+                    'hasPopup' => false
+                ];
+            } else {
+                $items = [[
+                    'classes' => 'menuitem cascade stats',
+                    'disabled' => false,
+                    'icon' => $iconRoot . 'statistics_icon.gif',
+                    'text' => $this->string['reports'],
+                    'hasPopup' => true,
+                    'href' => '#',
+                    'tabindex' => 0,
+                    'id' => 'reports'
+                ]];
+
+                // Add mapping objectives if applicable
+                if (mb_strpos($checklist, 'mapping') !== false && $paperType != '6') {
+                    $items[] = $this->getMappedObjectivesItem($properties, $paperID, $module, $folder);
+                }
+
+                // Add paper type specific items
+                if ($paperType == '5') {
+                    $items[] = [
+                        'classes' => 'menuitem',
+                        'icon' => $iconRoot . 'import_16.gif',
+                        'text' => $this->string['importmarks'],
+                        'href' => $iconRoot . "/import/offline_marks.php?paperID=$paperID&module=$module&folder=$folder",
+                        'tabindex' => 0
+                    ];
+                } elseif ($paperType != '6') {
+                    if (mb_strpos($checklist, 'stdset') !== false) {
+                        $items[] = [
+                            'classes' => 'menuitem',
+                            'icon' => $iconRoot . 'std_set_icon_16.gif',
+                            'text' => $this->string['standardssetting'],
+                            'href' => $iconRoot . "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
+                            'tabindex' => 0
+                        ];
+                    }
+                }
+
+                return $items[0]; // Return main reports item, other items handled by submenu
+            }
+        }
+        
+        // Handling type 3 paper
+        if ($paperType == '3') {
             return [
-                'classes' => 'grey menuitem greycascade',
-                'disabled' => true,
-                'icon' => 'statistics_icon_grey.gif',
+                'classes' => 'menuitem cascade stats',
+                'disabled' => false,
+                'icon' => $iconRoot . 'statistics_icon.gif',
                 'text' => $this->string['reports'],
-                'hasPopup' => false
+                'hasPopup' => true,
+                'href' => '#',
+                'tabindex' => 0,
+                'id' => 'reports'
             ];
         }
+        
+        // Handling type 4 paper
+        if ($paperType == '4') {
+            $items = [[
+                'classes' => 'menuitem cascade stats',
+                'disabled' => false,
+                'icon' => $iconRoot . 'statistics_icon.gif',
+                'text' => $this->string['reports'],
+                'hasPopup' => true,
+                'href' => '#',
+                'tabindex' => 0,
+                'id' => 'reports'
+            ]];
 
-        // Create base reports menu item
-        $item = $this->createPopupMenuItem(
-            'reports',
-            $this->string['reports'],
-            'statistics_icon.gif',
-            'reports',
-            '4'
-        );
-
-        // Add submenu items based on paper type and conditions
-        $item['submenu_items'] = $this->getReportSubmenuItems(
-            $paperType,
-            $properties,
-            $paperID,
-            $module, 
-            $folder,
-            $checklist,
-            $graded
-        );
-
-        return $item;
-    }
-
-    private function getReportSubmenuItems($paperType, $properties, $paperID, $module, $folder, $checklist, $graded) {
-        $submenuItems = [];
-
-        // Handle mapping objectives for all applicable types
-        if (mb_strpos($checklist, 'mapping') !== false && 
-            !in_array($paperType, ['6']) && 
-            ($paperType <= 2 || $paperType == 4 || $paperType == 5)) {
-            $submenuItems[] = $this->getMappedObjectivesItem($properties, $paperID, $module, $folder);
-        }
-
-        // Add type-specific menu items
-        $typeSpecificItems = [
-            '5' => [
-                'text' => $this->string['importmarks'],
-                'icon' => 'import_16.gif',
-                'path' => "/import/offline_marks.php"
-            ],
-            '4' => [
-                'text' => $this->string['importoscemarks'],
-                'icon' => 'import_16.gif',
-                'path' => "/import/osce_marks.php",
-                'condition' => !$graded
-            ]
-        ];
-
-        if (isset($typeSpecificItems[$paperType])) {
-            $item = $typeSpecificItems[$paperType];
-            if (!isset($item['condition']) || $item['condition']) {
-                $submenuItems[] = [
+            if (!$graded) {
+                $items[] = [
                     'classes' => 'menuitem',
-                    'text' => $item['text'],
-                    'icon' => $item['icon'],
-                    'href' => Config::get_instance()->get('cfg_root_path') . 
-                            $item['path'] . "?paperID=$paperID&module=$module&folder=$folder",
+                    'icon' => $iconRoot . 'import_16.gif',
+                    'text' => $this->string['importoscemarks'],
+                    'href' => $iconRoot . "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder",
                     'tabindex' => 0
                 ];
             }
-        }
 
-        // Add standards setting for applicable types
-        if ($paperType != '6' && mb_strpos($checklist, 'stdset') !== false) {
-            $submenuItems[] = [
-                'classes' => 'menuitem',
-                'text' => $this->string['standardssetting'],
-                'icon' => 'std_set_icon_16.gif',
-                'href' => Config::get_instance()->get('cfg_root_path') . 
-                        "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
-                'tabindex' => 0
-            ];
-        }
+            if (mb_strpos($checklist, 'mapping') !== false) {
+                $items[] = $this->getMappedObjectivesItem($properties, $paperID, $module, $folder);
+            }
 
-        return $submenuItems;
+            return $items[0]; // Return main reports item, other items handled by submenu
+        }
+        
+        return null;
     }
 
     private function getMappedObjectivesItem($properties, $paperID, $module, $folder) {
