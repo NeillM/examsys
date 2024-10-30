@@ -91,7 +91,7 @@ class MenuItemData {
             return [
                 'classes' => 'grey menuitem',
                 'disabled' => true,
-                'icon' => 'add_questions_grey.gif',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/add_questions_grey.gif',
                 'text' => $this->string['addquestionspaper']
             ];
         }
@@ -100,7 +100,7 @@ class MenuItemData {
         return [
             'classes' => 'menuitem addquestions',
             'disabled' => false,
-            'icon' => 'add_questions_16.gif',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/add_questions_16.gif',
             'text' => $this->string['addquestionspaper'],
             'href' => '#',
             'tabindex' => 0,
@@ -119,6 +119,39 @@ class MenuItemData {
             'href' => Config::get_instance()->get('cfg_root_path') . 
                     "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder",
             'tabindex' => 0
+        ];
+    }
+    public function getEmailExternalsItem($properties) {
+        // Only proceed if paper type is 2
+        if ($properties->get_paper_type() != '2') {
+            return null;
+        }
+        
+        if (is_null($properties->get_external_review_deadline())) {
+            return [
+                'classes' => 'grey menuitem',
+                'id' => 'emailexternalsgrey',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_email_grey.png',
+                'text' => $this->string['emailexternals'],
+                'disabled' => true,
+                'role' => 'menuitem'
+            ];
+        }
+        
+        return [
+            'classes' => 'menuitem cascade showmenu',
+            'id' => 'emailexternals',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_email.png',
+            'text' => $this->string['emailexternals'],
+            'href' => '#',
+            'tabindex' => -1,
+            'hasPopup' => true,
+            'data_attributes' => [
+                'popupid' => '1',
+                'popuptype' => 'papertasks',
+                'popupname' => 'emailexternals'
+            ],
+            'role' => 'menuitem'
         ];
     }
 
@@ -358,6 +391,7 @@ class MenuItemData {
             'role' => 'menuitem'
         ];
     }
+
     public function getImportExportItem($properties, $paperID, $module) {
         return [
             'text' => $this->string['importexport'],
@@ -375,4 +409,20 @@ class MenuItemData {
             ]
         ];
     }
+
+    public function getStudentCohortItem($properties) {
+    // Only return if calendar year exists
+    if (!$properties->get_calendar_year()) {
+        return null;
+    }
+    
+    return [
+        'classes' => 'menuitem studentcohort',
+        'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_user_icon.gif',
+        'text' => $this->string['studentcohort'],
+        'href' => '#',
+        'tabindex' => 0,
+        'role' => 'menuitem'
+    ];
+}
 }
