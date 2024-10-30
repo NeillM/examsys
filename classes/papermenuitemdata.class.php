@@ -86,41 +86,40 @@ class MenuItemData {
         }
     }
 
-    public function getImportExportItem($properties, $paperID, $module) {
-        $submenuItems = [];
-        
-        if (!$properties->get_summative_lock()) {
-            $submenuItems[] = [
-                'text' => $this->string['import'],
-                'href' => Config::get_instance()->get('cfg_root_path') . "/qti/import.php?paperID=$paperID&module=$module"
-            ];
-            $submenuItems[] = [
-                'text' => $this->string['importraf'],
-                'href' => Config::get_instance()->get('cfg_root_path') . "/import/rogo_assessment_format.php?paperID=$paperID&module=$module"
-            ];
-            if ($properties->get_question_no() > 0) {
-                $submenuItems[] = ['type' => 'separator'];
-            }
-        }
-        
-        if ($properties->get_question_no() > 0) {
-            $submenuItems[] = [
-                'text' => $this->string['export12'],
-                'href' => Config::get_instance()->get('cfg_root_path') . "/qti/export.php?dest=qti12&paperID=$paperID&module=$module"
-            ];
-            $submenuItems[] = [
-                'text' => $this->string['exportraf'],
-                'href' => Config::get_instance()->get('cfg_root_path') . "/export/rogo_assessment_format.php?paperID=$paperID"
+    public function getAddQuestionsItem($properties) {
+        if ($properties->get_summative_lock() == 1) {
+            return [
+                'classes' => 'grey menuitem',
+                'disabled' => true,
+                'icon' => 'add_questions_grey.gif',
+                'text' => $this->string['addquestionspaper']
             ];
         }
 
-        return $this->createSubmenuItem(
-            $this->string['importexport'],
-            'ims_16.png',
-            'qti',
-            ['popupid' => '2', 'popuptype' => 'papertasks', 'popupname' => 'qti'],
-            $submenuItems
-        );
+        $max_screen = ($properties->get_max_screen() != '') ? $properties->get_max_screen() : 0;
+        return [
+            'classes' => 'menuitem addquestions',
+            'disabled' => false,
+            'icon' => 'add_questions_16.gif',
+            'text' => $this->string['addquestionspaper'],
+            'href' => '#',
+            'tabindex' => 0,
+            'data_attributes' => [
+                'dispno' => ($properties->get_max_display_pos() + 1),
+                'screen' => $max_screen
+            ]
+        ];
+    }
+
+    public function getEditPropertiesItem($paperID, $module, $folder) {
+        return [
+            'classes' => 'menuitem properties',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/properties_icon.gif',
+            'text' => $this->string['editproperties'],
+            'href' => Config::get_instance()->get('cfg_root_path') . 
+                    "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder",
+            'tabindex' => 0
+        ];
     }
 
     public function getReportsItem($properties, $paperID, $module, $folder, $checklist, $graded = false) {
@@ -247,6 +246,133 @@ class MenuItemData {
                     "&ed=" . $properties->get_end_date() . 
                     "&module=$module&folder=$folder",
             'tabindex' => 0
+        ];
+    }
+
+    public function getCopyPaperItem() {
+        return [
+            'classes' => 'menuitem cascade',
+            'id' => 'copypaper',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/copy_icon.gif',
+            'text' => $this->string['copypaper'],
+            'href' => '#',
+            'tabindex' => 0,
+            'hasPopup' => true,
+            'role' => 'menuitem'
+        ];
+    }
+
+    public function getCopyFromPaperItem($properties) {
+        if ($properties->get_summative_lock() == 1) {
+            return [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/copy_icon_grey.gif',
+                'text' => $this->string['copyfrompaper'],
+                'disabled' => true,
+                'role' => 'menuitem'
+            ];
+        }
+        
+        return [
+            'classes' => 'menuitem cascade',
+            'id' => 'copyfrompaper',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/copy_icon.gif',
+            'text' => $this->string['copyfrompaper'],
+            'href' => '#',
+            'tabindex' => 0,
+            'hasPopup' => true,
+            'role' => 'menuitem'
+        ];
+    }
+
+    public function getDeletePaperItem($properties, $userObject, $configObject) {
+        if ($properties->get_summative_lock() == 1 || 
+            ($configObject->get_setting('core', 'cfg_summative_mgmt') && 
+            $properties->get_paper_type() == '2' && 
+            !$userObject->has_role(array('Admin', 'SysAdmin')))) {
+            return [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/delete_paper_grey_16.gif',
+                'text' => $this->string['deletepaper'],
+                'disabled' => true,
+                'role' => 'menuitem'
+            ];
+        }
+        
+        return [
+            'classes' => 'menuitem deletepaper',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/delete_paper_16.gif',
+            'text' => $this->string['deletepaper'],
+            'href' => '#',
+            'tabindex' => 0,
+            'role' => 'menuitem'
+        ];
+    }
+
+    public function getRetirePaperItem() {
+        return [
+            'classes' => 'menuitem retirepaper',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/retire_16.png',
+            'text' => $this->string['retirepaper'],
+            'href' => '#',
+            'tabindex' => 0,
+            'role' => 'menuitem'
+        ];
+    }
+
+    public function getPrintHardcopyItem($properties, $paperID) {
+        if ($properties->get_item_no() == 0) {
+            return [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/print_icon_16_disabled.png',
+                'text' => $this->string['printhardcopy'],
+                'disabled' => true,
+                'role' => 'menuitem'
+            ];
+        }
+        
+        if ($properties->get_paper_type() == '4') {
+            return [
+                'classes' => 'menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/print_icon_16.png',
+                'text' => $this->string['printhardcopy'],
+                'href' => Config::get_instance()->get('cfg_root_path') . "/osce/print.php?paperID=$paperID",
+                'tabindex' => 0,
+                'role' => 'menuitem'
+            ];
+        }
+        
+        return [
+            'classes' => 'menuitem cascade showmenu',
+            'id' => 'hardcopy',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/print_icon_16.png',
+            'text' => $this->string['printhardcopy'],
+            'href' => '#',
+            'tabindex' => 0,
+            'hasPopup' => true,
+            'data_attributes' => [
+                'popupid' => '3',
+                'popuptype' => 'papertasks',
+                'popupname' => 'hardcopy'
+            ],
+            'role' => 'menuitem'
+        ];
+    }
+    public function getImportExportItem($properties, $paperID, $module) {
+        return [
+            'text' => $this->string['importexport'],
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/ims_16.png',
+            'href' => '#',
+            'classes' => 'menuitem cascade showmenu',
+            'id' => 'qti',
+            'disabled' => false,
+            'hasPopup' => true,
+            'tabindex' => 0,                                    
+            'data_attributes' => [
+                'popupid' => '2',
+                'popuptype' => 'papertasks',
+                'popupname' => 'qti'
+            ]
         ];
     }
 }
