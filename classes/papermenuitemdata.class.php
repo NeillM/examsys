@@ -57,7 +57,7 @@ class MenuItemData {
             'template' => $template
         ];
     }
-
+    // Paper Tasks
     public function getTestPreviewItem($properties) {
         if ($properties->get_paper_type() == '5' || $properties->get_item_no() == 0) {
             return [
@@ -412,17 +412,157 @@ class MenuItemData {
 
     public function getStudentCohortItem($properties) {
     // Only return if calendar year exists
-    if (!$properties->get_calendar_year()) {
-        return null;
+        if (!$properties->get_calendar_year()) {
+            return null;
+        }
+        
+        return [
+            'classes' => 'menuitem studentcohort',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_user_icon.gif',
+            'text' => $this->string['studentcohort'],
+            'href' => '#',
+            'tabindex' => 0,
+            'role' => 'menuitem'
+        ];
+    }
+
+    // Question Tasks
+    // In MenuItemData class:
+
+    public function getCurrentQuestionItemsGrey($exam_clarifications = false, $paperType = null) {
+        $items = [
+            [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/edit_grey.png',
+                'text' => $this->string['editquestion'],
+                'disabled' => true
+            ],
+            [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/information_icon_grey.gif',
+                'text' => $this->string['information'],
+                'disabled' => true
+            ],
+            [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/copy_icon_grey.gif',
+                'text' => $this->string['copyontopaperx'],
+                'disabled' => true
+            ],
+            [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/link_grey.png',
+                'text' => $this->string['linktopaper'],
+                'disabled' => true
+            ],
+            [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/red_cross_grey.png',
+                'text' => $this->string['removefrompaper'],
+                'disabled' => true
+            ],
+            [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_play_grey.png',
+                'text' => $this->string['previewquestion'],
+                'disabled' => true
+            ]
+        ];
+
+        // Add exam clarifications if enabled
+        if ($exam_clarifications) {
+            array_splice($items, 2, 0, [[
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/comment_16_grey.png',
+                'text' => $this->string['midexamclarification'],
+                'disabled' => true
+            ]]);
+        }
+
+        return $items;
+    }
+
+    public function getCurrentQuestionItemsActive($exam_clarifications = false, $paperType = null) {
+        $items = [
+            [
+                'classes' => 'menuitem edit',
+                'id' => 'edit',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/edit.png',
+                'text' => $this->string['editquestion'],
+                'href' => '#'
+            ],
+            [
+                'classes' => 'menuitem information',
+                'id' => 'information',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/information_icon.gif',
+                'text' => $this->string['information'],
+                'href' => '#'
+            ],
+            [
+                'classes' => 'menuitem copy',
+                'id' => 'copy',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/copy_icon.gif',
+                'text' => $this->string['copyontopaperx'],
+                'href' => '#'
+            ],
+            [
+                'classes' => 'menuitem link',
+                'id' => 'link',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/link.png',
+                'text' => $this->string['linktopaper'],
+                'href' => '#'
+            ],
+            [
+                'classes' => 'menuitem',
+                'id' => 'delete',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/red_cross.png',
+                'text' => $this->string['removefrompaper'],
+                'href' => '#'
+            ],
+            [
+                'classes' => 'menuitem startpaper',
+                'id' => 'preview',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_play.png',
+                'text' => $this->string['previewquestion'],
+                'href' => '#',
+                'data_attributes' => [
+                    'fullscreen' => '0',
+                    'preview' => '1'
+                ]
+            ]
+        ];
+
+        // Add exam clarifications if enabled
+        if ($exam_clarifications) {
+            array_splice($items, 2, 0, [[
+                'classes' => 'menuitem clarification',
+                'id' => 'clarification',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/comment_16.png',
+                'text' => $this->string['midexamclarification'],
+                'href' => '#'
+            ]]);
+        }
+
+        return $items;
+    }
+    public function getKillerQuestionItem($isGrey = false) {
+        if ($isGrey) {
+            return [
+                'classes' => 'grey menuitem',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/skull_16.png',
+                'text' => $this->string['unsetkillerquestion'],
+                'disabled' => true,
+            ];
+        }
+        
+        return [
+            'classes' => 'menuitem killerq',
+            'id' => 'killerq',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/skull_16.png',
+            'text' => $this->string['unsetkillerquestion'],
+            'href' => '#',
+            'disabled' => false,
+        ];
     }
     
-    return [
-        'classes' => 'menuitem studentcohort',
-        'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_user_icon.gif',
-        'text' => $this->string['studentcohort'],
-        'href' => '#',
-        'tabindex' => 0,
-        'role' => 'menuitem'
-    ];
-}
 }
