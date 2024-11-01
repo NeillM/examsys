@@ -1,0 +1,11 @@
+<div class="{{ data.classes }}" {% if data.id %}id="{{ data.id }}" {% endif %} role="menuitem" {% if data.disabled
+    %}aria-disabled="true" {% endif %}>
+    <img class="sidebar_icon" src="{{ data.icon }}" alt="skull" />
+    <span class="killer">
+        {% if not data.disabled %}
+        <a href="{{ data.href }}">{{ data.text }}</a>
+        {% else %}
+        {{ data.text }}
+        {% endif %}
+    </span>
+</div>
