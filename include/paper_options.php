@@ -207,62 +207,50 @@ echo "</div>\n";
 // - Current Question Tasks ---------------------------------------------------
 ?>
 <div class="submenuheading" id="currentquestion"><?php echo $string['currentquestiontasks'] ?></div>
-
+<!-- Grey menu items -->
 <div id="menu2a">
-    <div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit_grey.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></div>
-    <div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon_grey.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></div>
     <?php
-    if ($exam_clarifications) {
-        echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/comment_16_grey.png" alt="" />' . $string['midexamclarification'] . "</div>\n";
+    $greyItems = $menuItemData->getCurrentQuestionItemsGrey($exam_clarifications, $properties->get_paper_type());
+    foreach ($greyItems as $item) {
+        $render->render($item, $string, 'sidebar/menuitem.html');
+    }
+    
+    // Add killer question if paper type is 4
+    if ($properties->get_paper_type() == '4') {
+        $killerItem = $menuItemData->getKillerQuestionItem(true);
+        $render->render($killerItem, $string, 'sidebar/killerquestion.html');
     }
     ?>
-    <div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon_grey.gif" alt="<?php echo $string['copyontopaperx'] ?>" /><?php echo $string['copyontopaperx'] ?></div>
-    <div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link_grey.png" alt="<?php echo $string['linktopaper'] ?>" /><?php echo $string['linktopaper'] ?></div>
-    <div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper'] ?>" /><?php echo $string['removefrompaper'] ?></div>
-<?php
-if ($properties->get_paper_type() == '4') {
-    echo '<div class="grey menuitem"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/skull_16.png" alt="skull" /><span class="killer">' . $string['unsetkillerquestion'] . "</span></div>\n";
-}
-?>
-    <div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play_grey.png" alt="<?php echo $string['previewquestion'] ?>" /><?php echo $string['previewquestion'] ?></div>
 </div>
-
+<!-- Active menu items -->
 <div id="menu2b">
-    <div class="menuitem edit" id="edit"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion'] ?>" /><?php echo $string['editquestion'] ?></a></div>
-    <div class="menuitem information" id="information"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
     <?php
-    if ($exam_clarifications) {
-        echo '<div class="menuitem clarification" id="clarification"><a href="#"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/comment_16.png" alt="' . $string['information'] . '" />' . $string['midexamclarification'] . "</a></div>\n";
+    $activeItems = $menuItemData->getCurrentQuestionItemsActive($exam_clarifications, $properties->get_paper_type());
+    foreach ($activeItems as $item) {
+        $render->render($item, $string, 'sidebar/menuitem.html');
+    }
+    
+    // Add killer question if paper type is 4
+    if ($properties->get_paper_type() == '4') {
+        $killerItem = $menuItemData->getKillerQuestionItem(false);
+        $render->render($killerItem, $string, 'sidebar/killerquestion.html');
     }
     ?>
-    <div class="menuitem copy" id="copy"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx'] ?></a></div>
-    <div class="menuitem link" id="link"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="<?php echo $string['linktopaper'] ?>" /><?php echo $string['linktopaper'] ?></a></div>
-    <div class="menuitem " id="delete"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross.png" alt="<?php echo $string['removefrompaper'] ?>" /><?php echo $string['removefrompaper'] ?></a></div>
-<?php
-if ($properties->get_paper_type() == '4') {
-    echo '<div class="menuitem killerq" id="killerq"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/skull_16.png" alt="skull" /><span class="killer"><a href="#">' . $string['unsetkillerquestion'] . "</a></span></div>\n";
-}
-?>
-    <div class="menuitem startpaper" id="preview" data-fullscreen="0" data-preview="1"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion'] ?>" /><?php echo $string['previewquestion'] ?></a></div>
 </div>
 
 <div id="menu2c">
-    <div class="menuitem edit" id="edit"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/edit.png" alt="<?php echo $string['editquestion'] ?>" /><?php echo $string['editquestion'] ?></a></div>
-    <div class="menuitem information" id="information"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/information_icon.gif" alt="<?php echo $string['information'] ?>" /><?php echo $string['information'] ?></a></div>
     <?php
-    if ($exam_clarifications) {
-        echo '<div class="menuitem clarification" id="clarification"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/comment_16.png" alt="' . $string['information'] . '" /><a href="#">' . $string['midexamclarification'] . "</a></div>\n";
+    $activeItems = $menuItemData->getCurrentQuestionItemsActive($exam_clarifications, $properties->get_paper_type());
+    foreach ($activeItems as $item) {
+        $render->render($item, $string, 'sidebar/menuitem.html');
+    }
+    
+    // Add killer question if paper type is 4
+    if ($properties->get_paper_type() == '4') {
+        $killerItem = $menuItemData->getKillerQuestionItem(false);
+        $render->render($killerItem, $string, 'sidebar/killerquestion.html');
     }
     ?>
-    <div class="menuitem copy" id="copy"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx'] ?>" /><?php echo $string['copyontopaperx'] ?></a></div>
-    <div class="menuitem link" id="link"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/link.png" alt="<?php echo $string['linktopaper'] ?>" /><?php echo $string['linktopaper'] ?></a></div>
-    <div class="grey menuitem"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/red_cross_grey.png" alt="<?php echo $string['removefrompaper'] ?>" /><?php echo $string['removefrompaper'] ?></div>
-<?php
-if ($properties->get_paper_type() == '4') {
-    echo '<div class="menuitem killerq" id="killerq"><a href="#"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/skull_16.png" alt="' . $string['skull'] . '" /><span class="killer">' . $string['unsetkillerquestion'] . "</a></span></div>\n";
-}
-?>
-    <div class="menuitem startpaper" id="preview" data-fullscreen="0" data-preview="1"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_play.png" alt="<?php echo $string['previewquestion'] ?>" /><?php echo $string['previewquestion'] ?></a></div>
 </div>
 
 <!--[if lt IE 9]>
@@ -579,3 +567,4 @@ if ($properties->get_question_no() > 0) {
   $dataarray['papers'] = PaperUtils::get_available_papers($userObject, $order, $direction, $properties->get_paper_type(), $module);
   $render->render($dataarray, $lang, 'paper/copy_from_paper_menu.html')
     ?>
+    
