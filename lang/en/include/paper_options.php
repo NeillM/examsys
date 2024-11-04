@@ -19,7 +19,7 @@ require '../lang/' . $language . '/include/question_types.php';
 require '../lang/' . $language . '/include/paper_types.php';
 
 $string['papertasks'] = 'Paper Tasks';
-$string['testpreview'] = 'Test &amp; Preview';
+$string['testpreview'] = 'Test & Preview';
 $string['addquestionspaper'] = 'Add Questions to Paper';
 $string['editproperties'] = 'Edit Properties';
 $string['emailexternals'] = 'Email Externals';
