@@ -283,17 +283,20 @@ if ($properties->get_summative_lock() == true) {
 }
 ?>
 <div id="menu2a">
+    <!-- Create new question -->
 <?php
-  $extra_url = '';
-  $module = param::optional('module', null, param::INT, param::FETCH_GET);
-if (!is_null($module)) {
-    $extra_url .= '&module=' . $module;
-}
-if ($extra_url != '') {
-    $extra_url = '?' . $extra_url;
-}
+    $extra_url = '';
+    $module = param::optional('module', null, param::INT, param::FETCH_GET);
+    if (!is_null($module)) {
+        $extra_url .= '&module=' . $module;
+    }
+    if ($extra_url != '') {
+        $extra_url = '?' . $extra_url;
+    }
+    $newQuestionItem = $menuItemData->getNewQuestionItem();
+    $render->render($newQuestionItem, $string, 'sidebar/menuitem.html');
 ?>
-  <div class="menuitem cascade showmenu" id="newquestion" data-popupid="0" data-popuptype="banktasks" data-popupname="newquestion"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion'] ?>" /><?php echo $string['createnewquestion'] ?></a></div>
+  <!-- <div class="menuitem cascade showmenu" id="newquestion" data-popupid="0" data-popuptype="banktasks" data-popupname="newquestion"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion'] ?>" /><?php echo $string['createnewquestion'] ?></a></div> -->
 </div>
 
 <?php

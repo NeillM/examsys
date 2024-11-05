@@ -427,7 +427,6 @@ class MenuItemData {
     }
 
     // Question Tasks
-    // In MenuItemData class:
 
     public function getCurrentQuestionItemsGrey($exam_clarifications = false, $paperType = null) {
         $items = [
@@ -562,6 +561,21 @@ class MenuItemData {
             'text' => $this->string['unsetkillerquestion'],
             'href' => '#',
             'disabled' => false,
+        ];
+    }
+
+    public function getNewQuestionItem() {
+        return [
+            'classes' => 'menuitem cascade showmenu',
+            'id' => 'newquestion',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/new_question_menu_icon.gif',
+            'text' => $this->string['createnewquestion'],
+            'href' => '#',
+            'data_attributes' => [
+                'popupid' => '0',
+                'popuptype' => 'banktasks',
+                'popupname' => 'newquestion'
+            ]
         ];
     }
     
