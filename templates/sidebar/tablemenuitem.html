@@ -1,0 +1,11 @@
+<tr {% if data.height %}style="height:{{ data.height }}px" {% endif %}>
+    <td {% if data.width %}style="width:{{ data.width }}px" {% endif %}>
+        <img src="{{ data.icon }}" width="16" height="16" alt="{{ data.alt|default('') }}" />
+    </td>
+    <td>
+        <a href="{{ data.href }}" class="checklist {{ data.link_class|default('properties') }}">
+            {{ data.text }}
+        </a>
+    </td>
+    <td>{{ data.status }}</td>
+</tr>
