@@ -310,25 +310,38 @@ if ($properties->get_paper_type() == '2') {
   </tr>
     <?php
     // Session
-    $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
+    if ($sessionItem = $menuItemData->getSessionCheckItem($properties)) {
+        $render->render($sessionItem, $string, 'sidebar/tablemenuitem.html');
+    }
+    // $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
 
-    if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
-        echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['session'] . '</a></td><td>' . $string['mismatch'] . "</td></tr>\n";
-    }
+    // if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
+    //     // echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['session'] . '</a></td><td>' . $string['mismatch'] . "</td></tr>\n";
+    // }
+
     // Times
-    if ($properties->get_start_date() == $properties->get_end_date() or is_null($properties->get_start_date()) or is_null($properties->get_end_date())) {
-        echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['examtime'] . '</a></td><td>' . $string['incorrect'] . "</td></tr>\n";
+    if ($timesItem = $menuItemData->getTimesCheckItem($properties)) {
+        $render->render($timesItem, $string, 'sidebar/checklist_item.html');
     }
+    // if ($properties->get_start_date() == $properties->get_end_date() or is_null($properties->get_start_date()) or is_null($properties->get_end_date())) {
+    //     echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['examtime'] . '</a></td><td>' . $string['incorrect'] . "</td></tr>\n";
+    // }
 
     // Duration
-    if ($properties->get_exam_duration() == '') {
-        echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['duration'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
+    if ($durationItem = $menuItemData->getDurationCheckItem($properties)) {
+        $render->render($durationItem, $string, 'sidebar/tablemenuitem.html');
     }
+    // if ($properties->get_exam_duration() == '') {
+    //     echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['duration'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
+    // }
 
     // Computer labs
-    if ($properties->get_labs() == '') {
-        echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['computerlabs'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
+    if ($labsItem = $menuItemData->getLabsCheckItem($properties)) {
+        $render->render($labsItem, $string, 'sidebar/tablemenuitem.html');
     }
+    // if ($properties->get_labs() == '') {
+    //     echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['computerlabs'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
+    // }
 
     // Internal Peer review
     if (mb_strpos($checklist, 'peer') !== false) {

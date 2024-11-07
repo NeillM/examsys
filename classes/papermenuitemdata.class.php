@@ -427,7 +427,6 @@ class MenuItemData {
     }
 
     // Question Tasks
-
     public function getCurrentQuestionItemsGrey($exam_clarifications = false, $paperType = null) {
         $items = [
             [
@@ -578,5 +577,61 @@ class MenuItemData {
             ]
         ];
     }
-    
+
+    // Summative Checklist 
+    public function getSessionCheckItem($properties) {
+        $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
+        if ($tmp_match !== false && $tmp_match != $properties->get_calendar_year()) {
+            return [
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
+                'alt' => $this->string['warning'],
+                'text' => $this->string['session'],
+                'href' => '',
+                'status' => $this->string['mismatch']
+            ];
+        }
+        return null;
+    }
+
+    public function getTimesCheckItem($properties) {
+        if ($properties->get_start_date() == $properties->get_end_date() || 
+            is_null($properties->get_start_date()) || 
+            is_null($properties->get_end_date())) {
+            return [
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
+                'alt' => $this->string['warning'],
+                'text' => $this->string['examtime'],
+                'href' => '',
+                'status' => $this->string['incorrect']
+            ];
+        }
+        return null;
+    }
+
+    public function getDurationCheckItem($properties) {
+        if ($properties->get_exam_duration() == '') {
+            return [
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
+                'alt' => $this->string['warning'],
+                'text' => $this->string['duration'],
+                'href' => '',
+                'status' => $this->string['unset']
+            ];
+        }
+        return null;
+    }
+
+    public function getLabsCheckItem($properties) {
+        if ($properties->get_labs() == '') {
+            return [
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
+                'alt' => $this->string['warning'],
+                'text' => $this->string['computerlabs'],
+                'href' => '',
+                'status' => $this->string['unset']
+            ];
+        }
+        return null;
+    }
+
 }
