@@ -634,4 +634,63 @@ class MenuItemData {
         return null;
     }
 
+   public function getUnsetInternalReviewItem($text, $status) {
+        return [
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
+            'alt' => $this->string['warning'],
+            'text' => $text,
+            'href' => '',
+            'link_class' => 'properties',
+            'status' => $status
+        ];
+    } 
+    public function getInternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder) {
+        $href = Config::get_instance()->get('cfg_root_path') . 
+                "/reports/review_comments.php?type=internal&paperID=" . $paperID . 
+                "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . 
+                "&folder=" . $folder . "&percent=100&absent=0&direction=asc";
+
+        return [
+            'height' => 16,
+            'width' => 18,
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . 
+                    ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
+            'alt' => $isComplete ? '.' : $this->string['warning'],
+            'text' => $text,
+            'href' => $href,
+            'link_class' => 'checklist',
+            'status' => $status
+        ];
+    }
+
+    public function getUnsetExternalReviewItem($text, $status) {
+        return [
+            'height' => 16,
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
+            'alt' => $this->string['warning'],
+            'text' => $text,
+            'href' => '',
+            'link_class' => 'properties',
+            'status' => $status
+        ];
+    }
+
+    public function getExternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder) {
+        $href = Config::get_instance()->get('cfg_root_path') . 
+                "/reports/review_comments.php?type=external&paperID=" . $paperID . 
+                "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . 
+                "&folder=" . $folder . "&percent=100&absent=0&direction=asc";
+
+        return [
+            'height' => 16,
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . 
+                    ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
+            'alt' => $isComplete ? '.' : $this->string['warning'],
+            'text' => $text,
+            'href' => $href,
+            'link_class' => 'checklist',
+            'status' => $status
+        ];
+    }
+
 }
