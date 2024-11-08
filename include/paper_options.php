@@ -346,7 +346,11 @@ if ($properties->get_paper_type() == '2') {
     // Internal Peer review
     if (mb_strpos($checklist, 'peer') !== false) {
         if (count($properties->get_internal_reviewers()) == 0) {
-            echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['peerreviewes'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
+            $item = $menuItemData->getUnsetInternalReviewItem(
+            $string['peerreviewes'], 
+            $string['unset']
+            );
+            $render->render($item, $string, 'sidebar/tablemenuitem.html');
         } else {
             $tmp_array = $properties->get_internal_reviewers();
             $internal_array = array();
@@ -375,9 +379,27 @@ if ($properties->get_paper_type() == '2') {
                 } else {
                     $tmp_color = '#F27000';
                 }
-                echo "<tr style=\"height:16px\"><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['peerreviewes'] . "</a></td><td>$reviews_complete/" . count($internal_array) . "</td></tr>\n";
+                $item = $menuItemData->getInternalReviewCheckItem(
+                    $string['peerreviewes'],
+                    $reviews_complete . "/" . count($internal_array),
+                    false,
+                    $paperID,
+                    $module,
+                    $folder
+                );
+                $render->render($item, $string, 'sidebar/tablemenuitem.html');
+                // echo "<tr style=\"height:16px\"><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['peerreviewes'] . "</a></td><td>$reviews_complete/" . count($internal_array) . "</td></tr>\n";
             } else {
-                echo "<tr><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['peerreviewes'] . '</a></td><td>' . $string['ok'] . "</td></tr>\n";
+                $item = $menuItemData->getInternalReviewCheckItem(
+                    $string['peerreviewes'],
+                    $string['ok'],
+                    true,
+                    $paperID,
+                    $module,
+                    $folder
+                );
+                $render->render($item, $string, 'sidebar/tablemenuitem.html');
+                // echo "<tr><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['peerreviewes'] . '</a></td><td>' . $string['ok'] . "</td></tr>\n";
             }
         }
     }
@@ -385,7 +407,12 @@ if ($properties->get_paper_type() == '2') {
     // External examiners
     if (mb_strpos($checklist, 'external') !== false) {
         if (count($properties->get_externals()) == 0) {
-            echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['externalreviews'] . '</td><td>' . $string['unset'] . "</td></tr>\n";
+            $item = $menuItemData->getUnsetExternalReviewItem(
+                $string['externalreviews'],
+                $string['unset']
+            );
+            $render->render($item, $string, 'sidebar/tablemenuitem.html');
+            // echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['externalreviews'] . '</td><td>' . $string['unset'] . "</td></tr>\n";
         } else {
             $tmp_array = $properties->get_externals();
             $external_array = array();
@@ -406,9 +433,27 @@ if ($properties->get_paper_type() == '2') {
             $stmt->close();
             $paperID = param::required('paperID', param::INT, param::FETCH_GET);
             if ($reviews_complete < count($external_array)) {
-                echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['externalreviews'] . "</a></td><td>$reviews_complete/" . count($external_array) . "</td></tr>\n";
+                    $item = $menuItemData->getExternalReviewCheckItem(
+                    $string['externalreviews'],
+                    $reviews_complete . "/" . count($external_array),
+                    false,
+                    $paperID,
+                    $module,
+                    $folder
+                );
+                $render->render($item, $string, 'sidebar/tablemenuitem.html');
+                // echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['externalreviews'] . "</a></td><td>$reviews_complete/" . count($external_array) . "</td></tr>\n";
             } else {
-                echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['externalreviews'] . '</a></td><td>' . $string['ok'] . "</td></tr>\n";
+                $item = $menuItemData->getExternalReviewCheckItem(
+                    $string['externalreviews'],
+                    $string['ok'],
+                    true,
+                    $paperID,
+                    $module,
+                    $folder
+                );
+                $render->render($item, $string, 'sidebar/checklist_item.html');
+                // echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['externalreviews'] . '</a></td><td>' . $string['ok'] . "</td></tr>\n";
             }
         }
     }
@@ -510,7 +555,7 @@ if ($properties->get_summative_lock()) {
 } else {
     $params = "&paperID=$paperID&folder=$folder&module=" . $module . '&calling=paper';
 }
-
+// Initialising the "Create new Question" submenu 
 if ($properties->get_paper_type() == '6') {
     makeMenu(array(
     $string['likert'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",
@@ -537,7 +582,7 @@ if ($properties->get_paper_type() == '6') {
     $string['textbox'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox$params",
     $string['true_false'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false$params"));
 }
-
+// Initialising the "Import/Export" submenu
     $importexport_menu = array();
 if (!$properties->get_summative_lock()) {
     $importexport_menu[$string['import']] = $configObject->get('cfg_root_path') . "/qti/import.php?paperID=$paperID&module=$module";
@@ -550,7 +595,7 @@ if ($properties->get_question_no() > 0) {
     $importexport_menu[$string['export12']] = $configObject->get('cfg_root_path') . "/qti/export.php?dest=qti12&paperID=$paperID&module=$module";
     $importexport_menu[$string['exportraf']] = $configObject->get('cfg_root_path') . "/export/rogo_assessment_format.php?paperID=$paperID";
 }
-
+// Initialising the external submenu
     $external_menu[$string['initialinvitation']] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=0";
     $external_menu[$string['reminder']] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=1";
     $external_menu[$string['viewcomments']] = $configObject->get('cfg_root_path') . "/reviews/pick_external.php?paperID=$paperID&module=$module&mode=2";
