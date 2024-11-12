@@ -130,18 +130,26 @@ if ($reportsItem) {
     $render->render($reportsItem, $string, 'sidebar/menuitem.html');
 }
 
-    // Add Standard Settings item if applicable
-    if ($properties->get_paper_type() != '6' && mb_strpos($checklist, 'stdset') !== false) {
-        $standardSettingsItem = [
-            'classes' => 'menuitem',
-            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/std_set_icon_16.gif',
-            'text' => $string['standardssetting'],
-            'href' => Config::get_instance()->get('cfg_root_path') . 
-                    "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
-            'tabindex' => 0
-        ];
-        $render->render($standardSettingsItem, $string, 'sidebar/menuitem.html');
-    }
+// Mapped Objectives Item (for paper types 0,1,2,5)
+if (in_array($properties->get_paper_type(), ['0', '1', '2', '5']) && 
+    mb_strpos($checklist, 'mapping') !== false && 
+    $properties->get_paper_type() != '6') {
+    $mappedObjectivesItem = $menuItemData->getMappedObjectivesItem($properties, $paperID, $module, $folder);
+    $render->render($mappedObjectivesItem, $string, 'sidebar/menuitem.html');
+}
+
+// Add Standard Settings item if applicable
+if ($properties->get_paper_type() != '6' && mb_strpos($checklist, 'stdset') !== false) {
+    $standardSettingsItem = [
+        'classes' => 'menuitem',
+        'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/std_set_icon_16.gif',
+        'text' => $string['standardssetting'],
+        'href' => Config::get_instance()->get('cfg_root_path') . 
+                "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
+        'tabindex' => 0
+    ];
+    $render->render($standardSettingsItem, $string, 'sidebar/menuitem.html');
+}
 
 // Copy Paper
 $copyPaperItem = $menuItemData->getCopyPaperItem();
