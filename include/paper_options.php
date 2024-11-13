@@ -130,8 +130,18 @@ if ($reportsItem) {
     $render->render($reportsItem, $string, 'sidebar/menuitem.html');
 }
 
+// Import OSCE marks
+if ($properties->get_paper_type() == '4') {
+    $gradebook = new gradebook($mysqli);
+    $graded = $gradebook->paper_graded($paperID);
+    if (!$graded) {
+        $importOsceMarksItem = $menuItemData->getImportOsceMarksItem($paperID, $module, $folder);
+        $render->render($importOsceMarksItem, $string, 'sidebar/menuitem.html');
+    }
+}
+
 // Mapped Objectives Item (for paper types 0,1,2,5)
-if (in_array($properties->get_paper_type(), ['0', '1', '2', '5']) && 
+if (in_array($properties->get_paper_type(), ['0', '1', '2', '4','5']) && 
     mb_strpos($checklist, 'mapping') !== false && 
     $properties->get_paper_type() != '6') {
     $mappedObjectivesItem = $menuItemData->getMappedObjectivesItem($properties, $paperID, $module, $folder);

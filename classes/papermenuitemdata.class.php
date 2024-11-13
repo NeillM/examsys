@@ -107,7 +107,7 @@ class MenuItemData {
         ];
     }
 
-    public function getReportsItem($properties) {
+    public function getReportsItem($properties, $paperID, $module, $folder, $checklist, $graded = false) {
         $paperType = $properties->get_paper_type();
         
         // Types 0,1,2,5,6 with no items - grey disabled version
@@ -131,6 +131,17 @@ class MenuItemData {
         }
 
         return null;
+    }
+
+    public function getImportOsceMarksItem($paperID, $module, $folder) {
+        return [
+            'classes' => 'menuitem',
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/import_16.gif',
+            'text' => $this->string['importoscemarks'],
+            'href' => Config::get_instance()->get('cfg_root_path') . 
+                    "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder",
+            'tabindex' => 0
+        ];
     }
 
     public function getMappedObjectivesItem($properties, $paperID, $module, $folder) {
