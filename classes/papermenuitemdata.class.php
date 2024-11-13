@@ -9,54 +9,6 @@ class MenuItemData {
         $this->string = $string;
     }
 
-    public function createMenuItem($text, $icon, $href = '#', $classes = '', $disabled = false, $id = '', $dataAttributes = [], $hasPopup = false, $tabindex = 0) {
-        return [
-            'text' => $text,
-            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . $icon,
-            'href' => $href,
-            'classes' => $classes,
-            'disabled' => $disabled,
-            'id' => $id,
-            'data_attributes' => $dataAttributes,
-            'hasPopup' => $hasPopup,
-            'tabindex' => $tabindex
-        ];
-    }
-
-    public function createSubmenuItem($text, $icon, $id, $dataAttributes, $submenuItems) {
-        return [
-            'text' => $text,
-            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . $icon,
-            'href' => '#',
-            'classes' => 'menuitem cascade showmenu',
-            'disabled' => false,
-            'id' => $id,
-            'data_attributes' => $dataAttributes,
-            'hasPopup' => true,
-            'tabindex' => 0,
-            'submenu' => $submenuItems,
-            'template' => 'sidebar/submenuitem.html'
-        ];
-    }
-
-    public function createPopupMenuItem($id, $text, $icon, $popupType, $popupId, $template = 'sidebar/popupmenuitem.html') {
-        return [
-            'id' => $id,
-            'text' => $text,
-            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . $icon,
-            'classes' => 'menuitem cascade showmenu',
-            'disabled' => false,
-            'hasPopup' => true,
-            'href' => '#',
-            'tabindex' => -1,
-            'data_attributes' => [
-                'popupid' => $popupId,
-                'popuptype' => 'papertasks',
-                'popupname' => $popupType
-            ],
-            'template' => $template
-        ];
-    }
     // Paper Tasks
     public function getTestPreviewItem($properties) {
         if ($properties->get_paper_type() == '5' || $properties->get_item_no() == 0) {
@@ -157,13 +109,12 @@ class MenuItemData {
 
     public function getReportsItem($properties) {
         $paperType = $properties->get_paper_type();
-        $iconRoot = Config::get_instance()->get('cfg_root_path') . '/artwork/';
         
         // Types 0,1,2,5,6 with no items - grey disabled version
         if (in_array($paperType, ['0', '1', '2', '5', '6']) && $properties->get_item_no() == 0) {
             return [
                 'classes' => 'grey menuitem greycascade',
-                'icon' => $iconRoot . 'statistics_icon_grey.gif',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/statistics_icon_grey.gif',
                 'text' => $this->string['reports']
             ];
         }
@@ -173,7 +124,7 @@ class MenuItemData {
             return [
                 'classes' => 'menuitem cascade stats',
                 'id' => 'reports',
-                'icon' => $iconRoot . 'statistics_icon.gif',
+                'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/statistics_icon.gif',
                 'text' => $this->string['reports'],
                 'href' => '#'
             ];
