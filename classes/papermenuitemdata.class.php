@@ -1,16 +1,32 @@
 <?php
 
-class MenuItemData {
-
+// This file is part of ExamSys
+//
+// ExamSys is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// ExamSys is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+class MenuItemData
+{
     private $string;
 
-    public function __construct($configObject, $string) {
+    public function __construct($configObject, $string)
+    {
         $this->configObject = $configObject;
         $this->string = $string;
     }
 
     // Paper Tasks
-    public function getTestPreviewItem($properties) {
+    public function getTestPreviewItem($properties)
+    {
         if ($properties->get_paper_type() == '5' || $properties->get_item_no() == 0) {
             return [
                 'classes' => 'grey menuitem',
@@ -38,7 +54,8 @@ class MenuItemData {
         }
     }
 
-    public function getAddQuestionsItem($properties) {
+    public function getAddQuestionsItem($properties)
+    {
         if ($properties->get_summative_lock() == 1) {
             return [
                 'classes' => 'grey menuitem',
@@ -63,22 +80,24 @@ class MenuItemData {
         ];
     }
 
-    public function getEditPropertiesItem($paperID, $module, $folder) {
+    public function getEditPropertiesItem($paperID, $module, $folder)
+    {
         return [
             'classes' => 'menuitem properties',
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/properties_icon.gif',
             'text' => $this->string['editproperties'],
-            'href' => Config::get_instance()->get('cfg_root_path') . 
-                    "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder",
+            'href' => Config::get_instance()->get('cfg_root_path')
+                    . "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder",
             'tabindex' => 0
         ];
     }
-    public function getEmailExternalsItem($properties) {
+    public function getEmailExternalsItem($properties)
+    {
         // Only proceed if paper type is 2
         if ($properties->get_paper_type() != '2') {
             return null;
         }
-        
+
         if (is_null($properties->get_external_review_deadline())) {
             return [
                 'classes' => 'grey menuitem',
@@ -89,7 +108,7 @@ class MenuItemData {
                 'role' => 'menuitem'
             ];
         }
-        
+
         return [
             'classes' => 'menuitem cascade showmenu',
             'id' => 'emailexternals',
@@ -107,9 +126,10 @@ class MenuItemData {
         ];
     }
 
-    public function getReportsItem($properties, $paperID, $module, $folder, $checklist, $graded = false) {
+    public function getReportsItem($properties, $paperID, $module, $folder, $checklist, $graded = false)
+    {
         $paperType = $properties->get_paper_type();
-        
+
         // Types 0,1,2,5,6 with no items - grey disabled version
         if (in_array($paperType, ['0', '1', '2', '5', '6']) && $properties->get_item_no() == 0) {
             return [
@@ -133,18 +153,20 @@ class MenuItemData {
         return null;
     }
 
-    public function getImportOsceMarksItem($paperID, $module, $folder) {
+    public function getImportOsceMarksItem($paperID, $module, $folder)
+    {
         return [
             'classes' => 'menuitem',
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/import_16.gif',
             'text' => $this->string['importoscemarks'],
-            'href' => Config::get_instance()->get('cfg_root_path') . 
-                    "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder",
+            'href' => Config::get_instance()->get('cfg_root_path')
+                    . "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder",
             'tabindex' => 0
         ];
     }
 
-    public function getMappedObjectivesItem($properties, $paperID, $module, $folder) {
+    public function getMappedObjectivesItem($properties, $paperID, $module, $folder)
+    {
         if ($properties->get_calendar_year() == '') {
             return [
                 'classes' => 'greymenuitem',
@@ -153,21 +175,22 @@ class MenuItemData {
                 'text' => $this->string['mappedobjectives']
             ];
         }
-        
+
         return [
             'classes' => 'menuitem',
             'text' => $this->string['mappedobjectives'],
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/curriculum_map_small.png',
-            'href' => Config::get_instance()->get('cfg_root_path') . 
-                    "/mapping/paper_by_session.php?paperID=$paperID&paper_title=" . 
-                    $properties->get_paper_title() . 
-                    "&sd=" . $properties->get_start_date() . 
-                    "&ed=" . $properties->get_end_date() . 
-                    "&module=$module&folder=$folder",
+            'href' => Config::get_instance()->get('cfg_root_path')
+                    . "/mapping/paper_by_session.php?paperID=$paperID&paper_title="
+                    . $properties->get_paper_title()
+                    . '&sd=' . $properties->get_start_date()
+                    . '&ed=' . $properties->get_end_date()
+                    . "&module=$module&folder=$folder",
         ];
     }
 
-    public function getCopyPaperItem() {
+    public function getCopyPaperItem()
+    {
         return [
             'classes' => 'menuitem cascade',
             'id' => 'copypaper',
@@ -180,7 +203,8 @@ class MenuItemData {
         ];
     }
 
-    public function getCopyFromPaperItem($properties) {
+    public function getCopyFromPaperItem($properties)
+    {
         if ($properties->get_summative_lock() == 1) {
             return [
                 'classes' => 'grey menuitem',
@@ -190,7 +214,7 @@ class MenuItemData {
                 'role' => 'menuitem'
             ];
         }
-        
+
         return [
             'classes' => 'menuitem cascade',
             'id' => 'copyfrompaper',
@@ -203,11 +227,14 @@ class MenuItemData {
         ];
     }
 
-    public function getDeletePaperItem($properties, $userObject, $configObject) {
-        if ($properties->get_summative_lock() == 1 || 
-            ($configObject->get_setting('core', 'cfg_summative_mgmt') && 
-            $properties->get_paper_type() == '2' && 
-            !$userObject->has_role(array('Admin', 'SysAdmin')))) {
+    public function getDeletePaperItem($properties, $userObject, $configObject)
+    {
+        if (
+            $properties->get_summative_lock() == 1 ||
+            ($configObject->get_setting('core', 'cfg_summative_mgmt') &&
+            $properties->get_paper_type() == '2' &&
+            !$userObject->has_role(array('Admin', 'SysAdmin')))
+        ) {
             return [
                 'classes' => 'grey menuitem',
                 'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/delete_paper_grey_16.gif',
@@ -216,7 +243,7 @@ class MenuItemData {
                 'role' => 'menuitem'
             ];
         }
-        
+
         return [
             'classes' => 'menuitem deletepaper',
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/delete_paper_16.gif',
@@ -227,7 +254,8 @@ class MenuItemData {
         ];
     }
 
-    public function getRetirePaperItem() {
+    public function getRetirePaperItem()
+    {
         return [
             'classes' => 'menuitem retirepaper',
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/retire_16.png',
@@ -238,7 +266,8 @@ class MenuItemData {
         ];
     }
 
-    public function getPrintHardcopyItem($properties, $paperID) {
+    public function getPrintHardcopyItem($properties, $paperID)
+    {
         if ($properties->get_item_no() == 0) {
             return [
                 'classes' => 'grey menuitem',
@@ -248,7 +277,7 @@ class MenuItemData {
                 'role' => 'menuitem'
             ];
         }
-        
+
         if ($properties->get_paper_type() == '4') {
             return [
                 'classes' => 'menuitem',
@@ -259,7 +288,7 @@ class MenuItemData {
                 'role' => 'menuitem'
             ];
         }
-        
+
         return [
             'classes' => 'menuitem cascade showmenu',
             'id' => 'hardcopy',
@@ -277,7 +306,8 @@ class MenuItemData {
         ];
     }
 
-    public function getImportExportItem($properties, $paperID, $module) {
+    public function getImportExportItem($properties, $paperID, $module)
+    {
         return [
             'text' => $this->string['importexport'],
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/ims_16.png',
@@ -286,7 +316,7 @@ class MenuItemData {
             'id' => 'qti',
             'disabled' => false,
             'hasPopup' => true,
-            'tabindex' => 0,                                    
+            'tabindex' => 0,
             'data_attributes' => [
                 'popupid' => '2',
                 'popuptype' => 'papertasks',
@@ -295,12 +325,13 @@ class MenuItemData {
         ];
     }
 
-    public function getStudentCohortItem($properties) {
+    public function getStudentCohortItem($properties)
+    {
     // Only return if calendar year exists
         if (!$properties->get_calendar_year()) {
             return null;
         }
-        
+
         return [
             'classes' => 'menuitem studentcohort',
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/small_user_icon.gif',
@@ -312,7 +343,8 @@ class MenuItemData {
     }
 
     // Question Tasks
-    public function getCurrentQuestionItemsGrey($exam_clarifications = false, $paperType = null) {
+    public function getCurrentQuestionItemsGrey($exam_clarifications = false, $paperType = null)
+    {
         $items = [
             [
                 'classes' => 'grey menuitem',
@@ -365,7 +397,8 @@ class MenuItemData {
         return $items;
     }
 
-    public function getCurrentQuestionItemsActive($exam_clarifications = false, $paperType = null) {
+    public function getCurrentQuestionItemsActive($exam_clarifications = false, $paperType = null)
+    {
         $items = [
             [
                 'classes' => 'menuitem edit',
@@ -428,7 +461,8 @@ class MenuItemData {
 
         return $items;
     }
-    public function getKillerQuestionItem($isGrey = false) {
+    public function getKillerQuestionItem($isGrey = false)
+    {
         if ($isGrey) {
             return [
                 'classes' => 'grey menuitem',
@@ -437,7 +471,7 @@ class MenuItemData {
                 'disabled' => true,
             ];
         }
-        
+
         return [
             'classes' => 'menuitem killerq',
             'id' => 'killerq',
@@ -448,7 +482,8 @@ class MenuItemData {
         ];
     }
 
-    public function getNewQuestionItem() {
+    public function getNewQuestionItem()
+    {
         return [
             'classes' => 'menuitem cascade showmenu',
             'id' => 'newquestion',
@@ -463,8 +498,9 @@ class MenuItemData {
         ];
     }
 
-    // Summative Checklist 
-    public function getSessionCheckItem($properties) {
+    // Summative Checklist
+    public function getSessionCheckItem($properties)
+    {
         $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
         if ($tmp_match !== false && $tmp_match != $properties->get_calendar_year()) {
             return [
@@ -478,10 +514,13 @@ class MenuItemData {
         return null;
     }
 
-    public function getTimesCheckItem($properties) {
-        if ($properties->get_start_date() == $properties->get_end_date() || 
-            is_null($properties->get_start_date()) || 
-            is_null($properties->get_end_date())) {
+    public function getTimesCheckItem($properties)
+    {
+        if (
+            $properties->get_start_date() == $properties->get_end_date() ||
+            is_null($properties->get_start_date()) ||
+            is_null($properties->get_end_date())
+        ) {
             return [
                 'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
                 'alt' => $this->string['warning'],
@@ -493,7 +532,8 @@ class MenuItemData {
         return null;
     }
 
-    public function getDurationCheckItem($properties) {
+    public function getDurationCheckItem($properties)
+    {
         if ($properties->get_exam_duration() == '') {
             return [
                 'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
@@ -506,7 +546,8 @@ class MenuItemData {
         return null;
     }
 
-    public function getLabsCheckItem($properties) {
+    public function getLabsCheckItem($properties)
+    {
         if ($properties->get_labs() == '') {
             return [
                 'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
@@ -519,7 +560,8 @@ class MenuItemData {
         return null;
     }
 
-   public function getUnsetInternalReviewItem($text, $status) {
+    public function getUnsetInternalReviewItem($text, $status)
+    {
         return [
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
             'alt' => $this->string['warning'],
@@ -528,18 +570,19 @@ class MenuItemData {
             'link_class' => 'properties',
             'status' => $status
         ];
-    } 
-    public function getInternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder) {
-        $href = Config::get_instance()->get('cfg_root_path') . 
-                "/reports/review_comments.php?type=internal&paperID=" . $paperID . 
-                "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . 
-                "&folder=" . $folder . "&percent=100&absent=0&direction=asc";
+    }
+    public function getInternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder)
+    {
+        $href = Config::get_instance()->get('cfg_root_path')
+            . '/reports/review_comments.php?type=internal&paperID=' . $paperID
+            . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module
+            . '&folder=' . $folder . '&percent=100&absent=0&direction=asc';
 
         return [
             'height' => 16,
             'width' => 18,
-            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . 
-                    ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/'
+               . ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
             'alt' => $isComplete ? '.' : $this->string['warning'],
             'text' => $text,
             'href' => $href,
@@ -548,7 +591,8 @@ class MenuItemData {
         ];
     }
 
-    public function getUnsetExternalReviewItem($text, $status) {
+    public function getUnsetExternalReviewItem($text, $status)
+    {
         return [
             'height' => 16,
             'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/checklist_exclamation.png',
@@ -560,16 +604,17 @@ class MenuItemData {
         ];
     }
 
-    public function getExternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder) {
-        $href = Config::get_instance()->get('cfg_root_path') . 
-                "/reports/review_comments.php?type=external&paperID=" . $paperID . 
-                "&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=" . $module . 
-                "&folder=" . $folder . "&percent=100&absent=0&direction=asc";
+    public function getExternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder)
+    {
+        $href = Config::get_instance()->get('cfg_root_path')
+            . '/reports/review_comments.php?type=external&paperID=' . $paperID
+            . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module
+            . '&folder=' . $folder . '&percent=100&absent=0&direction=asc';
 
         return [
             'height' => 16,
-            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/' . 
-                    ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
+            'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/'
+                . ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
             'alt' => $isComplete ? '.' : $this->string['warning'],
             'text' => $text,
             'href' => $href,
@@ -577,5 +622,4 @@ class MenuItemData {
             'status' => $status
         ];
     }
-
 }

@@ -9,7 +9,7 @@
 //
 // ExamSys is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See theZX
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
@@ -94,7 +94,7 @@ echo "<div id=\"menu1\" role=\"menu\">\n";
 // Test & Preview
 $render = new render($configObject);
 $testPreviewItem = $menuItemData->getTestPreviewItem($properties);
-$render->render($testPreviewItem, $string,  'sidebar/menuitem.html');
+$render->render($testPreviewItem, $string, 'sidebar/menuitem.html');
 
 // Add Questions to Paper
 $addQuestionsItem = $menuItemData->getAddQuestionsItem($properties);
@@ -141,9 +141,11 @@ if ($properties->get_paper_type() == '4') {
 }
 
 // Mapped Objectives Item (for paper types 0,1,2,5)
-if (in_array($properties->get_paper_type(), ['0', '1', '2', '4','5']) && 
-    mb_strpos($checklist, 'mapping') !== false && 
-    $properties->get_paper_type() != '6') {
+if (
+    in_array($properties->get_paper_type(), ['0', '1', '2', '4','5']) &&
+    mb_strpos($checklist, 'mapping') !== false &&
+    $properties->get_paper_type() != '6'
+) {
     $mappedObjectivesItem = $menuItemData->getMappedObjectivesItem($properties, $paperID, $module, $folder);
     $render->render($mappedObjectivesItem, $string, 'sidebar/menuitem.html');
 }
@@ -154,8 +156,7 @@ if ($properties->get_paper_type() != '6' && mb_strpos($checklist, 'stdset') !== 
         'classes' => 'menuitem',
         'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/std_set_icon_16.gif',
         'text' => $string['standardssetting'],
-        'href' => Config::get_instance()->get('cfg_root_path') . 
-                "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
+        'href' => Config::get_instance()->get('cfg_root_path') . "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
         'tabindex' => 0
     ];
     $render->render($standardSettingsItem, $string, 'sidebar/menuitem.html');
@@ -232,7 +233,7 @@ echo "</div>\n";
     foreach ($greyItems as $item) {
         $render->render($item, $string, 'sidebar/menuitem.html');
     }
-    
+
     // Add killer question if paper type is 4
     if ($properties->get_paper_type() == '4') {
         $killerItem = $menuItemData->getKillerQuestionItem(true);
@@ -247,7 +248,7 @@ echo "</div>\n";
     foreach ($activeItems as $item) {
         $render->render($item, $string, 'sidebar/menuitem.html');
     }
-    
+
     // Add killer question if paper type is 4
     if ($properties->get_paper_type() == '4') {
         $killerItem = $menuItemData->getKillerQuestionItem(false);
@@ -262,7 +263,7 @@ echo "</div>\n";
     foreach ($activeItems as $item) {
         $render->render($item, $string, 'sidebar/menuitem.html');
     }
-    
+
     // Add killer question if paper type is 4
     if ($properties->get_paper_type() == '4') {
         $killerItem = $menuItemData->getKillerQuestionItem(false);
@@ -305,12 +306,12 @@ if ($properties->get_summative_lock() == true) {
 <?php
     $extra_url = '';
     $module = param::optional('module', null, param::INT, param::FETCH_GET);
-    if (!is_null($module)) {
-        $extra_url .= '&module=' . $module;
-    }
-    if ($extra_url != '') {
-        $extra_url = '?' . $extra_url;
-    }
+if (!is_null($module)) {
+    $extra_url .= '&module=' . $module;
+}
+if ($extra_url != '') {
+    $extra_url = '?' . $extra_url;
+}
     $newQuestionItem = $menuItemData->getNewQuestionItem();
     $render->render($newQuestionItem, $string, 'sidebar/menuitem.html');
 ?>
@@ -365,8 +366,8 @@ if ($properties->get_paper_type() == '2') {
     if (mb_strpos($checklist, 'peer') !== false) {
         if (count($properties->get_internal_reviewers()) == 0) {
             $item = $menuItemData->getUnsetInternalReviewItem(
-            $string['peerreviewes'], 
-            $string['unset']
+                $string['peerreviewes'],
+                $string['unset']
             );
             $render->render($item, $string, 'sidebar/tablemenuitem.html');
         } else {
@@ -399,7 +400,7 @@ if ($properties->get_paper_type() == '2') {
                 }
                 $item = $menuItemData->getInternalReviewCheckItem(
                     $string['peerreviewes'],
-                    $reviews_complete . "/" . count($internal_array),
+                    $reviews_complete . '/' . count($internal_array),
                     false,
                     $paperID,
                     $module,
@@ -452,13 +453,13 @@ if ($properties->get_paper_type() == '2') {
             $paperID = param::required('paperID', param::INT, param::FETCH_GET);
             if ($reviews_complete < count($external_array)) {
                     $item = $menuItemData->getExternalReviewCheckItem(
-                    $string['externalreviews'],
-                    $reviews_complete . "/" . count($external_array),
-                    false,
-                    $paperID,
-                    $module,
-                    $folder
-                );
+                        $string['externalreviews'],
+                        $reviews_complete . '/' . count($external_array),
+                        false,
+                        $paperID,
+                        $module,
+                        $folder
+                    );
                 $render->render($item, $string, 'sidebar/tablemenuitem.html');
                 // echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['externalreviews'] . "</a></td><td>$reviews_complete/" . count($external_array) . "</td></tr>\n";
             } else {
@@ -573,7 +574,7 @@ if ($properties->get_summative_lock()) {
 } else {
     $params = "&paperID=$paperID&folder=$folder&module=" . $module . '&calling=paper';
 }
-// Initialising the "Create new Question" submenu 
+// Initialising the "Create new Question" submenu
 if ($properties->get_paper_type() == '6') {
     makeMenu(array(
     $string['likert'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",
