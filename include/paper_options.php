@@ -28,10 +28,9 @@
 require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
 require_once $cfg_web_root . 'include/mapping.inc';
-require_once $cfg_web_root . 'classes/papermenuitemdata.class.php';
 
 $userObject = UserObject::get_instance();
-$menuItemData = new MenuItemData($configObject, $string);
+$menuItemData = new PaperMenuItemData($configObject, $string);
 
 
 $clarif_types = $configObject->get_setting('core', 'summative_midexam_clarification');
@@ -99,30 +98,16 @@ $render->render($testPreviewItem, $string, 'sidebar/menuitem.html');
 // Add Questions to Paper
 $addQuestionsItem = $menuItemData->getAddQuestionsItem($properties);
 $render->render($addQuestionsItem, $string, 'sidebar/menuitem.html');
-// if ($properties->get_summative_lock() == 1) {
-//     echo "<div class=\"grey menuitem\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/add_questions_grey.gif\" alt=\"\" />" . $string['addquestionspaper'] . "</div>\n";
-// } else {
-//     $max_screen = ($properties->get_max_screen() != '') ? $properties->get_max_screen() : 0;
-//     echo '<div class="menuitem addquestions" data-dispno="' . ($properties->get_max_display_pos() + 1) . '" data-screen="' . $max_screen . '" role="menuitem"><a href="#" tabindex="0"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/add_questions_16.gif" alt="" />' . $string['addquestionspaper'] . "</a></div>\n";
-// }
 
 // Edit Properties
 $editPropertiesItem = $menuItemData->getEditPropertiesItem($paperID, $module, $folder);
 $render->render($editPropertiesItem, $string, 'sidebar/menuitem.html');
-// echo "<div class=\"menuitem properties\" role=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/paper/properties.php?paperID={$paperID}&caller=details&module={$module}&folder={$folder}\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/properties_icon.gif\" alt=\"\" />" . $string['editproperties'] . "</a></div>\n";
 
 // Email Externals
 $emailExternalsItem = $menuItemData->getEmailExternalsItem($properties);
 if ($emailExternalsItem) {
     $render->render($emailExternalsItem, $string, 'sidebar/menuitem.html');
 }
-// if ($properties->get_paper_type() == '2') {
-//     if (is_null($properties->get_external_review_deadline())) {
-//         echo "<div class=\"grey menuitem\" id=\"emailexternalsgrey\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email_grey.png\" alt=\"\" />" . $string['emailexternals'] . "</div>\n";
-//     } else {
-//         echo "<div class=\"menuitem cascade showmenu\" id=\"emailexternals\" data-popupid=\"1\" data-popuptype=\"papertasks\" data-popupname=\"emailexternals\" role=\"menuitem\" aria-haspopup=\"true\" tabindex=\"0\"><a href=\"#\" tabindex=\"-1\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_email.png\" alt=\"\" />" . $string['emailexternals'] . "</a></div>\n";
-//     }
-// }
 
 // Reports
 $reportsItem = $menuItemData->getReportsItem($properties, $paperID, $module, $folder, $checklist, isset($graded) ? $graded : false);
@@ -165,57 +150,33 @@ if ($properties->get_paper_type() != '6' && mb_strpos($checklist, 'stdset') !== 
 // Copy Paper
 $copyPaperItem = $menuItemData->getCopyPaperItem();
 $render->render($copyPaperItem, $string, 'sidebar/menuitem.html');
-// echo "<div class=\"menuitem cascade\" id=\"copypaper\" role=\"menuitem\" aria-haspopup=\"true\"><a href=\"#\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/copy_icon.gif\" alt=\"\" />" . $string['copypaper'] . "</a></div>\n";
 
 // Copy from Paper
 $copyFromPaperItem = $menuItemData->getCopyFromPaperItem($properties);
 $render->render($copyFromPaperItem, $string, 'sidebar/menuitem.html');
-// if ($properties->get_summative_lock() == 1) {
-//     echo '<div class="grey menuitem" role="menuitem" aria-disabled="true"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/copy_icon_grey.gif" alt="" />' . $string['copyfrompaper'] . '</div>';
-// } else {
-//     echo '<div class="menuitem cascade" id="copyfrompaper" role="menuitem" aria-haspopup="true"><a href="#" tabindex="0"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/copy_icon.gif" alt="" />' . $string['copyfrompaper'] . '</a></div>';
-// }
 
 // Delete Paper
 $deletePaperItem = $menuItemData->getDeletePaperItem($properties, $userObject, $configObject);
 $render->render($deletePaperItem, $string, 'sidebar/menuitem.html');
-// if ($properties->get_summative_lock() == 1 or ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('Admin', 'SysAdmin')))) {
-//     echo '<div class="grey menuitem" role="menuitem" aria-disabled="true"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/delete_paper_grey_16.gif" alt="" />' . $string['deletepaper'] . '</div>';
-// } else {
-//     echo '<div class="menuitem deletepaper" role="menuitem"><a href="#" tabindex="0"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/delete_paper_16.gif" alt="" />' . $string['deletepaper'] . '</a></div>';
-// }
 
 // Retire Paper
 $retirePaperItem = $menuItemData->getRetirePaperItem();
 $render->render($retirePaperItem, $string, 'sidebar/menuitem.html');
-// echo '<div class="menuitem retirepaper" role="menuitem"><a href="#" tabindex="0"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/retire_16.png" alt="" />' . $string['retirepaper'] . '</a></div>';
 
 // Print Hardcopy
 $printHardcopyItem = $menuItemData->getPrintHardcopyItem($properties, $paperID);
 $render->render($printHardcopyItem, $string, 'sidebar/menuitem.html');
-// if ($properties->get_item_no() == 0) {
-//     echo "<div class=\"grey menuitem\" role=\"menuitem\" aria-disabled=\"true\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16_disabled.png\" alt=\"\" />" . $string['printhardcopy'] . "</div>\n";
-// } else {
-//     if ($properties->get_paper_type() == '4') {
-//         echo "<div class=\"menuitem\" role=\"menuitem\"><a href=\"{$configObject->get('cfg_root_path')}/osce/print.php?paperID=$paperID\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"\" />" . $string['printhardcopy'] . "</a></div>\n";
-//     } else {
-//         echo "<div class=\"menuitem cascade showmenu\" id=\"hardcopy\" data-popupid=\"3\" data-popuptype=\"papertasks\" data-popupname=\"hardcopy\" role=\"menuitem\" aria-haspopup=\"true\" tabindex=\"0\"><a href=\"#\" tabindex=\"-1\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/print_icon_16.png\" alt=\"\" />" . $string['printhardcopy'] . "</a></div>\n";
-//     }
-// }
 
 // Import/Export
 $importExportItem = $menuItemData->getImportExportItem($properties, $paperID, $module);
 $render->render($importExportItem, $string, 'sidebar/menuitem.html');
-// echo "<div class=\"menuitem cascade showmenu\" id=\"qti\" data-popupid=\"2\" data-popuptype=\"papertasks\" data-popupname=\"qti\" role=\"menuitem\" aria-haspopup=\"true\" tabindex=\"0\"><a href=\"#\" tabindex=\"-1\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ims_16.png\" alt=\"\" />" . $string['importexport'] . "</a></div>\n";
 
 // Student Cohort
 $studentCohortItem = $menuItemData->getStudentCohortItem($properties);
 if ($studentCohortItem) {
     $render->render($studentCohortItem, $string, 'sidebar/menuitem.html');
 }
-// if ($properties->get_calendar_year()) {
-//     echo "<div class=\"menuitem studentcohort\" role=\"menuitem\"><a href=\"#\" tabindex=\"0\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/small_user_icon.gif\" alt=\"\" />" . $string['studentcohort'] . "</a></div>\n";
-// }
+
 
 echo "</div>\n";
 ?>
@@ -315,7 +276,6 @@ if ($extra_url != '') {
     $newQuestionItem = $menuItemData->getNewQuestionItem();
     $render->render($newQuestionItem, $string, 'sidebar/menuitem.html');
 ?>
-  <!-- <div class="menuitem cascade showmenu" id="newquestion" data-popupid="0" data-popuptype="banktasks" data-popupname="newquestion"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="<?php echo $string['createnewquestion'] ?>" /><?php echo $string['createnewquestion'] ?></a></div> -->
 </div>
 
 <?php
@@ -332,35 +292,21 @@ if ($properties->get_paper_type() == '2') {
     if ($sessionItem = $menuItemData->getSessionCheckItem($properties)) {
         $render->render($sessionItem, $string, 'sidebar/tablemenuitem.html');
     }
-    // $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
-
-    // if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
-    //     // echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['session'] . '</a></td><td>' . $string['mismatch'] . "</td></tr>\n";
-    // }
 
     // Times
     if ($timesItem = $menuItemData->getTimesCheckItem($properties)) {
         $render->render($timesItem, $string, 'sidebar/checklist_item.html');
     }
-    // if ($properties->get_start_date() == $properties->get_end_date() or is_null($properties->get_start_date()) or is_null($properties->get_end_date())) {
-    //     echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['examtime'] . '</a></td><td>' . $string['incorrect'] . "</td></tr>\n";
-    // }
 
     // Duration
     if ($durationItem = $menuItemData->getDurationCheckItem($properties)) {
         $render->render($durationItem, $string, 'sidebar/tablemenuitem.html');
     }
-    // if ($properties->get_exam_duration() == '') {
-    //     echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['duration'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
-    // }
 
     // Computer labs
     if ($labsItem = $menuItemData->getLabsCheckItem($properties)) {
         $render->render($labsItem, $string, 'sidebar/tablemenuitem.html');
     }
-    // if ($properties->get_labs() == '') {
-    //     echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['computerlabs'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
-    // }
 
     // Internal Peer review
     if (mb_strpos($checklist, 'peer') !== false) {
@@ -407,7 +353,6 @@ if ($properties->get_paper_type() == '2') {
                     $folder
                 );
                 $render->render($item, $string, 'sidebar/tablemenuitem.html');
-                // echo "<tr style=\"height:16px\"><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['peerreviewes'] . "</a></td><td>$reviews_complete/" . count($internal_array) . "</td></tr>\n";
             } else {
                 $item = $menuItemData->getInternalReviewCheckItem(
                     $string['peerreviewes'],
@@ -418,7 +363,6 @@ if ($properties->get_paper_type() == '2') {
                     $folder
                 );
                 $render->render($item, $string, 'sidebar/tablemenuitem.html');
-                // echo "<tr><td style=\"width:18px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=internal&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['peerreviewes'] . '</a></td><td>' . $string['ok'] . "</td></tr>\n";
             }
         }
     }
@@ -431,7 +375,6 @@ if ($properties->get_paper_type() == '2') {
                 $string['unset']
             );
             $render->render($item, $string, 'sidebar/tablemenuitem.html');
-            // echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['externalreviews'] . '</td><td>' . $string['unset'] . "</td></tr>\n";
         } else {
             $tmp_array = $properties->get_externals();
             $external_array = array();
@@ -461,7 +404,6 @@ if ($properties->get_paper_type() == '2') {
                         $folder
                     );
                 $render->render($item, $string, 'sidebar/tablemenuitem.html');
-                // echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['externalreviews'] . "</a></td><td>$reviews_complete/" . count($external_array) . "</td></tr>\n";
             } else {
                 $item = $menuItemData->getExternalReviewCheckItem(
                     $string['externalreviews'],
@@ -471,8 +413,7 @@ if ($properties->get_paper_type() == '2') {
                     $module,
                     $folder
                 );
-                $render->render($item, $string, 'sidebar/checklist_item.html');
-                // echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/reports/review_comments.php?type=external&paperID=" . $paperID . '&startdate=&enddate=&repcourse=%&repyear=%&sortby=name&module=' . $module . '&folder=' . $folder . '&percent=100&absent=0&direction=asc">' . $string['externalreviews'] . '</a></td><td>' . $string['ok'] . "</td></tr>\n";
+                $render->render($item, $string, 'sidebar/tablemenuitem.html');
             }
         }
     }
