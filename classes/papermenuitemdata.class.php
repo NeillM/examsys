@@ -96,7 +96,7 @@ class PaperMenuItemData
     {
         // Only proceed if paper type is 2
         if ($properties->get_paper_type() != '2') {
-            return null;
+            return [];
         }
 
         if (is_null($properties->get_external_review_deadline())) {
@@ -151,7 +151,7 @@ class PaperMenuItemData
             ];
         }
 
-        return null;
+        return [];
     }
 
     public function getImportOsceMarksItem($paperID, $module, $folder)
@@ -330,7 +330,7 @@ class PaperMenuItemData
     {
     // Only return if calendar year exists
         if (!$properties->get_calendar_year()) {
-            return null;
+            return [];
         }
 
         return [
@@ -512,7 +512,7 @@ class PaperMenuItemData
                 'status' => $this->string['mismatch']
             ];
         }
-        return null;
+        return [];
     }
 
     public function getTimesCheckItem($properties)
@@ -530,7 +530,7 @@ class PaperMenuItemData
                 'status' => $this->string['incorrect']
             ];
         }
-        return null;
+        return [];
     }
 
     public function getDurationCheckItem($properties)
@@ -544,7 +544,7 @@ class PaperMenuItemData
                 'status' => $this->string['unset']
             ];
         }
-        return null;
+        return [];
     }
 
     public function getLabsCheckItem($properties)
@@ -558,7 +558,7 @@ class PaperMenuItemData
                 'status' => $this->string['unset']
             ];
         }
-        return null;
+        return [];
     }
 
     public function getUnsetInternalReviewItem($text, $status)

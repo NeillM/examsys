@@ -295,7 +295,7 @@ if ($properties->get_paper_type() == '2') {
 
     // Times
     if ($timesItem = $menuItemData->getTimesCheckItem($properties)) {
-        $render->render($timesItem, $string, 'sidebar/checklist_item.html');
+        $render->render($timesItem, $string, 'sidebar/tablemenuitem.html');
     }
 
     // Duration
