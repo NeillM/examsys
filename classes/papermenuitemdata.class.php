@@ -623,4 +623,50 @@ class PaperMenuItemData
             'status' => $status
         ];
     }
+
+    public function getStandardsSetCheckItem($standards_set, $paperID, $module, $folder)
+    {
+        $href = "{$this->rootPath}/std_setting/index.php?paperID={$paperID}&module={$module}&folder={$folder}";
+
+        $status = match($standards_set) {
+            1 => $this->string['ok'],
+            0.5 => $this->string['incomplete'],
+            default => $this->string['unset']
+        };
+        
+        return [
+            'icon' => $this->rootPath . '/artwork/' . ($standards_set == 1 ? 'checklist_tick.png' : 'checklist_exclamation.png'),
+            'alt' => $standards_set == 1 ? '.' : $this->string['warning'],
+            'text' => $this->string['standardsset'],
+            'href' => $href,
+            'link_class' => 'checklist',
+            'status' => $status
+        ];
+    }
+
+    public function getMappingCheckItem($mappings_complete, $total_questions, $objsBySession, $paperID, $module, $folder)
+    {
+        $href = "{$this->rootPath}/mapping/paper_by_question.php?paperID={$paperID}&folder={$folder}&module={$module}";
+        
+        if ($objsBySession == 'error') {
+            return [
+                'icon' => $this->rootPath . '/artwork/checklist_exclamation.png',
+                'alt' => $this->string['warning'],
+                'text' => $this->string['mapping'],
+                'href' => $href,
+                'link_class' => 'checklist',
+                'status' => 'Error'
+            ];
+        }
+
+        $isComplete = $mappings_complete >= $total_questions;
+        return [
+            'icon' => $this->rootPath . '/artwork/' . ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
+            'alt' => $isComplete ? '.' : $this->string['warning'],
+            'text' => $this->string['mapping'],
+            'href' => $href,
+            'link_class' => 'checklist',
+            'status' => $isComplete ? $this->string['ok'] : "$mappings_complete/$total_questions"
+        ];
+    }
 }
