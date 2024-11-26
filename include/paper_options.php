@@ -283,11 +283,8 @@ if ($properties->get_paper_type() == '2') {
     ?>
 <br />
 
-<table style="width:210px; background-color: #2B569A; color: white !important; margin-bottom:16px">
-  <tr>
-    <td style="font-size:120%; font-weight:bold; padding-bottom:6px" colspan="3"><?php echo $string['summativechecklist'] ?></td>
-  </tr>
-    <?php
+<div class="checklist-container">
+    <h2 class="checklist-header"><?php echo $string['summativechecklist'] ?></h2>    <?php
     // Session
     if ($sessionItem = $menuItemData->getSessionCheckItem($properties)) {
         $render->render($sessionItem, $string, 'sidebar/tablemenuitem.html');
@@ -434,20 +431,8 @@ if ($properties->get_paper_type() == '2') {
             }
         }
         $stmt->close();
-        $paperID = param::required('paperID', param::INT, param::FETCH_GET);
-        if ($standards_set == 1) {
-            echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/std_setting/index.php?paperID=" . $paperID . '&module=' . $module . '&folder=' . $folder . '">' . $string['standardsset'] . '</a></td>';
-        } else {
-            echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/std_setting/index.php?paperID=" . $paperID . '&module=' . $module . '&folder=' . $folder . '">' . $string['standardsset'] . '</a></td>';
-        }
-
-        if ($standards_set == 1) {
-            echo '<td>' . $string['ok'] . "</td></tr>\n";
-        } elseif ($standards_set == 0.5) {
-            echo '<td>' . $string['incomplete'] . "</td></tr>\n";
-        } else {
-            echo '<td>' . $string['unset'] . "</td></tr>\n";
-        }
+        $standardsItem = $menuItemData->getStandardsSetCheckItem($standards_set, $paperID, $module, $folder);
+        $render->render($standardsItem, $string, 'sidebar/tablemenuitem.html');
     }
 
     // Mapped
@@ -495,15 +480,10 @@ if ($properties->get_paper_type() == '2') {
 
         $mappings_complete = count($mappings);
         $paperID = param::required('paperID', param::INT, param::FETCH_GET);
-        if ($objsBySession == 'error') {
-            echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_by_question.php?paperID=" . $paperID . '&folder=' . $folder . '&module=' . $module . '">' . $string['mapping'] . "</a></td><td>Error</td></tr>\n";
-        } elseif ($mappings_complete < $properties->get_question_no()) {
-            echo "<tr style=\"height:16px\"><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . "\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_by_question.php?paperID=" . $paperID . '&folder=' . $folder . '&module=' . $module . '">' . $string['mapping'] . "</a></td><td>$mappings_complete/" . $properties->get_question_no() . "</td></tr>\n";
-        } else {
-            echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_tick.png\" width=\"16\" height=\"16\" alt=\".\" /></td><td><a class=\"checklist\" href=\"{$configObject->get('cfg_root_path')}/mapping/paper_by_question.php?paperID=" . $paperID . '&folder=' . $folder . '&module=' . $module . '">' . $string['mapping'] . '</a></td><td>' . $string['ok'] . "</td></tr>\n";
-        }
+        $mappingItem = $menuItemData->getMappingCheckItem($mappings_complete, $properties->get_question_no(), $objsBySession, $paperID, $module, $folder);
+        $render->render($mappingItem, $string, 'sidebar/tablemenuitem.html');
     }
-    echo "</table>\n";
+    echo "</div>\n";;
 }
 ?>
 
