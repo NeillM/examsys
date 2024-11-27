@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of ExamSys
 //
 // ExamSys is free software: you can redistribute it and/or modify
@@ -28,7 +27,7 @@ class PaperMenuItemData
     // Paper Tasks
     public function getTestPreviewItem($properties)
     {
-        if ($properties->get_paper_type() == '5' || $properties->get_item_no() == 0) {
+        if ($properties->get_paper_type() == \assessment::TYPE_OFFLINE || $properties->get_item_no() == 0) {
             return [
                 'classes' => 'grey menuitem',
                 'disabled' => true,
@@ -95,7 +94,7 @@ class PaperMenuItemData
     public function getEmailExternalsItem($properties)
     {
         // Only proceed if paper type is 2
-        if ($properties->get_paper_type() != '2') {
+        if ($properties->get_paper_type() != \assessment::TYPE_SUMMATIVE) {
             return [];
         }
 
@@ -116,7 +115,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/small_email.png',
             'text' => $this->string['emailexternals'],
             'href' => '#',
-            'tabindex' => -1,
             'hasPopup' => true,
             'data_attributes' => [
                 'popupid' => '1',
@@ -132,7 +130,7 @@ class PaperMenuItemData
         $paperType = $properties->get_paper_type();
 
         // Types 0,1,2,5,6 with no items - grey disabled version
-        if (in_array($paperType, ['0', '1', '2', '5', '6']) && $properties->get_item_no() == 0) {
+        if (in_array($paperType, [/assessment::TYPE_FORMATIVE , /assessment::TYPE_PROGRESS, /assessment::TYPE_SUMMATIVE, /assessment::TYPE_OFFLINE, /assessment::TYPE_PEERREVIEW]) && $properties->get_item_no() == 0) {
             return [
                 'classes' => 'grey menuitem greycascade',
                 'icon' => $this->rootPath . '/artwork/statistics_icon_grey.gif',
@@ -233,7 +231,7 @@ class PaperMenuItemData
         if (
             $properties->get_summative_lock() == 1 ||
             ($configObject->get_setting('core', 'cfg_summative_mgmt') &&
-            $properties->get_paper_type() == '2' &&
+            $properties->get_paper_type() == \assessment::TYPE_SUMMATIVE &&
             !$userObject->has_role(array('Admin', 'SysAdmin')))
         ) {
             return [
@@ -279,7 +277,7 @@ class PaperMenuItemData
             ];
         }
 
-        if ($properties->get_paper_type() == '4') {
+        if ($properties->get_paper_type() == \assessment::TYPE_OSCE) {
             return [
                 'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/print_icon_16.png',

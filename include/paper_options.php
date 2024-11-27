@@ -128,8 +128,7 @@ if ($properties->get_paper_type() == '4') {
 // Mapped Objectives Item (for paper types 0,1,2,5)
 if (
     in_array($properties->get_paper_type(), ['0', '1', '2', '4','5']) &&
-    mb_strpos($checklist, 'mapping') !== false &&
-    $properties->get_paper_type() != '6'
+    mb_strpos($checklist, 'mapping') !== false
 ) {
     $mappedObjectivesItem = $menuItemData->getMappedObjectivesItem($properties, $paperID, $module, $folder);
     $render->render($mappedObjectivesItem, $string, 'sidebar/menuitem.html');
