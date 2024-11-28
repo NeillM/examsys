@@ -149,7 +149,23 @@ class PaperMenuItemData
             ];
         }
 
+        // Offline marks
+        if ($paperType == \assessment::TYPE_OFFLINE) {
+            $items['submenu'][] = $this->getImportOfflineMarksItem($paperID, $module, $folder);
+        }
+
         return [];
+    }
+
+    public function getImportOfflineMarksItem($paperID, $module, $folder)
+    {
+        return [
+            'classes' => 'menuitem',
+            'icon' => $this->rootPath . '/artwork/import_16.gif',
+            'text' => $this->string['importmarks'],
+            'href' => $this->rootPath . "/import/offline_marks.php?paperID=$paperID&module=$module&folder=$folder",
+            'tabindex' => 0
+        ];
     }
 
     public function getImportOsceMarksItem($paperID, $module, $folder)
