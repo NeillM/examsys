@@ -184,7 +184,7 @@ class PaperMenuItemData
     {
         if ($properties->get_calendar_year() == '') {
             return [
-                'classes' => 'greymenuitem',
+                'classes' => 'grey menuitem',
                 'disabled' => true,
                 'icon' => $this->rootPath . '/artwork/curriculum_map_small_grey.png',
                 'text' => $this->string['mappedobjectives']
