@@ -35,6 +35,7 @@ class PaperMenuItemData
                 'text' => $this->string['testpreview'],
                 'href' => '#',
                 'hasPopup' => false,
+                'popupType' => null,
                 'tabindex' => 0
             ];
         } else {
@@ -45,6 +46,7 @@ class PaperMenuItemData
                 'text' => $this->string['testpreview'],
                 'href' => '#',
                 'hasPopup' => false,
+                'popupType' => null,
                 'tabindex' => 0,
                 'data_attributes' => [
                     'fullscreen' => $properties->get_fullscreen(),
@@ -116,6 +118,7 @@ class PaperMenuItemData
             'text' => $this->string['emailexternals'],
             'href' => '#',
             'hasPopup' => true,
+            'popupType' => 'menu',
             'data_attributes' => [
                 'popupid' => '1',
                 'popuptype' => 'papertasks',
@@ -214,6 +217,7 @@ class PaperMenuItemData
             'href' => '#',
             'tabindex' => 0,
             'hasPopup' => true,
+            'popupType' => 'dialog',
             'role' => 'menuitem'
         ];
     }
@@ -238,6 +242,7 @@ class PaperMenuItemData
             'href' => '#',
             'tabindex' => 0,
             'hasPopup' => true,
+            'popupType' => 'dialog',
             'role' => 'menuitem'
         ];
     }
@@ -312,6 +317,7 @@ class PaperMenuItemData
             'href' => '#',
             'tabindex' => 0,
             'hasPopup' => true,
+            'popupType' => 'menu',
             'data_attributes' => [
                 'popupid' => '3',
                 'popuptype' => 'papertasks',
@@ -331,6 +337,7 @@ class PaperMenuItemData
             'id' => 'qti',
             'disabled' => false,
             'hasPopup' => true,
+            'popupType' => 'menu',
             'tabindex' => 0,
             'data_attributes' => [
                 'popupid' => '2',
