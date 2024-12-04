@@ -1,9 +1,9 @@
-<div class=" {{ data.classes }}" role="menuitem" {% if data.disabled %}aria-disabled="true" {% endif %} {% if
+<div class="{% if data.disabled %}grey {% endif %}{{ data.classes }}" role="menuitem" {% if data.disabled %}aria-disabled="true" {% endif %} {% if
     data.hasPopup %}aria-haspopup="true" {% endif %} {% if data.id %}id="{{ data.id }}" {% endif %} {% if
     data.data_attributes %} {% for key, value in data.data_attributes %} data-{{ key }}="{{ value }}" {% endfor %} {%
     endif %}> 
     {% if not data.disabled and data.href %}
-    <a href="{{ data.href }}" tabindex="{{ data.tabindex|default(0) }}">
+    <a href="{{ data.href }}" tabindex="{{ data.tabindex }}">
         {% endif %}
         {% if data.icon %}
         <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
