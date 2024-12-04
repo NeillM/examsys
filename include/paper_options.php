@@ -197,7 +197,7 @@ echo "</div>\n";
     // Add killer question if paper type is 4
     if ($properties->get_paper_type() == '4') {
         $killerItem = $menuItemData->getKillerQuestionItem(true);
-        $render->render($killerItem, $string, 'sidebar/killerquestion.html');
+        $render->render($killerItem, $string, 'sidebar/menuitem.html');
     }
     ?>
 </div>
@@ -212,7 +212,7 @@ echo "</div>\n";
     // Add killer question if paper type is 4
     if ($properties->get_paper_type() == '4') {
         $killerItem = $menuItemData->getKillerQuestionItem(false);
-        $render->render($killerItem, $string, 'sidebar/killerquestion.html');
+        $render->render($killerItem, $string, 'sidebar/menuitem.html');
     }
     ?>
 </div>
@@ -227,14 +227,14 @@ echo "</div>\n";
     // Add killer question if paper type is 4
     if ($properties->get_paper_type() == '4') {
         $killerItem = $menuItemData->getKillerQuestionItem(false);
-        $render->render($killerItem, $string, 'sidebar/killerquestion.html');
+        $render->render($killerItem, $string, 'sidebar/menuitem.html');
     }
     ?>
 </div>
 
 <!--[if lt IE 9]>
 <div class="iefixdiv"></div><div class="iefixdiv"></div>
-<![endif]-->
+<![endif]>
 
 <?php
 if ($properties->get_summative_lock() == true) {

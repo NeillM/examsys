@@ -480,7 +480,7 @@ class PaperMenuItemData
     {
         if ($isGrey) {
             return [
-                'classes' => 'menuitem',
+                'classes' => 'menuitem killer',
                 'icon' => $this->rootPath . '/artwork/skull_16.png',
                 'text' => $this->string['unsetkillerquestion'],
                 'disabled' => true,
@@ -488,10 +488,10 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem killerq',
+            'classes' => 'menuitem killerq killer',
             'id' => 'killerq',
             'icon' => $this->rootPath . '/artwork/skull_16.png',
-            'text' => $this->string['unsetkillerquestion'],
+            'text' => $this->string['setkillerquestion'],
             'href' => '#',
             'disabled' => false,
         ];
