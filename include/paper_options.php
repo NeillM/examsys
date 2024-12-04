@@ -234,7 +234,7 @@ echo "</div>\n";
 
 <!--[if lt IE 9]>
 <div class="iefixdiv"></div><div class="iefixdiv"></div>
-<![endif]>
+<![endif]> -->
 
 <?php
 if ($properties->get_summative_lock() == true) {
@@ -262,7 +262,6 @@ if ($properties->get_summative_lock() == true) {
 }
 ?>
 <div id="menu2a">
-    <!-- Create new question -->
 <?php
     $extra_url = '';
     $module = param::optional('module', null, param::INT, param::FETCH_GET);
