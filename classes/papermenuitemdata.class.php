@@ -130,7 +130,7 @@ class PaperMenuItemData
         $paperType = $properties->get_paper_type();
 
         // Types 0,1,2,5,6 with no items - grey disabled version
-        if (in_array($paperType, [/assessment::TYPE_FORMATIVE , /assessment::TYPE_PROGRESS, /assessment::TYPE_SUMMATIVE, /assessment::TYPE_OFFLINE, /assessment::TYPE_PEERREVIEW]) && $properties->get_item_no() == 0) {
+        if (in_array($paperType, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE, \assessment::TYPE_OFFLINE, \assessment::TYPE_PEERREVIEW]) && $properties->get_item_no() == 0) {
             return [
                 'classes' => 'grey menuitem greycascade',
                 'icon' => $this->rootPath . '/artwork/statistics_icon_grey.gif',
