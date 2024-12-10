@@ -27,44 +27,59 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             this.scrollLine = 0;
             this.myUpInterval = 0;
             this.myDownInterval = 0;
-            this.currentFocusIndex = -1;
+            this.lastFocusedTrigger = null;
             var scope = this;
             
             // Add keyboard event listener for menu navigation
             $(document).on('keydown', function(e) {
                 if (!$('.popup:visible').length) return;
                 
-                var visibleMenu = $('.popup:visible').first();
-                var menuItems = visibleMenu.find('.popupitem').not('.scrollup, .scrolldown');
-                
-                switch(e.key) {
-                    case 'ArrowDown':
-                        e.preventDefault();
-                        if (scope.currentFocusIndex < menuItems.length - 1) {
-                            scope.currentFocusIndex++;
-                            menuItems.eq(scope.currentFocusIndex).focus();
-                        }
-                        break;
-                        
-                    case 'ArrowUp':
-                        e.preventDefault();
-                        if (scope.currentFocusIndex > 0) {
-                            scope.currentFocusIndex--;
-                            menuItems.eq(scope.currentFocusIndex).focus();
-                        }
-                        break;
-                        
-                    case 'Enter':
-                        e.preventDefault();
-                        if (scope.currentFocusIndex >= 0) {
-                            menuItems.eq(scope.currentFocusIndex).trigger('click');
-                        }
-                        break;
-                        
-                    case 'Escape':
-                        e.preventDefault();
-                        scope.hideMenus();
-                        break;
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    var visibleMenu = $('.popup:visible').first();
+                    var menuItems = visibleMenu.find('.popupitem');
+                    var currentFocus = $(':focus');
+                    var currentIndex = menuItems.index(currentFocus);
+                    // Constrain tabbing to be within the popupmenu once its open
+                    if (e.shiftKey) {
+                        // Shift+Tab - go backwards
+                        var prevIndex = currentIndex <= 0 ? menuItems.length - 1 : currentIndex - 1;
+                        menuItems.eq(prevIndex).focus(); 
+                    } else {
+                        // Tab - go forwards
+                        var nextIndex = currentIndex >= menuItems.length - 1 ? 0 : currentIndex + 1;
+                        menuItems.eq(nextIndex).focus();
+                    }
+                } else {                    
+                    switch(e.key) {
+                        case 'ArrowDown':
+                            e.preventDefault();
+                            if (scope.currentFocusIndex < menuItems.length - 1) {
+                                scope.currentFocusIndex++;
+                                menuItems.eq(scope.currentFocusIndex).focus();
+                            }
+                            break;
+                            
+                        case 'ArrowUp':
+                            e.preventDefault();
+                            if (scope.currentFocusIndex > 0) {
+                                scope.currentFocusIndex--;
+                                menuItems.eq(scope.currentFocusIndex).focus();
+                            }
+                            break;
+                            
+                        case 'Enter':
+                            e.preventDefault();
+                            if (scope.currentFocusIndex >= 0) {
+                                menuItems.eq(scope.currentFocusIndex).trigger('click');
+                            }
+                            break;
+                            
+                        case 'Escape':
+                            e.preventDefault();
+                            scope.hideMenus();
+                            break;
+                    }
                 }
             });
             
@@ -242,8 +257,18 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
 
             if (!e) e = window.event;
             if ($('#' + submenuID).css('display') != 'block') {
+                // Store the triggering element before hiding menus
+                this.lastFocusedTrigger = $('#' + callingID);
                 scope.hideMenus(e);
                 $('#' + submenuID).show();
+                
+                // Make all menu items focusable first
+                $('#' + submenuID + ' .popupitem').attr('tabindex', '0');
+                
+                // Focus the first menu item after showing the menu
+                var firstItem = $('#' + submenuID + ' .popupitem').first();
+                firstItem.attr('tabindex', '0');
+                firstItem.trigger('focus');
             } else {
                 scope.hideMenus(e);
             }
@@ -258,26 +283,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $('#' + submenuID).css('top', mytop + 'px');
 
             e.cancelBubble = true;
-
-            // Reset focus index when showing menu
-            this.currentFocusIndex = -1;
-            
-            // Add ARIA attributes for accessibility
-            $('#' + submenuID).attr({
-                'role': 'menu',
-                'aria-labelledby': callingID
-            });
-            
-            // Make menu items focusable and add ARIA roles
-            $('#' + submenuID + ' .popupitem').not('.scrollup, .scrolldown').each(function() {
-                $(this).attr({
-                    'role': 'menuitem',
-                    'tabindex': '-1'
-                });
-            });
-            
-            // Set first menu item as focusable
-            $('#' + submenuID + ' .popupitem').not('.scrollup, .scrolldown').first().attr('tabindex', '0');
             
             return false;
         };
@@ -289,6 +294,10 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $(".popup").each(function() {
                 $(this).hide();
             });
+            // Restore focus to the triggering element if available
+            if (this.lastFocusedTrigger && this.lastFocusedTrigger.length) {
+                this.lastFocusedTrigger.focus();
+            }
         }
     }
 });
