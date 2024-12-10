@@ -27,7 +27,47 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             this.scrollLine = 0;
             this.myUpInterval = 0;
             this.myDownInterval = 0;
+            this.currentFocusIndex = -1;
             var scope = this;
+            
+            // Add keyboard event listener for menu navigation
+            $(document).on('keydown', function(e) {
+                if (!$('.popup:visible').length) return;
+                
+                var visibleMenu = $('.popup:visible').first();
+                var menuItems = visibleMenu.find('.popupitem').not('.scrollup, .scrolldown');
+                
+                switch(e.key) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        if (scope.currentFocusIndex < menuItems.length - 1) {
+                            scope.currentFocusIndex++;
+                            menuItems.eq(scope.currentFocusIndex).focus();
+                        }
+                        break;
+                        
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        if (scope.currentFocusIndex > 0) {
+                            scope.currentFocusIndex--;
+                            menuItems.eq(scope.currentFocusIndex).focus();
+                        }
+                        break;
+                        
+                    case 'Enter':
+                        e.preventDefault();
+                        if (scope.currentFocusIndex >= 0) {
+                            menuItems.eq(scope.currentFocusIndex).trigger('click');
+                        }
+                        break;
+                        
+                    case 'Escape':
+                        e.preventDefault();
+                        scope.hideMenus();
+                        break;
+                }
+            });
+            
             $('.scrollup').mouseover(function() {
                 var id = $(this).attr('data-menuno');
                 var options = JSON.parse($("#popupmenu" + id).attr('data-myOptions'));
@@ -219,6 +259,26 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
 
             e.cancelBubble = true;
 
+            // Reset focus index when showing menu
+            this.currentFocusIndex = -1;
+            
+            // Add ARIA attributes for accessibility
+            $('#' + submenuID).attr({
+                'role': 'menu',
+                'aria-labelledby': callingID
+            });
+            
+            // Make menu items focusable and add ARIA roles
+            $('#' + submenuID + ' .popupitem').not('.scrollup, .scrolldown').each(function() {
+                $(this).attr({
+                    'role': 'menuitem',
+                    'tabindex': '-1'
+                });
+            });
+            
+            // Set first menu item as focusable
+            $('#' + submenuID + ' .popupitem').not('.scrollup, .scrolldown').first().attr('tabindex', '0');
+            
             return false;
         };
 
@@ -232,4 +292,3 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
         }
     }
 });
-
