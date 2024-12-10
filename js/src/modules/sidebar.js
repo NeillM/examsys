@@ -34,12 +34,13 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $(document).on('keydown', function(e) {
                 if (!$('.popup:visible').length) return;
                 
+                var visibleMenu = $('.popup:visible').first();
+                var menuItems = visibleMenu.find('.popupitem');
+                var currentFocus = $(':focus');
+                var currentIndex = menuItems.index(currentFocus);
+                
                 if (e.key === 'Tab') {
                     e.preventDefault();
-                    var visibleMenu = $('.popup:visible').first();
-                    var menuItems = visibleMenu.find('.popupitem');
-                    var currentFocus = $(':focus');
-                    var currentIndex = menuItems.index(currentFocus);
                     // Constrain tabbing to be within the popupmenu once its open
                     if (e.shiftKey) {
                         // Shift+Tab - go backwards
@@ -54,24 +55,23 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                     switch(e.key) {
                         case 'ArrowDown':
                             e.preventDefault();
-                            if (scope.currentFocusIndex < menuItems.length - 1) {
-                                scope.currentFocusIndex++;
-                                menuItems.eq(scope.currentFocusIndex).focus();
-                            }
+                            nextIndex = currentIndex < 0 ? 0 : 
+                                      currentIndex >= menuItems.length - 1 ? menuItems.length - 1 : currentIndex + 1;
+                            menuItems.eq(nextIndex).focus();
                             break;
                             
                         case 'ArrowUp':
                             e.preventDefault();
-                            if (scope.currentFocusIndex > 0) {
-                                scope.currentFocusIndex--;
-                                menuItems.eq(scope.currentFocusIndex).focus();
-                            }
+                            prevIndex = currentIndex <= 0 ? 0 : currentIndex - 1;
+                            menuItems.eq(prevIndex).focus();
                             break;
                             
                         case 'Enter':
                             e.preventDefault();
-                            if (scope.currentFocusIndex >= 0) {
-                                menuItems.eq(scope.currentFocusIndex).trigger('click');
+                            if (currentFocus.hasClass('popupitem')) {
+                                currentFocus.trigger('click');
+                            } else if (menuItems.length > 0) {
+                                menuItems.eq(0).focus().trigger('click');
                             }
                             break;
                             
