@@ -290,21 +290,6 @@ div.iefixdiv {
   display: inherit;
 }
 
-/* .submenu {
-  display: none;
-  position: absolute;
-  left: 100%;
-  top: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-} */
-
-/* .menuitem:hover .submenu,
-.menuitem:focus-within .submenu {
-  display: block;
-} */
-
 .checklist-container {
   width: 13.125rem; 
   background-color: #2B569A;
@@ -339,3 +324,6 @@ div.iefixdiv {
   color: white;
   text-decoration: none;
 }
+
+
+
