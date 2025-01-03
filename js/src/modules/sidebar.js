@@ -267,7 +267,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 
                 // Focus the first menu item after showing the menu
                 var firstItem = $('#' + submenuID + ' .popupitem').first();
-                firstItem.attr('tabindex', '0');
                 firstItem.trigger('focus');
             } else {
                 scope.hideMenus(e);
