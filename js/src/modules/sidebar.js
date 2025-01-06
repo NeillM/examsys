@@ -79,6 +79,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             e.preventDefault();
                             scope.hideMenus();
                             break;
+                            
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            scope.hideMenus();
+                            break;
                     }
                 }
             });
@@ -111,6 +116,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 var id = 'popup' + $(this).attr('data-popupid');
                 var type = $(this).attr('data-popuptype');
                 var name = $(this).attr('data-popupname');
+                scope.lastFocusedTrigger = $(this).closest('.menuitem');  // Store the parent menuitem
                 scope.showMenu(id, type, name, options, urls, e);
             });
 
@@ -257,8 +263,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
 
             if (!e) e = window.event;
             if ($('#' + submenuID).css('display') != 'block') {
-                // Store the triggering element before hiding menus
-                this.lastFocusedTrigger = $('#' + callingID);
                 scope.hideMenus(e);
                 $('#' + submenuID).show();
                 
@@ -293,9 +297,14 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $(".popup").each(function() {
                 $(this).hide();
             });
-            // Restore focus to the triggering element if available
+            // Restore focus to the triggering menuitem by finding its <a> tag
             if (this.lastFocusedTrigger && this.lastFocusedTrigger.length) {
-                this.lastFocusedTrigger.focus();
+                var focusTarget = this.lastFocusedTrigger.find('a');
+                if (focusTarget.length) {
+                    focusTarget.focus();
+                } else {
+                    this.lastFocusedTrigger.focus();
+                }
             }
         }
     }
