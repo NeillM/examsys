@@ -266,6 +266,9 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 scope.hideMenus(e);
                 $('#' + submenuID).show();
                 
+                // Set aria-expanded to true 
+                $('#' + callingID).attr('aria-expanded', 'true');
+                
                 // Make all menu items focusable first
                 $('#' + submenuID + ' .popupitem').attr('tabindex', '0');
                 
@@ -297,6 +300,8 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $(".popup").each(function() {
                 $(this).hide();
             });
+            // Set aria-expanded to false for menu item
+            $('[aria-expanded="true"]').attr('aria-expanded', 'false');
             // Restore focus to the triggering menuitem by finding its <a> tag
             if (this.lastFocusedTrigger && this.lastFocusedTrigger.length) {
                 var focusTarget = this.lastFocusedTrigger.find('a');
