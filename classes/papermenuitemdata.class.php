@@ -14,11 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Data class that handles the creation of menu items for the paper_options.php page.
+ * Data class that handles the creation of menu items for the paper management interface.
+ * This class generates structured data for all interactive elements in the paper sidebar,
+ * including paper tasks (preview, edit, delete), question management (add, edit, remove),
+ * and summative assessment checklist items. Each menu item includes properties such as
+ * icons, text, URLs, and UI states based on paper properties and user permissions.
  *
  * @author Iyud Dissanayake
  * @copyright Copyright (c) 2024 The University of Nottingham
- * @package 
+ * @package classes
  */
 class PaperMenuItemData
 {
