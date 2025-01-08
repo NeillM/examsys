@@ -14,15 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 /**
- * Data class that handles the creation of menu items for the paper management interface.
+ * Data class that handles the creation of menu items for the paper_options.php page.
  * This class generates structured data for all interactive elements in the paper sidebar,
- * including paper tasks (preview, edit, delete), question management (add, edit, remove),
- * and summative assessment checklist items. Each menu item includes properties such as
- * icons, text, URLs, and UI states based on paper properties and user permissions.
+ * including paper tasks, question tasks, and summative assessment checklist items.
  *
  * @author Iyud Dissanayake
  * @copyright Copyright (c) 2024 The University of Nottingham
- * @package classes
+ * @package 
  */
 class PaperMenuItemData
 {
@@ -63,8 +61,7 @@ class PaperMenuItemData
                 'text' => $this->string['testpreview'],
                 'href' => '#',
                 'hasPopup' => false,
-                'popupType' => null,
-                'tabindex' => 0
+                'popupType' => null
             ];
         } else {
             return [
@@ -75,7 +72,6 @@ class PaperMenuItemData
                 'href' => '#',
                 'hasPopup' => false,
                 'popupType' => null,
-                'tabindex' => 0,
                 'data_attributes' => [
                     'fullscreen' => $properties->get_fullscreen(),
                     'preview' => '0'
@@ -110,7 +106,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/add_questions_16.gif',
             'text' => $this->string['addquestionspaper'],
             'href' => '#',
-            'tabindex' => 0,
             'data_attributes' => [
                 'dispno' => ($properties->get_max_display_pos() + 1),
                 'screen' => $max_screen
@@ -133,8 +128,7 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/properties_icon.gif',
             'text' => $this->string['editproperties'],
             'href' => $this->rootPath
-                    . "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder",
-            'tabindex' => 0
+                    . "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder"
         ];
     }
 
@@ -234,8 +228,7 @@ class PaperMenuItemData
             'classes' => 'menuitem',
             'icon' => $this->rootPath . '/artwork/import_16.gif',
             'text' => $this->string['importmarks'],
-            'href' => $this->rootPath . "/import/offline_marks.php?paperID=$paperID&module=$module&folder=$folder",
-            'tabindex' => 0
+            'href' => $this->rootPath . "/import/offline_marks.php?paperID=$paperID&module=$module&folder=$folder"
         ];
     }
 
@@ -254,8 +247,7 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/import_16.gif',
             'text' => $this->string['importoscemarks'],
             'href' => $this->rootPath
-                    . "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder",
-            'tabindex' => 0
+                    . "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder"
         ];
     }
 
@@ -289,7 +281,7 @@ class PaperMenuItemData
                     . $properties->get_paper_title()
                     . '&sd=' . $properties->get_start_date()
                     . '&ed=' . $properties->get_end_date()
-                    . "&module=$module&folder=$folder",
+                    . "&module=$module&folder=$folder"
         ];
     }
 
@@ -306,7 +298,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copypaper'],
             'href' => '#',
-            'tabindex' => 0,
             'hasPopup' => true,
             'popupType' => 'dialog',
             'role' => 'menuitem'
@@ -338,7 +329,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copyfrompaper'],
             'href' => '#',
-            'tabindex' => 0,
             'hasPopup' => true,
             'popupType' => 'dialog',
             'role' => 'menuitem'
@@ -377,7 +367,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/delete_paper_16.gif',
             'text' => $this->string['deletepaper'],
             'href' => '#',
-            'tabindex' => 0,
             'role' => 'menuitem'
         ];
     }
@@ -394,7 +383,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/retire_16.png',
             'text' => $this->string['retirepaper'],
             'href' => '#',
-            'tabindex' => 0,
             'role' => 'menuitem'
         ];
     }
@@ -424,9 +412,7 @@ class PaperMenuItemData
                 'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/print_icon_16.png',
                 'text' => $this->string['printhardcopy'],
-                'href' => $this->rootPath . "/osce/print.php?paperID=$paperID",
-                'tabindex' => 0,
-                'role' => 'menuitem'
+                'href' => $this->rootPath . "/osce/print.php?paperID=$paperID"
             ];
         }
 
@@ -436,7 +422,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/print_icon_16.png',
             'text' => $this->string['printhardcopy'],
             'href' => '#',
-            'tabindex' => 0,
             'hasPopup' => true,
             'popupType' => 'menu',
             'data_attributes' => [
@@ -467,7 +452,6 @@ class PaperMenuItemData
             'disabled' => false,
             'hasPopup' => true,
             'popupType' => 'menu',
-            'tabindex' => 0,
             'data_attributes' => [
                 'popupid' => '2',
                 'popuptype' => 'papertasks',
@@ -495,7 +479,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/small_user_icon.gif',
             'text' => $this->string['studentcohort'],
             'href' => '#',
-            'tabindex' => 0,
             'role' => 'menuitem'
         ];
     }
