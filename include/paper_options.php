@@ -110,7 +110,7 @@ if ($emailExternalsItem) {
 }
 
 // Reports
-$reportsItem = $menuItemData->getReportsItem($properties, $paperID, $module, $folder, $checklist, isset($graded) ? $graded : false);
+$reportsItem = $menuItemData->getReportsItem($properties, $paperID, $module, $folder);
 if ($reportsItem) {
     $render->render($reportsItem, $string, 'sidebar/menuitem.html');
 }

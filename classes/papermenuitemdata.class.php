@@ -128,7 +128,7 @@ class PaperMenuItemData
         ];
     }
 
-    public function getReportsItem($properties, $paperID, $module, $folder, $checklist, $graded = false)
+    public function getReportsItem($properties, $paperID, $module, $folder)
     {
         $paperType = $properties->get_paper_type();
 
