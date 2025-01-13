@@ -30,7 +30,7 @@ require_once $cfg_web_root . 'include/sidebar_functions.inc';
 require_once $cfg_web_root . 'include/mapping.inc';
 
 $userObject = UserObject::get_instance();
-$menuItemData = new PaperMenuItemData($configObject, $string);
+$menuItemData = new PaperMenuItemData($string);
 
 
 $clarif_types = $configObject->get_setting('core', 'summative_midexam_clarification');

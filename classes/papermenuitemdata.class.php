@@ -32,11 +32,10 @@ class PaperMenuItemData
 
     /**
      * Constructor for PaperMenuItemData
-     *
-     * @param object $configObject Configuration object containing system settings
+     * 
      * @param array $string Array of language strings for menu items
      */
-    public function __construct($configObject, $string)
+    public function __construct(array $string)
     {
         $this->rootPath = Config::get_instance()->get('cfg_root_path');
         $this->string = $string;
