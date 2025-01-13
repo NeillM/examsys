@@ -151,7 +151,6 @@ class PaperMenuItemData
                 'icon' => $this->rootPath . '/artwork/small_email_grey.png',
                 'text' => $this->string['emailexternals'],
                 'disabled' => true,
-                'role' => 'menuitem'
             ];
         }
 
@@ -168,7 +167,6 @@ class PaperMenuItemData
                 'popuptype' => 'papertasks',
                 'popupname' => 'emailexternals'
             ],
-            'role' => 'menuitem'
         ];
     }
 
@@ -290,7 +288,6 @@ class PaperMenuItemData
             'href' => '#',
             'hasPopup' => true,
             'popupType' => 'dialog',
-            'role' => 'menuitem'
         ];
     }
 
@@ -309,7 +306,6 @@ class PaperMenuItemData
                 'icon' => $this->rootPath . '/artwork/copy_icon_grey.gif',
                 'text' => $this->string['copyfrompaper'],
                 'disabled' => true,
-                'role' => 'menuitem'
             ];
         }
 
@@ -321,7 +317,6 @@ class PaperMenuItemData
             'href' => '#',
             'hasPopup' => true,
             'popupType' => 'dialog',
-            'role' => 'menuitem'
         ];
     }
 
@@ -348,7 +343,6 @@ class PaperMenuItemData
                 'icon' => $this->rootPath . '/artwork/delete_paper_grey_16.gif',
                 'text' => $this->string['deletepaper'],
                 'disabled' => true,
-                'role' => 'menuitem'
             ];
         }
 
@@ -357,7 +351,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/delete_paper_16.gif',
             'text' => $this->string['deletepaper'],
             'href' => '#',
-            'role' => 'menuitem'
         ];
     }
 
@@ -373,7 +366,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/retire_16.png',
             'text' => $this->string['retirepaper'],
             'href' => '#',
-            'role' => 'menuitem'
         ];
     }
 
@@ -393,7 +385,6 @@ class PaperMenuItemData
                 'icon' => $this->rootPath . '/artwork/print_icon_16_disabled.png',
                 'text' => $this->string['printhardcopy'],
                 'disabled' => true,
-                'role' => 'menuitem'
             ];
         }
 
@@ -419,7 +410,6 @@ class PaperMenuItemData
                 'popuptype' => 'papertasks',
                 'popupname' => 'hardcopy'
             ],
-            'role' => 'menuitem'
         ];
     }
 
@@ -469,7 +459,6 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/small_user_icon.gif',
             'text' => $this->string['studentcohort'],
             'href' => '#',
-            'role' => 'menuitem'
         ];
     }
 
