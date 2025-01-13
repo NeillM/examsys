@@ -194,23 +194,14 @@ class PaperMenuItemData
             ];
         }
 
-        // All other cases (including types 3 and 4) - active version
-        if (in_array($paperType, ['0', '1', '2', '3', '4', '5', '6'])) {
-            return [
-                'classes' => 'menuitem cascade stats',
-                'id' => 'reports',
-                'icon' => $this->rootPath . '/artwork/statistics_icon.gif',
-                'text' => $this->string['reports'],
-                'href' => '#'
-            ];
-        }
-
-        // Offline marks
-        if ($paperType == \assessment::TYPE_OFFLINE) {
-            $items['submenu'][] = $this->getImportOfflineMarksItem($paperID, $module, $folder);
-        }
-
-        return [];
+        // Return active version for all paper types
+        return [
+            'classes' => 'menuitem cascade stats',
+            'id' => 'reports',
+            'icon' => $this->rootPath . '/artwork/statistics_icon.gif',
+            'text' => $this->string['reports'],
+            'href' => '#'
+        ];
     }
 
     /**

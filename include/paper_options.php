@@ -39,7 +39,7 @@ if (!isset($properties)) {
     $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 }
 
-if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
+if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
     $exam_clarifications = true;
 } else {
     $exam_clarifications = false;
@@ -115,8 +115,14 @@ if ($reportsItem) {
     $render->render($reportsItem, $string, 'sidebar/menuitem.html');
 }
 
+//Import Offline marks
+if($properties->get_paper_type() == \assessment::TYPE_OFFLINE) {
+    $importOfflineMarksItem = $menuItemData->getImportOfflineMarksItem($paperID, $module, $folder);
+    $render->render($importOfflineMarksItem, $string, 'sidebar/menuitem.html');
+}
+
 // Import OSCE marks
-if ($properties->get_paper_type() == '4') {
+if ($properties->get_paper_type() == \assessment::TYPE_OSCE) {
     $gradebook = new gradebook($mysqli);
     $graded = $gradebook->paper_graded($paperID);
     if (!$graded) {
@@ -125,9 +131,9 @@ if ($properties->get_paper_type() == '4') {
     }
 }
 
-// Mapped Objectives Item (for paper types 0,1,2,5)
+// Mapped Objectives Item (exclude peer review type)
 if (
-    in_array($properties->get_paper_type(), ['0', '1', '2', '4','5']) &&
+    $properties->get_paper_type() != \assessment::TYPE_PEERREVIEW &&
     mb_strpos($checklist, 'mapping') !== false
 ) {
     $mappedObjectivesItem = $menuItemData->getMappedObjectivesItem($properties, $paperID, $module, $folder);
@@ -135,7 +141,7 @@ if (
 }
 
 // Add Standard Settings item if applicable
-if ($properties->get_paper_type() != '6' && mb_strpos($checklist, 'stdset') !== false) {
+if ($properties->get_paper_type() != \assessment::TYPE_PEERREVIEW && mb_strpos($checklist, 'stdset') !== false) {
     $standardSettingsItem = [
         'classes' => 'menuitem',
         'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/std_set_icon_16.gif',
@@ -195,7 +201,7 @@ echo "</div>\n";
     }
 
     // Add killer question if paper type is 4
-    if ($properties->get_paper_type() == '4') {
+    if ($properties->get_paper_type() == \assessment::TYPE_OSCE) {
         $killerItem = $menuItemData->getKillerQuestionItem(true);
         $render->render($killerItem, $string, 'sidebar/menuitem.html');
     }
@@ -210,7 +216,7 @@ echo "</div>\n";
     }
 
     // Add killer question if paper type is 4
-    if ($properties->get_paper_type() == '4') {
+    if ($properties->get_paper_type() == \assessment::TYPE_OSCE) {
         $killerItem = $menuItemData->getKillerQuestionItem(false);
         $render->render($killerItem, $string, 'sidebar/menuitem.html');
     }
@@ -225,7 +231,7 @@ echo "</div>\n";
     }
 
     // Add killer question if paper type is 4
-    if ($properties->get_paper_type() == '4') {
+    if ($properties->get_paper_type() == \assessment::TYPE_OSCE) {
         $killerItem = $menuItemData->getKillerQuestionItem(false);
         $render->render($killerItem, $string, 'sidebar/menuitem.html');
     }
@@ -241,7 +247,7 @@ if ($properties->get_summative_lock() == true) {
     ?>
 <ul id="break_controls" class="menu_list">
     <?php
-    if ($properties->get_paper_type() != '4') {
+    if ($properties->get_paper_type() != \assessment::TYPE_OSCE) {
         ?>
   <li id="add_break" class="break greymenuitem"><?php echo $string['addscreenbreak'] ?></li>
   <li id="delete_break" class="greymenuitem"><?php echo $string['deletescreenbreak'] ?></li>
@@ -252,7 +258,7 @@ if ($properties->get_summative_lock() == true) {
     ?>
 <ul id="break_controls" class="menu_list">
     <?php
-    if ($properties->get_paper_type() != '4') {
+    if ($properties->get_paper_type() != \assessment::TYPE_OSCE) {
         ?>
   <li id="add_break" class="break greymenuitem"><a href="#"><?php echo $string['addscreenbreak'] ?></a></li>
   <li id="delete_break" class="greymenuitem"><a href="#"><?php echo $string['deletescreenbreak'] ?></a></li>
@@ -277,7 +283,7 @@ if ($extra_url != '') {
 </div>
 
 <?php
-if ($properties->get_paper_type() == '2') {
+if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
     ?>
 <br />
 
@@ -494,7 +500,7 @@ if ($properties->get_summative_lock()) {
     $params = "&paperID=$paperID&folder=$folder&module=" . $module . '&calling=paper';
 }
 // Initialising the "Create new Question" submenu
-if ($properties->get_paper_type() == '6') {
+if ($properties->get_paper_type() ==  \assessment::TYPE_PEERREVIEW) {
     makeMenu(array(
     $string['likert'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",
     $string['mcq'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params"));
