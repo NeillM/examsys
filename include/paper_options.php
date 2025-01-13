@@ -291,22 +291,22 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
     <h2 class="checklist-header"><?php echo $string['summativechecklist'] ?></h2>    <?php
     // Session
     if ($sessionItem = $menuItemData->getSessionCheckItem($properties)) {
-        $render->render($sessionItem, $string, 'sidebar/tablemenuitem.html');
+        $render->render($sessionItem, $string, 'sidebar/summativemenuitem.html');
     }
 
     // Times
     if ($timesItem = $menuItemData->getTimesCheckItem($properties)) {
-        $render->render($timesItem, $string, 'sidebar/tablemenuitem.html');
+        $render->render($timesItem, $string, 'sidebar/summativemenuitem.html');
     }
 
     // Duration
     if ($durationItem = $menuItemData->getDurationCheckItem($properties)) {
-        $render->render($durationItem, $string, 'sidebar/tablemenuitem.html');
+        $render->render($durationItem, $string, 'sidebar/summativemenuitem.html');
     }
 
     // Computer labs
     if ($labsItem = $menuItemData->getLabsCheckItem($properties)) {
-        $render->render($labsItem, $string, 'sidebar/tablemenuitem.html');
+        $render->render($labsItem, $string, 'sidebar/summativemenuitem.html');
     }
 
     // Internal Peer review
@@ -316,7 +316,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
                 $string['peerreviewes'],
                 $string['unset']
             );
-            $render->render($item, $string, 'sidebar/tablemenuitem.html');
+            $render->render($item, $string, 'sidebar/summativemenuitem.html');
         } else {
             $tmp_array = $properties->get_internal_reviewers();
             $internal_array = array();
@@ -353,7 +353,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
                     $module,
                     $folder
                 );
-                $render->render($item, $string, 'sidebar/tablemenuitem.html');
+                $render->render($item, $string, 'sidebar/summativemenuitem.html');
             } else {
                 $item = $menuItemData->getInternalReviewCheckItem(
                     $string['peerreviewes'],
@@ -363,7 +363,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
                     $module,
                     $folder
                 );
-                $render->render($item, $string, 'sidebar/tablemenuitem.html');
+                $render->render($item, $string, 'sidebar/summativemenuitem.html');
             }
         }
     }
@@ -375,7 +375,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
                 $string['externalreviews'],
                 $string['unset']
             );
-            $render->render($item, $string, 'sidebar/tablemenuitem.html');
+            $render->render($item, $string, 'sidebar/summativemenuitem.html');
         } else {
             $tmp_array = $properties->get_externals();
             $external_array = array();
@@ -404,7 +404,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
                         $module,
                         $folder
                     );
-                $render->render($item, $string, 'sidebar/tablemenuitem.html');
+                $render->render($item, $string, 'sidebar/summativemenuitem.html');
             } else {
                 $item = $menuItemData->getExternalReviewCheckItem(
                     $string['externalreviews'],
@@ -414,7 +414,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
                     $module,
                     $folder
                 );
-                $render->render($item, $string, 'sidebar/tablemenuitem.html');
+                $render->render($item, $string, 'sidebar/summativemenuitem.html');
             }
         }
     }
@@ -436,7 +436,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
         }
         $stmt->close();
         $standardsItem = $menuItemData->getStandardsSetCheckItem($standards_set, $paperID, $module, $folder);
-        $render->render($standardsItem, $string, 'sidebar/tablemenuitem.html');
+        $render->render($standardsItem, $string, 'sidebar/summativemenuitem.html');
     }
 
     // Mapped
@@ -485,7 +485,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
         $mappings_complete = count($mappings);
         $paperID = param::required('paperID', param::INT, param::FETCH_GET);
         $mappingItem = $menuItemData->getMappingCheckItem($mappings_complete, $properties->get_question_no(), $objsBySession, $paperID, $module, $folder);
-        $render->render($mappingItem, $string, 'sidebar/tablemenuitem.html');
+        $render->render($mappingItem, $string, 'sidebar/summativemenuitem.html');
     }
     echo "</div>\n";;
 }
