@@ -327,11 +327,11 @@ class PaperMenuItemData
      *
      * @param object $properties Paper properties object
      * @param object $userObject User object containing role information
-     * @param object $configObject Configuration object containing system settings
      * @return array Menu item data structure with UI properties
      */
-    public function getDeletePaperItem($properties, $userObject, $configObject)
+    public function getDeletePaperItem($properties, $userObject)
     {
+        $configObject = config::get_instance();
         if (
             $properties->get_summative_lock() == 1 ||
             ($configObject->get_setting('core', 'cfg_summative_mgmt') &&

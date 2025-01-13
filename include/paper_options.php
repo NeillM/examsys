@@ -161,7 +161,7 @@ $copyFromPaperItem = $menuItemData->getCopyFromPaperItem($properties);
 $render->render($copyFromPaperItem, $string, 'sidebar/menuitem.html');
 
 // Delete Paper
-$deletePaperItem = $menuItemData->getDeletePaperItem($properties, $userObject, $configObject);
+$deletePaperItem = $menuItemData->getDeletePaperItem($properties, $userObject);
 $render->render($deletePaperItem, $string, 'sidebar/menuitem.html');
 
 // Retire Paper
