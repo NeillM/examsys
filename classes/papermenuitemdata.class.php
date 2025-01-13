@@ -773,7 +773,7 @@ class PaperMenuItemData
             'width' => 18,
             'icon' => $this->rootPath . '/artwork/'
                . ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
-            'alt' => $isComplete ? '.' : $this->string['warning'],
+            'alt' => $isComplete ? $this->string['complete'] : $this->string['warning'],
             'text' => $text,
             'href' => $href,
             'link_class' => 'checklist',
@@ -823,7 +823,7 @@ class PaperMenuItemData
             'height' => 16,
             'icon' => $this->rootPath . '/artwork/'
                 . ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
-            'alt' => $isComplete ? '.' : $this->string['warning'],
+            'alt' => $isComplete ? $this->string['complete'] : $this->string['warning'],
             'text' => $text,
             'href' => $href,
             'link_class' => 'checklist',
@@ -852,7 +852,7 @@ class PaperMenuItemData
         
         return [
             'icon' => $this->rootPath . '/artwork/' . ($standards_set == 1 ? 'checklist_tick.png' : 'checklist_exclamation.png'),
-            'alt' => $standards_set == 1 ? '.' : $this->string['warning'],
+            'alt' => $standards_set == 1 ? $this->string['complete'] : $this->string['warning'],
             'text' => $this->string['standardsset'],
             'href' => $href,
             'link_class' => 'checklist',
@@ -889,7 +889,7 @@ class PaperMenuItemData
         $isComplete = $mappings_complete >= $total_questions;
         return [
             'icon' => $this->rootPath . '/artwork/' . ($isComplete ? 'checklist_tick.png' : 'checklist_exclamation.png'),
-            'alt' => $isComplete ? '.' : $this->string['warning'],
+            'alt' => $isComplete ? $this->string['complete'] : $this->string['warning'],
             'text' => $this->string['mapping'],
             'href' => $href,
             'link_class' => 'checklist',

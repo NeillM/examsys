@@ -64,6 +64,7 @@ $string['mismatch'] = 'Mismatch';
 $string['examtime'] = 'Exam Time';
 $string['incorrect'] = 'Incorrect';
 $string['incomplete'] = 'Incomplete';
+$string['complete'] = 'Complete';
 $string['duration'] = 'Duration';
 $string['unset'] = 'Unset';
 $string['computerlabs'] = 'Computer Labs';
