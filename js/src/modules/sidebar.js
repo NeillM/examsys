@@ -70,8 +70,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             e.preventDefault();
                             if (currentFocus.hasClass('popupitem')) {
                                 currentFocus.trigger('click');
-                            } else if (menuItems.length > 0) {
-                                menuItems.eq(0).focus().trigger('click');
                             }
                             break;
                             
