@@ -337,6 +337,18 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 return;
             }
 
+            // For cascade menus 
+            if (menuItem.hasClass('cascade') || menuItem.hasClass('showmenu')) {
+                var popupId = menuItem.attr('aria-controls');
+                if (popupId) {
+                    var menuId = popupId.replace('popup', '');
+                    var options = JSON.parse($('#' + popupId).attr('data-myOptions') || '[]');
+                    var urls = JSON.parse($('#' + popupId).attr('data-myURLs') || '[]');
+                    this.showMenu(popupId, menuId, menuItem.attr('id'), options, urls);
+                    return;
+                }
+            }
+
             // For remaining items that still need client-side processing,
             // fall back to click simulation
             menuItem.trigger('click');
