@@ -32,26 +32,29 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             
             // Add keyboard event listener for menu navigation
             $(document).on('keydown', function(e) {
-                if (!$('.popup:visible').length) return;
+                if (!$('.sidebar:visible').length) return;
                 
+                // Check if a popup is open
                 var visibleMenu = $('.popup:visible').first();
                 var menuItems = visibleMenu.find('.popupitem');
                 var currentFocus = $(':focus');
                 var currentIndex = menuItems.index(currentFocus);
                 
                 if (e.key === 'Tab') {
-                    e.preventDefault();
-                    // Constrain tabbing to be within the popupmenu once its open
-                    if (e.shiftKey) {
-                        // Shift+Tab - go backwards
-                        var prevIndex = currentIndex <= 0 ? menuItems.length - 1 : currentIndex - 1;
-                        menuItems.eq(prevIndex).focus(); 
-                    } else {
-                        // Tab - go forwards
-                        var nextIndex = currentIndex >= menuItems.length - 1 ? 0 : currentIndex + 1;
-                        menuItems.eq(nextIndex).focus();
+                    if($('.popup:visible').length){
+                        e.preventDefault();
+                        // Constrain tabbing to be within the popupmenu once its open
+                        if (e.shiftKey) {
+                            // Shift+Tab - go backwards
+                            var prevIndex = currentIndex <= 0 ? menuItems.length - 1 : currentIndex - 1;
+                            menuItems.eq(prevIndex).focus(); 
+                        } else {
+                            // Tab - go forwards
+                            var nextIndex = currentIndex >= menuItems.length - 1 ? 0 : currentIndex + 1;
+                            menuItems.eq(nextIndex).focus();
+                        }
                     }
-                } else {                    
+                }else {                    
                     switch(e.key) {
                         case 'ArrowDown':
                             e.preventDefault();
@@ -68,9 +71,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             
                         case 'Enter':
                             e.preventDefault();
-                            if (currentFocus.hasClass('popupitem')) {
-                                currentFocus.trigger('click');
-                            }
+                            scope.handleMenuItemAction(currentFocus);
                             break;
                             
                         case 'Escape':
@@ -81,6 +82,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         case 'ArrowLeft':
                             e.preventDefault();
                             scope.hideMenus();
+                            break;
+
+                        case 'ArrowRight':
+                            e.preventDefault();
+                            currentFocus.trigger('click');
                             break;
                     }
                 }
@@ -309,6 +315,31 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                     this.lastFocusedTrigger.focus();
                 }
             }
-        }
+        };
+
+        this.handleMenuItemAction = function(menuItem) {
+            // If the item is disabled, do nothing
+            if (menuItem.closest('[aria-disabled="true"]').length) {
+                return;
+            }
+
+            // First try to find a direct href link
+            var link = menuItem.find('a[href]');
+            if (link.length && link.attr('href') !== '#') {
+                window.location.href = link.attr('href');
+                return;
+            }
+
+            // For items being converted to pages, check for a data-url attribute
+            var dataUrl = menuItem.data('url');
+            if (dataUrl) {
+                window.location.href = dataUrl;
+                return;
+            }
+
+            // For remaining items that still need client-side processing,
+            // fall back to click simulation
+            menuItem.trigger('click');
+        };
     }
 });
