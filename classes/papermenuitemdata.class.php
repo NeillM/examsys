@@ -162,6 +162,7 @@ class PaperMenuItemData
             'href' => '#',
             'hasPopup' => true,
             'popupType' => 'menu',
+            'action' => 'openSubMenu',
             'data_attributes' => [
                 'popupid' => '1',
                 'popuptype' => 'papertasks',
@@ -405,6 +406,7 @@ class PaperMenuItemData
             'href' => '#',
             'hasPopup' => true,
             'popupType' => 'menu',
+            'action' => 'openSubMenu',
             'data_attributes' => [
                 'popupid' => '3',
                 'popuptype' => 'papertasks',
@@ -430,6 +432,7 @@ class PaperMenuItemData
             'classes' => 'menuitem cascade showmenu',
             'id' => 'qti',
             'disabled' => false,
+            'action' => 'openSubMenu',
             'hasPopup' => true,
             'popupType' => 'menu',
             'data_attributes' => [
@@ -636,6 +639,9 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/new_question_menu_icon.gif',
             'text' => $this->string['createnewquestion'],
             'href' => '#',
+            'hasPopup' => true,
+            'popupType' => 'menu',
+            'action' => 'openSubMenu',
             'data_attributes' => [
                 'popupid' => '0',
                 'popuptype' => 'banktasks',
