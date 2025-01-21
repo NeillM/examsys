@@ -32,6 +32,7 @@ data - Object containing menu item properties:
     popupType - Type of popup ('menu' or 'dialog') if hasPopup is true
     id - Unique identifier for the menu item (optional)
     data_attributes - Object containing additional data attributes (optional)
+    action - Action identifier for the menu item (optional)
 #}
 <div class="{% if data.disabled %}grey {% endif %}{{ data.classes }}" 
     role="menuitem" 
@@ -42,6 +43,7 @@ data - Object containing menu item properties:
     aria-controls="popup{{ data.data_attributes.popupid }}"
     {% endif %}
     {% if data.id %}id="{{ data.id }}" {% endif %}
+    {% if data.action %}data-action="{{ data.action }}"{% endif %}
     {% if data.data_attributes %}
     {% for key, value in data.data_attributes %}
     data-{{ key }}="{{ value }}"
