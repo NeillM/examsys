@@ -71,7 +71,10 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             
                         case 'Enter':
                             e.preventDefault();
-                            scope.handleMenuItemAction(currentFocus);
+                            var menuItem = currentFocus.closest('[data-action]');
+                            if (menuItem.length) {
+                                scope.handleMenuItemAction(menuItem, e);
+                            }
                             break;
                             
                         case 'Escape':
@@ -317,41 +320,29 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             }
         };
 
-        this.handleMenuItemAction = function(menuItem) {
-            // If the item is disabled, do nothing
-            if (menuItem.closest('[aria-disabled="true"]').length) {
-                return;
-            }
+        this.handleMenuItemAction = function(menuItem,e) {
 
-            // First try to find a direct href link
-            var link = menuItem.find('a[href]');
-            if (link.length && link.attr('href') !== '#') {
-                window.location.href = link.attr('href');
-                return;
-            }
-
-            // For items being converted to pages, check for a data-url attribute
-            var dataUrl = menuItem.data('url');
-            if (dataUrl) {
-                window.location.href = dataUrl;
-                return;
-            }
-
-            // For cascade menus 
-            if (menuItem.hasClass('cascade') || menuItem.hasClass('showmenu')) {
-                var popupId = menuItem.attr('aria-controls');
-                if (popupId) {
-                    var menuId = popupId.replace('popup', '');
-                    var options = JSON.parse($('#' + popupId).attr('data-myOptions') || '[]');
-                    var urls = JSON.parse($('#' + popupId).attr('data-myURLs') || '[]');
-                    this.showMenu(popupId, menuId, menuItem.attr('id'), options, urls);
-                    return;
+            var action = menuItem.attr('data-action');
+            console.log(action);
+            if (action) {
+                switch (action) {
+                    case 'openSubMenu':
+                        var options = JSON.parse($("#popupmenu" + menuItem.attr('data-popupid')).attr('data-myOptions'));
+                        var urls = JSON.parse($("#popupmenu" + menuItem.attr('data-popupid')).attr('data-myURLs'));
+                        var id = 'popup' + menuItem.attr('data-popupid');
+                        var type = menuItem.attr('data-popuptype');
+                        var name = menuItem.attr('data-popupname');
+                        this.lastFocusedTrigger = menuItem.closest('.menuitem');  // Store the parent menuitem
+                        this.showMenu(id, type, name, options, urls, e);
+                        break;
+                   
+                    default:
+                        console.warn('Unknown action type:', action);
+                        break;
                 }
+                return;
             }
 
-            // For remaining items that still need client-side processing,
-            // fall back to click simulation
-            menuItem.trigger('click');
         };
     }
 });
