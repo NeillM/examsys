@@ -127,7 +127,8 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/properties_icon.gif',
             'text' => $this->string['editproperties'],
             'href' => $this->rootPath
-                    . "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder"
+                    . "/paper/properties.php?paperID=$paperID&caller=details&module=$module&folder=$folder",
+            'action' => 'directUrl'
         ];
     }
 
@@ -217,7 +218,8 @@ class PaperMenuItemData
             'classes' => 'menuitem',
             'icon' => $this->rootPath . '/artwork/import_16.gif',
             'text' => $this->string['importmarks'],
-            'href' => $this->rootPath . "/import/offline_marks.php?paperID=$paperID&module=$module&folder=$folder"
+            'href' => $this->rootPath . "/import/offline_marks.php?paperID=$paperID&module=$module&folder=$folder",
+            'action' => 'directUrl'
         ];
     }
 
@@ -236,7 +238,9 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/import_16.gif',
             'text' => $this->string['importoscemarks'],
             'href' => $this->rootPath
-                    . "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder"
+                    . "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder",
+            'action' => 'directUrl'
+            
         ];
     }
 
@@ -270,7 +274,8 @@ class PaperMenuItemData
                     . $properties->get_paper_title()
                     . '&sd=' . $properties->get_start_date()
                     . '&ed=' . $properties->get_end_date()
-                    . "&module=$module&folder=$folder"
+                    . "&module=$module&folder=$folder",
+            'action' => 'directUrl'
         ];
     }
 

@@ -321,7 +321,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
         };
 
         this.handleMenuItemAction = function(menuItem,e) {
-
             var action = menuItem.attr('data-action');
             console.log(action);
             if (action) {
@@ -334,6 +333,13 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         var name = menuItem.attr('data-popupname');
                         this.lastFocusedTrigger = menuItem.closest('.menuitem');  // Store the parent menuitem
                         this.showMenu(id, type, name, options, urls, e);
+                        break;
+
+                    case 'directUrl':
+                        var href = menuItem.find('a').attr('href');
+                        if (href) {
+                            window.location = href;
+                        }
                         break;
                    
                     default:
