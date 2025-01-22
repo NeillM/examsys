@@ -33,6 +33,7 @@ data - Object containing menu item properties:
     id - Unique identifier for the menu item (optional)
     data_attributes - Object containing additional data attributes (optional)
     action - Action identifier for the menu item (optional)
+    type - Type of menu item ('button' or 'link') (optional)
 #}
 <div class="{% if data.disabled %}grey {% endif %}{{ data.classes }}" 
     role="menuitem" 
@@ -49,14 +50,26 @@ data - Object containing menu item properties:
     data-{{ key }}="{{ value }}"
     {% endfor %}
     {% endif %}> 
-    {% if not data.disabled and data.href %}
-    <a href="{{ data.href }}">
-    {% endif %}
-    {% if data.icon %}
-    <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
-    {% endif %}
-    {{ data.text}}
-    {% if not data.disabled and data.href %}
-    </a>
+    {% if not data.disabled %}
+        {% if data.type == 'button' %}
+            <button type="button">
+                {% if data.icon %}
+                <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
+                {% endif %}
+                {{ data.text }}
+            </button>
+        {% else %}
+            <a href="{{ data.href }}">
+                {% if data.icon %}
+                <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
+                {% endif %}
+                {{ data.text }}
+            </a>
+        {% endif %}
+    {% else %}
+        {% if data.icon %}
+        <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
+        {% endif %}
+        {{ data.text }}
     {% endif %}
 </div>
