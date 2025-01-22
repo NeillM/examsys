@@ -279,6 +279,8 @@ class PaperMenuItemData
         ];
     }
 
+    
+
     /**
      * Generates menu item data for copying a paper.
      *
@@ -467,6 +469,25 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/small_user_icon.gif',
             'text' => $this->string['studentcohort'],
             'href' => '#',
+        ];
+    }
+
+    /**
+     * Generates menu item data for standard settings.
+     * 
+     * @param int $paperID The ID of the paper
+     * @param string $module The module code
+     * @param string $folder The folder name
+     * @return array Menu item data structure with UI properties
+     */
+    public function getStandardSettingsItem($paperID, $module, $folder)
+    {
+        return [
+            'classes' => 'menuitem',
+            'icon' => $this->rootPath . '/artwork/std_set_icon_16.gif',
+            'text' => $this->string['standardssetting'],
+            'href' => $this->rootPath . "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
+            'action' => 'directUrl'
         ];
     }
 

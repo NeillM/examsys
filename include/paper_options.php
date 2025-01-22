@@ -142,13 +142,7 @@ if (
 
 // Add Standard Settings item if applicable
 if ($properties->get_paper_type() != \assessment::TYPE_PEERREVIEW && mb_strpos($checklist, 'stdset') !== false) {
-    $standardSettingsItem = [
-        'classes' => 'menuitem',
-        'icon' => Config::get_instance()->get('cfg_root_path') . '/artwork/std_set_icon_16.gif',
-        'text' => $string['standardssetting'],
-        'href' => Config::get_instance()->get('cfg_root_path') . "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
-        'tabindex' => 0
-    ];
+    $standardSettingsItem = $menuItemData->getStandardSettingsItem($paperID, $module, $folder);
     $render->render($standardSettingsItem, $string, 'sidebar/menuitem.html');
 }
 
