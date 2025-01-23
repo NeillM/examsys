@@ -203,6 +203,7 @@ class PaperMenuItemData
             'hasPopup' => true,
             'popupType' => 'menu',
             'action' => 'openSubMenu',
+            'type' => 'button',
             'data_attributes' => [
                 'popupid' => '1',
                 'popuptype' => 'papertasks',
@@ -485,6 +486,7 @@ class PaperMenuItemData
             'hasPopup' => true,
             'popupType' => 'menu',
             'action' => 'openSubMenu',
+            'type' => 'button',
             'data_attributes' => [
                 'popupid' => '3',
                 'popuptype' => 'papertasks',
@@ -511,6 +513,7 @@ class PaperMenuItemData
             'id' => 'qti',
             'disabled' => false,
             'action' => 'openSubMenu',
+            'type' => 'button',
             'hasPopup' => true,
             'popupType' => 'menu',
             'data_attributes' => [
@@ -748,6 +751,7 @@ class PaperMenuItemData
             'hasPopup' => true,
             'popupType' => 'menu',
             'action' => 'openSubMenu',
+            'type' => 'button',
             'data_attributes' => [
                 'popupid' => '0',
                 'popuptype' => 'banktasks',
