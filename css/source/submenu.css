@@ -214,6 +214,21 @@ a.greylink:hover {
   text-decoration: underline;
   cursor: pointer;
 }
+.menuitem button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+}
+
+.menuitem button:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #316AC5;
+}
+
 .menuitem.sub span {
   background: transparent url('../artwork/submenu_arrow.png') no-repeat 90% top;
 }
@@ -324,6 +339,3 @@ div.iefixdiv {
   color: white;
   text-decoration: none;
 }
-
-
-
