@@ -159,7 +159,7 @@ $deletePaperItem = $menuItemData->getDeletePaperItem($properties, $userObject, $
 $render->render($deletePaperItem, $string, 'sidebar/menuitem.html');
 
 // Retire Paper
-$retirePaperItem = $menuItemData->getRetirePaperItem();
+$retirePaperItem = $menuItemData->getRetirePaperItem($paperID, $module, $folder);
 $render->render($retirePaperItem, $string, 'sidebar/menuitem.html');
 
 // Print Hardcopy
@@ -171,11 +171,10 @@ $importExportItem = $menuItemData->getImportExportItem($properties, $paperID, $m
 $render->render($importExportItem, $string, 'sidebar/menuitem.html');
 
 // Student Cohort
-$studentCohortItem = $menuItemData->getStudentCohortItem($properties);
+$studentCohortItem = $menuItemData->getStudentCohortItem($properties, $paperID);
 if ($studentCohortItem) {
     $render->render($studentCohortItem, $string, 'sidebar/menuitem.html');
 }
-
 
 echo "</div>\n";
 ?>

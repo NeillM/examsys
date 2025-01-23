@@ -406,16 +406,27 @@ class PaperMenuItemData
 
     /**
      * Generates menu item data for retiring a paper.
-     *
+     * 
+     * @param int $paperID The ID of the paper
+     * @param string $module The module code
+     * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getRetirePaperItem()
+    public function getRetirePaperItem($paperID, $module, $folder)
     {
         return [
             'classes' => 'menuitem retirepaper',
             'icon' => $this->rootPath . '/artwork/retire_16.png',
             'text' => $this->string['retirepaper'],
             'href' => '#',
+            'action' => 'openPopup',
+            'data_attributes' => [
+                'url' => $this->rootPath . "/paper/check_retire_paper.php?paperID=" . $paperID . "&module=" . $module . "&folder=" . $folder,
+                'popuptype' => 'window',
+                'name' => 'notice',
+                'features' => 'width=500,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable',
+                'focus' => true
+            ]
         ];
     }
 
@@ -497,11 +508,12 @@ class PaperMenuItemData
      * Returns an empty array if calendar year is not set.
      *
      * @param object $properties Paper properties object
+     * @param int $paperID The ID of the paper
      * @return array Menu item data structure with UI properties
      */
-    public function getStudentCohortItem($properties)
+    public function getStudentCohortItem($properties, $paperID)
     {
-    // Only return if calendar year exists
+        // Only return if calendar year exists
         if (!$properties->get_calendar_year()) {
             return [];
         }
@@ -511,6 +523,14 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/small_user_icon.gif',
             'text' => $this->string['studentcohort'],
             'href' => '#',
+            'action' => 'openPopup',
+            'data_attributes' => [
+                'url' => $this->rootPath . "/users/paper.php?paperID=" . $paperID,
+                'popuptype' => 'window',
+                'name' => 'properties',
+                'features' => 'width=888,height=650,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable',
+                'focus' => true
+            ]
         ];
     }
 
