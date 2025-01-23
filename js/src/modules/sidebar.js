@@ -122,15 +122,15 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 scope.scrollDownEnd();
             });
 
-            $('.showmenu').click(function(e) {
-                var options = JSON.parse($("#popupmenu" + $(this).attr('data-popupid')).attr('data-myOptions'));
-                var urls = JSON.parse($("#popupmenu" + $(this).attr('data-popupid')).attr('data-myURLs'));
-                var id = 'popup' + $(this).attr('data-popupid');
-                var type = $(this).attr('data-popuptype');
-                var name = $(this).attr('data-popupname');
-                scope.lastFocusedTrigger = $(this).closest('.menuitem');  // Store the parent menuitem
-                scope.showMenu(id, type, name, options, urls, e);
-            });
+            // $('.showmenu').click(function(e) {
+            //     var options = JSON.parse($("#popupmenu" + $(this).attr('data-popupid')).attr('data-myOptions'));
+            //     var urls = JSON.parse($("#popupmenu" + $(this).attr('data-popupid')).attr('data-myURLs'));
+            //     var id = 'popup' + $(this).attr('data-popupid');
+            //     var type = $(this).attr('data-popuptype');
+            //     var name = $(this).attr('data-popupname');
+            //     scope.lastFocusedTrigger = $(this).closest('.menuitem');  // Store the parent menuitem
+            //     scope.showMenu(id, type, name, options, urls, e);
+            // });
 
             $('.popup').mouseleave(function(e) {
                 // FF/IE trigger mouseleave incorrectly on dropdown use so ignore.
