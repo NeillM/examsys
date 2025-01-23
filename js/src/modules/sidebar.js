@@ -86,10 +86,10 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             e.preventDefault();
                             scope.hideMenus();
                             break;
-
+                        
                         case 'ArrowRight':
                             e.preventDefault();
-                            currentFocus.trigger('click');
+                            currentFocus.trigger('click'); // Temporary to test click vs handle function
                             break;
                     }
                 }
