@@ -48,9 +48,10 @@ class PaperMenuItemData
      * otherwise returns an enabled menu item with fullscreen and preview settings.
      *
      * @param object $properties Paper properties object containing paper settings
+     * @param string $cryptname The encrypted paper ID
      * @return array Menu item data structure with UI properties
      */
-    public function getTestPreviewItem($properties)
+    public function getTestPreviewItem($properties, $cryptname)
     {
         if ($properties->get_paper_type() == \assessment::TYPE_OFFLINE || $properties->get_item_no() == 0) {
             return [
@@ -59,24 +60,41 @@ class PaperMenuItemData
                 'icon' => $this->rootPath . '/artwork/small_play_grey.png',
                 'text' => $this->string['testpreview'],
                 'href' => '#',
-                'hasPopup' => false,
-                'popupType' => null
-            ];
-        } else {
-            return [
-                'classes' => 'menuitem startpaper',
-                'disabled' => false,
-                'icon' => $this->rootPath . '/artwork/small_play.png',
-                'text' => $this->string['testpreview'],
-                'href' => '#',
-                'hasPopup' => false,
-                'popupType' => null,
-                'data_attributes' => [
-                    'fullscreen' => $properties->get_fullscreen(),
-                    'preview' => '0'
-                ]
             ];
         }
+
+        $paperType = $properties->get_paper_type();
+        $fullscreen = $properties->get_fullscreen();
+        
+        // build URL based on paper type
+        if ($paperType == 4) {
+            $url = $this->rootPath . "/osce/form.php?id=" . $cryptname . "&username=test";
+            $features = "width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
+        } else if ($paperType == 6) {
+            $url = $this->rootPath . "/peer_review/form.php?id=" . $cryptname;
+            $features = "width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
+        } else {
+            $url = $this->rootPath . "/paper/start.php?id=" . $cryptname . "&mode=preview";
+            $features = $fullscreen ? 
+                "fullscreen" : 
+                "width=" . (1920-80) . ",height=" . (1080-80) . ",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable";
+        }
+
+        return [
+            'classes' => 'menuitem startpaper',
+            'disabled' => false,
+            'icon' => $this->rootPath . '/artwork/small_play.png',
+            'text' => $this->string['testpreview'],
+            'href' => '#',
+            'action' => 'openPopup',
+            'data_attributes' => [
+                'url' => $url,
+                'popuptype' => 'window',
+                'name' => 'paper',
+                'features' => $features,
+                'focus' => true
+            ]
+        ];
     }
 
     /**

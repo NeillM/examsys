@@ -92,7 +92,7 @@ echo "<div id=\"menu1\" role=\"menu\">\n";
 
 // Test & Preview
 $render = new render($configObject);
-$testPreviewItem = $menuItemData->getTestPreviewItem($properties);
+$testPreviewItem = $menuItemData->getTestPreviewItem($properties, $properties->get_crypt_name());
 $render->render($testPreviewItem, $string, 'sidebar/menuitem.html');
 
 // Add Questions to Paper
