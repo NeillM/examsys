@@ -304,9 +304,9 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             });
             // Set aria-expanded to false for menu item
             $('[aria-expanded="true"]').attr('aria-expanded', 'false');
-            // Restore focus to the triggering menuitem by finding its <a> tag
+            // Restore focus to the triggering menuitem by finding its interactive element (button or a)
             if (this.lastFocusedTrigger && this.lastFocusedTrigger.length) {
-                var focusTarget = this.lastFocusedTrigger.find('a');
+                var focusTarget = this.lastFocusedTrigger.find('button, a').first();
                 if (focusTarget.length) {
                     focusTarget.focus();
                 } else {
