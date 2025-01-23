@@ -85,9 +85,13 @@ class PaperMenuItemData
      * otherwise returns an enabled menu item 
      *
      * @param object $properties Paper properties object containing paper settings
+     * @param int $paperID The paper ID
+     * @param string $module The module code
+     * @param string $folder The folder name
+     * @param int $scrOfY The scroll Y position
      * @return array Menu item data structure with UI properties
      */
-    public function getAddQuestionsItem($properties)
+    public function getAddQuestionsItem($properties, $paperID, $module, $folder, $scrOfY = 0)
     {
         if ($properties->get_summative_lock() == 1) {
             return [
@@ -99,15 +103,32 @@ class PaperMenuItemData
         }
 
         $max_screen = ($properties->get_max_screen() != '') ? $properties->get_max_screen() : 0;
+        $display_pos = $properties->get_max_display_pos() + 1;
+        
+        // Calculate window dimensions and features
+        $winW = "screen.width - 80";
+        $winH = "screen.height - 100";
+        $features = "width=' + $winW + ',height=' + $winH + ',left=40,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
+        
         return [
             'classes' => 'menuitem addquestions',
             'disabled' => false,
             'icon' => $this->rootPath . '/artwork/add_questions_16.gif',
             'text' => $this->string['addquestionspaper'],
             'href' => '#',
+            'action' => 'openPopup',
             'data_attributes' => [
-                'dispno' => ($properties->get_max_display_pos() + 1),
-                'screen' => $max_screen
+                'url' => $this->rootPath . "/question/add/add_questions_frame.php"
+                      . "?paperID=" . $paperID 
+                      . "&module=" . $module
+                      . "&folder=" . $folder
+                      . "&scrOfY=" . $scrOfY
+                      . "&display_pos=" . $display_pos
+                      . "&max_screen=" . $max_screen,
+                'popuptype' => 'window',
+                'name' => 'notice',
+                'features' => $features,
+                'focus' => true
             ]
         ];
     }

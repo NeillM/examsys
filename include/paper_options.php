@@ -96,7 +96,7 @@ $testPreviewItem = $menuItemData->getTestPreviewItem($properties);
 $render->render($testPreviewItem, $string, 'sidebar/menuitem.html');
 
 // Add Questions to Paper
-$addQuestionsItem = $menuItemData->getAddQuestionsItem($properties);
+$addQuestionsItem = $menuItemData->getAddQuestionsItem($properties, $paperID, $module, $folder, 0);
 $render->render($addQuestionsItem, $string, 'sidebar/menuitem.html');
 
 // Edit Properties

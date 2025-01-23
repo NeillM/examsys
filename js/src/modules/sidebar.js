@@ -95,6 +95,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 }
             });
             
+            // click handler for menu items
+            $(document).on('click', '[data-action]', function(e) {
+                scope.handleMenuItemAction($(this), e);
+            });
+            
             $('.scrollup').mouseover(function() {
                 var id = $(this).attr('data-menuno');
                 var options = JSON.parse($("#popupmenu" + id).attr('data-myOptions'));
@@ -339,6 +344,16 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         var href = menuItem.find('a').attr('href');
                         if (href) {
                             window.location = href;
+                        }
+                        break;
+
+                    case 'openPopup':
+                        var settings = menuItem.data();
+                        if (settings.popuptype === 'window') {
+                            var popup = window.open(settings.url, settings.name, settings.features);
+                            if (settings.focus && window.focus) {
+                                popup.focus();
+                            }
                         }
                         break;
                    
