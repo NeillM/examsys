@@ -356,9 +356,12 @@ class PaperMenuItemData
      *
      * @param object $properties Paper properties object
      * @param object $userObject User object containing role information
+     * @param int $paperID The paper ID
+     * @param string $module The module code
+     * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getDeletePaperItem($properties, $userObject)
+    public function getDeletePaperItem($properties, $userObject, $paperID, $module, $folder)
     {
         $configObject = config::get_instance();
         if (
@@ -375,11 +378,29 @@ class PaperMenuItemData
             ];
         }
 
+        // Calculate window dimensions and position
+        $width = 500;
+        $height = 210;
+        $left = "' + (screen.width / 2 - " . ($width/2) . ") + '";
+        $top = "' + (screen.height / 2 - " . ($height/2) . ") + '";
+        $features = "width=$width,height=$height,left=$left,top=$top,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
+
         return [
             'classes' => 'menuitem deletepaper',
             'icon' => $this->rootPath . '/artwork/delete_paper_16.gif',
             'text' => $this->string['deletepaper'],
             'href' => '#',
+            'action' => 'openPopup',
+            'data_attributes' => [
+                'url' => $this->rootPath . "/delete/check_delete_paper.php"
+                      . "?paperID=" . $paperID 
+                      . "&module=" . $module
+                      . "&folder=" . $folder,
+                'popuptype' => 'window',
+                'name' => 'notice',
+                'features' => $features,
+                'focus' => true
+            ]
         ];
     }
 
