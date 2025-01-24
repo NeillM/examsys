@@ -54,7 +54,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             menuItems.eq(nextIndex).focus();
                         }
                     }
-                }else {                    
+                } else {                    
                     switch(e.key) {
                         case 'ArrowDown':
                             e.preventDefault();
