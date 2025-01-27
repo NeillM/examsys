@@ -55,7 +55,8 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         }
                     }
                 } else {                    
-                    switch(e.key) {
+                    var menuItem = currentFocus.closest('[data-action]');
+                    switch (e.key) {
                         case 'ArrowDown':
                             e.preventDefault();
                             nextIndex = currentIndex < 0 ? 0 : 
@@ -71,7 +72,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             
                         case 'Enter':
                             e.preventDefault();
-                            var menuItem = currentFocus.closest('[data-action]');
                             if (menuItem.length) {
                                 scope.handleMenuItemAction(menuItem, e);
                             }
@@ -89,7 +89,9 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         
                         case 'ArrowRight':
                             e.preventDefault();
-                            currentFocus.trigger('click'); // Temporary to test click vs handle function
+                            if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
+                                scope.handleMenuItemAction(menuItem, e);
+                            }
                             break;
                     }
                 }
