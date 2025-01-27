@@ -47,11 +47,11 @@ class PaperMenuItemData
      * Returns a disabled menu item if the paper is offline or has no items,
      * otherwise returns an enabled menu item with fullscreen and preview settings.
      *
-     * @param object $properties Paper properties object containing paper settings
+     * @param PaperProperties $properties Paper properties object containing paper settings
      * @param string $cryptname The encrypted paper ID
      * @return array Menu item data structure with UI properties
      */
-    public function getTestPreviewItem($properties, $cryptname)
+    public function getTestPreviewItem(PaperProperties $properties, string $cryptname): array
     {
         if ($properties->get_paper_type() == \assessment::TYPE_OFFLINE || $properties->get_item_no() == 0) {
             return [
@@ -102,14 +102,14 @@ class PaperMenuItemData
      * Returns a disabled menu item if the paper is summatively locked,
      * otherwise returns an enabled menu item 
      *
-     * @param object $properties Paper properties object containing paper settings
+     * @param PaperProperties $properties Paper properties object containing paper settings
      * @param int $paperID The paper ID
      * @param string $module The module code
      * @param string $folder The folder name
      * @param int $scrOfY The scroll Y position
      * @return array Menu item data structure with UI properties
      */
-    public function getAddQuestionsItem($properties, $paperID, $module, $folder, $scrOfY = 0)
+    public function getAddQuestionsItem(PaperProperties $properties, int $paperID, string $module, string $folder, int $scrOfY = 0): array
     {
         if ($properties->get_summative_lock() == 1) {
             return [
@@ -159,7 +159,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getEditPropertiesItem($paperID, $module, $folder)
+    public function getEditPropertiesItem(int $paperID, string $module, string $folder): array
     {
         return [
             'classes' => 'menuitem properties',
@@ -174,10 +174,10 @@ class PaperMenuItemData
     /**
      * Generates menu item data for emailing externals.
      *
-     * @param object $properties Paper properties object containing paper settings
+     * @param PaperProperties $properties Paper properties object containing paper settings
      * @return array Menu item data structure with UI properties
      */
-    public function getEmailExternalsItem($properties)
+    public function getEmailExternalsItem(PaperProperties $properties): array
     {
         // Only proceed if paper type is 2
         if ($properties->get_paper_type() != \assessment::TYPE_SUMMATIVE) {
@@ -215,13 +215,13 @@ class PaperMenuItemData
     /**
      * Generates menu item data for accessing paper reports.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @param int $paperID The ID of the paper
      * @param string $module The module code
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getReportsItem($properties, $paperID, $module, $folder)
+    public function getReportsItem(PaperProperties $properties, int $paperID, string $module, string $folder): array
     {
         $paperType = $properties->get_paper_type();
 
@@ -252,7 +252,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getImportOfflineMarksItem($paperID, $module, $folder)
+    public function getImportOfflineMarksItem(int $paperID, string $module, string $folder): array
     {
         return [
             'classes' => 'menuitem',
@@ -271,7 +271,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getImportOsceMarksItem($paperID, $module, $folder)
+    public function getImportOsceMarksItem(int $paperID, string $module, string $folder): array
     {
         return [
             'classes' => 'menuitem',
@@ -280,7 +280,6 @@ class PaperMenuItemData
             'href' => $this->rootPath
                     . "/import/osce_marks.php?paperID=$paperID&module=$module&folder=$folder",
             'action' => 'directUrl'
-            
         ];
     }
 
@@ -288,13 +287,13 @@ class PaperMenuItemData
      * Generates menu item data for viewing mapped objectives.
      * Returns a disabled menu item if calendar year is not set.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @param int $paperID The ID of the paper
      * @param string $module The module code
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getMappedObjectivesItem($properties, $paperID, $module, $folder)
+    public function getMappedObjectivesItem(PaperProperties $properties, int $paperID, string $module, string $folder): array
     {
         if ($properties->get_calendar_year() == '') {
             return [
@@ -326,7 +325,7 @@ class PaperMenuItemData
      *
      * @return array Menu item data structure with UI properties
      */
-    public function getCopyPaperItem()
+    public function getCopyPaperItem(): array
     {
         return [
             'classes' => 'menuitem cascade',
@@ -343,10 +342,10 @@ class PaperMenuItemData
      * Generates menu item data for copying from another paper.
      * Returns a disabled menu item if the paper is summatively locked.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @return array Menu item data structure with UI properties
      */
-    public function getCopyFromPaperItem($properties)
+    public function getCopyFromPaperItem(PaperProperties $properties): array
     {
         if ($properties->get_summative_lock() == 1) {
             return [
@@ -373,14 +372,14 @@ class PaperMenuItemData
      * Returns a disabled menu item if the paper is summatively locked
      * or if user lacks required permissions for summative papers.
      *
-     * @param object $properties Paper properties object
-     * @param object $userObject User object containing role information
-     * @param int $paperID The paper ID
+     * @param PaperProperties $properties Paper properties object containing paper settings
+     * @param UserObject $userObject User object containing role information
+     * @param int $paperID The ID of the paper
      * @param string $module The module code
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getDeletePaperItem($properties, $userObject, $paperID, $module, $folder)
+    public function getDeletePaperItem(PaperProperties $properties, UserObject $userObject, int $paperID, string $module, string $folder): array
     {
         $configObject = config::get_instance();
         if (
@@ -431,7 +430,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getRetirePaperItem($paperID, $module, $folder)
+    public function getRetirePaperItem(int $paperID, string $module, string $folder): array
     {
         return [
             'classes' => 'menuitem retirepaper',
@@ -453,11 +452,11 @@ class PaperMenuItemData
      * Generates menu item data for printing a hardcopy of the paper.
      * Returns a disabled menu item if the paper has no items.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @param int $paperID The ID of the paper
      * @return array Menu item data structure with UI properties
      */
-    public function getPrintHardcopyItem($properties, $paperID)
+    public function getPrintHardcopyItem(PaperProperties $properties, int $paperID): array
     {
         if ($properties->get_item_no() == 0) {
             return [
@@ -498,12 +497,12 @@ class PaperMenuItemData
     /**
      * Generates menu item data for importing/exporting paper data.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @param int $paperID The ID of the paper
      * @param string $module The module code
      * @return array Menu item data structure with UI properties
      */
-    public function getImportExportItem($properties, $paperID, $module)
+    public function getImportExportItem(PaperProperties $properties, int $paperID, string $module): array
     {
         return [
             'text' => $this->string['importexport'],
@@ -528,11 +527,11 @@ class PaperMenuItemData
      * Generates menu item data for accessing the student cohort.
      * Returns an empty array if calendar year is not set.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @param int $paperID The ID of the paper
      * @return array Menu item data structure with UI properties
      */
-    public function getStudentCohortItem($properties, $paperID)
+    public function getStudentCohortItem(PaperProperties $properties, int $paperID): array
     {
         // Only return if calendar year exists
         if (!$properties->get_calendar_year()) {
@@ -563,7 +562,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getStandardSettingsItem($paperID, $module, $folder)
+    public function getStandardSettingsItem(int $paperID, string $module, string $folder): array
     {
         return [
             'classes' => 'menuitem',
@@ -582,7 +581,7 @@ class PaperMenuItemData
      * @param string|null $paperType The type of paper
      * @return array Array of menu item data structures
      */
-    public function getCurrentQuestionItemsGrey($exam_clarifications = false, $paperType = null)
+    public function getCurrentQuestionItemsGrey(bool $exam_clarifications = false, string $paperType = null): array
     {
         $items = [
             [
@@ -643,7 +642,7 @@ class PaperMenuItemData
      * @param string|null $paperType The type of paper
      * @return array Array of menu item data structures
      */
-    public function getCurrentQuestionItemsActive($exam_clarifications = false, $paperType = null)
+    public function getCurrentQuestionItemsActive(bool $exam_clarifications = false, string $paperType = null): array
     {
         $items = [
             [
@@ -714,7 +713,7 @@ class PaperMenuItemData
      * @param bool $isGrey Whether to return the item in disabled state
      * @return array Menu item data structure with UI properties
      */
-    public function getKillerQuestionItem($isGrey = false)
+    public function getKillerQuestionItem(bool $isGrey = false): array
     {
         if ($isGrey) {
             return [
@@ -740,7 +739,7 @@ class PaperMenuItemData
      *
      * @return array Menu item data structure with UI properties
      */
-    public function getNewQuestionItem()
+    public function getNewQuestionItem(): array
     {
         return [
             'classes' => 'menuitem cascade showmenu',
@@ -765,10 +764,10 @@ class PaperMenuItemData
      * Generates menu item data for session check in summative checklist.
      * Returns a warning item if academic year from title doesn't match calendar year.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @return array Menu item data structure with UI properties
      */
-    public function getSessionCheckItem($properties)
+    public function getSessionCheckItem(PaperProperties $properties): array
     {
         $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
         if ($tmp_match !== false && $tmp_match != $properties->get_calendar_year()) {
@@ -786,10 +785,10 @@ class PaperMenuItemData
     /**
      * Generates menu item data for time check in summative checklist.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @return array Menu item data structure with UI properties
      */
-    public function getTimesCheckItem($properties)
+    public function getTimesCheckItem(PaperProperties $properties): array
     {
         if (
             $properties->get_start_date() == $properties->get_end_date() ||
@@ -810,10 +809,10 @@ class PaperMenuItemData
     /**
      * Generates menu item data for duration check in summative checklist.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @return array Menu item data structure with UI properties
      */
-    public function getDurationCheckItem($properties)
+    public function getDurationCheckItem(PaperProperties $properties): array
     {
         if ($properties->get_exam_duration() == '') {
             return [
@@ -830,10 +829,10 @@ class PaperMenuItemData
     /**
      * Generates menu item data for labs check in summative checklist.
      *
-     * @param object $properties Paper properties object
+     * @param PaperProperties $properties Paper properties object
      * @return array Menu item data structure with UI properties
      */
-    public function getLabsCheckItem($properties)
+    public function getLabsCheckItem(PaperProperties $properties): array
     {
         if ($properties->get_labs() == '') {
             return [
@@ -854,7 +853,7 @@ class PaperMenuItemData
      * @param string $status Current review status
      * @return array Menu item data structure with UI properties
      */
-    public function getUnsetInternalReviewItem($text, $status)
+    public function getUnsetInternalReviewItem(string $text, string $status): array
     {
         return [
             'icon' => $this->rootPath . '/artwork/checklist_exclamation.png',
@@ -877,7 +876,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getInternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder)
+    public function getInternalReviewCheckItem(string $text, string $status, bool $isComplete, int $paperID, string $module, string $folder): array
     {
         $href = $this->rootPath
             . '/reports/review_comments.php?type=internal&paperID=' . $paperID
@@ -904,7 +903,7 @@ class PaperMenuItemData
      * @param string $status Current review status
      * @return array Menu item data structure with UI properties
      */
-    public function getUnsetExternalReviewItem($text, $status)
+    public function getUnsetExternalReviewItem(string $text, string $status): array
     {
         return [
             'height' => 16,
@@ -928,7 +927,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getExternalReviewCheckItem($text, $status, $isComplete, $paperID, $module, $folder)
+    public function getExternalReviewCheckItem(string $text, string $status, bool $isComplete, int $paperID, string $module, string $folder): array
     {
         $href = $this->rootPath
             . '/reports/review_comments.php?type=external&paperID=' . $paperID
@@ -956,7 +955,7 @@ class PaperMenuItemData
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getStandardsSetCheckItem($standards_set, $paperID, $module, $folder)
+    public function getStandardsSetCheckItem(float $standards_set, int $paperID, string $module, string $folder): array
     {
         $href = "{$this->rootPath}/std_setting/index.php?paperID={$paperID}&module={$module}&folder={$folder}";
 
@@ -981,13 +980,13 @@ class PaperMenuItemData
      *
      * @param int $mappings_complete Number of completed mappings
      * @param int $total_questions Total number of questions
-     * @param string $objsBySession Objectives by session
+     * @param array $objsBySession Objectives by session
      * @param int $paperID The ID of the paper
      * @param string $module The module code
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getMappingCheckItem($mappings_complete, $total_questions, $objsBySession, $paperID, $module, $folder)
+    public function getMappingCheckItem(int $mappings_complete, int $total_questions, array $objsBySession, int $paperID, string $module, string $folder): array
     {
         $href = "{$this->rootPath}/mapping/paper_by_question.php?paperID={$paperID}&folder={$folder}&module={$module}";
         
