@@ -36,7 +36,6 @@ data - Object containing menu item properties:
     type - Type of menu item ('button' or 'link') (optional)
 #}
 <div class="{% if data.disabled %}grey {% endif %}{{ data.classes }}" 
-    role="menuitem" 
     {% if data.disabled %}aria-disabled="true" {% endif %}
     {% if data.hasPopup %}
     aria-haspopup="{{ data.popupType }}"
@@ -52,14 +51,14 @@ data - Object containing menu item properties:
     {% endif %}> 
     {% if not data.disabled %}
         {% if data.type == 'button' %}
-            <button type="button">
+            <button type="button" role="button">
                 {% if data.icon %}
                 <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
                 {% endif %}
                 {{ data.text }}
             </button>
         {% else %}
-            <a href="{{ data.href }}">
+            <a href="{{ data.href }}" role="menuitem">
                 {% if data.icon %}
                 <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
                 {% endif %}
