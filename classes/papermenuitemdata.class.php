@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of ExamSys
 //
 // ExamSys is free software: you can redistribute it and/or modify
@@ -20,7 +21,7 @@
  *
  * @author Iyud Dissanayake
  * @copyright Copyright (c) 2024 The University of Nottingham
- * @package 
+ * @package
  */
 class PaperMenuItemData
 {
@@ -32,7 +33,7 @@ class PaperMenuItemData
 
     /**
      * Constructor for PaperMenuItemData
-     * 
+     *
      * @param array $string Array of language strings for menu items
      */
     public function __construct(array $string)
@@ -65,19 +66,19 @@ class PaperMenuItemData
 
         $paperType = $properties->get_paper_type();
         $fullscreen = $properties->get_fullscreen();
-        
+
         // build URL based on paper type
         if ($paperType == 4) {
-            $url = $this->rootPath . "/osce/form.php?id=" . $cryptname . "&username=test";
-            $features = "width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
+            $url = $this->rootPath . '/osce/form.php?id=' . $cryptname . '&username=test';
+            $features = 'width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable';
         } else if ($paperType == 6) {
-            $url = $this->rootPath . "/peer_review/form.php?id=" . $cryptname;
-            $features = "width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
+            $url = $this->rootPath . '/peer_review/form.php?id=' . $cryptname;
+            $features = 'width=1024,height=600,left=0,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable';
         } else {
-            $url = $this->rootPath . "/paper/start.php?id=" . $cryptname . "&mode=preview";
-            $features = $fullscreen ? 
-                "fullscreen" : 
-                "width=" . (1920-80) . ",height=" . (1080-80) . ",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable";
+            $url = $this->rootPath . '/paper/start.php?id=' . $cryptname . '&mode=preview';
+            $features = $fullscreen ?
+                'fullscreen' :
+                'width=' . (1920 - 80) . ',height=' . (1080 - 80) . ',left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable';
         }
 
         return [
@@ -100,7 +101,7 @@ class PaperMenuItemData
     /**
      * Generates menu item data for adding questions to the paper.
      * Returns a disabled menu item if the paper is summatively locked,
-     * otherwise returns an enabled menu item 
+     * otherwise returns an enabled menu item
      *
      * @param PaperProperties $properties Paper properties object containing paper settings
      * @param int $paperID The paper ID
@@ -122,12 +123,12 @@ class PaperMenuItemData
 
         $max_screen = ($properties->get_max_screen() != '') ? $properties->get_max_screen() : 0;
         $display_pos = $properties->get_max_display_pos() + 1;
-        
+
         // Calculate window dimensions and features
-        $winW = "screen.width - 80";
-        $winH = "screen.height - 100";
-        $features = "width=' + $winW + ',height=' + $winH + ',left=40,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
-        
+        $winW = 'screen.width - 80';
+        $winH = 'screen.height - 100';
+        $features = 'width=' . $winW . ',height=' . $winH . ',left=40,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable';
+
         return [
             'classes' => 'menuitem addquestions',
             'disabled' => false,
@@ -136,13 +137,13 @@ class PaperMenuItemData
             'href' => '#',
             'action' => 'openPopup',
             'data_attributes' => [
-                'url' => $this->rootPath . "/question/add/add_questions_frame.php"
-                      . "?paperID=" . $paperID 
-                      . "&module=" . $module
-                      . "&folder=" . $folder
-                      . "&scrOfY=" . $scrOfY
-                      . "&display_pos=" . $display_pos
-                      . "&max_screen=" . $max_screen,
+                'url' => $this->rootPath . '/question/add/add_questions_frame.php'
+                      . '?paperID=' . $paperID
+                      . '&module=' . $module
+                      . '&folder=' . $folder
+                      . '&scrOfY=' . $scrOfY
+                      . '&display_pos=' . $display_pos
+                      . '&max_screen=' . $max_screen,
                 'popuptype' => 'window',
                 'name' => 'notice',
                 'features' => $features,
@@ -318,7 +319,7 @@ class PaperMenuItemData
         ];
     }
 
-    
+
 
     /**
      * Generates menu item data for copying a paper.
@@ -399,8 +400,8 @@ class PaperMenuItemData
         // Calculate window dimensions and position
         $width = 500;
         $height = 210;
-        $left = "' + (screen.width / 2 - " . ($width/2) . ") + '";
-        $top = "' + (screen.height / 2 - " . ($height/2) . ") + '";
+        $left = "' + (screen.width / 2 - " . ($width / 2) . ") + '";
+        $top = "' + (screen.height / 2 - " . ($height / 2) . ") + '";
         $features = "width=$width,height=$height,left=$left,top=$top,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
 
         return [
@@ -410,10 +411,7 @@ class PaperMenuItemData
             'href' => '#',
             'action' => 'openPopup',
             'data_attributes' => [
-                'url' => $this->rootPath . "/delete/check_delete_paper.php"
-                      . "?paperID=" . $paperID 
-                      . "&module=" . $module
-                      . "&folder=" . $folder,
+                'url' => $this->rootPath . '/delete/check_delete_paper.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder,
                 'popuptype' => 'window',
                 'name' => 'notice',
                 'features' => $features,
@@ -424,7 +422,7 @@ class PaperMenuItemData
 
     /**
      * Generates menu item data for retiring a paper.
-     * 
+     *
      * @param int $paperID The ID of the paper
      * @param string $module The module code
      * @param string $folder The folder name
@@ -439,7 +437,7 @@ class PaperMenuItemData
             'href' => '#',
             'action' => 'openPopup',
             'data_attributes' => [
-                'url' => $this->rootPath . "/paper/check_retire_paper.php?paperID=" . $paperID . "&module=" . $module . "&folder=" . $folder,
+                'url' => $this->rootPath . '/paper/check_retire_paper.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder,
                 'popuptype' => 'window',
                 'name' => 'notice',
                 'features' => 'width=500,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable',
@@ -545,7 +543,7 @@ class PaperMenuItemData
             'href' => '#',
             'action' => 'openPopup',
             'data_attributes' => [
-                'url' => $this->rootPath . "/users/paper.php?paperID=" . $paperID,
+                'url' => $this->rootPath . '/users/paper.php?paperID=' . $paperID,
                 'popuptype' => 'window',
                 'name' => 'properties',
                 'features' => 'width=888,height=650,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable',
@@ -556,7 +554,7 @@ class PaperMenuItemData
 
     /**
      * Generates menu item data for standard settings.
-     * 
+     *
      * @param int $paperID The ID of the paper
      * @param string $module The module code
      * @param string $folder The folder name
@@ -958,13 +956,11 @@ class PaperMenuItemData
     public function getStandardsSetCheckItem(float $standards_set, int $paperID, ?string $module, string $folder): array
     {
         $href = "{$this->rootPath}/std_setting/index.php?paperID={$paperID}&module={$module}&folder={$folder}";
-
-        $status = match($standards_set) {
+        $status = match ($standards_set) {
             1 => $this->string['ok'],
             0.5 => $this->string['incomplete'],
             default => $this->string['unset']
         };
-        
         return [
             'icon' => $this->rootPath . '/artwork/' . ($standards_set == 1 ? 'checklist_tick.png' : 'checklist_exclamation.png'),
             'alt' => $standards_set == 1 ? $this->string['complete'] : $this->string['warning'],
@@ -989,7 +985,6 @@ class PaperMenuItemData
     public function getMappingCheckItem(int $mappings_complete, int $total_questions, array $objsBySession, int $paperID, ?string $module, string $folder): array
     {
         $href = "{$this->rootPath}/mapping/paper_by_question.php?paperID={$paperID}&folder={$folder}&module={$module}";
-        
         if ($objsBySession == 'error') {
             return [
                 'icon' => $this->rootPath . '/artwork/checklist_exclamation.png',
