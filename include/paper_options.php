@@ -116,7 +116,7 @@ if ($reportsItem) {
 }
 
 //Import Offline marks
-if($properties->get_paper_type() == \assessment::TYPE_OFFLINE) {
+if ($properties->get_paper_type() == \assessment::TYPE_OFFLINE) {
     $importOfflineMarksItem = $menuItemData->getImportOfflineMarksItem($paperID, $module, $folder);
     $render->render($importOfflineMarksItem, $string, 'sidebar/menuitem.html');
 }
@@ -258,16 +258,16 @@ if ($properties->get_summative_lock() == true) {
 ?>
 <div id="menu2a">
 <?php
-    $extra_url = '';
-    $module = param::optional('module', null, param::INT, param::FETCH_GET);
-    if (!is_null($module)) {
-        $extra_url .= '&module=' . $module;
-    }
-    if ($extra_url != '') {
-        $extra_url = '?' . $extra_url;
-    }
-    $newQuestionItem = $menuItemData->getNewQuestionItem();
-    $render->render($newQuestionItem, $string, 'sidebar/menuitem.html');
+$extra_url = '';
+$module = param::optional('module', null, param::INT, param::FETCH_GET);
+if (!is_null($module)) {
+    $extra_url .= '&module=' . $module;
+}
+if ($extra_url != '') {
+    $extra_url = '?' . $extra_url;
+}
+$newQuestionItem = $menuItemData->getNewQuestionItem();
+$render->render($newQuestionItem, $string, 'sidebar/menuitem.html');
 ?>
 </div>
 
@@ -476,7 +476,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
         $mappingItem = $menuItemData->getMappingCheckItem($mappings_complete, $properties->get_question_no(), $objsBySession, $paperID, $module, $folder);
         $render->render($mappingItem, $string, 'sidebar/summativemenuitem.html');
     }
-    echo "</div>\n";;
+    echo "</div>\n";
 }
 ?>
 
