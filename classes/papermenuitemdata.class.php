@@ -951,11 +951,11 @@ class PaperMenuItemData
      *
      * @param float $standards_set Standards set value
      * @param int $paperID The ID of the paper
-     * @param string $module The module code
+     * @param string|null $module The module code
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getStandardsSetCheckItem(float $standards_set, int $paperID, string $module, string $folder): array
+    public function getStandardsSetCheckItem(float $standards_set, int $paperID, ?string $module, string $folder): array
     {
         $href = "{$this->rootPath}/std_setting/index.php?paperID={$paperID}&module={$module}&folder={$folder}";
 
@@ -982,11 +982,11 @@ class PaperMenuItemData
      * @param int $total_questions Total number of questions
      * @param array $objsBySession Objectives by session
      * @param int $paperID The ID of the paper
-     * @param string $module The module code
+     * @param string|null $module The module code
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getMappingCheckItem(int $mappings_complete, int $total_questions, array $objsBySession, int $paperID, string $module, string $folder): array
+    public function getMappingCheckItem(int $mappings_complete, int $total_questions, array $objsBySession, int $paperID, ?string $module, string $folder): array
     {
         $href = "{$this->rootPath}/mapping/paper_by_question.php?paperID={$paperID}&folder={$folder}&module={$module}";
         
