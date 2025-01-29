@@ -41,7 +41,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 var currentIndex = menuItems.index(currentFocus);
                 
                 if (e.key === 'Tab') {
-                    if($('.popup:visible').length){
+                    if ($('.popup:visible').length){
                         e.preventDefault();
                         // Constrain tabbing to be within the popupmenu once its open
                         if (e.shiftKey) {

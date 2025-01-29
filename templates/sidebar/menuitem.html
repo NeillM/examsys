@@ -51,7 +51,7 @@ data - Object containing menu item properties:
     {% endif %}> 
     {% if not data.disabled %}
         {% if data.type == 'button' %}
-            <button type="button" role="button">
+            <button type="button">
                 {% if data.icon %}
                 <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
                 {% endif %}
