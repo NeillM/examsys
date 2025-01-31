@@ -976,16 +976,16 @@ class PaperMenuItemData
      *
      * @param int $mappings_complete Number of completed mappings
      * @param int $total_questions Total number of questions
-     * @param array|string $objsBySession Objectives by session
+     * @param bool $has_objective_error Whether there are any objective mapping errors
      * @param int $paperID The ID of the paper
      * @param string|null $module The module code
      * @param string $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getMappingCheckItem(int $mappings_complete, int $total_questions, array|string $objsBySession, int $paperID, ?string $module, string $folder): array
+    public function getMappingCheckItem(int $mappings_complete, int $total_questions, bool $has_objective_error, int $paperID, ?string $module, string $folder): array
     {
         $href = "{$this->rootPath}/mapping/paper_by_question.php?paperID={$paperID}&folder={$folder}&module={$module}";
-        if ($objsBySession == 'error') {
+        if ($has_objective_error) {
             return [
                 'icon' => $this->rootPath . '/artwork/checklist_exclamation.png',
                 'alt' => $this->string['warning'],

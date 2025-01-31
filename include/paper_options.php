@@ -448,7 +448,9 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
 
         $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
         $objsBySession = getObjectives($moduleIDs, $tmp_session, $paperID, $tmp_question_list, $mysqli);
-        if ($objsBySession !== 'error') {
+        $has_objective_error = ($objsBySession === 'error');
+
+        if (!$has_objective_error) {
             foreach ($objsBySession as $moduleCode) {
                 foreach ($moduleCode as $sessionID) {
                     if (isset($sessionID['objectives'])) {
@@ -473,7 +475,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
 
         $mappings_complete = count($mappings);
         $paperID = param::required('paperID', param::INT, param::FETCH_GET);
-        $mappingItem = $menuItemData->getMappingCheckItem($mappings_complete, $properties->get_question_no(), $objsBySession, $paperID, $module, $folder);
+        $mappingItem = $menuItemData->getMappingCheckItem($mappings_complete, $properties->get_question_no(), $has_objective_error, $paperID, $module, $folder);
         $render->render($mappingItem, $string, 'sidebar/summativemenuitem.html');
     }
     echo "</div>\n";
