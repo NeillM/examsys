@@ -720,7 +720,7 @@ class PaperMenuItemData
     public function getNewQuestionItem(): array
     {
         return [
-            'classes' => 'menuitem cascade showmenu',
+            'classes' => 'cascade showmenu',
             'id' => 'newquestion',
             'icon' => $this->rootPath . '/artwork/new_question_menu_icon.gif',
             'text' => $this->string['createnewquestion'],
