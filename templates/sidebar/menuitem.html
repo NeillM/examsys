@@ -23,7 +23,7 @@ It supports both enabled and disabled states, with optional popup functionality.
 
 Required variables:
 data - Object containing menu item properties:
-    classes - CSS classes for the menu item
+    classes - CSS classes for the menu item (optional, they all have the menuitem class by default)
     disabled - Boolean indicating if the item is disabled
     icon - Path to the menu item's icon image
     text - Display text for the menu item
@@ -35,7 +35,7 @@ data - Object containing menu item properties:
     action - Action identifier for the menu item (optional)
     type - Type of menu item ('button' or 'link') (optional)
 #}
-<div class="{% if data.disabled %}grey {% endif %}{{ data.classes }}" 
+<div class="{% if data.disabled %}grey {% endif %}{{ data.classes }} menuitem" 
     {% if data.disabled %}aria-disabled="true" {% endif %}
     {% if data.hasPopup %}
     aria-haspopup="{{ data.popupType }}"

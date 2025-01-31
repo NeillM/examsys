@@ -56,7 +56,6 @@ class PaperMenuItemData
     {
         if ($properties->get_paper_type() == \assessment::TYPE_OFFLINE || $properties->get_item_no() == 0) {
             return [
-                'classes' => 'menuitem',
                 'disabled' => true,
                 'icon' => $this->rootPath . '/artwork/small_play_grey.png',
                 'text' => $this->string['testpreview'],
@@ -82,7 +81,7 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem startpaper',
+            'classes' => 'startpaper',
             'disabled' => false,
             'icon' => $this->rootPath . '/artwork/small_play.png',
             'text' => $this->string['testpreview'],
@@ -114,7 +113,6 @@ class PaperMenuItemData
     {
         if ($properties->get_summative_lock() == 1) {
             return [
-                'classes' => 'menuitem',
                 'disabled' => true,
                 'icon' => $this->rootPath . '/artwork/add_questions_grey.gif',
                 'text' => $this->string['addquestionspaper']
@@ -130,7 +128,7 @@ class PaperMenuItemData
         $features = 'width=' . $winW . ',height=' . $winH . ',left=40,top=0,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable';
 
         return [
-            'classes' => 'menuitem addquestions',
+            'classes' => 'addquestions',
             'disabled' => false,
             'icon' => $this->rootPath . '/artwork/add_questions_16.gif',
             'text' => $this->string['addquestionspaper'],
@@ -163,7 +161,7 @@ class PaperMenuItemData
     public function getEditPropertiesItem(int $paperID, string $module, string $folder): array
     {
         return [
-            'classes' => 'menuitem properties',
+            'classes' => 'properties',
             'icon' => $this->rootPath . '/artwork/properties_icon.gif',
             'text' => $this->string['editproperties'],
             'href' => $this->rootPath
@@ -187,7 +185,6 @@ class PaperMenuItemData
 
         if (is_null($properties->get_external_review_deadline())) {
             return [
-                'classes' => 'menuitem',
                 'id' => 'emailexternalsgrey',
                 'icon' => $this->rootPath . '/artwork/small_email_grey.png',
                 'text' => $this->string['emailexternals'],
@@ -196,7 +193,7 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem cascade showmenu',
+            'classes' => 'cascade showmenu',
             'id' => 'emailexternals',
             'icon' => $this->rootPath . '/artwork/small_email.png',
             'text' => $this->string['emailexternals'],
@@ -229,7 +226,7 @@ class PaperMenuItemData
         // Types 0,1,2,5,6 with no items - grey disabled version
         if (in_array($paperType, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE, \assessment::TYPE_OFFLINE, \assessment::TYPE_PEERREVIEW]) && $properties->get_item_no() == 0) {
             return [
-                'classes' => 'menuitem greycascade',
+                'classes' => 'greycascade',
                 'icon' => $this->rootPath . '/artwork/statistics_icon_grey.gif',
                 'text' => $this->string['reports']
             ];
@@ -237,7 +234,7 @@ class PaperMenuItemData
 
         // Return active version for all paper types
         return [
-            'classes' => 'menuitem cascade stats',
+            'classes' => 'cascade stats',
             'id' => 'reports',
             'icon' => $this->rootPath . '/artwork/statistics_icon.gif',
             'text' => $this->string['reports'],
@@ -256,7 +253,6 @@ class PaperMenuItemData
     public function getImportOfflineMarksItem(int $paperID, string $module, string $folder): array
     {
         return [
-            'classes' => 'menuitem',
             'icon' => $this->rootPath . '/artwork/import_16.gif',
             'text' => $this->string['importmarks'],
             'href' => $this->rootPath . "/import/offline_marks.php?paperID=$paperID&module=$module&folder=$folder",
@@ -275,7 +271,6 @@ class PaperMenuItemData
     public function getImportOsceMarksItem(int $paperID, string $module, string $folder): array
     {
         return [
-            'classes' => 'menuitem',
             'icon' => $this->rootPath . '/artwork/import_16.gif',
             'text' => $this->string['importoscemarks'],
             'href' => $this->rootPath
@@ -298,7 +293,6 @@ class PaperMenuItemData
     {
         if ($properties->get_calendar_year() == '') {
             return [
-                'classes' => 'menuitem',
                 'disabled' => true,
                 'icon' => $this->rootPath . '/artwork/curriculum_map_small_grey.png',
                 'text' => $this->string['mappedobjectives']
@@ -306,7 +300,6 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem',
             'text' => $this->string['mappedobjectives'],
             'icon' => $this->rootPath . '/artwork/curriculum_map_small.png',
             'href' => $this->rootPath
@@ -329,7 +322,7 @@ class PaperMenuItemData
     public function getCopyPaperItem(): array
     {
         return [
-            'classes' => 'menuitem cascade',
+            'classes' => 'cascade',
             'id' => 'copypaper',
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copypaper'],
@@ -350,7 +343,6 @@ class PaperMenuItemData
     {
         if ($properties->get_summative_lock() == 1) {
             return [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/copy_icon_grey.gif',
                 'text' => $this->string['copyfrompaper'],
                 'disabled' => true,
@@ -358,7 +350,7 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem cascade',
+            'classes' => 'cascade',
             'id' => 'copyfrompaper',
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copyfrompaper'],
@@ -390,7 +382,6 @@ class PaperMenuItemData
             !$userObject->has_role(array('Admin', 'SysAdmin')))
         ) {
             return [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/delete_paper_grey_16.gif',
                 'text' => $this->string['deletepaper'],
                 'disabled' => true,
@@ -405,7 +396,7 @@ class PaperMenuItemData
         $features = "width=$width,height=$height,left=$left,top=$top,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable";
 
         return [
-            'classes' => 'menuitem deletepaper',
+            'classes' => 'deletepaper',
             'icon' => $this->rootPath . '/artwork/delete_paper_16.gif',
             'text' => $this->string['deletepaper'],
             'href' => '#',
@@ -431,7 +422,7 @@ class PaperMenuItemData
     public function getRetirePaperItem(int $paperID, string $module, string $folder): array
     {
         return [
-            'classes' => 'menuitem retirepaper',
+            'classes' => 'retirepaper',
             'icon' => $this->rootPath . '/artwork/retire_16.png',
             'text' => $this->string['retirepaper'],
             'href' => '#',
@@ -458,7 +449,6 @@ class PaperMenuItemData
     {
         if ($properties->get_item_no() == 0) {
             return [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/print_icon_16_disabled.png',
                 'text' => $this->string['printhardcopy'],
                 'disabled' => true,
@@ -467,7 +457,6 @@ class PaperMenuItemData
 
         if ($properties->get_paper_type() == \assessment::TYPE_OSCE) {
             return [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/print_icon_16.png',
                 'text' => $this->string['printhardcopy'],
                 'href' => $this->rootPath . "/osce/print.php?paperID=$paperID"
@@ -475,7 +464,7 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem cascade showmenu',
+            'classes' => 'cascade showmenu',
             'id' => 'hardcopy',
             'icon' => $this->rootPath . '/artwork/print_icon_16.png',
             'text' => $this->string['printhardcopy'],
@@ -506,7 +495,7 @@ class PaperMenuItemData
             'text' => $this->string['importexport'],
             'icon' => $this->rootPath . '/artwork/ims_16.png',
             'href' => '#',
-            'classes' => 'menuitem cascade showmenu',
+            'classes' => 'cascade showmenu',
             'id' => 'qti',
             'disabled' => false,
             'action' => 'openSubMenu',
@@ -537,7 +526,7 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem studentcohort',
+            'classes' => 'studentcohort',
             'icon' => $this->rootPath . '/artwork/small_user_icon.gif',
             'text' => $this->string['studentcohort'],
             'href' => '#',
@@ -563,7 +552,6 @@ class PaperMenuItemData
     public function getStandardSettingsItem(int $paperID, string $module, string $folder): array
     {
         return [
-            'classes' => 'menuitem',
             'icon' => $this->rootPath . '/artwork/std_set_icon_16.gif',
             'text' => $this->string['standardssetting'],
             'href' => $this->rootPath . "/std_setting/index.php?paperID=$paperID&module=$module&folder=$folder",
@@ -583,37 +571,31 @@ class PaperMenuItemData
     {
         $items = [
             [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/edit_grey.png',
                 'text' => $this->string['editquestion'],
                 'disabled' => true
             ],
             [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/information_icon_grey.gif',
                 'text' => $this->string['information'],
                 'disabled' => true
             ],
             [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/copy_icon_grey.gif',
                 'text' => $this->string['copyontopaperx'],
                 'disabled' => true
             ],
             [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/link_grey.png',
                 'text' => $this->string['linktopaper'],
                 'disabled' => true
             ],
             [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/red_cross_grey.png',
                 'text' => $this->string['removefrompaper'],
                 'disabled' => true
             ],
             [
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/small_play_grey.png',
                 'text' => $this->string['previewquestion'],
                 'disabled' => true
@@ -623,7 +605,6 @@ class PaperMenuItemData
         // Add exam clarifications if enabled
         if ($exam_clarifications) {
             array_splice($items, 2, 0, [[
-                'classes' => 'menuitem',
                 'icon' => $this->rootPath . '/artwork/comment_16_grey.png',
                 'text' => $this->string['midexamclarification'],
                 'disabled' => true
@@ -644,42 +625,41 @@ class PaperMenuItemData
     {
         $items = [
             [
-                'classes' => 'menuitem edit',
+                'classes' => 'edit',
                 'id' => 'edit',
                 'icon' => $this->rootPath . '/artwork/edit.png',
                 'text' => $this->string['editquestion'],
                 'href' => '#'
             ],
             [
-                'classes' => 'menuitem information',
+                'classes' => 'information',
                 'id' => 'information',
                 'icon' => $this->rootPath . '/artwork/information_icon.gif',
                 'text' => $this->string['information'],
                 'href' => '#'
             ],
             [
-                'classes' => 'menuitem copy',
+                'classes' => 'copy',
                 'id' => 'copy',
                 'icon' => $this->rootPath . '/artwork/copy_icon.gif',
                 'text' => $this->string['copyontopaperx'],
                 'href' => '#'
             ],
             [
-                'classes' => 'menuitem link',
+                'classes' => 'link',
                 'id' => 'link',
                 'icon' => $this->rootPath . '/artwork/link.png',
                 'text' => $this->string['linktopaper'],
                 'href' => '#'
             ],
             [
-                'classes' => 'menuitem',
                 'id' => 'delete',
                 'icon' => $this->rootPath . '/artwork/red_cross.png',
                 'text' => $this->string['removefrompaper'],
                 'href' => '#'
             ],
             [
-                'classes' => 'menuitem startpaper',
+                'classes' => 'startpaper',
                 'id' => 'preview',
                 'icon' => $this->rootPath . '/artwork/small_play.png',
                 'text' => $this->string['previewquestion'],
@@ -694,7 +674,7 @@ class PaperMenuItemData
         // Add exam clarifications if enabled
         if ($exam_clarifications) {
             array_splice($items, 2, 0, [[
-                'classes' => 'menuitem clarification',
+                'classes' => 'clarification',
                 'id' => 'clarification',
                 'icon' => $this->rootPath . '/artwork/comment_16.png',
                 'text' => $this->string['midexamclarification'],
@@ -715,7 +695,7 @@ class PaperMenuItemData
     {
         if ($isGrey) {
             return [
-                'classes' => 'menuitem killer',
+                'classes' => 'killer',
                 'icon' => $this->rootPath . '/artwork/skull_16.png',
                 'text' => $this->string['unsetkillerquestion'],
                 'disabled' => true,
@@ -723,7 +703,7 @@ class PaperMenuItemData
         }
 
         return [
-            'classes' => 'menuitem killerq killer',
+            'classes' => 'killerq killer',
             'id' => 'killerq',
             'icon' => $this->rootPath . '/artwork/skull_16.png',
             'text' => $this->string['setkillerquestion'],
