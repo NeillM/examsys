@@ -55,7 +55,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         }
                     }
                 } else {                    
-                    var menuItem = currentFocus.closest('[data-action]');
+                    var menuItem = currentFocus.closest('.menuitem');
                     switch (e.key) {
                         case 'ArrowDown':
                             e.preventDefault();
@@ -98,7 +98,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             });
             
             // click handler for menu items
-            $(document).on('click', '[data-action]', function(e) {
+            $(document).on('click', '.menuitem', function(e) {
                 scope.handleMenuItemAction($(this), e);
             });
             
