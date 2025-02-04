@@ -188,7 +188,7 @@ echo "</div>\n";
 <!-- Grey menu items -->
 <div id="menu2a">
     <?php
-    $greyItems = $menuItemData->getCurrentQuestionItemsGrey($exam_clarifications, $properties->get_paper_type());
+    $greyItems = $menuItemData->getCurrentQuestionItemsGrey($exam_clarifications);
     foreach ($greyItems as $item) {
         $render->render($item, $string, 'sidebar/menuitem.html');
     }
@@ -203,7 +203,7 @@ echo "</div>\n";
 <!-- Active menu items -->
 <div id="menu2b">
     <?php
-    $activeItems = $menuItemData->getCurrentQuestionItemsActive($exam_clarifications, $properties->get_paper_type());
+    $activeItems = $menuItemData->getCurrentQuestionItemsActive($exam_clarifications);
     foreach ($activeItems as $item) {
         $render->render($item, $string, 'sidebar/menuitem.html');
     }
@@ -218,7 +218,7 @@ echo "</div>\n";
 
 <div id="menu2c">
     <?php
-    $activeItems = $menuItemData->getCurrentQuestionItemsActive($exam_clarifications, $properties->get_paper_type());
+    $activeItems = $menuItemData->getCurrentQuestionItemsActive($exam_clarifications);
     foreach ($activeItems as $item) {
         $render->render($item, $string, 'sidebar/menuitem.html');
     }

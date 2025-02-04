@@ -564,10 +564,9 @@ class PaperMenuItemData
      * Generates menu items data for question actions in disabled state.
      *
      * @param bool $exam_clarifications Whether to include exam clarification options
-     * @param string|null $paperType The type of paper
      * @return array Array of menu item data structures
      */
-    public function getCurrentQuestionItemsGrey(bool $exam_clarifications = false, string $paperType = null): array
+    public function getCurrentQuestionItemsGrey(bool $exam_clarifications = false): array
     {
         $items = [
             [
@@ -618,10 +617,9 @@ class PaperMenuItemData
      * Generates menu items data for question actions in active state.
      *
      * @param bool $exam_clarifications Whether to include exam clarification options
-     * @param string|null $paperType The type of paper
      * @return array Array of menu item data structures
      */
-    public function getCurrentQuestionItemsActive(bool $exam_clarifications = false, string $paperType = null): array
+    public function getCurrentQuestionItemsActive(bool $exam_clarifications = false): array
     {
         $items = [
             [
