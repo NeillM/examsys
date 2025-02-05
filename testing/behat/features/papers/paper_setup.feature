@@ -27,7 +27,7 @@ Feature: Paper setup
   Scenario: Create a blank question on the paper
     Given I login as "teacher"
     And I am on "Paper Details" page for "a formative paper"
-    And I follow "Create new Question"
+    And I click "Create new Question" "button"
     And I click "Fill-in-the-Blank" "sub_search_menu_item"
     And I create a new "blank" question:
       | theme | blank theme |
@@ -50,4 +50,3 @@ Feature: Paper setup
     Then I should see questions:
       | tf 1 leadin |
       | tf 2 leadin |
-
