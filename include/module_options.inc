@@ -36,7 +36,7 @@ if (!$userObject->has_role('Standards Setter')) {
         }
         echo "<div class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" alt=\"key\" />" . $string['managekeywords'] . '</a></div>';
         echo "<div class=\"menuitem\"><a href=\"../module/list_ref_material.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" alt=\"key\" />" . $string['referencematerial'] . '</a></div>';
-        echo '<div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search"><a href="#" id="search"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="Search" />' . $string['search'] . '</a></div>';
+        echo '<div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search" data-action="openSubMenu" type="button"><a href="#" id="search"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="Search" />' . $string['search'] . '</a></div>';
         // Get members of current team.
         if (!isset($_GET['type']) and $_GET['module'] != '0') {
             $team_members = module_utils::get_staff_members($module, $mysqli);
