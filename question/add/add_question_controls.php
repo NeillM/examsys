@@ -25,10 +25,11 @@
 
 require '../../include/staff_auth.inc';
 
+$max_screen = param::optional('max_screen', 0, param::INT, param::FETCH_GET);
+
 echo "<form id='addquestions' name=\"theform\" method=\"post\" action=\"\" autocomplete=\"off\">\n";
 echo '<div align="right">' . $string['screen'] . "&nbsp;<select name=\"screen\">\n";
 
-$max_screen = $_GET['max_screen'];
 for ($i = 1; $i <= $max_screen + 1; $i++) {
     if ($i == $max_screen) {
         echo "<option value=\"$i\" selected>$i</option>\n";
