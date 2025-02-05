@@ -27,7 +27,81 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             this.scrollLine = 0;
             this.myUpInterval = 0;
             this.myDownInterval = 0;
+            this.lastFocusedTrigger = null;
             var scope = this;
+            
+            // Add keyboard event listener for menu navigation
+            $(document).on('keydown', function(e) {
+                if (!$('.sidebar:visible').length) return;
+                
+                // Check if a popup is open
+                var visibleMenu = $('.popup:visible').first();
+                var menuItems = visibleMenu.find('.popupitem');
+                var currentFocus = $(':focus');
+                var currentIndex = menuItems.index(currentFocus);
+                
+                if (e.key === 'Tab') {
+                    if ($('.popup:visible').length){
+                        e.preventDefault();
+                        // Constrain tabbing to be within the popupmenu once its open
+                        if (e.shiftKey) {
+                            // Shift+Tab - go backwards
+                            var prevIndex = currentIndex <= 0 ? menuItems.length - 1 : currentIndex - 1;
+                            menuItems.eq(prevIndex).focus(); 
+                        } else {
+                            // Tab - go forwards
+                            var nextIndex = currentIndex >= menuItems.length - 1 ? 0 : currentIndex + 1;
+                            menuItems.eq(nextIndex).focus();
+                        }
+                    }
+                } else {                    
+                    var menuItem = currentFocus.closest('.menuitem');
+                    switch (e.key) {
+                        case 'ArrowDown':
+                            e.preventDefault();
+                            nextIndex = currentIndex < 0 ? 0 : 
+                                      currentIndex >= menuItems.length - 1 ? menuItems.length - 1 : currentIndex + 1;
+                            menuItems.eq(nextIndex).focus();
+                            break;
+                            
+                        case 'ArrowUp':
+                            e.preventDefault();
+                            prevIndex = currentIndex <= 0 ? 0 : currentIndex - 1;
+                            menuItems.eq(prevIndex).focus();
+                            break;
+                            
+                        case 'Enter':
+                            e.preventDefault();
+                            if (menuItem.length) {
+                                scope.handleMenuItemAction(menuItem, e);
+                            }
+                            break;
+                            
+                        case 'Escape':
+                            e.preventDefault();
+                            scope.hideMenus();
+                            break;
+                            
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            scope.hideMenus();
+                            break;
+                        
+                        case 'ArrowRight':
+                            e.preventDefault();
+                            if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
+                                scope.handleMenuItemAction(menuItem, e);
+                            }
+                            break;
+                    }
+                }
+            });
+            
+            // click handler for menu items
+            $(document).on('click', '.menuitem', function(e) {
+                scope.handleMenuItemAction($(this), e);
+            });
+            
             $('.scrollup').mouseover(function() {
                 var id = $(this).attr('data-menuno');
                 var options = JSON.parse($("#popupmenu" + id).attr('data-myOptions'));
@@ -48,15 +122,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
 
             $('.scrolldown').mouseout(function() {
                 scope.scrollDownEnd();
-            });
-
-            $('.showmenu').click(function(e) {
-                var options = JSON.parse($("#popupmenu" + $(this).attr('data-popupid')).attr('data-myOptions'));
-                var urls = JSON.parse($("#popupmenu" + $(this).attr('data-popupid')).attr('data-myURLs'));
-                var id = 'popup' + $(this).attr('data-popupid');
-                var type = $(this).attr('data-popuptype');
-                var name = $(this).attr('data-popupname');
-                scope.showMenu(id, type, name, options, urls, e);
             });
 
             $('.popup').mouseleave(function(e) {
@@ -204,6 +269,16 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             if ($('#' + submenuID).css('display') != 'block') {
                 scope.hideMenus(e);
                 $('#' + submenuID).show();
+                
+                // Set aria-expanded to true 
+                $('#' + callingID).attr('aria-expanded', 'true');
+                
+                // Make all menu items focusable first
+                $('#' + submenuID + ' .popupitem').attr('tabindex', '0');
+                
+                // Focus the first menu item after showing the menu
+                var firstItem = $('#' + submenuID + ' .popupitem').first();
+                firstItem.trigger('focus');
             } else {
                 scope.hideMenus(e);
             }
@@ -218,7 +293,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $('#' + submenuID).css('top', mytop + 'px');
 
             e.cancelBubble = true;
-
+            
             return false;
         };
 
@@ -229,7 +304,58 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $(".popup").each(function() {
                 $(this).hide();
             });
-        }
+            // Set aria-expanded to false for menu item
+            $('[aria-expanded="true"]').attr('aria-expanded', 'false');
+            // Restore focus to the triggering menuitem by finding its interactive element (button or a)
+            if (this.lastFocusedTrigger && this.lastFocusedTrigger.length) {
+                var focusTarget = this.lastFocusedTrigger.find('button, a').first();
+                if (focusTarget.length) {
+                    focusTarget.focus();
+                } else {
+                    this.lastFocusedTrigger.focus();
+                }
+            }
+        };
+
+        this.handleMenuItemAction = function(menuItem,e) {
+            var action = menuItem.attr('data-action');
+            console.log(action);
+            if (action) {
+                switch (action) {
+                    case 'openSubMenu':
+                        var options = JSON.parse($("#popupmenu" + menuItem.attr('data-popupid')).attr('data-myOptions'));
+                        var urls = JSON.parse($("#popupmenu" + menuItem.attr('data-popupid')).attr('data-myURLs'));
+                        var id = 'popup' + menuItem.attr('data-popupid');
+                        var type = menuItem.attr('data-popuptype');
+                        var name = menuItem.attr('data-popupname');
+                        this.lastFocusedTrigger = menuItem.closest('.menuitem');  // Store the parent menuitem
+                        this.showMenu(id, type, name, options, urls, e);
+                        break;
+
+                    case 'directUrl':
+                        var href = menuItem.find('a').attr('href');
+                        if (href) {
+                            window.location = href;
+                        }
+                        break;
+
+                    case 'openPopup':
+                        var settings = menuItem.data();
+                        if (settings.popuptype === 'window') {
+                            var popup = window.open(settings.url, settings.name, settings.features);
+                            if (settings.focus && window.focus) {
+                                popup.focus();
+                            }
+                        }
+                        break;
+                   
+                    default:
+                        console.warn('Unknown action type:', action);
+                        break;
+                }
+                return;
+            }
+
+        };
     }
 });
-

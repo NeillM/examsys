@@ -19,7 +19,7 @@ require '../lang/' . $language . '/include/question_types.php';
 require '../lang/' . $language . '/include/paper_types.php';
 
 $string['papertasks'] = 'Paper Tasks';
-$string['testpreview'] = 'Test &amp; Preview';
+$string['testpreview'] = 'Test & Preview';
 $string['addquestionspaper'] = 'Add Questions to Paper';
 $string['editproperties'] = 'Edit Properties';
 $string['emailexternals'] = 'Email Externals';
@@ -64,6 +64,7 @@ $string['mismatch'] = 'Mismatch';
 $string['examtime'] = 'Exam Time';
 $string['incorrect'] = 'Incorrect';
 $string['incomplete'] = 'Incomplete';
+$string['complete'] = 'Complete';
 $string['duration'] = 'Duration';
 $string['unset'] = 'Unset';
 $string['computerlabs'] = 'Computer Labs';

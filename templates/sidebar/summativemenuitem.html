@@ -1,0 +1,40 @@
+
+{# This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>. 
+#}
+
+{#
+This template renders a checklist menu item for the paper sidebar interface.
+Used primarily for summative assessment checklist items that display status information.
+
+@author Iyud Dissanayake
+@copyright 2024 The University of Nottingham
+
+Required variables:
+data - Object containing checklist menu item properties:
+    icon - Path to the checklist item's icon image
+    alt - Alt text for the icon
+    href - URL for the checklist item link
+    link_class - CSS class for the link
+    text - Display text for the checklist item
+    status - Status text to display next to the checklist item
+#}
+<div class="checklist-item">
+    <img src="{{ data.icon }}" class="checklist-icon" alt="{{ data.alt }}" />
+    <a href="{{ data.href }}" class="{{ data.link_class }}">
+        {{ data.text }}
+    </a>
+    <span class="checklist-status">{{ data.status }}</span>
+</div>

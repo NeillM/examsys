@@ -1,0 +1,74 @@
+{# This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>. 
+#}
+
+{#
+This template renders a single menu item for the paper sidebar interface.
+It supports both enabled and disabled states, with optional popup functionality.
+
+@author Iyud Dissanayake
+@copyright 2024 The University of Nottingham
+
+Required variables:
+data - Object containing menu item properties:
+    classes - CSS classes for the menu item (optional, they all have the menuitem class by default)
+    disabled - Boolean indicating if the item is disabled
+    icon - Path to the menu item's icon image
+    text - Display text for the menu item
+    href - URL for the menu item link (optional)
+    hasPopup - Boolean indicating if item has a popup menu (optional)
+    popupType - Type of popup ('menu' or 'dialog') if hasPopup is true
+    id - Unique identifier for the menu item (optional)
+    data_attributes - Object containing additional data attributes (optional)
+    action - Action identifier for the menu item (optional)
+    type - Type of menu item ('button' or 'link') (optional)
+#}
+<div class="{% if data.disabled %}grey {% endif %}{{ data.classes }} menuitem" 
+    {% if data.disabled %}aria-disabled="true" {% endif %}
+    {% if data.hasPopup %}
+    aria-haspopup="{{ data.popupType }}"
+    aria-expanded="false"
+    aria-controls="popup{{ data.data_attributes.popupid }}"
+    {% endif %}
+    {% if data.id %}id="{{ data.id }}" {% endif %}
+    {% if data.action %}data-action="{{ data.action }}"{% endif %}
+    {% if data.data_attributes %}
+    {% for key, value in data.data_attributes %}
+    data-{{ key }}="{{ value }}"
+    {% endfor %}
+    {% endif %}> 
+    {% if not data.disabled %}
+        {% if data.type == 'button' %}
+            <button type="button">
+                {% if data.icon %}
+                <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
+                {% endif %}
+                {{ data.text }}
+            </button>
+        {% else %}
+            <a href="{{ data.href }}" role="menuitem">
+                {% if data.icon %}
+                <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
+                {% endif %}
+                {{ data.text }}
+            </a>
+        {% endif %}
+    {% else %}
+        {% if data.icon %}
+        <img class="sidebar_icon" src="{{ data.icon }}" alt="" />
+        {% endif %}
+        {{ data.text }}
+    {% endif %}
+</div>

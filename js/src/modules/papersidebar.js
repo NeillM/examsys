@@ -351,6 +351,7 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
          */
         this.showAssStatsMenu = function() {
             $('#stats_menu').show()
+            $('#stats_menu').find('a, input, select, button').first().focus();
         };
 
         /**
@@ -358,6 +359,8 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
          */
         this.showCopyMenu = function() {
             $('#copy_submenu').show();
+            $('#copy_submenu').find('a, input, select, button').first().focus();
+
         };
 
         /**
@@ -365,6 +368,8 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
          */
         this.showCopyFromMenu = function() {
             $('#copy_from_submenu').show();
+            $('#copy_from_submenu').find('a, input, select, button').first().focus();
+
         };
 
         /**
