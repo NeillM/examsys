@@ -61,7 +61,7 @@ if (!isset($module_details) && $module != '0') {
 </div>
 
 <div>
-<div class="menuitem cascade showmenu" id="newquestion" data-popupid="0" data-popuptype="banktasks" data-popupname="newquestion"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion'] ?></a></div>
+<div class="menuitem cascade showmenu" id="newquestion" data-popupid="0" data-popuptype="banktasks" data-popupname="newquestion" data-action="openSubMenu" type="button"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/new_question_menu_icon.gif" alt="newquestion" /><?php echo $string['createnewquestion'] ?></a></div>
 </div>
 
 <?php

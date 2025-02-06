@@ -135,6 +135,9 @@ class PaperMenuItemData
             'href' => '#',
             'action' => 'openPopup',
             'data_attributes' => [
+                'srcofy' => $scrOfY,
+                'dispno' => $display_pos,
+                'screen' => $max_screen,
                 'url' => $this->rootPath . '/question/add/add_questions_frame.php'
                       . '?paperID=' . $paperID
                       . '&module=' . $module
