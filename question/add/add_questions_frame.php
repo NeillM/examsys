@@ -25,7 +25,7 @@
 
 require '../../include/staff_auth.inc';
 
-$maxscreen = param::optional('max_screen', 0, param::INT, param::FETCH_GET);
+$maxscreen = param::required('max_screen', param::INT, param::FETCH_GET);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -104,8 +104,8 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
 $miscdataset['attributes']['module'] = param::optional('module', '', param::INT, param::FETCH_GET);
 $miscdataset['attributes']['folder'] = param::optional('folder', '', param::INT, param::FETCH_GET);
-$miscdataset['attributes']['disp'] = param::optional('display_pos', 1, param::INT, param::FETCH_GET);
-$miscdataset['attributes']['srcofy'] = param::optional('scrOfY', 0.0, param::FLOAT, param::FETCH_GET);
+$miscdataset['attributes']['disp'] = param::required('display_pos', param::INT, param::FETCH_GET);
+$miscdataset['attributes']['srcofy'] = param::required('scrOfY', param::FLOAT, param::FETCH_GET);
 $miscdataset['attributes']['max'] = $maxscreen;
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
