@@ -1,0 +1,64 @@
+/* Copy Paper Page Styles */
+.copy-form {
+    margin: 1rem;
+}
+
+.form-row {
+    margin-bottom: 1rem;
+}
+
+.form-row label {
+    display: inline-block;
+    width: 120px;
+    text-align: right;
+    margin-right: 8px;
+    vertical-align: top;
+}
+
+.form-row input[type="text"],
+.form-row select {
+    width: 400px;
+}
+
+.checkbox-label {
+    width: auto !important;
+    text-align: left !important;
+}
+
+.radio-group {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.radio-option {
+    display: inline-block;
+    margin-right: 2rem;
+    text-align: center;
+}
+
+.radio-option label {
+    width: auto;
+    text-align: center;
+    margin: 0;
+    cursor: pointer;
+}
+
+.radio-option span {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.radio-option img {
+    display: block;
+    margin: 0 auto;
+}
+
+.button-group {
+    margin-top: 1rem;
+    margin-left: 128px;
+}
+
+.button-group input {
+    margin-right: 8px;
+}
+
