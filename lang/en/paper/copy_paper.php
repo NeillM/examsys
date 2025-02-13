@@ -27,3 +27,13 @@ $string['paperonly'] = 'Paper Only';
 $string['paperandquestions'] = 'Paper and Questions';
 $string['cancel'] = 'Cancel';
 $string['next'] = 'Next';
+
+// Summative exam fields
+$string['barriersneeded'] = 'Barriers needed';
+$string['duration'] = 'Duration';
+$string['hrs'] = 'hrs';
+$string['mins'] = 'mins';
+$string['daterequired'] = 'Date Required';
+$string['cohortsize'] = 'Cohort Size';
+$string['sittings'] = 'Number of Sittings';
+$string['notes'] = 'Notes';
