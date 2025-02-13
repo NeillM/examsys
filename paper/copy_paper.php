@@ -15,8 +15,17 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 <html>
 <head>
     <title><?php echo $string['copypaper']; ?></title>
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" type="text/css" href="../css/source/copy_paper.css">
+    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>" src="../js/rogoconfig.js"></script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script>
+        requirejs(['copypaper', 'jquery'], function(CopyPaper, $) {
+            $(document).ready(function() {
+                new CopyPaper();
+            });
+        });
+    </script>
 </head>
 <body>
     <div id="content">
@@ -98,6 +107,73 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
                         <img src="../artwork/copy_paper_questions.png" width="120" height="130" alt="" />
                     </label>
                 </div>
+            </div>
+        </div>
+
+        <!-- Summative exam fields - initially hidden -->
+        <div id="summative_fields" style="display: none;">
+            <div class="form-row">
+                <label></label>
+                <input type="checkbox" name="barriers_needed" id="barriers_needed" />
+                <label for="barriers_needed" class="checkbox-label"><?php echo $string['barriersneeded']; ?></label>
+            </div>
+
+            <div class="form-row">
+                <label for="duration"><?php echo $string['duration']; ?></label>
+                <div class="duration-inputs">
+                    <input type="number" name="duration_hours" id="duration_hours" min="0" max="24" />
+                    <label class="inline-label"><?php echo $string['hrs']; ?></label>
+                    <input type="number" name="duration_mins" id="duration_mins" min="0" max="59" />
+                    <label class="inline-label"><?php echo $string['mins']; ?></label>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="period"><?php echo $string['daterequired']; ?></label>
+                <select name="date_required" id="period">
+                    <option value=""></option>
+                    <?php
+                    $months = array(
+                        1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
+                        5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
+                        9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
+                    );
+                    foreach ($months as $num => $name) {
+                        echo '<option value="' . $num . '">' . $name . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="cohort_size"><?php echo $string['cohortsize']; ?></label>
+                <select name="cohort_size" id="cohort_size">
+                    <option value=""></option>
+                    <?php
+                    $sizes = array('&lt;whole cohort&gt', '0-10', '11-20', '21-30', '31-40', '41-50', 
+                                 '51-75', '76-100', '101-150', '151-200', '201-300', '301-400', '401-500');
+                    foreach ($sizes as $size) {
+                        echo '<option value="' . $size . '">' . $size . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="sittings"><?php echo $string['sittings']; ?></label>
+                <select name="sittings" id="sittings">
+                    <option value=""></option>
+                    <?php
+                    for ($i = 1; $i <= 10; $i++) {
+                        echo '<option value="' . $i . '">' . $i . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="notes"><?php echo $string['notes']; ?></label>
+                <textarea name="notes" id="notes" rows="4"></textarea>
             </div>
         </div>
 
