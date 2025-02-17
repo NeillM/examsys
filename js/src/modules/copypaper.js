@@ -150,7 +150,5 @@ define(['jquery'], function($) {
             window.location.href = '../paper/details.php?paperID=' + paperID;
         };
 
-        // Initialize
-        this.init();
     };
 });

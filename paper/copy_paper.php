@@ -19,13 +19,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
     <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>" src="../js/rogoconfig.js"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
-    <script>
-        requirejs(['copypaper', 'jquery'], function(CopyPaper, $) {
-            $(document).ready(function() {
-                new CopyPaper();
-            });
-        });
-    </script>
+    <script src='../js/copypaperinit.min.js'></script>
 </head>
 <body>
     <div id="content">
