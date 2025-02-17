@@ -77,8 +77,8 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
                         echo '<option value="' . \assessment::TYPE_OFFLINE . '" selected>' . 
                              $string['offline paper'] . '</option>';
                         break;
-                    case \assessment::TYPE_PEER_REVIEW:
-                        echo '<option value="' . \assessment::TYPE_PEER_REVIEW . '" selected>' . 
+                    case \assessment::TYPE_PEERREVIEW:
+                        echo '<option value="' . \assessment::TYPE_PEERREVIEW . '" selected>' . 
                              $string['peer review'] . '</option>';
                         break;
                 }
