@@ -184,7 +184,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
                 <select name="sittings" id="sittings">
                     <option value=""></option>
                     <?php
-                    for ($i = 1; $i <= 10; $i++) {
+                    for ($i = 1; $i <= 6; $i++) {
                         echo '<option value="' . $i . '">' . $i . '</option>';
                     }
                     ?>
