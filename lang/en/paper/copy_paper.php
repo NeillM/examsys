@@ -30,6 +30,7 @@ $string['cancel'] = 'Cancel';
 $string['next'] = 'Next';
 
 // Summative exam fields
+$string['campus'] = 'Campus';
 $string['barriersneeded'] = 'Barriers needed';
 $string['duration'] = 'Duration';
 $string['hrs'] = 'hrs';

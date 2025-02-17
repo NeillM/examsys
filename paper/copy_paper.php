@@ -118,6 +118,21 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
         <!-- Summative exam fields - initially hidden -->
         <div id="summative_fields" style="display: none;">
             <div class="form-row">
+                <label for="campus"><?php echo $string['campus']; ?></label>
+                <select name="campus" id="campus">
+                    <?php
+                    $campusobj = new campus($mysqli);
+                    $campuses = $campusobj->get_all_campus_details();
+                    foreach ($campuses as $key => $campusarray) {
+                        echo '<option value="' . $campusarray['campusname'] . '"' . 
+                             ($campusarray['isdefault'] ? ' selected' : '') . '>' . 
+                             $campusarray['campusname'] . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+
+            <div class="form-row">
                 <label></label>
                 <input type="checkbox" name="barriers_needed" id="barriers_needed" />
                 <label for="barriers_needed" class="checkbox-label"><?php echo $string['barriersneeded']; ?></label>
