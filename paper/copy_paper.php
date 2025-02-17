@@ -29,6 +29,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 </head>
 <body>
     <div id="content">
+        <div id="dataset" data-paperid="<?php echo $paperID; ?>"></div>
         <h1><?php echo $string['copypaper']; ?></h1>
         
         <?php

@@ -146,7 +146,8 @@ define(['jquery'], function($) {
          * Handle cancel button click
          */
         this.handleCancel = function() {
-            window.location.href = '../paper/details.php';
+            var paperID = $('#dataset').attr('data-paperid');
+            window.location.href = '../paper/details.php?paperID=' + paperID;
         };
 
         // Initialize
