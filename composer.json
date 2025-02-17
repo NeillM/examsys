@@ -39,7 +39,8 @@
         "symfony/var-dumper": "^4.0",
         "symfony/yaml": "^6",
         "squizlabs/php_codesniffer": "*",
-        "dvdoug/behat-code-coverage": "*"
+        "dvdoug/behat-code-coverage": "*",
+        "rector/rector": "^2.0"
     },
     "minimum-stability": "stable"
 }
