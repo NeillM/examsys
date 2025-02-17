@@ -79,6 +79,16 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
         </div>
 
         <div class="form-row">
+            <label for="session"><?php echo $string['academicsession']; ?></label>
+            <select name="session" id="session">
+                <?php
+                $yearutils = new yearutils($mysqli);
+                echo $yearutils->get_calendar_year_dropdown_options($properties->get_paper_type(), $properties->get_calendar_year(), $string);
+                ?>
+            </select>
+        </div>
+
+        <div class="form-row">
             <label></label>
             <input type="checkbox" name="copy_std_setting" id="copy_std_setting" 
                    <?php echo $configObject->get_setting('core', 'stdset_copy_std_setting') ? 'checked' : ''; ?> />

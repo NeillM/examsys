@@ -21,6 +21,7 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/paper_types.php';
 $string['copypaper'] = 'Copy Paper';
 $string['copyname'] = 'New Paper Name';
 $string['type'] = 'Type';
+$string['academicsession'] = 'Academic Session';
 $string['copystdsetting'] = 'Copy standard settings';
 $string['copytype'] = 'Copy Type';
 $string['paperonly'] = 'Paper Only';
