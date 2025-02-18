@@ -115,11 +115,13 @@ define(['jquery'], function($) {
                 this.$step2.removeClass('active');
                 this.$nextButton.show();
                 this.$submitButton.hide();
+                this.$backButton.hide();
             } else {
                 this.$step1.removeClass('active');
                 this.$step2.addClass('active');
                 this.$nextButton.hide();
                 this.$submitButton.show();
+                this.$backButton.show();
             }
         };
 

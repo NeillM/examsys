@@ -128,7 +128,6 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
         <div id="step2" class="form-step">
             <div class="step-header">
                 <h2><?php echo $string['summativedetails']; ?></h2>
-                <button type="button" class="back-button" id="back_button"><?php echo $string['back']; ?></button>
             </div>
             
             <!-- Summative exam fields -->
@@ -222,6 +221,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
             <button type="button" id="next_button" style="display: none;"><?php echo $string['next']; ?></button>
             <button type="submit" id="submit_button"><?php echo $string['copypaper']; ?></button>
             <button type="button" id="cancel"><?php echo $string['cancel']; ?></button>
+            <button type="button" class="back-button" id="back_button" style="display: none;"><?php echo $string['back']; ?></button>
         </div>
     </form>
 </div>
