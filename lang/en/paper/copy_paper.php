@@ -27,6 +27,7 @@ $string['copytype'] = 'Copy Type';
 $string['paperonly'] = 'Paper Only';
 $string['paperandquestions'] = 'Paper and Questions';
 $string['cancel'] = 'Cancel';
+$string['back'] = 'Back';
 $string['next'] = 'Next';
 
 // Summative exam fields

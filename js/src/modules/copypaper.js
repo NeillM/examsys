@@ -22,14 +22,16 @@ define(['jquery'], function($) {
     return function() {
         var self = this;
 
-       //DOM elements
+        // DOM elements
         this.$form = $('#checkcopy');
         this.$paperType = $('#paper_type');
         this.$newPaper = $('#new_paper');
         this.$nextButton = $('#next_button');
+        this.$backButton = $('#back_button');
         this.$submitButton = $('#submit_button');
         this.$cancelButton = $('#cancel');
-        this.$summativeFields = $('#summative_fields');
+        this.$step1 = $('#step1');
+        this.$step2 = $('#step2');
         
         // Required fields for summative exams
         this.summativeRequiredFields = [
@@ -62,6 +64,11 @@ define(['jquery'], function($) {
                 self.handleNextClick();
             });
 
+            // Handle back button click
+            this.$backButton.on('click', function() {
+                self.handleBackClick();
+            });
+
             // Handle form submission
             this.$form.on('submit', function() {
                 return self.handleSubmit();
@@ -82,12 +89,37 @@ define(['jquery'], function($) {
             if (isSummative) {
                 this.$nextButton.show();
                 this.$submitButton.hide();
-                // Reset and hide summative fields when switching back to summative
-                this.$summativeFields.hide();
+                this.$step1.addClass('active');
+                this.$step2.removeClass('active');
             } else {
                 this.$nextButton.hide();
                 this.$submitButton.show();
-                this.$summativeFields.hide();
+                // For non-summative papers, always show step1 and hide step2
+                this.$step1.addClass('active');
+                this.$step2.removeClass('active');
+            }
+        };
+
+        /**
+         * Show a specific step
+         * @param {number} stepNumber The step to show (1 or 2)
+         */
+        this.showStep = function(stepNumber) {
+            // Only allow step navigation for summative papers
+            if (this.$paperType.val() !== '2') {
+                return;
+            }
+
+            if (stepNumber === 1) {
+                this.$step1.addClass('active');
+                this.$step2.removeClass('active');
+                this.$nextButton.show();
+                this.$submitButton.hide();
+            } else {
+                this.$step1.removeClass('active');
+                this.$step2.addClass('active');
+                this.$nextButton.hide();
+                this.$submitButton.show();
             }
         };
 
@@ -95,6 +127,11 @@ define(['jquery'], function($) {
          * Handle click on the next button
          */
         this.handleNextClick = function() {
+            // Only proceed if this is a summative paper
+            if (this.$paperType.val() !== '2') {
+                return;
+            }
+
             // Validate paper name
             if (!this.$newPaper.val().trim()) {
                 alert('Please enter a paper name');
@@ -102,10 +139,14 @@ define(['jquery'], function($) {
                 return;
             }
 
-            // Show summative fields
-            this.$summativeFields.show();
-            this.$nextButton.hide();
-            this.$submitButton.show();
+            this.showStep(2);
+        };
+
+        /**
+         * Handle click on the back button
+         */
+        this.handleBackClick = function() {
+            this.showStep(1);
         };
 
         /**
@@ -116,7 +157,7 @@ define(['jquery'], function($) {
             var isSummative = this.$paperType.val() === '2';
             
             // For summative exams, validate all required fields
-            if (isSummative && this.$summativeFields.is(':visible')) {
+            if (isSummative) {
                 for (var i = 0; i < this.summativeRequiredFields.length; i++) {
                     var fieldId = this.summativeRequiredFields[i];
                     var $field = $('#' + fieldId);
@@ -149,6 +190,5 @@ define(['jquery'], function($) {
             var paperID = $('#dataset').attr('data-paperid');
             window.location.href = '../paper/details.php?paperID=' + paperID;
         };
-
     };
 });
