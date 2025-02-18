@@ -31,6 +31,7 @@ $string['back'] = 'Back';
 $string['next'] = 'Next';
 
 // Summative exam fields
+$string['summativedetails'] = 'Summative Details';
 $string['campus'] = 'Campus';
 $string['barriersneeded'] = 'Barriers needed';
 $string['duration'] = 'Duration';
