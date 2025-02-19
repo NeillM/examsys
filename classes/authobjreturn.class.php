@@ -34,6 +34,13 @@ class authobjreturn
     public $datas;
     public $statuses;
     public $username;
+
+    /** @var string Details about why authentication failed. */
+    public $message;
+
+    /** @var bool Stores if login was a success. */
+    public $success;
+
     public $postredirect = false;
 
     public function __construct()
