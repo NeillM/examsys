@@ -103,7 +103,7 @@ class environment
                 'extensions' => array(
                     'Behat\MinkExtension' => array(
                         'base_url' => self::get_behat_website(),
-                        'goutte' => null,
+                        'browserkit_http' => null,
                         'selenium2' => $seleniumconfig,
                     ),
                 ),
