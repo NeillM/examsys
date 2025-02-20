@@ -32,6 +32,23 @@ $folder = param::optional('folder', null, param::INT, param::FETCH_GET);
 // Get paper properties
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
+// Check if user has permission to edit this paper
+$userObject = UserObject::get_instance();
+if (!$properties->can_user_edit_paper($userObject)) {
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit(
+        $mysqli,
+        $string['accessdenied'],
+        $msg,
+        $string['accessdenied'],
+        '/artwork/page_not_found.png',
+        '#C00000',
+        true,
+        true
+    );
+}
+
 ?>
 <!DOCTYPE html>
 <html>

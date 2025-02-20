@@ -3629,4 +3629,50 @@ class PaperProperties
 
         return $this->graded;
     }
+
+    /**
+     * Check if the user has permission to edit this paper
+     * 
+     * It checks:
+     * 1. If the user is a SysAdmin (always has access)
+     * 2. If the user is the paper owner
+     * 3. If the user is a Standards Setter
+     * 4. If the user has access through module assignment
+     * 
+     * @param UserObject $userObject The user to check permissions for
+     * @return bool True if the user can edit the paper, false otherwise
+     */
+    public function can_user_edit_paper(UserObject $userObject): bool 
+    {
+        // SysAdmin 
+        if ($userObject->has_role('SysAdmin')) {
+            return true;
+        }
+
+        // Get paper owner
+        $paper_ownerID = Paper_utils::get_ownerID($this->property_id, $this->db);
+        
+        // Paper owner 
+        if ($paper_ownerID == $userObject->get_user_ID()) {
+            return true;
+        }
+        
+        // Standards Setters
+        if ($userObject->has_role('Standards Setter')) {
+            return true;
+        }
+        
+        // Check if user has access through module assignment
+        $paper_modules = Paper_utils::get_modules($this->property_id, $this->db);
+        if (!empty($paper_modules)) {
+            $staff_modules = $userObject->get_staff_modules();
+            foreach ($paper_modules as $module) {
+                if (in_array($module, $staff_modules)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
 }
