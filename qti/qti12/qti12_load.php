@@ -1661,8 +1661,7 @@ class IE_qti12_Load extends IE_Main
         $dest->status = $source->qmd_status;
         $dest->presentation = 'vertical';
         $dest->type = 'mcq';
-        reset($source->responses);
-        $key = key($source->responses);
+        $key = array_key_first($source->responses);
         if ($source->responses[$key]->shuffle == 1) {
             $dest->q_option_order = 'random';
         }
@@ -1785,8 +1784,7 @@ class IE_qti12_Load extends IE_Main
         $dest->status = $source->qmd_status;
         $dest->presentation = 'vertical';
         $dest->type = 'true_false';
-        reset($source->responses);
-        $key = key($source->responses);
+        $key = array_key_first($source->responses);
         if ($source->responses[$key]->shuffle == 1) {
             $dest->q_option_order = 'random';
         }

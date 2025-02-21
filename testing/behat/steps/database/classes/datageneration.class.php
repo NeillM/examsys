@@ -631,7 +631,7 @@ trait datageneration
 
             // The SCT leadin is special. and contains multiple pices of information separated by a ~
             // The second part is for new information.
-            if (strpos($row['leadin'], '~') === false) {
+            if (!str_contains($row['leadin'], '~')) {
                 $row['leadin'] .= '~';
             }
         }

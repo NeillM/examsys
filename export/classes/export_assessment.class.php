@@ -712,8 +712,7 @@ class export_assessment extends exporter
                             }
                         }
                         if (!$rnd_found) {
-                            reset($question['rand_ids']);
-                            $tmp_question_ID = key($question['rand_ids']);
+                            $tmp_question_ID = array_key_first($question['rand_ids']);
                             $question = \QuestionUtils::get_correct_answer($question, $tmp_question_ID, $this->config->db);
                         }
                     } else {

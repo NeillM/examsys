@@ -577,7 +577,7 @@ class UserSearch extends Search
             return;
         }
 
-        if (strpos($field, '.') !== false) {
+        if (str_contains($field, '.')) {
             // Remove the table name from the field, since the order is on a UNION.
             $parts = explode('.', $field);
             $field = $parts[1];

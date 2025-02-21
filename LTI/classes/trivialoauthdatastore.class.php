@@ -34,7 +34,7 @@ class TrivialOAuthDataStore extends OAuthDataStore {
 	}
 
 	function lookup_consumer($consumer_key) {
-		if (strpos($consumer_key, "http://" ) === 0) {
+		if (str_starts_with($consumer_key, "http://")) {
 			$consumer = new OAuthConsumer($consumer_key,"secret", NULL);
 			return $consumer;
 		}

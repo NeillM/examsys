@@ -21,7 +21,7 @@ class Rserve_Connection {
 	const PARSER_REXP 					= 1;
 	const PARSER_DEBUG 					= 2;
 	const PARSER_NATIVE_WRAPPED = 3;
-    
+
 	const DT_INT 				= 1;
 	const DT_CHAR 			= 2;
 	const DT_DOUBLE 		= 3;
@@ -138,7 +138,7 @@ class Rserve_Connection {
 		}
 		$buf = '';
 		$n = socket_recv($socket, $buf, 32, 0);
-		if ($n < 32 || strncmp($buf, 'Rsrv', 4) != 0) {
+		if ($n < 32 || !str_starts_with($buf, 'Rsrv')) {
 			throw new Rserve_Exception('Invalid response from server.');
 		}
 		$rv = substr($buf, 4, 4);

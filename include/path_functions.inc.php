@@ -27,7 +27,7 @@
 
 function get_root_path()
 {
-    $path_parts = pathinfo(dirname(__FILE__));
+    $path_parts = pathinfo(__DIR__);
     return normalise_path($path_parts['dirname']);
 }
 

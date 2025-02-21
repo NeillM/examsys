@@ -80,7 +80,7 @@ class OAuthUtil {
     // that $_SERVER actually contains what we need
     $out = array();
     foreach ($_SERVER as $key => $value) {
-      if (substr($key, 0, 5) == "HTTP_") {
+      if (str_starts_with($key, "HTTP_")) {
         // this is chaos, basically it is just there to capitalize the first
         // letter of every word that is not an initial HTTP and strip HTTP
         // code from przemek
