@@ -238,7 +238,8 @@ if (!$properties->can_user_edit_paper($userObject)) {
                     <select name="sittings" id="sittings">
                         <option value=""></option>
                         <?php
-                        for ($i = 1; $i <= 6; $i++) {
+                        $maxSittings = $configObject->get_setting('core', 'summative_max_sittings');
+                        for ($i = 1; $i <= $maxSittings; $i++) {
                             echo '<option value="' . $i . '">' . $i . '</option>';
                         }
                         ?>
