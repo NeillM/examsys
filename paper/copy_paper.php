@@ -62,7 +62,10 @@ if (!$properties->can_user_edit_paper($userObject)) {
 </head>
 <body>
     <div id="content">
-        <div id="dataset" data-paperid="<?php echo $paperID; ?>"></div>
+        <div id="dataset" 
+             data-paperid="<?php echo $paperID; ?>"
+             data-summative-mgmt="<?php echo $configObject->get_setting('core', 'cfg_summative_mgmt'); ?>">
+        </div>
         <h1><?php echo $string['copypaper']; ?></h1>
         
         <?php

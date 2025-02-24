@@ -81,12 +81,13 @@ define(['jquery'], function($) {
         };
 
         /**
-         * Update button visibility based on paper type
+         * Update button visibility based on paper type and summative management
          */
         this.updateButtons = function() {
             var isSummative = this.$paperType.val() === '2';
-
-            if (isSummative) {
+            var summativeMgmtEnabled = $('#dataset').data('summative-mgmt') === 1;
+            
+            if (isSummative && summativeMgmtEnabled) {
                 this.$nextButton.show();
                 this.$submitButton.hide();
             } else {
