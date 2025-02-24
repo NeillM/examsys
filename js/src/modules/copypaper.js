@@ -89,14 +89,9 @@ define(['jquery'], function($) {
             if (isSummative) {
                 this.$nextButton.show();
                 this.$submitButton.hide();
-                this.$step1.addClass('active');
-                this.$step2.removeClass('active');
             } else {
                 this.$nextButton.hide();
                 this.$submitButton.show();
-                // For non-summative papers, always show step1 and hide step2
-                this.$step1.addClass('active');
-                this.$step2.removeClass('active');
             }
         };
 
