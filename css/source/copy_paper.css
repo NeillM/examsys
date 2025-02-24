@@ -228,3 +228,8 @@ h1 {
     width: 25rem;
     max-width: 25rem;
 }
+
+#next_button,
+#back_button {
+    display: none;
+}

@@ -257,10 +257,10 @@ if (!$properties->can_user_edit_paper($userObject)) {
         <input type="hidden" name="folder" value="<?php echo $folder; ?>" />
         
         <div class="form-buttons">
-            <button type="button" id="next_button" style="display: none;"><?php echo $string['next']; ?></button>
+            <button type="button" id="next_button"><?php echo $string['next']; ?></button>
             <button type="submit" id="submit_button"><?php echo $string['copypaper']; ?></button>
             <button type="button" id="cancel"><?php echo $string['cancel']; ?></button>
-            <button type="button" class="back-button" id="back_button" style="display: none;"><?php echo $string['back']; ?></button>
+            <button type="button" class="back-button" id="back_button"><?php echo $string['back']; ?></button>
         </div>
     </form>
 </div>
