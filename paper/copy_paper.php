@@ -207,13 +207,10 @@ if (!$properties->can_user_edit_paper($userObject)) {
                     <select name="date_required" id="period">
                         <option value=""></option>
                         <?php
-                        $months = array(
-                            1 => 'January', 2 => 'February', 3 => 'March', 4 => 'April',
-                            5 => 'May', 6 => 'June', 7 => 'July', 8 => 'August',
-                            9 => 'September', 10 => 'October', 11 => 'November', 12 => 'December'
-                        );
-                        foreach ($months as $num => $name) {
-                            echo '<option value="' . $num . '">' . $name . '</option>';
+                        $month_keys = array('january', 'february', 'march', 'april', 'may', 'june', 
+                                         'july', 'august', 'september', 'october', 'november', 'december');
+                        for ($i = 1; $i <= 12; $i++) {
+                            echo '<option value="' . $i . '">' . $string[$month_keys[$i-1]] . '</option>';
                         }
                         ?>
                     </select>

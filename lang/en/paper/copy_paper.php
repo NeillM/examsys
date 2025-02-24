@@ -16,6 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once $cfg_web_root . 'lang/' . $language . '/include/paper_types.php';
+require_once $cfg_web_root . 'lang/' . $language . '/include/months.php';
 
 // Copy paper specific strings
 $string['copypaper'] = 'Copy Paper';
