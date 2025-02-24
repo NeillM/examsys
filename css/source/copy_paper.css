@@ -158,7 +158,8 @@ h1 {
     transition: all 0.2s;
 }
 
-.form-buttons button[type="submit"] {
+.form-buttons button[type="submit"],
+#next_button {
     background: #316AC5;
     border-color: #316AC5;
     color: #fff;
@@ -168,7 +169,8 @@ h1 {
     background: #f5f5f5;
 }
 
-.form-buttons button[type="submit"]:hover {
+.form-buttons button[type="submit"]:hover,
+#next_button:hover {
     background: #2859a8;
 }
 
