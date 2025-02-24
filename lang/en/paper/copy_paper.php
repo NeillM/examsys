@@ -40,5 +40,6 @@ $string['hrs'] = 'hrs';
 $string['mins'] = 'mins';
 $string['daterequired'] = 'Date Required';
 $string['cohortsize'] = 'Cohort Size';
+$string['wholecohort'] = 'whole cohort';
 $string['sittings'] = 'Number of Sittings';
 $string['notes'] = 'Notes';

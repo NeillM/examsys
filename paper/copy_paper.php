@@ -221,9 +221,9 @@ if (!$properties->can_user_edit_paper($userObject)) {
                     <select name="cohort_size" id="cohort_size">
                         <option value=""></option>
                         <?php
-                        $sizes = array('&lt;whole cohort&gt', '0-10', '11-20', '21-30', '31-40', '41-50', 
-                                     '51-75', '76-100', '101-150', '151-200', '201-300', '301-400', '401-500');
-                        foreach ($sizes as $size) {
+                        $cohort_sizes = $configObject->get_setting('core', 'summative_cohort_sizes');
+                        echo '<option value="whole cohort">' . $string['wholecohort'] . '</option>';
+                        foreach ($cohort_sizes as $size) {
                             echo '<option value="' . $size . '">' . $size . '</option>';
                         }
                         ?>
