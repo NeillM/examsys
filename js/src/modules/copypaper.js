@@ -39,7 +39,6 @@ define(['jquery'], function($) {
             'duration_mins',
             'period',
             'cohort_size',
-            'sittings'
         ];
 
         /**
@@ -171,8 +170,17 @@ define(['jquery'], function($) {
                 // Validate duration
                 var hours = parseInt($('#duration_hours').val()) || 0;
                 var mins = parseInt($('#duration_mins').val()) || 0;
+                var totalMinutes = (hours * 60) + mins;
+                
                 if (hours === 0 && mins === 0) {
                     alert('Please enter a valid duration');
+                    $('#duration_hours').focus();
+                    return false;
+                }
+                
+                var maxDuration = parseInt($('#dataset').attr('data-max-duration'));
+                if (totalMinutes > maxDuration) {
+                    alert('Duration cannot exceed ' + maxDuration + ' minutes');
                     $('#duration_hours').focus();
                     return false;
                 }

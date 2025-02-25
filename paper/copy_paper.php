@@ -64,7 +64,8 @@ if (!$properties->can_user_edit_paper($userObject)) {
     <div id="content">
         <div id="dataset" 
              data-paperid="<?php echo $paperID; ?>"
-             data-summative-mgmt="<?php echo $configObject->get_setting('core', 'cfg_summative_mgmt'); ?>">
+             data-summative-mgmt="<?php echo $configObject->get_setting('core', 'cfg_summative_mgmt'); ?>"
+             data-max-duration="<?php echo $configObject->get_setting('core', 'paper_max_duration'); ?>">
         </div>
         <h1><?php echo $string['copypaper']; ?></h1>
         
