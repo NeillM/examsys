@@ -108,42 +108,42 @@ if (date('n') < 7) {
     $summative_year--;
 }
 
-  $menudata = array();
-  $menudata['audit']                = array('./audit/list_audit.php', 'audit.png');
-  $menudata['anomaly']              = array('./anomaly/settings.php', 'anomaly.png');
-  $menudata['academicsessions']     = array('academic_sessions.php', 'sessions.png');
-  $menudata['authentication']       = array('./oauth/list_oauth.php', 'auth.png');
-  $menudata['bug']                  = array('https://examsys.atlassian.net', 'bug.png');
-  $menudata['calendar']             = array('calendar.php#week' . date('W'), 'calendar_icon.png');
-  $menudata['clearguestaccounts']   = array('clear_guest_users.php', 'clear_guest_users.png');
-  $menudata['clearorphanmedia']     = array('orphan_media.php', 'remove_orphan_icon.png');
-  $menudata['cleartraining']        = array('clear_training_module.php', 'training.png');
-  $menudata['computerlabs']         = array('list_labs.php', 'computer_lab_48.png');
-  $menudata['courses']              = array('list_courses.php', 'courses_icon.png');
-  $menudata['deniedlogwarnings']    = array('view_access_denied.php', 'access_denied.png');
-  $menudata['ebelgridtemplates']    = array('list_ebel_grids.php', 'grid_48.png');
-  $menudata['faculties']            = array('list_faculties.php', 'faculty.png');
-  $menudata['imslti']               = array('../LTI/lti_keys_list.php', 'lti_key_48.png');
+  $menudata = [];
+  $menudata['audit']                = ['./audit/list_audit.php', 'audit.png'];
+  $menudata['anomaly']              = ['./anomaly/settings.php', 'anomaly.png'];
+  $menudata['academicsessions']     = ['academic_sessions.php', 'sessions.png'];
+  $menudata['authentication']       = ['./oauth/list_oauth.php', 'auth.png'];
+  $menudata['bug']                  = ['https://examsys.atlassian.net', 'bug.png'];
+  $menudata['calendar']             = ['calendar.php#week' . date('W'), 'calendar_icon.png'];
+  $menudata['clearguestaccounts']   = ['clear_guest_users.php', 'clear_guest_users.png'];
+  $menudata['clearorphanmedia']     = ['orphan_media.php', 'remove_orphan_icon.png'];
+  $menudata['cleartraining']        = ['clear_training_module.php', 'training.png'];
+  $menudata['computerlabs']         = ['list_labs.php', 'computer_lab_48.png'];
+  $menudata['courses']              = ['list_courses.php', 'courses_icon.png'];
+  $menudata['deniedlogwarnings']    = ['view_access_denied.php', 'access_denied.png'];
+  $menudata['ebelgridtemplates']    = ['list_ebel_grids.php', 'grid_48.png'];
+  $menudata['faculties']            = ['list_faculties.php', 'faculty.png'];
+  $menudata['imslti']               = ['../LTI/lti_keys_list.php', 'lti_key_48.png'];
 if ($configObject->get_setting('core', 'cfg_ims_enabled')) {
-    $menudata['imssettings']          = array('../plugins/ims/ims_settings.php', 'ims_logo.png');
+    $menudata['imssettings']          = ['../plugins/ims/ims_settings.php', 'ims_logo.png'];
 }
-  $menudata['modules']              = array('list_modules.php', 'modules_icon.png');
-  $menudata['announcments']         = array('list_announcements.php', 'news_48.png');
-  $menudata['phpinfo']              = array('phpinfo.php', 'php.png');
-  $menudata['questionstatuses']     = array('list_statuses.php', 'status_icon.png');
-  $menudata['savefailattempts']     = array('list_save_fails.php', 'save_fail_48.png');
-  $menudata['schools']              = array('list_schools.php', 'school_icon.png');
-  $menudata['statistics']           = array('../statistics/index.php', 'statistics.png');
+  $menudata['modules']              = ['list_modules.php', 'modules_icon.png'];
+  $menudata['announcments']         = ['list_announcements.php', 'news_48.png'];
+  $menudata['phpinfo']              = ['phpinfo.php', 'php.png'];
+  $menudata['questionstatuses']     = ['list_statuses.php', 'status_icon.png'];
+  $menudata['savefailattempts']     = ['list_save_fails.php', 'save_fail_48.png'];
+  $menudata['schools']              = ['list_schools.php', 'school_icon.png'];
+  $menudata['statistics']           = ['../statistics/index.php', 'statistics.png'];
 if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
-      $menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
+      $menudata['summativescheduling'] = ['summative_scheduling.php', 'summative_scheduling.png'];
 }
-  $menudata['systemerrors']         = array('sys_error_list.php', 'system_errors.png');
-  $menudata['systeminformation']    = array('system_info.php', 'information.png');
-  $menudata['testing']              = array('../testing/', 'crash_test.png');
-  $menudata['usermanagement']       = array('../users/search.php', 'user_accounts_icon.png');
-  $menudata['plugins']       = array('./plugins/list_plugins.php', 'plugins.svg');
-  $menudata['config']        = array('config.php', 'config.png');
-  $menudata['externalsystems']        = array('external/list_extsys.php', 'sync.png');
+  $menudata['systemerrors']         = ['sys_error_list.php', 'system_errors.png'];
+  $menudata['systeminformation']    = ['system_info.php', 'information.png'];
+  $menudata['testing']              = ['../testing/', 'crash_test.png'];
+  $menudata['usermanagement']       = ['../users/search.php', 'user_accounts_icon.png'];
+  $menudata['plugins']       = ['./plugins/list_plugins.php', 'plugins.svg'];
+  $menudata['config']        = ['config.php', 'config.png'];
+  $menudata['externalsystems']        = ['external/list_extsys.php', 'sync.png'];
 if ($configObject->get('cfg_setting_icons_order')) {
     foreach ($configObject->get('cfg_setting_icons_order') as $iconkey) {
         if (($iconkey == 'summativescheduling' && !$configObject->get_setting('core', 'cfg_summative_mgmt')) || empty($menudata[$iconkey])) {
@@ -170,7 +170,7 @@ if ($configObject->get('cfg_setting_icons_order')) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/adminindexinit.min.js"></script>
 </body>

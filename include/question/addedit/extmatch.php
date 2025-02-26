@@ -32,27 +32,27 @@ if ($num_options > 0) {
     $first = reset($options);
     $correct_answers = $first->get_all_corrects();
 } else {
-    $correct_answers = array();
+    $correct_answers = [];
 }
-$option_texts = array();
+$option_texts = [];
 
 // Media, stem and feedback for this question type are compound fields
 $all_media = $question->get_all_media();
 $stems = $question->get_all_stems();
 $all_feedback = $question->get_all_correct_fbacks();
 // We need to coalesce the values as there will be no array key 0 when there is no media for the leadin.
-$current_media = array(
+$current_media = [
     'filename' => $all_media['filenames'][0] ?? '',
     'width' => $all_media['widths'][0] ?? '',
     'height' => $all_media['heights'][0] ?? '',
     'alt' => $all_media['alts'][0] ?? '',
     'owner' => $all_media['owners'][0] ?? '',
     'num' => $all_media['nums'][0] ?? '',
-);
+];
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 
 // Work out how many 'questions' to show
-$visble = array();
+$visble = [];
 for ($i = 0; $i < $question->max_stems; $i++) {
     if ((isset($stems[$i]) and $stems[$i] != '')) {
         $visble[] = $i;
@@ -73,7 +73,7 @@ $visible_questions = count($visble);
           <h2 class="midblue_header"><?php echo $string['availableoptions'] ?></h2>
           <dl id="extended-option-list">
 <?php
-  $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
+  $numerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx'];
 
 for ($index = 0; $index < $question->max_options; $index++) {
     $mandatory = ($index < 3) ? '<span class="mandatory">*</span> ' : '';

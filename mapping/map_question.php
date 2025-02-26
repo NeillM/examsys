@@ -109,7 +109,7 @@ function display_q($configObject, $target_id, $db)
             $question['dismiss'] = '';
             $question['assigned_number'] = $_GET['qNo'];
         }
-        $question['options'][] = array(
+        $question['options'][] = [
             'correct' => $correct,
             'option_text' => $option_text,
             'o_media' => $option_media,
@@ -119,7 +119,7 @@ function display_q($configObject, $target_id, $db)
             'marks_correct' => $marks_correct,
             'marks_incorrect' => $marks_incorrect,
             'marks_partial' => $marks_partial
-        );
+        ];
     }
     $question_data->close();
 
@@ -130,7 +130,7 @@ function display_q($configObject, $target_id, $db)
     $question_offset = $_GET['qNo'];
 
     $screen_pre_submitted = 0;
-    $user_answers = array();
+    $user_answers = [];
 
     if ($question['q_type'] == 'enhancedcalc') {
         $question['screen'] = 1;
@@ -213,13 +213,13 @@ try {
   $jsdataset['name'] = 'jsutils';
   $jsdataset['attributes']['xls'] = json_encode($string);
   $render = new render($configObject);
-  $render->render($jsdataset, array(), 'dataset.html');
+  $render->render($jsdataset, [], 'dataset.html');
   // Dataset.
   $miscdataset['name'] = 'dataset';
   $miscdataset['attributes']['language'] = $language;
   $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-  $render->render($miscdataset, array(), 'dataset.html');
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+  $render->render($miscdataset, [], 'dataset.html');
+  $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 </body>
 </html>

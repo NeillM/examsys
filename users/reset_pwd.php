@@ -43,13 +43,13 @@ if (!$success) {
 }
 $mysqli->close();
 $render = new render($configObject);
-$headerdata = array(
-  'css' => array(
+$headerdata = [
+  'css' => [
     '/css/screen.css',
     '/css/password.css',
-  ),
-  'scripts' => array(),
-);
+  ],
+  'scripts' => [],
+];
 $lang['title'] = $string['passwordreset'];
 $lang['pwdreset'] = $string['passwordreset'];
 if ($enc->is_readable()) {

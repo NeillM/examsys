@@ -48,7 +48,7 @@ class IE_qti12_Save extends IE_Main
         $this->data =& $data;
         $this->params =& $params;
 
-        $this->ll = array();
+        $this->ll = [];
         for ($i = 1; $i < 27; $i++) {
             $varletter = chr(ord('A') + $i - 1);
             $this->ll[$i] = $varletter;
@@ -200,7 +200,7 @@ class IE_qti12_Save extends IE_Main
 
         $title = StripForTitle($title);
 
-        return array($output, $title);
+        return [$output, $title];
     }
 
     public function SaveBlank(&$question)
@@ -550,7 +550,7 @@ class IE_qti12_Save extends IE_Main
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
         //build list of options
-        $optlist = array();
+        $optlist = [];
 
         foreach ($question->options as $option) {
             if ($option->order == '') {

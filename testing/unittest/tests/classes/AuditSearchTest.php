@@ -39,25 +39,25 @@ class AuditSearchTest extends testing\unittest\unittestdatabase
 
         $datagenerator = $this->get_datagenerator('audit', 'core');
         $this->audit[] = $datagenerator->create(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'action' => Audit::ADDROLE,
                 'details' => 'Student',
-            )
+            ]
         );
         $this->audit[] = $datagenerator->create(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'action' => Audit::REMOVEROLE,
                 'details' => 'Student',
-            )
+            ]
         );
         $this->audit[] = $datagenerator->create(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'details' => Audit::ADDROLE,
                 'action' => 'Student',
-            )
+            ]
         );
     }
 

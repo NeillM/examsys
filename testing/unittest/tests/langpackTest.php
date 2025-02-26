@@ -48,7 +48,7 @@ class langpacktest extends UnitTest
     {
         $lang = new \langpack();
         $component = 'api/usermanagement';
-        $names = array('user_invalid_role', 'user_does_not_exist');
+        $names = ['user_invalid_role', 'user_does_not_exist'];
         $strings = $lang->get_strings($component, $names);
         $this->assertEquals('User has invalid role', $strings['user_invalid_role']);
         $this->assertEquals('User does not exist', $strings['user_does_not_exist']);

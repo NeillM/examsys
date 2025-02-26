@@ -69,14 +69,14 @@ class announcement_utils
      */
     public static function get_staff_announcements($db)
     {
-        $announcements = array();
-        $icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
+        $announcements = [];
+        $icons = ['', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png'];
 
         $result = $db->prepare("SELECT id, title, staff_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND staff_msg != '' AND deleted IS NULL");
         $result->execute();
         $result->bind_result($announcementID, $news_title, $staff_msg, $icon);
         while ($result->fetch()) {
-            $announcements[] = array('id' => $announcementID, 'title' => $news_title, 'msg' => $staff_msg, 'icon' => $icons[$icon]);
+            $announcements[] = ['id' => $announcementID, 'title' => $news_title, 'msg' => $staff_msg, 'icon' => $icons[$icon]];
         }
         $result->close();
 
@@ -90,14 +90,14 @@ class announcement_utils
      */
     public static function get_student_announcements($db)
     {
-        $announcements = array();
-        $icons = array('', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png');
+        $announcements = [];
+        $icons = ['', 'news_64.png', 'new_64.png', 'tip_64.png', 'software_64.png', 'exclamation_64.png', 'sync_64.png', 'megaphone_64.png'];
 
         $result = $db->prepare("SELECT id, title, student_msg, icon FROM announcements WHERE NOW() > startdate AND NOW() < enddate AND student_msg != '' AND deleted IS NULL");
         $result->execute();
         $result->bind_result($announcementID, $news_title, $student_msg, $icon);
         while ($result->fetch()) {
-            $announcements[] = array('id' => $announcementID, 'title' => $news_title, 'msg' => $student_msg, 'icon' => $icons[$icon]);
+            $announcements[] = ['id' => $announcementID, 'title' => $news_title, 'msg' => $student_msg, 'icon' => $icons[$icon]];
         }
         $result->close();
 

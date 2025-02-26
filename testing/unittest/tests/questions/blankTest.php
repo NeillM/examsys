@@ -65,11 +65,11 @@ class blanktest extends unittest
         $useranswer = '["Wales","u"]';
         $data->set_option_answer(0, $useranswer, '', 1);
         $this->assertTrue($data->unanswered);
-        $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
-        $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => 'Wales');
-        $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
-        $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true);
-        $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+        $blankoptions[1] = ['itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of '];
+        $blankoptions[2] = ['itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => 'Wales'];
+        $blankoptions[3] = ['itemtype' => 'blurb', 'itemvalue' => ' and is in the '];
+        $blankoptions[4] = ['itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true];
+        $blankoptions[5] = ['itemtype' => 'blurb', 'itemvalue' => '</div>'];
         $this->assertEquals($blankoptions, $data->blankoptions);
         $this->assertEquals(2, $data->marks);
         $data->scoremethod = 'Mark per Question';
@@ -92,9 +92,9 @@ class blanktest extends unittest
         $data->marks = 0;
         $useranswer = '["0"]';
         $data->set_option_answer(0, $useranswer, '', 1);
-        $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>The answer is ');
-        $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => '0');
-        $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+        $blankoptions[1] = ['itemtype' => 'blurb', 'itemvalue' => '<div>The answer is '];
+        $blankoptions[2] = ['itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => '0'];
+        $blankoptions[3] = ['itemtype' => 'blurb', 'itemvalue' => '</div>'];
         $this->assertEquals($blankoptions, $data->blankoptions);
     }
 
@@ -113,11 +113,11 @@ class blanktest extends unittest
         $data->marks = 0;
         $useranswer = '["Wales","u"]';
         $data->set_option_answer(0, $useranswer, '', 1);
-        $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
-        $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
-        $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
-        $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true);
-        $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+        $blankoptions[1] = ['itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of '];
+        $blankoptions[2] = ['itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales'];
+        $blankoptions[3] = ['itemtype' => 'blurb', 'itemvalue' => ' and is in the '];
+        $blankoptions[4] = ['itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true];
+        $blankoptions[5] = ['itemtype' => 'blurb', 'itemvalue' => '</div>'];
         $this->assertEquals($blankoptions, $data->blankoptions);
     }
 
@@ -155,11 +155,11 @@ class blanktest extends unittest
         $useranswer = '["Wales","u"]';
         $data->set_option_answer(0, $useranswer, '', 1);
         $this->assertEquals(4, $data->marks);
-        $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
-        $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
-        $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
-        $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true);
-        $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+        $blankoptions[1] = ['itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of '];
+        $blankoptions[2] = ['itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales'];
+        $blankoptions[3] = ['itemtype' => 'blurb', 'itemvalue' => ' and is in the '];
+        $blankoptions[4] = ['itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true];
+        $blankoptions[5] = ['itemtype' => 'blurb', 'itemvalue' => '</div>'];
         $this->assertEquals($blankoptions, $data->blankoptions);
     }
 
@@ -179,17 +179,17 @@ class blanktest extends unittest
         $useranswer = '["Wales","u"]';
         $data->set_option_answer(0, $useranswer, '', 1);
         $this->assertTrue($data->unanswered);
-        $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
-        $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'unans' => false, 'itemvalue' => array(
-            0 => array('answer' => 'England', 'selected' => false),
-            1 => array('answer' => 'Northern Ireland', 'selected' => false),
-            2 => array('answer' => 'Scotland', 'selected' => false),
-            3 => array('answer' => 'Wales', 'selected' => true)));
-        $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
-        $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'unans' => true, 'itemvalue' => array(
-            0 => array('answer' => 'United Kingdom', 'selected' => false),
-            1 => array('answer' => 'United States of America', 'selected' => false)));
-        $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+        $blankoptions[1] = ['itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of '];
+        $blankoptions[2] = ['itemtype' => 'blank', 'itemcount' => 1, 'unans' => false, 'itemvalue' => [
+            0 => ['answer' => 'England', 'selected' => false],
+            1 => ['answer' => 'Northern Ireland', 'selected' => false],
+            2 => ['answer' => 'Scotland', 'selected' => false],
+            3 => ['answer' => 'Wales', 'selected' => true]]];
+        $blankoptions[3] = ['itemtype' => 'blurb', 'itemvalue' => ' and is in the '];
+        $blankoptions[4] = ['itemtype' => 'blank', 'itemcount' => 2, 'unans' => true, 'itemvalue' => [
+            0 => ['answer' => 'United Kingdom', 'selected' => false],
+            1 => ['answer' => 'United States of America', 'selected' => false]]];
+        $blankoptions[5] = ['itemtype' => 'blurb', 'itemvalue' => '</div>'];
         // Need to split test as itemvalue randomly shuffled so need to sort before test.
         $options = $data->blankoptions;
         $this->assertEquals($blankoptions[1], $options[1]);

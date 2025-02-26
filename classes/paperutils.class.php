@@ -141,7 +141,7 @@ class PaperUtils
      */
     public function get_ownerID($paperID, $db)
     {
-        $modules = array();
+        $modules = [];
         $result = $db->prepare('SELECT paper_ownerID FROM properties WHERE property_id = ? LIMIT 1');
         $result->bind_param('i', $paperID);
         $result->execute();
@@ -154,7 +154,7 @@ class PaperUtils
 
     public function get_textual_feedback($paperID, $db, $direction = 'ASC')
     {
-        $textual_feedback = array();
+        $textual_feedback = [];
         $i = 1;
 
         $result = $db->prepare("SELECT boundary, msg FROM paper_feedback WHERE paperID = ? ORDER BY boundary $direction");
@@ -180,7 +180,7 @@ class PaperUtils
      */
     public function get_modules($paperID, $db)
     {
-        $modules = array();
+        $modules = [];
         if ($paperID == -1) {
             return $modules;
         }
@@ -341,7 +341,7 @@ SQL;
      */
     public function get_metadata($db, $paperID, $keys = [])
     {
-        $metadata = array();
+        $metadata = [];
 
         $sql = 'SELECT name, value FROM paper_metadata WHERE paperID = ?';
         if (empty($keys)) {
@@ -349,7 +349,7 @@ SQL;
             $result->bind_param('i', $paperID);
         } else {
             if (!is_array($keys)) {
-                $keys = array($keys);
+                $keys = [$keys];
             }
             $sql .= ' AND name IN (' . implode(',', array_fill(0, count($keys), '?')) . ')';
             $result = $db->prepare($sql);
@@ -404,7 +404,7 @@ SQL;
      */
     public function get_security_metadata($paperID, $db)
     {
-        $metadata = array();
+        $metadata = [];
 
         $result = $db->prepare('SELECT name, value FROM paper_metadata_security WHERE paperID = ?');
         $result->bind_param('i', $paperID);
@@ -594,11 +594,11 @@ SQL;
         $now = time();
         $details = Paper_utils::get_paper_properties($paperID, $db);
         $papertitle = $details['title'] . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
-        $update_params = array(
-        'paper_title' => array('s',$papertitle),
-        'deleted' => array('i', $now),
-        'paper_ownerID' => array('i', $owner)
-        );
+        $update_params = [
+        'paper_title' => ['s',$papertitle],
+        'deleted' => ['i', $now],
+        'paper_ownerID' => ['i', $owner]
+        ];
         return $assessment->db_update_assessment($paperID, $update_params);
     }
 
@@ -825,14 +825,14 @@ SQL;
     public function need_interactiveQ($screen_data, $screen, $db)
     {
         $interactive = false;
-        $checktypes = array('hotspot', 'labelling', 'area');
+        $checktypes = ['hotspot', 'labelling', 'area'];
         if (isset($screen_data[$screen])) {
             foreach ($screen_data[$screen] as $question_part) {
                 if (in_array($question_part[0], $checktypes)) {
                     $interactive = true;
                 } elseif ($question_part[0] == 'random') {
                     $options = random_utils::get_random_qids_for_question($question_part[1], $db);
-                    $types = array();
+                    $types = [];
                     foreach ($options as $opt) {
                         $qtype = QuestionUtils::get_question_type($opt, $db);
                         $types[] = $qtype;
@@ -847,7 +847,7 @@ SQL;
                     $options = QuestionUtils::get_options_text($question_part[1], $db);
                     foreach ($options as $opt) {
                         $keywords = keyword_utils::get_keyword_questions($opt, $db);
-                        $types = array();
+                        $types = [];
                         foreach ($keywords as $key) {
                                 $qtype = QuestionUtils::get_question_type($key, $db);
                                 $types[] = $qtype;
@@ -874,7 +874,7 @@ SQL;
      */
     public function get_recent($userID, $db)
     {
-        $recent = array();
+        $recent = [];
 
         $result = $db->prepare('SELECT paperID, paper_title FROM (recent_papers, properties) WHERE userID = ? AND recent_papers.paperID = properties.property_id ORDER BY accessed DESC LIMIT 10');
         $result->bind_param('i', $userID);
@@ -1108,7 +1108,7 @@ SQL;
             return false;
         }
         $result->close();
-        $details = array(
+        $details = [
             'title' => $title,
             'type' => $type,
             'owner' => $owner,
@@ -1145,7 +1145,7 @@ SQL;
             'internal_review_deadline' => $internal_review_deadline,
             'sound_demo' => $sound_demo,
             'password' => $password
-        );
+        ];
         return $details;
     }
 
@@ -1182,7 +1182,7 @@ SQL;
      */
     public static function get_papers_by_session($session, $type, $db)
     {
-        $paperids = array();
+        $paperids = [];
         $result = $db->prepare('SELECT property_id FROM properties WHERE calendar_year = ? AND paper_type = ? AND deleted IS NULL');
         $result->bind_param('is', $session, $type);
         $result->execute();
@@ -1204,7 +1204,7 @@ SQL;
      */
     public static function get_finalised_papers($year, $papertype, $db)
     {
-        $papers = array();
+        $papers = [];
         $result = $db->prepare("SELECT paperid
       FROM gradebook_paper, properties
       WHERE gradebook_paper.paperid = properties.property_id
@@ -1233,11 +1233,11 @@ SQL;
     {
         // Return empty list if type and team not provided.
         if (is_null($type) and is_null($teamid)) {
-            return array();
+            return [];
         }
         $configObject = \Config::get_instance();
         $mysqli = $configObject->db;
-        $paper_details = array();
+        $paper_details = [];
         if (!is_null($type)) {
             $user_teams = $userObject->get_staff_modules();
             $module_id_list = implode(',', array_keys($user_teams));
@@ -1261,7 +1261,7 @@ SQL;
         $result->bind_result($property_id, $paper_title, $paper_type, $created, $title, $initials, $surname, $moduleid);
         while ($result->fetch()) {
             if (!isset($paper_details[$property_id])) {
-                $paper_details[$property_id] = array(
+                $paper_details[$property_id] = [
                     'paper_title' => $paper_title,
                     'paper_type' => $paper_type,
                     'created' => ' ' . date(
@@ -1271,7 +1271,7 @@ SQL;
                     'title' => $title,
                     'initials' => $initials,
                     'surname' => $surname
-                );
+                ];
             }
             $paper_details[$property_id]['moduleid'][] = $moduleid;
         }
@@ -1288,7 +1288,7 @@ SQL;
      */
     public static function copy_between_sessions($old_course, $new_course)
     {
-        $mappings_copy_objID = array();
+        $mappings_copy_objID = [];
         foreach ($old_course as $module => $sessions) {
             foreach ($sessions as $identifier => $session) {
                 if (!empty($session['objectives'])) {
@@ -1436,45 +1436,45 @@ SQL;
 
         $assessment = new assessment($db, $configObject);
         $unixtime = time();
-        $params = array(
-            'paper_title' => array('s', $postparams['new_paper']),
-            'start_date' => array('i', $tmp_start_date),
-            'end_date' => array('i', $tmp_end_date),
-            'timezone' => array('s', $properties['timezone']),
-            'paper_type' => array('s', $postparams['paper_type']),
-            'paper_prologue' => array('s', $properties['paper_prologue']),
-            'paper_postscript' => array('s', $properties['paper_postscript']),
-            'bgcolor' => array('s', $properties['bgcolor']),
-            'fgcolor' => array('s', $properties['fgcolor']),
-            'themecolor' => array('s', $properties['themecolor']),
-            'labelcolor' => array('s', $properties['labelcolor']),
-            'fullscreen' => array('s', $properties['fullscreen']),
-            'marking' => array('s', $properties['marking']),
-            'bidirectional' => array('s', $properties['bidirectional']),
-            'pass_mark' => array('i', $properties['pass_mark']),
-            'distinction_mark' => array('i', $properties['distinction_mark']),
-            'paper_ownerID' => array('i', $userID),
-            'folder' => array('s', $properties['folder']),
-            'labs' => array('s', $labs),
-            'rubric' => array('s', $properties['rubric']),
-            'calculator' => array('i', $properties['calculator']),
-            'exam_duration' => array('i', $tmp_exam_duration),
-            'created' => array('i', $unixtime),
-            'random_mark' => array('d', $tmp_random_mark),
-            'total_mark' => array('i', $tmp_total_mark),
-            'display_correct_answer' => array('s', $properties['display_correct_answer']),
-            'display_question_mark' => array('s', $properties['display_question_mark']),
-            'display_students_response' => array('s', $properties['display_students_response']),
-            'display_feedback' => array('s', $properties['display_feedback']),
-            'hide_if_unanswered' => array('s', $properties['hide_if_unanswered']),
-            'calendar_year' => array('i', $new_calendar_year),
-            'external_review_deadline' => array('s', $tmp_external_review_deadline),
-            'internal_review_deadline' => array('s', $tmp_internal_review_deadline),
-            'sound_demo' => array('s', $properties['sound_demo']),
-            'password' => array('s', $properties['password'])
-        );
+        $params = [
+            'paper_title' => ['s', $postparams['new_paper']],
+            'start_date' => ['i', $tmp_start_date],
+            'end_date' => ['i', $tmp_end_date],
+            'timezone' => ['s', $properties['timezone']],
+            'paper_type' => ['s', $postparams['paper_type']],
+            'paper_prologue' => ['s', $properties['paper_prologue']],
+            'paper_postscript' => ['s', $properties['paper_postscript']],
+            'bgcolor' => ['s', $properties['bgcolor']],
+            'fgcolor' => ['s', $properties['fgcolor']],
+            'themecolor' => ['s', $properties['themecolor']],
+            'labelcolor' => ['s', $properties['labelcolor']],
+            'fullscreen' => ['s', $properties['fullscreen']],
+            'marking' => ['s', $properties['marking']],
+            'bidirectional' => ['s', $properties['bidirectional']],
+            'pass_mark' => ['i', $properties['pass_mark']],
+            'distinction_mark' => ['i', $properties['distinction_mark']],
+            'paper_ownerID' => ['i', $userID],
+            'folder' => ['s', $properties['folder']],
+            'labs' => ['s', $labs],
+            'rubric' => ['s', $properties['rubric']],
+            'calculator' => ['i', $properties['calculator']],
+            'exam_duration' => ['i', $tmp_exam_duration],
+            'created' => ['i', $unixtime],
+            'random_mark' => ['d', $tmp_random_mark],
+            'total_mark' => ['i', $tmp_total_mark],
+            'display_correct_answer' => ['s', $properties['display_correct_answer']],
+            'display_question_mark' => ['s', $properties['display_question_mark']],
+            'display_students_response' => ['s', $properties['display_students_response']],
+            'display_feedback' => ['s', $properties['display_feedback']],
+            'hide_if_unanswered' => ['s', $properties['hide_if_unanswered']],
+            'calendar_year' => ['i', $new_calendar_year],
+            'external_review_deadline' => ['s', $tmp_external_review_deadline],
+            'internal_review_deadline' => ['s', $tmp_internal_review_deadline],
+            'sound_demo' => ['s', $properties['sound_demo']],
+            'password' => ['s', $properties['password']]
+        ];
         $new_paper_id = $assessment->db_insert_assessment($params);
-        $update_params = array('crypt_name' => array('s', $new_paper_id . $unixtime . $userID));
+        $update_params = ['crypt_name' => ['s', $new_paper_id . $unixtime . $userID]];
         $assessment->db_update_assessment($new_paper_id, $update_params);
 
         // Get the old reviewers and populate the new paper with.
@@ -1497,7 +1497,7 @@ SQL;
         if ($postparams['paper_type'] == $assessment::TYPE_SUMMATIVE and $configObject->get_setting('core', 'cfg_summative_mgmt')) {
             $assessment->schedule($new_paper_id, $postparams['period'], $postparams['barriers_needed'], $postparams['cohort_size'], $postparams['notes'], $postparams['sittings'], $postparams['campus']);
         }
-        return array('calendar_year' => $calendar_year, 'new_calendar_year' => $new_calendar_year, 'moduleIDs' => $moduleIDs, 'new_paper_id' => $new_paper_id);
+        return ['calendar_year' => $calendar_year, 'new_calendar_year' => $new_calendar_year, 'moduleIDs' => $moduleIDs, 'new_paper_id' => $new_paper_id];
     }
 
     /**
@@ -1509,7 +1509,7 @@ SQL;
      */
     public function get_marking_overrides($log_type, $temp_userID, $paperID)
     {
-        $overrides = array();
+        $overrides = [];
         $configObject = \Config::get_instance();
         $db = $configObject->db;
         $sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
@@ -1522,7 +1522,7 @@ SQL;
         $result->store_result();
         $result->bind_result($o_q_id, $o_title, $o_surname, $o_date_marked, $o_new_mark_type, $o_adjmark);
         while ($result->fetch()) {
-            $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
+            $overrides[$o_q_id] = ['q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark];
         }
         $result->close();
         return $overrides;
@@ -1535,7 +1535,7 @@ SQL;
      */
     public static function get_linked_question_parents($questions)
     {
-        $linked = array();
+        $linked = [];
         foreach ($questions as &$question) {
             if ($question['q_type'] === 'enhancedcalc') {
                 $settings = json_decode($question['settings'], true);
@@ -1566,7 +1566,7 @@ SQL;
      */
     public static function getTypeList(): array
     {
-        return array(
+        return [
             'formative' => assessment::TYPE_FORMATIVE,
             'progress' => assessment::TYPE_PROGRESS,
             'summative' => assessment::TYPE_SUMMATIVE,
@@ -1574,7 +1574,7 @@ SQL;
             'osce' => assessment::TYPE_OSCE,
             'offline' => assessment::TYPE_OFFLINE,
             'peer_review' => assessment::TYPE_PEERREVIEW
-        );
+        ];
     }
 
     /**

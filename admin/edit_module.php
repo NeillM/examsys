@@ -37,11 +37,11 @@ if ($module === false) {
 }
 
 $SMS = SMSutils::GetSmsUtils();
-$cfg_sms_sources = array();
+$cfg_sms_sources = [];
 if (is_object($SMS)) {
     $cfg_sms_sources =  $SMS->getModuleSources();
 }
-$cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
+$cfg_sms_sources = [$string['nolookup'] => ''] + $cfg_sms_sources;
 ?>
 <!DOCTYPE html>
   <html>
@@ -61,9 +61,9 @@ $cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
   $mu = module_utils::get_instance();
   $vle_apis = $mu->get_vle_api_data($vle_apis);
 if (count($vle_apis) > 0) {
-    $map_levels = array(iCMAPI::LEVEL_SESSION => $string['session'], iCMAPI::LEVEL_MODULE => $string['module']);
+    $map_levels = [iCMAPI::LEVEL_SESSION => $string['session'], iCMAPI::LEVEL_MODULE => $string['module']];
 } else {
-    $map_levels = array();
+    $map_levels = [];
 }
 ?>
   </head>
@@ -233,12 +233,12 @@ while ($result->fetch()) {
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['moduleid'] = $_GET['moduleid'];
 $miscdataset['attributes']['posturl'] = 'do_edit_module.php?moduleid=' . $_GET['moduleid'];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
   <script src="../js/moduleeditinit.min.js"></script>
 </body>

@@ -131,7 +131,7 @@ $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['parent'] = $parent;
 $miscdataset['attributes']['parentid'] = $parentID;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/deletefolderinit.min.js"></script>
 </body>

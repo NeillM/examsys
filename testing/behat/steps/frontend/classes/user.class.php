@@ -46,7 +46,7 @@ trait User
         $element = $this->find('id_or_name', 'createname');
         $element->click();
         $this->i_focus_popup('Note');
-        $this->fillDropDown('paperID', array($paper));
+        $this->fillDropDown('paperID', [$paper]);
         $this->fillField('note', $note);
         $element = $this->find('button', 'Save');
         $element->click();

@@ -96,7 +96,7 @@ class AuditSearch extends Search
             $arguments[] = &$param;
         }
 
-        if (call_user_func_array(array($query, 'bind_param'), array_merge($types, $arguments)) === false) {
+        if (call_user_func_array([$query, 'bind_param'], array_merge($types, $arguments)) === false) {
             throw new \RuntimeException($query->error);
         }
 
@@ -131,7 +131,7 @@ class AuditSearch extends Search
             $arguments[] = &$param;
         }
 
-        if (call_user_func_array(array($query, 'bind_param'), array_merge($types, $arguments)) === false) {
+        if (call_user_func_array([$query, 'bind_param'], array_merge($types, $arguments)) === false) {
             throw new \RuntimeException($query->error);
         }
 

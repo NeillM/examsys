@@ -41,7 +41,7 @@ class rogo_unit_test implements Context
      *
      * @var array
      */
-    private $data = array();
+    private $data = [];
 
     /**
      * Get a data generator for adding information into the ExamSys database.
@@ -123,6 +123,6 @@ class rogo_unit_test implements Context
      */
     final public function reset()
     {
-        $this->data = array();
+        $this->data = [];
     }
 }

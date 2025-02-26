@@ -51,11 +51,11 @@ $objective_modules = param::optional('objective_modules', '', param::TEXT, param
 function get_post_params($part_names, $option, $option_no)
 {
 
-    $postparams = array();
+    $postparams = [];
     foreach ($part_names as $field) {
         if (method_exists($option, 'get_post_' . $field)) {
             $var = 'get_post_' . $field;
-            $postparams = array_merge($postparams, call_user_func(array($option, $var), $option_no));
+            $postparams = array_merge($postparams, call_user_func([$option, $var], $option_no));
         }
     }
     if (count($postparams) === 0) {
@@ -113,7 +113,7 @@ function save_options(&$update_options_media, $question, $userObject, $db)
             // Build arrays for compound fields
             $compound_fields = $option->get_compound_fields();
             if (!isset($existing_values)) {
-                $existing_values = array();
+                $existing_values = [];
             }
             $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
             // Save editable fields that aren't unified
@@ -122,7 +122,7 @@ function save_options(&$update_options_media, $question, $userObject, $db)
             $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
         } else {
             // Create new option if have required data
-            $option = OptionEdit::option_factory($db, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
+            $option = OptionEdit::option_factory($db, $userObject->get_user_ID(), $question, $option_no, $string, ['marks' => 1]);
             if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
                 $part_names = $option->get_editable_fields();
                 try {
@@ -134,7 +134,7 @@ function save_options(&$update_options_media, $question, $userObject, $db)
                 // Build arrays for compound fields
                 $compound_fields = $option->get_compound_fields();
                 if (!isset($existing_values)) {
-                    $existing_values = array();
+                    $existing_values = [];
                 }
                 $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
                 // Save editable fields that aren't unified
@@ -167,12 +167,12 @@ function save_options(&$update_options_media, $question, $userObject, $db)
                     return $string['mediauploaderror'];
                 }
             } elseif (isset($current_alt) and $new_media_alt !== $current_alt) {
-                $update_options_media[] = array('mid' => $current_mediaid, 'alt' => $new_media_alt);
+                $update_options_media[] = ['mid' => $current_mediaid, 'alt' => $new_media_alt];
             } else {
                 // Delete existing media if asked
                 if (isset($_POST["delete_media$option_no"]) and $_POST["delete_media$option_no"] == 'on') {
                     media_handler::deleteMedia($old_media['filename']);
-                    $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0, 'alt' => '', 'owner' => null));
+                    $option->set_media(['filename' => '', 'width' => 0, 'height' => 0, 'alt' => '', 'owner' => null]);
                 }
             }
         }
@@ -184,7 +184,7 @@ $paper_count = 0;
 $critical_error = '';
 $q_no = '';
 $q_type_full = '';
-$errors = array();
+$errors = [];
 if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
     // We're adding a new question
     $mode = $string['add'];
@@ -202,7 +202,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
                     $modules = Paper_utils::get_modules($paper_id, $mysqli);
             } else {
                 // Adding via a module.
-                  $modules = array($module => module_utils::get_instance()->get_moduleid_from_id($module, $mysqli));
+                  $modules = [$module => module_utils::get_instance()->get_moduleid_from_id($module, $mysqli)];
             }
             $question->set_teams($modules);
         } catch (ClassNotFoundException $ex) {
@@ -238,7 +238,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
     // Handle label images for Labelling questions. These never really hit the question object as items in their own right
     // but are used in parameters to the Flash setup JS function
     if ($question->get_type() == 'labelling') {
-        $label_images = array();
+        $label_images = [];
         for (
             $i = 1; $i <= 6; $i++
         ) {
@@ -270,7 +270,7 @@ if ($critical_error == '') {
     $do_save = false;
     $show_media_upload = false;
     $show_correction_intermediate = false;
-    $update_options_media = array();
+    $update_options_media = [];
     if ($question->requires_media() and ((isset($_POST['submit']) and $_POST['submit'] == 'Replace Media') or $current_media['filename'] == '')) {
         $show_media_upload = true;
     } elseif (isset($_POST['submit']) and $_POST['submit'] == $string['limitedsave']) {
@@ -283,7 +283,7 @@ if ($critical_error == '') {
             if ($save_individual) {
                 // Calculation, MCQ
                 $part_names = $question->get_change_fields();
-                $fields = array();
+                $fields = [];
                 foreach ($part_names as $field) {
                     if (isset($_POST[$field])) {
                         $fields[$field] = $_POST[$field];
@@ -309,7 +309,7 @@ if ($critical_error == '') {
                     $loop_limit = count($question->options);
                 }
                 $part_names = $question->get_change_fields();
-                $correct_answers = array();
+                $correct_answers = [];
                 foreach ($part_names as $field) {
                     for (
                         $i = 1; $i <= $loop_limit; $i++
@@ -328,7 +328,7 @@ if ($critical_error == '') {
                 $errors = $question->update_correct($correct_answers, $paper_id);
             }
 
-            $question_teams = array();
+            $question_teams = [];
             if (isset($_POST['teams'])) {
                 foreach ($_POST['teams'] as $idMod) {
                     $question_teams[$idMod] = module_utils::get_moduleid_from_id($idMod, $mysqli);
@@ -336,9 +336,9 @@ if ($critical_error == '') {
             }
             $question->set_teams($question_teams);
             // Save metadata
-            $part_names = array('bloom', 'status', 'correct_fback', 'incorrect_fback', 'externalref', 'staffnotes');
+            $part_names = ['bloom', 'status', 'correct_fback', 'incorrect_fback', 'externalref', 'staffnotes'];
             if (!isset($_POST['teams'])) {
-                $_POST['teams'] = array();
+                $_POST['teams'] = [];
             }
             foreach ($part_names as $section_name) {
                 if (isset($_POST["$section_name"])) {
@@ -368,7 +368,7 @@ if ($critical_error == '') {
             }
 
             // Save compound fields
-            $question->populate_compound($compound_fields, $_POST, array('media'), $prefix = 'question_');
+            $question->populate_compound($compound_fields, $_POST, ['media'], $prefix = 'question_');
             // Handle changes in media for compound fields
             if (in_array('media', $compound_fields)) {
                 $question->populate_compound_media($_FILES, $_POST, 'q_media', 'question_media');
@@ -377,7 +377,7 @@ if ($critical_error == '') {
             // Strip MS Office HTML.
             $question->set_scenario(clearMSOtags($question->get_scenario()));
             $question->set_leadin(clearMSOtags($question->get_leadin()));
-            $question_teams = array();
+            $question_teams = [];
             if (isset($_POST['teams'])) {
                 //$question_teams = array_combine($_POST['teams'], $_POST['teams']);
                 foreach ($_POST['teams'] as $idMod) {
@@ -676,7 +676,7 @@ if ($critical_error != '') {
           </div>
 
     <?php
-    $q_teams = array();
+    $q_teams = [];
     if (count($question->get_teams()) > 0) {
         $q_teams = $question->get_teams();
     } elseif (isset($module)) {
@@ -712,7 +712,7 @@ if ($critical_error != '') {
       <table style="font-size:90%; width:100%" class="data">
     <?php
     echo '<tr><th></th><th>' . $string['papername'] . '</th><th>' . $string['screenno'] . '</th><th>' . $string['examdate'] . '</th><th>' . $string['cohort'] . '</th><th></th><th>' . $string['p'] . '</th><th>' . $string['d'] . "</th></tr>\n";
-    $performance_array = ($question->id > -1) ? question_info::question_performance($question->id, $mysqli) : array();
+    $performance_array = ($question->id > -1) ? question_info::question_performance($question->id, $mysqli) : [];
     foreach ($performance_array as $paper => $performance) {
         echo '<tr><td><img src="../../artwork/' . $performance['icon'] . '" width="16" height="16" /></td>';
         echo '<td>' . $performance['title'] . '</td>';
@@ -769,19 +769,19 @@ if ($critical_error != '') {
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
-if (!empty($_GET['tab']) and in_array($_GET['tab'], array('changes', 'comments', 'performance', 'mapping'))) {
+if (!empty($_GET['tab']) and in_array($_GET['tab'], ['changes', 'comments', 'performance', 'mapping'])) {
     $miscdataset['attributes']['tab'] = $_GET['tab'];
 } else {
     $miscdataset['attributes']['tab'] = '';
 }
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 if ($question->requires_html5()) {
-    $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+    $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 }
 ?>
 <script src="../../js/questioneditinit.min.js"></script>

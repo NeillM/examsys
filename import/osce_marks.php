@@ -47,7 +47,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
     $marking    = $propertyObj->get_marking();
 
     // Get the questions on the paper.
-    $paper = array();
+    $paper = [];
     $question_no = 0;
     $result = $db->prepare('SELECT question, marks_correct FROM papers, options WHERE paper = ? AND papers.question = options.o_id ORDER BY screen, display_pos');
     $result->bind_param('i', $paperID);
@@ -62,7 +62,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
     $moduleIDs = implode(',', array_keys(Paper_utils::get_modules($paperID, $db)));
 
     // Get student data.
-    $students = array();
+    $students = [];
     $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($moduleIDs) AND calendar_year = ?");
     $result->bind_param('s', $session);
     $result->execute();
@@ -163,17 +163,17 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
                     if ($save_ok) {
                         switch ($marking) {
                             case '3':
-                                    $cat2no = array('clear fail' => 1,'borderline' => 2,'clear pass' => 3);
+                                    $cat2no = ['clear fail' => 1,'borderline' => 2,'clear pass' => 3];
                                 break;
                             case '4':
-                                  $cat2no = array('fail' => 1,'borderline fail' => 2,'borderline pass' => 3,'pass' => 4,'good pass' => 5);
+                                  $cat2no = ['fail' => 1,'borderline fail' => 2,'borderline pass' => 3,'pass' => 4,'good pass' => 5];
                                 break;
                             case '5':
                                 //automatic
-                                $cat2no = array('unsatisfactory' => 1,'competent' => 2);
+                                $cat2no = ['unsatisfactory' => 1,'competent' => 2];
                                 break;
                             case '6':
-                                $cat2no = array('clear fail' => 1,'borderline' => 2,'clear pass' => 3,'honours pass' => 4);
+                                $cat2no = ['clear fail' => 1,'borderline' => 2,'clear pass' => 3,'honours pass' => 4];
                                 break;
                             case '7':
                                 $cat2no = ['fail' => 1, 'pass' => 2];
@@ -339,10 +339,10 @@ if (!$graded and isset($_POST['submit'])) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $dataset['name'] = 'dataset';
 $dataset['attributes']['paperid'] =  $paperID;
 $dataset['attributes']['module'] =  $moduleID;
 $dataset['attributes']['folder'] =  $folderID;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 $mysqli->close();

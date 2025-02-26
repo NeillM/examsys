@@ -92,7 +92,7 @@ if ($result->num_rows == 0) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </body>

@@ -34,21 +34,21 @@ class save_fail_logsTest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $pid1 = $datagenerator->create_paper(array('papertitle' => 'test formative',
+        $pid1 = $datagenerator->create_paper(['papertitle' => 'test formative',
             'bidirectional' => '1',
             'fullscreen' => '1',
             'paperowner' => 'admin',
             'papertype' => '0',
-            'modulename' => 'Training Module'));
-        $pid2 = $datagenerator->create_paper(array('papertitle' => 'test formative 2',
+            'modulename' => 'Training Module']);
+        $pid2 = $datagenerator->create_paper(['papertitle' => 'test formative 2',
             'bidirectional' => '1',
             'fullscreen' => '1',
             'paperowner' => 'admin',
             'papertype' => '0',
-            'modulename' => 'Training Module'));
+            'modulename' => 'Training Module']);
         $datagenerator = $this->get_datagenerator('incident', 'core');
-        $datagenerator->create_fail(array('userid' => $this->admin['id'], 'paperid' => $pid1['id']));
-        $datagenerator->create_fail(array('userid' => $this->admin['id'], 'paperid' => $pid2['id']));
+        $datagenerator->create_fail(['userid' => $this->admin['id'], 'paperid' => $pid1['id']]);
+        $datagenerator->create_fail(['userid' => $this->admin['id'], 'paperid' => $pid2['id']]);
     }
 
     /**

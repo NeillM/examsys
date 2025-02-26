@@ -34,7 +34,7 @@ class PaperNotes
      */
     public static function get_all_notes_by_paper($paperID, $db)
     {
-        $notes = array();
+        $notes = [];
         // Query any student notes for the current paper
         $result = $db->prepare('SELECT userID FROM student_notes WHERE paper_id = ?');
         $result->bind_param('i', $paperID);
@@ -64,7 +64,7 @@ class PaperNotes
         $result->fetch();
         $result->close();
 
-        return array('note_id' => $note_id, 'note' => $note);
+        return ['note_id' => $note_id, 'note' => $note];
     }
 
     /**

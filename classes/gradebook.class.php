@@ -165,15 +165,15 @@ class gradebook
             $sql->bind_param('i', $pid);
             $sql->execute();
             $sql->bind_result($userid, $studentid, $username, $raw_grade, $adjusted_grade, $classification);
-            $users = array();
+            $users = [];
             while ($sql->fetch()) {
                 if ($paperidtype == self::EXTPAPER) {
                     $uid = $studentid;
                 } else {
                     $uid = $userid;
                 }
-                $users[$uid] = array('raw_grade' => $raw_grade, 'adjusted_grade' => $adjusted_grade,
-                    'classification' => $classification, 'username' => $username);
+                $users[$uid] = ['raw_grade' => $raw_grade, 'adjusted_grade' => $adjusted_grade,
+                    'classification' => $classification, 'username' => $username];
             }
             $gradebook[$paperid] = $users;
             $sql->close();
@@ -196,10 +196,10 @@ class gradebook
             $sql->bind_param('i', $paperid);
             $sql->execute();
             $sql->bind_result($userid, $studentid, $username, $surname, $first_names, $raw_grade, $adjusted_grade, $classification);
-            $users = array();
+            $users = [];
             while ($sql->fetch()) {
-                $users[$userid] = array('student_id' => $studentid, 'raw_grade' => $raw_grade, 'adjusted_grade' => $adjusted_grade,
-                    'classification' => $classification, 'username' => $username, 'surname' => $surname, 'first_names' => $first_names);
+                $users[$userid] = ['student_id' => $studentid, 'raw_grade' => $raw_grade, 'adjusted_grade' => $adjusted_grade,
+                    'classification' => $classification, 'username' => $username, 'surname' => $surname, 'first_names' => $first_names];
             }
             $gradebook[$paperid] = $users;
             $sql->close();
@@ -243,10 +243,10 @@ class gradebook
         $sql->bind_param('i', $modid);
         $sql->execute();
         $sql->bind_result($paperid, $extpaperid, $userid, $studentid, $username, $raw_grade, $adjusted_grade, $classification);
-        $papers = array();
+        $papers = [];
         while ($sql->fetch()) {
-            $users = array('raw_grade' => $raw_grade, 'adjusted_grade' => $adjusted_grade, 'classification' => $classification,
-                'username' => $username);
+            $users = ['raw_grade' => $raw_grade, 'adjusted_grade' => $adjusted_grade, 'classification' => $classification,
+                'username' => $username];
             if ($moduleidtype == self::EXTMODULE) {
                 $papers[$extpaperid][$studentid] = $users;
             } else {

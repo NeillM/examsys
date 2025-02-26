@@ -39,7 +39,7 @@ class outline_authentication
     protected $calling_object;
     protected $session;
     protected $request;
-    public $debug = array();
+    public $debug = [];
     public $debugpointer = 0;
     protected $error = null;
     public $rogoid = false;
@@ -98,7 +98,7 @@ class outline_authentication
 
     public function error_handling($context = null)
     {
-        $context1 = array();
+        $context1 = [];
         if (is_null($context)) {
             // if no array set get currently define variables in this object
             $context = get_defined_vars();
@@ -143,7 +143,7 @@ class outline_authentication
     public function get_new_debug_messages($number = null)
     {
         if (is_null($number)) {
-            $returnarray = array();
+            $returnarray = [];
             while (isset($this->debug[$this->debugpointer])) {
                 $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
             }
@@ -168,7 +168,7 @@ class outline_authentication
     public function register_callback_sections()
     {
         //this is blank so that classes that dont register anything dont break
-        return array();
+        return [];
     }
 
     /**
@@ -182,7 +182,7 @@ class outline_authentication
      */
     public function register_callback($callback, $section, $number, $name, $insert = false)
     {
-        $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
+        $this->callbackarray[] = [$callback, $section, $number, $name, $insert];
     }
 
 
@@ -192,7 +192,7 @@ class outline_authentication
     public function register_callback_routines()
     {
         //this is blank so that classes that dont register anything dont break
-        return array();
+        return [];
     }
 
     /**
@@ -224,7 +224,7 @@ class outline_authentication
             foreach ($this->callbackarray as $callback) {
                 $funcname = $callback[0][1];
                 $where = $callback[1];
-                $data->callbackfunctions[] = array($funcname, $where);
+                $data->callbackfunctions[] = [$funcname, $where];
             }
         }
 

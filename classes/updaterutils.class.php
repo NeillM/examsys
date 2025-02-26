@@ -486,7 +486,7 @@ class UpdaterUtils
             array_splice($cfg, $default_line, 0, $new_lines);
 
             if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-                InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
+                InstallUtils::logWarning([300 => $string['couldnotwrite']]);
             }
 
             if (!empty(ob_list_handlers())) {
@@ -523,7 +523,7 @@ class UpdaterUtils
             $cfg[$founndloc] = $new_line;
 
             if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-                InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
+                InstallUtils::logWarning([300 => $string['couldnotwrite']]);
             }
             ob_flush();
             flush();
@@ -559,7 +559,7 @@ class UpdaterUtils
                 $this->backup_file($cfg_web_root, 'php-tags');
                 $cfg = preg_replace('/\?>\s*$/', '', $cfg);
                 if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-                    InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
+                    InstallUtils::logWarning([300 => $string['couldnotwrite']]);
                 }
             }
         }

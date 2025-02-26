@@ -87,7 +87,7 @@ $user_results = \sort::array_csort($user_results, $sortby, $ordering);
 
 $completed_no = 0;
 $total_score = 0;
-$classifications = array('' => '', 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 'ERROR' => 0, 'pass' => 0, 'fail' => 0);
+$classifications = ['' => '', 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 'ERROR' => 0, 'pass' => 0, 'fail' => 0];
 
 for ($i = 0; $i < $user_no; $i++) {
     if ($user_results[$i]['metadataID'] != '') {   // No attendance
@@ -162,11 +162,11 @@ echo draw_toprightmenu();
 <?php
   //output table heading
 if ($borderline_method) {
-    $table_order = array('' => 16, 'Title' => 45, $string['surname'] => 170, $string['firstnames'] => 270, $string['studentid'] => 80, $string['course'] => 55, $string['total'] => 50, $string['rating'] => 'rating', $string['classification'] => 80, $string['starttime'] => 170, $string['examiner'] => 100);
+    $table_order = ['' => 16, 'Title' => 45, $string['surname'] => 170, $string['firstnames'] => 270, $string['studentid'] => 80, $string['course'] => 55, $string['total'] => 50, $string['rating'] => 'rating', $string['classification'] => 80, $string['starttime'] => 170, $string['examiner'] => 100];
 } else {
-    $table_order = array('' => 16, 'Title' => 45, $string['surname'] => 170, $string['firstnames'] => 270, $string['studentid'] => 80, $string['course'] => 55, $string['total'] => 50, $string['classification'] => 80, $string['starttime'] => 170, $string['examiner'] => 100);
+    $table_order = ['' => 16, 'Title' => 45, $string['surname'] => 170, $string['firstnames'] => 270, $string['studentid'] => 80, $string['course'] => 55, $string['total'] => 50, $string['classification'] => 80, $string['starttime'] => 170, $string['examiner'] => 100];
 }
-  $metadata_cols = array();
+  $metadata_cols = [];
 if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
         if (strrpos($key, 'meta_') !== false) {

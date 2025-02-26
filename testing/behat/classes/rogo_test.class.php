@@ -119,7 +119,7 @@ class rogo_test extends MinkContext
     {
         if (selectors::is_allowed_named($name)) {
             $selector = 'named';
-            $locator = array($name, $value);
+            $locator = [$name, $value];
         } else {
             $selector = $name;
             $locator = $value;
@@ -152,7 +152,7 @@ class rogo_test extends MinkContext
     {
         if (selectors::is_allowed_named($name)) {
             $selector = 'named';
-            $locator = array($name, $value);
+            $locator = [$name, $value];
         } else {
             $selector = $name;
             $locator = $value;
@@ -175,7 +175,7 @@ class rogo_test extends MinkContext
     {
         if (selectors::is_allowed_named($name)) {
             $selector = 'named';
-            $locator = array($name, $value);
+            $locator = [$name, $value];
         } else {
             $selector = $name;
             $locator = $value;

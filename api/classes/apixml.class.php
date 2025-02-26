@@ -39,9 +39,9 @@ class apixml extends \api\apiabstract
     /**
      * Status codes
      */
-    private $statuscodes = array(
+    private $statuscodes = [
         'API_NO_PERMISSION' => 000
-    );
+    ];
     /**
      * Constructor
      * @param string $request - the xml request
@@ -66,7 +66,7 @@ class apixml extends \api\apiabstract
         @$this->data->loadXML($this->xml);
         $schema = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'api' . DIRECTORY_SEPARATOR . 'schema' . DIRECTORY_SEPARATOR . $folder
             . DIRECTORY_SEPARATOR . $type . '.xsd';
-        $errorresp = array();
+        $errorresp = [];
         if (!$this->data->schemaValidate($schema)) {
             $errors = libxml_get_errors();
             foreach ($errors as $error) {
@@ -91,7 +91,7 @@ class apixml extends \api\apiabstract
     public function parse($tasktype, $fields, $actions, $perms, $userid)
     {
         $langpack = new \langpack();
-        $response = array();
+        $response = [];
         $xpath = new \DOMXPath($this->data);
         foreach ($actions as $action) {
             $parentnode = $xpath->query($action);
@@ -103,16 +103,16 @@ class apixml extends \api\apiabstract
                         $item0 = $item->item(0);
                         if (!empty($item0)) {
                             if ($item0->childNodes->length > 1) {
-                                $childarray = array();
+                                $childarray = [];
                                 foreach ($item0->childNodes as $childnode) {
                                     if ($childnode->nodeType != XML_TEXT_NODE) {
                                         $nodevalue = trim($childnode->nodeValue);
                                         if ($childnode->hasAttribute('id')) {
-                                            $childarray[] = array('id' => $childnode->getAttribute('id'),
-                                                'name' => $childnode->nodeName, 'value' => $nodevalue);
+                                            $childarray[] = ['id' => $childnode->getAttribute('id'),
+                                                'name' => $childnode->nodeName, 'value' => $nodevalue];
                                         } else {
-                                            $childarray[] = array('name' => $childnode->nodeName,
-                                                'value' => $nodevalue);
+                                            $childarray[] = ['name' => $childnode->nodeName,
+                                                'value' => $nodevalue];
                                         }
                                     }
                                 }
@@ -127,7 +127,7 @@ class apixml extends \api\apiabstract
                     }
                 } else {
                     $error = true;
-                    $data = array('statuscode' => $this->statuscodes['API_NO_PERMISSION'], 'status' => $langpack->get_string($this->langcomponent, 'nopermission'), 'id' => null);
+                    $data = ['statuscode' => $this->statuscodes['API_NO_PERMISSION'], 'status' => $langpack->get_string($this->langcomponent, 'nopermission'), 'id' => null];
                 }
                 if ($error) {
                     if ($node->hasAttribute('id')) {

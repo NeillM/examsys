@@ -47,14 +47,14 @@ class usermanagementtest extends unittestdatabase
         $this->user = $this->get_user_id('test2');
         $this->module2 = $this->get_module_id('SYSTEM');
         $datagenerator = $this->get_datagenerator('users', 'core');
-        $user = $datagenerator->create_user(array('surname' => 'test3', 'username' => 'unit3', 'grade' => 'TEST2', 'initials' => null,
-            'title' => null, 'email' => null, 'gender' => null, 'first_names' => null, 'yearofstudy' => null, 'sid' => '141516171819'));
+        $user = $datagenerator->create_user(['surname' => 'test3', 'username' => 'unit3', 'grade' => 'TEST2', 'initials' => null,
+            'title' => null, 'email' => null, 'gender' => null, 'first_names' => null, 'yearofstudy' => null, 'sid' => '141516171819']);
         $this->user2 = $user['id'];
         $datagenerator = $this->get_datagenerator('course', 'core');
-        $datagenerator->create_course(array('name' => 'TEST', 'description' => 'Test course', 'schoolid' => $this->school));
-        $datagenerator->create_course(array('name' => 'TEST2', 'description' => 'Test course 2', 'schoolid' => $this->school));
+        $datagenerator->create_course(['name' => 'TEST', 'description' => 'Test course', 'schoolid' => $this->school]);
+        $datagenerator->create_course(['name' => 'TEST2', 'description' => 'Test course 2', 'schoolid' => $this->school]);
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $pid = $datagenerator->create_paper(array('papertitle' => 'Test create formative',
+        $pid = $datagenerator->create_paper(['papertitle' => 'Test create formative',
             'startdate' => '2016-01-25 09:00:00',
             'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
@@ -63,18 +63,18 @@ class usermanagementtest extends unittestdatabase
             'papertype' => '0',
             'externalid' => '123abc456',
             'externalsys' => 'test ExamSys api',
-            'modulename' => 'Training Module'));
-        $pid2 = $datagenerator->create_paper(array('papertitle' => 'Test create osce',
+            'modulename' => 'Training Module']);
+        $pid2 = $datagenerator->create_paper(['papertitle' => 'Test create osce',
             'startdate' => '2016-01-25 09:00:00',
             'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
             'timezone' => 'Europe/London',
             'paperowner' => 'admin',
             'papertype' => '4',
-            'modulename' => 'Training Module'));
+            'modulename' => 'Training Module']);
         $datagenerator = $this->get_datagenerator('log', 'core');
-        $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $pid2['id']));
-        $datagenerator->create_osceoverall(array('userID' => $this->user2, 'q_paper' => $pid['id']));
+        $datagenerator->create_metadata(['userID' => $this->student['id'], 'paperID' => $pid2['id']]);
+        $datagenerator->create_osceoverall(['userID' => $this->user2, 'q_paper' => $pid['id']]);
     }
 
     /**
@@ -83,14 +83,14 @@ class usermanagementtest extends unittestdatabase
      */
     private function create_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->user2 + 1,
             'externalid' => null,
-            'error' => array(),
+            'error' => [],
             'node' => 'create',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -99,13 +99,13 @@ class usermanagementtest extends unittestdatabase
      */
     private function create_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'username' => 'testy',
             'surname' => 'tester',
             'role' => 'Student',
             'course' => 'TEST2',
-            'modules' => array(array('name' => 'moduleid', 'id' => 0, 'value' => $this->module)));
+            'modules' => [['name' => 'moduleid', 'id' => 0, 'value' => $this->module]]];
     }
 
     /**
@@ -114,13 +114,13 @@ class usermanagementtest extends unittestdatabase
      */
     private function create_staff_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'username' => 'staff',
             'surname' => 'staffy',
             'role' => 'Staff',
             'course' => 'University Lecturer',
-            'modules' => array(array('name' => 'moduleid', 'id' => 0, 'value' => $this->module)));
+            'modules' => [['name' => 'moduleid', 'id' => 0, 'value' => $this->module]]];
     }
 
     /**
@@ -129,14 +129,14 @@ class usermanagementtest extends unittestdatabase
      */
     private function update_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->user,
             'externalid' => '00000001',
-            'error' => array(),
+            'error' => [],
             'node' => 'update',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -145,13 +145,13 @@ class usermanagementtest extends unittestdatabase
      */
     private function update_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'id' => $this->user,
             'externalid' => null,
             'surname' => '',
             'forename' => 'test',
-            'modules' => array(array('name' => 'moduleid', 'id' => 0, 'value' => $this->module2)));
+            'modules' => [['name' => 'moduleid', 'id' => 0, 'value' => $this->module2]]];
     }
 
     /**
@@ -160,14 +160,14 @@ class usermanagementtest extends unittestdatabase
      */
     private function delete_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->user,
             'externalid' => '00000001',
             'error' => null,
             'node' => 'delete',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -176,9 +176,9 @@ class usermanagementtest extends unittestdatabase
      */
     private function delete_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
-            'id' => $this->user);
+            'id' => $this->user];
     }
 
     /**
@@ -194,13 +194,13 @@ class usermanagementtest extends unittestdatabase
         $create = $user->create($params, $this->admin['id']);
         $this->assertEquals($responsearray, $create);
         // Check user is enrolled on expected moulde.
-        $querytable = $this->query(array('columns' => array('userID', 'idMod'), 'table' => 'modules_student'));
-        $expectedtable = array (
-            0 => array(
+        $querytable = $this->query(['columns' => ['userID', 'idMod'], 'table' => 'modules_student']);
+        $expectedtable =  [
+            0 => [
                 'userID' => $create['id'],
                 'idMod' => $this->module
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -217,13 +217,13 @@ class usermanagementtest extends unittestdatabase
         $create = $user->create($params, $this->admin['id']);
         $this->assertEquals($responsearray, $create);
         // Check user is enrolled on expected moulde.
-        $querytable = $this->query(array('columns' => array('memberID', 'idMod'), 'table' => 'modules_staff'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['memberID', 'idMod'], 'table' => 'modules_staff']);
+        $expectedtable = [
+            0 => [
                 'memberID' => $create['id'],
                 'idMod' => $this->module
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -317,13 +317,13 @@ class usermanagementtest extends unittestdatabase
         $update = $user->update($params, $this->admin['id']);
         $this->assertEquals($responsearray, $update);
         // Check user is enrolled on expected module.
-        $querytable = $this->query(array('columns' => array('userID', 'idMod'), 'table' => 'modules_student'));
-        $expectedtable = array (
-            0 => array(
+        $querytable = $this->query(['columns' => ['userID', 'idMod'], 'table' => 'modules_student']);
+        $expectedtable =  [
+            0 => [
                 'userID' => $update['id'],
                 'idMod' => $this->module2
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -340,17 +340,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Username.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'username' => '');
+            'username' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('username'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['username'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'username' => 'unit3'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -367,17 +367,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Password.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'password' => '');
+            'password' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('password'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['password'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'password' => '$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -394,17 +394,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Title.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'title' => '');
+            'title' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('title'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['title'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'title' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -421,17 +421,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Forename.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'forename' => '');
+            'forename' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('first_names'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['first_names'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'first_names' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -448,17 +448,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Surname.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'surname' => '');
+            'surname' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('surname'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['surname'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'surname' => 'test3'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -475,17 +475,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Email.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'email' => '');
+            'email' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('email'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['email'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'email' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -502,17 +502,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Course.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'course' => '');
+            'course' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('grade'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['grade'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'grade' => 'TEST2'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -529,17 +529,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Gender.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'gender' => '');
+            'gender' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('gender'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['gender'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'gender' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -556,17 +556,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Year.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'year' => '');
+            'year' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['yearofstudy'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'yearofstudy' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -583,17 +583,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Role.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'role' => '');
+            'role' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'user_roles', 'columns' => ['roleid'], 'where' => [['column' => 'userid', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'roleid' => 4,
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -610,15 +610,15 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Student id.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'studentid' => '');
+            'studentid' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy', 'gender', 'grade', 'email',
-            'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['yearofstudy', 'gender', 'grade', 'email',
+            'surname', 'first_names', 'title', 'password', 'username', 'initials'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'yearofstudy' => null,
                 'gender' => null,
                 'grade' => 'TEST2',
@@ -629,15 +629,15 @@ class usermanagementtest extends unittestdatabase
                 'password' => '$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1',
                 'username' => 'unit3',
                 'initials' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
-        $expectedtable = array(
-                0 => array (
+        $querytable = $this->query(['table' => 'user_roles', 'columns' => ['roleid'], 'where' => [['column' => 'userid', 'value' => $this->user2]]]);
+        $expectedtable = [
+                0 =>  [
                         'roleid' => 4,
-                )
-        );
+                ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -654,17 +654,17 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Initials.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'initials' => '');
+            'initials' => ''];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['initials'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'initials' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -681,15 +681,15 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Modules.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
-            'modules' => array());
+            'modules' => []];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy', 'gender', 'grade', 'email',
-            'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['yearofstudy', 'gender', 'grade', 'email',
+            'surname', 'first_names', 'title', 'password', 'username', 'initials'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'yearofstudy' => null,
                 'gender' => null,
                 'grade' => 'TEST2',
@@ -700,15 +700,15 @@ class usermanagementtest extends unittestdatabase
                 'password' => '$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1',
                 'username' => 'unit3',
                 'initials' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
-        $expectedtable = array(
-                0 => array (
+        $querytable = $this->query(['table' => 'user_roles', 'columns' => ['roleid'], 'where' => [['column' => 'userid', 'value' => $this->user2]]]);
+        $expectedtable = [
+                0 =>  [
                         'roleid' => 4,
-                )
-        );
+                ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -725,19 +725,19 @@ class usermanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
         // Modules.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->user2,
             'password' => '',
             'surname' => 'test3',
             'username' => 'unit3',
             'roles' => 'Student',
-            'course' => 'TEST2');
+            'course' => 'TEST2'];
         $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
-        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy', 'gender', 'grade', 'email',
-            'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['table' => 'users', 'columns' => ['yearofstudy', 'gender', 'grade', 'email',
+            'surname', 'first_names', 'title', 'password', 'username', 'initials'], 'where' => [['column' => 'id', 'value' => $this->user2]]]);
+        $expectedtable = [
+            0 =>  [
                 'yearofstudy' => null,
                 'gender' => null,
                 'grade' => 'TEST2',
@@ -748,15 +748,15 @@ class usermanagementtest extends unittestdatabase
                 'password' => '$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1',
                 'username' => 'unit3',
                 'initials' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('table' => 'user_roles', 'columns' => array('roleid'), 'where' => array(array('column' => 'userid', 'value' => $this->user2))));
-        $expectedtable = array(
-                0 => array (
+        $querytable = $this->query(['table' => 'user_roles', 'columns' => ['roleid'], 'where' => [['column' => 'userid', 'value' => $this->user2]]]);
+        $expectedtable = [
+                0 =>  [
                         'roleid' => 4,
-                )
-        );
+                ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -792,18 +792,18 @@ class usermanagementtest extends unittestdatabase
         $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
         // Check that the remaining user are correct, when we delete a user we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
-        $querytable = $this->query(array('columns' => array('username'), 'table' => 'users', 'where' => array(array('column' => 'user_deleted', 'value' => null, 'operator' => 'IS'))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['columns' => ['username'], 'table' => 'users', 'where' => [['column' => 'user_deleted', 'value' => null, 'operator' => 'IS']]]);
+        $expectedtable = [
+            0 =>  [
                 'username' => 'admin'
-            ),
-            1 => array (
+            ],
+            1 =>  [
                 'username' => 'test1'
-            ),
-            2 => array (
+            ],
+            2 =>  [
                 'username' => 'unit3'
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -824,8 +824,8 @@ class usermanagementtest extends unittestdatabase
         $params['id'] = 0;
         $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
         // Test id not supplied.
-        $params = array(
-            'nodeid' => 1);
+        $params = [
+            'nodeid' => 1];
         $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
     }
 

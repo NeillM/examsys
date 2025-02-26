@@ -49,7 +49,7 @@ class module
      */
     public function get_staff_members($idMod, $db)
     {
-        $members = array();
+        $members = [];
 
         $result = $db->prepare('SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users) WHERE modules_staff.memberID = users.id AND idMod = ? AND user_deleted IS NULL ORDER BY surname, initials');
         $result->bind_param('i', $idMod);
@@ -58,7 +58,7 @@ class module
         $result->bind_result($surname, $initials, $title, $userID);
         while ($result->fetch()) {
             $title = str_replace('Professor', 'Prof', $title);
-            $members[] = array('surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID);
+            $members[] = ['surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID];
         }
         $result->close();
 
@@ -75,7 +75,7 @@ class module
      */
     public function get_student_members($calendar_year, $idMod, $db)
     {
-        $members = array();
+        $members = [];
 
         $result = $db->prepare('SELECT DISTINCT surname, initials, title, users.id, username, student_id 
         FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? ORDER BY surname, initials');
@@ -84,7 +84,7 @@ class module
         $result->store_result();
         $result->bind_result($surname, $initials, $title, $userID, $username, $sid);
         while ($result->fetch()) {
-            $members[] = array('surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID, 'username' => $username, 'studentid' => $sid);
+            $members[] = ['surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID, 'username' => $username, 'studentid' => $sid];
         }
         $result->close();
 
@@ -283,7 +283,7 @@ class module
         $res = $result->execute();
 
         // An array to convert DB fields to lang strings argghhh!!!!
-        $lang_mappings = array(
+        $lang_mappings = [
             'moduleid' => 'moduleid',
             'fullname' => 'name',
             'schoolid' => 'school',
@@ -301,7 +301,7 @@ class module
             'academic_year_start' => 'academicyearstart',
             'externalid' => 'externalid',
             'syncpreviousyear' => 'syncpreviousyear'
-        );
+        ];
 
         if ($res === true) {
             // Log any changes
@@ -401,7 +401,7 @@ class module
      */
     public function get_full_details($idtype, $id, $db, $externalsys = null)
     {
-        $types = array('internal', 'external');
+        $types = ['internal', 'external'];
         if (!in_array($idtype, $types)) {
             return false;
         }
@@ -461,7 +461,7 @@ class module
         }
         $result->close();
 
-        return array(
+        return [
             'idMod' => $idMod,
             'moduleid' => $moduleid,
             'fullname' => $fullname,
@@ -481,7 +481,7 @@ class module
             'academic_year_start' => $academic_year_start,
             'externalid' => $externalid,
             'syncpreviousyear' => $syncpreviousyear
-        );
+        ];
     }
 
     /**
@@ -566,7 +566,7 @@ class module
     public function get_idMod($module_id, $db)
     {
         if (is_array($module_id)) {
-            $ids = array();
+            $ids = [];
 
             $sql = implode("','", $module_id);
             $sql = str_replace("',' ", "','", $sql);
@@ -607,7 +607,7 @@ class module
      */
     public function get_module_list_by_id($db)
     {
-        $modules = array();
+        $modules = [];
 
         $result = $db->prepare('SELECT id, moduleid, fullname FROM modules WHERE mod_deleted IS NULL');
         $result->execute();
@@ -687,7 +687,7 @@ class module
     {
         $userObject = UserObject::get_instance();
 
-        $paper_types = array();
+        $paper_types = [];
 
         if ($idMod == '0') {    // Unused papers.
             if ($show_retired) {
@@ -838,7 +838,7 @@ class module
         $result->execute();
         $result->store_result();
         $result->bind_result($id, $externalid, $deleted);
-        $diff = array();
+        $diff = [];
         while ($result->fetch()) {
             // Mark for delete if not found in external list.
             if (!in_array($externalid, $external)) {
@@ -901,14 +901,14 @@ class module
      */
     public static function get_modules_for_paper($paperid, $userid, $db)
     {
-        $modules = array();
+        $modules = [];
         $result = $db->prepare('SELECT m.moduleid, m.fullname, m.externalid FROM properties_modules pm, modules_student ms, modules m WHERE pm.idMod = ms.idMod AND m.id = pm.idMod AND pm.property_id = ? AND ms.userID = ?');
         $result->bind_param('ii', $paperid, $userid);
         $result->execute();
         $result->store_result();
         $result->bind_result($moduleid, $fullname, $externalid);
         while ($result->fetch()) {
-            $modules[] = array('moduleid' => $moduleid, 'fullname' => $fullname, 'externalid' => $externalid);
+            $modules[] = ['moduleid' => $moduleid, 'fullname' => $fullname, 'externalid' => $externalid];
         }
         $result->close();
         return $modules;
@@ -943,7 +943,7 @@ class module
      */
     public static function get_sync_previous_year_modules($sms)
     {
-        $modules = array();
+        $modules = [];
         $configObject = Config::get_instance();
         $result = $configObject->db->prepare('SELECT externalid FROM modules WHERE sms = ? and syncpreviousyear = 1');
         $result->bind_param('s', $sms);
@@ -979,7 +979,7 @@ class module
         $results->execute();
         $results->store_result();
         $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title, $username);
-        $student_object = array();
+        $student_object = [];
 
         while ($results->fetch()) {
             $student_object[$userID]['user_ID'] = $userID;

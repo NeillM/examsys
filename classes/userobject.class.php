@@ -380,7 +380,7 @@ class UserObject extends RogoStaticSingleton
     public function get_staff_modules()
     {
 
-        if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+        if (!$this->has_role(['Staff', 'Admin', 'SysAdmin'])) {
             // This is not a staff user, so they cannot be on any modules.
             return [];
         }
@@ -401,7 +401,7 @@ class UserObject extends RogoStaticSingleton
      */
     public function get_staff_team_modules()
     {
-        if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+        if (!$this->has_role(['Staff', 'Admin', 'SysAdmin'])) {
             //this is not a staff user so it cant be on any modules
             return false;
         }
@@ -439,7 +439,7 @@ class UserObject extends RogoStaticSingleton
      */
     public function is_staff_user_on_module($moduleID)
     {
-        if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+        if (!$this->has_role(['Staff', 'Admin', 'SysAdmin'])) {
             //this is not a staff user so it cant be on any modules
             return false;
         }
@@ -481,7 +481,7 @@ class UserObject extends RogoStaticSingleton
      */
     public function load_staff_modules()
     {
-        $this->staffModules = array();
+        $this->staffModules = [];
 
         if ($this->has_role('Admin')) {
             $result = $this->db->prepare('SELECT idMod, moduleID
@@ -519,7 +519,7 @@ class UserObject extends RogoStaticSingleton
      */
     public function load_staff_team_modules()
     {
-        $this->staffTeamModules = array();
+        $this->staffTeamModules = [];
 
         $standards_setter_sql = '';
 
@@ -689,9 +689,9 @@ class UserObject extends RogoStaticSingleton
      *
      * @return array of staff module that this user has access to.
      */
-    public function get_staff_accessable_modules($additional_mods = array())
+    public function get_staff_accessable_modules($additional_mods = [])
     {
-        $staff_modules_list = array();
+        $staff_modules_list = [];
 
         $staff_modules_sql = implode(',', array_keys($this->get_staff_modules()));
         $default_modules = array_keys($this->get_staff_modules());
@@ -699,7 +699,7 @@ class UserObject extends RogoStaticSingleton
         $new_array = array_merge($default_modules, $additional_mods);
         $staff_modules_sql = implode(',', array_unique($new_array));
 
-        if ($staff_modules_sql != '' or $this->has_role(array('SysAdmin', 'Admin'))) {
+        if ($staff_modules_sql != '' or $this->has_role(['SysAdmin', 'Admin'])) {
             if ($this->has_role('SysAdmin')) {
                 $sql = 'SELECT DISTINCT modules.id, moduleid, fullname, schools.code, school FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleID';
             } elseif ($this->has_role('Admin')) {
@@ -741,7 +741,7 @@ class UserObject extends RogoStaticSingleton
      */
     public function load_student_modules()
     {
-        $this->studentModules = array();
+        $this->studentModules = [];
 
         // studentmodule year -> module ->decode
         $result = $this->db->prepare('SELECT idMod, moduleID, calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID'); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
@@ -877,9 +877,9 @@ class UserObject extends RogoStaticSingleton
 
         if ($this->has_role('SysAdmin')) {
             $this->store_original_user();
-            $this->roles          = array();
-            $this->staffModules   = array();
-            $this->studentModules = array();
+            $this->roles          = [];
+            $this->staffModules   = [];
+            $this->studentModules = [];
             $this->load($userid);
             $this->impersonate    = true;
         } else {
@@ -1012,7 +1012,7 @@ class UserObject extends RogoStaticSingleton
 
         $configObject = Config::get_instance();
 
-        $getback = array('cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd', 'cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd', 'cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_internal_user', 'cfg_db_internal_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database');
+        $getback = ['cfg_db_sysadmin_user', 'cfg_db_sysadmin_passwd', 'cfg_db_admin_user', 'cfg_db_admin_passwd', 'cfg_db_staff_user', 'cfg_db_staff_passwd', 'cfg_db_student_user', 'cfg_db_student_passwd', 'cfg_db_external_user', 'cfg_db_external_passwd', 'cfg_db_internal_user', 'cfg_db_internal_passwd', 'cfg_db_inv_user', 'cfg_db_inv_passwd', 'cfg_db_database'];
 
         $arr = $this->configObj->get($getback);
         foreach ($arr as $k => $v) {
@@ -1022,7 +1022,7 @@ class UserObject extends RogoStaticSingleton
         // Select the aproprate database user
         if ($this->has_role('SysAdmin')) {
             $result = $this->db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
-        } elseif ($this->has_role(array('Staff', 'Admin'))) { // Process staff first to get higher priority than students
+        } elseif ($this->has_role(['Staff', 'Admin'])) { // Process staff first to get higher priority than students
             $result = $this->db->change_user($cfg_db_staff_user, $cfg_db_staff_passwd, $cfg_db_database);
         } elseif ($this->has_role('Student')) {
             $result = $this->db->change_user($cfg_db_student_user, $cfg_db_student_passwd, $cfg_db_database);

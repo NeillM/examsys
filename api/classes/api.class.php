@@ -194,9 +194,9 @@ class api
         // Validate request.
         $errorresp = $this->api->validate($folder, $type);
         if (count($errorresp) > 0) {
-            return array('BAD', $errorresp);
+            return ['BAD', $errorresp];
         } else {
-            return array('OK', $this->api->getdata());
+            return ['OK', $this->api->getdata()];
         }
     }
 

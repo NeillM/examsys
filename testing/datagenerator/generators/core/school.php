@@ -48,8 +48,8 @@ class school extends generator
             throw new data_error('facultyID must be provided');
         }
         $schoolscreated = ++self::$schoolscreated;
-        $defaults = array('school' => 'School ' . $schoolscreated,'code' => null, 'externalid' => null, 'externalsys' => null,
-            'facultyID' => $parameters['facultyID']);
+        $defaults = ['school' => 'School ' . $schoolscreated,'code' => null, 'externalid' => null, 'externalsys' => null,
+            'facultyID' => $parameters['facultyID']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $schoolid = SchoolUtils::add_school($parameters['facultyID'], $settings['school'], $this->db, $settings['code'], $settings['externalid'], $settings['externalsys']);
         if (!$schoolid) {

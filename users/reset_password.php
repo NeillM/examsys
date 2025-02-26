@@ -39,8 +39,8 @@ $mysqli = DBUtils::get_mysqli_link(
 );
 $password = $password_confirm = $email = '';
 $message = '';
-$critical_errors = array();
-$errors = array();
+$critical_errors = [];
+$errors = [];
 $token = '';
 $form_util = new FormUtils();
 // Check if we've been passed a token
@@ -63,7 +63,7 @@ if ($token == '') {
 
 if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] != '') {
     // Process form submission
-    $errors = $form_util->check_required(array('email' => $string['emailaddress'], 'password' => $string['password'], 'password_confirm' => $string['passwordconfirm']));
+    $errors = $form_util->check_required(['email' => $string['emailaddress'], 'password' => $string['password'], 'password_confirm' => $string['passwordconfirm']]);
     if (!$form_util->is_email($_POST['email'])) {
         $email = $_POST['email'];
         $errors[] = $string['emailaddressinvalid'];
@@ -233,7 +233,7 @@ if ($message == '') {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/resetpasswordinit.min.js"></script>
 </body>

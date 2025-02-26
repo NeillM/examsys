@@ -38,7 +38,7 @@ $paper_title    = $propertyObj->get_paper_title();
 header('Pragma: public');
 header('Content-type: application/octet-stream');
 header('Content-Disposition: attachment; filename="' . \file_handler::make_filename_safe($paper_title) . '.csv"');
-$log_array = array();
+$log_array = [];
 $hits = 0;
 $user_no = 0;
 // Capture the log data first.

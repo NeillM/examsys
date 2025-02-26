@@ -259,7 +259,7 @@ class PaperProperties
             return [];
         }
 
-        $properties = array();
+        $properties = [];
         while ($paper_results->fetch()) {
             $property_object = new PaperProperties($db);
             $property_object->set_property_id($property_id);
@@ -433,7 +433,7 @@ class PaperProperties
         $this->set_display_end_date();
         $this->set_display_end_time();
 
-        $this->changes = array();
+        $this->changes = [];
 
         $this->load_summative_lock();
 
@@ -452,75 +452,75 @@ class PaperProperties
         $userObject   = UserObject::get_instance();
         $graded = $this->isGraded();
         // Set common updates parameters.
-        $params = array();
-        $params['display_correct_answer'] = array('s', $this->display_correct_answer);
-        $params['display_students_response'] = array('s', $this->display_students_response);
-        $params['display_question_mark'] = array('s', $this->display_question_mark);
-        $params['display_feedback'] = array('s', $this->display_feedback);
-        $params['external_review_deadline'] = array('s', $this->external_review_deadline);
-        $params['internal_review_deadline'] = array('s', $this->internal_review_deadline);
-        $params['recache_marks'] = array('i', $this->recache_marks);
+        $params = [];
+        $params['display_correct_answer'] = ['s', $this->display_correct_answer];
+        $params['display_students_response'] = ['s', $this->display_students_response];
+        $params['display_question_mark'] = ['s', $this->display_question_mark];
+        $params['display_feedback'] = ['s', $this->display_feedback];
+        $params['external_review_deadline'] = ['s', $this->external_review_deadline];
+        $params['internal_review_deadline'] = ['s', $this->internal_review_deadline];
+        $params['recache_marks'] = ['i', $this->recache_marks];
 
         // Set update parameters.
         if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
             if (!$graded) {
-                $params['marking'] = array('s', $this->marking);
-                $params['pass_mark'] = array('i', $this->pass_mark);
-                $params['distinction_mark'] = array('i', $this->distinction_mark);
+                $params['marking'] = ['s', $this->marking];
+                $params['pass_mark'] = ['i', $this->pass_mark];
+                $params['distinction_mark'] = ['i', $this->distinction_mark];
             }
-        } elseif ($configObject->get_setting('core', 'cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
+        } elseif ($configObject->get_setting('core', 'cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(['Admin', 'SysAdmin'])) {
             // Non admin users cannot delete papers when summative management enabled so stop paper title change when non admin tries to delete a paper.
             if (is_null($this->get_deleted())) {
-                $params['paper_title'] = array('s', $this->paper_title);
+                $params['paper_title'] = ['s', $this->paper_title];
             }
-            $params['paper_prologue'] = array('s', $this->paper_prologue);
-            $params['paper_postscript'] = array('s', $this->paper_postscript);
-            $params['bgcolor'] = array('s', $this->bgcolor);
-            $params['fgcolor'] = array('s', $this->fgcolor);
-            $params['themecolor'] = array('s', $this->themecolor);
-            $params['labelcolor'] = array('s', $this->labelcolor);
-            $params['fullscreen'] = array('s', $this->fullscreen);
-            $params['marking'] = array('s', $this->marking);
-            $params['bidirectional'] = array('s', $this->bidirectional);
-            $params['pass_mark'] = array('i', $this->pass_mark);
-            $params['distinction_mark'] = array('i', $this->distinction_mark);
-            $params['folder'] = array('s',$this->folder);
-            $params['rubric'] = array('s',$this->rubric);
-            $params['calculator'] = array('i',$this->calculator);
-            $params['hide_if_unanswered'] = array('s',$this->hide_if_unanswered);
-            $params['sound_demo'] = array('s',$this->sound_demo);
-            $params['password'] = array('s',$this->password);
+            $params['paper_prologue'] = ['s', $this->paper_prologue];
+            $params['paper_postscript'] = ['s', $this->paper_postscript];
+            $params['bgcolor'] = ['s', $this->bgcolor];
+            $params['fgcolor'] = ['s', $this->fgcolor];
+            $params['themecolor'] = ['s', $this->themecolor];
+            $params['labelcolor'] = ['s', $this->labelcolor];
+            $params['fullscreen'] = ['s', $this->fullscreen];
+            $params['marking'] = ['s', $this->marking];
+            $params['bidirectional'] = ['s', $this->bidirectional];
+            $params['pass_mark'] = ['i', $this->pass_mark];
+            $params['distinction_mark'] = ['i', $this->distinction_mark];
+            $params['folder'] = ['s',$this->folder];
+            $params['rubric'] = ['s',$this->rubric];
+            $params['calculator'] = ['i',$this->calculator];
+            $params['hide_if_unanswered'] = ['s',$this->hide_if_unanswered];
+            $params['sound_demo'] = ['s',$this->sound_demo];
+            $params['password'] = ['s',$this->password];
         } else {
-            $params['paper_title'] = array('s', $this->paper_title);
-            $params['paper_type'] = array('s', $this->paper_type);
-            $params['paper_prologue'] = array('s', $this->paper_prologue);
-            $params['paper_postscript'] = array('s', $this->paper_postscript);
-            $params['bgcolor'] = array('s', $this->bgcolor);
-            $params['fgcolor'] = array('s', $this->fgcolor);
-            $params['themecolor'] = array('s', $this->themecolor);
-            $params['labelcolor'] = array('s', $this->labelcolor);
-            $params['fullscreen'] = array('s', $this->fullscreen);
-            $params['bidirectional'] = array('s', $this->bidirectional);
-            $params['folder'] = array('s', $this->folder);
-            $params['labs'] = array('s', $this->labs);
-            $params['rubric'] = array('s', $this->rubric);
-            $params['calculator'] = array('i', $this->calculator);
-            $params['hide_if_unanswered'] = array('s', $this->hide_if_unanswered);
-            $params['sound_demo'] = array('s', $this->sound_demo);
-            $params['password'] = array('s', $this->password);
-            $params['deleted'] = array('i', $this->deleted);
+            $params['paper_title'] = ['s', $this->paper_title];
+            $params['paper_type'] = ['s', $this->paper_type];
+            $params['paper_prologue'] = ['s', $this->paper_prologue];
+            $params['paper_postscript'] = ['s', $this->paper_postscript];
+            $params['bgcolor'] = ['s', $this->bgcolor];
+            $params['fgcolor'] = ['s', $this->fgcolor];
+            $params['themecolor'] = ['s', $this->themecolor];
+            $params['labelcolor'] = ['s', $this->labelcolor];
+            $params['fullscreen'] = ['s', $this->fullscreen];
+            $params['bidirectional'] = ['s', $this->bidirectional];
+            $params['folder'] = ['s', $this->folder];
+            $params['labs'] = ['s', $this->labs];
+            $params['rubric'] = ['s', $this->rubric];
+            $params['calculator'] = ['i', $this->calculator];
+            $params['hide_if_unanswered'] = ['s', $this->hide_if_unanswered];
+            $params['sound_demo'] = ['s', $this->sound_demo];
+            $params['password'] = ['s', $this->password];
+            $params['deleted'] = ['i', $this->deleted];
             if (!$graded) {
-                $params['start_date'] = array('i', $this->start_date);
-                $params['end_date'] = array('i', $this->end_date);
-                $params['timezone'] = array('s', $this->timezone);
-                $params['marking'] = array('s', $this->marking);
-                $params['pass_mark'] = array('i', $this->pass_mark);
-                $params['distinction_mark'] = array('i',  $this->distinction_mark);
-                $params['exam_duration'] = array('i', $this->exam_duration);
-                $params['calendar_year'] = array('i', $this->calendar_year);
+                $params['start_date'] = ['i', $this->start_date];
+                $params['end_date'] = ['i', $this->end_date];
+                $params['timezone'] = ['s', $this->timezone];
+                $params['marking'] = ['s', $this->marking];
+                $params['pass_mark'] = ['i', $this->pass_mark];
+                $params['distinction_mark'] = ['i',  $this->distinction_mark];
+                $params['exam_duration'] = ['i', $this->exam_duration];
+                $params['calendar_year'] = ['i', $this->calendar_year];
                 if ($userObject->has_role('SysAdmin')) {
-                    $params['externalid'] = array('s', $this->externalid);
-                    $params['externalsys'] = array('s', $this->externalsys);
+                    $params['externalid'] = ['s', $this->externalid];
+                    $params['externalsys'] = ['s', $this->externalsys];
                 }
             }
         }
@@ -617,7 +617,7 @@ class PaperProperties
             if ($q_type != 'info') {
                 $q_no++;
             }
-            $this->questions[] = array('q_id' => $q_id, 'q_no' => $q_no, 'type' => $q_type, 'screen' => $screen);
+            $this->questions[] = ['q_id' => $q_id, 'q_no' => $q_no, 'type' => $q_type, 'screen' => $screen];
         }
         $paper_results->close();
     }
@@ -664,7 +664,7 @@ class PaperProperties
 
     private function load_externals()
     {
-        $external_list = array();
+        $external_list = [];
 
         $result = $this->db->prepare("SELECT reviewerID, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND paperID = ? AND type = 'external'");
         $property_id = $this->get_property_id();
@@ -681,7 +681,7 @@ class PaperProperties
 
     private function load_internals()
     {
-        $internal_list = array();
+        $internal_list = [];
 
         $result = $this->db->prepare("SELECT reviewerID, title, initials, surname FROM properties_reviewers, users WHERE properties_reviewers.reviewerID = users.id AND paperID = ? AND type = 'internal'");
         $property_id = $this->get_property_id();
@@ -830,7 +830,7 @@ class PaperProperties
         $this->paper_title = $paper_title;
 
         if ($old_paper_title != $paper_title) {
-            $this->changes[] = array('old' => $old_paper_title, 'new' => $paper_title, 'part' => 'name');
+            $this->changes[] = ['old' => $old_paper_title, 'new' => $paper_title, 'part' => 'name'];
         }
     }
 
@@ -873,7 +873,7 @@ class PaperProperties
         $this->start_date = $start_date;
 
         if ($old_start_date != $start_date) {
-            $this->changes[] = array('old' => $old_start_date, 'new' => $start_date, 'part' => 'startdate');
+            $this->changes[] = ['old' => $old_start_date, 'new' => $start_date, 'part' => 'startdate'];
         }
     }
 
@@ -967,7 +967,7 @@ class PaperProperties
         $this->end_date = $end_date;
 
         if ($old_end_date != $end_date) {
-            $this->changes[] = array('old' => $old_end_date, 'new' => $end_date, 'part' => 'enddate');
+            $this->changes[] = ['old' => $old_end_date, 'new' => $end_date, 'part' => 'enddate'];
         }
     }
 
@@ -1039,7 +1039,7 @@ class PaperProperties
         $this->timezone = $timezone;
 
         if ($old_timezone != $timezone) {
-            $this->changes[] = array('old' => $old_timezone, 'new' => $timezone, 'part' => 'timezone');
+            $this->changes[] = ['old' => $old_timezone, 'new' => $timezone, 'part' => 'timezone'];
         }
     }
 
@@ -1061,7 +1061,7 @@ class PaperProperties
         $this->paper_type = $paper_type;
 
         if ($old_paper_type != $paper_type) {
-            $this->changes[] = array('old' => $old_paper_type, 'new' => $paper_type, 'part' => 'papertype');
+            $this->changes[] = ['old' => $old_paper_type, 'new' => $paper_type, 'part' => 'papertype'];
         }
     }
 
@@ -1083,7 +1083,7 @@ class PaperProperties
         $this->paper_prologue = $paper_prologue;
 
         if ($old_paper_prologue != $paper_prologue) {
-            $this->changes[] = array('old' => $old_paper_prologue, 'new' => $paper_prologue, 'part' => 'prologue');
+            $this->changes[] = ['old' => $old_paper_prologue, 'new' => $paper_prologue, 'part' => 'prologue'];
         }
     }
 
@@ -1105,7 +1105,7 @@ class PaperProperties
         $this->paper_postscript = $paper_postscript;
 
         if ($old_paper_postscript != $paper_postscript) {
-            $this->changes[] = array('old' => $old_paper_postscript, 'new' => $paper_postscript, 'part' => 'postscript');
+            $this->changes[] = ['old' => $old_paper_postscript, 'new' => $paper_postscript, 'part' => 'postscript'];
         }
     }
 
@@ -1127,7 +1127,7 @@ class PaperProperties
         $this->bgcolor = $bgcolor;
 
         if ($old_bgcolor != $bgcolor) {
-            $this->changes[] = array('old' => $old_bgcolor, 'new' => $bgcolor, 'part' => 'background');
+            $this->changes[] = ['old' => $old_bgcolor, 'new' => $bgcolor, 'part' => 'background'];
         }
     }
 
@@ -1149,7 +1149,7 @@ class PaperProperties
         $this->fgcolor = $fgcolor;
 
         if ($old_fgcolor != $fgcolor) {
-            $this->changes[] = array('old' => $old_fgcolor, 'new' => $fgcolor, 'part' => 'foreground');
+            $this->changes[] = ['old' => $old_fgcolor, 'new' => $fgcolor, 'part' => 'foreground'];
         }
     }
 
@@ -1171,7 +1171,7 @@ class PaperProperties
         $this->themecolor = $themecolor;
 
         if ($old_themecolor != $themecolor) {
-            $this->changes[] = array('old' => $old_themecolor, 'new' => $themecolor, 'part' => 'theme');
+            $this->changes[] = ['old' => $old_themecolor, 'new' => $themecolor, 'part' => 'theme'];
         }
     }
 
@@ -1193,7 +1193,7 @@ class PaperProperties
         $this->labelcolor = $labelcolor;
 
         if ($old_labelcolor != $labelcolor) {
-            $this->changes[] = array('old' => $old_labelcolor, 'new' => $labelcolor, 'part' => 'labelsnotes');
+            $this->changes[] = ['old' => $old_labelcolor, 'new' => $labelcolor, 'part' => 'labelsnotes'];
         }
     }
 
@@ -1218,7 +1218,7 @@ class PaperProperties
         $this->fullscreen = $fullscreen;
 
         if ($old_fullscreen != $fullscreen) {
-            $this->changes[] = array('old' => $old_fullscreen, 'new' => $fullscreen, 'part' => 'display');
+            $this->changes[] = ['old' => $old_fullscreen, 'new' => $fullscreen, 'part' => 'display'];
         }
     }
 
@@ -1240,7 +1240,7 @@ class PaperProperties
         $this->marking = $marking;
 
         if ($old_marking != $marking) {
-            $this->changes[] = array('old' => $old_marking, 'new' => $marking, 'part' => 'marking');
+            $this->changes[] = ['old' => $old_marking, 'new' => $marking, 'part' => 'marking'];
         }
     }
 
@@ -1262,7 +1262,7 @@ class PaperProperties
         $this->bidirectional = $bidirectional;
 
         if ($old_bidirectional != $bidirectional) {
-            $this->changes[] = array('old' => $old_bidirectional, 'new' => $bidirectional, 'part' => 'navigation');
+            $this->changes[] = ['old' => $old_bidirectional, 'new' => $bidirectional, 'part' => 'navigation'];
         }
     }
 
@@ -1305,7 +1305,7 @@ class PaperProperties
         $this->pass_mark = $pass_mark;
 
         if ($old_pass_mark != $pass_mark) {
-            $this->changes[] = array('old' => $old_pass_mark, 'new' => $pass_mark, 'part' => 'passmark');
+            $this->changes[] = ['old' => $old_pass_mark, 'new' => $pass_mark, 'part' => 'passmark'];
         }
     }
 
@@ -1327,7 +1327,7 @@ class PaperProperties
         $this->distinction_mark = $distinction_mark;
 
         if ($old_distinction_mark != $distinction_mark) {
-            $this->changes[] = array('old' => $old_distinction_mark, 'new' => $distinction_mark, 'part' => 'distinction');
+            $this->changes[] = ['old' => $old_distinction_mark, 'new' => $distinction_mark, 'part' => 'distinction'];
         }
     }
 
@@ -1365,7 +1365,7 @@ class PaperProperties
         $this->folder = $folder;
 
         if ($old_folder != $folder) {
-            $this->changes[] = array('old' => $old_folder, 'new' => $folder, 'part' => 'folder');
+            $this->changes[] = ['old' => $old_folder, 'new' => $folder, 'part' => 'folder'];
         }
     }
 
@@ -1398,7 +1398,7 @@ class PaperProperties
         $this->labs = $labs ?? '';
 
         if ($old_labs != $labs) {
-            $this->changes[] = array('old' => $old_labs, 'new' => $labs, 'part' => 'labs');
+            $this->changes[] = ['old' => $old_labs, 'new' => $labs, 'part' => 'labs'];
         }
     }
 
@@ -1420,7 +1420,7 @@ class PaperProperties
         $this->rubric = $rubric;
 
         if ($old_rubric != $rubric) {
-            $this->changes[] = array('old' => $old_rubric, 'new' => $rubric, 'part' => 'rubric');
+            $this->changes[] = ['old' => $old_rubric, 'new' => $rubric, 'part' => 'rubric'];
         }
     }
 
@@ -1442,7 +1442,7 @@ class PaperProperties
         $this->calculator = $calculator;
 
         if ($old_calculator != $calculator) {
-            $this->changes[] = array('old' => $old_calculator, 'new' => $calculator, 'part' => 'displaycalculator');
+            $this->changes[] = ['old' => $old_calculator, 'new' => $calculator, 'part' => 'displaycalculator'];
         }
     }
 
@@ -1499,7 +1499,7 @@ class PaperProperties
         $this->exam_duration = $exam_duration;
 
         if ($old_exam_duration != $exam_duration) {
-            $this->changes[] = array('old' => $old_exam_duration, 'new' => $exam_duration, 'part' => 'duration');
+            $this->changes[] = ['old' => $old_exam_duration, 'new' => $exam_duration, 'part' => 'duration'];
         }
     }
 
@@ -1598,9 +1598,9 @@ class PaperProperties
 
         if ($old_display_correct_answer != $display_correct_answer) {
             if ($this->get_paper_type() == '6') {
-                $this->changes[] = array('old' => $old_display_correct_answer, 'new' => $display_correct_answer, 'part' => 'photos');
+                $this->changes[] = ['old' => $old_display_correct_answer, 'new' => $display_correct_answer, 'part' => 'photos'];
             } else {
-                $this->changes[] = array('old' => $old_display_correct_answer, 'new' => $display_correct_answer, 'part' => 'correctanswerhighlight');
+                $this->changes[] = ['old' => $old_display_correct_answer, 'new' => $display_correct_answer, 'part' => 'correctanswerhighlight'];
             }
         }
     }
@@ -1623,7 +1623,7 @@ class PaperProperties
         $this->display_question_mark = $display_question_mark;
 
         if ($old_display_question_mark != $display_question_mark) {
-            $this->changes[] = array('old' => $old_display_question_mark, 'new' => $display_question_mark, 'part' => 'review');
+            $this->changes[] = ['old' => $old_display_question_mark, 'new' => $display_question_mark, 'part' => 'review'];
         }
     }
 
@@ -1645,7 +1645,7 @@ class PaperProperties
         $this->display_students_response = $display_students_response;
 
         if ($old_display_students_response != $display_students_response) {
-            $this->changes[] = array('old' => $old_display_students_response, 'new' => $display_students_response, 'part' => 'ticks_crosses');
+            $this->changes[] = ['old' => $old_display_students_response, 'new' => $display_students_response, 'part' => 'ticks_crosses'];
         }
     }
 
@@ -1667,7 +1667,7 @@ class PaperProperties
         $this->display_feedback = $display_feedback;
 
         if ($display_feedback != $old_display_feedback) {
-            $this->changes[] = array('old' => $old_display_feedback, 'new' => $display_feedback, 'part' => 'textfeedback');
+            $this->changes[] = ['old' => $old_display_feedback, 'new' => $display_feedback, 'part' => 'textfeedback'];
         }
     }
 
@@ -1689,7 +1689,7 @@ class PaperProperties
         $this->hide_if_unanswered = $hide_if_unanswered;
 
         if ($old_hide_if_unanswered != $hide_if_unanswered) {
-            $this->changes[] = array('old' => $old_hide_if_unanswered, 'new' => $hide_if_unanswered, 'part' => 'hideallfeedback');
+            $this->changes[] = ['old' => $old_hide_if_unanswered, 'new' => $hide_if_unanswered, 'part' => 'hideallfeedback'];
         }
     }
 
@@ -1711,7 +1711,7 @@ class PaperProperties
         $this->calendar_year = $calendar_year;
 
         if ($old_calendar_year != $calendar_year) {
-            $this->changes[] = array('old' => $old_calendar_year, 'new' => $calendar_year, 'part' => 'session');
+            $this->changes[] = ['old' => $old_calendar_year, 'new' => $calendar_year, 'part' => 'session'];
         }
     }
 
@@ -1753,7 +1753,7 @@ class PaperProperties
         $this->external_review_deadline = $external_review_deadline;
 
         if ($old_external_review_deadline != $external_review_deadline) {
-            $this->changes[] = array('old' => $old_external_review_deadline, 'new' => $external_review_deadline, 'part' => 'externalreviewdeadline');
+            $this->changes[] = ['old' => $old_external_review_deadline, 'new' => $external_review_deadline, 'part' => 'externalreviewdeadline'];
         }
     }
 
@@ -1775,7 +1775,7 @@ class PaperProperties
         $this->internal_review_deadline = $internal_review_deadline;
 
         if ($old_internal_review_deadline != $internal_review_deadline) {
-            $this->changes[] = array('old' => $old_internal_review_deadline, 'new' => $internal_review_deadline, 'part' => 'internalreviewdeadline');
+            $this->changes[] = ['old' => $old_internal_review_deadline, 'new' => $internal_review_deadline, 'part' => 'internalreviewdeadline'];
         }
     }
 
@@ -1797,7 +1797,7 @@ class PaperProperties
         $this->sound_demo = $sound_demo;
 
         if ($old_sound_demo != $sound_demo) {
-            $this->changes[] = array('old' => $old_sound_demo, 'new' => $sound_demo, 'part' => 'demosoundclip');
+            $this->changes[] = ['old' => $old_sound_demo, 'new' => $sound_demo, 'part' => 'demosoundclip'];
         }
     }
 
@@ -1846,7 +1846,7 @@ class PaperProperties
         }
 
         if ($old_password != $password) {
-            $this->changes[] = array('old' => $old_password, 'new' => $password, 'part' => 'password');
+            $this->changes[] = ['old' => $old_password, 'new' => $password, 'part' => 'password'];
         }
     }
 
@@ -1935,7 +1935,7 @@ class PaperProperties
     private function load_modules()
     {
         $paperID = $this->get_property_id();
-        $this->modules = array();
+        $this->modules = [];
 
         $result = $this->db->prepare('SELECT idMod, moduleid FROM (modules, properties_modules) WHERE idMod = id AND property_id = ?');
         $result->bind_param('i', $paperID);
@@ -2000,7 +2000,7 @@ class PaperProperties
             $this->load_questions();
         }
 
-        $enhancedcalc_ids = array();
+        $enhancedcalc_ids = [];
 
         $paperID = $this->get_property_id();
         $paperType = $this->get_paper_type();
@@ -2035,11 +2035,11 @@ class PaperProperties
 
         // Find unmarked questions.
         if (count($enhancedcalc_ids) > 0) {
-            $this->enhancedcalc_questions = array();
+            $this->enhancedcalc_questions = [];
 
             // Some error states are fatal we should skip over these to avoid an infitie loop trying to mark them,
             // Affected questions will be flagged to the staff member marking.
-            $skiperrorstates = array(-5);
+            $skiperrorstates = [-5];
 
             if ($studentsonly) {
                 $rolesql = \log::get_student_only();
@@ -2140,7 +2140,7 @@ class PaperProperties
             $this->load_questions();
         }
 
-        $textbox_ids = array();
+        $textbox_ids = [];
 
         $paperID = $this->get_property_id();
         $paperType = $this->get_paper_type();
@@ -2244,7 +2244,7 @@ class PaperProperties
         $old_externalid = $this->externalid;
         if ($old_externalid != $externalid) {
             $this->externalid = $externalid;
-            $this->changes[] = array('old' => $old_externalid, 'new' => $externalid, 'part' => 'externalid');
+            $this->changes[] = ['old' => $old_externalid, 'new' => $externalid, 'part' => 'externalid'];
         }
     }
 
@@ -2266,7 +2266,7 @@ class PaperProperties
         $old_externalsys = $this->externalsys;
         if ($old_externalsys != $externalsys) {
             $this->externalsys = $externalsys;
-            $this->changes[] = array('old' => $old_externalsys, 'new' => $externalsys, 'part' => 'externalsys');
+            $this->changes[] = ['old' => $old_externalsys, 'new' => $externalsys, 'part' => 'externalsys'];
         }
     }
 
@@ -2282,7 +2282,7 @@ class PaperProperties
     {
         $paperID = $this->get_property_id();
         // Get how many screens make up the question paper.
-        $screen_data = array();
+        $screen_data = [];
         if ($is_question_preview_mode) {
             $stmt = $this->db->prepare('SELECT 1, q_type, q_id
                                     FROM
@@ -2309,7 +2309,7 @@ class PaperProperties
 
         while ($stmt->fetch()) {
             if ($q_type != 'info') {    // Do not count information blocks.
-                $screen_data[$screen][] = array($q_type, $q_id);
+                $screen_data[$screen][] = [$q_type, $q_id];
             }
         }
         $stmt->free_result();
@@ -2325,7 +2325,7 @@ class PaperProperties
     public function load_reference_materials()
     {
         $paperID = $this->get_property_id();
-        $reference_materials = array();
+        $reference_materials = [];
         $ref_no = 0;
         $max_ref_width = 0;
         $stmt = $this->db->prepare('SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?');
@@ -2345,7 +2345,7 @@ class PaperProperties
             $ref_no++;
         }
         $stmt->close();
-        return array($reference_materials, $max_ref_width);
+        return [$reference_materials, $max_ref_width];
     }
 
     /**
@@ -2438,7 +2438,7 @@ class PaperProperties
         $no_on_screen = 0;
         $old_screen = 0;
         // Build the questions_array
-        $tmp_questions_array = array();
+        $tmp_questions_array = [];
         while ($question_data->fetch()) {
             $q_no++;
             if ($screen != $old_screen) {
@@ -2502,7 +2502,7 @@ class PaperProperties
         );
 
         while ($option_data->fetch()) {
-            $tmp_questions_array[$q_id]['options'][$id_num] = array(
+            $tmp_questions_array[$q_id]['options'][$id_num] = [
                 'correct' => $correct,
                 'option_text' => $option_text,
                 'o_media' => $option_media,
@@ -2512,7 +2512,7 @@ class PaperProperties
                 'marks_correct' => $marks_correct,
                 'marks_incorrect' => $marks_incorrect,
                 'marks_partial' => $marks_partial
-            );
+            ];
         }
         $option_data->free_result();
         $option_data->close();
@@ -2526,7 +2526,7 @@ class PaperProperties
             ksort($options);
             if (empty($options)) {
                 // We must always have at least one set of options.
-                $options[] = array(
+                $options[] = [
                     'correct' => '',
                     'option_text' => '',
                     'o_media' => '',
@@ -2536,7 +2536,7 @@ class PaperProperties
                     'marks_correct' => '',
                     'marks_incorrect' => '',
                     'marks_partial' => '',
-                );
+                ];
             }
             $question['options'] = array_values($options);
             $return_array[$q_no] = $question;
@@ -2836,7 +2836,7 @@ class PaperProperties
             // Get the keyword id.
             $keyword_id = keyword_utils::get_keywordid_for_question($random_q_data['q_id'], $this->db);
             // Generate a random question ID from keywords.
-            $question_ids = array();
+            $question_ids = [];
             $question_data = $this->db->prepare('SELECT DISTINCT k.q_id FROM keywords_question k, questions q WHERE k.q_id = q.q_id AND'
                 . ' k.keywordID = ? AND q.deleted is NULL');
             $question_data->bind_param('i', $keyword_id);
@@ -2960,10 +2960,10 @@ class PaperProperties
      */
     public function get_user_list($startdate, $enddate, $percentile, $studentonly = true, $modules = '')
     {
-        $student_list = array();
+        $student_list = [];
         $userlist = null;
         if ($modules !== '') {
-            $moduleusers = array();
+            $moduleusers = [];
             $calendar_year = $this->get_calendar_year();
             $modules = explode(',', $modules);
             foreach ($modules as $module) {
@@ -3075,14 +3075,14 @@ class PaperProperties
      */
     public function get_paper_assessment_data($course, $startdate, $enddate, $user_list, $studentonly, $demo)
     {
-        $log_array = array();
+        $log_array = [];
         $rowID = 0;
         // Capture the log data.
         $log = log::get_paperlog($this->get_paper_type());
         $assessment = $log->get_assessment_data($this->property_id, $startdate, $enddate, $user_list, $course, $studentonly);
         $old_username = '';
         $old_started = '';
-        $users = array();
+        $users = [];
         foreach ($assessment as $log) {
             if ($old_username != $log['username'] or $old_started != $log['started']) {
                 $rowID++;
@@ -3133,7 +3133,7 @@ class PaperProperties
      */
     public function get_paper_questions()
     {
-        $paper_buffer = array();
+        $paper_buffer = [];
         $configObject = \Config::get_instance();
         $db = $configObject->db;
         $question_no = -1;
@@ -3182,12 +3182,12 @@ class PaperProperties
      */
     protected function paper_stores_user_answers()
     {
-        $stores_user_answers = array(
+        $stores_user_answers = [
             '0' => '0', // Formative.
             '1' => '1', // Progress test.
             '2' => '2', // Summative.
             '3' => '3', // Survey.
-        );
+        ];
         return isset($stores_user_answers[$this->get_paper_type()]);
     }
 
@@ -3197,7 +3197,7 @@ class PaperProperties
      */
     public function isEnabled(): bool
     {
-        $type = array(
+        $type = [
             assessment::TYPE_FORMATIVE => 'formative',
             assessment::TYPE_PROGRESS => 'progress',
             assessment::TYPE_SUMMATIVE => 'summative',
@@ -3205,7 +3205,7 @@ class PaperProperties
             assessment::TYPE_OSCE => 'osce',
             assessment::TYPE_OFFLINE => 'offline',
             assessment::TYPE_PEERREVIEW => 'peer_review'
-        );
+        ];
 
         if (!array_key_exists($this->get_paper_type(), $type)) {
             return false;
@@ -3273,7 +3273,7 @@ class PaperProperties
      */
     public function getMinAvailability(int $duration = -1): int
     {
-        $minduration = array();
+        $minduration = [];
         $calendar_year = $this->get_calendar_year();
         $modules = array_keys($this->get_modules());
         // Get the stored exam duartion if non provided.

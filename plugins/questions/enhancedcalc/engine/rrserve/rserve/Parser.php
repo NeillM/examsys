@@ -143,14 +143,14 @@ class Rserve_Parser {
                 $a = NULL;
                 break;
             case self::XT_VECTOR: // generic vector
-                $a = array();
+                $a = [];
                 while ($i < $eoa) {
                     $a[] = self::parse($buf, $i);
                 }
                 // if the 'names' attribute is set, convert the plain array into a map
                 if ( isset($attr['names']) ) {
                     $names = $attr['names'];
-                    $na = array();
+                    $na = [];
                     $n = count($a);
                     for ($k = 0; $k < $n; $k++) {
                         $na[$names[$k]] = $a[$k];
@@ -184,14 +184,14 @@ class Rserve_Parser {
 
             case self::XT_LANG_NOTAG:
             case self::XT_LIST_NOTAG : // pairlist w/o tags
-                $a = array();
+                $a = [];
                 while ($i < $eoa) $a[] = self::parse($buf, $i);
             break;
 
             case self::XT_LIST_TAG:
             case self::XT_LANG_TAG:
                 // pairlist with tags
-                $a = array();
+                $a = [];
                 while ($i < $eoa) {
                     $val = self::parse($buf, $i);
                     $tag = self::parse($buf, $i);
@@ -200,7 +200,7 @@ class Rserve_Parser {
             break;
 
             case self::XT_ARRAY_INT: // integer array
-                $a = array();
+                $a = [];
                 while ($i < $eoa) {
                     $a[] = int32($r, $i);
                     $i += 4;
@@ -228,7 +228,7 @@ class Rserve_Parser {
             break;
 
             case self::XT_ARRAY_DOUBLE:// double array
-                $a = array();
+                $a = [];
                 while ($i < $eoa) {
                     $a[] = flt64($r, $i);
                     $i += 8;
@@ -239,7 +239,7 @@ class Rserve_Parser {
             break;
 
             case self::XT_ARRAY_STR: // string array
-                $a = array();
+                $a = [];
                 $oi = $i;
                 while ($i < $eoa) {
                     if (ord($r[$i]) == 0) {
@@ -257,7 +257,7 @@ class Rserve_Parser {
                 $n = int32($r, $i);
                 $i += 4;
                 $k = 0;
-                $a = array();
+                $a = [];
                 while ($k < $n) {
                     $v = int8($r, $i++);
                     $a[$k++] = ($v == 1) ? TRUE : (($v == 0) ? FALSE : NULL);
@@ -323,7 +323,7 @@ class Rserve_Parser {
 
 		$offset = $eoa = $i + $rl;
 
-		$result = array();
+		$result = [];
 
 		$result['type'] = self::xtName($ra & 63);
 		$result['length'] =  $rl;
@@ -345,7 +345,7 @@ class Rserve_Parser {
 			return $result;
 		}
 		if ($ra == self::XT_VECTOR) { // generic vector
-			$a = array();
+			$a = [];
 			while ($i < $eoa) {
 				$a[] = self::parseDebug($buf, $i);
 			}
@@ -359,12 +359,12 @@ class Rserve_Parser {
 			$result['contents'] = substr($buf, $oi, $i - $oi);
 		}
 		if ($ra == self::XT_LIST_NOTAG || $ra == self::XT_LANG_NOTAG) { // pairlist w/o tags
-			$a = array();
+			$a = [];
 			while ($i < $eoa) $a[] = self::parseDebug($buf, $i);
 			$result['contents'] = $a;
 		}
 		if ($ra == self::XT_LIST_TAG || $ra == self::XT_LANG_TAG) { // pairlist with tags
-			$a = array();
+			$a = [];
 			while ($i < $eoa) {
 				$val = self::parseDebug($buf, $i);
 				$tag = self::parse($buf, $i);
@@ -373,7 +373,7 @@ class Rserve_Parser {
 			$result['contents'] = $a;
 		}
 		if ($ra == self::XT_ARRAY_INT) { // integer array
-			$a = array();
+			$a = [];
 			while ($i < $eoa) {
 				$a[] = int32($r, $i);
 				$i += 4;
@@ -384,7 +384,7 @@ class Rserve_Parser {
 			$result['contents'] = $a;
 		}
 		if ($ra == self::XT_ARRAY_DOUBLE) { // double array
-			$a = array();
+			$a = [];
 			while ($i < $eoa) {
 				$a[] = flt64($r, $i);
 				$i += 8;
@@ -395,7 +395,7 @@ class Rserve_Parser {
 			$result['contents'] = $a;
 		}
 		if ($ra == self::XT_ARRAY_STR) { // string array
-			$a = array();
+			$a = [];
 			$oi = $i;
 			while ($i < $eoa) {
 				if (ord($r[$i]) == 0) {
@@ -414,7 +414,7 @@ class Rserve_Parser {
 			$result['size'] = $n;
 			$i += 4;
 			$k = 0;
-			$a = array();
+			$a = [];
 			while ($k < $n) {
 				$v = int8($r, $i++);
 				$a[$k] = ($v === 1) ? TRUE : (($v === 0) ? FALSE : NULL);
@@ -468,7 +468,7 @@ class Rserve_Parser {
 				$a =  new Rserve_REXP_Null();
 				break;
 			case self::XT_VECTOR: // generic vector
-				$v = array();
+				$v = [];
 				while ($i < $eoa) {
 					$v[] = self::parseREXP($buf, $i);
 				}
@@ -487,7 +487,7 @@ class Rserve_Parser {
 				break;
 			case self::XT_LIST_NOTAG:
 			case self::XT_LANG_NOTAG: // pairlist w/o tags
-				$v = array();
+				$v = [];
 				while ($i < $eoa) {
 					$v[] = self::parseREXP($buf, $i);
 				}
@@ -498,8 +498,8 @@ class Rserve_Parser {
 			case self::XT_LIST_TAG :
 			case self::XT_LANG_TAG: // pairlist with tags
 				$clasz = ($ra == self::XT_LIST_TAG) ? 'Rserve_REXP_List' : 'Rserve_REXP_Language';
-				$v = array();
-				$names = array();
+				$v = [];
+				$names = [];
 				while ($i < $eoa) {
 					$v[] = self::parseREXP($buf, $i);
 					$names[] = self::parseREXP($buf, $i);
@@ -510,7 +510,7 @@ class Rserve_Parser {
 				break;
 
 			case self::XT_ARRAY_INT: // integer array
-				$v = array();
+				$v = [];
 				while ($i < $eoa) {
 					$v[] = int32($r, $i);
 					$i += 4;
@@ -520,7 +520,7 @@ class Rserve_Parser {
 				break;
 
 			case self::XT_ARRAY_DOUBLE: // double array
-				$v = array();
+				$v = [];
 				while ($i < $eoa) {
 					$v[] = flt64($r, $i);
 					$i += 8;
@@ -530,7 +530,7 @@ class Rserve_Parser {
 				break;
 
 			case self::XT_ARRAY_STR: // string array
-				$v = array();
+				$v = [];
 				$oi = $i;
 				while ($i < $eoa) {
 					if (ord($r[$i]) == 0) {
@@ -547,7 +547,7 @@ class Rserve_Parser {
 				$n = int32($r, $i);
 				$i += 4;
 				$k = 0;
-				$vv = array();
+				$vv = [];
 				while ($k < $n) {
 					$v = int8($r, $i++);
 					$vv[$k] = ($v == 1) ? TRUE : (($v == 0) ? FALSE : NULL);

@@ -277,7 +277,7 @@ class InstallUtils
         return $clean;
     }
 
-    public static function processForm($args = array())
+    public static function processForm($args = [])
     {
         global $string, $cfg_encrypt_salt;
         $configObject = Config::get_instance();
@@ -306,11 +306,11 @@ class InstallUtils
         try {
             if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_port)) {
                 $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-                self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
+                self::displayError(['002' => sprintf($string['errors17'], $mysql_min_ver)], true);
             }
         } catch (Exception $e) {
             // Could not connect to the database.
-            self::displayError(array('005' => sprintf($string['errors20'], $e->getMessage())), true);
+            self::displayError(['005' => sprintf($string['errors20'], $e->getMessage())], true);
         }
 
         if (!self::$cli) {
@@ -321,10 +321,10 @@ class InstallUtils
             self::$cfg_rogo_data = self::getSettings(param::TEXT, true, 'server', 'data');
         }
         if (!file_exists(self::$cfg_rogo_data)) {
-            self::displayError(array('003' => sprintf($string['errors18'], self::$cfg_rogo_data)));
+            self::displayError(['003' => sprintf($string['errors18'], self::$cfg_rogo_data)]);
         }
         if (!is_writable(self::$cfg_rogo_data)) {
-            self::displayError(array('004' => sprintf($string['errors19'], self::$cfg_rogo_data)));
+            self::displayError(['004' => sprintf($string['errors19'], self::$cfg_rogo_data)]);
         }
         self::createDirectories();
 
@@ -435,7 +435,7 @@ class InstallUtils
             self::$cfg_support_email = self::getSettings(param::TEXT, true, 'supportemail');
             self::$paper_anomaly_email = self::getSettings(param::TEXT, true, 'paperanomalyemail');
         }
-        self::$emergency_support_numbers = array();
+        self::$emergency_support_numbers = [];
         for ($i = 1; $i <= 3; $i++) {
             if (!self::$cli) {
                 $supportname = param::optional("emergency_support$i", null, param::TEXT, param::FETCH_POST);
@@ -460,17 +460,17 @@ class InstallUtils
         self::$rogo_path = dirname(__DIR__);
         if (file_exists(self::$rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
             if (!is_writable(self::$rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
-                self::displayError(array(300 => 'Could not write config file!'));
+                self::displayError([300 => 'Could not write config file!']);
             }
         } elseif (!is_writable(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config')) {
-            self::displayError(array(300 => 'Could not write config file!'));
+            self::displayError([300 => 'Could not write config file!']);
         }
 
         //CREATE and populate DB
         self::$db = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, '', self::$cfg_db_port);
 
         if (mysqli_connect_error()) {
-            self::displayError(array('001' => mysqli_connect_error()));
+            self::displayError(['001' => mysqli_connect_error()]);
         }
 
         // Enforce utf8mb4
@@ -486,9 +486,9 @@ class InstallUtils
         }
         $cfg_encrypt_salt = $salt;
 
-        $authentication = array(
-        array('internaldb', array('table' => '', 'username_col' => '', 'passwd_col' => '', 'id_col' => '', 'sql_extra' => '', 'encrypt' => 'SHA-512', 'encrypt_salt' => $cfg_encrypt_salt), 'Internal Database')
-        );
+        $authentication = [
+        ['internaldb', ['table' => '', 'username_col' => '', 'passwd_col' => '', 'id_col' => '', 'sql_extra' => '', 'encrypt' => 'SHA-512', 'encrypt_salt' => $cfg_encrypt_salt], 'Internal Database']
+        ];
         $configObject->set('authentication', $authentication);
 
         InstallUtils::checkDBUsers();
@@ -532,13 +532,13 @@ class InstallUtils
             } catch (Exception $e) {
                 switch ($e->getMessage()) {
                     case 'CANNOT_DOWNLOAD_XML':
-                        self::logWarning(array('600' => $string['cannotdownloadxml']));
+                        self::logWarning(['600' => $string['cannotdownloadxml']]);
                         // This means that we also did not download the language files.
                     case 'CANNOT_DOWNLOAD_ZIP':
-                        self::logWarning(array('601' => $string['cannotdownloadzip']));
+                        self::logWarning(['601' => $string['cannotdownloadzip']]);
                         break;
                     default:
-                        self::logWarning(array('602' => $string['cannotextract']));
+                        self::logWarning(['602' => $string['cannotextract']]);
                         break;
                 }
             }
@@ -620,9 +620,9 @@ class InstallUtils
             OnlineHelp::load_staff_help();
         } catch (Exception $ex) {
             if ($ex->getMessage() === 'CANNOT_FIND') {
-                self::logWarning(array('502' => $string['logwarning2']));
+                self::logWarning(['502' => $string['logwarning2']]);
             } else {
-                self::logWarning(array('501' => $string['logwarning1']));
+                self::logWarning(['501' => $string['logwarning1']]);
             }
         }
         // Student help files.
@@ -630,9 +630,9 @@ class InstallUtils
             OnlineHelp::load_student_help();
         } catch (Exception $ex) {
             if ($ex->getMessage() === 'CANNOT_FIND') {
-                self::logWarning(array('503' => $string['logwarning3']));
+                self::logWarning(['503' => $string['logwarning3']]);
             } else {
-                self::logWarning(array('504' => $string['logwarning4']));
+                self::logWarning(['504' => $string['logwarning4']]);
             }
         }
     }
@@ -642,7 +642,7 @@ class InstallUtils
      */
     public static function createConstraints()
     {
-        $alter = array();
+        $alter = [];
         $alter[] = 'ALTER TABLE sms_imports ADD CONSTRAINT sms_imports_fk0 FOREIGN KEY (academic_year) REFERENCES academic_year(calendar_year)';
         $alter[] = 'ALTER TABLE sessions ADD CONSTRAINT sessions_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)';
         $alter[] = 'ALTER TABLE relationships ADD CONSTRAINT relationships_fk0 FOREIGN KEY (calendar_year) REFERENCES academic_year(calendar_year)';
@@ -716,7 +716,7 @@ class InstallUtils
         $insert->execute();
         $insert->close();
         // Add user psermissions.
-        $permissions = array(
+        $permissions = [
             'assessmentmanagement/create',
             'assessmentmanagement/update',
             'assessmentmanagement/delete',
@@ -739,7 +739,7 @@ class InstallUtils
             'facultymanagement/create',
             'facultymanagement/delete',
            'facultymanagement/update',
-        );
+        ];
         foreach ($permissions as $permission) {
             $insert = self::$db->prepare('INSERT INTO permissions (action) VALUES (?)');
             $insert->bind_param('s', $permission);
@@ -752,8 +752,8 @@ class InstallUtils
         $insert->close();
         // Save json encoded list of timezones.
         $timezones = $timezone_array;
-        $cohorts = array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
-        '301-400', '401-500');
+        $cohorts = ['<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
+        '301-400', '401-500'];
         $configObject = Config::get_instance();
         $configObject->set_db_object(self::$db);
         $configObject->set_setting('paper_timezones', $timezones, Config::TIMEZONES);
@@ -770,7 +770,7 @@ class InstallUtils
         $configObject->set_setting('cfg_gradebook_enabled', 1, Config::BOOLEAN);
         $configObject->set_setting('cfg_api_enabled', 1, Config::BOOLEAN);
         $configObject->set_setting('paper_marks_postive', range(1, 20), Config::CSV);
-        $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), Config::CSV);
+        $configObject->set_setting('paper_marks_negative', [0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10], Config::CSV);
         $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), Config::CSV);
         $configObject->set_setting('paper_mathjax', 1, Config::BOOLEAN);
         $configObject->set_setting('paper_mee', 0, Config::BOOLEAN);
@@ -784,7 +784,7 @@ class InstallUtils
         $configObject->set_setting('cfg_calc_type', 'phpEval', Config::STRING);
         $configObject->set_setting(
             'cfg_calc_settings',
-            array('host' => '', 'port' => '', 'timeout' => '', 'locale' => 'en_GB'),
+            ['host' => '', 'port' => '', 'timeout' => '', 'locale' => 'en_GB'],
             Config::ASSOC
         );
         $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
@@ -801,22 +801,22 @@ class InstallUtils
         $configObject->set_setting('rpt_letters_for_hotspots', false, Config::BOOLEAN);
         $configObject->set_setting(
             'stdset_hofstee_pass',
-            array(
+            [
                 'min_pass' => 0,
                 'max_pass' => 'median',
                 'min_fail' => 0,
                 'max_fail' => 100,
-            ),
+            ],
             Config::ASSOC
         );
         $configObject->set_setting(
             'stdset_hofstee_distinction',
-            array(
+            [
                 'min_pass' => 'median',
                 'max_pass' => 100,
                 'min_fail' => 0,
                 'max_fail' => 100,
-            ),
+            ],
             Config::ASSOC
         );
         $configObject->set_setting('stdset_hofstee_whole_numbers', true, Config::BOOLEAN);
@@ -829,10 +829,10 @@ class InstallUtils
             $contact_count++;
             $configObject->set_setting(
                 'emergency_support_contact' . $contact_count,
-                array(
+                [
                     'name' => $name,
                     'number' => $number
-                ),
+                ],
                 Config::ASSOC
             );
         }
@@ -841,14 +841,14 @@ class InstallUtils
             $i++;
             $configObject->set_setting(
                 'emergency_support_contact' . $i,
-                array(
+                [
                     'name' => '',
                     'number' => ''
-                ),
+                ],
                 Config::ASSOC
             );
         }
-        $configObject->set_setting('support_contact_email', array(self::$cfg_support_email), Config::EMAIL);
+        $configObject->set_setting('support_contact_email', [self::$cfg_support_email], Config::EMAIL);
         $configObject->set_setting('api_oauth_access_lifetime', 1209600, Config::INTEGER);
         $configObject->set_setting('api_oauth_refresh_token_lifetime', 1209600, Config::INTEGER);
         $configObject->set_setting('api_oauth_always_issue_new_refresh_token', true, Config::BOOLEAN);
@@ -856,16 +856,16 @@ class InstallUtils
         $configObject->set_setting('paper_autosave_frequency', 180, Config::INTEGER);
         $configObject->set_setting('paper_autosave_retrylimit', 3, Config::INTEGER);
         $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
-        $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
+        $configObject->set_setting('summative_midexam_clarification', ['invigilators', 'students'], Config::CSV);
         $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
         $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
         $configObject->set_setting('lti_ssl_verifyhost', 2, Config::INTEGER);
         $configObject->set_setting('paper_textbox_editor_default', 'plain', Config::EDITOR);
         $configObject->set_setting('paper_hide_repeat_scenario', 0, Config::BOOLEAN);
-        $filetypes = array();
+        $filetypes = [];
         foreach (media_handler::SUPPORTED as $name => $type) {
             // Threejs and old multimedia types disabled by default.
-            $defaultdisabled = array(questiondata::THREED, questiondata::ARCHIVE, questiondata::MOVIE, questiondata::AUDIO);
+            $defaultdisabled = [questiondata::THREED, questiondata::ARCHIVE, questiondata::MOVIE, questiondata::AUDIO];
             if (in_array($type, $defaultdisabled)) {
                 $filetypes[$name] = 0;
             } else {
@@ -887,7 +887,7 @@ class InstallUtils
         $configObject->set_setting('summative_issuelink', '', Config::URL);
         $configObject->set_setting('summative_issuelink2', '', Config::URL);
         // Paper type configuration.
-        $papertypes = array(
+        $papertypes = [
             'formative' => 1,
             'progress' => 1,
             'summative' => 1,
@@ -895,9 +895,9 @@ class InstallUtils
             'osce' => 1,
             'offline' => 1,
             'peer_review' => 1
-        );
+        ];
         $configObject->set_setting('paper_types', $papertypes, Config::ASSOC);
-        $configObject->set_setting('paper_breaktime_scale', array(5, 10, 25, 33, 50, 100, 200, 300), Config::CSV);
+        $configObject->set_setting('paper_breaktime_scale', [5, 10, 25, 33, 50, 100, 200, 300], Config::CSV);
         $configObject->set_setting('paper_breaktime_mins', 0, Config::BOOLEAN);
         $configObject->set_setting('paper_pause_exam', 0, Config::BOOLEAN);
         $configObject->set_setting('paper_seb_enabled', 1, Config::BOOLEAN);
@@ -909,12 +909,12 @@ class InstallUtils
         $configObject->set_setting('mailer_username', '', Config::STRING);
         $configObject->set_setting('mailer_password', '', Config::STRING);
         $configObject->set_setting('mailer_secure', '', Config::STRING);
-        $anomalypapersettings = array(
+        $anomalypapersettings = [
             'progress' => 0,
             'summative' => 0,
-        );
+        ];
         $configObject->set_setting('paper_anomaly_detection', $anomalypapersettings, Config::ASSOC);
-        $configObject->set_setting('paper_anomaly_email', array(self::$paper_anomaly_email), Config::EMAIL);
+        $configObject->set_setting('paper_anomaly_email', [self::$paper_anomaly_email], Config::EMAIL);
         // Add external systems.
         $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
         $insert->execute();
@@ -938,7 +938,7 @@ class InstallUtils
     public static function updateSysUpdates()
     {
         $current_datetime = date('Y-m-d H:i:s');
-        $updates = array(
+        $updates = [
             'convert_calc_ans_done',
             'sct_fix',
             'textbox_fix',
@@ -954,7 +954,7 @@ class InstallUtils
             'errorstate_signed_log2',
             'errorstate_signed_log3',
             'errorstate_signed_log_late',
-        );
+        ];
         foreach ($updates as $update) {
             $insert = self::$db->prepare('INSERT INTO sys_updates VALUES (?, ?)');
             $insert->bind_param('ss', $update, $current_datetime);
@@ -1040,7 +1040,7 @@ class InstallUtils
         @ob_flush();
         @flush();
         if ($res->num_rows > 0) {
-            self::displayError(array('010' => sprintf($string['displayerror1'], $dbname)));
+            self::displayError(['010' => sprintf($string['displayerror1'], $dbname)]);
         }
         $res->close();
 
@@ -1048,7 +1048,7 @@ class InstallUtils
             // Have to use query here oldvers of php throw an error.
             self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $dbcollation");
         } catch (mysqli_sql_exception $e) {
-            self::displayError(array('011' => $string['displayerror2']));
+            self::displayError(['011' => $string['displayerror2']]);
         }
 
         //select the newly created database
@@ -1063,7 +1063,7 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('012' => $string['displayerror3'] . $e->getMessage() . "<br /> $sql"));
+                self::displayError(['012' => $string['displayerror3'] . $e->getMessage() . "<br /> $sql"]);
                 self::$db->rollback();
             }
         }
@@ -1102,13 +1102,13 @@ class InstallUtils
         $generated_password = $enc->gen_password(false, 16);
         self::$cfg_cron_passwd = $generated_password['password'];
 
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user authentication user' and grant permissions
         try {
             self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".admin_access TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
@@ -1146,20 +1146,20 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
         self::$db->commit();
 
 
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user student user' and grant permissions
         try {
             self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".announcements TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
@@ -1250,18 +1250,18 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
         self::$db->commit();
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user external user' and grant permissions
         try {
             self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_log TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
@@ -1339,19 +1339,19 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
         self::$db->commit();
 
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user internal user' and grant permissions
         try {
             self::$db->query("CREATE USER  '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_internal_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotcreated'] . ' ' . self::$db->error));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotcreated'] . ' ' . self::$db->error]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_log TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
@@ -1396,19 +1396,19 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
         self::$db->commit();
 
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user staff user' and grant permissions
         try {
             self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".* TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
@@ -1512,19 +1512,19 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
         self::$db->commit();
 
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user SCT user' and grant permissions
         try {
             self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".options TO '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "'";
@@ -1551,19 +1551,19 @@ class InstallUtils
             try {
                 self::$db->query($sql);
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
         self::$db->commit();
 
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user Invigilator user' and grant permissions
         try {
             self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".exam_announcements TO '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "'";
@@ -1608,19 +1608,19 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
         self::$db->commit();
 
-        $priv_SQL = array();
+        $priv_SQL = [];
         //create 'database user sysadmin user' and grant permissions
         try {
             self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON ' . $dbname . ".* TO '" . self::$cfg_db_sysadmin_user . "'@'" . self::$cfg_web_host . "'";
@@ -1630,7 +1630,7 @@ class InstallUtils
             self::$db->query("CREATE USER  '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_webservice_passwd . "'");
         } catch (mysqli_sql_exception $e) {
             if (!self::$behat_install && !self::$phpunit_install) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . $e->getMessage()]);
             }
         }
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".* TO '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "'";
@@ -1659,7 +1659,7 @@ class InstallUtils
                 @ob_flush();
                 @flush();
             } catch (mysqli_sql_exception $e) {
-                self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . $e->getMessage()));
+                self::displayError(['013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . $e->getMessage()]);
                 self::$db->rollback();
             }
         }
@@ -1669,7 +1669,7 @@ class InstallUtils
         try {
             self::$db->query('FLUSH PRIVILEGES');
         } catch (mysqli_sql_exception $e) {
-            self::logWarning(array('014' => $string['logwarning20']));
+            self::logWarning(['014' => $string['logwarning20']]);
         }
         self::$db->commit();
         self::$db->autocommit(false);
@@ -1853,7 +1853,7 @@ class InstallUtils
     public static function configFile()
     {
         global $string;
-        $errors = array();
+        $errors = [];
         if (self::config_exists()) {
             $errors['90'] =  $string['errors1'];
             self::displayError($errors);
@@ -1905,8 +1905,8 @@ class InstallUtils
     protected static function createPaperSettings()
     {
         // Categories.
-        $categories = array('general', 'security', 'seb', 'prologue', 'postscript',
-            'rubric', 'feedback', 'reviewers', 'reference');
+        $categories = ['general', 'security', 'seb', 'prologue', 'postscript',
+            'rubric', 'feedback', 'reviewers', 'reference'];
         PaperSettings::createPaperSettingsCategories(self::$db, $categories);
 
         // Setting declarations.
@@ -1949,13 +1949,13 @@ class InstallUtils
         global $string;
 
         // Create default question statuses
-        $statuses = array(
-            array('name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
-            array('name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
-            array('name' => 'Incomplete', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2),
-            array('name' => 'Experimental', 'exclude_marking' => true, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3),
-            array('name' => 'Beta', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4)
-        );
+        $statuses = [
+            ['name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0],
+            ['name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1],
+            ['name' => 'Incomplete', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => false, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 2],
+            ['name' => 'Experimental', 'exclude_marking' => true, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 0, 'colour' => '#808080', 'display_order' => 3],
+            ['name' => 'Beta', 'exclude_marking' => false, 'retired' => false, 'is_default' => false, 'change_locked' => false, 'validate' => true, 'display_warning' => 1, 'colour' => '#000000', 'display_order' => 4]
+        ];
 
         foreach ($statuses as $data) {
             $qs = new QuestionStatus(self::$db, $string, $data);
@@ -1969,7 +1969,7 @@ class InstallUtils
     public static function createDirectories()
     {
         global $string;
-        $errors = array();
+        $errors = [];
         //media
         $mediadirectory = rogo_directory::get_directory('media');
         $mediadirectory->create();
@@ -2032,7 +2032,7 @@ class InstallUtils
     public static function checkDirPermissionsPre()
     {
         global $string;
-        $errors = array();
+        $errors = [];
         self::$rogo_path = dirname(__DIR__);
         if (!is_writable(self::$rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
             if (!is_writable(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config')) {
@@ -2052,7 +2052,7 @@ class InstallUtils
     public static function checkDirPermissionsPost()
     {
         global $string;
-        $errors = array();
+        $errors = [];
         if (!self::$cli) {
             $tmp = param::required('tmpdir', param::TEXT, param::FETCH_POST);
         } else {
@@ -2069,9 +2069,9 @@ class InstallUtils
 
     public static function checkDBUsers()
     {
-        $errors = array();
+        $errors = [];
 
-        $usernames = array('auth' => 300, 'stu' => 301, 'staff' => 302, 'ext' => 303, 'sys' => 304, 'sct' => 305, 'inv' => 306);
+        $usernames = ['auth' => 300, 'stu' => 301, 'staff' => 302, 'ext' => 303, 'sys' => 304, 'sct' => 305, 'inv' => 306];
         foreach ($usernames as $username => $err_code) {
             $test_username = self::$cfg_db_basename . '_' . $username;
             if (self::does_user_exist($test_username)) {
@@ -2096,12 +2096,12 @@ class InstallUtils
             if (self::$cli) {
                 foreach ($error as $errCode => $message) {
                     $filter = FILTER_SANITIZE_STRING;
-                    $options = array(
-                        'options' => array(
+                    $options = [
+                        'options' => [
                             'default' => null,
-                        ),
+                        ],
                         'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
-                    );
+                    ];
                     cli_utils::prompt($string['errors13'] . "$errCode: " . filter_var($message, $filter, $options));
                 }
             } else {
@@ -2141,17 +2141,17 @@ class InstallUtils
         global $string;
         $configObject = Config::get_instance();
         $render = new render_install($configObject);
-        $headerdata = array(
-            'css' => array(
+        $headerdata = [
+            'css' => [
                 '/css/rogo_logo.css',
                 '/css/header.css',
                 '/css/install.css',
-            ),
-            'scripts' => array(
+            ],
+            'scripts' => [
                 '/js/require.js',
                 '/js/main.min.js',
-            ),
-        );
+            ],
+        ];
         $lang['title'] = $string['install'];
         $lang['blurb'] = $string['systeminstallation'];
         $lang['altintallicon'] = $string['altintallicon'];
@@ -2362,7 +2362,7 @@ CONFIG;
         $config = str_replace('{cfg_site_address}', self::$cfg_site_address, $config);
         $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);
 
-        $authentication_arrays = array();
+        $authentication_arrays = [];
         if (self::$cfg_auth_lti) {
             $authentication_arrays[] = "array('ltilogin', array(), 'LTI Auth')";
         }
@@ -2381,7 +2381,7 @@ CONFIG;
 
         $config = str_replace('{cfg_authentication_arrays}', implode(",\n  ", $authentication_arrays), $config);
 
-        $lookup_arrays = array();
+        $lookup_arrays = [];
         if (self::$cfg_uselookupLdap) {
             $lookup_arrays[] = "array('ldap', array('ldap_server' => '{cfg_lookup_ldap_server}', 'ldap_search_dn' => '{cfg_lookup_ldap_search_dn}', 'ldap_bind_rdn' => '{cfg_lookup_ldap_bind_rdn}', 'ldap_bind_password' => '{cfg_lookup_ldap_bind_password}', 'ldap_user_prefix' => '{cfg_lookup_ldap_user_prefix}', 'ldap_attributes' => array('sAMAccountName' => 'username', 'sn' => 'surname', 'title' => 'title', 'givenName' => 'firstname', 'department' => 'school', 'mail' => 'email',  'cn' => 'username',  'employeeType' => 'role',  'initials' => 'initials'), 'lowercasecompare' => true, 'storeprepend' => 'ldap_'), 'LDAP')";
         }
@@ -2414,7 +2414,7 @@ CONFIG;
         }
 
         if (file_put_contents(self::$rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php', $config) === false) {
-            self::displayError(array(300 => 'Could not write config file!'));
+            self::displayError([300 => 'Could not write config file!']);
         }
     }
 }

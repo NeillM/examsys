@@ -54,7 +54,7 @@ class likerttest extends unittest
         $this->assertFalse($data->displaylikertnotes);
         $this->assertFalse($data->displaylikertscenario);
         $this->assertTrue($data->displayna);
-        $this->assertEquals(array(0, 1, 2, 3, 4), $data->scale);
+        $this->assertEquals([0, 1, 2, 3, 4], $data->scale);
     }
 
     /**
@@ -69,7 +69,7 @@ class likerttest extends unittest
         $data->scenario = 'scenario';
         $data->set_question(0, '', '');
         $this->assertFalse($data->displayna);
-        $this->assertEquals(array(0, 1, 2, 3, 4), $data->scale);
+        $this->assertEquals([0, 1, 2, 3, 4], $data->scale);
         $this->assertTrue($data->displaylikertnotes);
         $this->assertTrue($data->displaylikertscenario);
         $this->assertEquals(6, $data->likertnotescolspan);
@@ -90,7 +90,7 @@ class likerttest extends unittest
         $data->set_option_answer(0, '4', '', 1);
         $this->assertFalse($data->unanswered);
         $this->assertEquals('1_0', $data->id);
-        $this->assertEquals(array('n/a' => false, 1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $data->scaleopt);
+        $this->assertEquals(['n/a' => false, 1 => false, 2 => false, 3 => false, 4 => true, 5 => false], $data->scaleopt);
     }
 
     /**
@@ -105,7 +105,7 @@ class likerttest extends unittest
         $data->questionno = '1';
         $data->displayna = true;
         $data->set_option_answer(0, 'n/a', '', 1);
-        $this->assertEquals(array('n/a' => true, 1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
+        $this->assertEquals(['n/a' => true, 1 => false, 2 => false, 3 => false, 4 => false, 5 => false], $data->scaleopt);
     }
 
     /**
@@ -121,6 +121,6 @@ class likerttest extends unittest
         $data->scale_size = mb_substr_count($data->displaymethod, '|');
         $data->set_option_answer(0, 'u', '', 1);
         $this->assertTrue($data->unanswered);
-        $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
+        $this->assertEquals([1 => false, 2 => false, 3 => false, 4 => false, 5 => false], $data->scaleopt);
     }
 }

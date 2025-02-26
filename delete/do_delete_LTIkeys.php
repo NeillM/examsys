@@ -45,5 +45,5 @@ $lti->delete_lti_key($LTIkeysid);
 $render = new render($configObject);
 $lang['title'] = $string['title'];
 $lang['success'] = $string['ltikeydel'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

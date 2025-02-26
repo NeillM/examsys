@@ -31,7 +31,7 @@ class lti_uon_integration_extended extends lti_integration
     public const CS_META_MODULE_CHECK = '/^!((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/';
     public const CS_COURSE_ID = '/^(?P<id>[0-9]{6})_(?P<offering>[0-9]{1,2})_(?P<term>[0-9]{4})$/';
 
-    private $dept_code = array(
+    private $dept_code = [
         'MS' => 'Surgery',
         'CC' => 'ACS',
         'AA' => 'American & Canadian Studies',
@@ -92,7 +92,7 @@ class lti_uon_integration_extended extends lti_integration
         'AV' => 'Slavonic Studies',
         'AT' => 'Theology',
         'SV' => 'Vet School'
-    );
+    ];
 
     /**
      * Process module information from saturn based naming convnetion
@@ -103,7 +103,7 @@ class lti_uon_integration_extended extends lti_integration
      */
     private function process_cs_naming_convention($mysqli, $moduleshortcode, $course_title = ' ')
     {
-        $data = array();
+        $data = [];
         $fin = mb_strlen($course_title);
         if (mb_strpos($course_title, '(') !== false) {
             $fin = mb_strpos($course_title, '(') - 1;
@@ -125,7 +125,7 @@ class lti_uon_integration_extended extends lti_integration
             if ($info['campus'] != 'UNUK') {
                 $info['module']  .= '_' . $info['campus'];
             }
-            $data[] = array('SMS', $info['module'] , $info['campus'], 'UNKNOWN School', 0, $course_title, 'Campus Solutions');
+            $data[] = ['SMS', $info['module'] , $info['campus'], 'UNKNOWN School', 0, $course_title, 'Campus Solutions'];
         }
         if (count($data) == 0) {
             // Non module name space.
@@ -151,7 +151,7 @@ class lti_uon_integration_extended extends lti_integration
                         $schoolname = $this->dept_code[$info['school']];
                     }
                 }
-                $data[] = array('Manual', $info['module'] , $info['campus'], $schoolname, 1, $course_title);
+                $data[] = ['Manual', $info['module'] , $info['campus'], $schoolname, 1, $course_title];
             }
         }
 
@@ -185,7 +185,7 @@ class lti_uon_integration_extended extends lti_integration
             //this should mean its a fake course
             $modcode = '';
             for ($a = 1; $a < count($exploded); $a++) {
-                if (in_array(mb_strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
+                if (in_array(mb_strtoupper($exploded[$a]), ['UK', 'MY', 'CN'])) {
                     $campus = mb_strtoupper($exploded[$a]);
                     break;
                 }
@@ -200,21 +200,21 @@ class lti_uon_integration_extended extends lti_integration
             if ($course_title == ' ') {
                 $course_title = 'MISSING: ';
             }
-            $data[] = array('Manual', $modcode, $campus, $schoolname, $selfreg, $course_title);
+            $data[] = ['Manual', $modcode, $campus, $schoolname, $selfreg, $course_title];
         } else {
             $a = 0;
             $b = 0;
-            $data = array();
+            $data = [];
             $selfreg = 0;
             while (isset($exploded[$a])) {
                 if (mb_strlen($exploded[$a]) == 6) {
                     //saturn codes are 6 chars
                     // data is
 
-                    $data[$b++] = array('SMS', $exploded[$a], 'CampusMissing', 'UNKNOWN School', $selfreg, "MISSING:$course_title");
+                    $data[$b++] = ['SMS', $exploded[$a], 'CampusMissing', 'UNKNOWN School', $selfreg, "MISSING:$course_title"];
                 } elseif (mb_strlen($exploded[$a]) == 2) {
                     // probably campus check
-                    if (in_array(mb_strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
+                    if (in_array(mb_strtoupper($exploded[$a]), ['UK', 'MY', 'CN'])) {
                         for ($c = 0; $c < $b; $c++) {
                             if ($data[$c][2] == 'CampusMissing') {
                                 $data[$c][2] = mb_strtoupper($exploded[$a]);

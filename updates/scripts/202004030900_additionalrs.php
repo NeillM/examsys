@@ -131,8 +131,8 @@ if ($updater_utils->check_version('7.2.0')) {
         $updater_utils->execute_query($sql, false);
 
         // Install Categories.
-        $categories = array('general', 'security', 'prologue', 'postscript',
-            'rubric', 'feedback', 'reviewers', 'reference');
+        $categories = ['general', 'security', 'prologue', 'postscript',
+            'rubric', 'feedback', 'reviewers', 'reference'];
         PaperSettings::createPaperSettingsCategories($update_mysqli, $categories);
 
         // Install Setting declarations.
@@ -148,7 +148,7 @@ if ($updater_utils->check_version('7.2.0')) {
         $updater_utils->execute_query($sql, false);
 
         // Paper type configuration.
-        $papertypes = array(
+        $papertypes = [
             'formative' => 1,
             'progress' => 1,
             'summative' => 1,
@@ -156,7 +156,7 @@ if ($updater_utils->check_version('7.2.0')) {
             'osce' => 1,
             'offline' => 1,
             'peer_review' => 1
-        );
+        ];
         $configObject->set_setting('paper_types', $papertypes, Config::ASSOC);
 
         $updater_utils->record_update('rogo2767');

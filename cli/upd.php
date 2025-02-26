@@ -46,9 +46,9 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARAT
 
 // Lets look to see what arguments have been passed.
 $options = 'hu:p:s::o::q::l::';
-$longoptions = array(
+$longoptions = [
   'help',
-);
+];
 
 $optionslist = getopt($options, $longoptions);
 

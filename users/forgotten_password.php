@@ -40,12 +40,12 @@ $mysqli = DBUtils::get_mysqli_link(
 $configObject->set_db_object($mysqli);
 $email = (isset($_GET['email'])) ? $_GET['email'] : '';
 $message = '';
-$errors = array();
+$errors = [];
 $form_util = new FormUtils();
 if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
     $email = $_POST['email'];
     // Process the form submission
-    $errors = $form_util->check_required(array('email' => $string['emailaddress']));
+    $errors = $form_util->check_required(['email' => $string['emailaddress']]);
     if (count($errors) == 0) {
         // Check if the supplied value is an email address (avoid an unnecessary DB call)
         if (!$form_util->is_email($email)) {
@@ -193,7 +193,7 @@ if ($message == '') {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/forgottenpasswordinit.min.js"></script>
 </body>

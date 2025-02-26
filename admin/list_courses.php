@@ -70,7 +70,7 @@ require '../include/sysadmin_auth.inc';
 <tbody>
 <?php
 $course_no = 0;
-$courses = array();
+$courses = [];
 
 $result = $mysqli->prepare("SELECT courses.id, schools.code, school, name, description FROM courses LEFT JOIN schools ON courses.schoolid = schools.id WHERE name != 'left' AND name != 'none' AND courses.deleted IS NULL");
 $result->execute();

@@ -22,7 +22,7 @@ if ($updater_utils->check_version('7.2.0')) {
         $updater_utils->execute_query($sql, false);
 
         // Break time scale configuration.
-        $breaktimescale = array(5, 10, 25, 33, 50, 100, 200, 300);
+        $breaktimescale = [5, 10, 25, 33, 50, 100, 200, 300];
         $configObject->set_setting('paper_breaktime_scale', $breaktimescale, Config::CSV);
         $configObject->set_setting('paper_breaktime_mins', 0, Config::BOOLEAN);
         // Pause exam enabled configuration.

@@ -134,7 +134,7 @@ try {
 if (!empty($hosts)) {
     $port = $configObject->get('cfg_memcache_port');
     $memcache = new Memcached();
-    $servers = array();
+    $servers = [];
     foreach ($hosts as $memcacheserver) {
         // Add servers.
         $memcache->addServer($memcacheserver, $port);

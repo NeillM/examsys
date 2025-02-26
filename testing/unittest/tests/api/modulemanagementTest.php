@@ -59,54 +59,54 @@ class ModuleManagementTest extends unittestdatabase
         $this->module2 = $this->get_module_id('SYSTEM');
         $this->school2 = $this->get_school_id('Training');
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2015, 'academic_year' => '2015/16'));
-        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator->create_academic_year(['calendar_year' => 2015, 'academic_year' => '2015/16']);
+        $datagenerator->create_academic_year(['calendar_year' => 2016, 'academic_year' => '2016/17']);
         $datagenerator = $this->get_datagenerator('modules', 'core');
-        $module = $datagenerator->create_module(array('fullname' => 'Test module 3', 'moduleid' => 'TEST3'));
+        $module = $datagenerator->create_module(['fullname' => 'Test module 3', 'moduleid' => 'TEST3']);
         $this->module3 = $module['id'];
         $datagenerator->create_enrolment(
-            array(
+            [
                 'userid' => $this->student['id'],
                 'moduleid' => $this->module3,
-                'calendar_year' => 2016)
+                'calendar_year' => 2016]
         );
         $datagenerator->create_enrolment(
-            array(
+            [
                 'userid' => $this->user,
                 'moduleid' => $this->module3,
-                'calendar_year' => 2016)
+                'calendar_year' => 2016]
         );
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $datagenerator->create_paper(array('papertitle' => 'Test create formative',
+        $datagenerator->create_paper(['papertitle' => 'Test create formative',
             'calendaryear' => 2016,
             'modulename' => 'Online Help',
             'paperowner' => 'admin',
             'papertype' => '0',
             'duration' => 60,
-            'labs' => '1'));
+            'labs' => '1']);
         $datagenerator = $this->get_datagenerator('api', 'core');
         $client = $datagenerator->create_client(
-            array(
+            [
                 'clientid' => 'test1',
                 'userid' => $this->admin['id'],
                 'secret' => 'test'
-            )
+            ]
         );
         $datagenerator->create_external(
-            array(
+            [
                 'clientid' => $client['clientid'],
                 'name' => 'test ExamSys api',
                 'type' => 'api'
-            )
+            ]
         );
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $datagenerator->create_campus(array('name' => 'Test Campus', 'isdefault' => 1));
+        $datagenerator->create_campus(['name' => 'Test Campus', 'isdefault' => 1]);
         $datagenerator->create_lab(
-            array(
+            [
                 'name' => 'Test lab',
                 'building' => 'Test building',
                 'room' => 1
-            )
+            ]
         );
     }
 
@@ -116,14 +116,14 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function createResponseArray()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->module3 + 1,
             'externalid' => null,
             'error' => null,
             'node' => 'create',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -132,12 +132,12 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function createParamArray()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'modulecode' => 'TEST4',
             'name' => 'Test module 4',
             'school' => 'Test school',
-            'faculty' => 'Test faculty');
+            'faculty' => 'Test faculty'];
     }
 
     /**
@@ -146,10 +146,10 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function updateParamArray()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'id' => $this->module2,
-            'name' => 'Test module 2 update');
+            'name' => 'Test module 2 update'];
     }
 
     /**
@@ -158,14 +158,14 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function updateResponseArray()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->module2,
             'externalid' => null,
             'error' => null,
             'node' => 'update',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -174,12 +174,12 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function enrolParamArray()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'userid' => $this->student['id'],
             'moduleid' => $this->module,
             'session' => 2016,
-            'attempt' => 1);
+            'attempt' => 1];
     }
 
     /**
@@ -188,13 +188,13 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function enrolResponseArray()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'externalid' => null,
             'error' => null,
             'node' => 'enrol',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -203,11 +203,11 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function unenrolParamArray()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'userid' => $this->student['id'],
             'moduleid' => $this->module3,
-            'session' => 2016);
+            'session' => 2016];
     }
 
     /**
@@ -216,13 +216,13 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function unenrolResponseArray()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'externalid' => null,
             'error' => null,
             'node' => 'unenrol',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -231,14 +231,14 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function deleteResponseArray()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->module,
             'externalid' => null,
             'error' => null,
             'node' => 'delete',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -247,9 +247,9 @@ class ModuleManagementTest extends unittestdatabase
      */
     private function deleteParamArray()
     {
-        return array(
+        return [
             'nodeid' => 1,
-            'id' => $this->module);
+            'id' => $this->module];
     }
 
     /**
@@ -265,19 +265,19 @@ class ModuleManagementTest extends unittestdatabase
         $responsearray['id'] = $create['id'];
         $this->assertEquals($responsearray, $create);
         // Create moudle in new school
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'modulecode' => 'TEST5',
             'name' => 'Test module 5',
             'school' => 'Test school 2',
-            'faculty' => 'Test faculty');
+            'faculty' => 'Test faculty'];
         $create = $module->create($params, $this->admin['id']);
         $responsearray['id'] = $create['id'];
         $this->assertEquals($responsearray, $create);
         // Check default settings
         $querytable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'checklist',
                     'selfenroll',
                     'neg_marking',
@@ -288,18 +288,18 @@ class ModuleManagementTest extends unittestdatabase
                     'map_level',
                     'academic_year_start',
                     'syncpreviousyear',
-                ),
+                ],
                 'table' => 'modules',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => $responsearray['id']
-                    )
-                ),
-            )
+                    ]
+                ],
+            ]
         );
-        $expectedtable = array(
-            0 => array(
+        $expectedtable = [
+            0 => [
                 'checklist' => 'peer,external',
                 'selfenroll' => 0,
                 'neg_marking' => 1,
@@ -310,8 +310,8 @@ class ModuleManagementTest extends unittestdatabase
                 'map_level' => 0,
                 'academic_year_start' => '07/01',
                 'syncpreviousyear' => 0,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -361,12 +361,12 @@ class ModuleManagementTest extends unittestdatabase
         $responsearray['statuscode'] = 506;
         $responsearray['status'] = 'Faculty not supplied';
         $responsearray['id'] = null;
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'modulecode' => 'TEST5',
             'name' => 'Test module 5',
             'school' => 'Test school 2',
-            'faculty' => '');
+            'faculty' => ''];
         $this->assertEquals($responsearray, $module->create($params, $this->admin['id']));
     }
 
@@ -381,41 +381,41 @@ class ModuleManagementTest extends unittestdatabase
         $module = new \api\modulemanagement($this->db, 'test1');
         $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
         // Test module update module code.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->module2,
-            'modulecode' => 'TEST2UPDATE');
+            'modulecode' => 'TEST2UPDATE'];
         $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
         // Check update occured.
         $querytable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'moduleid',
                     'fullname',
                     'active',
                     'schoolid',
                     'academic_year_start',
                     'sms'
-                ),
+                ],
                 'table' => 'modules',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => 2
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedtable = array(
-            0 => array(
+        $expectedtable = [
+            0 => [
                 'moduleid' => 'TEST2UPDATE',
                 'fullname' => 'Test module 2 update',
                 'active' => 1,
                 'schoolid' =>  $this->school2,
                 'academic_year_start' => '07/01',
                 'sms' => ''
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -427,12 +427,12 @@ class ModuleManagementTest extends unittestdatabase
         $responsearray = $this->updateResponseArray();
         $params = $this->updateParamArray();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' =>  $this->module2,
             'modulecode' => 'TEST2UPDATE',
             'school' => 'Test school',
-            'faculty' => 'Test faculty');
+            'faculty' => 'Test faculty'];
         $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
     }
 
@@ -447,17 +447,17 @@ class ModuleManagementTest extends unittestdatabase
         $module = new \api\modulemanagement($this->db, 'test1');
         $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
         // Test module update module code.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'externalid' => 'abc123def',
-            'newexternalid' => '87654321');
+            'newexternalid' => '87654321'];
         $responsearray['id'] = $this->module;
         $responsearray['externalid'] = '87654321';
         $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
         // Check update occured.
         $querytable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'moduleid',
                     'fullname',
                     'active',
@@ -465,18 +465,18 @@ class ModuleManagementTest extends unittestdatabase
                     'academic_year_start',
                     'externalid',
                     'sms'
-                ),
+                ],
                 'table' => 'modules',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'externalid',
                         'value' => '87654321'
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedtable = array(
-            0 => array(
+        $expectedtable = [
+            0 => [
                 'moduleid' => 'TRAIN',
                 'fullname' => 'Training Module',
                 'active' => 1,
@@ -484,8 +484,8 @@ class ModuleManagementTest extends unittestdatabase
                 'externalid' => '87654321',
                 'sms' => 'test ExamSys api',
                 'academic_year_start' => '07/01'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -495,14 +495,14 @@ class ModuleManagementTest extends unittestdatabase
     public function testUpdateExceptionNoUpdate()
     {
         $responsearray = $this->updateResponseArray();
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->module2,
             'modulecode' => 'SYSTEM',
             'name' => 'Online Help',
             'school' => 'Training',
             'faculty' => 'Administrative and Support Units',
-            'sms' => '');
+            'sms' => ''];
         $module = new \api\modulemanagement($this->db, 'test1');
         $responsearray['statuscode'] = 512;
         $responsearray['status'] = 'Request updates nothing';
@@ -593,11 +593,11 @@ class ModuleManagementTest extends unittestdatabase
         $this->assertEquals($responsearray, $enrol);
         // No session supplied - user current.
         $responsearray['statuscode'] = 100;
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'userid' => $this->student['id'],
             'moduleid' => $this->module2,
-            'attempt' => 1);
+            'attempt' => 1];
         $enrol = $module->enrol($params, $this->admin['id']);
         $responsearray['id'] = $enrol['id'];
         $this->assertEquals($responsearray, $enrol);
@@ -610,12 +610,12 @@ class ModuleManagementTest extends unittestdatabase
     {
         // Test module enrolment - SUCCESS.
         $responsearray = $this->enrolResponseArray();
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'studentid' => '00000001',
             'moduleid' => $this->module,
             'session' => 2016,
-            'attempt' => 1);
+            'attempt' => 1];
         $module = new \api\modulemanagement($this->db, 'test1');
         $enrol = $module->enrol($params, $this->admin['id']);
         $responsearray['id'] = $enrol['id'];
@@ -675,10 +675,10 @@ class ModuleManagementTest extends unittestdatabase
     {
         // Test module enrolment - SUCCESS.
         $responsearray = $this->unenrolResponseArray();
-        $params = array('nodeid' => 1,
+        $params = ['nodeid' => 1,
             'studentid' => '00000001',
             'moduleid' => $this->module3,
-            'session' => 2016);
+            'session' => 2016];
         $module = new \api\modulemanagement($this->db, 'test1');
         $enrol = $module->unenrol($params, $this->admin['id']);
         $responsearray['id'] = $enrol['id'];
@@ -705,10 +705,10 @@ class ModuleManagementTest extends unittestdatabase
         $responsearray['statuscode'] = 510;
         $responsearray['status'] = 'Session not supplied';
         $responsearray['id'] = null;
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'userid' => $this->student['id'],
-            'moduleid' => $this->module);
+            'moduleid' => $this->module];
         $this->assertEquals($responsearray, $module->unenrol($params, $this->admin['id']));
     }
 
@@ -759,39 +759,39 @@ class ModuleManagementTest extends unittestdatabase
         // when we delete a module we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
         $querytable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'moduleid',
                     'fullname',
                     'active',
                     'schoolid',
                     'academic_year_start'
-                ),
+                ],
                 'table' => 'modules',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'mod_deleted',
                         'value' => null,
-                        'operator' => 'IS')
-                )
-            )
+                        'operator' => 'IS']
+                ]
+            ]
         );
-        $expectedtable = array(
-            0 => array(
+        $expectedtable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
                 'fullname' => 'Online Help',
                 'active' => 1,
                 'schoolid' => $this->school2,
                 'academic_year_start' => '07/01',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'moduleid' => 'TEST3',
                 'fullname' => 'Test module 3',
                 'active' => 1,
                 'schoolid' => $this->school,
                 'academic_year_start' => '07/01',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -810,8 +810,8 @@ class ModuleManagementTest extends unittestdatabase
         $params['id'] = 0;
         $this->assertEquals($responsearray, $module->delete($params, $this->admin['id']));
         // Test no module supplied.
-        $params = array(
-            'nodeid' => 1);
+        $params = [
+            'nodeid' => 1];
         $this->assertEquals($responsearray, $module->delete($params, $this->admin['id']));
     }
 

@@ -39,7 +39,7 @@ if (!$module_details) {
     exit();
 }
 
-if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
+if (!$userObject->has_role(['SysAdmin', 'Admin'])) {
     if ($module_details['add_team_members'] == 0) {
         $contactemail = support::get_email();
         $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);

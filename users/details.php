@@ -48,7 +48,7 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color, 
     $html = '<tr><td colspan="' . ($col_span - 1) . "\" style=\"background-color:$bg_color\">";
     $html .= '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr>';
 
-    $tab_array = array('Log');
+    $tab_array = ['Log'];
 
     if (stripos($user_roles, 'Staff') !== false) {
         $tab_array[] = 'Teams';
@@ -148,7 +148,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
             $result->close();
         }
     }
-} elseif (!is_null($updateaccess) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
+} elseif (!is_null($updateaccess) and $userObject->has_role(['Admin', 'SysAdmin'])) {
     $colour_background = param::optional('bg_radio', false, param::BOOLEAN, param::FETCH_POST);
     $colour_forground = param::optional('fg_radio', false, param::BOOLEAN, param::FETCH_POST);
     $colour_marks = param::optional('marks_radio', false, param::BOOLEAN, param::FETCH_POST);
@@ -413,7 +413,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
         $result->execute();
         $result->close();
     }
-} elseif (!is_null($save_metadata) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
+} elseif (!is_null($save_metadata) and $userObject->has_role(['Admin', 'SysAdmin'])) {
     $metadata_no = param::optional('metadata_no', 0, param::INT, param::FETCH_POST);
     for ($i = 0; $i < $metadata_no; $i++) {
         $meta_moduleID = param::optional("meta_moduleID$i", null, param::INT, param::FETCH_POST);
@@ -616,10 +616,10 @@ if ($tab == 'log') {
   $old_screen = 0;
   $old_paper_title = '';
   $results_no = 0;
-  $paper = array();
+  $paper = [];
 
   echo '<tr><td>';
-  $table_order = array('', $string['papername'], $string['type'], $string['started'], $string['ipaddress']);
+  $table_order = ['', $string['papername'], $string['type'], $string['started'], $string['ipaddress']];
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"1\" border=\"0\" style=\"width:100%\">\n";
   echo "<thead>\n";
   echo "<tr>\n";
@@ -634,19 +634,19 @@ foreach ($table_order as $col_title) {
 <?php
   $stmt = false;
 
-if ($userObject->has_role(array('Admin', 'SysAdmin')) or $userObject->get_user_ID() == $userID) {
+if ($userObject->has_role(['Admin', 'SysAdmin']) or $userObject->get_user_ID() == $userID) {
     $log_viewable = true;
 } else {
     $idMod = array_keys($userObject->get_staff_modules());
     $log_viewable = UserUtils::is_user_on_module($userID, $idMod, '', $mysqli);
 }
 
-  $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
+  $paper_types = ['Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review'];
 
 if ($log_viewable) {
     // Get the papers the External/Internal is down to review.
     if (stripos($user_details['roles'], 'External Examiner') !== false or stripos($user_details['roles'], 'Internal Reviewer') !== false) {
-        $external_array = array();
+        $external_array = [];
 
         // The expectation is that $started is used for ordering, while $display_started is used for display.
         $sql = "SELECT DISTINCT
@@ -689,7 +689,7 @@ if ($log_viewable) {
         $stmt->close();
     } else {
         // Only allow Admin/SysAdmin or current user to view this information
-        $queries = array();
+        $queries = [];
 
         $queries[] = "SELECT DISTINCT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log0 WHERE properties.property_id = log_metadata.paperID AND log_metadata.id = log0.metadataID AND log_metadata.userID = ? AND paper_type IN ('0','1') ORDER BY started";
         $queries[] = "SELECT DISTINCT crypt_name, paper_title, 1 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log1 WHERE properties.property_id = log_metadata.paperID AND log_metadata.id = log1.metadataID AND log_metadata.userID = ? AND paper_type IN ('0','1') ORDER BY started";
@@ -838,7 +838,7 @@ if ($tab == 'modules') {
   echo '<tr><td class="coltitle" style="width:20px">&nbsp;</td><td class="coltitle">&nbsp;' . $string['moduleid'] . '</td><td class="coltitle">' . $string['name'] . '</td><td class="coltitle">' . $string['academicyear'] . "</td></tr>\n";
   $old_year = '';
   $row_no = 0;
-  $user_modules = array();
+  $user_modules = [];
   $current_year = false;
 
   $results = $mysqli->prepare('SELECT DISTINCT modules.id, modules.moduleid, fullname, modules_student.calendar_year, attempt FROM (modules_student, modules) WHERE mod_deleted IS NULL AND modules_student.idMod = modules.id AND userID = ? ORDER BY modules_student.calendar_year DESC, modules.moduleid');
@@ -865,7 +865,7 @@ while ($results->fetch()) {
 
 if ($current_year == false) {
     echo '<tr><td colspan="4"><table border="0" style="padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $current_session;
-    if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+    if ($userObject->has_role(['Admin', 'SysAdmin'])) {
         echo '&nbsp;&nbsp;<a class="modules" href="#" data-session="' . $current_session . '" data-grade="' . $user_details['grade'] . '"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['editmodules'] . '" /></a>';
     }
     echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
@@ -875,7 +875,7 @@ for ($i = 0; $i < $row_no; $i++) {
     if ($user_modules[$i]['calendar_year'] != $old_year) {
         $display_year = $year_names[$user_modules[$i]['calendar_year']];
         echo '<tr><td colspan="4"><table border="0" style="padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>' . $display_year;
-        if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == $current_session) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
+        if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == $current_session) and $userObject->has_role(['Admin', 'SysAdmin'])) {
             echo '&nbsp;&nbsp;<a class="modules" href="#" data-session="' . $user_modules[$i]['calendar_year'] . '" data-grade="' . $user_details['grade'] . '"); return false;"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['editmodules'] . '" /></a>';
         }
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
@@ -1053,8 +1053,8 @@ if (!isset($highlightcolour)) {
 }
 $result->close();
 
-$times = array(5, 10, 25, 33, 50, 100, 200, 300);
-$accessibilitydata['extratime'] = array();
+$times = [5, 10, 25, 33, 50, 100, 200, 300];
+$accessibilitydata['extratime'] = [];
 foreach ($times as $individual_time) {
     if ($individual_time == $extra_time) {
         $accessibilitydata['extratime'][$individual_time] = true;
@@ -1062,8 +1062,8 @@ foreach ($times as $individual_time) {
         $accessibilitydata['extratime'][$individual_time] = false;
     }
 }
-$fontsizes = array(90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400);
-$accessibilitydata['fontsize'] = array();
+$fontsizes = [90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400];
+$accessibilitydata['fontsize'] = [];
 foreach ($fontsizes as $individual_fontsize) {
     if ($individual_fontsize == $textsize) {
         $accessibilitydata['fontsize'][$individual_fontsize] = true;
@@ -1072,8 +1072,8 @@ foreach ($fontsizes as $individual_fontsize) {
     }
 }
 
-$fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
-$accessibilitydata['fontfamily'] = array();
+$fontfamily = ['Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana'];
+$accessibilitydata['fontfamily'] = [];
 foreach ($fontfamily as $individual_fontfamily) {
     if ($individual_fontfamily == $font) {
         $accessibilitydata['fontfamily'][$individual_fontfamily] = true;
@@ -1081,68 +1081,68 @@ foreach ($fontfamily as $individual_fontfamily) {
         $accessibilitydata['fontfamily'][$individual_fontfamily] = false;
     }
 }
-$accessibilitydata['colours'] = array(
-    array(
+$accessibilitydata['colours'] = [
+    [
         'name' => $string['background'],
         'value' => $background,
         'radio_name' => 'bg',
         'input_name' => 'background'
-    ),
-    array(
+    ],
+    [
         'name' => $string['foreground'],
         'value' => $foreground,
         'radio_name' => 'fg',
         'input_name' => 'foreground'
-    ),
-    array(
+    ],
+    [
         'name' => $string['markscolour'],
         'value' => $marks_color,
         'radio_name' => 'marks',
         'input_name' => 'marks_color'
-    ),
-    array(
+    ],
+    [
         'name' => $string['themecolour'],
         'value' => $themecolor,
         'radio_name' => 'theme',
         'input_name' => 'themecolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['labelscolour'],
         'value' => $labelcolor,
         'radio_name' => 'labels',
         'input_name' => 'labelcolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['unanswered'],
         'value' => $unansweredcolor,
         'radio_name' => 'unanswered',
         'input_name' => 'unansweredcolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['dismisscolor'],
         'value' => $dismisscolor,
         'radio_name' => 'dismiss',
         'input_name' => 'dismisscolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['highlightcolour'],
         'value' => $highlightcolour,
         'radio_name' => 'colour_highlight',
         'input_name' => 'highlightcolour'
-    ),
-    array(
+    ],
+    [
         'name' => $string['globalthemecolour'],
         'value' => $globalthemecolour,
         'radio_name' => 'colour_globaltheme',
         'input_name' => 'globalthemecolour'
-    ),
-    array(
+    ],
+    [
         'name' => $string['globalthemefontcolour'],
         'value' => $globalthemefontcolour,
         'radio_name' => 'colour_globalthemefont',
         'input_name' => 'globalthemefontcolour'
-    ),
-);
+    ],
+];
 $accessibilitydata['medical'] = $medical;
 $accessibilitydata['breaks'] = $breaks;
 if ($configObject->get_setting('core', 'paper_breaktime_mins')) {
@@ -1160,11 +1160,11 @@ foreach ($scale as $individual_time) {
 }
 // Still display students settings even if no longer available as an option.
 if ($break_time != 0 and !in_array($break_time, $scale)) {
-    $accessibilitydata['oldbreakscale'] = array($break_time, true);
+    $accessibilitydata['oldbreakscale'] = [$break_time, true];
 } else {
     $accessibilitydata['oldbreakscale'] = '';
 }
-if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+if ($userObject->has_role(['Admin', 'SysAdmin'])) {
     $accessibilitydata['admin'] = true;
 } else {
     $accessibilitydata['admin'] = false;
@@ -1214,7 +1214,7 @@ while ($stmt->fetch()) {
   $stmt->close();
 
   echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
-if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+if ($userObject->has_role(['Admin', 'SysAdmin'])) {
     echo '<tr><td colspan="5" style="text-align:center">';
     if ($metadata_no > 0) {
         echo '<input type="submit" name="save_metadata" value="' . $string['save'] . '" class="ok" />';
@@ -1237,7 +1237,7 @@ if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
     echo '<tr><td id="teams" colspan="4">&nbsp;<img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['editteams'] . '" />&nbsp;<a href="#">' . $string['editteams'] . "</a></td></tr>\n";
 }
 
-if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_ID() == $userID) {   // Only allow Admin/SysAdmin or current user to view this information
+if ($userObject->has_role(['SysAdmin', 'Admin']) or $userObject->get_user_ID() == $userID) {   // Only allow Admin/SysAdmin or current user to view this information
     $result = $mysqli->prepare("SELECT moduleID, fullname, DATE_FORMAT(added,'%d/%m/%Y') AS added FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ? ORDER BY moduleID");
     $result->bind_param('i', $userID);
     $result->execute();
@@ -1298,7 +1298,7 @@ $changes = $logger->get_changes('User Profile', $userID);
 $profileauditdata = [];
 $profilecount = 0;
 foreach ($changes as $change) {
-    $profileauditdata[] = array(
+    $profileauditdata[] = [
         'date' => date($configObject->get('cfg_very_short_datetime_php'), $change['date']),
         'part' => $change['part'],
         'old' => $change['old'],
@@ -1308,7 +1308,7 @@ foreach ($changes as $change) {
         'surname' => $change['surname'],
         'rowclass' => $profilecount % 2 ? 'auditrow auditaltrow' : 'auditrow',
         'displaycolour' => $change['part'] != 'font' && $change['part'] != 'textsize' ? true : false,
-    );
+    ];
     $profilecount++;
 }
 $render->render($profileauditdata, $string, 'users/details/profileaudit.html');
@@ -1332,7 +1332,7 @@ $dataset['attributes']['sid'] = $student_id;
 $dataset['attributes']['searchusername'] = $search_username;
 $dataset['attributes']['searchsurname'] = $search_surname;
 $dataset['attributes']['sysadmin'] = $is_sysadmin;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 </body>
 </html>

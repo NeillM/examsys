@@ -39,7 +39,7 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $rater_query   = '';
-$rater_names   = array();
+$rater_names   = [];
 $review_string = '';
 
 if (isset($_GET['reviewers'])) {
@@ -68,7 +68,7 @@ if (isset($_GET['reviewers'])) {
     }
     $rater_query .= ')';
 }
-$reviews = array();
+$reviews = [];
 
 
 $setterID = '';
@@ -354,9 +354,9 @@ while ($stmt->fetch()) {
         $old_q_id       = $q_id;
         $old_theme      = $theme;
         $old_screen     = $screen;
-        $options_array  = array();
+        $options_array  = [];
     }
-    $options_array[] = array(
+    $options_array[] = [
         'q_type' => $q_type,
         'score_method' => $score_method,
         'display_method' => $display_method,
@@ -374,7 +374,7 @@ while ($stmt->fetch()) {
         'marks_correct' => $marks_correct,
         'marks_incorrect' => $marks_incorrect,
         'marks_partial' => $marks_partial
-    );
+    ];
 }
 $stmt->close();
 
@@ -406,8 +406,8 @@ $mysqli->close();
   // Dataset.
   $miscdataset['name'] = 'dataset';
   $miscdataset['attributes']['language'] = $language;
-  $render->render($miscdataset, array(), 'dataset.html');
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+  $render->render($miscdataset, [], 'dataset.html');
+  $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 <script src="../js/stdsetgroupinit.min.js"></script>
 </body>

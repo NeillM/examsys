@@ -56,9 +56,9 @@ class gradebook extends \api\abstractpublish
                 break;
         }
         if ($grades) {
-            return array('OK', $grades);
+            return ['OK', $grades];
         } else {
-            return array('BAD', array(sprintf($langpack->get_string($this->langcomponent, 'notfound'), $filtername, $filterid)));
+            return ['BAD', [sprintf($langpack->get_string($this->langcomponent, 'notfound'), $filtername, $filterid)]];
         }
     }
 }

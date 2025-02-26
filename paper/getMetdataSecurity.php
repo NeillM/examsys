@@ -30,7 +30,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 <table cellpadding="0" cellspacing="3" border="0" style="width:100%">
 <?php
 // Get the current metadata settings for the paper
-$current_settings = array();
+$current_settings = [];
 $stmt = $mysqli->prepare('SELECT name, value FROM paper_metadata_security WHERE paperID = ?');
 $stmt->bind_param('i', $paperID);
 $stmt->execute();

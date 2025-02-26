@@ -259,7 +259,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
                         if ($display_method == 'dropdown') {
                             echo '<select>';
-                            $options_array = array();
+                            $options_array = [];
                             $options_array = explode(',', $blank_options);
                             // Filter the options in the same way that user's answers are.
                             $options_array = \param::clean_array($options_array, \param::TEXT);
@@ -427,7 +427,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 }
                 break;
         }
-        if (!in_array($q_type, array('info', 'keyword_based', 'random', 'blank', 'labelling', 'hotspot'))) {
+        if (!in_array($q_type, ['info', 'keyword_based', 'random', 'blank', 'labelling', 'hotspot'])) {
             echo "</table></p>\n";
         }
     } elseif ($q_type == 'matrix') {
@@ -473,14 +473,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $matching_alt = explode('|', $q_media_alt);
         $matching_num = explode('|', $q_media_num);
         $tmp_answers_array = explode('|', $correct_buf[0]);
-        $matching_media = array();
+        $matching_media = [];
         for ($i = 0; $i < count($matching_source); $i++) {
-            $matching_media[$matching_num[$i]] = array(
+            $matching_media[$matching_num[$i]] = [
                 'source' => $matching_source[$i],
                 'width' => $matching_width[$i],
                 'height' => $matching_height[$i],
                 'alt' => $matching_alt[$i],
-            );
+            ];
         }
 
         array_unshift($matching_scenarios, '');
@@ -555,7 +555,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo "</td></tr>\n";
 
     // Display comments here.
-    if (!in_array($q_type, array('info', 'keyword_based', 'random'))) {
+    if (!in_array($q_type, ['info', 'keyword_based', 'random'])) {
         echo displayComments($q_id, $comments, $q_no, $reviewer_data, $type, $string);
     }
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -574,7 +574,7 @@ if (!isset($paper)) {
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$reviewer_data = array();
+$reviewer_data = [];
 $result = $mysqli->prepare("SELECT users.id, title, initials, surname, DATE_FORMAT(started,'%d/%m/%Y %T') AS started, DATE_FORMAT(complete,'%d/%m/%Y %T') AS complete, paper_comment FROM (properties_reviewers, users) LEFT JOIN review_metadata ON properties_reviewers.reviewerID = review_metadata.reviewerID AND properties_reviewers.paperID = review_metadata.paperID WHERE properties_reviewers.reviewerID = users.id AND type = ? AND properties_reviewers.paperID = ? ORDER BY surname, initials");
 $result->bind_param('si', $type, $paperID);
 $result->execute();
@@ -681,7 +681,7 @@ if (count($reviewer_data) == 0) {
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render = new render($configObject);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     ?>
     </body>
 </html>
@@ -700,7 +700,7 @@ if (count($reviewer_data) == 0) {
 <?php
 
   // Capture reviewer comments data first.
-  $comments_array = array();
+  $comments_array = [];
 foreach ($reviewer_data as $reviewerID => $reviewer_detail) {
     // Only loads reviews if they exist.
     if (!empty($reviewer_detail['started'])) {
@@ -716,8 +716,8 @@ foreach ($reviewer_data as $reviewerID => $reviewer_detail) {
   $question_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
-  $options_buffer = array();
-  $correct_buffer = array();
+  $options_buffer = [];
+  $correct_buffer = [];
 
   $result = $mysqli->prepare('SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, correct, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
   $result->bind_param('i', $paperID);
@@ -738,8 +738,8 @@ while ($result->fetch()) {
             $question_no--;
         }
         displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $reviewer_data, $type, $string, $language);
-        $options_buffer = array();
-        $correct_buffer = array();
+        $options_buffer = [];
+        $correct_buffer = [];
         if ($old_screen != $screen) {
             echo '<tr><td colspan="2"><br /><div class="screenbrk">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['screen'] . '&nbsp;' . $screen . '</div></td></tr>';
         }
@@ -812,7 +812,7 @@ if ($old_q_type == 'info') {
   $jsdataset['name'] = 'jsutils';
   $jsdataset['attributes']['xls'] = json_encode($string);
   $render = new render($configObject);
-  $render->render($jsdataset, array(), 'dataset.html');
+  $render->render($jsdataset, [], 'dataset.html');
   // Dataset.
   $miscdataset['name'] = 'dataset';
   $miscdataset['attributes']['language'] = $language;
@@ -828,8 +828,8 @@ if (isset($_GET['folder'])) {
   $miscdataset['attributes']['type'] = $type;
   $miscdataset['attributes']['srcofy'] = param::optional('srcOfY', 0, param::FLOAT, param::FETCH_GET);
   $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-  $render->render($miscdataset, array(), 'dataset.html');
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+  $render->render($miscdataset, [], 'dataset.html');
+  $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 <script src="../js/reviewcommentsinit.min.js"></script>
 </body>

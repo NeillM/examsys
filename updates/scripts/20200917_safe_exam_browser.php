@@ -36,7 +36,7 @@ EOF;
     $updater_utils->execute_query('GRANT DELETE,INSERT,SELECT,UPDATE ON ' . $configObject->get('cfg_db_database') . ".paper_metadata TO '" . $configObject->get('cfg_db_staff_user') . "'@'" . $configObject->get('cfg_web_host') . "'", false);
 
     // Install setting category
-    $categories = array('seb');
+    $categories = ['seb'];
     PaperSettings::createPaperSettingsCategories($update_mysqli, $categories);
 
     // Install setting declaration.

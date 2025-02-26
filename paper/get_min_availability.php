@@ -37,4 +37,4 @@ try {
     echo json_encode('ERROR');
     exit();
 }
-echo json_encode(array('SUCCESS', $minavailability));
+echo json_encode(['SUCCESS', $minavailability]);

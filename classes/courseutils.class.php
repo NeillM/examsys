@@ -168,7 +168,7 @@ class CourseUtils
             $details = false;
         } else {
             $result->fetch();
-            $details = array('description' => $description, 'deleted' => $deleted, 'schoolid' => $schoolid);
+            $details = ['description' => $description, 'deleted' => $deleted, 'schoolid' => $schoolid];
         }
         $result->close();
 
@@ -213,7 +213,7 @@ class CourseUtils
             $details = false;
         } else {
             $result->fetch();
-            $details = array('name' => $name, 'description' => $description, 'deleted' => $deleted, 'schoolid' => $schoolid, 'externalid' => $externalid, 'externalsys' => $externalsys);
+            $details = ['name' => $name, 'description' => $description, 'deleted' => $deleted, 'schoolid' => $schoolid, 'externalid' => $externalid, 'externalsys' => $externalsys];
         }
         $result->close();
 
@@ -332,7 +332,7 @@ class CourseUtils
         $result->execute();
         $result->store_result();
         $result->bind_result($id, $externalid, $deleted);
-        $diff = array();
+        $diff = [];
         while ($result->fetch()) {
             // Mark for delete if not found in external list.
             if (!in_array($externalid, $external)) {

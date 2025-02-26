@@ -63,14 +63,14 @@ class guest_account_reservation extends generator
             $parameters['reserved'] = $date->getTimestamp();
         }
 
-        $defaults = array(
+        $defaults = [
                 'first_names' => null,
                 'surname' => null,
                 'title' => null,
                 'student_id' => null,
                 'assigned_account' => null,
                 'reserved' => time(),
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
 
         $values['id'] = $this->insertReservation($values);

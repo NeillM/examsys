@@ -60,97 +60,97 @@ class QuestionLineageTest extends unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $this->questions['grandparent'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'grandparent test'
-            )
+            ]
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['grandparent']['id'], 'admin', 'grandparent test modified', 'grandparent test', 'leadin');
         $this->questions['unrelated'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'unrelated test'
-            )
+            ]
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['unrelated']['id'], 'admin', 'unrelated test modified', 'unrelated test', 'leadin');
         $this->questions['unrelated_child'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'unrelated child test'
-            ),
+            ],
             $this->questions['unrelated']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['unrelated_child']['id'], 'admin', 'unrelated child modified', 'unrelated child test', 'leadin');
         $this->questions['parent'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'parent test'
-            ),
+            ],
             $this->questions['grandparent']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['parent']['id'], 'admin', 'parent test', 'parent test modified', 'leadin');
         $this->questions['parent_sibling'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'parent sibling test'
-            ),
+            ],
             $this->questions['grandparent']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['parent_sibling']['id'], 'admin', 'parent sibling modified', 'parent test modified', 'leadin');
         $this->questions['primary'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'primary test'
-            ),
+            ],
             $this->questions['parent']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['primary']['id'], 'admin', 'primary test', 'primary test modified', 'leadin');
         $datagenerator->track_question_change('Edit Question', $this->questions['primary']['id'], 'admin', 'primary test modified', 'primary test', 'leadin');
         $datagenerator->track_question_change('Edit Question', $this->questions['parent']['id'], 'admin', 'parent test modified', 'parent test', 'leadin');
         $this->questions['sibling'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'sibling test'
-            ),
+            ],
             $this->questions['parent']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['sibling']['id'], 'admin', 'sibling test modified', 'sibling test', 'leadin');
         $this->questions['child1'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'child 1 test'
-            ),
+            ],
             $this->questions['primary']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['child1']['id'], 'admin', 'child1 test modified', 'child1 test', 'leadin');
         $this->questions['child2'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'child 2 test'
-            ),
+            ],
             $this->questions['primary']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['child2']['id'], 'admin', 'child2 test modified', 'child2 test', 'leadin');
         $this->questions['grandchild1'] = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'grandchild test'
-            ),
+            ],
             $this->questions['child1']['id']
         );
         $datagenerator->track_question_change('Edit Question', $this->questions['grandchild1']['id'], 'admin', 'grandchild1 test modified', 'grandchild1 test', 'leadin');
 
-        $this->lineage = array(
+        $this->lineage = [
             $this->questions['grandparent']['id'] => null,
             $this->questions['parent']['id'] => $this->questions['grandparent']['id'],
             $this->questions['parent_sibling']['id'] => $this->questions['grandparent']['id'],
@@ -159,17 +159,17 @@ class QuestionLineageTest extends unittestdatabase
             $this->questions['child1']['id'] => $this->questions['primary']['id'],
             $this->questions['child2']['id'] => $this->questions['primary']['id'],
             $this->questions['grandchild1']['id'] => $this->questions['child1']['id']
-        );
+        ];
 
-        $this->primaryParents = array(
+        $this->primaryParents = [
             $this->questions['parent']['id'],
             $this->questions['grandparent']['id']
-        );
+        ];
 
-        $this->primaryDirectChildren = array(
+        $this->primaryDirectChildren = [
             $this->questions['child1']['id'],
             $this->questions['child2']['id']
-        );
+        ];
 
         /**
          * Construct expected history: we're expecting to see:

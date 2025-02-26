@@ -126,14 +126,14 @@ $textsize = $userObject->get_textsize(100);
 $font = $userObject->get_font('Arial');
 
 $render = new render($configObject);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/body.css',
         '/css/rogo_logo.css',
         '/css/studentsettings.css',
         '/css/accessiblity.css',
-    ),
-);
+    ],
+];
 $additionalcss = '<style type="text/css">body {padding-left:0; font-size:' . $textsize  . '%; font-family:' . $font . '}</style>';
 $render->render($headerdata, $string, 'header.html', '', $additionalcss);
 
@@ -141,8 +141,8 @@ require_once '../include/toprightmenu.inc';
 $accessibilitydata['toprightmenu'] = draw_toprightmenu();
 require '../tools/colour_picker/colour_picker.inc';
 
-$fontsizes = array(90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400);
-$accessibilitydata['fontsize'] = array();
+$fontsizes = [90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400];
+$accessibilitydata['fontsize'] = [];
 foreach ($fontsizes as $individual_fontsize) {
     if ($individual_fontsize == $userObject->get_textsize()) {
         $accessibilitydata['fontsize'][$individual_fontsize] = true;
@@ -151,8 +151,8 @@ foreach ($fontsizes as $individual_fontsize) {
     }
 }
 
-$fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
-$accessibilitydata['fontfamily'] = array();
+$fontfamily = ['Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana'];
+$accessibilitydata['fontfamily'] = [];
 foreach ($fontfamily as $individual_fontfamily) {
     if ($individual_fontfamily == $userObject->get_font()) {
         $accessibilitydata['fontfamily'][$individual_fontfamily] = true;
@@ -161,75 +161,75 @@ foreach ($fontfamily as $individual_fontfamily) {
     }
 }
 
-$accessibilitydata['colours'] = array(
-    array(
+$accessibilitydata['colours'] = [
+    [
         'name' => $string['background'],
         'value' => $userObject->get_bgcolor(''),
         'radio_name' => 'bg',
         'input_name' => 'background'
-    ),
-    array(
+    ],
+    [
         'name' => $string['foreground'],
         'value' => $userObject->get_fgcolor(''),
         'radio_name' => 'fg',
         'input_name' => 'foreground'
-    ),
-    array(
+    ],
+    [
         'name' => $string['markscolour'],
         'value' => $userObject->get_marks_color(''),
         'radio_name' => 'marks',
         'input_name' => 'marks_color'
-    ),
-    array(
+    ],
+    [
         'name' => $string['themecolour'],
         'value' => $userObject->get_themecolor(''),
         'radio_name' => 'theme',
         'input_name' => 'themecolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['labelscolour'],
         'value' => $userObject->get_labelcolor(''),
         'radio_name' => 'labels',
         'input_name' => 'labelcolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['unanswered'],
         'value' => $userObject->get_unanswered_color(''),
         'radio_name' => 'unanswered',
         'input_name' => 'unansweredcolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['dismisscolor'],
         'value' => $userObject->get_dismiss_color(''),
         'radio_name' => 'dismiss',
         'input_name' => 'dismisscolor'
-    ),
-    array(
+    ],
+    [
         'name' => $string['highlightcolour'],
         'value' => $userObject->getHighlightBackgroundColour(''),
         'radio_name' => 'colour_highlight',
         'input_name' => 'highlightcolour'
-    ),
-    array(
+    ],
+    [
         'name' => $string['globalthemecolour'],
         'value' => $userObject->getPaperGlobalThemeColour(''),
         'radio_name' => 'colour_globaltheme',
         'input_name' => 'globalthemecolour'
-    ),
-    array(
+    ],
+    [
         'name' => $string['globalthemefontcolour'],
         'value' => $userObject->getPaperGlobalThemeFontcolour(''),
         'radio_name' => 'colour_globalthemefont',
         'input_name' => 'globalthemefontcolour'
-    ),
-);
+    ],
+];
 $accessibilitydata['userid'] = $userObject->get_user_ID();
 $accessibilitydata['username'] = $userObject->get_username();
 $render->render($accessibilitydata, $string, 'students/settings.html');
 
 $data = [
-    'scripts' => array(
+    'scripts' => [
         '/js/studentsettingsinit.min.js',
-    ),
+    ],
 ];
-$render->render($data, array(), 'footer.html');
+$render->render($data, [], 'footer.html');

@@ -58,9 +58,9 @@ function drawTabs($tab_array, $current_tab, $sessions_with_papers)
     return $html;
 }
 
-$sessions_with_papers = array();
+$sessions_with_papers = [];
 
-$performance_summary_years = array();
+$performance_summary_years = [];
 
 if ($userObject->has_role('Student')) {
     $logger = new Logger($mysqli);
@@ -81,7 +81,7 @@ if ($userObject->has_role('Student')) {
     $lab_info->close();
 
     // Get modules
-    $modules = array();
+    $modules = [];
     $i = 0;
     if ($stmt = $mysqli->prepare("SELECT DISTINCT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 AND mod_deleted IS NULL AND calendar_year != '' ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
         $stmt->bind_param('i', $userObject->get_user_ID());
@@ -141,13 +141,13 @@ QUERY;
             $stmt->store_result();
             while ($stmt->fetch()) {
                 // Check if the user is able to access the paper from their current location
-                $lab_arr = (empty($labs)) ? array() : explode(',', $labs);
+                $lab_arr = (empty($labs)) ? [] : explode(',', $labs);
                 if (empty($lab_arr) or ($lab != -1 and in_array($lab, $lab_arr))) {
                     $screens = (empty($screens)) ? 0 : $screens;
 
                     // Don't show if 0 screens
                     if ($screens > 0) {
-                        $modules[$i]['papers'][] = array(
+                        $modules[$i]['papers'][] = [
                             'title' => $paper_title,
                             'type' => $paper_type,
                             'original_type' => $paper_type,
@@ -156,7 +156,7 @@ QUERY;
                             'screens' => $screens,
                             'crypt_name' => $crypt_name,
                             'password' => $password
-                        );
+                        ];
                         $papers++;
 
                         if (!in_array($modules[$i]['year'], $sessions_with_papers)) {
@@ -170,8 +170,8 @@ QUERY;
     }
 
     // Get which papers a student has taken (for feedback purposes).
-    $papers_taken = array();
-    $types = array(0, 1, 2, 5);
+    $papers_taken = [];
+    $types = [0, 1, 2, 5];
     foreach ($types as $type) {
         $log_query = "SELECT DISTINCT paperID FROM log$type, log_metadata WHERE log$type.metadataID = log_metadata.id AND userID = ?";
         $stmt = $mysqli->prepare($log_query);
@@ -216,7 +216,7 @@ QUERY;
             while ($stmt->fetch()) {
                 if (in_array($paper_id, $papers_taken)) {
                     if ($feedback_type == 'objectives' or $feedback_type == 'questions') {
-                        $modules[$i]['papers'][] = array('title' => $paper_title, 'type' => $feedback_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name, 'password' => $password);
+                        $modules[$i]['papers'][] = ['title' => $paper_title, 'type' => $feedback_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => 0, 'screens' => 1, 'crypt_name' => $crypt_name, 'password' => $password];
                         $papers++;
                     } elseif ($feedback_type == 'cohort_performance') {
                         $performance_summary_years[$calendar_year] = true;

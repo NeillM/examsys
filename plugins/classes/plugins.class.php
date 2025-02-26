@@ -185,7 +185,7 @@ abstract class plugins
                     if (\version::is_version_higher($this->version, $currentversion)) {
                         // Get update files available.
                         $updatefiles = glob($pluginpath . 'update*');
-                        $fileversion = array();
+                        $fileversion = [];
                         // SQL files.
                         foreach ($updatefiles as $file) {
                             $v = ltrim(rtrim(basename($file), '.sql'), 'update');

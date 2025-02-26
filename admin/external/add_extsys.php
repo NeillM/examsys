@@ -53,7 +53,7 @@ $addtionalcss = '<style type="text/css">
             border: 2px solid #800000;
           }
         </style>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['listextsys'] => 'list_extsys.php');
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['listextsys'] => 'list_extsys.php'];
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_extsys.php', 'sync_16.png', $lang, $toprightmenu, 'admin/options_list.html');

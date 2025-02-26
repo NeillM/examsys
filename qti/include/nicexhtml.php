@@ -616,42 +616,42 @@ function NX_CreateQTI2Tree()
 {
     global $tree;
 
-    $tree = array();
+    $tree = [];
 
     // block.ElementGroup
-    $block = array('pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'address', 'dl', 'ol', 'hr', 'blockquote', 'ul', 'table', 'div');
+    $block = ['pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'address', 'dl', 'ol', 'hr', 'blockquote', 'ul', 'table', 'div'];
 
     // inline.ElementGroup
-    $inline = array('hottext', 'img', 'br', 'gap', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite');
+    $inline = ['hottext', 'img', 'br', 'gap', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite'];
 
     // inlineStatic.ElementGroup
-    $inlineStatic = array('hottext', 'img', 'br', 'gap', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite');
+    $inlineStatic = ['hottext', 'img', 'br', 'gap', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite'];
 
     // flow.ElementGroup
-    $flow = array('pre', 'h2', 'h3', 'h1', 'h6', 'h4', 'h5', 'p', 'address', 'dl', 'ol', 'img', 'br', 'ul', 'hr', 'blockquote', 'hottext', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite', 'table', 'div');
+    $flow = ['pre', 'h2', 'h3', 'h1', 'h6', 'h4', 'h5', 'p', 'address', 'dl', 'ol', 'img', 'br', 'ul', 'hr', 'blockquote', 'hottext', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite', 'table', 'div'];
 
     // bodyElement.AttrGroup
-    $bea = array('id', 'class', 'label');
+    $bea = ['id', 'class', 'label'];
 
-    $tree['itemBody'] = array(
+    $tree['itemBody'] = [
     'tags' => $block,
-    'attr' => array()
-    );
+    'attr' => []
+    ];
 
-    $tree['prompt'] = array(
+    $tree['prompt'] = [
     'tags' => $inlineStatic,
-    'attr' => array()
-    );
+    'attr' => []
+    ];
 
-    $tree['feedbackInline'] = array(
+    $tree['feedbackInline'] = [
     'tags' => $inline,
-    'attr' => array()
-    );
+    'attr' => []
+    ];
 
-    $tree['pre'] = array(
+    $tree['pre'] = [
     'tags' => $inline,
     'attr' => $bea
-    );
+    ];
 
     $tree['h1'] = $tree['pre'];
 
@@ -667,76 +667,76 @@ function NX_CreateQTI2Tree()
 
     $tree['p'] = $tree['pre'];
 
-    $tree['dl'] = array(
-    'tags' => array('dt', 'dd'),
+    $tree['dl'] = [
+    'tags' => ['dt', 'dd'],
     'attr' => $bea
-    );
+    ];
 
-    $tree['ol'] = array(
-    'tags' => array('li'),
+    $tree['ol'] = [
+    'tags' => ['li'],
     'attr' => $bea
-    );
+    ];
 
-    $tree['hr'] = array(
-    'tags' => array(),
+    $tree['hr'] = [
+    'tags' => [],
     'attr' => $bea
-    );
+    ];
 
     $tree['blockquote'] = $tree['itemBody'];
 
-    $tree['ul'] = array(
-    'tags' => array('li'),
+    $tree['ul'] = [
+    'tags' => ['li'],
     'attr' => $bea
-    );
+    ];
 
-    $tree['table'] = array(
-    'tags' => array('caption', 'col', 'colgroup', 'thead', 'tfoot', 'tbody'),
+    $tree['table'] = [
+    'tags' => ['caption', 'col', 'colgroup', 'thead', 'tfoot', 'tbody'],
     'attr' => $bea
-    );
+    ];
 
-    $tree['div'] = array(
-    'tags' => array('dt', 'dd'),
+    $tree['div'] = [
+    'tags' => ['dt', 'dd'],
     'attr' => $bea
-    );
+    ];
 
-    $tree['dl'] = array(
-    'tags' => array('dt', 'dd'),
+    $tree['dl'] = [
+    'tags' => ['dt', 'dd'],
     'attr' => $bea
-    );
+    ];
 
-    $tree['dl'] = array(
-    'tags' => array('dt', 'dd'),
+    $tree['dl'] = [
+    'tags' => ['dt', 'dd'],
     'attr' => $bea
-    );
+    ];
 
     $tree['address'] = $tree['pre'];
 
-    $tree['hottext'] = array(
+    $tree['hottext'] = [
     'tags' => $inlineStatic,
     'attr' => $bea
-    );
+    ];
 
-    $tree['img'] = array(
-    'tags' => array(),
-    'attr' => array('id', 'class', 'label', 'src', 'alt', 'longdesc', 'height', 'width')
-    );
+    $tree['img'] = [
+    'tags' => [],
+    'attr' => ['id', 'class', 'label', 'src', 'alt', 'longdesc', 'height', 'width']
+    ];
 
-    $tree['br'] = array(
-    'tags' => array(),
+    $tree['br'] = [
+    'tags' => [],
     'attr' => $bea
-    );
+    ];
 
-    $tree['gap'] = array(
-    'tags' => array(),
-    'attr' => array('id', 'class', 'label', 'identifier', 'fixed', 'templateIdentifier', 'showHide', 'matchGroup', 'required')
-    );
+    $tree['gap'] = [
+    'tags' => [],
+    'attr' => ['id', 'class', 'label', 'identifier', 'fixed', 'templateIdentifier', 'showHide', 'matchGroup', 'required']
+    ];
 
     $tree['em'] = $tree['pre'];
 
-    $tree['a'] = array(
+    $tree['a'] = [
     'tags' => $inline,
-    'attr' => array('id', 'class', 'label', 'href', 'type')
-    );
+    'attr' => ['id', 'class', 'label', 'href', 'type']
+    ];
 
     $tree['code'] = $tree['pre'];
 
@@ -759,53 +759,53 @@ function NX_CreateQTI2Tree()
     $tree['b'] = $tree['pre'];
     $tree['cite'] = $tree['pre'];
 
-    $tree['dt'] = array(
+    $tree['dt'] = [
     'tags' => $inline,
-    'attr' => array()
-    );
+    'attr' => []
+    ];
 
-    $tree['dd'] = array(
+    $tree['dd'] = [
     'tags' => $flow,
-    'attr' => array()
-    );
+    'attr' => []
+    ];
 
-    $tree['li'] = array(
+    $tree['li'] = [
     'tags' => $flow,
-    'attr' => array()
-    );
+    'attr' => []
+    ];
 
-    $tree['caption'] = array(
+    $tree['caption'] = [
     'tags' => $inline,
-    'attr' => array()
-    );
+    'attr' => []
+    ];
 
-    $tree['col'] = array(
-    'tags' => array(),
-    'attr' => array('id', 'class', 'label', 'span')
-    );
+    $tree['col'] = [
+    'tags' => [],
+    'attr' => ['id', 'class', 'label', 'span']
+    ];
 
-    $tree['colgroup'] = array(
-    'tags' => array('col'),
-    'attr' => array('id', 'class', 'label', 'span')
-    );
+    $tree['colgroup'] = [
+    'tags' => ['col'],
+    'attr' => ['id', 'class', 'label', 'span']
+    ];
 
-    $tree['thead'] = array(
-    'tags' => array('tr'),
+    $tree['thead'] = [
+    'tags' => ['tr'],
     'attr' => $bea
-    );
+    ];
 
     $tree['tfoot'] = $tree['thead'];
     $tree['tbody'] = $tree['thead'];
 
-    $tree['tr'] = array(
-    'tags' => array('td', 'th'),
+    $tree['tr'] = [
+    'tags' => ['td', 'th'],
     'attr' => $bea
-    );
+    ];
 
-    $tree['td'] = array(
+    $tree['td'] = [
     'tags' => $flow,
-    'attr' => array('id', 'class', 'label', 'headers', 'scope', 'abbr', 'axis', 'rowspan', 'colspan')
-    );
+    'attr' => ['id', 'class', 'label', 'headers', 'scope', 'abbr', 'axis', 'rowspan', 'colspan']
+    ];
 
     $tree['th'] = $tree['td'];
 }

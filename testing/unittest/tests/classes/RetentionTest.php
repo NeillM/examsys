@@ -51,25 +51,25 @@ class RetentionTest extends unittestdatabase
         $datagenerator = $this->get_datagenerator('audit', 'core');
         $time = new \DateTime('91 days ago');
         $this->audit = $datagenerator->create(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'action' => Audit::ADDROLE,
                 'details' => 'Student',
                 'time' => $time->format('Y-m-d H:i:s')
-            )
+            ]
         );
         $time = new \DateTime('89 days ago');
         $this->audit2 = $datagenerator->create(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'action' => Audit::REMOVEROLE,
                 'details' => 'Student',
                 'time' => $time->format('Y-m-d H:i:s')
-            )
+            ]
         );
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $paper = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test summative',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
@@ -77,12 +77,12 @@ class RetentionTest extends unittestdatabase
                 'papertype' => '2',
                 'modulename' => 'Training Module',
                 'remote' => 1
-            )
+            ]
         );
         $datagenerator = $this->get_datagenerator('anomaly', 'core');
         $time = new \DateTime('366 days ago');
         $this->anomaly = $datagenerator->createAnomaly(
-            array(
+            [
                 'userid' => $this->student['id'],
                 'paperid' => $paper['id'],
                 'screen' => 2,
@@ -90,11 +90,11 @@ class RetentionTest extends unittestdatabase
                 'previous' => 'Tue Aug 19 1975 23:15:30 GMT+0200 (CEST)',
                 'current' => 'Tue Aug 19 1975 23:10:30 GMT+0200 (CEST)',
                 'time' => $time->getTimestamp(),
-            )
+            ]
         );
         $time = new \DateTime('364 days ago');
         $this->anomaly2 = $datagenerator->createAnomaly(
-            array(
+            [
                 'userid' => $this->student['id'],
                 'paperid' => $paper['id'],
                 'screen' => 3,
@@ -102,7 +102,7 @@ class RetentionTest extends unittestdatabase
                 'previous' => 'Tue Aug 20 1975 23:15:30 GMT+0200 (CEST)',
                 'current' => 'Tue Aug 20 1975 23:10:30 GMT+0200 (CEST)',
                 'time' => $time->getTimestamp(),
-            )
+            ]
         );
     }
 
@@ -115,20 +115,20 @@ class RetentionTest extends unittestdatabase
     {
         Retention::deleteDataByRetentionPolicy('audit_log');
         $queryTable = $this->query(
-            array(
+            [
                 'table' => 'audit_log',
-                'columns' => array('userID', 'action', 'details', 'sourceID', 'source')
-            )
+                'columns' => ['userID', 'action', 'details', 'sourceID', 'source']
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 =>  [
                 'userID' => $this->audit2['userID'],
                 'action' => $this->audit2['action'],
                 'details' => $this->audit2['details'],
                 'sourceID' => $this->audit2['sourceID'],
                 'source' => $this->audit2['source'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -141,13 +141,13 @@ class RetentionTest extends unittestdatabase
     {
         Retention::deleteDataByRetentionPolicy('anomaly');
         $queryTable = $this->query(
-            array(
-                'columns' => array('id', 'type', 'time', 'details', 'userID', 'paperID', 'screen'),
+            [
+                'columns' => ['id', 'type', 'time', 'details', 'userID', 'paperID', 'screen'],
                 'table' => 'anomaly',
-            )
+            ]
         );
-        $expectedTable = array(
-            0 => array(
+        $expectedTable = [
+            0 => [
                 'id' => $this->anomaly2['id'],
                 'type' => $this->anomaly2['type'],
                 'time' => $this->anomaly2['timestamp'],
@@ -155,8 +155,8 @@ class RetentionTest extends unittestdatabase
                 'userID' => $this->anomaly2['userid'],
                 'paperID' => $this->anomaly2['paperid'],
                 'screen' => $this->anomaly2['screen'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 }

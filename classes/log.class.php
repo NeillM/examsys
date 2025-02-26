@@ -152,13 +152,13 @@ abstract class log
             }
         }
         $log_data->close();
-        return array('used_questions' => $used_questions,
+        return ['used_questions' => $used_questions,
         'user_answers' => $user_answers,
         'user_dismiss' => $user_dismiss,
         'user_order' => $user_order,
         'previous_duration' => $this->previousduration,
         'screen_pre_submitted' => $this->screenpresubmitted,
-        'current_screen' => $this->currentscreen);
+        'current_screen' => $this->currentscreen];
     }
 
     /**
@@ -189,7 +189,7 @@ abstract class log
      */
     public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false)
     {
-        $user_list = array();
+        $user_list = [];
         if ($studentonly) {
             $from = 'log' . $this->papertype . ', log_metadata, users ' . self::get_student_only();
         } else {
@@ -242,7 +242,7 @@ abstract class log
      */
     public function get_assessment_data($paperid, $startdate, $enddate, $userlist, $course = '%', $studentonly = false)
     {
-        $data = array();
+        $data = [];
         if ($studentonly) {
             $from = 'log' . $this->papertype . ', log_metadata, questions, users ' . self::get_student_only();
         } else {

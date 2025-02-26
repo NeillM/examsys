@@ -53,12 +53,12 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <div id="content" class="content">
 <?php
-  echo $render->render_admin_navigation(array(
+  echo $render->render_admin_navigation([
     '/' => $string['home'],
     '/admin/index.php' => $string['admintools'],
     '/admin/list_courses.php' => $string['courses'],
     '/users/bulk_import_courses.php' => $string['bulkcourseimport'],
-  ));
+  ]);
     ?>
 <br />
 <br />
@@ -82,7 +82,7 @@ if (isset($_POST['submit'])) {
 
             <?php
             // Get a list of courses held by ExamSys.
-            $course_list = array();
+            $course_list = [];
             $result = $mysqli->prepare('SELECT DISTINCT name FROM courses WHERE deleted IS NULL');
             $result->execute();
             $result->bind_result($course_name);
@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
 
             // Get a list of schools held by ExamSys.
             $unknown_schoolID = 0;
-            $school_list = array();
+            $school_list = [];
             $result = $mysqli->prepare('SELECT DISTINCT id, school FROM schools WHERE deleted IS NULL');
             $result->execute();
             $result->bind_result($school_id, $school_name);
@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
             $coursesAdded = 0;
             $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_course_create.csv');
 
-            $students = array();
+            $students = [];
             foreach ($lines as $separate_line) {
                 if (trim($separate_line) != '') {
                     $fields = explode(',', $separate_line);

@@ -109,13 +109,13 @@ class renderdata extends \questiondata
             $this->displaymedia = true;
         }
         $sct_parts = explode('~', $this->leadin);
-        $sct_titles = array(
+        $sct_titles = [
             1 => $this->strings['hypothesis'],
             2 => $this->strings['investigation'],
             3 => $this->strings['prescription'],
             4 => $this->strings['intervention'],
             5 => $this->strings['treatment'],
-        );
+        ];
         $this->scttitle = $sct_titles[$this->displaymethod];
         $this->scthyp = $sct_parts[0];
         $this->sctinfo = $sct_parts[1];

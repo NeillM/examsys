@@ -35,19 +35,19 @@ class UserObjectTest extends unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('log', 'core');
         $datagenerator->create_metadata(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'paperID' => 1,
                 'started' => '2017-01-01 00:00:00',
                 'completed' => '2017-01-02 00:00:00'
-            )
+            ]
         );
         $datagenerator->create_metadata(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'paperID' => 2,
                 'started' => '2017-01-01 00:00:00'
-            )
+            ]
         );
     }
 
@@ -108,8 +108,8 @@ class UserObjectTest extends unittestdatabase
             null,
             null
         );
-        $expected = array(
-            0 => array(
+        $expected = [
+            0 => [
                 'background' => UserObject::BGCOLOUR,
                 'foreground' => UserObject::FGCOLOUR,
                 'textsize' => UserObject::TEXTSIZE,
@@ -122,46 +122,46 @@ class UserObjectTest extends unittestdatabase
                 'globalthemecolour' => '#DDDDDD',
                 'globalthemefont_colour' => UserObject::GLOBALTHEMEFONTCOLOUR,
                 'highlight_bgcolour' => UserObject::HIGHLIGHTCOLOUR,
-            ),
-        );
+            ],
+        ];
         $actual = $this->query(
-            array('columns' => array(
+            ['columns' => [
                     'background','foreground', 'textsize', 'marks_color', 'themecolor', 'labelcolor',
                     'font', 'unanswered', 'dismiss', 'globalthemecolour', 'globalthemefont_colour',
-                    'highlight_bgcolour'),
+                    'highlight_bgcolour'],
                 'table' => 'special_needs',
-                'where' => array(array('column' => 'userID', 'value' => $this->student['id']))
-            )
+                'where' => [['column' => 'userID', 'value' => $this->student['id']]]
+            ]
         );
 
         $this->assertEquals($expected, $actual);
 
         // Check tracked changes.
-        $expectedtrack = array(
-            0 => array(
+        $expectedtrack = [
+            0 => [
                 'type' => 'User Profile',
                 'typeID' => $this->student['id'],
                 'editor' => $this->student['id'],
                 'old' => UserObject::MARKSCOLOUR,
                 'new' => '#C0C0C0',
                 'part' => 'marks',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'type' => 'User Profile',
                 'typeID' => $this->student['id'],
                 'editor' => $this->student['id'],
                 'old' => UserObject::GLOBALTHEMECOLOUR,
                 'new' => '#DDDDDD',
                 'part' => 'globaltheme',
-            ),
-        );
+            ],
+        ];
 
         $actualtrack = $this->query(
-            array('columns' => array(
-                'type', 'typeID', 'editor', 'old', 'new', 'part'),
+            ['columns' => [
+                'type', 'typeID', 'editor', 'old', 'new', 'part'],
                 'table' => 'track_changes',
-                'where' => array(array('column' => 'typeID', 'value' => $this->student['id']))
-            )
+                'where' => [['column' => 'typeID', 'value' => $this->student['id']]]
+            ]
         );
 
         $this->assertEquals($expectedtrack, $actualtrack);

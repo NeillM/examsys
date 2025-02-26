@@ -43,11 +43,11 @@ $papertype = $assessment->get_type_value($paper_type);
 if ($papertype === false) {
     $errorline = __LINE__ - 2;
     $msg = __FILE__ . ' Line: ' . $errorline . ' Error:' . $string['papertypenotfound'];
-    echo json_encode(array('ERROR', $notice->ajax_notice('$paper_type' . $string['papertypenotfound'], $msg)));
+    echo json_encode(['ERROR', $notice->ajax_notice('$paper_type' . $string['papertypenotfound'], $msg)]);
     exit();
 }
 // Process the posted modules
-$modules = array();
+$modules = [];
 $first = true;
 $moduleno = param::optional('module_no', 0, param::INT, param::FETCH_POST);
 for ($i = 0; $i < $moduleno; $i++) {
@@ -175,21 +175,21 @@ try {
     $errorline = __LINE__ - 14;
     $log->record_application_warning($paper_owner, 'Paper Creation', $errorstring, $_SERVER['PHP_SELF'], $errorline);
     $msg = $errorline . ' Error code: ' . $e->getCode() . ' - ' . $errorstring;
-    echo json_encode(array(
+    echo json_encode([
         'ERROR',
         $notice->ajax_notice($string['errorcreatingpaper'], $msg)
-    ));
+    ]);
     exit();
 }
 
 if ($property_id !== false) {
     $folder = param::optional('folder', '', param::INT, param::FETCH_POST);
-    echo json_encode(array(
+    echo json_encode([
         'SUCCESS',
         $property_id,
         $first_module,
         $folder
-    ));
+    ]);
 } else {
     $log = new logger($mysqli);
     // Log warning to system.
@@ -201,8 +201,8 @@ if ($property_id !== false) {
         $_SERVER['PHP_SELF'],
         $errorline
     );
-    echo json_encode(array(
+    echo json_encode([
         'ERROR',
         $notice->ajax_notice($string['errorcreatingpaper'], $string['dbinsertfailed'])
-    ));
+    ]);
 }

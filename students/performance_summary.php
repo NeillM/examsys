@@ -30,7 +30,7 @@ require_once '../include/errors.php';
 require_once '../include/toprightmenu.inc';
 
 if (isset($_GET['userID'])) {
-    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+    if ($userObject->has_role(['SysAdmin', 'Admin', 'Staff'])) {
         if ($_GET['userID'] != '') {
             $userID = $_GET['userID'];
         } else {
@@ -60,7 +60,7 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {   // Check for valid user ID.
  */
 function get_taken_papers($userID, $db)
 {
-    $papers = array();
+    $papers = [];
 
     $i = 0;
 

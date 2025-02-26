@@ -36,10 +36,10 @@ class OptionENHANCEDCALC extends OptionEdit
     protected $formula = '';
     protected $units = '';
 
-    protected $_fields_editable = array('min', 'max', 'decimals', 'increment', 'formula', 'units');
-    private $_fields_var = array('min', 'max', 'decimals', 'increment');
-    private $_fields_ans = array('formula', 'units');
-    protected $_fields_compound = array();
+    protected $_fields_editable = ['min', 'max', 'decimals', 'increment', 'formula', 'units'];
+    private $_fields_var = ['min', 'max', 'decimals', 'increment'];
+    private $_fields_ans = ['formula', 'units'];
+    protected $_fields_compound = [];
 
     /**
      * This option is not directly persisted
@@ -60,12 +60,12 @@ class OptionENHANCEDCALC extends OptionEdit
             $this->clear_mods($this->_fields_ans);
         }
 
-        if ($this->is_deleted(array('min'))) {
+        if ($this->is_deleted(['min'])) {
             $this->track_delete_var($logger, $option_number);
             $this->clear_mods($this->_fields_var);
         }
 
-        if ($this->is_deleted(array('formula'))) {
+        if ($this->is_deleted(['formula'])) {
             $this->track_delete_ans($logger, $option_number);
             $this->clear_mods($this->_fields_ans);
         }
@@ -250,7 +250,7 @@ class OptionENHANCEDCALC extends OptionEdit
      */
     public function get_all_corrects()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -417,10 +417,10 @@ class OptionENHANCEDCALC extends OptionEdit
             null,
             param::REGEXP,
             param::FETCH_POST,
-            array(
+            [
             'default' => null,
             'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[-]?[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
-            )
+            ]
         );
 
         return $option;
@@ -443,10 +443,10 @@ class OptionENHANCEDCALC extends OptionEdit
             null,
             param::REGEXP,
             param::FETCH_POST,
-            array(
+            [
             'default' => null,
             'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[-]?[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
-            )
+            ]
         );
         return $option;
     }
@@ -463,7 +463,7 @@ class OptionENHANCEDCALC extends OptionEdit
             null,
             param::INT,
             param::FETCH_POST,
-            array('default' => null, 'min_range' => 0, 'max_range' => 8)
+            ['default' => null, 'min_range' => 0, 'max_range' => 8]
         );
         return $option;
     }
@@ -502,10 +502,10 @@ class OptionENHANCEDCALC extends OptionEdit
             null,
             param::REGEXP,
             param::FETCH_POST,
-            array(
+            [
               'default' => '',
               'regexp' => '/^[\s\w\d\/^%-°\p{L}]*$/u',
-            )
+            ]
         );
         return $option;
     }

@@ -32,7 +32,7 @@ class ST_QTI12_Question // <item
     public $qmd_toolvendor; // <itemmetadata><qmd_toolvendor>
 
     // counted stuff
-    public $counts = array(
+    public $counts = [
         'lid' => 0,
         'str' => 0,
         'num' => 0,
@@ -45,7 +45,7 @@ class ST_QTI12_Question // <item
         'extension' => 0,
         'response' => 0,
         'material' => 0
-    );
+    ];
 
     // calculate cardinaltiy, if all of lid are ismulti then Multi, if some are ismulti then varies (for extmatch i think)
     public $cardinality = 'Single';
@@ -67,7 +67,7 @@ class ST_QTI12_Question // <item
     // <response_lid>
     // array of ST_QTI12_Response
     // key on <response_lid ident=
-    public $responses = array();
+    public $responses = [];
 
     public $presentation;
     // </presentation>
@@ -77,22 +77,22 @@ class ST_QTI12_Question // <item
     // <respcondition>
     // array of ST_QTI12_RespCondition
     // key by numbe
-    public $respconditions = array();
+    public $respconditions = [];
 
     // <resprocessing>
 
     // <itemfeedback>
     // array of ST_QTI12_Itemfeedback
     // key by <itemfeedback ident=
-    public $itemfeedback = array();
+    public $itemfeedback = [];
 
-    public $comments = array();
-    public $params = array();
+    public $comments = [];
+    public $params = [];
 
     public function __construct($xml)
     {
-        $this->params['KEYWORD'] = array();
-        $this->params['VARIABLE'] = array();
+        $this->params['KEYWORD'] = [];
+        $this->params['VARIABLE'] = [];
         $this->raw_xml = $xml;
 
         $this->title = (string) $xml->attributes()->title;
@@ -248,7 +248,7 @@ class ST_QTI12_Question // <item
                         // if its not an array, make it one
                         if (!is_array($this->params[$param])) {
                             $old = $this->params[$param];
-                            $this->params[$param] = array();
+                            $this->params[$param] = [];
                             $this->params[$param][] = $old;
                         }
                         $this->params[$param][] = $bits[1];
@@ -431,7 +431,7 @@ class ST_QTI12_Response // <response_
     // <render_choice><response_label
     // ST_QTI12_Label
     // key by <response_label ident=
-    public $labels = array();
+    public $labels = [];
 
     public function __construct($type, $xml)
     {
@@ -518,7 +518,7 @@ class ST_QTI12_Response // <response_
     }
     public function __toString()
     {
-        $labeltxt = array();
+        $labeltxt = [];
         foreach ($this->labels as $label) {
             $labeltxt[] = $label->__toString();
         }
@@ -581,7 +581,7 @@ class ST_QTI12_RespCondition // <respcondition>
     // <conditionvar>
     // ST_QTI12_CondVar
     // no key
-    public $conditions = array();
+    public $conditions = [];
 
     public $sortedout;
     public $sortedoutR;
@@ -658,7 +658,7 @@ class ST_QTI12_RespCondition // <respcondition>
 
     public function __toString()
     {
-        $conditions = array();
+        $conditions = [];
         foreach ($this->conditions as $condition) {
             $conditions[] = $condition->__toString();
         }
@@ -731,7 +731,7 @@ class ST_QTI12_Itemfeedback // <itemfeedback>
 
 class ST_QTI12_Material_Inner
 {
-    public $data = array(); // <material><mattext>
+    public $data = []; // <material><mattext>
     public $image = '';
     public $label = '';
 
@@ -756,7 +756,7 @@ class ST_QTI12_Material_Inner
 class ST_QTI12_Material // <material>
 {
     public $count = 0;
-    public $chunks = array(); // array of ST_QTI12_Material_Inner
+    public $chunks = []; // array of ST_QTI12_Material_Inner
     public $image = '';
     public $x_scale = 1;
     public $y_scale = 1;
@@ -1132,7 +1132,7 @@ function parseHtml($s_str)
     $i_indicatorR = 0;
     $s_tagOption = '';
     $i_arrayCounter = 0;
-    $a_html = array();
+    $a_html = [];
     // Search for a tag in string
     while (is_int(($i_indicatorL = mb_strpos($s_str, '<', $i_indicatorR)))) {
         // Get everything into tag...

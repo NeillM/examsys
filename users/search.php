@@ -98,7 +98,7 @@ if (!is_null($submit)) {
     }
 
     // filter by roles
-    $roles = array();
+    $roles = [];
     if ($get_students) {
         $search->setSearchStudents();
     }
@@ -163,10 +163,10 @@ $temporary_yearid = param::optional('tmp_yearID', null, param::INT, param::FETCH
 $render = new render($configObject);
 
 // links on breadcrumb
-$links = array(
+$links = [
     '/' => $string['home'],
     '/users/search.php' => $string['usermanagement'],
-);
+];
 if ($moduleID) {
     $href = '/../module/index.php?module=' . $moduleID;
     $links[$href] = module_utils::get_moduleid_from_id($moduleID, $mysqli);
@@ -195,7 +195,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
         $result_detail = '';
     }
 
-    $table_order = array('#1', '#2', $string['title'], $string['surname'], $string['firstname'], $string['username'], $string['studentid'], $string['year'], $string['course']);
+    $table_order = ['#1', '#2', $string['title'], $string['surname'], $string['firstname'], $string['username'], $string['studentid'], $string['year'], $string['course']];
     $photodirectory = rogo_directory::get_directory('user_photo');
 }
 ?>
@@ -369,11 +369,11 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
             $dataset['attributes']['tmp_surname'] = $temporary_surname;
             $dataset['attributes']['tmp_courseid'] = $temporary_courseid;
             $dataset['attributes']['tmp_yearid'] = $temporary_yearid;
-            $render->render($dataset, array(), 'dataset.html');
+            $render->render($dataset, [], 'dataset.html');
             // JS utils dataset.
             $jsdataset['name'] = 'jsutils';
             $jsdataset['attributes']['xls'] = json_encode($string);
-            $render->render($jsdataset, array(), 'dataset.html');
+            $render->render($jsdataset, [], 'dataset.html');
             ?>
         <script src="../js/usersearchinit.min.js"></script>
     </body>

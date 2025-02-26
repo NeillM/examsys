@@ -38,8 +38,8 @@ class QuestionENHANCEDCALC extends QuestionEdit
     protected $tolerance_partial = 0;
     protected $fulltoltyp = '#';
     protected $parttoltyp = '#';
-    protected $vars = array();
-    protected $answers = array();
+    protected $vars = [];
+    protected $answers = [];
     protected $score_method = 'Allow partial Marks';
     protected $show_units = true;
     protected $marks_correct = 1;
@@ -50,25 +50,25 @@ class QuestionENHANCEDCALC extends QuestionEdit
     public $max_stems = 10;
     /** @var int The rounding method used for answers. */
     protected $rounding;
-    protected $variable_labels = array();
+    protected $variable_labels = [];
     protected $_allow_partial_marks = true;
     protected $_allow_change_marking_method = false;
     protected $_allow_new_options = true;
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'rounding', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status', 'staffnotes');
-    protected $_fields_change = array('option_formula', 'option_units', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_precision', 'rounding', 'marks_unit', 'tolerance_full', 'tolerance_partial');
-    protected $_fields_settings = array('sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'rounding', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars');
-    protected $_fields_force = array('show_units');
+    protected $_fields_editable = ['theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'units', 'answer_precision', 'rounding', 'show_units', 'marks_correct', 'marks_incorrect', 'marks_partial', 'marks_unit', 'tolerance_full', 'tolerance_partial', 'bloom', 'status', 'staffnotes'];
+    protected $_fields_change = ['option_formula', 'option_units', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'answer_precision', 'rounding', 'marks_unit', 'tolerance_full', 'tolerance_partial'];
+    protected $_fields_settings = ['sf', 'strictdisplay', 'strictzeros', 'dp', 'tolerance_full', 'rounding', 'fulltoltyp', 'tolerance_partial', 'parttoltyp', 'marks_partial', 'marks_incorrect', 'marks_correct', 'marks_unit', 'show_units', 'answers', 'vars'];
+    protected $_fields_force = ['show_units'];
 
     protected $_answer_negative = false;
 
-    private $_variable_map = array();
+    private $_variable_map = [];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
-        $this->_score_methods = array($this->_lang_strings['allowpartial']);
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
+        $this->_score_methods = [$this->_lang_strings['allowpartial']];
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']];
 
         // Convert the max number of options into a list of variables
         $this->variable_labels = range('A', chr(64 + $this->max_options));
@@ -513,15 +513,15 @@ class QuestionENHANCEDCALC extends QuestionEdit
     private function unserialize_answers($data)
     {
         $i = 1;
-        $this->answers = array();
+        $this->answers = [];
 
         foreach ($data as $fields) {
             if (!isset($this->options[$i])) {
-                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $fields['formula'], 'units' => $fields['units']));
+                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, ['formula' => $fields['formula'], 'units' => $fields['units']]);
                 $this->options[$i] = $opt;
             } else {
                 $old_opt = $this->options[$i];
-                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $fields['formula'], 'units' =>  $fields['units'], 'min' => $old_opt->get_min(), 'max' => $old_opt->get_max(), 'decimals' => $old_opt->get_decimals(), 'increment' => $old_opt->get_increment()));
+                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, ['formula' => $fields['formula'], 'units' =>  $fields['units'], 'min' => $old_opt->get_min(), 'max' => $old_opt->get_max(), 'decimals' => $old_opt->get_decimals(), 'increment' => $old_opt->get_increment()]);
                 $opt->set_variable($old_opt->get_variable());
                 $this->options[$i] = $opt;
             }
@@ -538,16 +538,16 @@ class QuestionENHANCEDCALC extends QuestionEdit
     private function unserialize_vars($data)
     {
         $i = 1;
-        $this->vars[] = array();
+        $this->vars[] = [];
 
         foreach ($data as $label => $fields) {
             if (!isset($this->options[$i])) {
-                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']));
+                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, ['min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']]);
                 $opt->set_variable($label);
                 $this->options[$i] = $opt;
             } else {
                 $old_opt = $this->options[$i];
-                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, array('formula' => $old_opt->get_formula(), 'units' => $old_opt->get_units(), 'min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']));
+                $opt = new OptionENHANCEDCALC($this->_mysqli, $this->_user_id, $this, $i, $this->_lang_strings, ['formula' => $old_opt->get_formula(), 'units' => $old_opt->get_units(), 'min' => $fields['min'], 'max' => $fields['max'], 'decimals' => $fields['dec'], 'increment' => $fields['inc']]);
                 $opt->set_variable($label);
                 $this->options[$i] = $opt;
             }
@@ -569,7 +569,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     private function extract_answers()
     {
-        $this->answers = array();
+        $this->answers = [];
 
         $all_ans = array_filter($this->options, function ($var) {
             return ($var->get_formula() != '');
@@ -580,14 +580,14 @@ class QuestionENHANCEDCALC extends QuestionEdit
             $units = $option->get_units();
 
             if ($formula != '') {
-                $this->answers[] = array('formula' => $formula, 'units' => $units);
+                $this->answers[] = ['formula' => $formula, 'units' => $units];
             }
         }
     }
 
     private function extract_vars()
     {
-        $this->vars = array();
+        $this->vars = [];
 
         $index = 1;
         foreach ($this->options as $dummy => $option) {
@@ -598,7 +598,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
             $increment = $option->get_increment();
 
             if ($min != '') {
-                $this->vars[$label] = array('min' => $min, 'max' => $max, 'inc' => $increment, 'dec' => $decimals);
+                $this->vars[$label] = ['min' => $min, 'max' => $max, 'inc' => $increment, 'dec' => $decimals];
             }
             $index++;
         }

@@ -30,14 +30,14 @@ class QuestionDICHOTOMOUS extends QuestionEdit
     protected $_answer_positive = 't';
     protected $_answer_negative = 'f';
     protected $display_method = 'TF_Positive';
-    protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect');
+    protected $_fields_change = ['option_correct', 'option_marks_correct', 'option_marks_incorrect'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-        $this->_display_methods = array('TF_NegativeAbstain' => $this->_lang_strings['tfnegativeabstain'], 'TF_Positive' => $this->_lang_strings['tfpositive'], 'YN_NegativeAbstain' => $this->_lang_strings['ynnegativeabstain'], 'YN_Positive' => $this->_lang_strings['ynpositive']);
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
+        $this->_display_methods = ['TF_NegativeAbstain' => $this->_lang_strings['tfnegativeabstain'], 'TF_Positive' => $this->_lang_strings['tfpositive'], 'YN_NegativeAbstain' => $this->_lang_strings['ynnegativeabstain'], 'YN_Positive' => $this->_lang_strings['ynpositive']];
 
         // 'correct' is not a unified field for Dichotomous questions
         $this->_fields_editable[] = 'correct';
@@ -49,9 +49,9 @@ class QuestionDICHOTOMOUS extends QuestionEdit
     public function get_tf_labels()
     {
         if (mb_substr($this->get_display_method(), 0, 2) == 'YN') {
-            $labels = array('true' => mb_substr($this->_lang_strings['yes'], 0, 1), 'false' => mb_substr($this->_lang_strings['no'], 0, 1));
+            $labels = ['true' => mb_substr($this->_lang_strings['yes'], 0, 1), 'false' => mb_substr($this->_lang_strings['no'], 0, 1)];
         } else {
-            $labels = array('true' => mb_substr($this->_lang_strings['true'], 0, 1), 'false' => mb_substr($this->_lang_strings['false'], 0, 1));
+            $labels = ['true' => mb_substr($this->_lang_strings['true'], 0, 1), 'false' => mb_substr($this->_lang_strings['false'], 0, 1)];
         }
 
         return $labels;

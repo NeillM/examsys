@@ -38,11 +38,11 @@ $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/settings.css"/>';
-$breadcrumb = array(
+$breadcrumb = [
     $string['home'] => '../../index.php',
     $string['administrativetools'] => '../index.php',
     $string['audit'] => 'list_audit.php'
-);
+];
 $render->render_admin_header($string, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/options_empty.html');
 $render->render_admin_content($breadcrumb, $string);

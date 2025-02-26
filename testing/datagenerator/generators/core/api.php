@@ -44,7 +44,7 @@ class api extends generator
         if (empty($parameters['userid'])) {
             throw new data_error('userid must be provided');
         }
-        $defaults = array('secret' => 'ssshitsasecret', 'redirect' => 'https://www.example.com', 'clientid' =>  $parameters['clientid'], 'userid' => $parameters['userid']);
+        $defaults = ['secret' => 'ssshitsasecret', 'redirect' => 'https://www.example.com', 'clientid' =>  $parameters['clientid'], 'userid' => $parameters['userid']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO oauth_clients (client_id, client_secret, redirect_uri, user_id) VALUES (?, ?, ?, ?)');
         $sql->bind_param('ssss', $parameters['clientid'], $settings['secret'], $settings['redirect'], $parameters['userid']);

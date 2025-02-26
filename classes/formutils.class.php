@@ -52,10 +52,10 @@ class FormUtils
      */
     public function pre_populate($fields, $array)
     {
-        $new_array = array();
+        $new_array = [];
 
         if (!is_array($array)) {
-            $array = array();
+            $array = [];
         }
 
         foreach (explode(',', $fields) as $field) {
@@ -74,7 +74,7 @@ class FormUtils
      */
     public function check_required($fields)
     {
-        $errors = array();
+        $errors = [];
 
         foreach ($fields as $name => $pretty_name) {
             if (!isset($_POST[$name]) || $_POST[$name] == '') {

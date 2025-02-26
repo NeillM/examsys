@@ -60,10 +60,10 @@ for (
         }
         $result->close();
         $assessment = new assessment($mysqli, $configObject);
-        $update_params = array(
-        'deleted' => array('s', null),
-        'paper_title' => array('s', $new_title)
-        );
+        $update_params = [
+        'deleted' => ['s', null],
+        'paper_title' => ['s', $new_title]
+        ];
         $assessment->db_update_assessment($item_id, $update_params);
         $result = $mysqli->prepare('SELECT question, deleted FROM (papers, questions) WHERE paper = ? AND papers.question = questions.q_id');
         $result->bind_param('i', $item_id);

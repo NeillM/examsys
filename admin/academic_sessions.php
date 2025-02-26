@@ -31,9 +31,9 @@ $result->execute();
 $result->store_result();
 $result->bind_result($calendar_year, $academic_year, $cal_status, $stat_status);
 // Put sessions into array so we can close hte db connection.
-$sessions = array();
+$sessions = [];
 while ($result->fetch()) {
-    $sessions[$calendar_year] = array($academic_year, $cal_status, $stat_status);
+    $sessions[$calendar_year] = [$academic_year, $cal_status, $stat_status];
 }
 $num_sessions = count($sessions);
 $result->close();

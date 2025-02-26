@@ -114,7 +114,7 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     if ($current_month > 12) {
         $current_month = 1;
     }
-    $months = array('', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+    $months = ['', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
     for ($i = 1; $i <= 12; $i++) {
         $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
         if ($i < 10) {
@@ -241,14 +241,14 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     }
     echo '</select> ' . $string['mins'] . '</td></tr>';
     echo '<tr><td style="text-align:right">' . $string['daterequired'] . '</td><td><select name="period" id="period">';
-    $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+    $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
     echo "<option value=\"\"></option>\n";
     for ($i = 0; $i < 12; $i++) {
         echo "<option value=\"$i\">" . $string[$months[$i]] . "</option>\n";
     }
     echo '</select></td><td style="text-align:right">' . $string['cohortsize'] . '</td><td><select name="cohort_size" id="cohort_size">';
     echo "<option value=\"\"></option>\n";
-    $sizes = array('&lt;' . $string['wholecohort'] . '&gt', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300', '301-400', '401-500');
+    $sizes = ['&lt;' . $string['wholecohort'] . '&gt', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300', '301-400', '401-500'];
     foreach ($sizes as $size) {
         echo "<option value=\"$size\">$size</option>\n";
     }
@@ -330,10 +330,10 @@ foreach ($module_array as $module) {
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['central'] = $central_mgmt;
-    $render->render($miscdataset, array(), 'dataset.html');
+    $render->render($miscdataset, [], 'dataset.html');
 ?>
 </body>
 </html>

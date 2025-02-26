@@ -49,9 +49,9 @@ require '../include/errors.php';
 </head>
 <body>
 <?php
-  $types = array('area', 'enhancedcalc', 'dichotomous', 'extmatch', 'blank', 'info', 'matrix', 'hotspot', 'labelling', 'likert', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
+  $types = ['area', 'enhancedcalc', 'dichotomous', 'extmatch', 'blank', 'info', 'matrix', 'hotspot', 'labelling', 'likert', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false'];
 
-  $question_types = array();
+  $question_types = [];
 foreach ($types as $type) {
     $question_types[$type]['desc'] = $string[$type . '_desc'];
     $question_types[$type]['title'] = $string[$type];
@@ -71,7 +71,7 @@ foreach ($question_types as $type => $details) {
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $_GET['module'];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/createquestioninit.min.js"></script>
 </body>

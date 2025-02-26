@@ -27,12 +27,12 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
 $faculties = 0;
-$faculty_list = array();
+$faculty_list = [];
 $result = $mysqli->prepare('SELECT id, code, name FROM faculty WHERE deleted IS NULL ORDER BY name');
 $result->execute();
 $result->bind_result($facultyID, $code, $name);
 while ($result->fetch()) {
-    $faculty_list[] = array($facultyID, $code, $name);
+    $faculty_list[] = [$facultyID, $code, $name];
     $faculties++;
 }
 $result->close();
@@ -113,7 +113,7 @@ $result->close();
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_add_school.php';
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/schoolforminit.min.js"></script>
 </body>

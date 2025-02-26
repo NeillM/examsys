@@ -66,7 +66,7 @@ if ($studentsonly) {
     $rolesjoin = '';
 }
 
-$log_answers = array();
+$log_answers = [];
 $time_int = \log::getStartInterval($paper_type);
 if ($paper_type == \assessment::TYPE_FORMATIVE) {
     $progress_time_int = \log::getStartInterval(\assessment::TYPE_PROGRESS);
@@ -113,7 +113,7 @@ while ($result->fetch()) {
 $result->close();
 
 
-$option_list_array = array();
+$option_list_array = [];
 
 // Iterate around all words marked for correction
 for ($i = 0; $i < $wordcount; $i++) {
@@ -178,7 +178,7 @@ foreach ($log_answers as $log_type => $log_data) {
         $have_answer = false;
         $saved_response = '';
         // Required to shift array indexes.
-        $blank_details_redo = array();
+        $blank_details_redo = [];
         $j = 0;
         $blank_details = explode('[blank', $new_option_text);
         for ($i = 1; $i <= $no_answers; $i++) {

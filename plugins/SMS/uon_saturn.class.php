@@ -34,7 +34,7 @@ class UON_SATURN extends SmsUtils
 
     public function getUserData($username)
     {
-        $user = array();
+        $user = [];
         $sources = $this->getStudentSources();
         foreach ($sources as $name => $source) {
             if ($source != '') {
@@ -76,7 +76,7 @@ class UON_SATURN extends SmsUtils
      */
     public function get_module($moduleID, $mysqli)
     {
-        $users = array();
+        $users = [];
 
         // Calculate what the current academic session is.
         $yearutils = new yearutils($mysqli);
@@ -130,7 +130,7 @@ class UON_SATURN extends SmsUtils
                     }
                 }
             }
-            return array($moduleID, $moduletitle, $school);
+            return [$moduleID, $moduletitle, $school];
         } else {
             return false;
         }
@@ -152,7 +152,7 @@ class UON_SATURN extends SmsUtils
 
             $lookup_username = trim($sms->Username);
 
-            $users[$lookup_username] = array($sms->Title, $sms->Surname, $sms->Forename, $sms->CourseCode, $sms->Email, $sms->Gender, $sms->YearofStudy, $sms->StudentID);
+            $users[$lookup_username] = [$sms->Title, $sms->Surname, $sms->Forename, $sms->CourseCode, $sms->Email, $sms->Gender, $sms->YearofStudy, $sms->StudentID];
         }
 
 
@@ -167,19 +167,19 @@ class UON_SATURN extends SmsUtils
     public function getStudentSources()
     {
         $configObject = Config::get_instance();
-        return array('&lt;No lookup&gt;' => '', 'UK' => $configObject->get_setting('core', 'cfg_sms_url')
+        return ['&lt;No lookup&gt;' => '', 'UK' => $configObject->get_setting('core', 'cfg_sms_url')
             . '/touchstonestudent.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url')
             . '/touchstonestudent.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url')
-            . '/touchstonestudent.ashx?campus=china');
+            . '/touchstonestudent.ashx?campus=china'];
     }
 
     public function getModuleSources()
     {
         $configObject = Config::get_instance();
-        return array('UK' => $configObject->get_setting('core', 'cfg_sms_url')
+        return ['UK' => $configObject->get_setting('core', 'cfg_sms_url')
             . '/touchstone.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url')
             . '/touchstone.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url')
-            . '/touchstone.ashx?campus=china');
+            . '/touchstone.ashx?campus=china'];
     }
 
 
@@ -229,7 +229,7 @@ class UON_SATURN extends SmsUtils
         //------------------------------------
 
         // Get the currently enrolled students in ExamSys for the module.
-        $current_users = array();
+        $current_users = [];
         $sql = "
         SELECT
             m.id, u.id, username, grade, title, surname, first_names, initials, GROUP_CONCAT(r.name  SEPARATOR ','), yearofstudy,
@@ -467,7 +467,7 @@ class UON_SATURN extends SmsUtils
         $this->set_enrolement_no($enrolements, $module);
         $this->set_deletion_no($deletions, $module);
 
-        $expdata = array();
+        $expdata = [];
         if ($demomode) {
             // Write out to temp
             $dir = sys_get_temp_dir();

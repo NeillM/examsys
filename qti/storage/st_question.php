@@ -44,7 +44,7 @@ class ST_Question
     public $q_group = '';
 
     public $bloom = '';
-    public $keywords = array();
+    public $keywords = [];
     public $q_option_order = 'display order'; //stem/option randomisation
 
     public $display_method = '';
@@ -72,7 +72,7 @@ class ST_Question_Blank extends ST_Question
     public $displaymode = 0;
     public $question = '';
     public $feedback = '';
-    public $options = array(); // array of STQ_Blank_Option, key as blank id in text ($BLANK_1$ etc)
+    public $options = []; // array of STQ_Blank_Option, key as blank id in text ($BLANK_1$ etc)
 }
 
 class STQ_Calc_Vars
@@ -91,13 +91,13 @@ class STQ_Calc_Vars
 class ST_Question_Calculation extends ST_Question
 {
     public $scenario = '';
-    public $variables = array(); // array of STQ_Calc_Vars, key as variable stored as (A-H)
+    public $variables = []; // array of STQ_Calc_Vars, key as variable stored as (A-H)
     public $formula;
     public $units;
     public $decimals = 0;
     public $tolerance = 0;
     public $feedback;
-    public $settings = array();
+    public $settings = [];
 }
 
 class ST_Question_enhancedcalc extends ST_Question_Calculation
@@ -131,7 +131,7 @@ class ST_Question_Dichotomous extends ST_Question
     public $scenario = '';
     public $feedback = '';
     public $score_method = 0;
-    public $options = array();
+    public $options = [];
 }
 
 class STQ_Extm_Scenario
@@ -143,7 +143,7 @@ class STQ_Extm_Scenario
     public $media_alt;
     public $media_type;
     public $feedback;
-    public $correctans = array(); // array of Keys for correct answers based on optionlist
+    public $correctans = []; // array of Keys for correct answers based on optionlist
 
     public $marks_correct;
     public $marks_incorrect;
@@ -172,14 +172,14 @@ class STQ_Extm_Option
 
 class ST_Question_Extmatch extends ST_Question
 {
-    public $optionlist = array(); // string array of STQ_Extm_Option options by Key (A-Z)
-    public $scenarios = array(); // array of STQ_Extm_Scenario, key as scenarion no
+    public $optionlist = []; // string array of STQ_Extm_Option options by Key (A-Z)
+    public $scenarios = []; // array of STQ_Extm_Scenario, key as scenarion no
 }
 
 class STQ_Hotspot_Spot
 {
     public $type;
-    public $coords = array();
+    public $coords = [];
 
     public function __toString()
     {
@@ -191,7 +191,7 @@ class ST_Question_Hotspot extends ST_Question
 {
     public $scenario = '';
     public $feedback = '';
-    public $hotspots = array(); // array of STQ_Hotspot_Spot
+    public $hotspots = []; // array of STQ_Hotspot_Spot
     // raw labeling option text for rogo->qti->rogo
     public $raw_option = '';
 }
@@ -219,7 +219,7 @@ class STQ_Labelling_Label
 class STQ_Labelling_Arrow
 {
     public $type;
-    public $coords = array();
+    public $coords = [];
 
     public function __toString()
     {
@@ -248,8 +248,8 @@ class ST_Question_Labelling extends ST_Question
     public $height = 35;
     public $label_type = 'single';
 
-    public $arrows = array(); // array of STQ_Labelling_Arrow
-    public $labels = array();
+    public $arrows = []; // array of STQ_Labelling_Arrow
+    public $labels = [];
 
     // raw labeling option text for rogo->qti->rogo
     public $raw_option = '';
@@ -259,7 +259,7 @@ class ST_Question_Labelling extends ST_Question
 class ST_Question_Likert extends ST_Question
 {
     public $scenario = '';
-    public $scale = array(); // string array of poss values
+    public $scale = []; // string array of poss values
     public $hasna = 0;
 }
 
@@ -276,9 +276,9 @@ class STQ_Matrix_Scenario
 
 class ST_Question_Matrix extends ST_Question
 {
-    public $options = array();
+    public $options = [];
     // Store matrix as $matrix[TOP][LEFT] = T/F
-    public $scenarios = array(); // array of STQ_Matrix_Scenario, key as row
+    public $scenarios = []; // array of STQ_Matrix_Scenario, key as row
 }
 
 class STQ_Mcq_Option
@@ -306,7 +306,7 @@ class ST_Question_Mcq extends ST_Question
     public $scenario = '';
     public $correct = 0;
 
-    public $options = array(); // array of STQ_Mcq_Option, key as option no
+    public $options = []; // array of STQ_Mcq_Option, key as option no
 
     public $fb_correct;
     public $fb_incorrect;
@@ -318,7 +318,7 @@ class ST_Question_TrueFalse extends ST_Question
     public $scenario = '';
     public $correct = 0;
 
-    public $options = array(); // array of STQ_Mcq_Option, key as option no
+    public $options = []; // array of STQ_Mcq_Option, key as option no
 
     public $fb_correct;
     public $fb_incorrect;
@@ -352,7 +352,7 @@ class ST_Question_Mrq extends ST_Question
     public $scenario = '';
     public $score_method = 0;
     public $include_other = 0;
-    public $options = array(); // array of STQ_Mrq_Options, key as option no
+    public $options = []; // array of STQ_Mrq_Options, key as option no
     public $feedback;
 }
 
@@ -377,7 +377,7 @@ class ST_Question_Rank extends ST_Question
 {
     public $scenario = '';
     public $score_method = 0;
-    public $options = array(); // array of STQ_Rank_Options, key as option no
+    public $options = []; // array of STQ_Rank_Options, key as option no
     public $fb_correct;
     public $fb_incorrect;
 }
@@ -390,7 +390,7 @@ class ST_Question_Textbox extends ST_Question
     public $editor = 'WYSIWYG';
     public $marks = 1;
     public $feedback = '';
-    public $terms = array(); // array of strings
+    public $terms = []; // array of strings
 }
 
 class ST_Question_Sct extends ST_Question
@@ -413,7 +413,7 @@ class ST_Question_true_false extends ST_Question
     public $scenario = '';
     public $correct = 0;
 
-    public $options = array(); // array of STQ_Mcq_Option, key as option no
+    public $options = []; // array of STQ_Mcq_Option, key as option no
 
     public $fb_correct;
     public $fb_incorrect;

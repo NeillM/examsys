@@ -129,7 +129,7 @@ class PaperSettings
      */
     public function get(): array
     {
-        $list = array();
+        $list = [];
         $papertype = array_search($this->papertype, $this->types);
         $sql = 'SELECT
             paper_settings_setting.setting,
@@ -149,7 +149,7 @@ class PaperSettings
         $result->bind_result($setting, $value, $category, $type, $supported);
         while ($result->fetch()) {
             if ($supported == 1) {
-                $list[$setting] = array('value' => $value, 'type' => $type, 'category' => $category);
+                $list[$setting] = ['value' => $value, 'type' => $type, 'category' => $category];
             }
         }
         $result->close();
@@ -205,18 +205,18 @@ class PaperSettings
         $langpack = new langpack();
         $strings = $langpack->get_all_strings($this->langcomponent);
         $render = new render($this->config);
-        $data = array();
+        $data = [];
         if ($category != '') {
             // Category specifc settings.
             foreach ($this->settings as $setting => $info) {
                 if ($info['category'] == $category) {
-                    $data[$category][$setting] = array('value' => $info['value'], 'type' => $info['type']);
+                    $data[$category][$setting] = ['value' => $info['value'], 'type' => $info['type']];
                 }
             }
         } else {
             // All settings.
             foreach ($this->settings as $setting => $info) {
-                $data[$category][$setting] = array('value' => $info['value'], 'type' => $info['type']);
+                $data[$category][$setting] = ['value' => $info['value'], 'type' => $info['type']];
             }
         }
         $render->render($data, $strings, 'admin/paper/settings.html');
@@ -229,7 +229,7 @@ class PaperSettings
      */
     private static function getSettingDeclartions(string $papertype): array
     {
-        $declarations = array();
+        $declarations = [];
         $configObject = Config::get_instance();
         $db = $configObject->db;
         $result = $db->prepare(
@@ -246,7 +246,7 @@ class PaperSettings
         $result->bind_result($setting, $category, $type, $supported);
         while ($result->fetch()) {
             if ($supported == 1) {
-                $declarations[$category][$setting] = array('type' => $type, 'supported' => $supported);
+                $declarations[$category][$setting] = ['type' => $type, 'supported' => $supported];
             }
         }
         $result->close();
@@ -262,7 +262,7 @@ class PaperSettings
     public static function renderNewSettings(array $strings, string $papertype, string $category = ''): void
     {
         $declarations = self::getSettingDeclartions($papertype);
-        $data = array();
+        $data = [];
         if (count($declarations) > 0) {
             if ($category === '') {
                 // All settings.
@@ -285,7 +285,7 @@ class PaperSettings
     {
         $papertype = array_search($this->papertype, $this->types);
         $declarations = self::getSettingDeclartions($papertype);
-        $data = array();
+        $data = [];
         if (count($declarations) > 0) {
             $data = $declarations[$category];
         }

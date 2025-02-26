@@ -51,7 +51,7 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->paper = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test summative',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
@@ -59,28 +59,28 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
                 'papertype' => '2',
                 'modulename' => 'Training Module',
                 'remote' => 1
-            )
+            ]
         );
         $datagenerator = $this->get_datagenerator('anomaly', 'core');
         $this->anomaly = $datagenerator->createAnomaly(
-            array(
+            [
                 'userid' => $this->student['id'],
                 'paperid' => $this->paper['id'],
                 'screen' => 2,
                 'type' => \Anomaly::CLOCK,
                 'previous' => 'Tue Aug 19 1975 23:15:30 GMT+0200 (CEST)',
                 'current' => 'Tue Aug 19 1975 23:10:30 GMT+0200 (CEST)'
-            )
+            ]
         );
         $this->anomaly2 = $datagenerator->createAnomaly(
-            array(
+            [
                 'userid' => $this->admin['id'],
                 'paperid' => $this->paper['id'],
                 'screen' => 1,
                 'type' => \Anomaly::CLOCK,
                 'previous' => 'Tue Aug 20 1976 07:30:30 GMT+0200 (CEST)',
                 'current' => 'Tue Aug 20 1976 07:10:30 GMT+0200 (CEST)'
-            )
+            ]
         );
     }
 
@@ -141,13 +141,13 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
         $expected->details = $this->anomaly['details'];
         $expected->screen = $this->anomaly['screen'];
         $items[] = $expected;
-        $expectedarray = array(
+        $expectedarray = [
             'from' => 1,
             'to' => 1,
             'total' => 1,
             'pages' => 1,
             'items' => $items
-        );
+        ];
         // Anomaly exists.
         $this->assertEquals(
             $expectedarray,
@@ -162,13 +162,13 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
             )
         );
         // No anomalies exist.
-        $expectedarray = array(
+        $expectedarray = [
             'from' => 0,
             'to' => 0,
             'total' => 0,
             'pages' => 0,
             'items' => []
-        );
+        ];
         $this->assertEquals(
             $expectedarray,
             \Anomaly::getAnomalies(
@@ -195,13 +195,13 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
         $expected->details = $this->anomaly2['details'];
         $expected->screen = $this->anomaly2['screen'];
         $items[] = $expected;
-        $expectedarray = array(
+        $expectedarray = [
             'from' => 1,
             'to' => 2,
             'total' => 2,
             'pages' => 1,
             'items' => $items
-        );
+        ];
         $this->assertEquals(
             $expectedarray,
             \Anomaly::getAnomalies(
@@ -232,20 +232,20 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
     {
         $previous = 'Tue Aug 19 1975 20:15:30 GMT+0200 (CEST)';
         $current = 'Tue Aug 19 1975 19:15:30 GMT+0200 (CEST)';
-        $data = array(
+        $data = [
             'userid' => $this->student['id'],
             'paperid' => $this->paper['id'],
             'screen' => 2,
             'previous' => $previous,
             'current' => $current,
-        );
+        ];
         $anomaly = new ClockAnomaly($data);
         $insert = $anomaly->insert();
         // Test properties table is as expected.
-        $queryTable = $this->query(array('columns' => array('id', 'type', 'time', 'details', 'userID',
-            'paperID', 'screen'), 'table' => 'anomaly'));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['columns' => ['id', 'type', 'time', 'details', 'userID',
+            'paperID', 'screen'], 'table' => 'anomaly']);
+        $expectedTable = [
+            0 => [
                 'id' => $this->anomaly['id'],
                 'type' => $this->anomaly['type'],
                 'time' => $this->anomaly['timestamp'],
@@ -253,8 +253,8 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
                 'userID' => $this->anomaly['userid'],
                 'paperID' => $this->anomaly['paperid'],
                 'screen' => $this->anomaly['screen'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'id' => $this->anomaly2['id'],
                 'type' => $this->anomaly2['type'],
                 'time' => $this->anomaly2['timestamp'],
@@ -262,17 +262,17 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
                 'userID' => $this->anomaly2['userid'],
                 'paperID' => $this->anomaly2['paperid'],
                 'screen' => $this->anomaly2['screen'],
-            ),
-            2 => array(
+            ],
+            2 => [
                 'id' => $insert['id'],
                 'type' => \Anomaly::CLOCK,
                 'time' => $insert['timestamp'],
-                'details' => json_encode(array('previous' => $previous, 'current' => $current)),
+                'details' => json_encode(['previous' => $previous, 'current' => $current]),
                 'userID' => $this->student['id'],
                 'paperID' => $this->paper['id'],
                 'screen' => 2,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -284,12 +284,12 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
         $this->expectExceptionMessage('Anomaly::insert() userid missing');
         $previous = 'Tue Aug 19 1975 20:15:30 GMT+0200 (CEST)';
         $current = 'Tue Aug 19 1975 19:15:30 GMT+0200 (CEST)';
-        $data = array(
+        $data = [
             'paperid' => $this->paper['id'],
             'screen' => 2,
             'previous' => $previous,
             'current' => $current,
-        );
+        ];
         $anomaly = new ClockAnomaly($data);
         $anomaly->insert();
     }
@@ -302,12 +302,12 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
         $this->expectExceptionMessage('Anomaly::insert() paperid missing');
         $previous = 'Tue Aug 19 1975 20:15:30 GMT+0200 (CEST)';
         $current = 'Tue Aug 19 1975 19:15:30 GMT+0200 (CEST)';
-        $data = array(
+        $data = [
             'userid' => $this->student['id'],
             'screen' => 2,
             'previous' => $previous,
             'current' => $current,
-        );
+        ];
         $anomaly = new ClockAnomaly($data);
         $anomaly->insert();
     }
@@ -320,12 +320,12 @@ class AnomalyTest extends \testing\unittest\unittestdatabase
         $this->expectExceptionMessage('Anomaly::insert() screen missing');
         $previous = 'Tue Aug 19 1975 20:15:30 GMT+0200 (CEST)';
         $current = 'Tue Aug 19 1975 19:15:30 GMT+0200 (CEST)';
-        $data = array(
+        $data = [
             'userid' => $this->student['id'],
             'paperid' => $this->paper['id'],
             'previous' => $previous,
             'current' => $current,
-        );
+        ];
         $anomaly = new ClockAnomaly($data);
         $anomaly->insert();
     }

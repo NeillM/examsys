@@ -359,7 +359,7 @@ class QuestionStatus
      */
     private static function get_all_statuses_by_type($db, $lang_strings, $type)
     {
-        $statuses = array();
+        $statuses = [];
 
         $sql = 'SELECT id, name, exclude_marking, retired, is_default, change_locked, validate, display_warning, colour FROM question_statuses ORDER BY display_order';
 
@@ -368,7 +368,7 @@ class QuestionStatus
         $result->store_result();
         $result->bind_result($id, $name, $exclude_marking, $retired, $is_default, $change_locked, $validate, $display_warning, $colour);
         while ($result->fetch()) {
-            $data = array('id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'retired' => $retired, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate, 'display_warning' => $display_warning, 'colour' => $colour);
+            $data = ['id' => $id, 'name' => $name, 'exclude_marking' => $exclude_marking, 'retired' => $retired, 'is_default' => $is_default, 'change_locked' => $change_locked, 'validate' => $validate, 'display_warning' => $display_warning, 'colour' => $colour];
             $qs = new QuestionStatus($db, $lang_strings, $data);
             if ($type == '') {
                 $statuses[] = $qs;
@@ -432,7 +432,7 @@ CSS;
      */
     public static function get_retired_status_ids($statuses)
     {
-        $retired_in = array();
+        $retired_in = [];
         foreach ($statuses as $status) {
             if ($status->get_retired()) {
                 $retired_in[] = $status->id;

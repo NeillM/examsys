@@ -332,11 +332,11 @@ class Invigilation
      */
     public function emergencyNumbers(): array
     {
-        $data = array();
+        $data = [];
         $contact1 = $this->config->get_setting('core', 'emergency_support_contact1');
         $contact2 = $this->config->get_setting('core', 'emergency_support_contact2');
         $contact3 = $this->config->get_setting('core', 'emergency_support_contact3');
-        $contacts = array($contact1, $contact2, $contact3);
+        $contacts = [$contact1, $contact2, $contact3];
         foreach ($contacts as $contact) {
             if (!empty($contact['name']) and !empty($contact['number'])) {
                 $data[$contact['name']] = $contact['number'];
@@ -363,7 +363,7 @@ class Invigilation
 
         // Create a caching LogExtraTime gets all the results in one hit.
         if (!is_null($log_lab_end_time)) {
-            $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $this->db, true);
+            $log_extra_time = new LogExtraTime($log_lab_end_time, [], $this->db, true);
         }
 
         // Get any student notes.
@@ -373,17 +373,17 @@ class Invigilation
         $toilet_break_array = ToiletBreaks::get_all_breaks_by_paper($paperID, $this->db);
 
         // Get guest account details.
-        $guest_accounts = array();
+        $guest_accounts = [];
         $sql = 'SELECT assigned_account, title, first_names, surname FROM temp_users';
         $results = $this->db->prepare($sql);
         $results->execute();
         $results->bind_result($assigned_account, $title, $first_names, $surname);
         while ($results->fetch()) {
-            $guest_accounts[$assigned_account] = array(
+            $guest_accounts[$assigned_account] = [
                 'title' => $title,
                 'first_names' => $first_names,
                 'surname' => $surname
-            );
+            ];
         }
         $results->close();
 
@@ -432,7 +432,7 @@ class Invigilation
         $sort_order = 'asc';
         $student_object = \sort::array_csort($student_object, $column, $sort_order);
 
-        $data = array();
+        $data = [];
         foreach ($student_object as $student_id => $student_obj) {
             try {
                 if (!is_null($log_lab_end_time)) {

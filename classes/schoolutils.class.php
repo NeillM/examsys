@@ -61,7 +61,7 @@ class SchoolUtils
      */
     public static function get_school_list_by_id($db)
     {
-        $school_list = array();
+        $school_list = [];
 
         $stmt = $db->prepare('SELECT id, school, facultyID FROM schools WHERE deleted IS NULL');
         $stmt->execute();
@@ -136,7 +136,7 @@ class SchoolUtils
      */
     public static function get_admin_schools($admin_userid, $db)
     {
-        $school_list = array();
+        $school_list = [];
 
         $stmt = $db->prepare('SELECT schools_id FROM admin_access WHERE userID = ?');
         $stmt->bind_param('i', $admin_userid);
@@ -337,7 +337,7 @@ class SchoolUtils
         $result->fetch();
         $result->close();
 
-        return array('name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
+        return ['name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys];
     }
 
     /**
@@ -398,7 +398,7 @@ class SchoolUtils
         $result->execute();
         $result->store_result();
         $result->bind_result($id, $externalid, $deleted);
-        $diff = array();
+        $diff = [];
         while ($result->fetch()) {
             // Mark for delete if not found in external list.
             if (!in_array($externalid, $external)) {

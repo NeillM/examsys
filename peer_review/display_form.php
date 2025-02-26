@@ -55,7 +55,7 @@ if ($type == '') {
 }
 
 // Get questions on the paper
-$questions = array();
+$questions = [];
 $result = $mysqli->prepare('SELECT question, q_type, leadin, display_method FROM (papers, questions) WHERE papers.question = questions.q_id AND paper = ? ORDER BY display_pos');
 $result->bind_param('i', $paperID);
 $result->execute();
@@ -70,7 +70,7 @@ if ($q_type == 'likert') {
     $parts = explode('|', $display_method);
     $columns = count($parts) - 1;
 } elseif ($q_type == 'mcq') {
-    $parts = array();
+    $parts = [];
     $result = $mysqli->prepare('SELECT option_text FROM options WHERE o_id = ?');
     $result->bind_param('i', $questionID);
     $result->execute();
@@ -103,7 +103,7 @@ $result->bind_result($student_username, $student_surname, $student_first_names, 
 $result->fetch();
 $result->close();
 // Get existing values.
-$saved_results = array();
+$saved_results = [];
 if ($review_type == '1') {
     $result = $mysqli->prepare('SELECT id, reviewerID, q_id, rating FROM log6 WHERE peerID = ? AND paperID = ?');
 } else {

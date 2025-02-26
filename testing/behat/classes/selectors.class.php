@@ -36,7 +36,7 @@ class selectors
      *
      * @var array
      */
-    protected static $allowedrogoselectors = array(
+    protected static $allowedrogoselectors = [
         // Built in selectors.
         'id' => 'id',
         'id_or_name' => 'id_or_name',
@@ -89,7 +89,7 @@ class selectors
         'configarea' => 'configarea',
         'text' => 'text',
         'invigilation_student' => 'invigilation_student',
-    );
+    ];
 
     /**
      * An array containing XPATH selectors for elements of ExamSys that behat can select.
@@ -97,7 +97,7 @@ class selectors
      *
      * @var array
      */
-    protected static $rogoselectors = array(
+    protected static $rogoselectors = [
         'menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]
 XPATH
@@ -203,7 +203,7 @@ XPATH
         ,'invigilation_student' => <<<XPATH
 //table[contains(@class, 'invigilator_cohort')]//tr[contains(@data-username , %locator%)]
 XPATH
-    );
+    ];
 
     /**
      * Get the custom ExamSys selector list or a selector.

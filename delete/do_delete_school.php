@@ -41,5 +41,5 @@ SchoolUtils::delete_school($schoolID, $mysqli);
 $render = new render($configObject);
 $lang['title'] = $string['title'];
 $lang['success'] = $string['success'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

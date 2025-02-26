@@ -36,7 +36,7 @@ class assessmentmanagement extends \api\abstractmanagement
     /**
      * Status codes
      */
-    private $statuscodes = array(
+    private $statuscodes = [
         'OK' => 100,
         'PAPER_GENERAL_ERROR' => 200,
         'PAPER_NOT_DELETED' => 201,
@@ -57,7 +57,7 @@ class assessmentmanagement extends \api\abstractmanagement
         'PAPER_NOTHING_TO_UPDATE' => 216,
         'PAPER_EXTERNALID_INUSE' => 217,
         'PAPER_INVALID_NO_MODULES' => 218
-    );
+    ];
 
     /**
      * Check labs
@@ -68,9 +68,9 @@ class assessmentmanagement extends \api\abstractmanagement
     private function check_labs($labs)
     {
         $langpack = new \langpack();
-        $labsarray = array();
+        $labsarray = [];
         $labfactory = new \LabFactory($this->db);
-        $error = array();
+        $error = [];
         if (!empty($labs)) {
             foreach ($labs as $lab) {
                 // We allow empty lab elements so labs so the paper can have all labs removed.
@@ -89,7 +89,7 @@ class assessmentmanagement extends \api\abstractmanagement
         } else {
             $labsstring = '';
         }
-        return array($labsstring, $error);
+        return [$labsstring, $error];
     }
     /**
      * Handle thrown exceptions
@@ -99,27 +99,27 @@ class assessmentmanagement extends \api\abstractmanagement
     private function handle_exception($exception)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('paper_calendar_year_invalid', 'paper_owner_role_invalid',
-            'paper_owner_does_not_exist', 'paper_title_inuse', 'paper_startdate_invalid', 'paper_general_error','paper_type_invalid', 'paper_externalid_inuse', 'paper_no_modules'));
+        $strings = $langpack->get_strings($this->langcomponent, ['paper_calendar_year_invalid', 'paper_owner_role_invalid',
+            'paper_owner_does_not_exist', 'paper_title_inuse', 'paper_startdate_invalid', 'paper_general_error','paper_type_invalid', 'paper_externalid_inuse', 'paper_no_modules']);
         switch ($exception) {
             case 'NON_UNIQUE_TITLE':
-                return array('statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null];
             case 'INVALID_PAPER_TYPE':
-                return array('statuscode' => $this->statuscodes['PAPER_INVALID_TYPE'], 'status' => $strings['paper_type_invalid'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_INVALID_TYPE'], 'status' => $strings['paper_type_invalid'], 'id' => null];
             case 'INVALID_USER':
-                return array('statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null];
             case 'INVALID_ROLE':
-                return array('statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null];
             case 'INVALID_SESSION':
-                return array('statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null];
             case 'INVALID_DATES':
-                return array('statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null];
             case 'NON_UNIQUE_EXTID':
-                return array('statuscode' => $this->statuscodes['PAPER_EXTERNALID_INUSE'], 'status' => $strings['paper_externalid_inuse'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_EXTERNALID_INUSE'], 'status' => $strings['paper_externalid_inuse'], 'id' => null];
             case 'INVALID_NO_MODULES':
-                return array('statuscode' => $this->statuscodes['PAPER_INVALID_NO_MODULES'], 'status' => $strings['paper_no_modules'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_INVALID_NO_MODULES'], 'status' => $strings['paper_no_modules'], 'id' => null];
             default:
-                return array('statuscode' => $this->statuscodes['PAPER_GENERAL_ERROR'], 'status' => $strings['paper_general_error'], 'id' => null);
+                return ['statuscode' => $this->statuscodes['PAPER_GENERAL_ERROR'], 'status' => $strings['paper_general_error'], 'id' => null];
         }
     }
     /**
@@ -131,9 +131,9 @@ class assessmentmanagement extends \api\abstractmanagement
     public function create($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_scheduled_summative', 'paper_invalid_module',
-             'paper_invalid_lab', 'paper_module_error'));
-        $error = array();
+        $strings = $langpack->get_strings($this->langcomponent, ['paper_not_created', 'paper_scheduled_summative', 'paper_invalid_module',
+             'paper_invalid_lab', 'paper_module_error']);
+        $error = [];
         $configObject = \Config::get_instance();
         $paper = new \assessment($this->db, $configObject);
         $papertype = $paper->get_type_value($params['type']);
@@ -144,7 +144,7 @@ class assessmentmanagement extends \api\abstractmanagement
         }
         // Error if trying to create a summative exam when they are set to be scheduled only.
         if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
-            $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
+            $data = ['statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null];
             return $this->get_response($data, 'create', $params['nodeid'], $error);
         }
         // Use system timezone if not provided on creation.
@@ -163,7 +163,7 @@ class assessmentmanagement extends \api\abstractmanagement
             $params['externalsys'] = $this->get_external_system($params['externalsys']);
         }
         // Check modules
-        $modulesarray = array();
+        $modulesarray = [];
         if (!empty($params['extmodules'])) {
             foreach ($params['extmodules'] as $module) {
                 $moduleid = \module_utils::get_id_from_externalid($module['value'], $params['externalsys'], $this->db);
@@ -185,7 +185,7 @@ class assessmentmanagement extends \api\abstractmanagement
         }
 
         if (count($error) > 0) {
-            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
+            $data = ['statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null];
         } else {
             // Check labs.
             if (!empty($params['labs'])) {
@@ -216,9 +216,9 @@ class assessmentmanagement extends \api\abstractmanagement
                     $params['externalsys']
                 );
                 if ($id) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error, 'externalid' => $params['externalid']);
+                    $data = ['statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error, 'externalid' => $params['externalid']];
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
+                    $data = ['statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null];
                 }
             } catch (\Exception $e) {
                 $data = $this->handle_exception($e->getMessage());
@@ -236,9 +236,9 @@ class assessmentmanagement extends \api\abstractmanagement
     public function update($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('paper_scheduled_summative', 'paper_does_not_exist',
-            'paper_not_updated', 'paper_invalid_module', 'paper_invalid_lab', 'paper_module_error', 'paper_nothing_to_update'));
-        $error = array();
+        $strings = $langpack->get_strings($this->langcomponent, ['paper_scheduled_summative', 'paper_does_not_exist',
+            'paper_not_updated', 'paper_invalid_module', 'paper_invalid_lab', 'paper_module_error', 'paper_nothing_to_update']);
+        $error = [];
         $configObject = \Config::get_instance();
         $paper = new \assessment($this->db, $configObject);
         if (isset($params['id']) and $params['id'] !== '') {
@@ -260,16 +260,16 @@ class assessmentmanagement extends \api\abstractmanagement
             $papertype = $details['type'];
         } else {
             // Paper does not exist so cannot update.
-            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_PAPER'], 'status' => $strings['paper_does_not_exist'], 'id' => null);
+            $data = ['statuscode' => $this->statuscodes['PAPER_INVALID_PAPER'], 'status' => $strings['paper_does_not_exist'], 'id' => null];
             return $this->get_response($data, 'update', $params['nodeid'], $error);
         }
         // Check if anything has been updated.
-        $checkparameter = array('title', 'owner', 'session', 'duration', 'timezone');
+        $checkparameter = ['title', 'owner', 'session', 'duration', 'timezone'];
         $change = $this->check_if_updated($checkparameter, $details, $params);
 
         // Error if trying to update a summative exam when they are set to be scheduled only.
         if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
-            $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
+            $data = ['statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null];
             return $this->get_response($data, 'update', $params['nodeid'], $error);
         }
 
@@ -320,7 +320,7 @@ class assessmentmanagement extends \api\abstractmanagement
             }
         }
         // Check modules
-        $modulesarray = array();
+        $modulesarray = [];
         if (!empty($params['extmodules'])) {
             foreach ($params['extmodules'] as $module) {
                 $moduleid = \module_utils::get_id_from_externalid($module['value'], $params['externalsys'], $this->db);
@@ -353,7 +353,7 @@ class assessmentmanagement extends \api\abstractmanagement
         }
 
         if (count($error) > 0) {
-            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
+            $data = ['statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null];
         } else {
             if (empty($params['labs'])) {
                 $labs = $details['labs'];
@@ -393,15 +393,15 @@ class assessmentmanagement extends \api\abstractmanagement
                         $details['externalsys']
                     );
                     if ($id) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error, 'externalid' => $details['externalid']);
+                        $data = ['statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error, 'externalid' => $details['externalid']];
                     } else {
-                        $data = array('statuscode' => $this->statuscodes['PAPER_NOT_UPDATED'], 'status' => $strings['paper_not_updated'], 'id' => null);
+                        $data = ['statuscode' => $this->statuscodes['PAPER_NOT_UPDATED'], 'status' => $strings['paper_not_updated'], 'id' => null];
                     }
                 } catch (\Exception $e) {
                     $data = $this->handle_exception($e->getMessage());
                 }
             } else {
-                $data = array('statuscode' => $this->statuscodes['PAPER_NOTHING_TO_UPDATE'], 'status' => $strings['paper_nothing_to_update'], 'id' => null);
+                $data = ['statuscode' => $this->statuscodes['PAPER_NOTHING_TO_UPDATE'], 'status' => $strings['paper_nothing_to_update'], 'id' => null];
             }
         }
 
@@ -417,8 +417,8 @@ class assessmentmanagement extends \api\abstractmanagement
     public function schedule($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_not_scheduled', 'paper_invalid_module'));
-        $error = array();
+        $strings = $langpack->get_strings($this->langcomponent, ['paper_not_created', 'paper_not_scheduled', 'paper_invalid_module']);
+        $error = [];
         $configObject = \Config::get_instance();
         $paper = new \assessment($this->db, $configObject);
         $papertype = $paper::TYPE_SUMMATIVE;
@@ -434,7 +434,7 @@ class assessmentmanagement extends \api\abstractmanagement
             $params['externalsys'] = $this->get_external_system($params['externalsys']);
         }
         // Check modules
-        $modulesarray = array();
+        $modulesarray = [];
         if (!empty($params['extmodules'])) {
             foreach ($params['extmodules'] as $module) {
                 $modid = \module_utils::get_id_from_externalid($module['value'], $params['externalsys'], $this->db);
@@ -496,9 +496,9 @@ class assessmentmanagement extends \api\abstractmanagement
                 // Schedule.
                 $id = $paper->schedule($paperid, $params['month'], $params['barriers'], $params['cohort_size'], $params['notes'], $params['sittings'], $params['campus']);
                 if ($id) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $paperid, 'error' => $error, 'externalid' => $params['externalid']);
+                    $data = ['statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $paperid, 'error' => $error, 'externalid' => $params['externalid']];
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['PAPER_NOT_SCHEDULED'], 'status' => $strings['paper_not_scheduled'], 'id' => null);
+                    $data = ['statuscode' => $this->statuscodes['PAPER_NOT_SCHEDULED'], 'status' => $strings['paper_not_scheduled'], 'id' => null];
                     // Not scheduled so remove new properties entry from db.
                     if (!\Paper_utils::complete_delete_paper($paperid, $this->db)) {
                         // Log warning to system if delete failed, as we want to clean up orhpaned papers.
@@ -511,7 +511,7 @@ class assessmentmanagement extends \api\abstractmanagement
                     }
                 }
             } else {
-                $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
+                $data = ['statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null];
             }
         } catch (\Exception $e) {
             $data = $this->handle_exception($e->getMessage());
@@ -529,8 +529,8 @@ class assessmentmanagement extends \api\abstractmanagement
     public function delete($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('paper_not_deleted_inuse', 'paper_not_deleted'
-            , 'paper_does_not_exist'));
+        $strings = $langpack->get_strings($this->langcomponent, ['paper_not_deleted_inuse', 'paper_not_deleted'
+            , 'paper_does_not_exist']);
         if (isset($params['id']) and $params['id'] !== '') {
             $paperexists = \Paper_utils::paper_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
@@ -550,18 +550,18 @@ class assessmentmanagement extends \api\abstractmanagement
             // Only delete assessment if no one has taken the paper.
             $inuse = \Paper_utils::paper_taken($params['id'], $this->db);
             if ($inuse) {
-                $data = array('statuscode' => $this->statuscodes['PAPER_NOT_DELETED_INUSE'], 'status' => $strings['paper_not_deleted_inuse'], 'id' => null);
+                $data = ['statuscode' => $this->statuscodes['PAPER_NOT_DELETED_INUSE'], 'status' => $strings['paper_not_deleted_inuse'], 'id' => null];
             } else {
                 $details = \Paper_utils::get_paper_properties($params['id'], $this->db);
                 $deleted = \Paper_utils::delete_paper($params['id'], $details['owner'], $this->db);
                 if ($deleted) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                    $data = ['statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']];
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['PAPER_NOT_DELETED'], 'status' => $strings['paper_not_deleted'], 'id' => null);
+                    $data = ['statuscode' => $this->statuscodes['PAPER_NOT_DELETED'], 'status' => $strings['paper_not_deleted'], 'id' => null];
                 }
             }
         } else {
-            $data = array('statuscode' => $this->statuscodes['PAPER_DOES_NOT_EXIST'], 'status' => $strings['paper_does_not_exist'], 'id' => null);
+            $data = ['statuscode' => $this->statuscodes['PAPER_DOES_NOT_EXIST'], 'status' => $strings['paper_does_not_exist'], 'id' => null];
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }

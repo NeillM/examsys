@@ -119,8 +119,8 @@ if ($userObject->has_role('Student')) {
 }
 
 // Get questions on the paper
-$questions = array();
-$old_options = array();
+$questions = [];
+$old_options = [];
 $old_questionID = 0;
 
 $result = $mysqli->prepare('SELECT question, scenario, leadin, display_method, q_type, option_text FROM (papers, questions, options) WHERE papers.question=questions.q_id AND paper = ? AND questions.q_id = options.o_id ORDER BY display_pos');
@@ -134,7 +134,7 @@ while ($result->fetch()) {
         $questions[$old_questionID]['display_method'] = $old_display_method;
         $questions[$old_questionID]['q_type'] = $old_q_type;
         $questions[$old_questionID]['options'] = $old_options;
-        $old_options = array();
+        $old_options = [];
     }
     $old_questionID = $questionID;
     $old_scenario = $scenario;
@@ -221,7 +221,7 @@ if (isset($_POST['submit'])) {
     $result->close();
 
     $insert_sql = '';
-    $variables = array();
+    $variables = [];
     $params = '';
 
     $current_time = date('YmdHis');
@@ -302,7 +302,7 @@ if (isset($_POST['submit'])) {
     echo '<br/><p style="margin-left:10px"><a href="../students/index.php">' . $string['homepagelink'] . '</a></p>';
 } else {
     // Get existing values.
-    $saved_results = array();
+    $saved_results = [];
     $result = $mysqli->prepare('SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?');
     $result->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $result->execute();
@@ -415,7 +415,7 @@ if (isset($_POST['submit'])) {
     $render = new render($configObject);
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['id'] = $_GET['id'];
-    $render->render($miscdataset, array(), 'dataset.html');
+    $render->render($miscdataset, [], 'dataset.html');
     ?>
   </body>
   </html>

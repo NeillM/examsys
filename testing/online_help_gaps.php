@@ -73,7 +73,7 @@ if (isset($_GET['type'])) {
 }
 
   // Get a list of the pages in the English (en) version.
-  $en_pages = array();
+  $en_pages = [];
 if ($help_table == 'staff_help') {
     $result = $mysqli->prepare("SELECT articleid, title, body, type, roles FROM $help_table WHERE language = 'en' AND deleted IS NULL");
 } else {
@@ -175,7 +175,7 @@ function create_page($language, $articleid, $page_details, $help_table, $db)
 function pages_in_lang($lang, $help_table, $db)
 {
 
-    $lang_pages = array();
+    $lang_pages = [];
     $result = $db->prepare("SELECT articleid FROM $help_table WHERE language = ? AND deleted IS NULL");
     $result->bind_param('s', $lang);
     $result->execute();
@@ -190,7 +190,7 @@ function pages_in_lang($lang, $help_table, $db)
 function get_languages($db)
 {
 
-    $languages = array();
+    $languages = [];
     $result = $db->prepare("SELECT DISTINCT(language) FROM staff_help WHERE language != 'en'");
     $result->execute();
     $result->bind_result($language);

@@ -40,8 +40,8 @@ class courseutilstest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('course', 'core');
-        $this->course = $datagenerator->create_course(array('name' => 'test', 'description' => 'a test', 'schoolid' => 1, 'externalid' => 'ABCD', 'externalsys' => 'external'));
-        $this->course2 = $datagenerator->create_course(array('name' => 'test2', 'description' => 'a test 2', 'schoolid' => 1, 'externalid' => 'WXYZ', 'externalsys' => 'external'));
+        $this->course = $datagenerator->create_course(['name' => 'test', 'description' => 'a test', 'schoolid' => 1, 'externalid' => 'ABCD', 'externalsys' => 'external']);
+        $this->course2 = $datagenerator->create_course(['name' => 'test2', 'description' => 'a test 2', 'schoolid' => 1, 'externalid' => 'WXYZ', 'externalsys' => 'external']);
     }
 
     /**
@@ -50,8 +50,8 @@ class courseutilstest extends unittestdatabase
      */
     public function test_diff_external_courses_to_internal_courses()
     {
-        $external = array($this->course['externalid'], 'EFGH', 'IJKL');
-        $this->assertEquals(array($this->course2['externalid']), CourseUtils::diff_external_courses_to_internal_courses($external, 'external', $this->db));
+        $external = [$this->course['externalid'], 'EFGH', 'IJKL'];
+        $this->assertEquals([$this->course2['externalid']], CourseUtils::diff_external_courses_to_internal_courses($external, 'external', $this->db));
     }
 
     /**

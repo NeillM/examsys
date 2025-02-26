@@ -47,14 +47,14 @@ class audit extends generator
         if (empty($parameters['action'])) {
             throw new data_error('action must be provided');
         }
-        $defaults = array(
+        $defaults = [
             'time' => date('Y-m-d H:i:s'),
             'source' => 'vendor/bin/phpunit',
             'sourceID' =>  -1,
             'details' => 'test',
             'userID' => $parameters['userID'],
             'action' => $parameters['action'],
-        );
+        ];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = 'INSERT INTO audit_log (userID, action, details, time, sourceID, source)
             VALUES (?, ?, ?, ?, ?, ?)';

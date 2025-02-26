@@ -56,12 +56,12 @@ class CM_UoNCM implements iCMAPI
         $this->_moodle_base_url = $configObject->get_setting('core', 'cfg_moodle_base_url') . '/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
         $url = $this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attrib&attrib=code&output=module_session_obs";
         $req = new restful($db);
-        $options = array(CURLOPT_TIMEOUT => 10,
+        $options = [CURLOPT_TIMEOUT => 10,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_HTTPHEADER => array('Accept: application/json'),
+            CURLOPT_HTTPHEADER => ['Accept: application/json'],
             CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
-        );
+        ];
         $res = json_decode($req->get($url, $options), true);
         if ($req->get_last_http_code() == 0) {
             $objectives = 'error';
@@ -96,7 +96,7 @@ class CM_UoNCM implements iCMAPI
      */
     public function getMappingLevels()
     {
-        return array(self::LEVEL_SESSION, self::LEVEL_MODULE);
+        return [self::LEVEL_SESSION, self::LEVEL_MODULE];
     }
 
     /**
@@ -121,7 +121,7 @@ class CM_UoNCM implements iCMAPI
     private function transformCMResponse($input, $calendar_year, $mod_id)
     {
         if (isset($input['cmapi']['module'])) {
-            $sessions = array();
+            $sessions = [];
             $i = 0;
             if (isset($input['cmapi']['module']['session'])) {
                 if (isset($input['cmapi']['module']['session']['@attributes'])) {
@@ -141,10 +141,10 @@ class CM_UoNCM implements iCMAPI
                     }
                 }
             }
-            $output = array($mod_id => $sessions);
+            $output = [$mod_id => $sessions];
             return $output;
         } else {
-            return array();
+            return [];
         }
     }
     /**
@@ -157,7 +157,7 @@ class CM_UoNCM implements iCMAPI
     private function transformCMResponseModule($input, $calendar_year, $mod_id)
     {
         if (isset($input['cmapi']['module'])) {
-            $sessions = array();
+            $sessions = [];
             $i = 0;
             if (isset($input['cmapi']['module']['objectives']) and isset($input['cmapi']['module']['objectives']['group'])) {
                 if (isset($input['cmapi']['module']['objectives']['group']['@attributes'])) {
@@ -168,10 +168,10 @@ class CM_UoNCM implements iCMAPI
                     }
                 }
             }
-            $output = array($mod_id => $sessions);
+            $output = [$mod_id => $sessions];
             return $output;
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -185,7 +185,7 @@ class CM_UoNCM implements iCMAPI
     {
         // If no objectives don't bother showing the session
         if (is_array($session['objectives'])) {
-            $sess_data = array(
+            $sess_data = [
             'identifier' => $session['@attributes']['id'],
             'GUID' => $session['@attributes']['guid'],
             'ttGUID' => $session['ttguid'],
@@ -196,24 +196,24 @@ class CM_UoNCM implements iCMAPI
             'VLE' => 'UoNCM',
             'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $session['@attributes']['id']) . '&ses=' . $session['code'],
             'mapped' => 0,
-            'objectives' => array()
-            );
+            'objectives' => []
+            ];
 
             $obs = $session['objectives']['outcome_session'];
             if (isset($obs['@attributes'])) {
-                $obj_data = array(
+                $obj_data = [
                 'content' => (isset($obs['title']) and $obs['title'] != '') ? $obs['title'] : $obs['content'],
                 'id' => $obs['@attributes']['id']
-                );
+                ];
                 $sess_data['objectives'][++$count] = $obj_data;
             } else {
                 foreach ($obs as $objective) {
-                    $obj_data = array(
+                    $obj_data = [
                     'content' => (isset($objective['title']) and $objective['title'] != '') ? $objective['title'] : $objective['content'],
                     'id' => $objective['@attributes']['id'],
                     'guid' => $objective['@attributes']['guid'],
                     'mapped' => 0
-                    );
+                    ];
                     $sess_data['objectives'][++$count] = $obj_data;
                 }
             }
@@ -231,7 +231,7 @@ class CM_UoNCM implements iCMAPI
     {
         // If no objectives don't bother showing the session
         if (is_array($learning_act['objectives'])) {
-            $act_data = array(
+            $act_data = [
             'identifier' => $learning_act['@attributes']['id'],
             'guid' => $learning_act['@attributes']['guid'],
             'class_code' => '',
@@ -242,24 +242,24 @@ class CM_UoNCM implements iCMAPI
             //        'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $learning_act['@attributes']['id']) . '&ses=' . $learning_act['code'],
             'source_url' => '',
             'mapped' => 0,
-            'objectives' => array()
-            );
+            'objectives' => []
+            ];
 
             $obs = $learning_act['objectives']['outcome_learning_act'];
             if (isset($obs['@attributes'])) {
-                $obj_data = array(
+                $obj_data = [
                 'content' => (isset($obs['title']) and $obs['title'] != '') ? $obs['title'] : $obs['content'],
                 'id' => $obs['@attributes']['id']
-                );
+                ];
                 $act_data['objectives'][++$count] = $obj_data;
             } else {
                 foreach ($obs as $objective) {
-                    $obj_data = array(
+                    $obj_data = [
                     'content' => (isset($objective['title']) and $objective['title'] != '') ? $objective['title'] : $objective['content'],
                     'id' => $objective['@attributes']['id'],
                     'guid' => $objective['@attributes']['guid'],
                     'mapped' => 0
-                    );
+                    ];
                     $act_data['objectives'][++$count] = $obj_data;
                 }
             }
@@ -278,7 +278,7 @@ class CM_UoNCM implements iCMAPI
     {
         // If no objectives don't bother showing the session
         if (is_array($group['outcome_module'])) {
-            $sess_data = array(
+            $sess_data = [
             'identifier' => $group['@attributes']['id'],
             'GUID' => $group['@attributes']['id'],
             'class_code' => '',
@@ -289,23 +289,23 @@ class CM_UoNCM implements iCMAPI
             'source_url' => '',   // TODO
             // 'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $session['@attributes']['id']) . '&ses=' . $session['code'],
             'mapped' => 0,
-            'objectives' => array()
-            );
+            'objectives' => []
+            ];
 
             $obs = $group['outcome_module'];
             if (isset($obs['@attributes'])) {
-                $obj_data = array(
+                $obj_data = [
                 'content' => (isset($obs['title']) and $obs['title'] != '') ? $obs['title'] : $obs['content'],
                 'id' => $obs['@attributes']['id']
-                );
+                ];
                 $sess_data['objectives'][++$count] = $obj_data;
             } else {
                 foreach ($obs as $objective) {
-                    $obj_data = array(
+                    $obj_data = [
                     'content' => (isset($objective['title']) and $objective['title'] != '') ? $objective['title'] : $objective['content'],
                     'id' => $objective['@attributes']['id'],
                     'mapped' => 0
-                    );
+                    ];
                     $sess_data['objectives'][++$count] = $obj_data;
                 }
             }

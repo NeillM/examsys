@@ -40,13 +40,13 @@ if (file_exists(dirname(__DIR__, 2) . '/node_modules/qunit/qunit/qunit.js')) {
 
     // Start generating the page
     $twigloader = new \Twig\Loader\FilesystemLoader(__DIR__ . DIRECTORY_SEPARATOR . 'templates');
-    $renderer = new \Twig\Environment($twigloader, array(
+    $renderer = new \Twig\Environment($twigloader, [
         'cache' => false
-    ));
-    $data = array(
+    ]);
+    $data = [
       'scripts' => $loader,
       'webroot' => $configObject->get('cfg_root_path'),
-    );
+    ];
 
     if ($success) {
         $template = 'test_runner.html';

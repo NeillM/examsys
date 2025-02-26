@@ -243,22 +243,22 @@ class assessment
             $duration = null;
         }
         $unixtime = time();
-        $params = array(
-            'paper_title' => array('s', $papertitle),
-            'start_date' => array('i', $startdate),
-            'end_date' => array('i', $enddate),
-            'timezone' => array('s', $timezone),
-            'paper_type' => array('s', $papertype),
-            'paper_ownerID' => array('i', $paperowner),
-            'labs' => array('s', $labs),
-            'rubric' => array('s', $default_rubric),
-            'calculator' => array('i', $default_calc),
-            'exam_duration' => array('i', $duration),
-            'created' => array('i', $unixtime),
-            'calendar_year' => array('i', $session),
-            'externalid' => array('s', $externalid),
-            'externalsys' => array('s', $externalsys)
-        );
+        $params = [
+            'paper_title' => ['s', $papertitle],
+            'start_date' => ['i', $startdate],
+            'end_date' => ['i', $enddate],
+            'timezone' => ['s', $timezone],
+            'paper_type' => ['s', $papertype],
+            'paper_ownerID' => ['i', $paperowner],
+            'labs' => ['s', $labs],
+            'rubric' => ['s', $default_rubric],
+            'calculator' => ['i', $default_calc],
+            'exam_duration' => ['i', $duration],
+            'created' => ['i', $unixtime],
+            'calendar_year' => ['i', $session],
+            'externalid' => ['s', $externalid],
+            'externalsys' => ['s', $externalsys]
+        ];
         $property_id = $this->db_insert_assessment($params);
         if ($property_id) {
             // Settings.
@@ -281,7 +281,7 @@ class assessment
 
             // Crypt name generation.
             $crypt_name = $property_id . $unixtime . $paperowner;
-            $update_params = array('crypt_name' => array('s', $crypt_name));
+            $update_params = ['crypt_name' => ['s', $crypt_name]];
             $this->db_update_assessment($property_id, $update_params);
         } else {
             return false;
@@ -327,8 +327,8 @@ class assessment
         $externalid = null,
         $externalsys = null
     ) {
-        $changes = array();
-        $params = array();
+        $changes = [];
+        $params = [];
         $details = Paper_utils::get_paper_properties($id, $this->db);
         if ($papertitle != $details['title']) {
             // Check title is unique.
@@ -337,8 +337,8 @@ class assessment
             if (!$uniquetitle and is_null($externalid)) {
                 throw new Exception('NON_UNIQUE_TITLE');
             }
-            $params['paper_title'] = array('s', $papertitle);
-            $changes[] = array('old' => $details['title'], 'new' => $papertitle, 'part' => 'name');
+            $params['paper_title'] = ['s', $papertitle];
+            $changes[] = ['old' => $details['title'], 'new' => $papertitle, 'part' => 'name'];
         }
 
         if ($paperowner != $details['owner']) {
@@ -353,8 +353,8 @@ class assessment
                     throw new Exception('INVALID_ROLE');
                 }
             }
-            $params['paper_ownerID'] = array('i', $paperowner);
-            $changes[] = array('old' => $details['owner'], 'new' => $paperowner, 'part' => 'owner');
+            $params['paper_ownerID'] = ['i', $paperowner];
+            $changes[] = ['old' => $details['owner'], 'new' => $paperowner, 'part' => 'owner'];
         }
 
         if ($session != $details['session']) {
@@ -364,8 +364,8 @@ class assessment
             if (!$validsession) {
                  throw new Exception('INVALID_SESSION');
             }
-            $params['calendar_year'] = array('i', $session);
-            $changes[] = array('old' => $details['session'], 'new' => $session, 'part' => 'session');
+            $params['calendar_year'] = ['i', $session];
+            $changes[] = ['old' => $details['session'], 'new' => $session, 'part' => 'session'];
         }
 
         // Set up start date and end date based on timezone.
@@ -378,12 +378,12 @@ class assessment
             throw new Exception('INVALID_DATES');
         }
         if ($startdate != $details['startdatetime']) {
-            $params['start_date'] = array('i', $startdate);
-            $changes[] = array('old' => $details['startdatetime'], 'new' => $startdate, 'part' => 'startdate');
+            $params['start_date'] = ['i', $startdate];
+            $changes[] = ['old' => $details['startdatetime'], 'new' => $startdate, 'part' => 'startdate'];
         }
         if ($enddate != $details['enddatetime']) {
-            $params['end_date'] = array('i', $enddate);
-            $changes[] = array('old' => $details['enddatetime'], 'new' => $enddate, 'part' => 'enddate');
+            $params['end_date'] = ['i', $enddate];
+            $changes[] = ['old' => $details['enddatetime'], 'new' => $enddate, 'part' => 'enddate'];
         }
 
         // Verify timezone is supported, revert to server timezone if not.
@@ -391,8 +391,8 @@ class assessment
             $timezone = $this->server_timezone;
         }
         if ($timezone != $details['timezone']) {
-            $params['timezone'] = array('s', $timezone);
-            $changes[] = array('old' => $details['timezone'], 'new' => $timezone, 'part' => 'timezone');
+            $params['timezone'] = ['s', $timezone];
+            $changes[] = ['old' => $details['timezone'], 'new' => $timezone, 'part' => 'timezone'];
         }
 
         // Enforce Interface boundaries.
@@ -404,23 +404,23 @@ class assessment
             }
         }
         if ($duration != $details['duration']) {
-            $params['exam_duration'] = array('i', $duration);
-            $changes[] = array('old' => $details['duration'], 'new' => $duration, 'part' => 'duration');
+            $params['exam_duration'] = ['i', $duration];
+            $changes[] = ['old' => $details['duration'], 'new' => $duration, 'part' => 'duration'];
         }
 
         if ($labs != $details['labs']) {
-            $params['labs'] = array('s', $labs);
-            $changes[] = array('old' => $details['labs'], 'new' => $labs, 'part' => 'labs');
+            $params['labs'] = ['s', $labs];
+            $changes[] = ['old' => $details['labs'], 'new' => $labs, 'part' => 'labs'];
         }
 
         if ($externalid != $details['externalid']) {
-            $params['externalid'] = array('s', $externalid);
-            $changes[] = array('old' => $details['externalid'], 'new' => $externalid, 'part' => 'externalid');
+            $params['externalid'] = ['s', $externalid];
+            $changes[] = ['old' => $details['externalid'], 'new' => $externalid, 'part' => 'externalid'];
         }
 
         if ($externalsys != $details['externalsys']) {
-            $params['externalsys'] = array('s', $externalsys);
-            $changes[] = array('old' => $details['externalsys'], 'new' => $externalsys, 'part' => 'externalsys');
+            $params['externalsys'] = ['s', $externalsys];
+            $changes[] = ['old' => $details['externalsys'], 'new' => $externalsys, 'part' => 'externalsys'];
         }
 
         // Update if changes made.
@@ -545,9 +545,9 @@ class assessment
         if (!$this->summative_mgmt or $papertype != self::TYPE_SUMMATIVE) {
             $start_date = date_utils::getUTCDateTime($fromdatetime, $timezone)->getTimestamp() ;
             $end_date = date_utils::getUTCDateTime($todatetime, $timezone)->getTimestamp() ;
-            return array($start_date, $end_date);
+            return [$start_date, $end_date];
         }
         // Summative exams do not have a start/end date if centrally scheduled.
-        return array(null, null);
+        return [null, null];
     }
 }

@@ -40,13 +40,13 @@ class coursemanagementtest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('course', 'core');
-        $course = $datagenerator->create_course(array('name' => 'TEST', 'description' => 'Test course', 'schoolid' => $this->school, 'externalid' => '123456', 'externalsys' => 'external'));
+        $course = $datagenerator->create_course(['name' => 'TEST', 'description' => 'Test course', 'schoolid' => $this->school, 'externalid' => '123456', 'externalsys' => 'external']);
         $this->cid1 = $course['id'];
-        $course = $datagenerator->create_course(array('name' => 'TEST2', 'description' => 'Test course 2', 'schoolid' => $this->school));
+        $course = $datagenerator->create_course(['name' => 'TEST2', 'description' => 'Test course 2', 'schoolid' => $this->school]);
         $this->cid2 = $course['id'];
         $datagenerator = $this->get_datagenerator('api', 'core');
-        $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
-        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'external', 'type' => 'api'));
+        $client = $datagenerator->create_client(['clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test']);
+        $datagenerator->create_external(['clientid' => $client['clientid'], 'name' => 'external', 'type' => 'api']);
     }
 
     /**
@@ -55,14 +55,14 @@ class coursemanagementtest extends unittestdatabase
      */
     private function create_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->cid2 + 1,
             'externalid' => null,
             'error' => null,
             'node' => 'create',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -71,12 +71,12 @@ class coursemanagementtest extends unittestdatabase
      */
     private function create_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'name' => 'CREATE',
             'description' => 'Create test',
             'school' => 'School test',
-            'faculty' => 'Faculty test');
+            'faculty' => 'Faculty test'];
     }
 
     /**
@@ -85,10 +85,10 @@ class coursemanagementtest extends unittestdatabase
      */
     private function update_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'id' => $this->cid1,
-            'description' => 'Test course update');
+            'description' => 'Test course update'];
     }
 
     /**
@@ -97,14 +97,14 @@ class coursemanagementtest extends unittestdatabase
      */
     private function update_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->cid1,
             'externalid' => 123456,
             'error' => null,
             'node' => 'update',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -113,14 +113,14 @@ class coursemanagementtest extends unittestdatabase
      */
     private function delete_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->cid1,
             'externalid' => 123456,
             'error' => null,
             'node' => 'delete',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -129,9 +129,9 @@ class coursemanagementtest extends unittestdatabase
      */
     private function delete_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
-            'id' => $this->cid1);
+            'id' => $this->cid1];
     }
 
     /**
@@ -155,13 +155,13 @@ class coursemanagementtest extends unittestdatabase
     {
         $responsearray = $this->create_response_array();
         $responsearray['externalid'] = 123457;
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'name' => 'CREATE',
             'description' => 'Create test',
             'schoolextid' => 'ABC',
             'schoolextsys' => 'external',
-            'externalid' => 123457);
+            'externalid' => 123457];
         $course = new \api\coursemanagement($this->db, 'test1');
         $this->assertEquals($responsearray, $course->create($params, $this->admin['id']));
     }
@@ -175,11 +175,11 @@ class coursemanagementtest extends unittestdatabase
         // Test course creation - SUCCESS (not supplying faculty)
         $responsearray = $this->create_response_array();
         $course = new \api\coursemanagement($this->db, 'test1');
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'name' => 'CREATE',
             'description' => 'Create test',
-            'school' => 'UNKNOWN School');
+            'school' => 'UNKNOWN School'];
         $this->assertEquals($responsearray, $course->create($params, $this->admin['id']));
     }
 
@@ -214,11 +214,11 @@ class coursemanagementtest extends unittestdatabase
         $responsearray['status'] = 'Faculty not supplied';
         $responsearray['id'] = null;
         $responsearray['externalid'] = null;
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'name' => 'CREATE',
             'description' => 'Create test',
-            'school' => 'School test invalid');
+            'school' => 'School test invalid'];
         $this->assertEquals($responsearray, $course->create($params, $this->admin['id']));
     }
 
@@ -232,10 +232,10 @@ class coursemanagementtest extends unittestdatabase
         $responsearray = $this->update_response_array();
         $course = new \api\coursemanagement($this->db, 'test1');
         // Test course update - SUCCESS name
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->cid1,
-            'name' => 'TESTUPDATE');
+            'name' => 'TESTUPDATE'];
         $this->assertEquals($responsearray, $course->update($params, $this->admin['id']));
     }
 
@@ -248,10 +248,10 @@ class coursemanagementtest extends unittestdatabase
         $responsearray = $this->update_response_array();
         $course = new \api\coursemanagement($this->db, 'test1');
         // Test course update - SUCCESS name
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'externalid' => 123456,
-            'name' => 'TESTUPDATE2');
+            'name' => 'TESTUPDATE2'];
         $this->assertEquals($responsearray, $course->update($params, $this->admin['id']));
     }
 
@@ -264,10 +264,10 @@ class coursemanagementtest extends unittestdatabase
         $responsearray = $this->update_response_array();
         $course = new \api\coursemanagement($this->db, 'test1');
         // Test course update - SUCCESS name
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'externalid' => 123456,
-            'schoolextid' => 'berty');
+            'schoolextid' => 'berty'];
         $this->assertEquals($responsearray, $course->update($params, $this->admin['id']));
     }
 
@@ -306,27 +306,27 @@ class coursemanagementtest extends unittestdatabase
         $params['faculty'] = 'Test faculty 2';
         $this->assertEquals($responsearray, $course->update($params, $this->admin['id']));
         // Check courses table.
-        $querytable = $this->query(array('columns' => array('name', 'description', 'schoolid', 'externalid', 'externalsys'), 'table' => 'courses', 'where' => array(array('column' => 'id', 'value' => $this->cid1))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['name', 'description', 'schoolid', 'externalid', 'externalsys'], 'table' => 'courses', 'where' => [['column' => 'id', 'value' => $this->cid1]]]);
+        $expectedtable = [
+            0 => [
                 'name' => 'TEST',
                 'description' => 'Test course',
                 'schoolid' => $this->school,
                 'externalid' => '123456',
                 'externalsys' => 'external'
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
         // Check faculty table.
-        $querytable = $this->query(array('columns' => array('name'), 'table' => 'faculty'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['name'], 'table' => 'faculty']);
+        $expectedtable = [
+            0 => [
                 'name' => 'UNKNOWN Faculty',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'name' => 'Administrative and Support Units',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -337,12 +337,12 @@ class coursemanagementtest extends unittestdatabase
     public function test_update_exception_noupdate()
     {
         $responsearray = $this->update_response_array();
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->cid1,
             'name' => 'TEST',
             'description' => 'Test course',
-            'school' => 'UNKNOWN School');
+            'school' => 'UNKNOWN School'];
         $course = new \api\coursemanagement($this->db, 'test1');
         $responsearray['statuscode'] = 308;
         $responsearray['status'] = 'Request updates nothing';
@@ -350,16 +350,16 @@ class coursemanagementtest extends unittestdatabase
         $responsearray['externalid'] = null;
         $this->assertEquals($responsearray, $course->update($params, $this->admin['id']));
         // Check courses table.
-        $querytable = $this->query(array('columns' => array('name', 'description', 'schoolid', 'externalid', 'externalsys'), 'table' => 'courses', 'where' => array(array('column' => 'id', 'value' => $this->cid1))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['name', 'description', 'schoolid', 'externalid', 'externalsys'], 'table' => 'courses', 'where' => [['column' => 'id', 'value' => $this->cid1]]]);
+        $expectedtable = [
+            0 => [
                 'name' => 'TEST',
                 'description' => 'Test course',
                 'schoolid' => $this->school,
                 'externalid' => '123456',
                 'externalsys' => 'external'
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -376,16 +376,16 @@ class coursemanagementtest extends unittestdatabase
         $this->assertEquals($responsearray, $course->delete($params, $this->admin['id']));
         // Check that the remaining courses are correct, when we delete a course we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
-        $querytable = $this->query(array('columns' => array('name', 'description', 'schoolid', 'externalid', 'externalsys'), 'table' => 'courses', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['name', 'description', 'schoolid', 'externalid', 'externalsys'], 'table' => 'courses', 'where' => [['column' => 'deleted', 'value' => null, 'operator' => 'IS']]]);
+        $expectedtable = [
+            0 => [
                 'name' => 'TEST2',
                 'description' => 'Test course 2',
                 'schoolid' => $this->school,
                 'externalid' => null,
                 'externalsys' => null
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -396,23 +396,23 @@ class coursemanagementtest extends unittestdatabase
     public function test_delete_success_external()
     {
         $responsearray = $this->delete_response_array();
-        $params = array(
+        $params = [
             'nodeid' => 1,
-            'externalid' => 123456);
+            'externalid' => 123456];
         $course = new \api\coursemanagement($this->db, 'test1');
         $this->assertEquals($responsearray, $course->delete($params, $this->admin['id']));
         // Check that the remaining courses are correct, when we delete a course we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
-        $querytable = $this->query(array('columns' => array('name', 'description', 'schoolid', 'externalid', 'externalsys'), 'table' => 'courses', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['name', 'description', 'schoolid', 'externalid', 'externalsys'], 'table' => 'courses', 'where' => [['column' => 'deleted', 'value' => null, 'operator' => 'IS']]]);
+        $expectedtable = [
+            0 => [
                 'name' => 'TEST2',
                 'description' => 'Test course 2',
                 'schoolid' => $this->school,
                 'externalid' => null,
                 'externalsys' => null
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -433,8 +433,8 @@ class coursemanagementtest extends unittestdatabase
         $params['id'] = 99;
         $this->assertEquals($responsearray, $course->delete($params, $this->admin['id']));
         // Test course deletion- ERROR no id provided.
-        $params = array(
-            'nodeid' => 1);
+        $params = [
+            'nodeid' => 1];
         $this->assertEquals($responsearray, $course->delete($params, $this->admin['id']));
     }
 

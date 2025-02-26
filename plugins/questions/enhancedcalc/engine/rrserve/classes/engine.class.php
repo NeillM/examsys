@@ -58,9 +58,9 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
             try {
                 // if the box isnt on this timeout is ignored and is likely to be different
                 if (!isset($this->config['timeout'])) {
-                    $timeoutarray = array('seconds' => 5, 'milliseconds' => 1);
+                    $timeoutarray = ['seconds' => 5, 'milliseconds' => 1];
                 } else {
-                    $timeoutarray = array('seconds' => $this->config['timeout'], 'milliseconds' => 1);
+                    $timeoutarray = ['seconds' => $this->config['timeout'], 'milliseconds' => 1];
                 }
                 self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port'], $timeoutarray);
             } catch (Exception $except) {
@@ -145,7 +145,7 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
             $R_rreturn = explode("\n", $R_rreturn);
         }
 
-        $ret = array();
+        $ret = [];
         foreach ($R_rreturn as $key => $val) {
             $val = trim($val);
             if ($val == '') {

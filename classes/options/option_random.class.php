@@ -42,14 +42,14 @@ class OptionRANDOM extends OptionEdit
         if ($valid === true) {
             // If $id is -1 we're inserting a new record
             if ($this->id == -1) {
-                $params = array_merge(array('issssddd'), $this->_data);
+                $params = array_merge(['issssddd'], $this->_data);
                 $query = <<< QUERY
 INSERT INTO options(o_id, option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
                 // Otherwise we're updating an existing one
-                $params = array_merge(array('issssdddi'), $this->_data, array(&$this->id));
+                $params = array_merge(['issssdddi'], $this->_data, [&$this->id]);
                 $query = <<< QUERY
 UPDATE options
 SET o_id = ?, option_text = ?, feedback_right = ?, feedback_wrong = ?, correct = ?, marks_correct = ?, marks_incorrect = ?, marks_partial = ?
@@ -57,7 +57,7 @@ WHERE id_num = ?
 QUERY;
             }
             $result = $this->_mysqli->prepare($query);
-            call_user_func_array(array($result,'bind_param'), $params);
+            call_user_func_array([$result,'bind_param'], $params);
             $result->execute();
             $success = ($result->affected_rows > -1);
 
@@ -74,7 +74,7 @@ QUERY;
             }
             $result->close();
 
-            $this->_modified_fields = array();
+            $this->_modified_fields = [];
         } else {
             throw new ValidationException($valid);
         }

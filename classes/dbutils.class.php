@@ -167,8 +167,8 @@ class DBUtils
         $selection = rtrim($selection, ', ');
         $values = array_values($params);
         // Get bind types and values
-        $bind_types = array();
-        $bind_values = array();
+        $bind_types = [];
+        $bind_values = [];
         foreach ($values as $idx => $val) {
             // Check valid bind_param type.
             if (preg_match('/^(i|d|s|b)$/', $val[0])) {
@@ -181,13 +181,13 @@ class DBUtils
         $bind_types = implode('', $bind_types);
         $bind_types .= 'i';
         $bind_values[] = $id;
-        $bind_values_ref = array();
+        $bind_values_ref = [];
         foreach ($bind_values as $key => $value) {
             $bind_values_ref[$key] = &$bind_values[$key];
         }
         // Run generated query.
         $result = $db->prepare($command . $selection . $filter);
-        call_user_func_array(array($result, 'bind_param'), array_merge(array($bind_types), $bind_values_ref));
+        call_user_func_array([$result, 'bind_param'], array_merge([$bind_types], $bind_values_ref));
         $result->execute();
         $result->close();
         if ($db->errno != 0) {
@@ -217,8 +217,8 @@ class DBUtils
         $selection .= ') VALUES (';
         $values = array_values($params);
         // Get bind types and values
-        $bind_types = array();
-        $bind_values = array();
+        $bind_types = [];
+        $bind_values = [];
         foreach ($values as $idx => $val) {
             // Check valid bind_param type.
             if (preg_match('/^(i|d|s|b)$/', $val[0])) {
@@ -232,13 +232,13 @@ class DBUtils
         $selection = rtrim($selection, ', ');
         $selection .= ')';
         $bind_types = implode('', $bind_types);
-        $bind_values_ref = array();
+        $bind_values_ref = [];
         foreach ($bind_values as $key => $value) {
             $bind_values_ref[$key] = &$bind_values[$key];
         }
         // Run generated query.
         $result = $db->prepare($command . $selection);
-        call_user_func_array(array($result, 'bind_param'), array_merge(array($bind_types), $bind_values_ref));
+        call_user_func_array([$result, 'bind_param'], array_merge([$bind_types], $bind_values_ref));
         $result->execute();
         $result->close();
         if ($db->errno != 0) {

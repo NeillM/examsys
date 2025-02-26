@@ -27,7 +27,7 @@ namespace LTI;
  * A Trivial memory-based store - no support for tokens
  */
 class TrivialOAuthDataStore extends OAuthDataStore {
-	private $consumers = array();
+	private $consumers = [];
 
 	function add_consumer($consumer_key, $consumer_secret) {
 		$this->consumers[$consumer_key] = $consumer_secret;

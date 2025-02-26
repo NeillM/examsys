@@ -41,7 +41,7 @@ if ($userObject->has_role('Demo')) {
 }
 
 if (isset($_GET['userID'])) {
-    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+    if ($userObject->has_role(['SysAdmin', 'Admin', 'Staff'])) {
         if ($_GET['userID'] != '') {
             $userID = $_GET['userID'];
         } else {
@@ -196,7 +196,7 @@ $textsize -= 10;
     echo "<div><strong>$student_name " . $string['feedback'] . '</strong></div></th>';
     echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></th></tr>\n";
 
-    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and !isset($_GET['userID'])) {
+    if ($userObject->has_role(['SysAdmin', 'Admin', 'Staff']) and !isset($_GET['userID'])) {
         echo '<tr><td class="yellowwarn"><div style="margin-left:10px">' . $string['staffmsg'] . "</div></td></tr>\n";
     }
 
@@ -207,32 +207,32 @@ $textsize -= 10;
 
     // Get users log data excluding exclued questions
     $qid_list = '';
-    $question_data = array();
+    $question_data = [];
 
     $metadataID_SQL = '';
-    $metadataparams = array();
+    $metadataparams = [];
     $metadatatypes = '';
     if (isset($_GET['metadataID'])) {
         $metadataID_SQL = ' AND log_metadata.id = ?';
-        $metadataparams = array(&$_GET['metadataID']);
+        $metadataparams = [&$_GET['metadataID']];
         $metadatatypes = 'i';
     }
 
     if ($paper_type == '0' or $paper_type == '1') {
         $sql = "SELECT q_id, mark, totalpos, started FROM log0, log_metadata WHERE log0.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? UNION SELECT q_id, mark, totalpos, started FROM log1, log_metadata WHERE log1.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $metadataID_SQL ORDER BY q_id, started";
-        $params = array_merge(array(&$paperID, &$userID, &$paperID, &$paperID, &$userID, &$paperID), $metadataparams);
+        $params = array_merge([&$paperID, &$userID, &$paperID, &$paperID, &$userID, &$paperID], $metadataparams);
         $types = 'iiiiii' . $metadatatypes;
     } elseif ($paper_type == '4') {
         $sql = 'SELECT log4.q_id, log4.rating, NULL, NULL AS totalpos FROM log4 INNER JOIN log4_overall l4o ON log4.log4_overallID = l4o.id WHERE log4.q_id NOT IN (SELECT q_id FROM question_exclude WHERE q_paper = ?) AND l4o.userID = ? AND l4o.q_paper = ? ORDER BY log4.q_id, l4o.started';
-        $params = array(&$paperID, &$userID, &$paperID);
+        $params = [&$paperID, &$userID, &$paperID];
         $types = 'iii';
     } else {
         $sql = "SELECT q_id, mark, totalpos, NULL FROM log$paper_type, log_metadata WHERE log$paper_type.metadataID = log_metadata.id AND q_id NOT IN (SELECT q_id FROM question_exclude WHERE paperID = ?) AND userID = ? AND paperID = ? $metadataID_SQL ORDER BY q_id, started";
-        $params = array_merge(array(&$paperID, &$userID, &$paperID), $metadataparams);
+        $params = array_merge([&$paperID, &$userID, &$paperID], $metadataparams);
         $types = 'iii' . $metadatatypes;
     }
     $result = $mysqli->prepare($sql);
-    call_user_func_array(array($result, 'bind_param'), array_merge(array($types), $params));
+    call_user_func_array([$result, 'bind_param'], array_merge([$types], $params));
     $result->execute();
     $result->bind_result($q_id, $mark, $totalpos, $tmp_started);
     $total_student_mark = 0;
@@ -260,7 +260,7 @@ $textsize -= 10;
         }
     }
 
-    $objectives = array();
+    $objectives = [];
     $qid_list = mb_substr($qid_list, 0, -1);
     $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
 

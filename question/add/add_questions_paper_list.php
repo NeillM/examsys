@@ -82,8 +82,8 @@ if (!is_null($order)) {
 </thead>
 <tbody>
 <?php
-  $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_16.gif');
-  $paper_details = array();
+  $paper_icons = ['formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_16.gif'];
+  $paper_details = [];
 
   $type = param::optional('paper_type', null, param::INT, param::FETCH_GET);
   $teamid = param::optional('teamID', null, param::INT, param::FETCH_GET);
@@ -109,7 +109,7 @@ foreach ($paper_details as $property_id => $paper_detail) {
 $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 <script type="text/javascript" src="../../js/paperquestionsinit.min.js"></script>
 </body>

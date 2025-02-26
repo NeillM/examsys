@@ -112,7 +112,7 @@ class yearutils
             $filter = 'WHERE a.deleted is NULL ORDER BY a.calendar_year ASC';
         }
 
-        $supported_years = array();
+        $supported_years = [];
         $result = $this->mysqli->prepare("SELECT a.calendar_year, a.academic_year FROM academic_year a $filter");
         $result->execute();
         $result->bind_result($calendar_year, $academic_year);
@@ -350,7 +350,7 @@ class yearutils
             $supported_years = $this->get_supported_years('STAT');
         }
 
-        $data = array();
+        $data = [];
         foreach ($supported_years as $calendar => $academic) {
             if ($type == 'academic') {
                 $tab_year = $academic;
@@ -359,9 +359,9 @@ class yearutils
             }
 
             if ($calendar == $current_tab) {
-                $data[] = array('selected' => true, 'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra, 'tabyear' => $tab_year);
+                $data[] = ['selected' => true, 'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra, 'tabyear' => $tab_year];
             } else {
-                $data[] = array('selected' => false, 'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra, 'tabyear' => $tab_year);
+                $data[] = ['selected' => false, 'url' => $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra, 'tabyear' => $tab_year];
             }
         }
 

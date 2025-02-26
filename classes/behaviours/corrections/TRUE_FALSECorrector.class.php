@@ -37,7 +37,7 @@ class TRUE_FALSECorrector extends Corrector
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $new_correct_val = $new_correct['option_correct'];
-        $errors = array();
+        $errors = [];
         $mark_changes = false;
 
         $old_correct_list = '';

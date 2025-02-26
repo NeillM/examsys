@@ -66,8 +66,8 @@ $result = $export_result;
 
 <?php
 
-$files = array();
-$tozip = array();
+$files = [];
+$tozip = [];
 
 if (count($result['save']['data']->files) > 1) {
     foreach ($result['save']['data']->files as $title => $file) {

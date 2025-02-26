@@ -41,5 +41,5 @@ refmaterials_utils::delete($refID, $mysqli);
 $render = new render($configObject);
 $lang['title'] = $string['delete'];
 $lang['success'] = $string['success'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

@@ -109,9 +109,9 @@ class EnhancedCalc extends Question implements questionInterface
 
         if (isset($this->useranswer['uansunit']) and $this->settings['show_units']) {
             if (isset($matches[0])) {
-                return array($matches[0], $this->useranswer['uansunit']);
+                return [$matches[0], $this->useranswer['uansunit']];
             } else {
-                return array($input, $this->useranswer['uansunit']); // No number matched
+                return [$input, $this->useranswer['uansunit']]; // No number matched
             }
         }
 
@@ -120,9 +120,9 @@ class EnhancedCalc extends Question implements questionInterface
             $units = trim(mb_substr($input, $sz));
             $numb = $matches[0];
 
-            return array($numb, $units);
+            return [$numb, $units];
         } else {
-            return array($input, ''); // No number matched
+            return [$input, '']; // No number matched
         }
     }
 
@@ -133,7 +133,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function build_formula_by_units($ans)
     {
-        $formula_by_units = array();
+        $formula_by_units = [];
         foreach ($ans as $key => $value) {
             $units = explode(',', $value['units']);
             foreach ($units as $value1) {
@@ -601,20 +601,20 @@ class EnhancedCalc extends Question implements questionInterface
                 $data[$key] = param::clean(
                     $value,
                     param::REGEXP,
-                    array(
+                    [
                     'default' => '',
                     'regexp' => '/^[+-]?[0-9]+[\.]?[0-9]*[\s\w\d\/^%-°\p{L}]*$/u',
-                    )
+                    ]
                 );
             } elseif ($key == 'uansunit') {
                 // Clean the unit value.
                 $data[$key] = param::clean(
                     $value,
                     param::REGEXP,
-                    array(
+                    [
                     'default' => '',
                     'regexp' => '/^[\s\w\d\/^%-°\p{L}]*$/u',
-                    )
+                    ]
                 );
             }
         }
@@ -744,7 +744,7 @@ class EnhancedCalc extends Question implements questionInterface
      * Render the question as required for displaying results and feedback to the user
      * @param array $extra additional paper settings
      */
-    public function render_feedback($extra = array())
+    public function render_feedback($extra = [])
     {
         global $string;
 
@@ -756,7 +756,7 @@ class EnhancedCalc extends Question implements questionInterface
             $varname = array_keys($this->useranswer['vars']);
             $varvalue = array_values($this->useranswer['vars']);
         } else {
-            $varname = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K');
+            $varname = ['$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K'];
             $varvalue = array_fill(0, 11, '<span class="var_error"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!">&nbsp;ERROR</span>');
         }
 
@@ -902,12 +902,12 @@ class EnhancedCalc extends Question implements questionInterface
     {
         //Question reference
         if ($this->is_linked_ans($inputVal)) {
-            $uansarray = array();
+            $uansarray = [];
             // 1. List answer and associated question
             $find_qid = $this->parse_linked_ans($inputVal);
             // 2. Error if user answers not set.
             if (!is_array($user_answers) or empty($user_answers)) {
-                $user_answers = array();
+                $user_answers = [];
                 $inputVal = 'ERROR';
             }
             // 3. Loop though user answers.
@@ -942,7 +942,7 @@ class EnhancedCalc extends Question implements questionInterface
             list($find_var, $find_qid) = $this->parse_linked_question_var($inputVal);
             // 2. Error if user answers not set.
             if (!is_array($user_answers) or empty($user_answers)) {
-                $user_answers = array();
+                $user_answers = [];
                 $inputVal = 'ERROR';
             }
             // 3. Loop though user answers.
@@ -1059,7 +1059,7 @@ class EnhancedCalc extends Question implements questionInterface
         $varname = mb_substr($varval, 3, 2);
         $qid = intval(mb_substr($varval, 5));
 
-        return array($varname, $qid);
+        return [$varname, $qid];
     }
 
     /**
@@ -1071,7 +1071,7 @@ class EnhancedCalc extends Question implements questionInterface
 
         if (!isset($this->useranswer['vars']) or !is_array($this->useranswer['vars'])) {
             // Create an empty array to hold the generated variables
-            $this->useranswer['vars'] = array();
+            $this->useranswer['vars'] = [];
         }
 
         // Check to see if variables have been previously generated if not put them in an array to be generated
@@ -1129,7 +1129,7 @@ class EnhancedCalc extends Question implements questionInterface
         }
     }
 
-    public function render_paper($extra = array())
+    public function render_paper($extra = [])
     {
         global $string;
 
@@ -1160,7 +1160,7 @@ class EnhancedCalc extends Question implements questionInterface
             }
         }
 
-        $calculatevars = array();
+        $calculatevars = [];
 
         $this->generate_variables();
 
@@ -1261,7 +1261,7 @@ class EnhancedCalc extends Question implements questionInterface
         if (isset($extra['current_question'])) {
             $screen = $extra['current_question']['screen'];
             // Find any previous failed/unanswered related question
-            $failed_answers = array();
+            $failed_answers = [];
             foreach ($this->useranswer['vars'] as $key => $value) {
                 if ($value == 'ERROR' and isset($this->settings['vars'][$key]['min'])) {
                     $failed_answer_id = mb_substr($this->settings['vars'][$key]['min'], 3);
@@ -1279,7 +1279,7 @@ class EnhancedCalc extends Question implements questionInterface
             $failed_answers = array_unique($failed_answers);
         } else {
             $screen = $extra['num_on_screen'];
-            $failed_answers = array();
+            $failed_answers = [];
         }
         $questiondata['screen'] = $screen;
         if (in_array('ERROR', $this->useranswer['vars'], true)) {
@@ -1326,7 +1326,7 @@ class EnhancedCalc extends Question implements questionInterface
     {
         $this->decode_settings();
 
-        return (isset($this->settings['vars'])) ? $this->settings['vars'] : array();
+        return (isset($this->settings['vars'])) ? $this->settings['vars'] : [];
     }
 
     /**
@@ -1357,7 +1357,7 @@ class EnhancedCalc extends Question implements questionInterface
         $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : 0;
 
         if ($marks_full !== false and $marks_partial !== false) {
-            return array('correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect);
+            return ['correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect];
         } else {
             return false;
         }

@@ -92,85 +92,85 @@ class param
      * @param array $opt Cleaning options.
      * @return mixed The cleaned string or null if it does not match the type defined.
      */
-    public static function clean($value, $type, $opt = array('default' => null))
+    public static function clean($value, $type, $opt = ['default' => null])
     {
         // Setup the parameters for the filter_var function.
         switch ($type) {
             case self::ALPHA:
             case self::ALPHANUM:
                 $filter = FILTER_UNSAFE_RAW;
-                $options = array(
+                $options = [
                     'options' => $opt,
                     'flags' => FILTER_FLAG_STRIP_LOW
-                );
+                ];
                 break;
             case self::BOOLEAN:
                 $filter = FILTER_VALIDATE_BOOLEAN;
-                $options = array(
+                $options = [
                     'options' => $opt,
                     'flags' => FILTER_NULL_ON_FAILURE,
-                );
+                ];
                 break;
             case self::EMAIL:
                 $filter = FILTER_VALIDATE_EMAIL;
-                $options = array(
+                $options = [
                     'options' => $opt,
-                );
+                ];
                 break;
             case self::FLOAT:
                 $filter = FILTER_VALIDATE_FLOAT;
-                $options = array(
+                $options = [
                     'options' => $opt,
-                );
+                ];
                 break;
             case self::HTML:
                 $filter = FILTER_UNSAFE_RAW;
-                $options = array(
+                $options = [
                     'options' => $opt,
-                );
+                ];
                 break;
             case self::INT:
                 $filter = FILTER_VALIDATE_INT;
-                $options = array(
+                $options = [
                     'options' => $opt,
                     'flags' => FILTER_FLAG_ALLOW_OCTAL | FILTER_FLAG_ALLOW_HEX,
-                );
+                ];
                 break;
             case self::IP_ADDRESS:
                 $filter = FILTER_VALIDATE_IP;
-                $options = array(
+                $options = [
                     'options' => $opt,
                     'flags' => FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6,
-                );
+                ];
                 break;
             case self::RAW:
             case self::TEXT:
             case self::FILENAME:
                 $filter = FILTER_UNSAFE_RAW;
-                $options = array(
+                $options = [
                 'options' => $opt,
-                );
+                ];
                 break;
             case self::URL:
             case self::LOCAL_URL:
                 $filter = FILTER_VALIDATE_URL;
-                $options = array(
+                $options = [
                     'options' => $opt,
-                );
+                ];
                 break;
             case self::REGEXP:
                 $filter = FILTER_VALIDATE_REGEXP;
-                $options = array(
+                $options = [
                     'options' => $opt,
-                );
+                ];
                 break;
             case self::SQLDATETIME:
                 $filter = FILTER_VALIDATE_REGEXP;
-                $options = array(
-                    'options' => array(
+                $options = [
+                    'options' => [
                         'regexp' => '/^([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01][0-9]|2[0-3])[0-5]\d[0-5]\d)$/',
-                    )
-                );
+                    ]
+                ];
                 break;
             default:
                 throw new coding_exception('invalid_type');
@@ -216,12 +216,12 @@ class param
                 $rogo_url = Config::get_instance()->get('cfg_web_host');
                 // We now know if it is a valid URL or not, we just need to ensure it is for the local instance of ExamSys.
                 $filter = FILTER_VALIDATE_REGEXP;
-                $options = array(
-                    'options' => array(
+                $options = [
+                    'options' => [
                         'default' => null,
                         'regexp' => "#^https?://$rogo_url(/.*)?$#",
-                    ),
-                );
+                    ],
+                ];
                 $return = filter_var($return, $filter, $options);
                 break;
         }
@@ -238,9 +238,9 @@ class param
      * @param array $opt Cleaning options.
      * @return array The array containing only cleaned values or null if it does not match the type defined.
      */
-    public static function clean_array(array $value, $type, $required = false, $opt = array('default' => null))
+    public static function clean_array(array $value, $type, $required = false, $opt = ['default' => null])
     {
-        $return = array();
+        $return = [];
         foreach ($value as $key => $part) {
             if (!is_array($part)) {
                 $clean = self::clean($part, $type, $opt);
@@ -326,7 +326,7 @@ class param
      * @param array $opt Cleaning options.
      * @return mixed
      */
-    public static function optional($name, $default, $type, $from = self::FETCH_REQUEST, $opt = array('default' => null))
+    public static function optional($name, $default, $type, $from = self::FETCH_REQUEST, $opt = ['default' => null])
     {
         $value = self::fetch($name, $from);
         if (is_null($value)) {
@@ -352,7 +352,7 @@ class param
      * @return mixed
      * @throws MissingParameter
      */
-    public static function required($name, $type, $from = self::FETCH_REQUEST, $opt = array('default' => null))
+    public static function required($name, $type, $from = self::FETCH_REQUEST, $opt = ['default' => null])
     {
         $value = self::fetch($name, $from);
         if (is_null($value)) {

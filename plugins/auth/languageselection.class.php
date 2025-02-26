@@ -44,8 +44,8 @@ class Languageselection_auth extends outline_authentication
 
     public function register_callback_routines()
     {
-        $callbackarray[] = array(array($this, 'add_language_selection'), 'displaystdform', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'store_data'), 'postauth', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'add_language_selection'], 'displaystdform', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'store_data'], 'postauth', $this->number, $this->name];
 
         return $callbackarray;
     }
@@ -77,7 +77,7 @@ class Languageselection_auth extends outline_authentication
         $newfield->description = '';
         $newfield->default = LangUtils::getLang($this->settings['cfg_web_root']);
         $newfield->name = 'ROGO_language';
-        $newfield->options = isset($this->settings['available_languages']) ? $this->settings['available_languages'] : array('English' => 'en');
+        $newfield->options = isset($this->settings['available_languages']) ? $this->settings['available_languages'] : ['English' => 'en'];
         $display_std_form_obj->fields[] = $newfield;
 
         return $display_std_form_obj;

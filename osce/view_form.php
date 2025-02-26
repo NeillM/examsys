@@ -34,7 +34,7 @@ if ($userObject->has_role('Demo')) {
 $contactemail = support::get_email();
 $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
 
-if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+if ($userObject->has_role(['Staff', 'Admin', 'SysAdmin'])) {
     $userID = $_GET['userID'];
     $propertyObj = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
     $paperID = $_GET['paperID'];
@@ -118,7 +118,7 @@ if ($photoname) {
   $result->fetch();
   $result->close();
 
-  $stored_results = array();
+  $stored_results = [];
   $result = $mysqli->prepare('SELECT q_id, rating, q_parts FROM log4 WHERE log4_overallID = ?');
   $result->bind_param('i', $log4_overall_id);
   $result->execute();
@@ -142,8 +142,8 @@ while ($max_cols_result->fetch()) {
 
   // Get the questions.
   $question_no = 1;
-  $sub_totals = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0, 9 => 0);
-  $cell_colors = array('#D99694', '#E5B9B7', '#FFC169', '#C2D69B', '#C2DFFF','#5ea2ef','#4b0082', '#4b00FF','#9400d3','#9400FF');
+  $sub_totals = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0, 9 => 0];
+  $cell_colors = ['#D99694', '#E5B9B7', '#FFC169', '#C2D69B', '#C2DFFF','#5ea2ef','#4b0082', '#4b00FF','#9400d3','#9400FF'];
 
   $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
   $result->bind_param('i', $paperID);
@@ -193,23 +193,23 @@ for ($i = 0; $i < $max_cols; $i++) {
 switch ($marking) {
     case '3':
         $labels = $string['marking3'];
-        $colors = array('#D99594', '#FABF8F', '#C2D69B');
+        $colors = ['#D99594', '#FABF8F', '#C2D69B'];
         break;
     case '4':
         $labels = $string['marking4'];
-        $colors = array('#D99694', '#E5B9B7', '#FFC169', '#D7E3BC', '#C2D69B');
+        $colors = ['#D99694', '#E5B9B7', '#FFC169', '#D7E3BC', '#C2D69B'];
         break;
     case '5':
         $labels = $string['marking5'];
-        $colors = array('#D99594', '#C2D69B');
+        $colors = ['#D99594', '#C2D69B'];
         break;
     case '6':
         $labels = $string['marking6'];
-        $colors = array('#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B');
+        $colors = ['#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B'];
         break;
     case '7':
         $labels = $string['marking7'];
-        $colors = array('#D99594', '#C2D69B');
+        $colors = ['#D99594', '#C2D69B'];
         break;
 }
 

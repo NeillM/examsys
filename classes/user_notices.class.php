@@ -81,21 +81,21 @@ class user_notices extends RogoStaticSingleton
         if (!file_exists($root . 'config/config.inc.php')) {
             // If we have not installed there is no config.inc.php file.
             $rp = rtrim('/' . trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $root), '/'), '/');
-            $headerdata = array(
-                'css' => array(
+            $headerdata = [
+                'css' => [
                     '/css/notice.css',
-                ),
+                ],
                 'path' => $rp,
                 'charset' => 'utf-8',
                 'language' => 'en',
-            );
+            ];
             $noticedata['path'] = $rp;
         } else {
-            $headerdata = array(
-                'css' => array(
+            $headerdata = [
+                'css' => [
                     '/css/notice.css',
-                ),
-            );
+                ],
+            ];
         }
         $render = new render($configObject);
 
@@ -113,7 +113,7 @@ class user_notices extends RogoStaticSingleton
         $render->render($noticedata, $lang, 'notice.html');
 
         if ($output_footer == true) {
-            $render->render(array(), array(), 'footer.html');
+            $render->render([], [], 'footer.html');
         }
     }
 

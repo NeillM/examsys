@@ -40,8 +40,8 @@ class access_denied_logsTest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('incident', 'core');
-        $this->denied1 = $datagenerator->create_denied(array('userid' => $this->admin['id'], 'page' => 'localhost'));
-        $this->denied2 = $datagenerator->create_denied(array('userid' => $this->admin['id'], 'page' => 'index.php'));
+        $this->denied1 = $datagenerator->create_denied(['userid' => $this->admin['id'], 'page' => 'localhost']);
+        $this->denied2 = $datagenerator->create_denied(['userid' => $this->admin['id'], 'page' => 'index.php']);
     }
 
     /**

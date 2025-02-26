@@ -57,18 +57,18 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid')));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid']]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'moduleid' => 'TRAIN',
-            ),
-            2 => array(
+            ],
+            2 => [
                 'moduleid' => 'TST',
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -81,13 +81,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_addteammember'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'add_team_members'), 'where' => array(array('column' => 'moduleid', 'value' => 'TRAIN'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'add_team_members'], 'where' => [['column' => 'moduleid', 'value' => 'TRAIN']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'TRAIN',
                 'add_team_members' => 0,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -100,13 +100,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_checklist'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'checklist'), 'where' => array(array('column' => 'moduleid', 'value' => 'SYSTEM'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'checklist'], 'where' => [['column' => 'moduleid', 'value' => 'SYSTEM']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
                 'checklist' => 'stdset,mapping',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -119,13 +119,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_active'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'active'), 'where' => array(array('column' => 'moduleid', 'value' => 'SYSTEM'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'active'], 'where' => [['column' => 'moduleid', 'value' => 'SYSTEM']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
                 'active' => 0,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -138,13 +138,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_externalid'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'externalid'), 'where' => array(array('column' => 'moduleid', 'value' => 'TRAIN'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'externalid'], 'where' => [['column' => 'moduleid', 'value' => 'TRAIN']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'TRAIN',
                 'externalid' => '12341234',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -157,13 +157,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_negmarking'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'neg_marking'), 'where' => array(array('column' => 'moduleid', 'value' => 'SYSTEM'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'neg_marking'], 'where' => [['column' => 'moduleid', 'value' => 'SYSTEM']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
                 'neg_marking' => 1,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -176,13 +176,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_objectiveapi'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'vle_api'), 'where' => array(array('column' => 'moduleid', 'value' => 'TRAIN'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'vle_api'], 'where' => [['column' => 'moduleid', 'value' => 'TRAIN']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'TRAIN',
                 'vle_api' => 'UoNCM',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -195,13 +195,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_questionbasedfb'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'exam_q_feedback'), 'where' => array(array('column' => 'moduleid', 'value' => 'TRAIN'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'exam_q_feedback'], 'where' => [['column' => 'moduleid', 'value' => 'TRAIN']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'TRAIN',
                 'exam_q_feedback' => 0,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -214,13 +214,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_selfenrol'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'selfenroll'), 'where' => array(array('column' => 'moduleid', 'value' => 'SYSTEM'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'selfenroll'], 'where' => [['column' => 'moduleid', 'value' => 'SYSTEM']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
                 'selfenroll' => 1,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -233,13 +233,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_timedexams'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'timed_exams'), 'where' => array(array('column' => 'moduleid', 'value' => 'SYSTEM'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'timed_exams'], 'where' => [['column' => 'moduleid', 'value' => 'SYSTEM']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
                 'timed_exams' => 1,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -252,13 +252,13 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_update_yearstart'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid', 'academic_year_start'), 'where' => array(array('column' => 'moduleid', 'value' => 'TRAIN'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid', 'academic_year_start'], 'where' => [['column' => 'moduleid', 'value' => 'TRAIN']]]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'TRAIN',
                 'academic_year_start' => '07/02',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -271,21 +271,21 @@ class import_modulesTest extends unittestdatabase
         $import = new import_modules($this->get_test_csv('modules_missing_school'));
         $import->execute();
         // Test modules table is correct.
-        $queryTable = $this->query(array('table' => 'modules', 'columns' => array('moduleid')));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'modules', 'columns' => ['moduleid']]);
+        $expectedTable = [
+            0 => [
                 'moduleid' => 'SYSTEM',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'moduleid' => 'TRAIN',
-            ),
-            2 => array(
+            ],
+            2 => [
                 'moduleid' => 'TST',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
         // Check failure caught.
-        $this->assertEquals(array('TST2'), $import->get_failed());
+        $this->assertEquals(['TST2'], $import->get_failed());
     }
 
     /**

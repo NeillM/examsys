@@ -62,15 +62,15 @@ class assessmentmanagementtest extends unittestdatabase
             $this->config->set_setting('cfg_summative_mgmt', false, \Config::BOOLEAN);
         }
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator->create_academic_year(['calendar_year' => 2016, 'academic_year' => '2016/17']);
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $datagenerator->create_campus(array('name' => 'Test Campus', 'isdefault' => 1));
-        $lab = $datagenerator->create_lab(array('name' => 'Test lab', 'building' => 'Test building', 'room' => 1));
+        $datagenerator->create_campus(['name' => 'Test Campus', 'isdefault' => 1]);
+        $lab = $datagenerator->create_lab(['name' => 'Test lab', 'building' => 'Test building', 'room' => 1]);
         $this->labid1 = $lab['id'];
-        $lab = $datagenerator->create_lab(array('name' => 'Test lab 2', 'building' => 'Test building 2', 'room' => 2));
+        $lab = $datagenerator->create_lab(['name' => 'Test lab 2', 'building' => 'Test building 2', 'room' => 2]);
         $this->labid2 = $lab['id'];
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'Test create formative',
+        $this->pid1 = $datagenerator->create_paper(['papertitle' => 'Test create formative',
             'startdate' => '2016-01-25 09:00:00',
             'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
@@ -79,8 +79,8 @@ class assessmentmanagementtest extends unittestdatabase
             'paperowner' => 'admin',
             'labs' => "$this->labid1",
             'papertype' => '0',
-            'modulename' => 'Training Module'));
-        $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'Test create formative 2',
+            'modulename' => 'Training Module']);
+        $this->pid2 = $datagenerator->create_paper(['papertitle' => 'Test create formative 2',
             'startdate' => '2016-01-25 09:00:00',
             'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
@@ -91,8 +91,8 @@ class assessmentmanagementtest extends unittestdatabase
             'papertype' => '0',
             'externalid' => '123abc456',
             'externalsys' => 'test ExamSys api',
-            'modulename' => 'Training Module'));
-        $this->pid3 = $datagenerator->create_paper(array('papertitle' => 'Test create osce 3',
+            'modulename' => 'Training Module']);
+        $this->pid3 = $datagenerator->create_paper(['papertitle' => 'Test create osce 3',
             'startdate' => '2016-01-25 09:00:00',
             'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
@@ -101,8 +101,8 @@ class assessmentmanagementtest extends unittestdatabase
             'paperowner' => 'admin',
             'labs' => "$this->labid1",
             'papertype' => '4',
-            'modulename' => 'Training Module'));
-        $this->pid4 = $datagenerator->create_paper(array('papertitle' => 'Test create summative',
+            'modulename' => 'Training Module']);
+        $this->pid4 = $datagenerator->create_paper(['papertitle' => 'Test create summative',
             'startdate' => '2016-01-25 09:00:00',
             'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
@@ -111,16 +111,16 @@ class assessmentmanagementtest extends unittestdatabase
             'paperowner' => 'admin',
             'labs' => "$this->labid1",
             'papertype' => '2',
-            'modulename' => 'Training Module'));
+            'modulename' => 'Training Module']);
         if ($management) {
             $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         }
         $datagenerator = $this->get_datagenerator('log', 'core');
-        $datagenerator->create_metadata(array('paperID' => $this->pid2['id'], 'userID' => $this->student['id']));
-        $datagenerator->create_osceoverall(array('q_paper' => $this->pid3['id'], 'userID' => $this->student['id']));
+        $datagenerator->create_metadata(['paperID' => $this->pid2['id'], 'userID' => $this->student['id']]);
+        $datagenerator->create_osceoverall(['q_paper' => $this->pid3['id'], 'userID' => $this->student['id']]);
         $datagenerator = $this->get_datagenerator('api', 'core');
-        $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
-        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test ExamSys api', 'type' => 'api'));
+        $client = $datagenerator->create_client(['clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test']);
+        $datagenerator->create_external(['clientid' => $client['clientid'], 'name' => 'test ExamSys api', 'type' => 'api']);
     }
 
     /**
@@ -129,14 +129,14 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function create_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->pid4['id'] + 1,
             'externalid' => null,
-            'error' => array(),
+            'error' => [],
             'node' => 'create',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -145,7 +145,7 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function create_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'title' => 'Test Formative',
             'type' => 'formative',
@@ -153,9 +153,9 @@ class assessmentmanagementtest extends unittestdatabase
             'startdatetime' => '2016-05-30T09:00:00',
             'enddatetime' => '2016-05-30T10:00:00',
             'session' => 2016,
-            'modules' => array(array('id' => 0, 'value' => $this->module)),
-            'labs' => array(array('id' => 0, 'value' => 'Test lab')),
-            'timezone' => 'Europe/London');
+            'modules' => [['id' => 0, 'value' => $this->module]],
+            'labs' => [['id' => 0, 'value' => 'Test lab']],
+            'timezone' => 'Europe/London'];
     }
 
     /**
@@ -164,12 +164,12 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function update_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'id' => $this->pid2['id'],
             'title' => 'Test Formative 2 update',
-            'modules' => array(array('id' => 0, 'value' => $this->module)),
-            'labs' => array(array('id' => 0, 'value' => 'Test lab')));
+            'modules' => [['id' => 0, 'value' => $this->module]],
+            'labs' => [['id' => 0, 'value' => 'Test lab']]];
     }
 
     /**
@@ -178,12 +178,12 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function update_ext_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'externalid' => '123abc456',
             'title' => 'Test Formative 2 update',
-            'extmodules' => array(array('id' => 0, 'value' => 'abc123def')),
-            'labs' => array(array('id' => 0, 'value' => 'Test lab')));
+            'extmodules' => [['id' => 0, 'value' => 'abc123def']],
+            'labs' => [['id' => 0, 'value' => 'Test lab']]];
     }
 
     /**
@@ -192,14 +192,14 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function update_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->pid2['id'],
             'externalid' => null,
-            'error' => array(),
+            'error' => [],
             'node' => 'update',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -208,14 +208,14 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function update_ext_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->pid2['id'],
             'externalid' => '123abc456',
-            'error' => array(),
+            'error' => [],
             'node' => 'update',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -224,14 +224,14 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function schedule_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->pid4['id'] + 1,
             'externalid' => null,
-            'error' => array(),
+            'error' => [],
             'node' => 'schedule',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -240,7 +240,7 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function schedule_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'title' => 'Test Summative',
             'owner' => $this->admin['id'],
@@ -252,7 +252,7 @@ class assessmentmanagementtest extends unittestdatabase
             'barriers' => 1,
             'campus' => 'Free text campus',
             'notes' => 'Free text notes',
-            'modules' => array(array('id' => 0, 'value' => $this->module)));
+            'modules' => [['id' => 0, 'value' => $this->module]]];
     }
 
     /**
@@ -261,14 +261,14 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function delete_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->pid1['id'],
             'externalid' => null,
             'error' => null,
             'node' => 'delete',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -277,9 +277,9 @@ class assessmentmanagementtest extends unittestdatabase
      */
     private function delete_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
-            'id' => $this->pid1['id']);
+            'id' => $this->pid1['id']];
     }
 
     /**
@@ -304,7 +304,7 @@ class assessmentmanagementtest extends unittestdatabase
         // Test paper create- SUCCESS.
         $params = $this->create_param_array();
         $params['externalid'] = 'qwertyberty';
-        $params['modules'] = array(array('id' => 0, 'value' => 'abc123def'));
+        $params['modules'] = [['id' => 0, 'value' => 'abc123def']];
         $responsearray = $this->create_response_array();
         $responsearray['externalid'] = 'qwertyberty';
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
@@ -432,12 +432,12 @@ class assessmentmanagementtest extends unittestdatabase
         $responsearray['statuscode'] = 211;
         $responsearray['status'] = 'Module error';
         $responsearray['id'] = null;
-        $error = array();
+        $error = [];
         $error[0] = 'Invalid module 1000';
         $responsearray['error'] = $error;
         $params['startdatetime'] = '2016-05-30T09:00:00';
         $params['enddatetime'] = '2016-05-30T10:00:00';
-        $params['modules'] = array(array('id' => 0, 'value' => 1000));
+        $params['modules'] = [['id' => 0, 'value' => 1000]];
         $this->assertEquals($responsearray, $assessment->create($params, $this->admin['id']));
     }
 
@@ -456,7 +456,7 @@ class assessmentmanagementtest extends unittestdatabase
         $responsearray['id'] = null;
         $params['startdatetime'] = '2016-05-30T09:00:00';
         $params['enddatetime'] = '2016-05-30T10:00:00';
-        $params['modules'] = array();
+        $params['modules'] = [];
         $this->assertEquals($responsearray, $assessment->create($params, $this->admin['id']));
     }
 
@@ -474,7 +474,7 @@ class assessmentmanagementtest extends unittestdatabase
         $responsearray['status'] = 'OK';
         $error[0] = 'Invalid lab Test lab 3';
         $responsearray['error'] = $error;
-        $params['labs'] = array(array('id' => 0, 'value' => 'Test lab 3'));
+        $params['labs'] = [['id' => 0, 'value' => 'Test lab 3']];
         $this->assertEquals($responsearray, $assessment->create($params, $this->admin['id']));
     }
 
@@ -491,9 +491,9 @@ class assessmentmanagementtest extends unittestdatabase
         $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $responsearray['statuscode'] = 214;
         $responsearray['status'] = 'This system is set-up to only allow the scheduling of summative exams';
-        $responsearray['error'] = array();
+        $responsearray['error'] = [];
         $responsearray['id'] = null;
-        $params['labs'] = array();
+        $params['labs'] = [];
         $params['type'] = 'summative';
         $params['title'] = 'Test summative';
         $this->assertEquals($responsearray, $assessment->create($params, $this->admin['id']));
@@ -519,25 +519,25 @@ class assessmentmanagementtest extends unittestdatabase
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $this->assertEquals($responsearray, $assessment->update($params, $this->admin['id']));
         // Check properties_modules.
-        $querytable = $this->query(array('columns' => array('property_id', 'idMod'), 'table' => 'properties_modules'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['property_id', 'idMod'], 'table' => 'properties_modules']);
+        $expectedtable = [
+            0 => [
                 'property_id' => $this->pid1['id'],
                 'idMod' => $this->module
-            ),
-            1 => array(
+            ],
+            1 => [
                 'property_id' => $this->pid2['id'],
                 'idMod' =>  $this->module
-            ),
-            2 => array(
+            ],
+            2 => [
                 'property_id' => $this->pid3['id'],
                 'idMod' =>  $this->module
-            ),
-            3 => array(
+            ],
+            3 => [
                 'property_id' => $this->pid4['id'],
                 'idMod' =>  $this->module
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -553,25 +553,25 @@ class assessmentmanagementtest extends unittestdatabase
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $this->assertEquals($responsearray, $assessment->update($params, $this->admin['id']));
         // Check properties_modules.
-        $querytable = $this->query(array('columns' => array('property_id', 'idMod'), 'table' => 'properties_modules'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['property_id', 'idMod'], 'table' => 'properties_modules']);
+        $expectedtable = [
+            0 => [
                 'property_id' => $this->pid1['id'],
                 'idMod' => $this->module
-            ),
-            1 => array(
+            ],
+            1 => [
                 'property_id' => $this->pid2['id'],
                 'idMod' =>  $this->module
-            ),
-            2 => array(
+            ],
+            2 => [
                 'property_id' => $this->pid3['id'],
                 'idMod' =>  $this->module
-            ),
-            3 => array(
+            ],
+            3 => [
                 'property_id' => $this->pid4['id'],
                 'idMod' =>  $this->module
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -595,7 +595,7 @@ class assessmentmanagementtest extends unittestdatabase
      */
     public function test_update_exception_noupdate()
     {
-        $params = array(
+        $params = [
             'id' => $this->pid1['id'],
             'nodeid' => 1,
             'title' => 'Test create formative',
@@ -604,9 +604,9 @@ class assessmentmanagementtest extends unittestdatabase
             'enddatetime' => '2016-01-25T10:00:00',
             'duration' => 60,
             'session' => 2016,
-            'modules' => array(array('id' => 0, 'value' => $this->module)),
-            'labs' => array(array('id' => 0, 'value' => 'Test lab')),
-            'timezone' => 'Europe/London');
+            'modules' => [['id' => 0, 'value' => $this->module]],
+            'labs' => [['id' => 0, 'value' => 'Test lab']],
+            'timezone' => 'Europe/London'];
         $responsearray = $this->update_response_array();
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $responsearray['statuscode'] = 216;
@@ -621,7 +621,7 @@ class assessmentmanagementtest extends unittestdatabase
      */
     public function test_update_exception_noupdate2()
     {
-        $params = array(
+        $params = [
             'id' => $this->pid1['id'],
             'nodeid' => 1,
             'title' => 'Test create formative',
@@ -630,8 +630,8 @@ class assessmentmanagementtest extends unittestdatabase
             'enddatetime' => '2016-01-25T10:00:00',
             'duration' => 60,
             'session' => 2016,
-            'labs' => array(array('id' => 0, 'value' => 'Test lab')),
-            'timezone' => 'Europe/London');
+            'labs' => [['id' => 0, 'value' => 'Test lab']],
+            'timezone' => 'Europe/London'];
         $responsearray = $this->update_response_array();
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $responsearray['statuscode'] = 216;
@@ -666,11 +666,11 @@ class assessmentmanagementtest extends unittestdatabase
         // Test paper update - SUCCESS do not pass labs or title.
         $responsearray = $this->update_response_array();
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
-        $params = array(
+        $params = [
             'id' => $this->pid2['id'],
             'nodeid' => 1,
             'duration' => 90,
-            'modules' => array(array('id' => 0, 'value' => $this->module)));
+            'modules' => [['id' => 0, 'value' => $this->module]]];
         $responsearray['externalid'] = '123abc456';
         $this->assertEquals($responsearray, $assessment->update($params, $this->admin['id']));
         // Test paper update - SUCCESS empty labs non fatal error.
@@ -678,17 +678,17 @@ class assessmentmanagementtest extends unittestdatabase
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $params['title'] = 'Test osce 3 update';
         $params['id'] = $this->pid3['id'];
-        $params['labs'] = array(array('id' => 0, 'value' => ''));
+        $params['labs'] = [['id' => 0, 'value' => '']];
         $responsearray['id'] = $this->pid3['id'];
         $responsearray['externalid'] = null;
         $this->assertEquals($responsearray, $assessment->update($params, $this->admin['id']));
         // We have done two updates that we want to check against the db now.
         // Assesment 2 - Check title / labs have not been changed in the db.
         // Assessment 3 - Check labs are null in the db.
-        $querytable = $this->query(array('columns' => array('paper_title', 'start_date', 'end_date', 'exam_duration',
-            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type', 'externalid', 'externalsys'), 'table' => 'properties'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['paper_title', 'start_date', 'end_date', 'exam_duration',
+            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type', 'externalid', 'externalsys'], 'table' => 'properties']);
+        $expectedtable = [
+            0 => [
                 'paper_title' => 'Test create formative',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -700,8 +700,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '0',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-            1 => array(
+            ],
+            1 => [
                 'paper_title' => 'Test create formative 2',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -713,8 +713,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '0',
                 'externalid' =>  '123abc456',
                 'externalsys' => 'test ExamSys api'
-            ),
-            2 => array(
+            ],
+            2 => [
                 'paper_title' => 'Test osce 3 update',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -726,8 +726,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '4',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-            3 => array(
+            ],
+            3 => [
                 'paper_title' => 'Test create summative',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -739,8 +739,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '2',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -825,21 +825,21 @@ class assessmentmanagementtest extends unittestdatabase
         // Test update summative - ERROR centrally managed
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
-        $summativeparams = array(
+        $summativeparams = [
             'id' => $this->pid4['id'],
             'type' => 'summative',
             'nodeid' => 9,
             'title' => 'Test summative 666',
-            'modules' => array(array('id' => 0, 'value' => $this->module)),
-            'labs' => array(array('id' => 0, 'value' => 'Test lab')));
-        $summativeresponsearray = array(
+            'modules' => [['id' => 0, 'value' => $this->module]],
+            'labs' => [['id' => 0, 'value' => 'Test lab']]];
+        $summativeresponsearray = [
             'statuscode' => 214,
             'status' => 'This system is set-up to only allow the scheduling of summative exams',
             'id' => null,
             'externalid' => null,
-            'error' => array(),
+            'error' => [],
             'node' => 'update',
-            'nodeid' => 9);
+            'nodeid' => 9];
         $assessment->create($summativeparams, $this->admin['id']);
         $this->assertEquals($summativeresponsearray, $assessment->update($summativeparams, $this->admin['id']));
         // Test create summative - success not centrally managed
@@ -875,22 +875,22 @@ class assessmentmanagementtest extends unittestdatabase
         // Test paper schedule- SUCCESS.
         $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $responsearray = $this->schedule_response_array();
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'title' => 'Test Summative',
             'owner' => $this->admin['id'],
             'session' => 2016,
             'duration' => 60,
             'month' => 0,
-            'modules' => array(array('id' => 0, 'value' => $this->module)));
+            'modules' => [['id' => 0, 'value' => $this->module]]];
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $create = $assessment->schedule($params, $this->admin['id']);
         $this->assertEquals($responsearray, $create);
         // Check db.
-        $querytable = $this->query(array('columns' => array('paper_title', 'start_date', 'end_date', 'exam_duration',
-            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type', 'externalid', 'externalsys'), 'table' => 'properties'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['paper_title', 'start_date', 'end_date', 'exam_duration',
+            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type', 'externalid', 'externalsys'], 'table' => 'properties']);
+        $expectedtable = [
+            0 => [
                 'paper_title' => 'Test create formative',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -902,8 +902,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '0',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-            1 => array(
+            ],
+            1 => [
                 'paper_title' => 'Test create formative 2',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -915,8 +915,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '0',
                 'externalid' =>  '123abc456',
                 'externalsys' => 'test ExamSys api'
-            ),
-            2 => array(
+            ],
+            2 => [
                 'paper_title' => 'Test create osce 3',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -928,8 +928,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '4',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-            3 => array(
+            ],
+            3 => [
                 'paper_title' => 'Test create summative',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -941,8 +941,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '2',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-            4 => array(
+            ],
+            4 => [
                 'paper_title' => 'Test Summative',
                 'start_date' => null,
                 'end_date' =>  null,
@@ -954,36 +954,36 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '2',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('columns' => array('property_id', 'idMod'), 'table' => 'properties_modules'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['property_id', 'idMod'], 'table' => 'properties_modules']);
+        $expectedtable = [
+            0 => [
                 'property_id' => $this->pid1['id'],
                 'idMod' => $this->module
-            ),
-            1 => array(
+            ],
+            1 => [
                 'property_id' => $this->pid2['id'],
                 'idMod' =>  $this->module
-            ),
-            2 => array(
+            ],
+            2 => [
                 'property_id' => $this->pid3['id'],
                 'idMod' =>  $this->module
-            ),
-            3 => array(
+            ],
+            3 => [
                 'property_id' => $this->pid4['id'],
                 'idMod' =>  $this->module
-            ),
-            4 => array(
+            ],
+            4 => [
                 'property_id' => $create['id'],
                 'idMod' =>  $this->module
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('table' => 'scheduling', 'columns' => array('paperID', 'period', 'barriers_needed', 'cohort_size', 'notes', 'sittings', 'campus')));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['table' => 'scheduling', 'columns' => ['paperID', 'period', 'barriers_needed', 'cohort_size', 'notes', 'sittings', 'campus']]);
+        $expectedtable = [
+            0 => [
                 'paperID' => $create['id'],
                 'period' => null,
                 'barriers_needed' => 0,
@@ -991,8 +991,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'notes' => null,
                 'sittings' => 1,
                 'campus' => null
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -1007,11 +1007,11 @@ class assessmentmanagementtest extends unittestdatabase
         $responsearray = $this->schedule_response_array();
         $params = $this->schedule_param_array();
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
-        $error = array();
+        $error = [];
         $error[0] = 'Invalid module 99';
         $responsearray['error'] = $error;
         $params['title'] = 'Test Summative 99';
-        $params['modules'] = array(array('id' => 0, 'value' => 99), array('id' => 1, 'value' => $this->module2));
+        $params['modules'] = [['id' => 0, 'value' => 99], ['id' => 1, 'value' => $this->module2]];
         $create = $assessment->schedule($params, $this->admin['id']);
         $responsearray['statuscode'] = 100;
         $responsearray['status'] = 'OK';
@@ -1034,7 +1034,7 @@ class assessmentmanagementtest extends unittestdatabase
         $responsearray['status'] = 'Paper was not assigned any modules';
         $responsearray['id'] = null;
         $params['title'] = 'Test Summative 99';
-        $params['modules'] = array();
+        $params['modules'] = [];
         $this->assertEquals($responsearray, $assessment->schedule($params, $this->admin['id']));
     }
 
@@ -1051,9 +1051,9 @@ class assessmentmanagementtest extends unittestdatabase
         $responsearray['statuscode'] = 206;
         $responsearray['status'] = 'Assessment title is already in use';
         $responsearray['id'] = null;
-        $responsearray['error'] = array();
+        $responsearray['error'] = [];
         $params['title'] = 'Test create summative';
-        $params['modules'] = array(array('id' => 0, 'value' => $this->module));
+        $params['modules'] = [['id' => 0, 'value' => $this->module]];
         $this->assertEquals($responsearray, $assessment->schedule($params, $this->admin['id']));
     }
 
@@ -1070,10 +1070,10 @@ class assessmentmanagementtest extends unittestdatabase
         $this->assertEquals($responsearray, $assessment->delete($params, $this->admin['id']));
         // Check that the remaining properties are correct, when we delete a paper we actually jsut add a timestamp to the table
         // which makes creating a ficute to check against difficult so doing this instead
-        $querytable = $this->query(array('columns' => array('paper_title', 'start_date', 'end_date', 'exam_duration',
-            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type', 'externalid', 'externalsys'), 'table' => 'properties', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['paper_title', 'start_date', 'end_date', 'exam_duration',
+            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type', 'externalid', 'externalsys'], 'table' => 'properties', 'where' => [['column' => 'deleted', 'value' => null, 'operator' => 'IS']]]);
+        $expectedtable = [
+            0 => [
                 'paper_title' => 'Test create formative 2',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -1085,8 +1085,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '0',
                 'externalid' =>  '123abc456',
                 'externalsys' => 'test ExamSys api'
-            ),
-            1 => array(
+            ],
+            1 => [
                 'paper_title' => 'Test create osce 3',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -1098,8 +1098,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '4',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-            2 => array(
+            ],
+            2 => [
                 'paper_title' => 'Test create summative',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' =>  strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -1111,8 +1111,8 @@ class assessmentmanagementtest extends unittestdatabase
                 'paper_type' => '2',
                 'externalid' =>  null,
                 'externalsys' => null
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -1132,8 +1132,8 @@ class assessmentmanagementtest extends unittestdatabase
         $params['id'] = 99;
         $this->assertEquals($responsearray, $assessment->delete($params, $this->admin['id']));
         // Test paper deletion- ERROR no id provided.
-        $params = array(
-            'nodeid' => 1);
+        $params = [
+            'nodeid' => 1];
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
         $this->assertEquals($responsearray, $assessment->delete($params, $this->admin['id']));
     }

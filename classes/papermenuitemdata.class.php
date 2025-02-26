@@ -382,7 +382,7 @@ class PaperMenuItemData
             $properties->get_summative_lock() == 1 ||
             ($configObject->get_setting('core', 'cfg_summative_mgmt') &&
             $properties->get_paper_type() == \assessment::TYPE_SUMMATIVE &&
-            !$userObject->has_role(array('Admin', 'SysAdmin')))
+            !$userObject->has_role(['Admin', 'SysAdmin']))
         ) {
             return [
                 'icon' => $this->rootPath . '/artwork/delete_paper_grey_16.gif',

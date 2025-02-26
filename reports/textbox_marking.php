@@ -280,7 +280,7 @@ if ($no_screens > 1) {
 }
   echo '</td></tr></table>';
 
-    $marks_array = array();
+    $marks_array = [];
 
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
   echo "<col width=\"40\"><col>\n";
@@ -288,7 +288,7 @@ if ($no_screens > 1) {
   $q_no = 0;
   $old_q_id = 0;
   $old_screen = 1;
-  $reminders = array();
+  $reminders = [];
 
   $question_data = $mysqli->prepare('SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, notes, marks_correct, correct_fback, settings FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num');
   $question_data->bind_param('i', $_GET['paperID']);
@@ -305,7 +305,7 @@ while ($question_data->fetch()) {
     }
 
     if ($q_id == $_GET['q_id']) {
-        $reminders[] = array('option_id' => $option_id, 'text' => $option_text);
+        $reminders[] = ['option_id' => $option_id, 'text' => $option_text];
     }
 
     if ($old_q_id != $q_id) {
@@ -468,10 +468,10 @@ function render_user_answer($answer, $settings, $string)
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $jsmiscdataset['name'] = 'dataset';
 $jsmiscdataset['attributes']['hash'] = 'q_id' . $_GET['q_id'];
-$render->render($jsmiscdataset, array(), 'dataset.html');
+$render->render($jsmiscdataset, [], 'dataset.html');
 ?>
 <script src='../js/textboxinit.min.js'></script>
 </body>

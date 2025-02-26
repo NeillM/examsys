@@ -114,7 +114,7 @@ class Statistics
     {
         $start = strtotime($current_year . '0901000000');
         $end = strtotime($current_year + 1 . '0831235959');
-        $papers = array();
+        $papers = [];
         $result = $this->db->prepare('
             SELECT
                 property_id,
@@ -135,13 +135,13 @@ class Statistics
         $result->store_result();
         $result->bind_result($property_id, $paper_title, $start_date, $end_date, $labs);
         while ($result->fetch()) {
-            $papers[$property_id] = array(
+            $papers[$property_id] = [
                 'title' => $paper_title,
                 'month' => date('m', $start_date),
                 'start' => $start_date,
                 'end' => $end_date,
                 'labs' => $labs
-            );
+            ];
         }
         $result->close();
         return $papers;
@@ -157,7 +157,7 @@ class Statistics
     {
         $monthstart = $this->getMonthStart($year, $month);
         $monthend = $this->getMonthEnd($year, $month);
-        $details = array();
+        $details = [];
         $result = $this->db->prepare('
             SELECT
                 DISTINCT lm.paperID,
@@ -177,11 +177,11 @@ class Statistics
         $result->store_result();
         $result->bind_result($property_id, $paper_title);
         while ($result->fetch()) {
-            $details[$property_id] = array(
+            $details[$property_id] = [
                 'title' => $paper_title,
                 'start' => $monthstart,
                 'end' => $monthend,
-            );
+            ];
         }
         $result->close();
         return $details;
@@ -196,7 +196,7 @@ class Statistics
      */
     public function getStudentCount(int $pid, string $start, string $end): array
     {
-        $users = array();
+        $users = [];
         $paper_data = $this->db->prepare('
             SELECT
                 DISTINCT lm.userid
@@ -237,7 +237,7 @@ class Statistics
             $extra = '&month=' . $month;
         }
         $data = $yearutils->generateTabs($year, 'academic', $extra);
-        $render->render($data, array(), 'admin/statistics/statsheader.html');
+        $render->render($data, [], 'admin/statistics/statsheader.html');
     }
 
     /**
@@ -294,7 +294,7 @@ class Statistics
             $studentsperpaper = round($month_student_no / $month_paper_no, 1);
             $numberstudents = number_format($month_student_no);
         }
-        return array(
+        return [
             'link' => $link,
             'linklabel' => $linklabel,
             'paperno' => $month_paper_no,
@@ -303,7 +303,7 @@ class Statistics
             'monthmin' => $month_min,
             'monthmax' => $month_max,
             'numberstudents' => $numberstudents,
-        );
+        ];
     }
 
     /**
@@ -313,7 +313,7 @@ class Statistics
      */
     public function generateLabStats(array $labsarray): array
     {
-        $lab_count = array();
+        $lab_count = [];
         foreach ($labsarray as $labs) {
             $lab_list = explode(',', $labs);
             foreach ($lab_list as $labID) {
@@ -330,7 +330,7 @@ class Statistics
         $result->execute();
         $result->store_result();
         $result->bind_result($id, $name);
-        $data = array();
+        $data = [];
         while ($result->fetch()) {
             if (isset($lab_count[$id])) {
                 $data[$name] = $lab_count[$id];
@@ -351,7 +351,7 @@ class Statistics
     {
         $langpack = new langpack();
         $string = $langpack->get_all_strings($this->langcomponent);
-        $month_names = array(
+        $month_names = [
             'january',
             'february',
             'march',
@@ -364,7 +364,7 @@ class Statistics
             'october',
             'november',
             'december'
-        );
+        ];
         return $string[$month_names[$month - 1]];
     }
 }

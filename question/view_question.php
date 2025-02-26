@@ -101,7 +101,7 @@ while ($question_data->fetch()) {
             }
         }
     }
-    $question['options'][] = array(
+    $question['options'][] = [
         'correct' => $correct,
         'option_text' => $option_text,
         'o_media' => $option_media,
@@ -111,13 +111,13 @@ while ($question_data->fetch()) {
         'marks_correct' => $marks_correct,
         'marks_incorrect' => $marks_incorrect,
         'marks_partial' => $marks_partial
-    );
+    ];
 }
 $question_data->close();
 $question_no = 0;
 $paper_type = 0;
 $unanswered = false;
-$user_answers[1] = array();
+$user_answers[1] = [];
 $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
 ?>
 <!DOCTYPE html>
@@ -176,21 +176,21 @@ $render = new render($configObject);
   $dataset['name'] = 'paper';
 $dataset['attributes']['timed'] = false;
 $dataset['attributes']['refcount'] = 0;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 // User dataset.
   $datasetuser['name'] = 'user';
 $datasetuser['attributes']['student'] = false;
-$render->render($datasetuser, array(), 'dataset.html');
+$render->render($datasetuser, [], 'dataset.html');
 // JS utils dataset.
   $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
   $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-$render->render($miscdataset, array(), 'dataset.html');
-$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render($miscdataset, [], 'dataset.html');
+$render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 <script type="text/javascript" src="../js/startinit.min.js"></script>
 </body>

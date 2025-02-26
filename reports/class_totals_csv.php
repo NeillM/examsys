@@ -84,9 +84,9 @@ if ($cohort_size > 0) {
     $total_time = 0;
 
     //output table heading
-    $table_order = array($string['title'] => 'title', $string['surname'] => 'Surname', $string['firstnames'] => 'First_Names', $string['studentid'] => 'student_id', $string['course'] => 'student_grade', $string['module'] => 'module', $string['mark'] => 'mark', $marking_label => $marking_key, $string['classification'] => 'mark', $string['rank'] => 'rank', $string['decile'] => 'decile', $string['starttime'] => 'started', $string['duration'] => 'duration', $string['ipaddress'] => 'ipaddress');
+    $table_order = [$string['title'] => 'title', $string['surname'] => 'Surname', $string['firstnames'] => 'First_Names', $string['studentid'] => 'student_id', $string['course'] => 'student_grade', $string['module'] => 'module', $string['mark'] => 'mark', $marking_label => $marking_key, $string['classification'] => 'mark', $string['rank'] => 'rank', $string['decile'] => 'decile', $string['starttime'] => 'started', $string['duration'] => 'duration', $string['ipaddress'] => 'ipaddress'];
     $table_order['room'] = 'room';
-    $metadata_cols = array();
+    $metadata_cols = [];
     if (isset($user_results[0])) {
         foreach ($user_results[0] as $key => $val) {
             if (strrpos($key, 'meta_') !== false) {

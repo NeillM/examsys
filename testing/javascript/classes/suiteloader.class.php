@@ -28,7 +28,7 @@ namespace testing\javascript;
 class SuiteLoader
 {
     /** @var array An array of all the Javascript unit tests. */
-    public $suites = array();
+    public $suites = [];
 
     /**
      * Find all tests and adds their location to the $tests property.

@@ -118,19 +118,19 @@ class ClassTotals
         $this->repmodule          = $repmodule;
         $this->pass_mark          = $propertyObj->get_pass_mark();
         $this->distinction_mark   = $propertyObj->get_distinction_mark();
-        $this->log_late           = array();
-        $this->q_medians          = array();
-        $this->random_q_ids       = array();
+        $this->log_late           = [];
+        $this->q_medians          = [];
+        $this->random_q_ids       = [];
         $this->config             = Config::get_instance();
         $this->propertyObj        = $propertyObj;
         $this->exclusions         = new Exclusion($this->paperID, $this->db);
         $this->display_excluded   = '';
         $this->user_no            = 0;
-        $this->marking_overrides  = array();
+        $this->marking_overrides  = [];
         $this->string             = $string;
         $this->percent_decimals   = $this->config->get_setting('core', 'rpt_percent_decimals');
         $this->gradebook_enabled  = $this->config->get_setting('core', 'cfg_gradebook_enabled');
-        $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
+        $this->question_statuses = QuestionStatus::get_all_statuses($db, [], true);
     }
 
     public function error_handling($context = null)
@@ -352,13 +352,13 @@ class ClassTotals
         $this->random_q_ids[] = $questionID;
 
         $this->question_no  = 0;
-        $random_questions   = array();
+        $random_questions   = [];
         $old_q_id           = 0;
         $old_score_method   = '';
         $old_q_media_width  = '';
         $old_q_media_height = '';
-        $old_correct        = array();
-        $old_option_text    = array();
+        $old_correct        = [];
+        $old_option_text    = [];
         $old_scenario       = '';
         $old_leadin         = '';
         $old_media          = '';
@@ -417,8 +417,8 @@ class ClassTotals
                     $random_questions[$old_q_id]['marks_incorrect'] = $old_marks_incorrect;
                     $random_questions[$old_q_id]['random_mark']     = qRandomMarks($old_q_type, '', $old_marks_correct, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
                     $random_questions[$old_q_id]['option_text']     = $old_option_text;
-                    $old_correct     = array();
-                    $old_option_text = array();
+                    $old_correct     = [];
+                    $old_option_text = [];
                     $this->question_no++;
                 }
                 $old_q_id             = $q_id;
@@ -493,7 +493,7 @@ class ClassTotals
     private function checkDisplayExcluded($exclude, $q_no, $q_type)
     {
         $subpart = '';
-        $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
+        $numerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii'];
 
         if ($q_type != 'mrq' and $q_type != 'rank' and mb_strlen($exclude) > 1) {
             for ($i = 0; $i < mb_strlen($exclude); $i++) {
@@ -528,7 +528,7 @@ class ClassTotals
     private function displayExperimental($q_no, $status)
     {
         if (!isset($this->display_experimental[$status])) {
-            $this->display_experimental[$status] = array('Q' . $q_no);
+            $this->display_experimental[$status] = ['Q' . $q_no];
         } else {
             $this->display_experimental[$status][] = 'Q' . $q_no;
         }
@@ -562,7 +562,7 @@ class ClassTotals
     {
         $user_no = count($this->user_results);
 
-        $marks_data = array();
+        $marks_data = [];
         for ($i = 0; $i < $user_no; $i++) {
             if (isset($this->user_results[$i]['percent'])) {
                 $marks_data[] = $this->user_results[$i]['percent'];
@@ -667,7 +667,7 @@ class ClassTotals
      */
     private function extract_blank_correct($option_text)
     {
-        $correct = array();
+        $correct = [];
 
         $not_used = preg_match('/mark="([0-9]{1,3})"/', $option_text, $results);
         $blank_details = explode('[blank', $option_text);
@@ -706,11 +706,11 @@ class ClassTotals
 
         $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
 
-        $multi_part_qns = array('extmatch' => 1, 'matrix' => 1, 'blank' => 1, 'dichotomous' => 1, 'enhancedcalc' => 1, 'labelling' => 1, 'hotspot' => 1);
+        $multi_part_qns = ['extmatch' => 1, 'matrix' => 1, 'blank' => 1, 'dichotomous' => 1, 'enhancedcalc' => 1, 'labelling' => 1, 'hotspot' => 1];
 
         $skip_random = false;
         if (!isset($this->paper_buffer[$q_id])) {
-            $tmp_q = array();
+            $tmp_q = [];
             $tmp_q_id = $this->find_random_question($q_id, $tmp_q);
             if ($tmp_q_id == -1) {
                 $skip_random = true;
@@ -734,7 +734,7 @@ class ClassTotals
         if (!$skip_random and $question['score_method'] != 'Mark per Question' and isset($multi_part_qns[$question['q_type']])) {
             if ($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') {
                 if (!isset($tmp_user_mark_array[$q_id])) {
-                    $tmp_user_mark_array[$q_id] = array();
+                    $tmp_user_mark_array[$q_id] = [];
                 }
                 $paper_answers = explode('|', $question['correct'][0]);
                 $user_answers = explode('|', $tmp_user_answer);
@@ -749,7 +749,7 @@ class ClassTotals
                             if (isset($user_answers[$a])) {
                                 $sub_user_answers = explode('$', $user_answers[$a]);
                             } else {
-                                $sub_user_answers = array();
+                                $sub_user_answers = [];
                             }
                             $exclude_on = true;
                             $count_sub_paper_answers = count($sub_paper_answers);
@@ -887,7 +887,7 @@ class ClassTotals
                     }
                 }
             } elseif ($question['q_type'] == 'labelling') {
-                $correct_labels = array();
+                $correct_labels = [];
 
                 $tmp_first_split = explode(';', $question['correct'][0]);
                 $tmp_second_split = explode('$', $tmp_first_split[11]);
@@ -960,7 +960,7 @@ class ClassTotals
                 }
                 //create shortened array
                 $i = 0;
-                $correct_labels_exc = array();
+                $correct_labels_exc = [];
                 foreach ($correct_labels as $cli => $clv) {
                     if ($tmp_exclude[$i++] == '0') {
                         $correct_labels_exc[$cli] = $clv;
@@ -1035,14 +1035,14 @@ class ClassTotals
     {
         $question_no      = 0;
         $old_q_id         = 0;
-        $old_correct      = array();
-        $old_option_text  = array();
+        $old_correct      = [];
+        $old_option_text  = [];
 
         $this->total_marks = 0;
         $this->orig_total_marks = 0;
         $this->total_random_mark = 0;
         $this->display_excluded = '';
-        $this->display_experimental = array();
+        $this->display_experimental = [];
 
         // Load the correct answers into 'paper_buffer' array.
         $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_type, correct, score_method, option_text, status, display_pos, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
@@ -1086,8 +1086,8 @@ class ClassTotals
                 }
                 $question_no++;
                 $option_no        = 0;
-                $old_correct      = array();
-                $old_option_text  = array();
+                $old_correct      = [];
+                $old_option_text  = [];
                 $question_id      = $q_id;
                 $this->paper_buffer[$question_id]['q_type']           = $q_type;
                 $this->paper_buffer[$question_id]['score_method']     = $score_method;
@@ -1196,7 +1196,7 @@ class ClassTotals
         if ($this->absent == 1) {
             // Get students in the cohort.
 
-            $this->student_cohort = array();
+            $this->student_cohort = [];
             $i = 0;
 
             $sql = "SELECT DISTINCT
@@ -1257,7 +1257,7 @@ class ClassTotals
      */
     private function find_users()
     {
-        $this->user_modules = array();
+        $this->user_modules = [];
         if ($this->repmodule != '') {
             $tmp_moduleID_in = $this->repmodule;
         } else {
@@ -1296,7 +1296,7 @@ class ClassTotals
      */
     private function load_metadata()
     {
-        $this->metadata_array = array();
+        $this->metadata_array = [];
 
         if ($this->calendar_year == '') {
             $stmt = $this->db->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($this->moduleID_in)");
@@ -1340,8 +1340,8 @@ class ClassTotals
             $roles_sql = " AND r.name IN ('Student', 'graduate')";
         }
 
-        $data_array = array();
-        $metadataids = array();
+        $data_array = [];
+        $metadataids = [];
 
         // Load started records from 'log_metadata'.
         $time_int = \log::getStartInterval($this->paper_type);
@@ -1412,7 +1412,7 @@ class ClassTotals
                 $student_id  = \demo::demo_replace_number($student_id);
             }
 
-            $this->user_results[$metadataID] = array(
+            $this->user_results[$metadataID] = [
                 'metadataID' => $metadataID,
                 'userID' => $userID,
                 'username' => $username,
@@ -1441,7 +1441,7 @@ class ClassTotals
                 'marking_complete' => true,
                 'module' => $module,
                 'paper_type' => $this->paper_type
-            );
+            ];
 
             if (isset($this->student_cohort)) {
                 // Remove the user from the absent list.
@@ -1453,7 +1453,7 @@ class ClassTotals
         $result->close();
 
         if (count($metadataids) == 0) {
-            $this->user_results = array();
+            $this->user_results = [];
             return false;
         }
 
@@ -1464,9 +1464,9 @@ class ClassTotals
         $user_duration        = 0;
         $marking_complete     = 1;
         $tmp_mark             = 0;
-        $tmp_user_mark_array  = array();
-        $log_data             = array();
-        $tmp_array            = array();
+        $tmp_user_mark_array  = [];
+        $log_data             = [];
+        $tmp_array            = [];
 
         // Load 'logX' data.
         if ($this->paper_type == '0' or $this->paper_type == '1') {
@@ -1492,7 +1492,7 @@ class ClassTotals
                 // Write the user results for the user that was iterated over previously using $old_metadataID
                 $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
                 $tmp_mark = 0;
-                $tmp_user_mark_array = array();
+                $tmp_user_mark_array = [];
                 $user_duration = 0;
                 $marking_complete = 1;
             }
@@ -1665,7 +1665,7 @@ class ClassTotals
     private function convert_moduleIDs()
     {
         $result_no = count($this->user_results);
-        $moduleIDs = array();
+        $moduleIDs = [];
 
         // Build up an array of IDs to module codes.
         for ($i = 0; $i < $result_no; $i++) {
@@ -1731,9 +1731,9 @@ class ClassTotals
         $this->stats['max_percent']   = 0;
         $this->stats['min_percent']   = 100;
 
-        $median_mark_array    = array();
-        $median_percent_array = array();
-        $marks_data           = array();
+        $median_mark_array    = [];
+        $median_percent_array = [];
+        $marks_data           = [];
 
         for ($i = 0; $i < $this->user_no; $i++) {
             if (isset($this->user_results[$i]['percent']) and $this->user_results[$i]['questions'] >= $this->question_no and $this->user_results[$i]['visible']) {
@@ -1898,8 +1898,8 @@ class ClassTotals
     private function load_special_needs()
     {
         // Query any student special needs for the current paper
-        $this->special_needs = array();
-        $users_in = array();
+        $this->special_needs = [];
+        $users_in = [];
         foreach ($this->user_results as $u) {
             $users_in[] = $u['userID'];
         }

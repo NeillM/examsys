@@ -27,7 +27,7 @@
 
 require '../../include/sysadmin_auth.inc';
 require '../../include/toprightmenu.inc';
-$oauth = array();
+$oauth = [];
 $result = $mysqli->prepare("SELECT client_id, access_token, username, expires, 'access token' as type FROM
     oauth_access_tokens o, users u WHERE u.id = o.user_id
     UNION
@@ -36,7 +36,7 @@ $result = $mysqli->prepare("SELECT client_id, access_token, username, expires, '
 $result->execute();
 $result->bind_result($client_id, $access_token, $username, $expires, $type);
 while ($result->fetch()) {
-    $oauth[$access_token] = array($username, $client_id, $access_token, $type, $expires);
+    $oauth[$access_token] = [$username, $client_id, $access_token, $type, $expires];
 }
 $result->close();
 $render = new render($configObject);
@@ -44,14 +44,14 @@ $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['oauthkeys'];
 $lang['view'] = $string['listoauthclient'];
 $lang['delete'] = $string['deleteoauthkeys'];
-$header = array(array('class' => 'col10', 'style' => 'width:15%', 'value' => $string['username']),
-array('class' => 'col', 'style' => 'width:15%', 'value' => $string['client']),
-array('class' => 'col', 'style' => 'width:40%', 'value' => $string['token']),
-array('class' => 'col', 'style' => 'width:10%', 'value' => $string['type']),
-array('class' => 'col', 'style' => 'width:10%', 'value' => $string['expires']));
+$header = [['class' => 'col10', 'style' => 'width:15%', 'value' => $string['username']],
+['class' => 'col', 'style' => 'width:15%', 'value' => $string['client']],
+['class' => 'col', 'style' => 'width:40%', 'value' => $string['token']],
+['class' => 'col', 'style' => 'width:10%', 'value' => $string['type']],
+['class' => 'col', 'style' => 'width:10%', 'value' => $string['expires']]];
 $additionaljs = '<script type="text/javascript" src="js/oauthinit.min.js"></script>';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php');
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('list_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options_list.html');
 $render->render_admin_content($breadcrumb, $lang);

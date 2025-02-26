@@ -25,8 +25,8 @@
 class IE_Main
 {
     public $output;
-    public $errors = array();
-    public $warnings = array();
+    public $errors = [];
+    public $warnings = [];
 
     public function AddError($message, $id = '0')
     {

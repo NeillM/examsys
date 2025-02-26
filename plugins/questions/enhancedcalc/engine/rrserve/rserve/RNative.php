@@ -13,12 +13,12 @@ class Rserve_RNative implements ArrayAccess {
     /**
     * @var array Data 
     */
-    private $data = array();
+    private $data = [];
     
     /**
     * @var array Attributes
     */
-    private $attr = array();
+    private $attr = [];
     
     public function __construct($data, $attributes = NULL) {
         $this->data = $data;

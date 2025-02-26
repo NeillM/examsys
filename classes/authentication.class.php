@@ -56,7 +56,7 @@ class Authentication
 
     public $impliments_api_auth_version = 1;
 
-    public $callbacktypes = array('init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore');
+    public $callbacktypes = ['init', 'lookupuser', 'preauth', 'auth', 'postauth', 'postauthsuccess', 'postauthfail', 'displaystdform', 'displayerrform', 'getauthobj', 'sessionstore'];
 
     public $initobj;
     public $lookupuserobj;
@@ -96,7 +96,7 @@ class Authentication
         $this->request = & $request;
         $this->session = & $session;
 
-        $this->debug = array();
+        $this->debug = [];
 
         if ($this->load_config()) {
             //if the config is ok setup the auth stack
@@ -142,7 +142,7 @@ class Authentication
         }
 
         if ($notfound === true) {
-            array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));     // Add in 'already logged in' plugin so don't re-authenticate every page.
+            array_unshift($this->config, ['alreadyloggedin', ['timeout' => 0], 'Internal Authentication']);     // Add in 'already logged in' plugin so don't re-authenticate every page.
         }
 
         // get form data here?
@@ -167,7 +167,7 @@ class Authentication
 
             //TODO this knackers unit testing ERROR Nesting level too deep -  recursive dependency?
             $this->returndata[$number] = new authtypereturn();
-            $this->authinfo[$number] = array($name => $authtype);
+            $this->authinfo[$number] = [$name => $authtype];
 
             $object = new stdClass();
             $object->db =& $this->db;
@@ -205,7 +205,7 @@ class Authentication
 
         if (isset($this->callbackregister['init'])) {
             foreach ($this->callbackregister['init'] as $number => $callback) {
-                $initobj = call_user_func_array($callback, array($initobj));
+                $initobj = call_user_func_array($callback, [$initobj]);
                 $objid = key($this->callbackregisterdata['init'][$number]);
                 $this->append_auth_object_debug($objid);
             }
@@ -249,10 +249,10 @@ class Authentication
 
         if ($insert == true) {
             array_unshift($this->callbackregister[$section], $callback);
-            array_unshift($this->callbackregisterdata[$section], array($number => $name));
+            array_unshift($this->callbackregisterdata[$section], [$number => $name]);
         } else {
             $this->callbackregister[$section][] = $callback;
-            $this->callbackregisterdata[$section][] = array($number => $name);
+            $this->callbackregisterdata[$section][] = [$number => $name];
         }
 
         return true;
@@ -264,7 +264,7 @@ class Authentication
      */
     public function get_callback($section)
     {
-        return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
+        return [&$this->callbackregister[$section], &$this->callbackregisterdata[$section]];
     }
 
     /*
@@ -277,7 +277,7 @@ class Authentication
 
         if (isset($this->callbackregister['displaystdform'])) {
             foreach ($this->callbackregister['displaystdform'] as $number => $callback) {
-                $displaystdformobj = call_user_func_array($callback, array($displaystdformobj));
+                $displaystdformobj = call_user_func_array($callback, [$displaystdformobj]);
                 $objid = key($this->callbackregisterdata['displaystdform'][$number]);
                 $this->append_auth_object_debug($objid);
             }
@@ -288,7 +288,7 @@ class Authentication
             // Recover any POSTed data assuming there's none already stored
             if (!empty($_POST) && empty($_SESSION['recovered_postdata'])) {
                 // Filter out login form inputs
-                $data_resubmit = array_diff_key($_POST, array_flip(array('ROGO_USER', 'ROGO_PW', 'rogo-login-form-std')));
+                $data_resubmit = array_diff_key($_POST, array_flip(['ROGO_USER', 'ROGO_PW', 'rogo-login-form-std']));
                 if (!empty($data_resubmit)) {
                     $_SESSION['recovered_postdata'] = serialize($data_resubmit);
                 }
@@ -317,7 +317,7 @@ class Authentication
 
         if (isset($this->callbackregister['displayerrform'])) {
             foreach ($this->callbackregister['displayerrform'] as $number => $callback) {
-                $displayerrformobj = call_user_func_array($callback, array($displayerrformobj));
+                $displayerrformobj = call_user_func_array($callback, [$displayerrformobj]);
                 $objid = key($this->callbackregisterdata['displayerrform'][$number]);
                 $this->append_auth_object_debug($objid);
             }
@@ -359,7 +359,7 @@ class Authentication
 
         if (isset($this->callbackregister['preauth'])) {
             foreach ($this->callbackregister['preauth'] as $number => $callback) {
-                $preauthobj = call_user_func_array($callback, array($preauthobj));
+                $preauthobj = call_user_func_array($callback, [$preauthobj]);
                 $objid = key($this->callbackregisterdata['preauth'][$number]);
                 $this->append_auth_object_debug($objid);
             }
@@ -369,7 +369,7 @@ class Authentication
 
         if (isset($this->callbackregister['auth'])) {
             foreach ($this->callbackregister['auth'] as $number => $callback) {
-                $authobj = call_user_func_array($callback, array($authobj));
+                $authobj = call_user_func_array($callback, [$authobj]);
                 $objid = key($this->callbackregisterdata['auth'][$number]);
                 $this->append_auth_object_debug($objid);
                 if ($authobj->returned === ROGO_AUTH_OBJ_SUCCESS) {
@@ -431,7 +431,7 @@ class Authentication
                         $this->debug[] = '******* ExamSys ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
                     } elseif ($createuser == true) {
                         $this->debug[] = 'Going to try and create new user';
-                        $arraycheck = array('username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials');
+                        $arraycheck = ['username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials'];
                         foreach ($arraycheck as $itemcheck) {
                             if (!isset($info->lookupdata->$itemcheck)) {
                                 $info->lookupdata->$itemcheck = '';
@@ -456,7 +456,7 @@ class Authentication
                         $errfile = 'Authentication';
                         $errline = 0;
                         $errstr = 'Couldnt create user see variables for more info';
-                        $variables = array('lookup' => &$lookup, 'info' => &$info, 'authentication' => &$this);
+                        $variables = ['lookup' => &$lookup, 'info' => &$info, 'authentication' => &$this];
                         log_error($userid, $username, 'Application Warning', $errstr, $errfile, $errline, '', null, $variables, null);
                     }
                 }
@@ -471,7 +471,7 @@ class Authentication
         $postauthobj->authobj = $authobj;
         if (isset($this->callbackregister['postauth'])) {
             foreach ($this->callbackregister['postauth'] as $number => $callback) {
-                $postauthobj = call_user_func_array($callback, array($postauthobj));
+                $postauthobj = call_user_func_array($callback, [$postauthobj]);
                 $objid = key($this->callbackregisterdata['postauth'][$number]);
                 $this->append_auth_object_debug($objid);
             }
@@ -486,12 +486,12 @@ class Authentication
             $this->session['authenticationObj']['attempt']++;
             if (isset($this->callbackregister['postauthfail'])) {
                 foreach ($this->callbackregister['postauthfail'] as $number => $callback) {
-                    $postauthfailobj = call_user_func_array($callback, array($postauthfailobj));
+                    $postauthfailobj = call_user_func_array($callback, [$postauthfailobj]);
                     $objid = key($this->callbackregisterdata['postauthfail'][$number]);
                     $this->append_auth_object_debug($objid);
                     $this->debug[] = 'parameters after running ' . var_export($this->postauthfailobj, true);
                     if (isset($postauthfailobj->callback)) {
-                        $postauthfailobj = call_user_func_array($postauthfailobj->callback, array($postauthfailobj));
+                        $postauthfailobj = call_user_func_array($postauthfailobj->callback, [$postauthfailobj]);
                         if ($postauthfailobj->exit === true) {
                               $notice = UserNotices::get_instance();
                               $notice->exit_php();
@@ -581,7 +581,7 @@ class Authentication
         if (isset($this->callbackregister['postauthsuccess'])) {
             foreach ($this->callbackregister['postauthsuccess'] as $number => $callback) {
                 $this->debug[] = 'run authsuccess callback ' . get_class($callback[0]) . ':' . $callback[1];
-                $postauthsuccessobj = call_user_func_array($callback, array($postauthsuccessobj));
+                $postauthsuccessobj = call_user_func_array($callback, [$postauthsuccessobj]);
                 $objid = key($this->callbackregisterdata['postauthsuccess'][$number]);
                 $this->append_auth_object_debug($objid);
             }
@@ -714,7 +714,7 @@ class Authentication
         if (isset($this->callbackregister['getauthobj'])) {
             foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
                 $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
-                $getauthobj = call_user_func_array($callback, array($getauthobj));
+                $getauthobj = call_user_func_array($callback, [$getauthobj]);
                 $objid = key($this->callbackregisterdata['getauthobj'][$number]);
                 $this->append_auth_object_debug($objid);
             }
@@ -750,11 +750,11 @@ class Authentication
     public function version_info($formatted = false, $advanced = false)
     {
         $data = new stdClass();
-        $data->plugins = array();
+        $data->plugins = [];
         foreach ($this->authPluginObj as $authobj) {
             $data->plugins[] = $authobj->get_info();
         }
-        $data->callbacks = array();
+        $data->callbacks = [];
         foreach ($this->callbacktypes as $value) {
             if (isset($this->callbackregister[$value])) {
                 foreach ($this->callbackregister[$value] as $order => $callitem) {
@@ -766,7 +766,7 @@ class Authentication
                     $data->callbacks[$value][] = $dat;
                 }
             } else {
-                $data->callbacks[$value] = array();
+                $data->callbacks[$value] = [];
             }
         }
 

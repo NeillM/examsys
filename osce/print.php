@@ -63,7 +63,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 
   // Get the questions.
   $question_no = 1;
-  $cell_colors = array('#FF8080','#FFC169','#50E850');
+  $cell_colors = ['#FF8080','#FFC169','#50E850'];
   $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
   $result->bind_param('i', $paperID);
   $result->execute();

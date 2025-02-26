@@ -50,31 +50,31 @@ class userutilstest extends unittestdatabase
     {
         $this->module2 = $this->get_module_id('SYSTEM');
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator->create_academic_year(['calendar_year' => 2016, 'academic_year' => '2016/17']);
         $datagenerator = $this->get_datagenerator('modules', 'core');
-        $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module, 'calendar_year' => 2016));
+        $datagenerator->create_enrolment(['userid' => $this->student['id'], 'moduleid' => $this->module, 'calendar_year' => 2016]);
         $datagenerator = $this->get_datagenerator('users', 'core');
         $this->student1 = $datagenerator->create_user(
-            array('roles' => 'Student',
+            ['roles' => 'Student',
                 'sid' => '24680',
                 'surname' => 'Smith',
-                'special_needs' => array(
+                'special_needs' => [
                     'extra_time' => 10,
                     'break_time' => 5
-                )
-            )
+                ]
+            ]
         );
         $this->student2 = $datagenerator->create_user(
-            array('roles' => 'Student',
+            ['roles' => 'Student',
                 'sid' => '13579',
                 'surname' => 'Johnson',
-                'special_needs' => array(
+                'special_needs' => [
                     'background' => '#000000',
                     'foreground' => '#FFFFFF',
                     'textsize' => 110,
                     'font' => 'Verdana',
-                )
-            )
+                ]
+            ]
         );
     }
 
@@ -99,10 +99,10 @@ class userutilstest extends unittestdatabase
         // Student ID exists.
         $this->assertEquals(true, UserUtils::update_user($this->student['id'], 'student1', '12345678', 'Mr', 'Joe', 'Baxter', 'joseph.baxter@example.com', 'TEST', 'Male', 1, 'Student', '12345678', $this->db));
         // Check tables update as expected.
-        $querytable = $this->query(array('columns' => array('username', 'grade', 'title', 'initials', 'surname', 'first_names', 'email', 'gender'),
-            'table' => 'users', 'where' => array(array('column' => 'id', 'value' => $this->student['id']))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['username', 'grade', 'title', 'initials', 'surname', 'first_names', 'email', 'gender'],
+            'table' => 'users', 'where' => [['column' => 'id', 'value' => $this->student['id']]]]);
+        $expectedtable = [
+            0 => [
                 'username' => 'student1',
                 'grade' => 'TEST',
                 'title' => 'Mr',
@@ -111,23 +111,23 @@ class userutilstest extends unittestdatabase
                 'first_names' => 'Joe',
                 'email' => 'joseph.baxter@example.com',
                 'gender' => 'Male'
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('columns' => array('roleid'), 'table' => 'user_roles', 'where' => array(array('column' => 'userid', 'value' => $this->student['id']))));
-        $expectedtable = array(
-                0 => array (
+        $querytable = $this->query(['columns' => ['roleid'], 'table' => 'user_roles', 'where' => [['column' => 'userid', 'value' => $this->student['id']]]]);
+        $expectedtable = [
+                0 =>  [
                         'roleid' => 4,
-                ),
-        );
+                ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('columns' => array('userID', 'student_id'), 'table' => 'sid', 'where' => array(array('column' => 'userID', 'value' => $this->student['id']))));
-        $expectedtable = array(
-            0 => array (
+        $querytable = $this->query(['columns' => ['userID', 'student_id'], 'table' => 'sid', 'where' => [['column' => 'userID', 'value' => $this->student['id']]]]);
+        $expectedtable = [
+            0 =>  [
                 'userID' => $this->student['id'],
                 'student_id' => '12345678'
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -138,16 +138,16 @@ class userutilstest extends unittestdatabase
     public function testGetExtraTime()
     {
         // Has extra time.
-        $expected = array(
+        $expected = [
             'extratime' => $this->student1['extra_time'],
             'breaktime' => $this->student1['break_time'],
-        );
+        ];
         $this->assertEquals($expected, UserUtils::getExtraTime($this->student1['id'], $this->db));
         // No extra time.
-        $expected = array(
+        $expected = [
             'extratime' => 0,
             'breaktime' => 0,
-        );
+        ];
         $this->assertEquals($expected, UserUtils::getExtraTime($this->student2['id'], $this->db));
     }
 
@@ -158,7 +158,7 @@ class userutilstest extends unittestdatabase
     public function testgetUserProfile()
     {
         // No profile info.
-        $expected = array(
+        $expected = [
             'background' => UserObject::BGCOLOUR,
             'foreground' => UserObject::FGCOLOUR,
             'textsize' => UserObject::TEXTSIZE,
@@ -171,11 +171,11 @@ class userutilstest extends unittestdatabase
             'globaltheme' => UserObject::GLOBALTHEMECOLOUR,
             'globalthemefontcolour' => UserObject::GLOBALTHEMEFONTCOLOUR,
             'highlight' => UserObject::HIGHLIGHTCOLOUR
-        );
+        ];
         $this->assertEquals($expected, UserUtils::getUserProfile($this->student1['id'], $this->db));
 
         // Profile info.
-        $expected = array(
+        $expected = [
             'background' => '#000000',
             'foreground' => '#FFFFFF',
             'textsize' => 110,
@@ -188,7 +188,7 @@ class userutilstest extends unittestdatabase
             'globaltheme' => UserObject::GLOBALTHEMECOLOUR,
             'globalthemefontcolour' => UserObject::GLOBALTHEMEFONTCOLOUR,
             'highlight' => UserObject::HIGHLIGHTCOLOUR
-        );
+        ];
         $this->assertEquals($expected, UserUtils::getUserProfile($this->student2['id'], $this->db));
     }
 }

@@ -93,14 +93,14 @@ if ($updater_utils->check_version('7.6.0')) {
         $updater_utils->execute_query($sqlcreateretention, false);
 
         // Global on/off setting.
-        $papertypes = array(
+        $papertypes = [
             'progress' => 0,
             'summative' => 0,
-        );
+        ];
         $configObject->set_setting('paper_anomaly_detection', $papertypes, Config::ASSOC);
 
         // Email address to send anomaly report to.
-        $configObject->set_setting('paper_anomaly_email', array(), Config::EMAIL);
+        $configObject->set_setting('paper_anomaly_email', [], Config::EMAIL);
 
         // Store site address needed by cli email system.
         $search = '$cfg_site_address';

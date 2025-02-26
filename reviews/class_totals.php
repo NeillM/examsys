@@ -138,7 +138,7 @@ if ($marking == '0') {
 }
 
   //output table heading
-    $table_order = array('', $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
+    $table_order = ['', $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']];
 if ($configObject->get_setting('core', 'system_hostname_lookup')) {
     $table_order[] = $string['hostnames'];
 } else {
@@ -148,7 +148,7 @@ if ($paper_type == '2') {
     $table_order[] = $string['room'];
 }
 
-  $metadata_cols = array();
+  $metadata_cols = [];
 if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
         if (mb_strrpos($key, 'meta_') !== false) {
@@ -509,7 +509,7 @@ if ($user_no > 0) {
     echo '<td></td>';
 
     // Deciles
-    $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
+    $suffix = ['', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th'];
     echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">\n";
     for ($i = 1; $i < 10; $i++) {
         echo '<tr><td style="width:40px">' . $i;

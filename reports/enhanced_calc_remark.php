@@ -57,7 +57,7 @@ if ($studentsonly) {
 } else {
     $rolesjoin = '';
 }
-$log_answers = array();
+$log_answers = [];
 $time_int = \log::getStartInterval($paper_type);
 if ($paper_type == \assessment::TYPE_FORMATIVE) {
     $progress_time_int = \log::getStartInterval(\assessment::TYPE_PROGRESS);
@@ -116,21 +116,21 @@ while ($result->fetch()) {
 
         // Don't include absolutely correct answers in the list.
         if (!$answer_obj->is_user_ans_correct()) {
-            $log_answers[] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id, 'distance' => $dist);
+            $log_answers[] = ['paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id, 'distance' => $dist];
         }
     }
 }
 $result->close();
 
 // Get any existing overrides
-$overrides = array();
+$overrides = [];
 $sql = 'SELECT log_id, new_mark_type, reason FROM marking_override WHERE q_id = ? AND paper_id = ?';
 $result = $mysqli->prepare($sql);
 $result->bind_param('ii', $q_id, $paperID);
 $result->execute();
 $result->bind_result($log_id, $new_mark_type, $reason);
 while ($result->fetch()) {
-    $overrides[$log_id] = array('type' => $new_mark_type, 'reason' => $reason);
+    $overrides[$log_id] = ['type' => $new_mark_type, 'reason' => $reason];
 }
 
 $question_obj = new enhancedcalc($configObject);
@@ -139,7 +139,7 @@ $question_obj->set_settings($settings);
 $q_vars = $question_obj->get_question_vars();
 $marks_arr = $question_obj->get_question_marks();
 if ($marks_arr == false) {
-    $marks_arr = array();
+    $marks_arr = [];
 }
 $q_marks = array_flip($marks_arr);
 ?>
@@ -198,8 +198,8 @@ foreach ($q_vars as $var => $dummy) {
     </thead>
     <tbody>
 <?php
-$mark_types = array('correct', 'partial', 'incorrect');
-$log_answers2 = array();
+$mark_types = ['correct', 'partial', 'incorrect'];
+$log_answers2 = [];
 foreach ($log_answers as $id => $ans) {
     $dist = $ans['distance'];
     $log_answers2["$dist"][] = $id;
@@ -290,7 +290,7 @@ foreach ($log_answers2 as $innerans) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/calcremarkinit.min.js"></script>
 </body>

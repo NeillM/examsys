@@ -47,7 +47,7 @@ $amber   = ImageColorAllocate($Image, 247, 150, 70);
 $font      = '../fonts/SourceSansPro-Regular.otf';
 $bold_font = '../fonts/SourceSansPro-Semibold.otf';
 
-$intervals = array(0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 4, 3, 3, 3, 4);
+$intervals = [0, 1, 1, 1, 1, 1, 2, 2, 2, 3, 2, 2, 3, 3, 3, 3, 4, 3, 3, 3, 4];
 
 //small ticks
 $gap1 = ($g_x2 - $g_x1) / $total_possible_mark;

@@ -31,19 +31,19 @@ require '../../include/toprightmenu.inc';
 $external = new \external_systems();
 $extsys = $external->get_all_externalsystems_details();
 foreach ($extsys as $idx => $details) {
-    $ext[$idx] = array($details['name'], $details['type']);
+    $ext[$idx] = [$details['name'], $details['type']];
 }
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['extsys'];
 $lang['view'] = $string['addextsys'];
 $lang['delete'] = $string['deleteextsys'];
-$header = array(array('class' => 'col10', 'style' => 'width:50%', 'value' => $string['name']),
-    array('class' => 'col10', 'style' => 'width:50%', 'value' => $string['type']));
+$header = [['class' => 'col10', 'style' => 'width:50%', 'value' => $string['name']],
+    ['class' => 'col10', 'style' => 'width:50%', 'value' => $string['type']]];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
-    $string['extsys'] => 'list_extsys.php',);
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
+    $string['extsys'] => 'list_extsys.php',];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_extsys.php', 'sync_16.png', $lang, $toprightmenu, 'admin/options_list.html');
 $render->render_admin_content($breadcrumb, $lang);

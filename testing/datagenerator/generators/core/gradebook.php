@@ -40,7 +40,7 @@ class gradebook extends generator
         if (empty($parameters['paperid'])) {
             throw new data_error('paperid must be provided');
         }
-        $defaults = array('timestamp' => date('Y-m-d H:i:s'), 'paperid' => $parameters['paperid']);
+        $defaults = ['timestamp' => date('Y-m-d H:i:s'), 'paperid' => $parameters['paperid']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO gradebook_paper VALUES (?, ?)');
         $sql->bind_param('is', $parameters['paperid'], $settings['timestamp']);
@@ -68,8 +68,8 @@ class gradebook extends generator
         if (empty($parameters['paperid'])) {
             throw new data_error('paperid must be provided');
         }
-        $defaults = array('grade' => 0, 'adjustedgrade' => 0, 'classification' => 'Fail', 'paperid' => $parameters['paperid']
-        , 'userid' => $parameters['userid']);
+        $defaults = ['grade' => 0, 'adjustedgrade' => 0, 'classification' => 'Fail', 'paperid' => $parameters['paperid']
+        , 'userid' => $parameters['userid']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO gradebook_user VALUES (?, ?, ?, ?, ?)');
         $sql->bind_param('iidds', $parameters['paperid'], $parameters['userid'], $settings['grade'], $settings['adjustedgrade'], $settings['classification']);

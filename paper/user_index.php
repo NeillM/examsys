@@ -270,21 +270,21 @@ if ($exam_duration !== null) {
 }
 
 $render = new render($configObject);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/user_index.css',
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
-    ),
-    'scripts' => array(
+    ],
+    'scripts' => [
         '/js/userindexinit.min.js',
-    ),
-);
+    ],
+];
 
 $lang['title'] = $string['startscreen'];
 $render->render($headerdata, $lang, 'header.html');
-$icon_types = array('formative', 'progress', 'summative', 'survey');
-$contentdata = array(
+$icon_types = ['formative', 'progress', 'summative', 'survey'];
+$contentdata = [
     'toprightmenu' => draw_toprightmenu(14),
     'papericon' => '../artwork/' . $icon_types[$test_type] . '.png',
     'papertitle' => $paper_title,
@@ -298,7 +298,7 @@ $contentdata = array(
     'issuelink' => '',
     'version' => $configObject->get_setting('core', 'rogo_version'),
     'photourl' => '',
-);
+];
 
 // Display user photo if summative exam.
 if ($test_type == 2) {
@@ -395,7 +395,7 @@ if ($sound_demo == '1') {
     $contentdata['sounddemo'] = $configObject->get('cfg_root_path') . '/paper/sound_demo.mp3';
 }
 
-if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
+if ($userObject->has_role(['Staff', 'Admin', 'SysAdmin', 'External Examiner'])) {
     $start_available      = true;
     $remaining_available  = true;
     $metadata_security    = true;
@@ -446,8 +446,8 @@ if (!check_seb_headers($propertyObj->get_property_id(), $userObject, $string, $m
 
 if ($test_type == 2) {
     $paper_utils = Paper_utils::get_instance();
-    $paper_display = array();
-    $paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli, $property_id);
+    $paper_display = [];
+    $paper_no = $paper_utils->get_active_papers($paper_display, ['1', '2'], $userObject, $mysqli, $property_id);
     if ($paper_no > 0) {
         $contentdata['switch'] = true;
     }
@@ -485,14 +485,14 @@ $render->render($contentdata, $string, 'paper/start.html');
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $dataset['name'] = 'dataset';
 $dataset['attributes']['ipmismatch'] = $ipmismatch;
 $dataset['attributes']['id'] = $id;
 $dataset['attributes']['mode'] = $mode;
 $dataset['attributes']['fullscreen'] = $fullscreen;
 $dataset['attributes']['remotesummative'] = $remote;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 $mysqli->close();
 
-$render->render(array(), array(), 'footer.html');
+$render->render([], [], 'footer.html');

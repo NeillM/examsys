@@ -96,7 +96,7 @@ if (!isset($_POST['submit'])) {
 
     if ($map_outcomes) {
         $yearutils = new yearutils($mysqli);
-        $vle_api_cache = array();
+        $vle_api_cache = [];
         $vle_api_data = MappingUtils::get_vle_api($_GET['module'], $yearutils->get_current_session(), $vle_api_cache, $mysqli);
     }
 
@@ -114,7 +114,7 @@ if (!isset($_POST['submit'])) {
 
     $q_IDs = explode(',', $q_id);
     for ($i = 1; $i < count($q_IDs); $i++) {
-        $map_guid = array();
+        $map_guid = [];
 
         Paper_utils::add_question($property_id, $q_IDs[$i], $screen, $display_pos, $mysqli);
 
@@ -173,11 +173,11 @@ $mysqli->close();
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['outcomes'] = $map_outcomes;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/questionlinkinit.min.js"></script>
 </body>

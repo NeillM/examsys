@@ -30,7 +30,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 $remote = param::optional('remote', 0, param::BOOLEAN, param::FETCH_GET);
 $invigilation = new Invigilation();
 $current_address = NetworkUtils::get_client_address();
-$properties_list = array();
+$properties_list = [];
 if (!$remote) {
     $lab = new LabFactory($mysqli);
 
@@ -55,7 +55,7 @@ foreach ($properties_list as $property_object) {
         $module_results->store_result();
         $module_results->bind_result($moduleID, $timed_exams);
 
-        $modules = array();
+        $modules = [];
 
         while ($module_results->fetch()) {
             $modules[] = $moduleID;

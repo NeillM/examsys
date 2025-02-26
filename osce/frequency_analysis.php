@@ -88,7 +88,7 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
 
   // Query Log4 to get stored ratings per question.
   $old_userID = '';
-  $frequencies = array();
+  $frequencies = [];
   $user_no = 0;
   $time_int = \log::getStartInterval(\assessment::TYPE_OSCE);
 
@@ -115,7 +115,7 @@ while ($result->fetch()) {
         $user_no++;
     }
     if (!isset($frequencies[$q_id])) {
-        $frequencies[$q_id] = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
+        $frequencies[$q_id] = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
     }
     if (isset($frequencies[$q_id][$rating])) {
         $frequencies[$q_id][$rating]++;
@@ -133,8 +133,8 @@ if ($user_no == 0) {
 
       // Get the questions.
     $question_no = 1;
-    $sub_totals = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
-    $cell_colors = array('#FFCBCB', '#FFE3B3', '#C0FFC0', '#FFFFCC', '#80FFFF', '#CCE6FF', '#FFE6FF', '#CCFFE6', '#FFE6E6', '#CCFFEE');
+    $sub_totals = [0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+    $cell_colors = ['#FFCBCB', '#FFE3B3', '#C0FFC0', '#FFFFCC', '#80FFFF', '#CCE6FF', '#FFE6FF', '#CCFFE6', '#FFE6E6', '#CCFFEE'];
     $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();

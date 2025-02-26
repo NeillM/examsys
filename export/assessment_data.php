@@ -51,10 +51,10 @@ if ($mode != 'text') {
 // 123,456
 // 123, 456
 // Values that match this are safe for direct use in the SQL.
-$repmodule_options = array(
+$repmodule_options = [
   'default' => null,
   'regexp' => '#\d+(,\s?\d+)*#',
-);
+];
 $repmodule = param::optional('repmodule', '', param::REGEXP, param::FETCH_GET, $repmodule_options);
 
 $students = $propertyObj->get_user_list($startdate, $enddate, $percentile, $studentonly, $repmodule);
@@ -72,7 +72,7 @@ $paper_title = $propertyObj->get_paper_title();
 $file = \file_handler::make_filename_safe($paper_title) . '_ER.csv';
 $handler = new \csv\csv_handler($file);
 $export = new \export\export_assessment($handler);
-$csvdata = array();
+$csvdata = [];
 
 if ($student_no > 0) {
     $log_array = $propertyObj->get_paper_assessment_data($repcourse, $startdate, $enddate, $student_list, $studentonly, $demo);
@@ -85,7 +85,7 @@ if ($student_no > 0) {
     // Data lines.
     $csvdata = array_merge($csvdata, $export->create_data($log_array, $paper_buffer, $exclusions, $mode, $string, $language));
 } else {
-    $export->dynamic_headers = array();
+    $export->dynamic_headers = [];
     $csvdata[] = str_getcsv($string['nodata'] . ',,,,,,,');
 }
 $export->execute($csvdata);

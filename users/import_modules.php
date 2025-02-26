@@ -49,12 +49,12 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <div id="content" class="content">
 <?php
-  echo $render->render_admin_navigation(array(
+  echo $render->render_admin_navigation([
       '/' => $string['home'],
       '/admin/index.php' => $string['admintools'],
       '/users/search.php' => $string['usermanagement'],
       '/users/import_users.php' => $string['importmodules'],
-  ));
+  ]);
   $file_problem = false;
   echo '<br /><br />';
   if (isset($_POST['submit'])) {
@@ -73,7 +73,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
               <?php
                 // Get a list of modules held by ExamSys.
-                $module_list = array();
+                $module_list = [];
                 $result = $mysqli->prepare('SELECT DISTINCT id, moduleid FROM modules');
                 $result->execute();
                 $result->bind_result($idMod, $moduleid);
@@ -83,12 +83,12 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
                 $result->close();
 
                 $modulesAdded = 0;
-                $missing_users = array();
-                $unknow_ModuleID = array();
+                $missing_users = [];
+                $unknow_ModuleID = [];
                 $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
 
                 // Build an array of unique student names.
-                $students = array();
+                $students = [];
                 foreach ($lines as $separate_line) {
                     if (trim($separate_line) != '') {
                         $fields = explode(',', $separate_line);
@@ -99,7 +99,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
                         $students[$sid]['sid'] = $sid;
                         $students[$sid]['session'] = $session;
-                        $students[$sid]['modules'] = array();
+                        $students[$sid]['modules'] = [];
                     }
                 }
 

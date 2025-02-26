@@ -65,7 +65,7 @@ $result->bind_result($title, $content, $width);
 $result->fetch();
 $result->close();
 
-$ref_modules = array();
+$ref_modules = [];
 
 $result = $mysqli->prepare('SELECT moduleID FROM reference_modules, modules WHERE reference_modules.idMod = modules.id AND refID = ?');
 $result->bind_param('i', $_GET['refID']);
@@ -124,7 +124,7 @@ for ($size = 200; $size < 850; $size += 50) {
 <?php
   echo '<div style="margin-top:1px; display:block; width:420px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%">';
 
-  $extra_modules = array();
+  $extra_modules = [];
   $result = $mysqli->prepare('SELECT idMod FROM reference_modules WHERE refID = ?');
   $result->bind_param('i', $_GET['refID']);
   $result->execute();

@@ -46,6 +46,6 @@ class NullCorrector
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         // At the moment do nothing - might consider throwing an unsupported operation exception
-        return array();
+        return [];
     }
 }

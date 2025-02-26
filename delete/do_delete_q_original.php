@@ -53,5 +53,5 @@ if ($found == 0) {    // Only delete if the question is on zero papers.
 $render = new render($configObject);
 $lang['title'] = $string['questiondeleted'];
 $lang['success'] = $string['msg'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

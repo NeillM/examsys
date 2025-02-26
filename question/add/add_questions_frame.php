@@ -107,7 +107,7 @@ $miscdataset['attributes']['folder'] = param::optional('folder', '', param::INT,
 $miscdataset['attributes']['disp'] = param::required('display_pos', param::INT, param::FETCH_GET);
 $miscdataset['attributes']['srcofy'] = param::required('scrOfY', param::FLOAT, param::FETCH_GET);
 $miscdataset['attributes']['max'] = $maxscreen;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../../js/questionsframeinit.min.js"></script>
 </body>

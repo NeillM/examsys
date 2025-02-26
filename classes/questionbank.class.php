@@ -71,7 +71,7 @@ class QuestionBank
 
     private function get_keywords()
     {
-        $keywords_array = array();
+        $keywords_array = [];
 
         $result = $this->db->prepare("SELECT keyword, keywords_user.id FROM keywords_user, modules WHERE keywords_user.userID = modules.id AND modules.id = $this->idMod ORDER BY keyword");
         $result->execute();
@@ -101,7 +101,7 @@ class QuestionBank
             case 'all':
             case 'type':
                 $this->load_stats($type);
-                $this->bank_types = array(
+                $this->bank_types = [
                 'area' => $this->string['area'],
                 'enhancedcalc' => $this->string['enhancedcalc'],
                 'dichotomous' => $this->string['dichotomous'],
@@ -120,12 +120,12 @@ class QuestionBank
                 'sct' => $this->string['sct'],
                 'textbox' => $this->string['textbox'],
                 'true_false' => $this->string['true_false']
-                );
+                ];
                 break;
             case 'status':
                 $statuses = QuestionStatus::get_all_statuses($this->db, $this->string);
                 $this->load_stats($type);
-                $this->bank_types = array();
+                $this->bank_types = [];
                 foreach ($statuses as $status) {
                     $status_name = $status->get_name();
                     $this->bank_types[$status->id] = $status_name;
@@ -133,18 +133,18 @@ class QuestionBank
                 break;
             case 'bloom':
                 $this->load_stats($type);
-                $this->bank_types = array(
+                $this->bank_types = [
                 'knowledge' => $this->string['knowledge'],
                 'comprehension' => $this->string['comprehension'],
                 'application' => $this->string['application'],
                 'analysis' => $this->string['analysis'],
                 'synthesis' => $this->string['synthesis'],
                 'evaluation' => $this->string['evaluation']
-                );
+                ];
                 break;
             case 'performance':
                 $this->load_performance_stats();
-                $this->bank_types = array(
+                $this->bank_types = [
                 'veryeasy' => $this->string['veryeasy'],
                 'easy' => $this->string['easy'],
                 'moderate' => $this->string['moderate'],
@@ -154,7 +154,7 @@ class QuestionBank
                 'high' => $this->string['high'],
                 'intermediate' => $this->string['intermediate'],
                 'low' => $this->string['low']
-                );
+                ];
                 break;
             case 'objective':
                 $this->load_stats($type);
@@ -165,7 +165,7 @@ class QuestionBank
 
     private function load_performance_stats()
     {
-        $this->stats = array('veryeasy' => 0, 'easy' => 0, 'moderate' => 0, 'hard' => 0, 'veryhard' => 0, 'highest' => 0, 'high' => 0, 'intermediate' => 0, 'low' => 0);
+        $this->stats = ['veryeasy' => 0, 'easy' => 0, 'moderate' => 0, 'hard' => 0, 'veryhard' => 0, 'highest' => 0, 'high' => 0, 'intermediate' => 0, 'low' => 0];
 
         $status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
         $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
@@ -203,7 +203,7 @@ class QuestionBank
 
     private function load_stats($type)
     {
-        $this->stats = array();
+        $this->stats = [];
 
         // Un-assigned papers should be limited to the owner.
         if ($this->idMod == 0) {
@@ -248,7 +248,7 @@ class QuestionBank
                 break;
             case 'objective':
                 $vle_api_data = MappingUtils::get_vle_api($this->idMod, $this->yearutils->get_current_session(), $vle_api_cache, $this->db);
-                $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+                $all_years = getYearsForModules($vle_api_data['api'], [$this->idMod => $this->module_id], $this->db);
                 $all_years = implode("','", $all_years);
 
                 $sql = 'SELECT COUNT(questions.q_id), relationships.obj_id'
@@ -272,8 +272,8 @@ class QuestionBank
 
     public function get_outcomes($ac_year = 'all', $vle_api_data = null)
     {
-        $outcomes = array();
-        $vle_api_cache = array();
+        $outcomes = [];
+        $vle_api_cache = [];
         // Get the VLE API we're using currently
         if (is_null($vle_api_data)) {
             $vle_api_data = MappingUtils::get_vle_api($this->idMod, $this->yearutils->get_current_session(), $vle_api_cache, $this->db);
@@ -281,13 +281,13 @@ class QuestionBank
 
         // Get years for which there are mappings for the current mapping source
         if ($ac_year == 'all') {
-            $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
+            $all_years = getYearsForModules($vle_api_data['api'], [$this->idMod => $this->module_id], $this->db);
         } else {
-            $all_years = array($ac_year);
+            $all_years = [$ac_year];
         }
 
         foreach ($all_years as $ac_year) {
-            $obs = getObjectives(array($this->idMod => $this->module_id), $ac_year, '', '', $this->db);
+            $obs = getObjectives([$this->idMod => $this->module_id], $ac_year, '', '', $this->db);
 
             if (is_array($obs) and isset($obs[$this->module_id])) {
                 foreach ($obs[$this->module_id] as $session) {
@@ -303,9 +303,9 @@ class QuestionBank
 
                             if ($uid != '') {
                                 // Build list of IDs but use the latest text
-                                $ids = (isset($outcomes[$uid])) ? $outcomes[$uid]['ids'] : array();
+                                $ids = (isset($outcomes[$uid])) ? $outcomes[$uid]['ids'] : [];
                                 $ids[] = $objective['id'];
-                                $outcomes[$uid] = array('ids' => $ids, 'label' => $objective['content']);
+                                $outcomes[$uid] = ['ids' => $ids, 'label' => $objective['content']];
                             }
                         }
                     }

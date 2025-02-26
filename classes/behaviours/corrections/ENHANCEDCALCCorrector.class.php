@@ -39,7 +39,7 @@ class ENHANCEDCALCCorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
 
         $marks_correct = $this->_question->get_marks_correct();
         $marks_incorrect = $this->_question->get_marks_incorrect();
@@ -123,7 +123,7 @@ class ENHANCEDCALCCorrector extends Corrector
                 // Complete new answer
                 $changes = true;
                 $userObj = UserObject::get_instance();
-                $this->_question->options[$i] = new OptionENHANCEDCALC($this->_mysqli, $userObj->get_user_ID(), $this->_question, $i, $this->_lang_strings, array('formula' => $new_correct['option_formula'][$i - 1], 'units' => $new_correct['option_units'][$i - 1]));
+                $this->_question->options[$i] = new OptionENHANCEDCALC($this->_mysqli, $userObj->get_user_ID(), $this->_question, $i, $this->_lang_strings, ['formula' => $new_correct['option_formula'][$i - 1], 'units' => $new_correct['option_units'][$i - 1]]);
                 $this->_question->add_unified_field_modification('New Answer ' . $i, 'New Answer ' . $i, '', $new_correct['option_formula'][$i - 1] . ', ' . $new_correct['option_units'][$i - 1], $this->_lang_strings['postexamchange']);
             }
         }

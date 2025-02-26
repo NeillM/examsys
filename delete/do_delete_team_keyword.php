@@ -28,7 +28,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 $keywordIDs = check_var('keywordID', 'POST', true, false, true);
-$keyword_names = array();
+$keyword_names = [];
 $result = $mysqli->prepare('SELECT keyword FROM keywords_user WHERE id IN (' . mb_substr($keywordIDs, 1) . ')');
 $result->execute();
 $result->bind_result($keyword);
@@ -60,5 +60,5 @@ foreach ($keyword_list as $individualID) {
 $render = new render($configObject);
 $lang['title'] = $string['title'];
 $lang['success'] = $string['msg'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

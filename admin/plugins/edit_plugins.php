@@ -85,7 +85,7 @@ $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['editplugins'];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/config.css"/>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['rogoplugins'] => '../plugins/list_plugins.php');
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['rogoplugins'] => '../plugins/list_plugins.php'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
 $render->render_admin_content($breadcrumb, $lang);

@@ -52,9 +52,9 @@ class render
         } else {
             $loader = new \Twig\Loader\FilesystemLoader($templatedir);
         }
-        $this->twig = new \Twig\Environment($loader, array(
+        $this->twig = new \Twig\Environment($loader, [
             'cache' => false
-        ));
+        ]);
         $this->config = $configObject;
     }
 
@@ -92,7 +92,7 @@ class render
         if (is_null($language)) {
             $language = LangUtils::getLang($this->config->get('cfg_web_root'));
         }
-        $data = array(
+        $data = [
             'data' => $data,
             'lang' => $lang,
             'path' => $path,
@@ -100,7 +100,7 @@ class render
             'additionaljs' => $additionaljs,
             'additionalcss' => $additionalcss,
             'language' => $language,
-        );
+        ];
         echo $this->twig->render($template, $data);
     }
 
@@ -113,7 +113,7 @@ class render
      */
     public function render_xml($template, $reponsename, $response)
     {
-        $data = array('name' => $reponsename, 'response' => $response);
+        $data = ['name' => $reponsename, 'response' => $response];
         return $this->twig->render($template, $data);
     }
 
@@ -125,7 +125,7 @@ class render
      */
     public function render_admin_list($data, $header)
     {
-        $data = array('data' => $data, 'header' => $header, 'path' => $this->config->get('cfg_root_path'));
+        $data = ['data' => $data, 'header' => $header, 'path' => $this->config->get('cfg_root_path')];
         echo $this->twig->render('admin/list.html', $data);
     }
 
@@ -139,13 +139,13 @@ class render
     public function render_admin_header($lang, $additionaljs, $additionalcss)
     {
         $lang['title'] = page::title($lang['title']);
-        $data = array(
+        $data = [
             'lang' => $lang, 'additionaljs' => $additionaljs,
             'additionalcss' => $additionalcss,
             'charset' => $this->config->get('cfg_page_charset'),
             'path' => $this->config->get('cfg_root_path'),
             'language' => LangUtils::getLang($this->config->get('cfg_web_root')),
-        );
+        ];
         echo $this->twig->render('admin/header.html', $data);
     }
 
@@ -157,16 +157,16 @@ class render
      * @param array $searchdata - search data
      * @return void
      */
-    public function render_admin_content($breadcrumb, $lang, $template = 'admin/content.html', $searchdata = array())
+    public function render_admin_content($breadcrumb, $lang, $template = 'admin/content.html', $searchdata = [])
     {
         if (empty($searchdata)) {
-            $data = array(
+            $data = [
                 'breadcrumb' => $breadcrumb,
                 'lang' => $lang,
                 'path' => $this->config->get('cfg_root_path'),
-            );
+            ];
         } else {
-            $data = array(
+            $data = [
                 'breadcrumb' => $breadcrumb,
                 'lang' => $lang,
                 'path' => $this->config->get('cfg_root_path'),
@@ -174,7 +174,7 @@ class render
                 'to' => $searchdata['to'],
                 'total' => $searchdata['total'],
                 'pageinfo' => $searchdata['pageinfo'],
-            );
+            ];
         }
         echo $this->twig->render($template, $data);
     }
@@ -201,7 +201,7 @@ class render
      */
     public function render_admin_options($script, $image, $lang, $toprightmenu, $template = 'admin/options.html')
     {
-        $data = array('script' => $script, 'image' => $image, 'lang' => $lang, 'toprightmenu' => $toprightmenu);
+        $data = ['script' => $script, 'image' => $image, 'lang' => $lang, 'toprightmenu' => $toprightmenu];
         echo $this->twig->render($template, $data);
     }
 
@@ -215,8 +215,8 @@ class render
      */
     public function render_admin_update($plugins, $header, $action, $lang)
     {
-        $data = array ('plugins' => $plugins, 'header' => $header, 'path' => $this->config->get('cfg_root_path'),
-            'action' => $action, 'lang' => $lang);
+        $data =  ['plugins' => $plugins, 'header' => $header, 'path' => $this->config->get('cfg_root_path'),
+            'action' => $action, 'lang' => $lang];
         echo $this->twig->render('admin/update.html', $data);
     }
 
@@ -232,11 +232,11 @@ class render
         $path = $this->config->get('cfg_root_path');
         $current = count($links) > 0 ? array_pop($links) : '';
 
-        $data = array (
+        $data =  [
             'path' => $path,
             'links' => $links,
             'current' => $current,
-        );
+        ];
 
         return $this->twig->render('admin/navigation.html', $data);
     }

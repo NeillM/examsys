@@ -127,7 +127,7 @@ if (isset($_POST['submit'])) {
     }
 
     // Get back total marks for the paper excluding all textboxes.
-    $marks_array = array();
+    $marks_array = [];
     if ($paper_type == \assessment::TYPE_FORMATIVE) {
         $progress_time_int = \log::getStartInterval(\assessment::TYPE_PROGRESS);
         $sql = <<< SQL

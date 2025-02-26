@@ -61,7 +61,7 @@ class render_install extends render
         if (is_null($language)) {
             $language = LangUtils::getLang($this->config->get('cfg_web_root'));
         }
-        $data = array(
+        $data = [
             'data' => $data,
             'lang' => $lang,
             'path' => $path,
@@ -69,7 +69,7 @@ class render_install extends render
             'additionaljs' => $additionaljs,
             'additionalcss' => $additionalcss,
             'language' => $language,
-        );
+        ];
         echo $this->twig->render($template, $data);
     }
 }

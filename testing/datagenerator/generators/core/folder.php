@@ -45,7 +45,7 @@ class folder extends generator
             throw new data_error('ownerID must be provided');
         }
         $folderscreated = ++self::$folderscreated;
-        $defaults = array('name' => 'Folder ' . $folderscreated, 'colour' => 'yellow', 'deleted' => false, 'ownerid' => $parameters['ownerID']);
+        $defaults = ['name' => 'Folder ' . $folderscreated, 'colour' => 'yellow', 'deleted' => false, 'ownerid' => $parameters['ownerID']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $now = date('Y-m-d H:i:s');
         if ($settings['deleted']) {

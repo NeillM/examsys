@@ -36,7 +36,7 @@ function getPaper($paperID)
 {
     global  $mysqli;
 
-    $temp_array = array();
+    $temp_array = [];
 
     if (!isset($_GET['ordering'])) {
         $ordering = 'screen';
@@ -54,7 +54,7 @@ function getPaper($paperID)
     $result->close();
 
     // Get any questions to exclude.
-    $excluded = array();
+    $excluded = [];
     $result = $mysqli->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ?');
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -196,17 +196,17 @@ if (isset($papers_tmp)) {
     }
 }
 
-$objsBySession = array();
+$objsBySession = [];
 foreach ($papers as $p_id => $paper) {
     $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
     $objsBySession[$p_id] = getObjectives($moduleIDs, $paper['session'], $p_id, $paper['questionID'], $mysqli);
 }
 
 $n = 0;
-$allsession     = array();
-$id_guid_map    = array();
-$guid_id_map    = array();
-$obs_canonical  = array();
+$allsession     = [];
+$id_guid_map    = [];
+$guid_id_map    = [];
+$obs_canonical  = [];
 
 foreach ($objsBySession as $p_id => $module) {
     if ($module !== 'error') {
@@ -319,7 +319,7 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['paper'] = $paperID;
 $miscdataset['attributes']['folder'] = $folderID;
 $miscdataset['attributes']['module'] = $moduleID;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 </body>
 </html>

@@ -155,7 +155,7 @@ if ($_GET['method'] == 'modified_angoff') {
 
   echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\" autocomplete=\"off\">\n";
 
-  $reviews = array();
+  $reviews = [];
 
 if (isset($_GET['std_setID'])) {
     $standard_setting = new StandardSetting($mysqli);
@@ -228,7 +228,7 @@ switch ($_GET['method']) {
   $total_marks = 0; //Altered as a globle in display_options !!!
   $std_excluded = 0;
   $prologue_show = 1;
-  $options_array = array();
+  $options_array = [];
   echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\n";
 
   $result = $mysqli->prepare("
@@ -385,9 +385,9 @@ switch ($_GET['method']) {
           $old_theme = $theme;
           $old_screen = $screen;
           $old_correct_fback = $correct_fback;
-          $options_array = array();
+          $options_array = [];
       }
-      $options_array[] = array(
+      $options_array[] = [
         'q_type' => $q_type,
         'score_method' => $score_method,
         'display_method' => $display_method,
@@ -407,7 +407,7 @@ switch ($_GET['method']) {
         'o_media_alt' => $option_media_alt,
         'marks_correct' => $marks_correct,
         'marks_incorrect' => $marks_incorrect
-      );
+      ];
   }
   $result->close();
 
@@ -442,7 +442,7 @@ switch ($_GET['method']) {
           $result->fetch();
           $result->close();
           if ($templateID == '') {
-                $ebel = array('EE' => 0, 'EI' => 0, 'EN' => 0, 'ME' => 0, 'MI' => 0, 'MN' => 0, 'HE' => 0, 'HI' => 0, 'HN' => 0, 'EE2' => 0, 'EI2' => 0, 'EN2' => 0, 'ME2' => 0, 'MI2' => 0, 'MN2' => 0, 'HE2' => 0, 'HI2' => 0, 'HN2' => 0);
+                $ebel = ['EE' => 0, 'EI' => 0, 'EN' => 0, 'ME' => 0, 'MI' => 0, 'MN' => 0, 'HE' => 0, 'HI' => 0, 'HN' => 0, 'EE2' => 0, 'EI2' => 0, 'EN2' => 0, 'ME2' => 0, 'MI2' => 0, 'MN2' => 0, 'HE2' => 0, 'HI2' => 0, 'HN2' => 0];
           } else {
               $result = $mysqli->prepare('SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?');
               $result->bind_param('i', $templateID);
@@ -541,14 +541,14 @@ if (isset($state['banksave']) and $state['banksave'] == 'true') {
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $miscdataset['attributes']['method'] = $_GET['method'];
-$render->render($miscdataset, array(), 'dataset.html');
-$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render($miscdataset, [], 'dataset.html');
+$render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 
 ?>
 <script src="../js/stdsetreviewinit.min.js"></script>

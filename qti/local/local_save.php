@@ -23,7 +23,7 @@
  * @package
  */
 
-function xml2array($xmlObject, $out = array())
+function xml2array($xmlObject, $out = [])
 {
     foreach ((array)$xmlObject as $index => $node) {
         $out[$index] = (is_object($node)) ? xml2array($node) : $node;
@@ -34,12 +34,12 @@ function xml2array($xmlObject, $out = array())
 
 class IE_Local_Save extends IE_Main
 {
-    public $q_row = array();
-    public $o_rows = array();
-    public $o_row = array();
-    public $m_row = array();
+    public $q_row = [];
+    public $o_rows = [];
+    public $o_row = [];
+    public $m_row = [];
     public $db;
-    public $statuses = array();
+    public $statuses = [];
 
     // ExamSys save parameters:
     // for saving questions
@@ -119,7 +119,7 @@ class IE_Local_Save extends IE_Main
 
         if ($module_id !== false) {
             // Get a list of the team and user's keywords
-            $user_keywords = array();
+            $user_keywords = [];
             if (is_array($module_id)) {
                 foreach (array_keys($module_id) as $mod_id) {
                     $user_keywordsl = $this->GetExistingKeywords($mod_id);
@@ -134,7 +134,7 @@ class IE_Local_Save extends IE_Main
             $this->q_row = $this->db->GetBlankTableRow('questions');
             $this->o_row = $this->db->GetBlankTableRow('options');
             $this->m_row = [];
-            $this->o_rows = array();
+            $this->o_rows = [];
 
             // stuff from parameters
             $this->q_row['ownerID'] = $ownerid;
@@ -208,7 +208,7 @@ class IE_Local_Save extends IE_Main
                 continue;
             }
 
-            if (!(in_array($this->q_row['q_option_order'], array('display order','alphabetic','random')))) {
+            if (!(in_array($this->q_row['q_option_order'], ['display order','alphabetic','random']))) {
                 $this->q_row['q_option_order'] = 'display order';
                 print 'correcting q_option_order';
             }
@@ -256,10 +256,10 @@ class IE_Local_Save extends IE_Main
                 $this->qm_row['idMod'] = $module_id;
                 $this->db->InsertRow('questions_modules', 'temp', $this->qm_row);
             }
-            $new_keywords = array();
+            $new_keywords = [];
             if ($module_id != -1) {
                 if (is_array($module_id)) {
-                    $user_keywords2 = array();
+                    $user_keywords2 = [];
                     foreach (array_keys($module_id) as $mod_id) {
                         $new_keywords1 = $this->SaveKeywords($this->q_row['q_id'], $question->keywords, $mod_id, $user_keywords, $user_keywords2);
                         $new_keywords = array_merge($new_keywords, $new_keywords1);
@@ -313,7 +313,7 @@ class IE_Local_Save extends IE_Main
             echo "<div>{$string['newkeywords']}</div>";
             print_p($new_keywords, false);
 
-            $track = array();
+            $track = [];
             $track['type'] = $string['qtiimport'];
             $track['typeID'] = $this->q_row['q_id'];
             $track['editor'] = $userID;
@@ -375,7 +375,7 @@ class IE_Local_Save extends IE_Main
 
                 $blankbit = $question->options[$part];
 
-                $blanks = array();
+                $blanks = [];
 
                 // get correct answer first
                 foreach ($blankbit as $blank) {
@@ -458,10 +458,10 @@ class IE_Local_Save extends IE_Main
         $feedback = '';
         $answer_text = '';
 
-        $media = array();
-        $media_width = array();
-        $media_height = array();
-        $media_alt = array();
+        $media = [];
+        $media_width = [];
+        $media_height = [];
+        $media_alt = [];
 
         foreach ($question->scenarios as $scenario) {
             $scenario_text .= $scenario->stem . '|';
@@ -516,7 +516,7 @@ class IE_Local_Save extends IE_Main
         $hs_text = '';
         foreach ($question->hotspots as $id => $hotspot) {
             $hs_text .= $hotspot->type . ';';
-            $coords = array();
+            $coords = [];
             foreach ($hotspot->coords as $coord) {
                 $coords[] = dechex($coord);
             }
@@ -553,7 +553,7 @@ class IE_Local_Save extends IE_Main
         // 5 - 3 pt
         // 6 - 4 1/2 pt
         // 7 - 6 pt
-        $line_thicknesses = array();
+        $line_thicknesses = [];
         $line_thicknesses['0.75'] = 1;
         $line_thicknesses['1'] = 2;
         $line_thicknesses['1.25'] = 3;
@@ -562,7 +562,7 @@ class IE_Local_Save extends IE_Main
         $line_thicknesses['4.5'] = 6;
         $line_thicknesses['6'] = 7;
 
-        $base = array();
+        $base = [];
         $base[0] = '0$0$8$30$';
         $base[1] = '1$0$8$77$';
         $base[2] = '2$0$8$125$';
@@ -819,7 +819,7 @@ class IE_Local_Save extends IE_Main
     public function GetExistingKeywords($module_id)
     {
         // We'll keep the keywords cached in an array and build it up as we add new keywords
-        $user_keywords = array();
+        $user_keywords = [];
 
         $this->db->SetTable('keywords_user');
         $this->db->AddField('id');
@@ -848,7 +848,7 @@ class IE_Local_Save extends IE_Main
      */
     public function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = null)
     {
-        $new_keywords = array();
+        $new_keywords = [];
         echo 'savekeywrds<br />';
 
         // Loop through the keywords, saving against the user and question
@@ -858,7 +858,7 @@ class IE_Local_Save extends IE_Main
             // Exclude existing keywords from the list that we want to save
             if (!in_array($q_keywords[$i], array_keys($user_keywords['mod' . $moduleID]))) {
                 // Add keyword to this user's list
-                $ku_row = array('userID' => $moduleID, 'keyword' => $q_keywords[$i], 'keyword_type' => 'team');
+                $ku_row = ['userID' => $moduleID, 'keyword' => $q_keywords[$i], 'keyword_type' => 'team'];
                 $this->db->InsertRow('keywords_user', 'id', $ku_row);
                 $kw_id = $ku_row['id'];
 
@@ -870,7 +870,7 @@ class IE_Local_Save extends IE_Main
             // Add keyword to the keyword question link table
             if ($kw_id != -1) {
                 // if(is_array($kw_id))
-                $kq_row = array('q_id' => $q_id, 'keywordID' => $kw_id);
+                $kq_row = ['q_id' => $q_id, 'keywordID' => $kw_id];
                 //$kq_row=$kq_row[0];
                 $this->db->InsertRow('keywords_question', '', $kq_row);
             }

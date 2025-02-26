@@ -110,7 +110,7 @@ echo draw_toprightmenu();
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_add_announcement.php';
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/announcementinit.min.js"></script>
 </body>

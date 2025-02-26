@@ -99,7 +99,7 @@ class UserUtils
             }
 
             // Force valid value for gender or default to NULL
-            $genders = array('male', 'female', 'other');
+            $genders = ['male', 'female', 'other'];
             if (!in_array(mb_strtolower($gender ?? ''), $genders)) {
                 $gender = null;
             }
@@ -220,7 +220,7 @@ class UserUtils
 
         // If updating the gender. Force valid value for gender or default to NULL
         if ($current['gender'] != $gender) {
-            $genders = array('male', 'female', 'other');
+            $genders = ['male', 'female', 'other'];
             if (!in_array(mb_strtolower($gender ?? ''), $genders)) {
                 $gender = null;
             }
@@ -504,9 +504,9 @@ class UserUtils
             $stmt->fetch();
             $stmt->close();
 
-            return array('username' => $username, 'title' => $title, 'surname' => $surname, 'initials' => $initials, 'first_names' => $first_names, 'first_name' => $first_name, 'email' => $email, 'roles' => $roles, 'student_id' => $student_id, 'gender' => $gender, 'grade' => $grade, 'yearofstudy' => $yearofstudy, 'user_deleted' => $user_deleted);
+            return ['username' => $username, 'title' => $title, 'surname' => $surname, 'initials' => $initials, 'first_names' => $first_names, 'first_name' => $first_name, 'email' => $email, 'roles' => $roles, 'student_id' => $student_id, 'gender' => $gender, 'grade' => $grade, 'yearofstudy' => $yearofstudy, 'user_deleted' => $user_deleted];
         } else {
-            return array('username' => $username, 'title' => $title, 'surname' => $surname, 'initials' => $initials, 'first_names' => $first_names, 'first_name' => $first_name, 'email' => $email, 'roles' => $roles, 'student_id' => '', 'gender' => $gender, 'grade' => $grade, 'yearofstudy' => $yearofstudy, 'user_deleted' => $user_deleted);
+            return ['username' => $username, 'title' => $title, 'surname' => $surname, 'initials' => $initials, 'first_names' => $first_names, 'first_name' => $first_name, 'email' => $email, 'roles' => $roles, 'student_id' => '', 'gender' => $gender, 'grade' => $grade, 'yearofstudy' => $yearofstudy, 'user_deleted' => $user_deleted];
         }
     }
 
@@ -610,7 +610,7 @@ class UserUtils
      */
     public static function list_staff_modules_by_userID($userID, $db)
     {
-        $user_modules = array();
+        $user_modules = [];
         $result = $db->prepare('SELECT
                                 moduleID, idMod
                             FROM
@@ -681,7 +681,7 @@ class UserUtils
      */
     public static function get_staff_modules_list_by_modID($modID, $db)
     {
-        $team_members = array();
+        $team_members = [];
         $result = $db->prepare('SELECT memberID FROM modules_staff WHERE idMod = ?');
         $result->bind_param('i', $modID);
         $result->execute();
@@ -705,7 +705,7 @@ class UserUtils
      */
     public static function get_staff_modules_list_by_name($team_name, $db)
     {
-        $team_members = array();
+        $team_members = [];
         $result = $db->prepare('SELECT memberID FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND moduleid = ? AND mod_deleted IS NULL');
         $result->bind_param('s', $team_name);
         $result->execute();
@@ -725,7 +725,7 @@ class UserUtils
      */
     public static function getStaffModules(int $userID): array
     {
-        $user_modules = array();
+        $user_modules = [];
         $result = Config::get_instance()->db->prepare('SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ?');
         $result->bind_param('i', $userID);
         $result->execute();
@@ -747,7 +747,7 @@ class UserUtils
      */
     public static function getStudentModules(int $userID, int $calendar_year, int $attempt): array
     {
-        $user_modules = array();
+        $user_modules = [];
         $result = Config::get_instance()->db->prepare('SELECT moduleID, idMod FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ? AND attempt = ?');
         $result->bind_param('iii', $userID, $calendar_year, $attempt);
         $result->execute();
@@ -971,14 +971,14 @@ class UserUtils
         if (mb_check_encoding($s, 'UTF-8')) {
             //do nothing
         } else {
-            $s = preg_replace_callback("/(\b[\w|']+\b)/s", array('UserUtils', 'fixcase_callback'), $s);
+            $s = preg_replace_callback("/(\b[\w|']+\b)/s", ['UserUtils', 'fixcase_callback'], $s);
         }
         return $s;
     }
 
     public static function load_student_modules($userID, $db)
     {
-        $studentModules = array();
+        $studentModules = [];
 
         // studentmodule year -> module ->decode
         $result = $db->prepare('SELECT idMod, moduleID, calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID'); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
@@ -1100,7 +1100,7 @@ class UserUtils
         $sql->fetch();
         $sql->close();
 
-        $details = array(
+        $details = [
             'username' => $username,
             'password' => $password,
             'title' => $title,
@@ -1113,7 +1113,7 @@ class UserUtils
             'role' => $roles,
             'studentid' => $student_id,
             'initials' => $initials
-        );
+        ];
 
         return $details;
     }
@@ -1218,10 +1218,10 @@ class UserUtils
             $break = $breaktime;
         }
         $result->close();
-        return array(
+        return [
             'extratime' => $extra,
             'breaktime' => $break
-        );
+        ];
     }
 
     /**
@@ -1253,7 +1253,7 @@ class UserUtils
             $highlight_bgcolour
         );
         $result->fetch();
-        $details = array(
+        $details = [
             'background' => $background ?? UserObject::BGCOLOUR,
             'foreground' => $foreground ?? UserObject::FGCOLOUR,
             'textsize' => $textsize == 0 ? UserObject::TEXTSIZE : $textsize,
@@ -1266,7 +1266,7 @@ class UserUtils
             'globaltheme' => $globalthemecolour ?? UserObject::GLOBALTHEMECOLOUR,
             'globalthemefontcolour' => $globalthemefont_colour ?? UserObject::GLOBALTHEMEFONTCOLOUR,
             'highlight' => $highlight_bgcolour ?? UserObject::HIGHLIGHTCOLOUR
-        );
+        ];
         $result->close();
         return $details;
     }

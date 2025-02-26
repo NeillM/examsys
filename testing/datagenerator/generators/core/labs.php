@@ -57,10 +57,10 @@ class labs extends generator
             throw new data_error('Must pass an array or object');
         }
         $number = ++self::$campusescreated;
-        $defaults = array(
+        $defaults = [
             'name' => "Campus $number",
             'isdefault' => 0,
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
         $values['id'] = $this->insert_campus($values);
         return $values;
@@ -86,12 +86,12 @@ class labs extends generator
         $number = ++self::$labscreated;
         $subnumber = (int)($number / 256);
         $lastnumber = ($number % 255) + 1; // Must not be 0, or we have a broadcast address.
-        $defaults = array(
+        $defaults = [
             'lab' => '',
             'address' => "192.168.$subnumber.$lastnumber", // We will be able to generate 65280 IP addresses before we get a duplicate.
             'hostname' => "test$number.example.com",
             'low_bandwidth' => 0,
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
         $lab = $values['lab'];
         $values['lab'] = $this->get_lab_id($values['lab']);
@@ -120,7 +120,7 @@ class labs extends generator
             throw new data_error('Must pass an array or object');
         }
         $number = ++self::$labscreated;
-        $defaults = array(
+        $defaults = [
             'name' => "Lab $number",
             'campus' => $this->get_default_campus(),
             'building' => 'My building',
@@ -128,7 +128,7 @@ class labs extends generator
             'timetabling' => '',
             'support' => '',
             'plagarism' => '',
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
         $campus = $values['campus'];
         $values['campus'] = $this->get_campus_id($values['campus']);
@@ -185,13 +185,13 @@ class labs extends generator
         }
 
         // Clean the values.
-        $defaults = array(
+        $defaults = [
             'extra_time' => 10,
             'invigilator' => null,
             'lab' => null,
             'paper' => null,
             'student' => null,
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
 
         // Save the entry.

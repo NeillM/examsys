@@ -78,8 +78,8 @@ if (isset($_POST['submit'])) {
     $old_title = '';
     $parent = '';
     $old_parent = '';
-    $help_toc = array();
-    $help_toc_titles = array();
+    $help_toc = [];
+    $help_toc_titles = [];
 
     $help_section = 0;
     $result = $mysqli->prepare($sql);

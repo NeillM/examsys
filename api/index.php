@@ -60,9 +60,9 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
 ) {
         $error = $exception->getCode();
         if ($error == 404) {
-            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', [$langpack->get_string('api/commonapi', '404')]);
         } else {
-            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')));
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', [$langpack->get_string('api/commonapi', '500')]);
         }
         // Send response.
         $response = $app->getResponseFactory()->createResponse();
@@ -92,8 +92,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $app->post('/modulemanagement/enrol', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'modulemanagement';
         $responsetype = 'moduleManagementEnrolResponse';
-        $operations = array('enrol', 'unenrol');
-        $fields = array('userid', 'attempt', 'moduleid', 'session', 'studentid', 'moduleextid', 'moduleextsys');
+        $operations = ['enrol', 'unenrol'];
+        $fields = ['userid', 'attempt', 'moduleid', 'session', 'studentid', 'moduleextid', 'moduleextsys'];
         $xsd = 'enrolrequest';
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
@@ -102,8 +102,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $app->post('/modulemanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'modulemanagement';
         $responsetype = 'moduleManagementResponse';
-        $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms', 'externalid', 'schoolextid', 'externalsys', 'newexternalid');
+        $operations = ['create', 'update', 'delete'];
+        $fields = ['id', 'modulecode', 'name', 'school', 'faculty', 'sms', 'externalid', 'schoolextid', 'externalsys', 'newexternalid'];
         $xsd = 'managementrequest';
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
@@ -112,8 +112,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $app->post('/coursemanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'coursemanagement';
         $responsetype = 'courseManagementResponse';
-        $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'name', 'description', 'school', 'faculty', 'externalid', 'schoolextid', 'externalsys');
+        $operations = ['create', 'update', 'delete'];
+        $fields = ['id', 'name', 'description', 'school', 'faculty', 'externalid', 'schoolextid', 'externalsys'];
         $xsd = 'managementrequest';
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
@@ -122,8 +122,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $app->post('/schoolmanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'schoolmanagement';
         $responsetype = 'schoolManagementResponse';
-        $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'name', 'faculty', 'externalid', 'facultyextid', 'code', 'externalsys');
+        $operations = ['create', 'update', 'delete'];
+        $fields = ['id', 'name', 'faculty', 'externalid', 'facultyextid', 'code', 'externalsys'];
         $xsd = 'managementrequest';
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
@@ -132,8 +132,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $app->post('/facultymanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'facultymanagement';
         $responsetype = 'facultyManagementResponse';
-        $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'name', 'externalid', 'code', 'externalsys');
+        $operations = ['create', 'update', 'delete'];
+        $fields = ['id', 'name', 'externalid', 'code', 'externalsys'];
         $xsd = 'managementrequest';
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
@@ -142,9 +142,9 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $app->post('/usermanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'usermanagement';
         $responsetype = 'userManagementResponse';
-        $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'username', 'title', 'forename', 'surname', 'initials', 'email', 'password',
-            'course', 'gender', 'year', 'role', 'studentid', 'modules');
+        $operations = ['create', 'update', 'delete'];
+        $fields = ['id', 'username', 'title', 'forename', 'surname', 'initials', 'email', 'password',
+            'course', 'gender', 'year', 'role', 'studentid', 'modules'];
         $xsd = 'managementrequest';
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
@@ -152,9 +152,9 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $app->post('/assessmentmanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'assessmentmanagement';
         $responsetype = 'assessmentManagementResponse';
-        $operations = array('create', 'schedule', 'delete', 'update');
-        $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
-            'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration', 'externalid', 'externalsys', 'extmodules');
+        $operations = ['create', 'schedule', 'delete', 'update'];
+        $fields = ['id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
+            'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration', 'externalid', 'externalsys', 'extmodules'];
         $xsd = 'managementrequest';
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
@@ -179,18 +179,18 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
         // Check for auth tokens
         $client_id = $oauth->check_auth();
         if ($client_id == 'INVALID_TOKEN') {
-            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', [$langpack->get_string('api/commonapi', 'invalidtoken')]);
             $api->log_response($apiid, $response_xml);
         } else {
             //Check Permission
             if (!$oauth->check_permissions('gradebook', $client_id)) {
-                $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
+                $response_xml = $render->render_xml('api/error.xml', 'rogo', [$langpack->get_string('api/commonapi', 'nopermission')]);
                 $api->log_response($apiid, $response_xml);
             } else {
-                $resp = array();
+                $resp = [];
                 $gradebook = new \api\gradebook($mysqli);
                 // Map template.
-                if (in_array($args['filtername'], array('paper', 'extpaper'))) {
+                if (in_array($args['filtername'], ['paper', 'extpaper'])) {
                     $templatename = 'paper';
                 } else {
                     $templatename = 'module';
@@ -249,7 +249,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
         // Check for auth tokens
         $client_id = $oauth->check_auth();
         if ($client_id == 'INVALID_TOKEN') {
-            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', [$langpack->get_string('api/commonapi', 'invalidtoken')]);
             $api->log_response($apiid, $response_xml);
         } else {
             //Check Permissions
@@ -262,10 +262,10 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
 
             // Check media type - only text/xml supported currently.
             if (!$api->get_mediatype()) {
-                $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
+                $response_xml = $render->render_xml('api/error.xml', 'rogo', [$langpack->get_string('api/commonapi', 'mediatype')]);
                 $api->log_response($apiid, $response_xml);
             } else {
-                $responsedata = array();
+                $responsedata = [];
                 $classname = '\\api\\' . $requesttype;
                 $requestobject = new $classname($mysqli, $client_id);
 

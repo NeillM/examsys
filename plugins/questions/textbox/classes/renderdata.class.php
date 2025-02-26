@@ -102,7 +102,7 @@ class renderdata extends \questiondata
     {
         parent::__construct();
         $this->questiontype = 'textbox';
-        $this->textboxesseen = array();
+        $this->textboxesseen = [];
         $this->editormathjax = false;
         $this->editor  = '';
     }

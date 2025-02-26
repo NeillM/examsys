@@ -80,9 +80,9 @@ if ($questions) {
 // Retire the paper itself
 $assessment = new assessment($mysqli, $configObject);
 $now = time();
-$update_params = array(
-    'retired' => array('i', $now)
-);
+$update_params = [
+    'retired' => ['i', $now]
+];
 if (!$assessment->db_update_assessment($paperID, $update_params)) {
     echo json_encode('ERROR');
     exit();

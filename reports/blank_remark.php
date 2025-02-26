@@ -51,7 +51,7 @@ if ($studentsonly) {
     $rolesjoin = '';
 }
 
-$log_answers = array();
+$log_answers = [];
 $time_int = \log::getStartInterval($paper_type);
 if ($paper_type == \assessment::TYPE_FORMATIVE) {
     $progress_time_int = \log::getStartInterval(\assessment::TYPE_PROGRESS);
@@ -110,7 +110,7 @@ for (
 }
 
 // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
-$new_blanks = array();
+$new_blanks = [];
 foreach ($blanks as $blank) {
     $new_blanks[] = mb_strtolower(trim($blank));
 }
@@ -218,7 +218,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src='../js/blankremarkinit.min.js'></script>
 </body>

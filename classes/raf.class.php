@@ -30,8 +30,8 @@ class RAF
     private $properties;
     private $configObj;
     private $userID;
-    private $media = array();
-    private $data = array();
+    private $media = [];
+    private $data = [];
     private $zip_filename;
     private $json_filename;
     private $logger;
@@ -98,7 +98,7 @@ class RAF
         $this->data['metadata']['rogo_version'] = $this->configObj->get_setting('core', 'rogo_version');
         $this->data['metadata']['export_date']  = date($this->configObj->get('cfg_long_datetime_php'));
         $this->data['metadata']['company']          = $this->configObj->get_setting('core', 'misc_company');
-        $this->data['items'] = array();
+        $this->data['items'] = [];
 
         $item_no = 0;
 
@@ -136,7 +136,7 @@ class RAF
 
         $status = $this->status_array[$status]->get_name();
 
-        return array('screen' => $question['screen'], 'q_id' => $question['q_id'], 'q_type' => $q_type, 'theme' => $theme, 'scenario' => $scenario, 'leadin' => $leadin, 'correct_fback' => $correct_fback, 'incorrect_fback' => $incorrect_fback, 'display_method' => $display_method, 'notes' => $notes, 'ownerID' => $ownerID, 'creation_date' => $creation_date, 'last_edited' => $last_edited, 'bloom' => $bloom, 'scenario_plain' => $scenario_plain, 'leadin_plain' => $leadin_plain, 'std' => $std, 'status' => $status, 'q_option_order' => $q_option_order, 'score_method' => $score_method, 'settings' => $settings, 'guid' => $guid, 'owner' => array('title' => $title, 'first_names' => $first_names, 'surname' => $surname));
+        return ['screen' => $question['screen'], 'q_id' => $question['q_id'], 'q_type' => $q_type, 'theme' => $theme, 'scenario' => $scenario, 'leadin' => $leadin, 'correct_fback' => $correct_fback, 'incorrect_fback' => $incorrect_fback, 'display_method' => $display_method, 'notes' => $notes, 'ownerID' => $ownerID, 'creation_date' => $creation_date, 'last_edited' => $last_edited, 'bloom' => $bloom, 'scenario_plain' => $scenario_plain, 'leadin_plain' => $leadin_plain, 'std' => $std, 'status' => $status, 'q_option_order' => $q_option_order, 'score_method' => $score_method, 'settings' => $settings, 'guid' => $guid, 'owner' => ['title' => $title, 'first_names' => $first_names, 'surname' => $surname]];
     }
 
     /**
@@ -147,17 +147,17 @@ class RAF
     private function getMedia(int $question): array
     {
         $mediaobj = QuestionUtils::getMedia($question);
-        $m = array();
+        $m = [];
         foreach ($mediaobj as $media) {
             $this->checkMedia($media->source);
-            $m[] = array(
+            $m[] = [
                 'source' => $media->source,
                 'width' => (int) $media->width,
                 'height' => (int) $media->height,
                 'alt' => $media->alt,
                 'ownerid' => (int) $media->owner,
                 'num' => (int) $media->num
-            );
+            ];
         }
         return $m;
     }
@@ -168,7 +168,7 @@ class RAF
      */
     private function get_options($o_id)
     {
-        $options = array();
+        $options = [];
 
         $result = $this->db->prepare('SELECT option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial, id_num FROM options WHERE o_id = ? ORDER BY id_num');
         $result->bind_param('i', $o_id);
@@ -176,7 +176,7 @@ class RAF
         $result->store_result();
         $result->bind_result($option_text, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial, $id_num);
         while ($result->fetch()) {
-            $options[] = array('option_text' => $option_text, 'feedback_right' => $feedback_right, 'feedback_wrong' => $feedback_wrong, 'correct' => $correct, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial, 'optionmetadata' => OptionsMetadata::getArray($id_num));
+            $options[] = ['option_text' => $option_text, 'feedback_right' => $feedback_right, 'feedback_wrong' => $feedback_wrong, 'correct' => $correct, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial, 'optionmetadata' => OptionsMetadata::getArray($id_num)];
         }
         $result->free_result();
         $result->close();
@@ -191,18 +191,18 @@ class RAF
      */
     private function getOptionMedia(int $oid): array
     {
-        $m = array();
+        $m = [];
         foreach ($this->getIDNums($oid) as $idnum) {
             $media = QuestionUtils::getOptionMedia($idnum);
             if ($media !== false) {
                 $this->checkMedia($media->source);
-                $m[] = array(
+                $m[] = [
                     'source' => $media->source,
                     'width' => $media->width,
                     'height' => $media->height,
                     'alt' => $media->alt,
                     'ownerid' => $media->owner,
-                );
+                ];
             }
         }
         return $m;
@@ -215,7 +215,7 @@ class RAF
      */
     private function getIDNums(int $o_id): array
     {
-        $idnums = array();
+        $idnums = [];
         $result = $this->db->prepare('SELECT id_num FROM options WHERE o_id = ? ORDER BY id_num ASC');
         $result->bind_param('i', $o_id);
         $result->execute();
@@ -238,7 +238,7 @@ class RAF
         $metadata = QuestionsMetadata::getArray($q_id);
         $metadataRAF = [];
         foreach ($metadata as $type => $value) {
-            $metadataRAF[] = array('type' => $type, 'questionID' => $q_id, 'value' => $value);
+            $metadataRAF[] = ['type' => $type, 'questionID' => $q_id, 'value' => $value];
         }
         return $metadataRAF;
     }
@@ -249,7 +249,7 @@ class RAF
      */
     private function get_keywords($q_id)
     {
-        $keywords = array();
+        $keywords = [];
 
         $result = $this->db->prepare('SELECT id, keyword FROM keywords_question, keywords_user WHERE keywords_question.keywordID = keywords_user.id AND q_id = ?');
         $result->bind_param('i', $q_id);
@@ -292,7 +292,7 @@ class RAF
                 $second_split = explode('src="', $image_line);
                 $third_split = explode('"', $second_split[1]);
                 $image_src = $third_split[0];
-                $matches = array();
+                $matches = [];
                 preg_match($regexp, $image_src, $matches);
                 if (!empty($matches[1])) {
                     $image_src = $matches[1];
@@ -591,7 +591,7 @@ class RAF
         if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
             $keywordIDs = $keywords;
         } else {
-            $keywordIDs = array();
+            $keywordIDs = [];
             foreach ($keywords as $keyword) {
                 if (isset($this->keywords_lookup[$keyword])) {
                     $tmp_ID = $this->keywords_lookup[$keyword];

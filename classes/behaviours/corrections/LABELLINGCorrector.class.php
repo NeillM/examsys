@@ -36,7 +36,7 @@ class LABELLINGCorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
 
         if ($changes) {
             $correct = $this->_question->get_points1();
@@ -52,7 +52,7 @@ class LABELLINGCorrector extends Corrector
                     $label_details = $option->get_correct();
 
                     // Calculate how many correct labels - are they on the canvas (x > 219px)
-                    $correct_labels = array();
+                    $correct_labels = [];
                     $tmp_first_split = explode(';', $label_details);
                     $tmp_second_split = explode('|', $tmp_first_split[11]);
                     $label_count = 0;

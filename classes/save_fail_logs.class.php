@@ -34,7 +34,7 @@ class save_fail_logs
     {
         $configObject = Config::get_instance();
         $this->db = $configObject->db;
-        $this->logs = array();
+        $this->logs = [];
     }
 
     /**
@@ -54,13 +54,13 @@ class save_fail_logs
      */
     public function get_save_fail_logs()
     {
-        $this->logs = array();
+        $this->logs = [];
         $result = $this->db->prepare("SELECT save_fail_log.id, surname, title, initials, userID, paperID, screen, ipaddress, FROM_UNIXTIME(failed, '%d/%m/%Y %H:%i:%s'), paper_title, status, request_url, response_data FROM save_fail_log, users, properties WHERE save_fail_log.userID = users.id AND save_fail_log.paperID = properties.property_id ORDER BY failed");
         $result->execute();
         $result->store_result();
         $result->bind_result($id, $surname, $title, $initials, $userID, $paperID, $screen, $ipaddress, $failed, $paper_title, $status, $request, $response);
         while ($result->fetch()) {
-            $this->logs[] = array('id' => $id,
+            $this->logs[] = ['id' => $id,
             'surname' => $surname,
             'title' => $title,
             'initials' => $initials,
@@ -72,7 +72,7 @@ class save_fail_logs
             'failed' => $failed,
             'status' => $status,
             'request' => $request,
-            'response' => $response);
+            'response' => $response];
         }
         $result->close();
         return $this->logs;

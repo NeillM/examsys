@@ -183,8 +183,8 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 
 <?php
 // Get computer lab information.
-$lab_names = array();
-$lab_details = array($string['default'] => array('-1' => $string['alllabs']));
+$lab_names = [];
+$lab_details = [$string['default'] => ['-1' => $string['alllabs']]];
 $stmt = $mysqli->prepare("SELECT labs.id, building, room_no, campus.name FROM labs, campus
 WHERE labs.campus = campus.id AND room_no != '' ORDER BY campus, building, room_no");
 $stmt->execute();
@@ -195,7 +195,7 @@ while ($stmt->fetch()) {
 }
 $stmt->close();
 // Get faculty and school info
-$schools = array($string['default'] => array('-1' => $string['allschools']));
+$schools = [$string['default'] => ['-1' => $string['allschools']]];
 $stmt = $mysqli->prepare('SELECT schools.id, faculty.code, faculty.name, schools.code, school FROM schools, faculty WHERE faculty.id = schools.facultyID AND faculty.deleted IS NULL and schools.deleted IS NULL ORDER BY faculty.name, school');
 $stmt->execute();
 $stmt->bind_result($id, $faculty_code, $faculty, $school_code, $school);
@@ -262,7 +262,7 @@ $stmt->close();
         <div style="text-align:right; vertical-align:bottom">
         <?php
             $data = $yearutils->generateTabs($current_year, 'calendar', $extra);
-            $render->render($data, array(), 'admin/yeartabs.html');
+            $render->render($data, [], 'admin/yeartabs.html');
         ?>
         </div>
       </th>
@@ -289,7 +289,7 @@ $stmt->close();
     $current_month = 1;
 
     // Get lab information.
-    $lab_list = array();
+    $lab_list = [];
     $stmt = $mysqli->prepare('SELECT id, room_no, name FROM labs');
     $stmt->execute();
     $stmt->bind_result($lab_id, $room_no, $name);
@@ -337,8 +337,8 @@ $stmt->close();
     }
 
     $max_property_id = 0;
-    $paper_details = array();
-    $paper_ids = array();
+    $paper_details = [];
+    $paper_ids = [];
     $property_id = 0;
     $startdatetime = strtotime($current_year . '0101000000');
     $enddatetime = strtotime($current_year . '1231235959');
@@ -466,7 +466,7 @@ $stmt->close();
         $result->execute();
         $result->bind_result($property_id, $metadata_name, $metadata_value);
         while ($result->fetch()) {
-            $paper_details[$property_id]['metadata'][] = array('name' => $metadata_name, 'value' => $metadata_value);
+            $paper_details[$property_id]['metadata'][] = ['name' => $metadata_name, 'value' => $metadata_value];
         }
         $result->close();
     }
@@ -609,11 +609,11 @@ $stmt->close();
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['lab_names'] = json_encode($lab_names);
 $miscdataset['attributes']['timezone'] = $default_timezone;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/calendarinit.min.js"></script>
 </body>

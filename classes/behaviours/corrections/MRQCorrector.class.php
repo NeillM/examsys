@@ -37,7 +37,7 @@ class MRQCorrector extends Corrector
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $new_correct_val = $new_correct['option_correct'];
-        $errors = array();
+        $errors = [];
 
         $old_correct_list = '';
         $i = 0;

@@ -39,11 +39,11 @@ class AuditTest extends \testing\unittest\unittestdatabase
 
         $datagenerator = $this->get_datagenerator('audit', 'core');
         $this->audit = $datagenerator->create(
-            array(
+            [
                 'userID' => $this->student['id'],
                 'action' => Audit::ADDROLE,
                 'details' => 'Student',
-            )
+            ]
         );
     }
 
@@ -54,14 +54,14 @@ class AuditTest extends \testing\unittest\unittestdatabase
     {
         Audit::setRetentionPeriod(45);
         // Check tables are correct.
-        $queryTable = $this->query(array('table' => 'retention', 'where' => array(array('column' => '`table`', 'value' => 'audit_log'))));
-        $expectedTable = array(
-            0 => array (
+        $queryTable = $this->query(['table' => 'retention', 'where' => [['column' => '`table`', 'value' => 'audit_log']]]);
+        $expectedTable = [
+            0 =>  [
                 'table' => 'audit_log',
                 'days' => 45,
                 'lastrun' => null
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -83,27 +83,27 @@ class AuditTest extends \testing\unittest\unittestdatabase
         Audit::insertEvent(Audit::REMOVEROLE, $this->student['id'], $details);
         // Check tables are correct.
         $queryTable = $this->query(
-            array(
+            [
                 'table' => 'audit_log',
-                'columns' => array('userID', 'action', 'details', 'sourceID', 'source')
-            )
+                'columns' => ['userID', 'action', 'details', 'sourceID', 'source']
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 =>  [
                 'userID' => $this->audit['userID'],
                 'action' => $this->audit['action'],
                 'details' => $this->audit['details'],
                 'sourceID' => $this->audit['sourceID'],
                 'source' => $this->audit['source'],
-            ),
-            1 => array (
+            ],
+            1 =>  [
                 'userID' => $this->student['id'],
                 'action' => Audit::REMOVEROLE,
                 'details' => $details,
                 'sourceID' => $this->admin['id'],
                 'source' => 'vendor/bin/phpunit',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -119,34 +119,34 @@ class AuditTest extends \testing\unittest\unittestdatabase
         $actual = Audit::getEvents($starttime, $limit, $page);
         $langpack = new langpack();
         $user = $langpack->get_string('classes/audit', 'system');
-        $expected = array (
+        $expected =  [
             'to' => '1',
             'from' => '1',
             'total' => '1',
             'pages' => 1.0,
-            'items' => array(
-                array(
-                    'object' => array(
-                        array(
+            'items' => [
+                [
+                    'object' => [
+                        [
                             'url' => $webroot . '/users/details.php?userID=' . $this->audit['userID'],
                             'label' => 'Student',
-                        ),
-                    ),
+                        ],
+                    ],
                     'objecttype' => 'Role',
                     'time' => $this->audit['time'],
                     'user' => $user,
-                    'affecteduser' => array(
+                    'affecteduser' => [
                         'url' => $webroot . '/users/details.php?userID=' . $this->audit['userID'],
                         'label' => UserUtils::get_username($this->student['id'], Config::get_instance()->db),
-                    ),
-                    'source' => array(
+                    ],
+                    'source' => [
                         'url' => '',
                         'label' => $this->audit['source'],
-                    ),
+                    ],
                     'eventtype' => 'Add User Role',
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
         $this->assertEquals($expected, $actual);
     }
 }

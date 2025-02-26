@@ -40,17 +40,17 @@ set_time_limit(0);
 $old_version = $configObject->get_setting('core', 'rogo_version');
 $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
 $render = new render($configObject);
-$headerdata = array(
-  'css' => array(
+$headerdata = [
+  'css' => [
     '/css/rogo_logo.css',
     '/css/header.css',
     '/css/updater.css',
-  ),
-  'scripts' => array(
+  ],
+  'scripts' => [
     '/js/require.js',
     '/js/main.min.js',
-  ),
-);
+  ],
+];
 $footerscripts = [
   '/js/updateinit.min.js',
 ];
@@ -58,7 +58,7 @@ $lang['title'] = sprintf($string['updtitle'], $old_version, $version);
 $render->render($headerdata, $lang, 'header.html');
 $lang['logo_small_txt'] = sprintf($string['logo_small_txt'], $old_version, $version);
 $lang['icon'] = $string['icon'];
-$data = array();
+$data = [];
 $data['updating'] = false;
 $data['configwarning'] = false;
 $data['dberror'] = false;

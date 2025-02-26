@@ -39,7 +39,7 @@ class facultyutilstest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('faculty', 'core');
-        $this->faculty2 = $datagenerator->create_faculty(array('externalid' => 'abcdef', 'externalsys' => 'external', 'code' => 'TEST'));
+        $this->faculty2 = $datagenerator->create_faculty(['externalid' => 'abcdef', 'externalsys' => 'external', 'code' => 'TEST']);
         \facultyutils::delete_faculty($this->faculty2['id'], $this->db);
     }
 
@@ -68,7 +68,7 @@ class facultyutilstest extends unittestdatabase
      */
     public function test_diff_external_faculties_to_internal_faculties()
     {
-        $external = array('abcdefghi', 'jklmnopq');
-        $this->assertEquals(array($this->faculty2['externalid']), FacultyUtils::diff_external_faculties_to_internal_faculties($external, 'external', $this->db));
+        $external = ['abcdefghi', 'jklmnopq'];
+        $this->assertEquals([$this->faculty2['externalid']], FacultyUtils::diff_external_faculties_to_internal_faculties($external, 'external', $this->db));
     }
 }

@@ -158,7 +158,7 @@ $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['id'] = $paperID;
 $miscdataset['attributes']['module'] = $module;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src='../js/importinit.min.js'></script>
 </body>

@@ -44,10 +44,10 @@ trait basic
         $count = 1;
         foreach ($coordinates as $coord) {
             $this->getSession()->getDriver()->getWebDriverSession()->moveto(
-                array(
+                [
                     'xoffset' => (int) $coord['x'],
                     'yoffset' => (int) $coord['y']
-                )
+                ]
             );
             if ($count < $last) {
                 $this->getSession()->getDriver()->getWebDriverSession()->click();
@@ -67,10 +67,10 @@ trait basic
     {
         $this->getSession()->getDriver()->getWebDriverSession()->buttondown();
         $this->getSession()->getDriver()->getWebDriverSession()->moveto(
-            array(
+            [
                 'xoffset' => $x,
                 'yoffset' => $y
-            )
+            ]
         );
         $this->getSession()->getDriver()->getWebDriverSession()->buttonup();
     }
@@ -578,10 +578,10 @@ JS;
         // Positions of everthing below is related to the shape button clicked.
         // Start position.
         $this->getSession()->getDriver()->getWebDriverSession()->moveto(
-            array(
+            [
                 'xoffset' => (int) $coordinates[0]['x'],
                 'yoffset' => (int) $coordinates[0]['y']
-            )
+            ]
         );
         $this->getSession()->getDriver()->getWebDriverSession()->click();
         // Other coords.
@@ -617,10 +617,10 @@ JS;
             // The click is requried so moveto knows where to start from.
             // Click on a label textarea in the topleft.
             $this->getSession()->getDriver()->getWebDriverSession()->moveto(
-                array(
+                [
                     'xoffset' => $xlabel,
                     'yoffset' => $ylabel
-                )
+                ]
             );
             $this->getSession()->getDriver()->getWebDriverSession()->click();
             // Add Text.

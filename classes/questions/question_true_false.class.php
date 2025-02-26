@@ -30,15 +30,15 @@ class QuestionTRUE_FALSE extends QuestionEdit
     protected $_answer_positive = 't';
     protected $_answer_negative = 'f';
     protected $display_method = 'horizontal';
-    protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect');
+    protected $_fields_change = ['option_correct', 'option_marks_correct', 'option_marks_incorrect'];
     protected $_allow_change_marking_method = false;
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-        $this->_display_methods = array('vertical' => $this->_lang_strings['vertical'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']);
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
+        $this->_display_methods = ['vertical' => $this->_lang_strings['vertical'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']];
 
         // 'correct' is not a unified field for True/False questions
         $this->_fields_editable[] = 'correct';
@@ -50,9 +50,9 @@ class QuestionTRUE_FALSE extends QuestionEdit
     public function get_tf_labels()
     {
         if (mb_substr($this->get_display_method(), 0, 2) == 'YN') {
-            $labels = array('true' => mb_substr($this->_lang_strings['yes'], 0, 1), 'false' => mb_substr($this->_lang_strings['no'], 0, 1));
+            $labels = ['true' => mb_substr($this->_lang_strings['yes'], 0, 1), 'false' => mb_substr($this->_lang_strings['no'], 0, 1)];
         } else {
-            $labels = array('true' => mb_substr($this->_lang_strings['true'], 0, 1), 'false' => mb_substr($this->_lang_strings['false'], 0, 1));
+            $labels = ['true' => mb_substr($this->_lang_strings['true'], 0, 1), 'false' => mb_substr($this->_lang_strings['false'], 0, 1)];
         }
 
         return $labels;

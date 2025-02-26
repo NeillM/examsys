@@ -80,7 +80,7 @@ class langpack
     {
         $filename = $this->get_filename($component);
         include $filename;
-        $strings = array();
+        $strings = [];
         foreach ($names as $name) {
             $strings[$name] = $string[$name];
         }
@@ -94,7 +94,7 @@ class langpack
      */
     public function get_all_strings($component)
     {
-        $string = array();
+        $string = [];
         $filename = $this->get_filename($component);
         include $filename;
         return $string;

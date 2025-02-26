@@ -29,5 +29,5 @@ class QuestionFLASH extends QuestionEdit
     public $max_options = 1;
     protected $_allow_correction = false;
 
-    protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
+    protected $_fields_required = ['type', 'leadin', 'option_order', 'owner_id', 'status'];
 }

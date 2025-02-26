@@ -34,7 +34,7 @@ $get_repcourse = param::optional('repcourse', '%', param::TEXT, param::FETCH_GET
 $complete = param::optional('completerpt', null, param::INT, param::FETCH_GET);
 $studentsonly = param::optional('studentsonly', 1, param::BOOLEAN);
 
-$bind_types = array();
+$bind_types = [];
 $queryParams[] = $paper_id;
 $bind_types[] = 'i';
 if (!empty($get_repyear)) {
@@ -57,7 +57,7 @@ $queryParams[] = $enddate;
 $bind_types[] = 'i';
 
 // Capture the paper makeup.
-$paper_buffer = array();
+$paper_buffer = [];
 $question_no = 0;
 
 $result = $mysqli->prepare("SELECT paper_title, q_id, q_type, paper_type FROM (papers, questions, properties) WHERE papers.paper=properties.property_id AND papers.question=questions.q_id AND papers.paper=? AND q_type!='info' ORDER BY screen, display_pos");
@@ -76,7 +76,7 @@ header('Pragma: public');
 header('Content-type: text/xml');
 header('Content-Disposition: attachment; filename="' . \file_handler::make_filename_safe($paper) . '.xml"');
 
-$log_array = array();
+$log_array = [];
 $hits = 0;
 $exclude = '';
 $time_int = \log::getStartInterval(\assessment::TYPE_SURVEY);
@@ -133,12 +133,12 @@ SQL;
 
 $bind_types_str = implode('', $bind_types);
 $result = $mysqli->prepare($sql);
-$bind_arr = array_merge(array($bind_types_str), $queryParams);
-$bind_values_ref = array();
+$bind_arr = array_merge([$bind_types_str], $queryParams);
+$bind_values_ref = [];
 foreach ($bind_arr as $key => $value) {
     $bind_values_ref[$key] = &$bind_arr[$key];
 }
-call_user_func_array(array($result, 'bind_param'), $bind_values_ref);
+call_user_func_array([$result, 'bind_param'], $bind_values_ref);
 
 $result->execute();
 $result->bind_result($question_ID, $grade, $started, $year, $surname, $initials, $title, $user_answer, $user_ID);

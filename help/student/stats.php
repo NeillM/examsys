@@ -107,7 +107,7 @@ for ($i = 1; $i < 32; $i++) {
     echo "</select>\n";
     // start Month
     echo "\n<select name=\"startmonth\">\n";
-    $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+    $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 for ($i = 0; $i < 12; $i++) {
     if (($split_month - 1) == $i) {
         if ($i < 9) {
@@ -256,7 +256,7 @@ for ($i = 2005; $i < (date('Y') + 2); $i++) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 
 $mysqli->close();
 ?>

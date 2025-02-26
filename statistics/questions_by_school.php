@@ -63,14 +63,14 @@ require '../include/errors.php';
 <tr>
 <th><?php echo $string['school'] ?></th>
 <?php
-    $types = array('area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
+    $types = ['area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false'];
 foreach ($types as $type) {
     echo '<th class="qtype">' . $string[$type] . '</th>';
 }
 ?>
 </tr>
 <?php
-$master_array = array();
+$master_array = [];
 
 // Get a list of all schools in ExamSys.
 $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
@@ -79,7 +79,7 @@ $result->bind_result($id, $code, $school, $faculty_code, $faculty);
 while ($result->fetch()) {
     $master_array[$id]['name'] = $code . ' ' . $school;
     $master_array[$id]['faculty'] = $faculty_code . ' ' . $faculty;
-    $master_array[$id]['types'] = array('blank' => 0, 'dichotomous' => 0, 'flash' => 0, 'hotspot' => 0, 'labelling' => 0, 'likert' => 0, 'matrix' => 0, 'mcq' => 0, 'mrq' => 0, 'rank' => 0, 'textbox' => 0, 'info' => 0, 'extmatch' => 0, 'random' => 0, 'sct' => 0, 'keyword_based' => 0, 'true_false' => 0, 'area' => 0, 'enhancedcalc' => 0);
+    $master_array[$id]['types'] = ['blank' => 0, 'dichotomous' => 0, 'flash' => 0, 'hotspot' => 0, 'labelling' => 0, 'likert' => 0, 'matrix' => 0, 'mcq' => 0, 'mrq' => 0, 'rank' => 0, 'textbox' => 0, 'info' => 0, 'extmatch' => 0, 'random' => 0, 'sct' => 0, 'keyword_based' => 0, 'true_false' => 0, 'area' => 0, 'enhancedcalc' => 0];
 }
 $result->close();
 

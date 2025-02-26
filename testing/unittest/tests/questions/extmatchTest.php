@@ -34,9 +34,9 @@ class extmatchtest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2018, 'academic_year' => '2018/19'));
+        $datagenerator->create_academic_year(['calendar_year' => 2018, 'academic_year' => '2018/19']);
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $paper = $datagenerator->create_paper(array('papertitle' => 'test formative',
+        $paper = $datagenerator->create_paper(['papertitle' => 'test formative',
             'startdate' => '2018-02-19 00:00:00',
             'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
@@ -45,9 +45,9 @@ class extmatchtest extends unittestdatabase
             'paperowner' => 'admin',
             'labs' => '1',
             'papertype' => '0',
-            'modulename' => 'Training Module'));
-        $datagenerator->set_post_creation_settings($paper['id'], array(
-            'paper_prologue' => 'paper test prologue'));
+            'modulename' => 'Training Module']);
+        $datagenerator->set_post_creation_settings($paper['id'], [
+            'paper_prologue' => 'paper test prologue']);
     }
 
     /**
@@ -74,16 +74,16 @@ class extmatchtest extends unittestdatabase
     {
         $data = questiondata::get_datastore('extmatch');
         $data->scenario = "<div>It is now known as;</div>|<div>It's football team is called</div>|<div>It's most famous landmark is the</div>|||||||";
-        $scenarios = array('<div>It is now known as;</div>',
+        $scenarios = ['<div>It is now known as;</div>',
             "<div>It's football team is called</div>",
-            "<div>It's most famous landmark is the</div>", '', '', '', '', '', '', '');
+            "<div>It's most famous landmark is the</div>", '', '', '', '', '', '', ''];
         $useranswer = '1|3|2';
         $data->set_question(1, $useranswer, '');
         $this->assertEquals($scenarios, $data->scenarios);
-        $this->assertEquals(array('1', '3', '2'), $data->usersanswers);
+        $this->assertEquals(['1', '3', '2'], $data->usersanswers);
         $useranswer = null;
         $data->set_question(0, $useranswer, '');
-        $this->assertEquals(array(), $data->usersanswers);
+        $this->assertEquals([], $data->usersanswers);
     }
 
     /**
@@ -93,15 +93,15 @@ class extmatchtest extends unittestdatabase
     public function test_set_option_answer()
     {
         $data = questiondata::get_datastore('extmatch');
-        $data->matchoptions = array('Paris');
-        $data->set_opt(1, array('optiontext' => 'Paris'));
-        $data->set_opt(2, array('optiontext' => 'Eifel Tower'));
-        $data->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.'));
-        $data->set_opt(4, array('optiontext' => 'Derby'));
-        $data->set_opt(5, array('optiontext' => 'Intu Centre'));
-        $data->set_opt(6, array('optiontext' => 'Derby County F.C.'));
+        $data->matchoptions = ['Paris'];
+        $data->set_opt(1, ['optiontext' => 'Paris']);
+        $data->set_opt(2, ['optiontext' => 'Eifel Tower']);
+        $data->set_opt(3, ['optiontext' => 'Paris Saint-Germain F.C.']);
+        $data->set_opt(4, ['optiontext' => 'Derby']);
+        $data->set_opt(5, ['optiontext' => 'Intu Centre']);
+        $data->set_opt(6, ['optiontext' => 'Derby County F.C.']);
         $data->set_option_answer(2, '1|3|2', '', 1);
-        $this->assertEquals(array('Paris', 'Eifel Tower'), $data->matchoptions);
+        $this->assertEquals(['Paris', 'Eifel Tower'], $data->matchoptions);
     }
 
     /**
@@ -111,30 +111,30 @@ class extmatchtest extends unittestdatabase
     public function test_process_options()
     {
         $data = questiondata::get_datastore('extmatch');
-        $data->set_opt(1, array('optiontext' => 'Paris', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-        $data->set_opt(2, array('optiontext' => 'Eifel Tower', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-        $data->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-        $data->set_opt(4, array('optiontext' => 'Derby', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-        $data->set_opt(5, array('optiontext' => 'Intu Centre', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-        $data->set_opt(6, array('optiontext' => 'Derby County F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-        $data->matchoptions = array('Paris', 'Eifel Tower', 'Paris Saint-Germain F.C.', 'Derby', 'Intu Centre', 'Derby County F.C.');
+        $data->set_opt(1, ['optiontext' => 'Paris', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1]);
+        $data->set_opt(2, ['optiontext' => 'Eifel Tower', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1]);
+        $data->set_opt(3, ['optiontext' => 'Paris Saint-Germain F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1]);
+        $data->set_opt(4, ['optiontext' => 'Derby', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1]);
+        $data->set_opt(5, ['optiontext' => 'Intu Centre', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1]);
+        $data->set_opt(6, ['optiontext' => 'Derby County F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1]);
+        $data->matchoptions = ['Paris', 'Eifel Tower', 'Paris Saint-Germain F.C.', 'Derby', 'Intu Centre', 'Derby County F.C.'];
         $data->optionorder = '0,1,2,3,4,5';
-        $data->scenarios = array('<div>It is now known as;</div>',
+        $data->scenarios = ['<div>It is now known as;</div>',
             "<div>It's football team is called</div>",
-            "<div>It's most famous landmark is the</div>", '', '', '', '', '', '', '');
+            "<div>It's most famous landmark is the</div>", '', '', '', '', '', '', ''];
         $data->qmedia = '1516973089.jpg|1516973089.png|1516975621.jpg||||||||';
         $data->qmediawidth = '1480|480|951||||||||';
         $data->qmediaheight = '776|105|121||||||||';
         $data->qmediaalt = 'image1|image2|image3||||||||';
         $data->qmedianum = '0|1|2||||||||';
-        $data->usersanswers = array('1', '3', '2');
+        $data->usersanswers = ['1', '3', '2'];
         $data->marks = 0;
         $cfg_root_path = $this->config->get('cfg_root_path');
-        $matchstem = array(
-            array('answerno' => 2,
+        $matchstem = [
+            ['answerno' => 2,
                 'scenario' => '<div>It is now known as;</div>',
                 'display' => true,
-                'media' => array('mediaid' => -1,
+                'media' => ['mediaid' => -1,
                     'mediafile' => '1516973089.png',
                     'mediawidth' => 480,
                     'mediaheight' => 105,
@@ -147,48 +147,48 @@ class extmatchtest extends unittestdatabase
                     'mediabordercolour' => '',
                     'mediaext' => 'png',
                     'mediadelay' => false,
-                    'mediaextra' => array()),
+                    'mediaextra' => []],
                 'unanswered' => false,
                 'listsize' => 6,
                 'subanswers' => 2,
                 'matchingoptions' => 6,
-                'matchingoption' => array(
-                    array(
+                'matchingoption' => [
+                    [
                         'selected' => true,
                         'value' => 1,
                         'option' => 'A. Paris'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 2,
                         'option' => 'B. Eifel Tower'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 3,
                         'option' => 'C. Paris Saint-Germain F.C.'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 4,
                         'option' => 'D. Derby'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 5,
                         'option' => 'E. Intu Centre'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 6,
                         'option' => 'F. Derby County F.C.'
-                    ),
-                )
-            ),
-            array('answerno' => 1,
+                    ],
+                ]
+            ],
+            ['answerno' => 1,
                 'scenario' => "<div>It's football team is called</div>",
                 'display' => true,
-                'media' => array('mediaid' => -1,
+                'media' => ['mediaid' => -1,
                     'mediafile' => '1516975621.jpg',
                     'mediawidth' => 951,
                     'mediaheight' => 121,
@@ -201,79 +201,79 @@ class extmatchtest extends unittestdatabase
                     'mediabordercolour' => '',
                     'mediaext' => 'jpg',
                     'mediadelay' => false,
-                    'mediaextra' => array()),
+                    'mediaextra' => []],
                 'unanswered' => false,
-                'matchingoption' => array(
-                    array(
+                'matchingoption' => [
+                    [
                         'selected' => false,
                         'value' => 1,
                         'option' => 'A. Paris'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 2,
                         'option' => 'B. Eifel Tower'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => true,
                         'value' => 3,
                         'option' => 'C. Paris Saint-Germain F.C.'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 4,
                         'option' => 'D. Derby'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 5,
                         'option' => 'E. Intu Centre'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 6,
                         'option' => 'F. Derby County F.C.'
-                    ),
-                )
-            ),
-            array('answerno' => 1,
+                    ],
+                ]
+            ],
+            ['answerno' => 1,
                 'scenario' => "<div>It's most famous landmark is the</div>",
                 'display' => false,
                 'unanswered' => false,
-                'matchingoption' => array(
-                    array(
+                'matchingoption' => [
+                    [
                         'selected' => false,
                         'value' => 1,
                         'option' => 'A. Paris'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => true,
                         'value' => 2,
                         'option' => 'B. Eifel Tower'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 3,
                         'option' => 'C. Paris Saint-Germain F.C.'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 4,
                         'option' => 'D. Derby'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 5,
                         'option' => 'E. Intu Centre'
-                    ),
-                    array(
+                    ],
+                    [
                         'selected' => false,
                         'value' => 6,
                         'option' => 'F. Derby County F.C.'
-                    ),
-                )
-            )
-        );
+                    ],
+                ]
+            ]
+        ];
         $data->process_options(6, '1|3|2', '', 1);
         $this->assertTrue($data->extmatchdisplaymedia);
         $this->assertEquals(2, $data->split);

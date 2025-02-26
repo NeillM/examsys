@@ -31,21 +31,21 @@ class Database
     public $table = '';
     public $table_alias = '';
 
-    public $fields = array(); // only for SELECT
-    public $leftjoins = array(); // only for SELECT
-    public $innerjoins = array(); // only for SELECT
-    public $wheres = array(); // only for SELECT/UPDATE
-    public $orders = array(); // only for SELECT
-    public $values = array(); // only for INSERT/REPLACE
-    public $groups = array(); // only for SELECT
-    public $set = array(); // only for UPDATE
+    public $fields = []; // only for SELECT
+    public $leftjoins = []; // only for SELECT
+    public $innerjoins = []; // only for SELECT
+    public $wheres = []; // only for SELECT/UPDATE
+    public $orders = []; // only for SELECT
+    public $values = []; // only for INSERT/REPLACE
+    public $groups = []; // only for SELECT
+    public $set = []; // only for UPDATE
     public $limit = 0;
     public $limitoffset = 0;
     public $rawquery = ''; // only for RAW
 
     public $query;
 
-    public $blankrows = array();
+    public $blankrows = [];
 
     public function DoError($error)
     {
@@ -62,14 +62,14 @@ class Database
         $this->table = $table;
         $this->table_alias = $alias;
 
-        $this->fields = array(); // only for SELECT
-        $this->leftjoins = array(); // only for SELECT
-        $this->innerjoins = array(); // only for SELECT
-        $this->wheres = array(); // only for SELECT/UPDATE
-        $this->orders = array(); // only for SELECT
-        $this->values = array(); // only for INSERT/REPLACE
-        $this->groups = array(); // only for SELECT
-        $this->set = array(); // only for UPDATE
+        $this->fields = []; // only for SELECT
+        $this->leftjoins = []; // only for SELECT
+        $this->innerjoins = []; // only for SELECT
+        $this->wheres = []; // only for SELECT/UPDATE
+        $this->orders = []; // only for SELECT
+        $this->values = []; // only for INSERT/REPLACE
+        $this->groups = []; // only for SELECT
+        $this->set = []; // only for UPDATE
     }
 
     public function AddField($fieldname)
@@ -98,7 +98,7 @@ class Database
             return $this->DoError('You must have a table alias for the main table to do a LEFT JOIN');
         }
 
-        $join = array();
+        $join = [];
         $join['table'] = $table;
         $join['alias'] = $alias;
         $join['sk'] = $sourcekey;
@@ -118,7 +118,7 @@ class Database
             return $this->DoError('You must have a table alias for the main table to do an INNER JOIN');
         }
 
-        $join = array();
+        $join = [];
         $join['table'] = $table;
         $join['alias'] = $alias;
         $join['sk'] = $sourcekey;
@@ -134,7 +134,7 @@ class Database
             return $this->DoError('Can only add WHERE when in SELECT or UPDATE mode');
         }
 
-        $where = array();
+        $where = [];
         $where['field'] = $field;
         $where['value'] = $value;
         $where['type'] = $type;
@@ -150,7 +150,7 @@ class Database
             return $this->DoError('Can only add ORDER BY when in SELECT mode');
         }
 
-        $order = array();
+        $order = [];
         $order['field'] = $field;
         $order['dir'] = $asc;
 
@@ -164,7 +164,7 @@ class Database
             return $this->DoError('Can only add field to set when in INSERT or REPLACE mode');
         }
 
-        $valuea = array();
+        $valuea = [];
         $valuea['field'] = $field;
         $valuea['value'] = $value;
         $valuea['type'] = $type;
@@ -200,7 +200,7 @@ class Database
             return $this->DoError('Can only add SET when in UPDATE mode');
         }
 
-        $set = array();
+        $set = [];
 
         $set['field'] = $field;
         $set['value'] = $value;
@@ -257,7 +257,7 @@ class Database
         if (count($this->orders) > 0) {
             $qry .= ' ORDER BY ';
 
-            $orderbits = array();
+            $orderbits = [];
 
             foreach ($this->orders as $order) {
                 $orderbits[] = $order['field'] . ' ' . $order['dir'];
@@ -283,7 +283,7 @@ class Database
         if (count($this->wheres) > 0) {
             $qry .= ' WHERE ';
 
-            $wherelist = array();
+            $wherelist = [];
 
             foreach ($this->wheres as $where) {
                 if ($where['wheretype'] == '=') {
@@ -326,7 +326,7 @@ class Database
             return;
         }
 
-        $params = array();
+        $params = [];
         $params[0] = $stmt;
         $params[1] = '';
 
@@ -398,8 +398,8 @@ class Database
 
         $data = mysqli_stmt_result_metadata($stmt);
 
-        $fields = array();
-        $out = array();
+        $fields = [];
+        $out = [];
 
         $fields[0] = $stmt;
 
@@ -431,8 +431,8 @@ class Database
 
         $data = mysqli_stmt_result_metadata($stmt);
 
-        $fields = array();
-        $out = array();
+        $fields = [];
+        $out = [];
 
         $fields[0] = $stmt;
 
@@ -442,10 +442,10 @@ class Database
 
         call_user_func_array('mysqli_stmt_bind_result', $fields);
 
-        $results = array();
+        $results = [];
 
         while ($stmt->fetch()) {
-            $row = array();
+            $row = [];
             foreach ($out as $key => $value) {
                 $row[$key] = $value;
             }
@@ -457,7 +457,7 @@ class Database
 
     public function GetBlankTableRow($table)
     {
-        return array();
+        return [];
         if (array_key_exists($table, $this->blankrows)) {
             return $this->blankrows[$table];
         }
@@ -466,7 +466,7 @@ class Database
         $this->AddLimit(1);
         $q_row = $this->GetSingleRow();
 
-        $output = array();
+        $output = [];
         foreach ($q_row as $field => $value) {
             if (is_int($value) || $value == '0') {
                 $output[$field] = 0;
@@ -483,10 +483,10 @@ class Database
         global $mysqli;
 
         $query = "INSERT INTO $table (";
-        $fieldnames = array();
-        $qmarks = array();
+        $fieldnames = [];
+        $qmarks = [];
 
-        $params = array();
+        $params = [];
         $params[0] = '';
         $params[1] = '';
 

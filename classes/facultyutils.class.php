@@ -240,7 +240,7 @@ class FacultyUtils
         $result->fetch();
         $result->close();
 
-        return array('name' => $name, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
+        return ['name' => $name, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys];
     }
 
     /**
@@ -274,7 +274,7 @@ class FacultyUtils
         $result->execute();
         $result->store_result();
         $result->bind_result($id, $externalid, $deleted);
-        $diff = array();
+        $diff = [];
         while ($result->fetch()) {
             // Mark for delete if not found in external list.
             if (!in_array($externalid, $external)) {

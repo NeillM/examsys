@@ -29,7 +29,7 @@ class ClockAnomaly extends Anomaly
      */
     public function getData(): array
     {
-        return array('previous' => $this->data['previous'], 'current' => $this->data['current']);
+        return ['previous' => $this->data['previous'], 'current' => $this->data['current']];
     }
 
     /**

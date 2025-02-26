@@ -63,7 +63,7 @@ header('Content-Disposition: attachment; filename="new_' . \file_handler::make_f
 
 function get_correct_labels($question, $tmp_exclude)
 {
-    $correct_labels = array();
+    $correct_labels = [];
 
     $tmp_first_split = explode(';', $question['correct'][0]);
     $tmp_second_split = explode('$', $tmp_first_split[11]);
@@ -84,7 +84,7 @@ function get_correct_labels($question, $tmp_exclude)
 
     return $correct_labels;
 }
-$numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
+$numerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx'];
 
 $csv = '';
 

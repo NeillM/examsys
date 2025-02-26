@@ -36,7 +36,7 @@ class MCQCorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
 
         $first = reset($this->_question->options);
         $old_correct = $first->get_correct();

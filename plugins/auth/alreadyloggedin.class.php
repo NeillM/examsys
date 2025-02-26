@@ -36,12 +36,12 @@ class alreadyloggedin_auth extends outline_authentication
     public function register_callback_routines()
     {
         if (isset($this->settings['disabled']) and $this->settings['disabled'] === true) {
-            return array();
+            return [];
         }
 
-        $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'store_user'), 'sessionstore', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'update_time'), 'postauthsuccess', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'store_user'], 'sessionstore', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'update_time'], 'postauthsuccess', $this->number, $this->name];
         return $callbackarray;
     }
 
@@ -98,7 +98,7 @@ class alreadyloggedin_auth extends outline_authentication
 
         if (is_array(($callbacklist))) {
             foreach ($callbacklist as $number => $callback) {
-                call_user_func_array($callback, array(&$this->lookupuserobj));
+                call_user_func_array($callback, [&$this->lookupuserobj]);
                 $objid = key($callbackregisterdatalist[$number]);
                 $new_messages = $this->get_new_debug_messages($objid);
                 foreach ($new_messages as $key => $value) {

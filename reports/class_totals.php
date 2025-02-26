@@ -71,7 +71,7 @@ $user_no      = $report->get_user_no();
 
 // Check for unmarked calculation questions against the cohort subset selected by the user.
 $unmarked = $propertyObj->unmarked_enhancedcalc($studentsonly);
-$nonsummative_papertypes = array ('0', '1');
+$nonsummative_papertypes =  ['0', '1'];
 // If a summative exam (2) only mark if exam is not active. If Formative or Progressive (0,1) always mark.
 if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_array($paper_type, $nonsummative_papertypes) and $unmarked)) {
     ?>
@@ -127,7 +127,7 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     ?>
   <script src='../js/classtotalsinit.min.js'></script>
   </body>
@@ -251,7 +251,7 @@ if ($marking == '0') {
 }
 
 // Output table heading
-$table_order = array('', 'Title', $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
+$table_order = ['', 'Title', $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']];
 if ($configObject->get_setting('core', 'system_hostname_lookup')) {
     $table_order[] = $string['hostnames'];
 } else {
@@ -261,7 +261,7 @@ if ($paper_type == '2') {
     $table_order[] = $string['room'];
 }
 
-$metadata_cols = array();
+$metadata_cols = [];
 if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
         if (mb_strrpos($key, 'meta_') !== false) {
@@ -692,7 +692,7 @@ if ($user_no > 0) {
     echo '<td></td>';
 
     // Deciles
-    $suffix = array('', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th');
+    $suffix = ['', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th' ,'th'];
     echo "<td colspan=\"2\" style=\"width:33%; vertical-align:top\"><table border=\"0\" style=\"font-size:110%\">\n";
     for ($i = 1; $i < 10; $i++) {
         echo '<tr><td style="width:40px">' . $i;
@@ -865,7 +865,7 @@ if ($user_no > 0) {
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     echo "</body>\n</html>";
     exit;
 }
@@ -878,10 +878,10 @@ if ($user_no > 0) {
   $render = new render($configObject);
   $jsdataset['name'] = 'jsutils';
   $jsdataset['attributes']['xls'] = json_encode($string);
-  $render->render($jsdataset, array(), 'dataset.html');
+  $render->render($jsdataset, [], 'dataset.html');
   $dataset['name'] = 'dataset';
   $dataset['attributes']['remotesummative'] = $propertyObj->getSetting('remote_summative');
-  $render->render($dataset, array(), 'dataset.html');
+  $render->render($dataset, [], 'dataset.html');
   $mysqli->close();
 ?>
   <script src='../js/classtotalsinit.min.js'></script>

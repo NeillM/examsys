@@ -38,8 +38,8 @@ class QuestionTEXTBOX extends QuestionEdit
     protected $_allow_option_edit = true;
 
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'correct', 'bloom', 'status', 'staffnotes');
-    protected $_fields_settings = array('columns', 'rows', 'editor', 'terms');
+    protected $_fields_editable = ['theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'rows', 'columns', 'editor', 'terms', 'correct', 'bloom', 'status', 'staffnotes'];
+    protected $_fields_settings = ['columns', 'rows', 'editor', 'terms'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
@@ -48,7 +48,7 @@ class QuestionTEXTBOX extends QuestionEdit
         $this->editor = $configObject->get_setting('core', 'paper_textbox_editor_default');
 
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
     }
 
     // ACCESSORS

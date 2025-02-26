@@ -49,9 +49,9 @@ class objective extends generator
         if (empty($parameters['identifier'])) {
             throw new data_error('identifier must be provided');
         }
-        $defaults = array(
+        $defaults = [
             'objective' => 'test objective', 'calendar_year' => null, 'sequence' => 1, 'idMod' => $parameters['idMod'],
-            'identifier' => $parameters['identifier']);
+            'identifier' => $parameters['identifier']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         if (is_null($settings['calendar_year'])) {
             $yearutils = new yearutils($this->db);
@@ -93,9 +93,9 @@ class objective extends generator
             throw new data_error('idMod must be provided');
         }
         $identifier = mappingutils::get_sessions_start();
-        $defaults = array(
+        $defaults = [
             'title' => 'test', 'calendar_year' => null, 'occurrence' => null, 'source_url' => 'https://www.example.com',
-            'idMod' => $parameters['idMod'], 'identifier' => $identifier);
+            'idMod' => $parameters['idMod'], 'identifier' => $identifier];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         if (is_null($settings['calendar_year'])) {
             $yearutils = new yearutils($this->db);

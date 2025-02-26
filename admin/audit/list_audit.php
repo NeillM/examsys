@@ -36,7 +36,7 @@ $toprightmenu = draw_toprightmenu();
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/audit_list.css"/>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php');
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php'];
 $render->render_admin_header($string, $additionaljs, $addtionalcss);
 $render->render_admin_options('settings.php', 'admin_icon_16.gif', $string, $toprightmenu, 'admin/options_link.html');
 // Create pages.

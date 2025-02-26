@@ -103,9 +103,9 @@ QUERY;
                     } else {
                         // Invalidate the cache so it will get rebuilt with new mark
                         $assessment = new assessment($mysqli, $configObject);
-                        $update_params = array(
-                        'recache_marks' => array('i', 1)
-                        );
+                        $update_params = [
+                        'recache_marks' => ['i', 1]
+                        ];
                         $cache_result = $assessment->db_update_assessment($paper_id, $update_params);
                         if ($cache_result == false) {
                             $status = 'ERROR';

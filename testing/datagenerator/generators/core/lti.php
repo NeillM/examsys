@@ -44,8 +44,8 @@ class lti extends generator
         if (empty($parameters['name'])) {
             throw new data_error('name must be provided');
         }
-        $defaults = array(
-            'oauth_consumer_key' => 'test', 'secret' => 'testsecret', 'contextid' => null, 'deleted' => false);
+        $defaults = [
+            'oauth_consumer_key' => 'test', 'secret' => 'testsecret', 'contextid' => null, 'deleted' => false];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $now = date('Y-m-d H:i:s');
         if ($settings['deleted']) {

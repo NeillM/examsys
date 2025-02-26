@@ -53,7 +53,7 @@ $userID = check_var('userID', 'REQUEST', true, false, true);
   </table>
 
 <?php
-  $user_teams = array();
+  $user_teams = [];
   $user_modules = UserUtils::getStaffModules($userID);
 
   $old_school = '';
@@ -91,8 +91,8 @@ while ($result->fetch()) {
   $render = new render($configObject);
   $jsdataset['name'] = 'jsutils';
   $jsdataset['attributes']['xls'] = json_encode($string);
-  $render->render($jsdataset, array(), 'dataset.html');
+  $render->render($jsdataset, [], 'dataset.html');
   $dataset['name'] = 'dataset';
   $dataset['attributes']['posturl'] = 'do_edit_multi_team.php';
-  $render->render($dataset, array(), 'dataset.html');
+  $render->render($dataset, [], 'dataset.html');
   $mysqli->close();

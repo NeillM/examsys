@@ -40,7 +40,7 @@ $dest = check_var('dest', 'GET', true, false, true);
 
 // Get question statuses
 $status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
-$statuses = array();
+$statuses = [];
 foreach ($status_tmp as $sid => $status) {
     $statuses[$sid] = $status->get_name();
 }
@@ -100,7 +100,7 @@ $load_params->base_dir = $base_dir;
 // perform operation //
 ///////////////////////
 
-$result = array();
+$result = [];
 $general_params = new stdClass();
 $result['general']['params'] = $general_params;
 

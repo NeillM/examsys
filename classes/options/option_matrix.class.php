@@ -27,8 +27,8 @@
 
 class OptionMATRIX extends OptionEdit
 {
-    protected $all_corrects = array();
-    protected $_fields_compound = array('correct' => 'raw');
+    protected $all_corrects = [];
+    protected $_fields_compound = ['correct' => 'raw'];
 
     // ACCESSORS
 
@@ -46,7 +46,7 @@ class OptionMATRIX extends OptionEdit
     public function set_all_corrects($value)
     {
         $stems = $this->_question->get_all_stems();
-        $this->all_corrects = array();
+        $this->all_corrects = [];
 
         for ($i = 0; $i < $this->_question->max_stems; $i++) {
             $this->all_corrects[] = (isset($stems[$i]) and $stems[$i] != '') ? $value[$i] : '';
@@ -56,7 +56,7 @@ class OptionMATRIX extends OptionEdit
 
     public function get_correct()
     {
-        $this->all_corrects = ($this->correct != '') ? explode('|', $this->correct) : array();
+        $this->all_corrects = ($this->correct != '') ? explode('|', $this->correct) : [];
         return $this->correct;
     }
 

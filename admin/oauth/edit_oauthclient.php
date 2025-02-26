@@ -38,8 +38,8 @@ if (isset($_POST['submit'])) {
     $storage = $oauth->get_storage();
     $storage->setClientDetails($client, $secret, $uri, null, null, $userid);
 
-    $manage = array('modulemanagement', 'usermanagement', 'assessmentmanagement',
-            'coursemanagement', 'schoolmanagement', 'facultymanagement');
+    $manage = ['modulemanagement', 'usermanagement', 'assessmentmanagement',
+            'coursemanagement', 'schoolmanagement', 'facultymanagement'];
     foreach ($manage as $management) {
         if (isset($_POST[$management . '/create'])) {
             $oauth->set_permission($management . '/create', $client, true);
@@ -87,17 +87,17 @@ if (isset($_POST['submit'])) {
     exit();
 } else {
     $client = check_var('client', 'GET', true, false, true);
-    $clients = array();
+    $clients = [];
     $result = $mysqli->prepare('SELECT client_id, client_secret, redirect_uri, user_id FROM oauth_clients WHERE client_id = ?');
     $result->bind_param('s', $client);
     $result->execute();
     $result->bind_result($client_id, $client_secret, $redriect_uri, $user_id);
     while ($result->fetch()) {
-        $clients[$client_id] = array($client_secret, $redriect_uri, $user_id);
+        $clients[$client_id] = [$client_secret, $redriect_uri, $user_id];
     }
     $result->close();
 
-    $clientperms = array();
+    $clientperms = [];
     $result = $mysqli->prepare('SELECT p.action, w.access FROM permissions p
         LEFT JOIN webservice_permissions w ON p.action = w.action and w.client_id = ?');
     $result->bind_param('s', $client);
@@ -136,7 +136,7 @@ $addtionalcss = '<style type="text/css">
             border: 2px solid #800000;
           }
         </style>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['oauthkeys'] => 'list_oauth.php', $string['listoauthclient'] => 'list_oauthclient.php' );
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['oauthkeys'] => 'list_oauth.php', $string['listoauthclient'] => 'list_oauthclient.php' ];
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');

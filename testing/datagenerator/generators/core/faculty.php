@@ -43,7 +43,7 @@ class faculty extends generator
     public function create_faculty($parameters)
     {
         $facultiescreated = ++self::$facultiescreated;
-        $defaults = array('name' => 'Faculty ' . $facultiescreated, 'code' => null, 'externalid' => null, 'externalsys' => null);
+        $defaults = ['name' => 'Faculty ' . $facultiescreated, 'code' => null, 'externalid' => null, 'externalsys' => null];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $facultyid = FacultyUtils::add_faculty($settings['name'], $this->db, $settings['code'], $settings['externalid'], $settings['externalsys']);
         if (!$facultyid) {

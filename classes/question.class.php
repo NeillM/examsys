@@ -46,7 +46,7 @@ class Question
     protected $media = '';
     protected $media_width = 0;
     protected $media_height = 0;
-    protected $teams = array();
+    protected $teams = [];
     protected $checkout_time = null;
     protected $checkout_author_id = '';
     protected $created = null;
@@ -55,7 +55,7 @@ class Question
     protected $deleted = null;
     protected $status = -1;
     protected $settings = '';
-    public $options = array();
+    public $options = [];
 
     // Below are for support in question display etc
 

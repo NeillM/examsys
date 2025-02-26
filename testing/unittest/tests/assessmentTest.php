@@ -40,10 +40,10 @@ class assessmenttest extends unittestdatabase
     {
         $this->module2 = $this->get_module_id('SYSTEM');
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator->create_academic_year(['calendar_year' => 2016, 'academic_year' => '2016/17']);
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $datagenerator->create_campus(array('name' => 'Test Campus', 'isdefault' => 1));
-        $datagenerator->create_lab(array('name' => 'Test lab', 'building' => 'Test building', 'room' => 1));
+        $datagenerator->create_campus(['name' => 'Test Campus', 'isdefault' => 1]);
+        $datagenerator->create_lab(['name' => 'Test lab', 'building' => 'Test building', 'room' => 1]);
     }
 
     /**
@@ -61,7 +61,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 60;
         $session = 2016;
-        $modules = array($this->module);
+        $modules = [$this->module];
         $timezone = 'Europe/London';
         return $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone);
     }
@@ -93,10 +93,10 @@ class assessmenttest extends unittestdatabase
         $pid = $this->create_paper('Test create formative', 0);
         $this->assertIsInt($pid);
         // Test properties table is as expected.
-        $queryTable = $this->query(array('columns' => array('paper_title', 'start_date', 'end_date', 'exam_duration',
-            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'), 'table' => 'properties'));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['columns' => ['paper_title', 'start_date', 'end_date', 'exam_duration',
+            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'], 'table' => 'properties']);
+        $expectedTable = [
+            0 => [
                 'paper_title' => 'Test create formative',
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' => strtotime('2016-01-25 10:00:00 Europe/London'),
@@ -106,17 +106,17 @@ class assessmenttest extends unittestdatabase
                 'paper_ownerID' => $this->admin['id'],
                 'labs' => '1',
                 'paper_type' => '0'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
         // Test properties_modules table is as expected.
-        $queryTable = $this->query(array('table' => 'properties_modules'));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'properties_modules']);
+        $expectedTable = [
+            0 => [
                 'property_id' => $pid,
                 'idMod' => $this->module,
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -135,7 +135,7 @@ class assessmenttest extends unittestdatabase
     {
         $assessment = new assessment($this->db, $this->config);
         $paperowner = $this->admin['id'];
-        $modules = array($this->module);
+        $modules = [$this->module];
         $pid = $assessment->create(
             'Test formative',
             0,
@@ -150,10 +150,10 @@ class assessmenttest extends unittestdatabase
         );
         $this->assertIsInt($pid);
         // Test properties table is as expected.
-        $queryTable = $this->query(array('columns' => array('paper_title', 'start_date', 'end_date', 'exam_duration',
-            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'), 'table' => 'properties'));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['columns' => ['paper_title', 'start_date', 'end_date', 'exam_duration',
+            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'], 'table' => 'properties']);
+        $expectedTable = [
+            0 => [
                 'paper_title' => 'Test formative',
                 'start_date' => $expectedstart,
                 'end_date' => $expectedend,
@@ -163,8 +163,8 @@ class assessmenttest extends unittestdatabase
                 'paper_ownerID' => $this->admin['id'],
                 'labs' => '1',
                 'paper_type' => '0'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -218,7 +218,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 60;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $externalid = 'A-000000001';
         $papertitle = 'Test schedule summative';
@@ -251,7 +251,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 60;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $this->expectExceptionMessage('INVALID_USER');
         $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone);
@@ -272,7 +272,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 60;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $this->expectExceptionMessage('INVALID_ROLE');
         $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone);
@@ -293,7 +293,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 60;
         $session = 0000;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $this->expectExceptionMessage('INVALID_SESSION');
         $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone);
@@ -314,7 +314,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 60;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $this->expectExceptionMessage('INVALID_DATES');
         $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone);
@@ -335,7 +335,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 60;
         $session = 2016;
-        $modules = array();
+        $modules = [];
         $timezone = 'Europe/London';
         $this->expectExceptionMessage('INVALID_NO_MODULES');
         $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone);
@@ -359,7 +359,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 90;
         $session = 2016;
-        $modules = array($this->module2);
+        $modules = [$this->module2];
         $timezone = 'Europe/London';
         $userid = $this->admin['id'];
         $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
@@ -367,37 +367,37 @@ class assessmenttest extends unittestdatabase
         $duration = 1000;
         $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test schedule table is as expected.
-        $queryTable = $this->query(array('columns' => array('start_date', 'end_date', 'exam_duration'), 'table' => 'properties'));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['columns' => ['start_date', 'end_date', 'exam_duration'], 'table' => 'properties']);
+        $expectedTable = [
+            0 => [
                 'start_date' => strtotime('2016-01-25 09:00:00 Europe/London'),
                 'end_date' => strtotime('2016-07-25 10:30:00 Europe/London'),
                 'exam_duration' => 779
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
         // Test update summative max duration too small - SUCCESS
         $duration = -1;
         $timezone = 'Asia/Hong_Kong';
         $this->assertTrue($assessment->update($id, $papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid));
         // Test properties table is as expected.
-        $queryTable = $this->query(array('columns' => array('start_date', 'end_date', 'exam_duration'), 'table' => 'properties'));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['columns' => ['start_date', 'end_date', 'exam_duration'], 'table' => 'properties']);
+        $expectedTable = [
+            0 => [
                 'start_date' => strtotime('2016-01-25 09:00:00 Asia/Hong_Kong'),
                 'end_date' => strtotime('2016-07-25 10:30:00 Asia/Hong_Kong'),
                 'exam_duration' => 0
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
         // Test properties_modules table is as expected.
-        $queryTable = $this->query(array('columns' => array('property_id', 'idMod'), 'table' => 'properties_modules'));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['columns' => ['property_id', 'idMod'], 'table' => 'properties_modules']);
+        $expectedTable = [
+            0 => [
                 'property_id' => $id,
                 'idMod' => $this->module2,
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -419,7 +419,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 90;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $userid = 1;
         $this->expectExceptionMessage('NON_UNIQUE_TITLE');
@@ -444,7 +444,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 90;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $userid = $this->admin['id'];
         $externalid = 'A-000000001';
@@ -467,7 +467,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 90;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $userid = $this->admin['id'];
         $this->expectExceptionMessage('INVALID_USER');
@@ -490,7 +490,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 90;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $userid = $this->admin['id'];
         $this->expectExceptionMessage('INVALID_ROLE');
@@ -513,7 +513,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 90;
         $session = 0000;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $userid = $this->admin['id'];
         $this->expectExceptionMessage('INVALID_SESSION');
@@ -537,7 +537,7 @@ class assessmenttest extends unittestdatabase
         $labs = '1';
         $duration = 90;
         $session = 2016;
-        $modules = array(1);
+        $modules = [1];
         $timezone = 'Europe/London';
         $userid = $this->admin['id'];
         $this->expectExceptionMessage('INVALID_DATES');
@@ -578,9 +578,9 @@ class assessmenttest extends unittestdatabase
         $sittings = -1;
         $this->assertIsInt($assessment->schedule($paperid5, $month, $barriers, $cohort_size, $notes, $sittings, $campus));
         // Test schedule table is as expected.
-        $queryTable = $this->query(array('table' => 'scheduling', 'columns' => array('paperID', 'period', 'barriers_needed', 'cohort_size', 'notes', 'sittings', 'campus')));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'scheduling', 'columns' => ['paperID', 'period', 'barriers_needed', 'cohort_size', 'notes', 'sittings', 'campus']]);
+        $expectedTable = [
+            0 => [
                 'paperID' => $paperid,
                 'period' => 1,
                 'barriers_needed' => 0,
@@ -588,8 +588,8 @@ class assessmenttest extends unittestdatabase
                 'notes' => 'Some interesting notes on this exam',
                 'sittings' => 1,
                 'campus' => 'Test campus'
-            ),
-            1 => array(
+            ],
+            1 => [
                 'paperID' => $paperid3,
                 'period' => 1,
                 'barriers_needed' => 0,
@@ -597,8 +597,8 @@ class assessmenttest extends unittestdatabase
                 'notes' => 'Some interesting notes on this exam',
                 'sittings' => 1,
                 'campus' => 'Test campus'
-            ),
-            2 => array(
+            ],
+            2 => [
                 'paperID' => $paperid4,
                 'period' => 1,
                 'barriers_needed' => 0,
@@ -606,8 +606,8 @@ class assessmenttest extends unittestdatabase
                 'notes' => 'Some interesting notes on this exam',
                 'sittings' => 6,
                 'campus' => 'Test campus'
-            ),
-            3 => array(
+            ],
+            3 => [
                 'paperID' => $paperid5,
                 'period' => 1,
                 'barriers_needed' => 0,
@@ -615,8 +615,8 @@ class assessmenttest extends unittestdatabase
                 'notes' => 'Some interesting notes on this exam',
                 'sittings' => 1,
                 'campus' => 'Test campus'
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 

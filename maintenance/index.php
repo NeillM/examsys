@@ -31,13 +31,13 @@ $language = LangUtils::getLang($cfg_web_root);
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 $configObject = Config::get_instance();
 $render = new render($configObject);
-$headerdata = array(
-  'css' => array(
+$headerdata = [
+  'css' => [
       '/css/maintenance.css',
-  ),
-  'scripts' => array(),
-);
-$data = array('retry_path' => param::required('from', param::LOCAL_URL, param::FETCH_GET));
+  ],
+  'scripts' => [],
+];
+$data = ['retry_path' => param::required('from', param::LOCAL_URL, param::FETCH_GET)];
 $render->render($headerdata, $string, 'header.html');
 $render->render($data, $string, '/maintenance/maintenance.html');
 $render->render_admin_footer();

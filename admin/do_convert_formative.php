@@ -47,11 +47,11 @@ $result->close();
 // Set start/end dates and the type to 0 (i.e. formative).
 $now = date('Y-m-d H:i:s');
 $assessment = new assessment($mysqli, $configObject);
-$update_params = array(
-    'start_date' => array('s', $now),
-    'end_date' => array('s', $now),
-    'paper_type' => array('s' , $assessment::TYPE_FORMATIVE)
-);
+$update_params = [
+    'start_date' => ['s', $now],
+    'end_date' => ['s', $now],
+    'paper_type' => ['s' , $assessment::TYPE_FORMATIVE]
+];
 $assessment->db_update_assessment($paperid, $update_params);
 $mysqli->close();
 echo json_encode('SUCCESS');

@@ -31,7 +31,7 @@ $metadataID = check_var('metadataID', 'GET', true, false, true);
 $log_type   = check_var('log_type', 'GET', true, false, true);
 // Get the order of the questions on the paper.
 $row_no = 0;
-$questions = array();
+$questions = [];
 $q_no = 1;
 $result = $mysqli->prepare("SELECT question FROM papers, questions WHERE papers.question = questions.q_id AND paper = ? AND q_type != 'info' ORDER BY screen, display_pos");
 $result->bind_param('i', $paperID);
@@ -105,7 +105,7 @@ if ($propertyObj->is_live()) {
   $result->close();
 
   // Get any questions which have gone into log_late
-  $missing = array();
+  $missing = [];
   $missing_no = 0;
   $row_no = 0;
   $result = $mysqli->prepare("SELECT l.q_id, l.screen, DATE_FORMAT(l.updated,'%d/%m/%Y %T'), lm.ipaddress FROM log_late l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.id = ? ORDER BY l.screen");
@@ -156,7 +156,7 @@ if ($propertyObj->is_live()) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src='../js/loglateassignmentinit.min.js'></script>
 </body>

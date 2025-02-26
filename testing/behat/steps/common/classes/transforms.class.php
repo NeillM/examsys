@@ -55,7 +55,7 @@ trait transforms
     {
         // Get rid of array from the start and ; from the end of the string.
         $temporary_array = explode(',', $string);
-        $return = array();
+        $return = [];
         foreach ($temporary_array as $value) {
             // Remove any white space from the front and end.
             $trimmed = trim($value);

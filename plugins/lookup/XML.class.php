@@ -35,8 +35,8 @@ class XML_lookup extends outline_lookup
 
     public function register_callback_routines()
     {
-        $callbackarray[] = array(array($this, 'userlookup'), 'userlookup', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'modulelookup'), 'modulelookup', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'userlookup'], 'userlookup', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'modulelookup'], 'modulelookup', $this->number, $this->name];
         return $callbackarray;
     }
 
@@ -44,7 +44,7 @@ class XML_lookup extends outline_lookup
     public function register_callback_sections()
     {
         //this is blank so that classes that dont register anything dont break
-        return array('userlookupxmltranslate','modulelookupxmltranslate');
+        return ['userlookupxmltranslate','modulelookupxmltranslate'];
     }
 
     public function modulelookup($lookupobj)
@@ -176,7 +176,7 @@ class XML_lookup extends outline_lookup
         if (is_array(($callbacklist))) {
             //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
             foreach ($callbacklist as $number => $callback) {
-                $xml = call_user_func_array($callback, array($xml));
+                $xml = call_user_func_array($callback, [$xml]);
                 $objid = key($callbackregisterdatalist[$number]);
                 $new_messages = $this->get_new_debug_messages($objid);
                 foreach ($new_messages as $key => $value) {
@@ -294,7 +294,7 @@ class XML_lookup extends outline_lookup
 
         if (is_array(($callbacklist))) {
             foreach ($callbacklist as $number => $callback) {
-                $xml = call_user_func_array($callback, array($xml));
+                $xml = call_user_func_array($callback, [$xml]);
                 $objid = key($callbackregisterdatalist[$number]);
                 $new_messages = $this->get_new_debug_messages($objid);
                 foreach ($new_messages as $key => $value) {
@@ -486,7 +486,7 @@ class XML_lookup extends outline_lookup
             $lookupdatas = new stdClass();
         }
         $lookupobj->lookupdatas[] = $lookupdatas;
-        $datablockstore = array();
+        $datablockstore = [];
         foreach ($datablock as $key => $value) {
             if (!is_int($key)) {
                 if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {

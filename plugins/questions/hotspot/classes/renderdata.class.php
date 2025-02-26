@@ -57,7 +57,7 @@ class renderdata extends \questiondata
      * The labels for the hotspot
      * @var array
      */
-    public $labels = array();
+    public $labels = [];
 
     /**
      * Constructor

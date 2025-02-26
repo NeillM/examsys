@@ -82,7 +82,7 @@ $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $_POST['module'];
 $miscdataset['attributes']['folder'] = $_POST['folder'];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/deletepaperinit.min.js"></script>
 </body>

@@ -35,7 +35,7 @@ class textbox_marking_utils
      */
     public static function get_remark_users($paperID, $db)
     {
-        $remark_array = array();
+        $remark_array = [];
 
         $result = $db->prepare('SELECT userID FROM textbox_remark WHERE paperID = ?');
         $result->bind_param('i', $paperID);

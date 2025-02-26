@@ -36,11 +36,11 @@ use testing\unittest\help,
 
 // Lets look to see what arguments have been passed.
 $options = 'h';
-$longoptions = array(
+$longoptions = [
     'clean',
     'help',
     'update',
-);
+];
 
 $optionslist = getopt($options, $longoptions);
 

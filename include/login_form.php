@@ -27,15 +27,15 @@ $configObject = Config::get_instance();
 $cfg_root_path = $configObject->get('cfg_root_path');
 
 $render = new render($configObject);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/rogo_logo.css',
         '/css/login_form.css',
-    ),
-    'scripts' => array(
+    ],
+    'scripts' => [
         '/js/logininit.min.js',
-    ),
-);
+    ],
+];
 
 $js = '';
 if (isset($displaystdformobj->scripts)) {

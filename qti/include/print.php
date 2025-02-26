@@ -75,7 +75,7 @@ body {font-family:Arial,sans-serif; font-size:90%}
     <?php
 }
 
-function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $print_nice_stack = array())
+function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $print_nice_stack = [])
 {
     $configObject = Config::get_instance();
     $base_dir = $configObject->get('cfg_root_path');
@@ -107,7 +107,7 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
             $title = "<img src='$base_dir/qti/artwork/class.png' width='16' height='16'> Object Type: " . get_class($elem);
 
             //            if (is_callable(array(get_class($elem),"__toString")))
-            if (is_callable(array($elem, '__toString'))) {
+            if (is_callable([$elem, '__toString'])) {
                 //if (get_class($elem) == "ST_QTI12_Material")
                 //{
                 $title .= ' (' . trim(mb_substr($elem->__toString(), 0, 125)) . ')';

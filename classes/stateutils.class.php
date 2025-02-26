@@ -55,7 +55,7 @@ class StateUtils
      */
     public function getState($page = '')
     {
-        $state_array = array();
+        $state_array = [];
         if ($page == '') {
             $page = $_SERVER['PHP_SELF'];
         }

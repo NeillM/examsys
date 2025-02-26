@@ -91,8 +91,8 @@ if (isset($_POST['submit'])) {
             exit();
         } else {
             // Load the IDs for all students in the module
-                  $student_id_array = array();
-            $student_data     = array();
+                  $student_id_array = [];
+            $student_data     = [];
             $stmt = $mysqli->prepare('SELECT users.id, username, student_id, users.title, surname, first_names FROM (users, modules_student, modules) LEFT JOIN sid ON users.id = sid.userID WHERE users.id = modules_student.userID AND modules_student.idMod = modules.id AND idMod = ? AND calendar_year = ? ORDER BY username');
             $stmt->bind_param('ss', $_GET['module'], $_POST['session']);
             $stmt->execute();
@@ -113,7 +113,7 @@ if (isset($_POST['submit'])) {
             $value = '';
             $line_no = 0;
             $col_no  = 0;
-            $headings = array();
+            $headings = [];
             echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"font-size:90%\">\n";
             $stmt = $mysqli->prepare('REPLACE INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)');
             $stmt->bind_param('iisss', $student_id, $module, $type, $value, $_POST['session']);
@@ -225,12 +225,12 @@ if (isset($_GET['folder'])) {
     $jsdataset['attributes']['folder'] = '';
 }
   $jsdataset['attributes']['module'] = $module;
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset = [
     'name' => 'jsutils',
     'attributes' => ['xls' => json_encode($string)],
   ];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/usersmetadatainit.min.js"></script>
 </body>

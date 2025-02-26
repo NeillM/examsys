@@ -39,9 +39,9 @@ class gradebookttest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator->create_academic_year(['calendar_year' => 2016, 'academic_year' => '2016/17']);
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'Test create summative',
+        $this->pid1 = $datagenerator->create_paper(['papertitle' => 'Test create summative',
             'startdate' => '2016-01-25 09:00:00',
             'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
@@ -51,13 +51,13 @@ class gradebookttest extends unittestdatabase
             'papertype' => '2',
             'externalid' => 'xyz987uvw',
             'externalsys' => 'test ExamSys api',
-            'modulename' => 'Training Module'));
+            'modulename' => 'Training Module']);
         $datagenerator = $this->get_datagenerator('gradebook', 'core');
-        $datagenerator->create_paper(array('paperid' => $this->pid1['id'], 'timestamp' => '2016-01-25 10:10:00'));
-        $datagenerator->create_user(array('paperid' => $this->pid1['id'], 'userid' => $this->student['id'], 'grade' => 60, 'adjustedgrade' => 62, 'classification' => 'Pass'));
+        $datagenerator->create_paper(['paperid' => $this->pid1['id'], 'timestamp' => '2016-01-25 10:10:00']);
+        $datagenerator->create_user(['paperid' => $this->pid1['id'], 'userid' => $this->student['id'], 'grade' => 60, 'adjustedgrade' => 62, 'classification' => 'Pass']);
         $datagenerator = $this->get_datagenerator('api', 'core');
-        $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
-        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test ExamSys api', 'type' => 'api'));
+        $client = $datagenerator->create_client(['clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test']);
+        $datagenerator->create_external(['clientid' => $client['clientid'], 'name' => 'test ExamSys api', 'type' => 'api']);
     }
 
     /**
@@ -68,14 +68,14 @@ class gradebookttest extends unittestdatabase
     {
         $gradebook = new \api\gradebook($this->db);
         // Test paper gradebook - SUCCESS.
-        $expected = array();
-        $users = array();
-        $users[$this->student['id']] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
-            'classification' => 'Pass', 'username' => 'test1');
+        $expected = [];
+        $users = [];
+        $users[$this->student['id']] = ['raw_grade' => 60, 'adjusted_grade' => 62.0,
+            'classification' => 'Pass', 'username' => 'test1'];
         $expected[$this->pid1['id']] = $users;
-        $this->assertEquals(array('OK', $expected), $gradebook->get('paper', $this->pid1['id']));
+        $this->assertEquals(['OK', $expected], $gradebook->get('paper', $this->pid1['id']));
         // Test paper gradebook - ERROR not found.
-        $this->assertEquals(array('BAD', array('Gradebook not found for paper 0')), $gradebook->get('paper', 0));
+        $this->assertEquals(['BAD', ['Gradebook not found for paper 0']], $gradebook->get('paper', 0));
     }
 
     /**
@@ -86,14 +86,14 @@ class gradebookttest extends unittestdatabase
     {
         $gradebook = new \api\gradebook($this->db);
         // Test module gradebook - SUCCESS.
-        $expected = array();
-        $papers = array();
-        $papers[$this->pid1['id']][$this->student['id']] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
-            'classification' => 'Pass', 'username' => 'test1');
+        $expected = [];
+        $papers = [];
+        $papers[$this->pid1['id']][$this->student['id']] = ['raw_grade' => 60, 'adjusted_grade' => 62.0,
+            'classification' => 'Pass', 'username' => 'test1'];
         $expected[$this->module] = $papers;
-        $this->assertEquals(array('OK', $expected), $gradebook->get('module', $this->module));
+        $this->assertEquals(['OK', $expected], $gradebook->get('module', $this->module));
         // Test module gradebook - ERROR not found.
-        $this->assertEquals(array('BAD', array('Gradebook not found for module 0')), $gradebook->get('module', 0));
+        $this->assertEquals(['BAD', ['Gradebook not found for module 0']], $gradebook->get('module', 0));
     }
 
     /**
@@ -104,14 +104,14 @@ class gradebookttest extends unittestdatabase
     {
         $gradebook = new \api\gradebook($this->db);
         // Test paper gradebook - SUCCESS.
-        $expected = array();
-        $users = array();
-        $users['1234567890'] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
-            'classification' => 'Pass', 'username' => 'test1');
+        $expected = [];
+        $users = [];
+        $users['1234567890'] = ['raw_grade' => 60, 'adjusted_grade' => 62.0,
+            'classification' => 'Pass', 'username' => 'test1'];
         $expected['xyz987uvw'] = $users;
-        $this->assertEquals(array('OK', $expected), $gradebook->get('extpaper', 'xyz987uvw', 'test ExamSys api'));
+        $this->assertEquals(['OK', $expected], $gradebook->get('extpaper', 'xyz987uvw', 'test ExamSys api'));
         // Test paper gradebook - ERROR not found.
-        $this->assertEquals(array('BAD', array('Gradebook not found for extpaper xyz123uvw')), $gradebook->get('extpaper', 'xyz123uvw', 'test ExamSys api'));
+        $this->assertEquals(['BAD', ['Gradebook not found for extpaper xyz123uvw']], $gradebook->get('extpaper', 'xyz123uvw', 'test ExamSys api'));
     }
 
     /**
@@ -122,13 +122,13 @@ class gradebookttest extends unittestdatabase
     {
         $gradebook = new \api\gradebook($this->db);
         // Test module gradebook - SUCCESS.
-        $expected = array();
-        $papers = array();
-        $papers['xyz987uvw']['1234567890'] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
-            'classification' => 'Pass', 'username' => 'test1');
+        $expected = [];
+        $papers = [];
+        $papers['xyz987uvw']['1234567890'] = ['raw_grade' => 60, 'adjusted_grade' => 62.0,
+            'classification' => 'Pass', 'username' => 'test1'];
         $expected['abc123def'] = $papers;
-        $this->assertEquals(array('OK', $expected), $gradebook->get('extmodule', 'abc123def', 'test ExamSys api'));
+        $this->assertEquals(['OK', $expected], $gradebook->get('extmodule', 'abc123def', 'test ExamSys api'));
         // Test module gradebook - ERROR not found.
-        $this->assertEquals(array('BAD', array('Gradebook not found for extmodule abc789def')), $gradebook->get('extmodule', 'abc789def', 'test ExamSys api'));
+        $this->assertEquals(['BAD', ['Gradebook not found for extmodule abc789def']], $gradebook->get('extmodule', 'abc789def', 'test ExamSys api'));
     }
 }

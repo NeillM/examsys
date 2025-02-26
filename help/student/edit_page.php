@@ -135,14 +135,14 @@ if (isset($_POST['save_changes'])) {
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     $miscdataset['name'] = 'dataset';
     if ($disabled == ' disabled') {
         $miscdataset['attributes']['editor'] = $string['pagelocked'] . " $editor_name. " . $string['isinreadonly'];
     } else {
         $miscdataset['attributes']['editor'] = '';
     }
-    $render->render($miscdataset, array(), 'dataset.html');
+    $render->render($miscdataset, [], 'dataset.html');
     $mysqli->close();
 }
 ?>

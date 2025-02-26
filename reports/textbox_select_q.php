@@ -99,7 +99,7 @@ if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRE
     $result->close();
 }
 
-  $second_mark = array();
+  $second_mark = [];
 if (isset($_GET['phase']) and $_GET['phase'] == 2) {
     // Get the usernames of papers to second mark.
     $second_mark = textbox_marking_utils::get_remark_users($paperID, $mysqli);

@@ -33,6 +33,6 @@ class QuestionMCQ extends QuestionEdit
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-        $this->_display_methods = array('vertical' => $this->_lang_strings['vertical'], 'vertical_other' => $this->_lang_strings['verticalother'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']);
+        $this->_display_methods = ['vertical' => $this->_lang_strings['vertical'], 'vertical_other' => $this->_lang_strings['verticalother'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']];
     }
 }

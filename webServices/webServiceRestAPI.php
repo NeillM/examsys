@@ -63,7 +63,7 @@ require './restAPI.class.php';
 class webServiceRestAPI extends restAPI
 {
     public $db;
-    private $qtypes = array(
+    private $qtypes = [
         '0' => 'Formative Quiz',
         '1' => 'Progress Test',
         '2' => 'Summative Exam',
@@ -71,7 +71,7 @@ class webServiceRestAPI extends restAPI
         '4' => 'OSCE Station',
         '5' => 'Offline Paper',
         '6' => 'Peer Review'
-    );
+    ];
 
     public function __construct($mysqli)
     {
@@ -239,9 +239,9 @@ class webServiceRestAPI extends restAPI
                 } elseif ($this->data === false) {
                     $this->sendResponse(409, '', '');
                 } elseif (!is_numeric($this->data)) {
-                    $this->sendResponse(200, $this->formatData(array('ERROR' => $this->data), 'user', 'paper'), $this->http_accept);
+                    $this->sendResponse(200, $this->formatData(['ERROR' => $this->data], 'user', 'paper'), $this->http_accept);
                 } else {
-                    $this->sendResponse(200, $this->formatData(array('userID' => $this->data), 'user', 'paper'), $this->http_accept);
+                    $this->sendResponse(200, $this->formatData(['userID' => $this->data], 'user', 'paper'), $this->http_accept);
                 }
                 break;
             case 'getQStatsLastWeek':
@@ -282,10 +282,10 @@ class webServiceRestAPI extends restAPI
     public function getQStatsLastWeek()
     {
         $userObject = UserObject::get_instance();
-        if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+        if (!$userObject->has_role(['SysAdmin', 'Admin', 'Staff'])) {
             return '';
         }
-        $papers = array();
+        $papers = [];
         $now = time();
         $fourwweksago = $now - (4 * date_utils::WEEKSECS);
         $sql = "SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > ? AND end_date < ? AND deleted IS NULL ORDER BY start_date";
@@ -307,18 +307,18 @@ class webServiceRestAPI extends restAPI
     public function getQStatsbyPaper($paperID)
     {
         $userObject = UserObject::get_instance();
-        if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+        if (!$userObject->has_role(['SysAdmin', 'Admin', 'Staff'])) {
             return '';
         }
 
-        $stats = array();
+        $stats = [];
 
         $stat_no = 0;
         $old_guid = 0;
 
-        $sql = array();
-        $bind_types = array();
-        $bind_values = array();
+        $sql = [];
+        $bind_types = [];
+        $bind_values = [];
         foreach ($paperID as $id) {
              $sql[] = '?';
              $bind_types[] = 'i';
@@ -336,7 +336,7 @@ class webServiceRestAPI extends restAPI
         ORDER BY questions.q_id, perform_id, part_no';
         $res = $this->db->prepare($sql);
         $bind_types = implode('', $bind_types);
-        call_user_func_array(array($res, 'bind_param'), array_merge(array($bind_types), $bind_values));
+        call_user_func_array([$res, 'bind_param'], array_merge([$bind_types], $bind_values));
         $res->execute();
         $res->store_result();
         $res->bind_result($guid, $percentage, $cohort_size, $taken, $part_no, $p, $d, $paperID);
@@ -353,7 +353,7 @@ class webServiceRestAPI extends restAPI
                     $stats[$stat_no]['taken'] = $taken;
                 }
 
-                $stats[$stat_no]['parts']['part' . $part_no] = array('p' => $p / 100, 'd' => $d / 100);
+                $stats[$stat_no]['parts']['part' . $part_no] = ['p' => $p / 100, 'd' => $d / 100];
 
                 $old_guid = $guid;
             }
@@ -369,7 +369,7 @@ class webServiceRestAPI extends restAPI
 
         $idMod = module_utils::get_idMod($moduleID, $this->db);
 
-        $papers = array();
+        $papers = [];
         $paper_no = 0;
         $sql = "SELECT 
             properties.property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name 
@@ -443,7 +443,7 @@ class webServiceRestAPI extends restAPI
 
         $paper_no = 0;
         $old_yearID = -1;
-        $papers = array();
+        $papers = [];
         if ($moduleID == '') {
             $sql = 'SELECT 
                       paper_id, 
@@ -558,7 +558,7 @@ class webServiceRestAPI extends restAPI
         $staff_modules = UserUtils::list_staff_modules_by_userID($tmp_userID, $this->db);
         if (count($staff_modules) == 0) {
             // User is not on any teams. stop!!
-            return array();
+            return [];
         }
         $staff_modules_ids_str = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ') ';
 
@@ -589,7 +589,7 @@ class webServiceRestAPI extends restAPI
                 break;
         }
 
-        $papers = array();
+        $papers = [];
         $paper_no = 0;
         $res = $this->db->prepare("SELECT 
                                   properties.property_id, paper_title, paper_type, start_date, end_date, created, MAX(screen), title, surname, crypt_name 
@@ -639,7 +639,7 @@ class webServiceRestAPI extends restAPI
         }
 
         $xml = new SimpleXMLElement($_POST['data']);
-        $fields = array('username', 'password', 'firstnames', 'title', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles');
+        $fields = ['username', 'password', 'firstnames', 'title', 'surname', 'email', 'course', 'gender', 'yearofstudy', 'roles'];
 
         foreach ($fields as $field) {
             if (isset($xml->$field) and $xml->$field != '') {

@@ -30,7 +30,7 @@ require '../../include/staff_auth.inc';
 if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) and is_array($_GET['link'])) {
     $paper_id = $_GET['paperID'];
     $new_order = process_new($_GET['link']);
-    $old_order = array();
+    $old_order = [];
 
     $result = $mysqli->prepare('SELECT p_id, question, screen, display_pos FROM papers WHERE paper = ? ORDER BY display_pos;');
     $result->bind_param('i', $paper_id);
@@ -39,16 +39,16 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
     $result->bind_result($p_id, $question, $screen, $display_pos);
 
     while ($result->fetch()) {
-        $old_order[$display_pos] = array('screen' => $screen, 'p_id' => $p_id, 'q_id' => $question);
+        $old_order[$display_pos] = ['screen' => $screen, 'p_id' => $p_id, 'q_id' => $question];
     }
     $result->close();
 
-    $screen_inc = array();
-    $screen_dec = array();
-    $screen_update = array();
-    $position_inc = array();
-    $position_dec = array();
-    $position_update = array();
+    $screen_inc = [];
+    $screen_dec = [];
+    $screen_update = [];
+    $position_inc = [];
+    $position_dec = [];
+    $position_update = [];
     for ($index = 1; $index <= count($new_order); $index++) {
         if ($new_order[$index]['screen'] == ($old_order[$index]['screen'] - 1)) {
             $screen_dec[] = $old_order[$index];
@@ -180,7 +180,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
 
 function process_new($raw)
 {
-    $new_order = array();
+    $new_order = [];
     $screen = 1;
     $new_pos = 1;
 
@@ -188,7 +188,7 @@ function process_new($raw)
         if (mb_strpos($item, 'break') !== false) {
             $screen++;
         } else {
-            $new_order[$item] = array('screen' => $screen, 'new_pos' => $new_pos);
+            $new_order[$item] = ['screen' => $screen, 'new_pos' => $new_pos];
             $new_pos++;
         }
     }

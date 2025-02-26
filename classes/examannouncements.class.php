@@ -62,14 +62,14 @@ class ExamAnnouncements
     {
         $configObject = Config::get_instance();
 
-        $announcements = array();
+        $announcements = [];
 
         $result = $this->db->prepare("SELECT q_id, q_number, screen, msg, DATE_FORMAT(created,'" . $configObject->get('cfg_long_date_time') . "') AS created FROM exam_announcements WHERE paperID = ? ORDER BY q_number");
         $result->bind_param('i', $this->paperID);
         $result->execute();
         $result->bind_result($q_id, $q_number, $screen, $msg, $created);
         while ($result->fetch()) {
-            $announcements[$q_id] = array('q_number' => $q_number, 'screen' => $screen, 'msg' => $msg, 'created' => $created);
+            $announcements[$q_id] = ['q_number' => $q_number, 'screen' => $screen, 'msg' => $msg, 'created' => $created];
         }
         $result->close();
 

@@ -33,7 +33,7 @@ require_once '../include/sidebar_menu.inc';
  */
 function format_space($space)
 {
-    $units = array('KB', 'MB', 'GB', 'TB');
+    $units = ['KB', 'MB', 'GB', 'TB'];
     $i = -1;
     do {
         $i++;
@@ -235,9 +235,9 @@ $serverinfo = [
 
 // Partition information.
 if (php_uname('s') == 'Windows NT') {
-    $disks = array('A:\\', 'B:\\', 'C:\\', 'D:\\', 'E:\\', 'F:\\', 'G:\\', 'H:\\', 'I:\\',
+    $disks = ['A:\\', 'B:\\', 'C:\\', 'D:\\', 'E:\\', 'F:\\', 'G:\\', 'H:\\', 'I:\\',
         'J:\\', 'K:\\', 'L:\\', 'M:\\', 'N:\\', 'O:\\', 'P:\\', 'Q:\\', 'R:\\', 'S:\\', 'T:\\',
-        'U:\\', 'V:\\', 'W:\\', 'X:\\', 'Y:\\', 'Z:\\');
+        'U:\\', 'V:\\', 'W:\\', 'X:\\', 'Y:\\', 'Z:\\'];
     $i = 1;
     foreach ($disks as $disk) {
         if (file_exists($disk)) {
@@ -256,7 +256,7 @@ if (php_uname('s') == 'Windows NT') {
     }
     $row_no = $i + 1;
 } else {
-    $master_array = array();
+    $master_array = [];
     // List free disk space, ensuring one file system per line.
     // df -P flag not used as not supported by Solaris.
     $results = shell_exec("df -k | awk 'NF == 1 {printf($1); next}; {print}'");

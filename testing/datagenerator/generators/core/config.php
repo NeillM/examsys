@@ -43,11 +43,11 @@ class config extends generator
         if (!is_array($data)) {
             throw new data_error('Must pass an array or object');
         }
-        $defaults = array(
+        $defaults = [
             'component' => 'core',
             'setting' => 'no_setting',
             'value' => '',
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $data);
         $component = $values['component'];
         $setting = $values['setting'];

@@ -77,15 +77,15 @@ foreach ($phpext as $idx => $val) {
 
 // Lang packs.
 if ($langpackfound === 1) {
-    $info['langpacks'] = array($string['langpacksfound'], true);
+    $info['langpacks'] = [$string['langpacksfound'], true];
 } elseif ($langpackfound === 2) {
-    $info['langpacks'] = array(sprintf($string['langpacksmissing'], $language), 'warn');
+    $info['langpacks'] = [sprintf($string['langpacksmissing'], $language), 'warn'];
 }
 // php version.
 if (!$phpversion) {
-    $info['phpversion'] = array(sprintf($string['phpversion'], $php_min_ver), false);
+    $info['phpversion'] = [sprintf($string['phpversion'], $php_min_ver), false];
 } else {
-    $info['phpversion'] = array($string['phpsuccess'],true);
+    $info['phpversion'] = [$string['phpsuccess'],true];
 }
 // db version.
 if (InstallUtils::config_exists()) {
@@ -93,13 +93,13 @@ if (InstallUtils::config_exists()) {
     try {
         $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_port'));
         if (!$dbversion) {
-            $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
+            $info['dbversion'] = [sprintf($string['dbversion'], $mysql_min_ver), false];
         } else {
-            $info['dbversion'] = array($string['dbsuccess'], true);
+            $info['dbversion'] = [$string['dbsuccess'], true];
         }
     } catch (Exception $e) {
         $dbversion = false;
-        $info['dbversion'] = array(sprintf($string['dbconnection'], $e->getMessage()), false);
+        $info['dbversion'] = [sprintf($string['dbconnection'], $e->getMessage()), false];
     }
 } else {
     // On install skip check here as done in insall process.
@@ -109,13 +109,13 @@ if (InstallUtils::config_exists()) {
 foreach ($phpext as $idx => $val) {
     if ($val === false) {
         $blurb = sprintf($string['phpextension'], $idx);
-        $info[$idx] = array($blurb, false);
+        $info[$idx] = [$blurb, false];
     } elseif ($val === true) {
         $blurb = sprintf($string['phpextensionsuccess'], $idx);
-        $info[$idx] = array($blurb, true);
+        $info[$idx] = [$blurb, true];
     } else {
         $blurb = sprintf($string['phpextensionwarn'], $idx);
-        $info[$idx] = array($blurb, 'warn');
+        $info[$idx] = [$blurb, 'warn'];
     }
 }
 

@@ -124,8 +124,8 @@ if (count($recycle_bin) > 0) {
 <tbody>
 <?php
 
-$paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
-$paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_16.gif');
+$paper_types = ['Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review'];
+$paper_icons = ['formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_16.gif'];
 $list_size = count($recycle_bin);
 for ($item = 0; $item < $list_size; $item++) {
     $split_name = explode('[deleted', $recycle_bin[$item]['name']);
@@ -157,7 +157,7 @@ for ($item = 0; $item < $list_size; $item++) {
 $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 <script src="../js/recycleinit.min.js"></script>
 </body>

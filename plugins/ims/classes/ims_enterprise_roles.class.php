@@ -53,7 +53,7 @@ class ims_enterprise_roles
      */
     public function __construct()
     {
-        $this->imsroles = array(
+        $this->imsroles = [
             self::ROLE_LEARNER => 'Learner',
             self::ROLE_INSTRUCTOR => 'Instructor',
             self::ROLE_CONTENT_DEVELOPER => 'Content Developer',
@@ -62,7 +62,7 @@ class ims_enterprise_roles
             self::ROLE_MENTOR => 'Mentor',
             self::ROLE_ADMINISTRATOR => 'Administrator',
             self::ROLE_TEACHINGASSISTANT => 'TeachingAssistant'
-        );
+        ];
         // PLEASE NOTE: It may seem odd that "Content Developer" has a space in it
         // but "TeachingAssistant" doesn't. That's what the spec says though!!!
     }
@@ -112,7 +112,7 @@ class ims_enterprise_roles
      */
     public static function validate_role($role)
     {
-        $allowedroles = array('student', 'staff', 'invigilator', 'external examiner');
+        $allowedroles = ['student', 'staff', 'invigilator', 'external examiner'];
         if (in_array($role, $allowedroles)) {
             return true;
         }
@@ -127,7 +127,7 @@ class ims_enterprise_roles
     {
         global $string;
 
-        $rolemappings = array();
+        $rolemappings = [];
         $rolemappings['Ignore'] = $string['ignore'];
         $rolemappings['Student'] = $string['student'];
         $rolemappings['Staff'] = $string['staff'];

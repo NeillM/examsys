@@ -33,7 +33,7 @@ class OAuthRequest {
   public static $POST_INPUT = 'php://input';
 
   function __construct($http_method, $http_url, $parameters=NULL) {
-    @$parameters or $parameters = array();
+    @$parameters or $parameters = [];
     $this->parameters = $parameters;
     $this->http_method = $http_method;
     $this->http_url = $http_url;
@@ -91,11 +91,11 @@ class OAuthRequest {
    * pretty much a helper function to set up the request
    */
   public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters=NULL) {
-    @$parameters or $parameters = array();
-    $defaults = array("oauth_version" => OAuthRequest::$version,
+    @$parameters or $parameters = [];
+    $defaults = ["oauth_version" => OAuthRequest::$version,
                       "oauth_nonce" => OAuthRequest::generate_nonce(),
                       "oauth_timestamp" => OAuthRequest::generate_timestamp(),
-                      "oauth_consumer_key" => $consumer->key);
+                      "oauth_consumer_key" => $consumer->key];
     if ($token)
       $defaults['oauth_token'] = $token->key;
 
@@ -117,7 +117,7 @@ class OAuthRequest {
       if (is_scalar($this->parameters[$name])) {
         // This is the first duplicate, so transform scalar (string)
         // into an array so we can add the duplicates
-        $this->parameters[$name] = array($this->parameters[$name]);
+        $this->parameters[$name] = [$this->parameters[$name]];
       }
 
       $this->parameters[$name][] = $value;
@@ -163,11 +163,11 @@ class OAuthRequest {
    * and the concated with &.
    */
   public function get_signature_base_string() {
-    $parts = array(
+    $parts = [
       $this->get_normalized_http_method(),
       $this->get_normalized_http_url(),
       $this->get_signable_parameters()
-    );
+    ];
 
     $parts = OAuthUtil::urlencode_rfc3986($parts);
 
@@ -230,7 +230,7 @@ class OAuthRequest {
    */
   public function to_header() {
     $out ='Authorization: OAuth realm=""';
-    $total = array();
+    $total = [];
     foreach ($this->parameters as $k => $v) {
       if (!str_starts_with($k, "oauth")) continue;
       if (is_array($v)) {

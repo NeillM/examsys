@@ -134,7 +134,7 @@ class PaperPropertiesGetUsersTest extends testing\unittest\unittestdatabase
     public function test_metadata()
     {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $oldyear = $datagenerator->create_academic_year(array('calendar_year' => 2017, 'academic_year' => '2017/18'));
+        $oldyear = $datagenerator->create_academic_year(['calendar_year' => 2017, 'academic_year' => '2017/18']);
         // Create a student with metadata.
         $usergen = $this->get_datagenerator('users', 'core');
         $student = $usergen->create_user(['roles' => 'Student', 'sid' => '64537', 'surname' => 'Appleton']);

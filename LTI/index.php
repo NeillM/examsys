@@ -32,7 +32,7 @@ require_once '../config/index.inc';
 
 function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $explode = false)
 {
-    $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
+    $icons = ['formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review'];
 
     $configObject = Config::get_instance();
 
@@ -59,7 +59,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
 
             echo "<div style=\"padding-left:20px\">$extra<img src=\"../artwork/" . $icons[$paper_type] . '_16.gif" width="16" height="16" alt="' . $paper_type . '" />&nbsp;' .  $paper_title . "$extra1</div>\n";
 
-            $_SESSION['postlookup'][$plk] = array($crypt_name, $moduleid);
+            $_SESSION['postlookup'][$plk] = [$crypt_name, $moduleid];
             $plk++;
         }
         echo '</div>';
@@ -69,7 +69,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
     }
     $results2->close();
 
-    return (array($block_id, $plk));
+    return ([$block_id, $plk]);
 }
 
 $lti = UoN_LTI::get_instance();
@@ -131,7 +131,7 @@ if (!$lti->isInstructor()) {
                 exit();
             }
         } else {
-            $data = array(array('', $returned2[0]));
+            $data = [['', $returned2[0]]];
         }
         $yearutils = new yearutils($mysqli);
         $session = $yearutils->get_current_session();
@@ -161,9 +161,9 @@ if (!$lti->isInstructor()) {
         $returned2 = $lti->lookup_lti_context();
         $mod = $returned2[0];
         // Staff user not on module and LTi allowed to enroll staff users and this is a staff user - enrol.
-        if (!$userObject->is_staff_user_on_module($mod) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+        if (!$userObject->is_staff_user_on_module($mod) and $lti_i->allow_staff_module_register() and $userObject->has_role(['Staff', 'Admin', 'SysAdmin'])) {
             UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $mod, $mysqli);
-        } elseif (!$userObject->is_staff_user_on_module($mod) and !$lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+        } elseif (!$userObject->is_staff_user_on_module($mod) and !$lti_i->allow_staff_module_register() and $userObject->has_role(['Staff', 'Admin', 'SysAdmin'])) {
             // Staff user not on module and LTi NOT allowed to enroll staff users and this is a staff user - display notice.
             UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $mod, '../artwork/exclamation_64.png', '#C00000');
             echo "\n</body>\n</html>\n";
@@ -182,7 +182,7 @@ if (!$lti->isInstructor()) {
         }
     } else {
         // no existing stored link so need to create one
-        if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+        if (!$userObject->has_role(['Staff', 'Admin', 'SysAdmin'])) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'], '../artwork/exclamation_64.png', '#C00000');
             echo "\n</body>\n</html>\n";
             exit();
@@ -206,7 +206,7 @@ if (!$lti->isInstructor()) {
                     $modid = module_utils::get_idMod($moduleinfo[1], $mysqli);
                     // Module does not exist and LTI allowed to create modules - create module.
                 } elseif (!module_utils::module_exists($moduleinfo[1], $mysqli) and $lti_i->allow_module_create()) {
-                    if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+                    if (!$userObject->has_role(['Staff', 'Admin', 'SysAdmin'])) {
                         UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $moduleinfo[1], '../artwork/exclamation_64.png', '#C00000');
                         echo "\n</body>\n</html>\n";
                         exit();
@@ -246,7 +246,7 @@ if (!$lti->isInstructor()) {
                     exit();
                 }
                 // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
-                if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1], $mysqli)) {
+                if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(['Staff', 'Admin', 'SysAdmin']) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1], $mysqli)) {
                     UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $moduleinfo[1], $mysqli);
                     $modid = module_utils::get_idMod($moduleinfo[1], $mysqli);
                     // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
@@ -261,10 +261,10 @@ if (!$lti->isInstructor()) {
                 }
             }
         } else {
-            $data = array(array('', $returned2[0]));
+            $data = [['', $returned2[0]]];
             foreach ($data as $moduleinfo) {
                 // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
-                if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1], $mysqli)) {
+                if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(['Staff', 'Admin', 'SysAdmin']) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1], $mysqli)) {
                       UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $moduleinfo[1], $mysqli);
                     // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
                 } elseif (!$userObject->is_staff_user_on_module($moduleinfo[1]) and !$lti_i->allow_staff_module_register()) {

@@ -29,7 +29,7 @@ class media_handler
      * Supported media types.
      * @var array
      */
-    public const SUPPORTED = array(
+    public const SUPPORTED = [
         'gif' => questiondata::IMAGE,
         'jpg' => questiondata::IMAGE,
         'jpeg' => questiondata::IMAGE,
@@ -56,7 +56,7 @@ class media_handler
         'mtl' => questiondata::THREED,
         'dds' => questiondata::THREED,
         'zip' => questiondata::ARCHIVE,
-    );
+    ];
 
     /**
      * Clean the alternate text so it is suitable for display
@@ -235,24 +235,24 @@ class media_handler
         if ($bad_file) {
             // Remove the file from the server.
             self::deleteMedia($unique_name);
-            return array(
+            return [
                 'filename' => '',
                 'width' => 0,
                 'height' => 0,
                 'alt' => '',
                 'owner' => -1,
                 'rejected_file' => $unique_name
-            );
+            ];
         }
 
-        return array(
+        return [
             'filename' => $unique_name,
             'width' => $file_width,
             'height' => $file_height,
             'alt' => $alt,
             'owner' => $owner,
             'rejected_file' => false
-        );
+        ];
     }
 
     /**
@@ -295,7 +295,7 @@ class media_handler
     public static function get_permitted()
     {
         $config = Config::get_instance();
-        $permitted = array();
+        $permitted = [];
         foreach ($config->get_setting('core', 'system_mediatypes') as $name => $value) {
             if ($value == true) {
                 $permitted[$name] = self::SUPPORTED[$name];
@@ -354,17 +354,17 @@ class media_handler
         $alt = self::cleanAltText($alt);
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('ssssi'),
-            array(
+            ['ssssi'],
+            [
                 &$source,
                 &$width,
                 &$height,
                 &$alt,
                 &$owner
-            )
+            ]
         );
         $sql = $db->prepare('INSERT INTO media (source, width, height, alt, ownerid) VALUES (?, ?, ?, ?, ?)');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $id = -1;
@@ -386,16 +386,16 @@ class media_handler
     {
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('iii'),
-            array(
+            ['iii'],
+            [
                 &$mediaid,
                 &$questionid,
                 &$num
-            )
+            ]
         );
         $ok = true;
         $sql = $db->prepare('INSERT INTO questions_media (mediaid, qid, num) VALUES (?, ?, ?)');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $ok = false;
@@ -419,19 +419,19 @@ class media_handler
         $alt = self::cleanAltText($alt);
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('ssssii'),
-            array(
+            ['ssssii'],
+            [
                 &$source,
                 &$width,
                 &$height,
                 &$alt,
                 &$owner,
                 &$id
-            )
+            ]
         );
         $ok = true;
         $sql = $db->prepare('UPDATE media SET source = ?, width = ?, height = ?, alt = ?, ownerid = ? WHERE id = ?');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $ok = false;
@@ -451,15 +451,15 @@ class media_handler
         $alt = self::cleanAltText($alt);
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('si'),
-            array(
+            ['si'],
+            [
                 &$alt,
                 &$id
-            )
+            ]
         );
         $ok = true;
         $sql = $db->prepare('UPDATE media SET alt = ? WHERE id = ?');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $ok = false;
@@ -477,14 +477,14 @@ class media_handler
     {
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('i'),
-            array(
+            ['i'],
+            [
                 &$id
-            )
+            ]
         );
         $ok = true;
         $sql = $db->prepare('DELETE FROM media WHERE id = ?');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $ok = false;
@@ -503,15 +503,15 @@ class media_handler
     {
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('ii'),
-            array(
+            ['ii'],
+            [
                 &$id,
                 &$questionid
-            )
+            ]
         );
         $ok = true;
         $sql = $db->prepare('DELETE FROM questions_media WHERE mediaid = ? AND qid = ?');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $ok = false;
@@ -530,15 +530,15 @@ class media_handler
     {
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('ii'),
-            array(
+            ['ii'],
+            [
                 &$mediaid,
                 &$optionid
-            )
+            ]
         );
         $ok = true;
         $sql = $db->prepare('INSERT INTO options_media (mediaid, oid) VALUES (?, ?)');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $ok = false;
@@ -557,15 +557,15 @@ class media_handler
     {
         $db = Config::get_instance()->db;
         $params = array_merge(
-            array('ii'),
-            array(
+            ['ii'],
+            [
                 &$id,
                 &$optionid
-            )
+            ]
         );
         $ok = true;
         $sql = $db->prepare('DELETE FROM options_media WHERE mediaid = ? AND oid = ?');
-        call_user_func_array(array($sql, 'bind_param'), $params);
+        call_user_func_array([$sql, 'bind_param'], $params);
         $sql->execute();
         if ($db->error) {
             $ok = false;

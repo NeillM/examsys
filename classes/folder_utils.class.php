@@ -121,7 +121,7 @@ class folder_utils
      */
     public static function get_all_folders($db)
     {
-        $folders = array();
+        $folders = [];
 
         $result = $db->prepare('SELECT id, name FROM folders');
         $result->execute();
@@ -168,7 +168,7 @@ class folder_utils
      */
     public static function get_parent_list($orig_folder_name, $userObj, $db)
     {
-        $parent_list = array();
+        $parent_list = [];
         if (mb_substr_count($orig_folder_name, ';') > 0) {
             $last_semicolon = mb_strrpos($orig_folder_name, ';');
             $path = mb_substr($orig_folder_name, 0, $last_semicolon);

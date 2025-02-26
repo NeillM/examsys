@@ -36,7 +36,7 @@ class TEXTBOXCorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
         if ($changes) {
             $first = reset($this->_question->options);
             $mark_correct = $first->get_marks_correct();

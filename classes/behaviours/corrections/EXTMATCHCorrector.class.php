@@ -41,7 +41,7 @@ class EXTMATCHCorrector extends Corrector
     public function execute($new_correct, $paper_id, &$prev_changes, $paper_type)
     {
         $new_correct_val = $new_correct['option_correct'];
-        $errors = array();
+        $errors = [];
         $changes = false;
 
         $first = reset($this->_question->options);
@@ -50,7 +50,7 @@ class EXTMATCHCorrector extends Corrector
         $mark_incorrect = $first->get_marks_incorrect();
         $stems = 0;
         $correct_count = 0;
-        $data = array();
+        $data = [];
 
         for ($i = 0; $i < $this->_question->max_stems; $i++) {
             $data['option_correct' . strval($i + 1)] = $new_correct_val[$i];
@@ -67,10 +67,10 @@ class EXTMATCHCorrector extends Corrector
             if ($changes) {
                 $prev_changes = $changes;
                 $opt_ids = array_keys($this->_question->options);
-                $existing = array();
+                $existing = [];
                 for ($option_no = 1; $option_no <= count($this->_question->options); $option_no++) {
                     $option = $this->_question->options[$opt_ids[$option_no - 1]];
-                    $option->populate_compound(array('correct'), $data, $existing, 'option_', $this->_lang_strings['postexamchange']);
+                    $option->populate_compound(['correct'], $data, $existing, 'option_', $this->_lang_strings['postexamchange']);
                 }
             }
 

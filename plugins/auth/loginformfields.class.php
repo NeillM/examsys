@@ -36,9 +36,9 @@ class loginformfields_auth extends outline_authentication
     {
         // maybe need to think of some function that will fail the auth if not received the data in the field?
 
-        $callbackarray[] = array(array($this, 'loginformfields'), 'displaystdform', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'loginformfields'], 'displaystdform', $this->number, $this->name];
         if (isset($this->settings['storedata']) and $this->settings['storedata'] === true) {
-            $callbackarray[] = array(array($this, 'store_data'), 'sessionstore', $this->number, $this->name);
+            $callbackarray[] = [[$this, 'store_data'], 'sessionstore', $this->number, $this->name];
         }
 
         return $callbackarray;
@@ -46,7 +46,7 @@ class loginformfields_auth extends outline_authentication
 
     public function store_data($sessionstoreobj)
     {
-        $list = array();
+        $list = [];
         if (isset($this->settings['fields']) and is_array($this->settings['fields'])) {
             foreach ($this->settings['fields'] as $fielddata) {
                 if (is_object($fielddata)) {

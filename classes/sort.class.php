@@ -33,7 +33,7 @@ class sort
      */
     public static function array_csort($marray, $sort_by, $sort_order, $sort_method = SORT_STRING)
     {
-        $sortarr = array();
+        $sortarr = [];
         foreach ($marray as $row) {
             $sortarr[] = $row[$sort_by];
         }

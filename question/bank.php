@@ -206,7 +206,7 @@ $miscdataset = [
   'name' => 'jsutils',
   'attributes' => ['xls' => json_encode($string)],
 ];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 
 $mysqli->close();
 ?>

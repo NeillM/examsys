@@ -125,7 +125,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $jsdataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../../js/addquestionsinit.min.js"></script>
 </body>

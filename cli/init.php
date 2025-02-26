@@ -52,9 +52,9 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPA
 
 // Lets look to see what arguments have been passed.
 $options = 'hu:p:s:t:n:';
-$longoptions = array(
+$longoptions = [
   'help',
-);
+];
 
 $optionslist = getopt($options, $longoptions);
 
@@ -116,13 +116,13 @@ try {
     }
     // Install.
     InstallUtils::checkDirPermissionsPost();
-    $args = array(
+    $args = [
         'mysql_admin_user' => $databaseuser,
         'mysql_admin_pass' => $databasepassword,
         'mysql_db_host' => $databasehost,
         'mysql_db_port' => $databaseport,
         'mysql_db_name' => $databasename
-    );
+    ];
     InstallUtils::processForm($args);
     umask($oldmask);
 } catch (Exception $e) {

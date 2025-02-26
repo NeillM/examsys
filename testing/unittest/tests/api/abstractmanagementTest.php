@@ -34,10 +34,10 @@ class abstractmanagementtest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('api', 'core');
-        $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
-        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test ExamSys api', 'type' => 'api'));
-        $client = $datagenerator->create_client(array('clientid' => 'test2', 'userid' => $this->admin['id'], 'secret' => 'test2'));
-        $datagenerator->create_external(array('name' => 'test ExamSys plugin', 'type' => 'plugin'));
+        $client = $datagenerator->create_client(['clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test']);
+        $datagenerator->create_external(['clientid' => $client['clientid'], 'name' => 'test ExamSys api', 'type' => 'api']);
+        $client = $datagenerator->create_client(['clientid' => 'test2', 'userid' => $this->admin['id'], 'secret' => 'test2']);
+        $datagenerator->create_external(['name' => 'test ExamSys plugin', 'type' => 'plugin']);
     }
 
     /**

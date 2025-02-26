@@ -31,7 +31,7 @@ class invalid_file_path extends Exception
      */
     public function __construct()
     {
-        $strings = LangUtils::loadlangfile('exceptions/messages.php', array());
+        $strings = LangUtils::loadlangfile('exceptions/messages.php', []);
         parent::__construct($strings['invalidfilepath']);
     }
 }

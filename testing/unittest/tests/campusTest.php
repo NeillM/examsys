@@ -40,9 +40,9 @@ class campustest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $this->campus = $datagenerator->create_campus(array('name' => 'Test Campus', 'isdefault' => 1));
-        $datagenerator->create_lab(array('name' => 'Test lab', 'building' => 'Test building', 'room' => 1, 'campus' => $this->campus['name']));
-        $this->campus2 = $datagenerator->create_campus(array('name' => 'Test Campus 2', 'isdefault' => 0));
+        $this->campus = $datagenerator->create_campus(['name' => 'Test Campus', 'isdefault' => 1]);
+        $datagenerator->create_lab(['name' => 'Test lab', 'building' => 'Test building', 'room' => 1, 'campus' => $this->campus['name']]);
+        $this->campus2 = $datagenerator->create_campus(['name' => 'Test Campus 2', 'isdefault' => 0]);
     }
 
     /**
@@ -53,9 +53,9 @@ class campustest extends unittestdatabase
     {
         $campus = new campus($this->db);
         // Test details found success.
-        $campusarray = array();
-        $campusarray[$this->campus['id']] = array('campusname' => $this->campus['name'], 'isdefault' => $this->campus['isdefault']);
-        $campusarray[$this->campus2['id']] = array('campusname' => $this->campus2['name'], 'isdefault' => $this->campus2['isdefault']);
+        $campusarray = [];
+        $campusarray[$this->campus['id']] = ['campusname' => $this->campus['name'], 'isdefault' => $this->campus['isdefault']];
+        $campusarray[$this->campus2['id']] = ['campusname' => $this->campus2['name'], 'isdefault' => $this->campus2['isdefault']];
         $this->assertEquals($campusarray, $campus->get_all_campus_details());
         // Test details not found error.
         $this->teardown_dataset();
@@ -70,7 +70,7 @@ class campustest extends unittestdatabase
     {
         $campus = new campus($this->db);
         // Test details found success.
-        $expected = array('campusid' => $this->campus['id'], 'campusname' => $this->campus['name'], 'isdefault' => $this->campus['isdefault']);
+        $expected = ['campusid' => $this->campus['id'], 'campusname' => $this->campus['name'], 'isdefault' => $this->campus['isdefault']];
         $this->assertEquals($expected, $campus->get_campus_details($this->campus['id']));
         // Test details not found error.
         $expected = false;

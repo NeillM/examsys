@@ -69,7 +69,7 @@ require '../include/sysadmin_auth.inc';
 <tbody>
 <?php
 $announce_no = 0;
-$announcements = array();
+$announcements = [];
 
 $result = $mysqli->prepare("SELECT id, title, startdate, DATE_FORMAT(startdate, '" . $configObject->get('cfg_long_date_time') . "') AS startdate_display, DATE_FORMAT(enddate, '" . $configObject->get('cfg_long_date_time') . "') AS enddate_display FROM announcements WHERE deleted IS NULL");
 $result->execute();

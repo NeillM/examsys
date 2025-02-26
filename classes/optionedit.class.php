@@ -51,31 +51,31 @@ class OptionEdit extends RogoObject
     protected $marks_incorrect = 0;
     protected $marks_partial = 0;
 
-    protected static $_fields = array('question_id', 'text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
-    protected static $_mfields = array('media_source', 'media_width', 'media_height', 'media_alt', 'media_owner');
-    protected static $_omfields = array('media', 'id');
+    protected static $_fields = ['question_id', 'text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial'];
+    protected static $_mfields = ['media_source', 'media_width', 'media_height', 'media_alt', 'media_owner'];
+    protected static $_omfields = ['media', 'id'];
 
     /** @var array metadata fields available for this option type */
-    public static $_metafields = array();
+    public static $_metafields = [];
 
-    protected $_fields_editable = array('text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial');
-    protected $_fields_required = array('question_id', 'marks_correct');
+    protected $_fields_editable = ['text', 'correct_fback', 'incorrect_fback', 'correct', 'marks_correct', 'marks_incorrect', 'marks_partial'];
+    protected $_fields_required = ['question_id', 'marks_correct'];
 
     /** @var array metadata fields required for this option type */
-    protected $_metafields_required = array();
+    protected $_metafields_required = [];
 
     protected $_question = null;
     protected $_number = -1;
     protected $_mysqli = null;
     protected $_user_id;
-    protected $_data = array();
-    protected $_metadata = array();
-    protected $_mdata = array();
-    protected $_omdata = array();
+    protected $_data = [];
+    protected $_metadata = [];
+    protected $_mdata = [];
+    protected $_omdata = [];
 
     // Map our 'nice' property names to the database fields
-    protected $_field_map = array('question_id' => 'o_id', 'text' => 'option_text', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'correct_fback' => 'feedback_right', 'incorrect_fback' => 'feedback_wrong');
-    protected $_pretty_names = array('question_id' => 'Question ID', 'text' => '', 'correct_fback' => 'Correct Feedback', 'incorrect_fback' => 'Incorrect Feedback', 'correct' => 'Correct Value', 'marks_correct' => 'Marks (correct)', 'marks_incorrect' => 'Marks (incorrect)', 'marks_partial' => 'Marks (partial)');
+    protected $_field_map = ['question_id' => 'o_id', 'text' => 'option_text', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'correct_fback' => 'feedback_right', 'incorrect_fback' => 'feedback_wrong'];
+    protected $_pretty_names = ['question_id' => 'Question ID', 'text' => '', 'correct_fback' => 'Correct Feedback', 'incorrect_fback' => 'Incorrect Feedback', 'correct' => 'Correct Value', 'marks_correct' => 'Marks (correct)', 'marks_incorrect' => 'Marks (incorrect)', 'marks_partial' => 'Marks (partial)'];
 
     // Refrence to array of localised language strings
     protected $_lang_strings = null;
@@ -143,7 +143,7 @@ class OptionEdit extends RogoObject
      * @param array $exclude a list of fields to exclude from the population process
      * @param string $prefix a prefix to apply to field names when used as keys into data array
      */
-    public function populate($fields, $index, $data, $exclude = array(), $prefix = '')
+    public function populate($fields, $index, $data, $exclude = [], $prefix = '')
     {
         foreach ($fields as $section_name) {
             if (!in_array($section_name, $exclude, true)) {
@@ -169,7 +169,7 @@ class OptionEdit extends RogoObject
      * @param string $prefix a prefix to apply to field names when used as keys into data array
      * @param boolean $save_changes should we save changes?  We don't want to do this for new options
      */
-    public function populate_unified($fields, $data, $exclude = array(), $prefix = '', $save_changes = true)
+    public function populate_unified($fields, $data, $exclude = [], $prefix = '', $save_changes = true)
     {
         foreach ($fields as $section_name => $section_label) {
             if (!in_array($section_name, $exclude, true)) {
@@ -238,14 +238,14 @@ class OptionEdit extends RogoObject
         if ($valid === true) {
             // If $id is -1 we're inserting a new record
             if ($this->id == -1) {
-                $params = array_merge(array('issssddd'), $this->_data);
+                $params = array_merge(['issssddd'], $this->_data);
                 $query = <<< QUERY
 INSERT INTO options(o_id, option_text, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
                 // Otherwise we're updating an existing one
-                $params = array_merge(array('issssdddi'), $this->_data, array(&$this->id));
+                $params = array_merge(['issssdddi'], $this->_data, [&$this->id]);
                 $query = <<< QUERY
 UPDATE options
 SET o_id = ?, option_text = ?, feedback_right = ?, feedback_wrong = ?, correct = ?, marks_correct = ?, marks_incorrect = ?, marks_partial = ?
@@ -253,7 +253,7 @@ WHERE id_num = ?
 QUERY;
             }
             $result = $this->_mysqli->prepare($query);
-            call_user_func_array(array($result,'bind_param'), $params);
+            call_user_func_array([$result,'bind_param'], $params);
             $result->execute();
             $success = ($result->affected_rows > -1);
             $newoption = false;
@@ -273,28 +273,28 @@ QUERY;
                 $alt = $this->_mdata['media_alt'];
                 $owner = $this->_mdata['media_owner'];
 
-                $insertmediaparams = array();
-                $updatemediaparams = array();
+                $insertmediaparams = [];
+                $updatemediaparams = [];
                 if ($source != '') {
                     if ($media > 0) {
                         // Update.
-                        $updatemediaparams = array(
+                        $updatemediaparams = [
                             'source' => $source,
                             'width' => $width,
                             'height' => $height,
                             'alt' => $alt,
                             'owner' => $owner,
                             'id' => $media
-                        );
+                        ];
                     } else {
                         // Insert.
-                        $insertmediaparams = array(
+                        $insertmediaparams = [
                             'source' => $source,
                             'width' => $width,
                             'height' => $height,
                             'alt' => $alt,
                             'owner' => $owner
-                        );
+                        ];
                     }
                 }
 
@@ -338,18 +338,18 @@ QUERY;
                     }
                 }
 
-                $deletemediaparams = array();
-                $deleteoptionmediaparams = array();
+                $deletemediaparams = [];
+                $deleteoptionmediaparams = [];
                 // If media width set to 0 delete it.
                 if ($width === 0) {
                     // Delete.
-                    $deletemediaparams = array(
+                    $deletemediaparams = [
                         'id' => $media,
-                    );
-                    $deleteoptionmediaparams = array(
+                    ];
+                    $deleteoptionmediaparams = [
                         'id' => $media,
                         'oid' => $this->id,
-                    );
+                    ];
                 }
 
                 // Delete questions_media rows.
@@ -373,7 +373,7 @@ QUERY;
             }
             $result->close();
 
-            $this->_modified_fields = array();
+            $this->_modified_fields = [];
         } else {
             throw new ValidationException($valid);
         }
@@ -496,7 +496,7 @@ QUERY;
      */
     public function get_media()
     {
-        return array('filename' => $this->media_source, 'width' => $this->media_width, 'height' => $this->media_height, 'alt' => $this->media_alt, 'owner' => $this->media_owner);
+        return ['filename' => $this->media_source, 'width' => $this->media_width, 'height' => $this->media_height, 'alt' => $this->media_alt, 'owner' => $this->media_owner];
     }
 
     /**
@@ -660,7 +660,7 @@ QUERY;
      */
     public static function get_options($question_id)
     {
-        $options = array();
+        $options = [];
 
         return $options;
     }
@@ -732,7 +732,7 @@ QUERY;
         $result->bind_param('i', $this->id);
         $result->execute();
         $result->store_result();
-        call_user_func_array(array($result, 'bind_result'), $this->_data);
+        call_user_func_array([$result, 'bind_result'], $this->_data);
         $result->fetch();
 
         // Assign additional metadata to object field names

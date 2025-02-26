@@ -130,7 +130,7 @@ ImageLine($Image, $trans1 - $trans2, 250 - ($max_mark * $gap / 10), $trans1 + $t
 ImageLine($Image, $trans1, 250 - ($max_mark * $gap / 10), $trans1, 250 - (round($q3, 2) * $gap / 10), $blue);   // Max whisker
 
 //passmark
-$style = array($red, $red, $red, $red, $red, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
+$style = [$red, $red, $red, $red, $red, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT];
 imagesetstyle($Image, $style);
 ImageLine($Image, $trans1 - $trans2 - 7, 250 - ($passmark * $gap / 10), $trans1 + $trans2 + 7, 250 - ($passmark * $gap / 10), IMG_COLOR_STYLED);
 

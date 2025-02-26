@@ -105,9 +105,9 @@ $total_score = 0;
 
 // Output table heading
 if ($borderline_method) {
-    $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['rating'], $string['classification'], $string['starttime'], $string['examiner']);
+    $table_order = [$string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['rating'], $string['classification'], $string['starttime'], $string['examiner']];
 } else {
-    $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['classification'], $string['starttime'], $string['examiner']);
+    $table_order = [$string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['classification'], $string['starttime'], $string['examiner']];
 }
 
 $col_no = 0;

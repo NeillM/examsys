@@ -72,7 +72,7 @@ class external_systems
      */
     public function get_mapped_externalsystem_info($client)
     {
-        $info = array();
+        $info = [];
         $result = $this->db->prepare('SELECT s.name, m.ext_id FROM external_systems s, external_systems_mapping m WHERE s.id = m.ext_id AND m.client_id = ?');
         $result->bind_param('s', $client);
         $result->execute();
@@ -96,7 +96,7 @@ class external_systems
      */
     public function get_all_externalsystems()
     {
-        $exts = array();
+        $exts = [];
         $result = $this->db->prepare('SELECT id, name FROM external_systems');
         $result->execute();
         $result->bind_result($extid, $name);
@@ -113,12 +113,12 @@ class external_systems
      */
     public function get_all_externalsystems_details()
     {
-        $exts = array();
+        $exts = [];
         $result = $this->db->prepare('SELECT id, name, type FROM external_systems');
         $result->execute();
         $result->bind_result($extid, $name, $type);
         while ($result->fetch()) {
-            $exts[$extid] = array('name' => $name, 'type' => $type);
+            $exts[$extid] = ['name' => $name, 'type' => $type];
         }
         $result->close();
         return $exts;
@@ -130,7 +130,7 @@ class external_systems
      */
     public function get_all_api_externalsystems()
     {
-        $exts = array();
+        $exts = [];
         $result = $this->db->prepare('SELECT id, name FROM external_systems WHERE type = ?');
         $api = self::API;
         $result->bind_param('s', $api);

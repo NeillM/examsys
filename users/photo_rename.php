@@ -35,7 +35,7 @@ require '../include/sysadmin_auth.inc';
 <body>
 <h1>Renaming Photos</h1>
 <?php
-  $allowed_modes = array('sid', 'fullname');
+  $allowed_modes = ['sid', 'fullname'];
 $mode = 'sid';
 if (isset($_GET['mode'])) {
     $mode = $_GET['mode'];

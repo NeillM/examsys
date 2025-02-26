@@ -35,7 +35,7 @@ class papers extends generator
     /**
      * @var array default paper properties
      */
-    private $default_paper_properties = array(
+    private $default_paper_properties = [
         'paper_prologue' => null, 'paper_postscript' => null, 'bgcolor' => 'white',
         'fgcolor' => 'black', 'themecolor' => '#316AC5', 'labelcolor' => '#C00000',
         'fullscreen' => '1', 'marking' => '1', 'bidirectional' => '1',
@@ -44,7 +44,7 @@ class papers extends generator
         'display_correct_answer' => '1', 'display_question_mark' => '1', 'display_students_response' => '1',
         'display_feedback' => '1', 'hide_if_unanswered' => '0', 'external_review_deadline' => null,
         'internal_review_deadline' => null, 'sound_demo' => '0', 'password' => null
-    );
+    ];
 
     /**
      * Creates security metadata restrictions for a paper.
@@ -68,11 +68,11 @@ class papers extends generator
         if (!is_array($parameters)) {
             throw new data_error('Must pass an array or object');
         }
-        $defaults = array(
+        $defaults = [
             'paperID' => $paperid,
             'name' => 'SomeType',
             'value' => 'Default',
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
         $values['id'] = $this->insertSecurityMetadata($values);
         return $values;
@@ -100,11 +100,11 @@ class papers extends generator
         if (!is_array($parameters)) {
             throw new data_error('Must pass an array or object');
         }
-        $defaults = array(
+        $defaults = [
             'paperID' => $paperid,
             'name' => 'SomeType',
             'value' => 'Default',
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
         $values['id'] = $this->insertMetadata($values);
         return $values;
@@ -146,7 +146,7 @@ class papers extends generator
             $paperowner = UserUtils::username_exists($parameters['paperowner'], $this->db);
             $modulename = $parameters['modulename'];
         }
-        $default = array(
+        $default = [
             'startdate' => null,
             'enddate' => null,
             'labs' => '',
@@ -159,7 +159,7 @@ class papers extends generator
             'remote' => 0,
             'settings' => '',
             'deleted' => null
-        );
+        ];
         $settings = $this->set_defaults_and_clean($default, $parameters);
         $timezone = new \DateTimeZone($settings['timezone']);
 
@@ -219,7 +219,7 @@ class papers extends generator
             }
         }
 
-        $settings['moduleids'] = array();
+        $settings['moduleids'] = [];
         if (is_array($modulename)) {
             foreach ($modulename as $m) {
                 $settings['moduleids'][] = self::test_get_moduleidbyname($m, $this->db);
@@ -397,7 +397,7 @@ class papers extends generator
         if (!is_array($parameters)) {
             throw new data_error('Must pass an array or object');
         }
-        $types = array('external', 'internal');
+        $types = ['external', 'internal'];
         if (
             empty($parameters['reviewer'])
             or empty($parameters['paper'])
@@ -443,7 +443,7 @@ class papers extends generator
 
         $yearutils = new \yearutils($this->db);
 
-        $default = array(
+        $default = [
             'barriers' => 0,
             'cohortsize' => '<whole cohort>',
             'notes' => 'Some notes about the exam',
@@ -453,7 +453,7 @@ class papers extends generator
             'month' => rand(0, 11), // 0 is January, 11 is December.
             'session' => $yearutils->get_current_session(),
             'remote' => 0,
-        );
+        ];
         $settings = $this->set_defaults_and_clean($default, $parameters);
         $config = Config::get_instance();
         $assessment = new \assessment($this->db, $config);
@@ -473,7 +473,7 @@ class papers extends generator
         }
 
         // Get modules ids.
-        $settings['moduleids'] = array();
+        $settings['moduleids'] = [];
         if (is_array($modulename)) {
             foreach ($modulename as $m) {
                 $settings['moduleids'][] = self::test_get_moduleidbyname($m, $this->db);

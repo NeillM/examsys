@@ -43,8 +43,8 @@ if (isset($_POST['submit'])) {
     $duplicate = $campusobj->check_campus_name_inuse($name);
     if (!$duplicate or $name == $details['campusname']) {
         if ($details['isdefault'] or empty($_POST['defaultchk'])) {
-            $params['name'] = array('s', $name);
-            $params['isdefault'] = array('i', 1);
+            $params['name'] = ['s', $name];
+            $params['isdefault'] = ['i', 1];
             DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
 
             $update = $mysqli->prepare('UPDATE campus SET isdefault = 0 WHERE id != ?');
@@ -52,8 +52,8 @@ if (isset($_POST['submit'])) {
             $update->execute();
             $update->close();
         } else {
-            $params['name'] = array('s', $name);
-            $params['isdefault'] = array('i', 0);
+            $params['name'] = ['s', $name];
+            $params['isdefault'] = ['i', 0];
             DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
         }
         header('location: list_campuses.php', true, 303);
@@ -80,7 +80,7 @@ $addtionalcss = '<style type="text/css">
             border: 2px solid #800000;
           }
         </style>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['computerlabs'] => '../list_labs.php', $string['campuses'] => 'list_campuses.php' );
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['computerlabs'] => '../list_labs.php', $string['campuses'] => 'list_campuses.php' ];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang, $toprightmenu);
 $render->render_admin_content($breadcrumb, $lang);

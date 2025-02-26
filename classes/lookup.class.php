@@ -44,7 +44,7 @@ class Lookup extends RogoStaticSingleton
 
     public $impliments_api_lookup_version = 1;
 
-    public $callbacktypes = array( 'init', 'preuserlookup', 'userlookup', 'userlookup', 'postuserlookup', 'usertranslatelookup', 'premodulelookup', 'modulelookup', 'modulelookup', 'postmodulelookup', 'moduletranslatelookup' );
+    public $callbacktypes = [ 'init', 'preuserlookup', 'userlookup', 'userlookup', 'postuserlookup', 'usertranslatelookup', 'premodulelookup', 'modulelookup', 'modulelookup', 'postmodulelookup', 'moduletranslatelookup' ];
 
 
     public $initobj;
@@ -110,7 +110,7 @@ class Lookup extends RogoStaticSingleton
             $name = $lookup[2];
             $this->debug[] = "Loading lookup #$number with Type:$lookuptype Settings:" . str_replace("\n", "\n", var_export($settings, true));
 
-            $this->lookupinfo[$number] = array($name => $lookuptype);
+            $this->lookupinfo[$number] = [$name => $lookuptype];
 
             $object = new stdClass();
             $object->db =& $this->db;
@@ -150,7 +150,7 @@ class Lookup extends RogoStaticSingleton
 
         if (isset($this->callbackregister['init'])) {
             foreach ($this->callbackregister['init'] as $number => $callback) {
-                $initobj = call_user_func_array($callback, array($initobj));
+                $initobj = call_user_func_array($callback, [$initobj]);
                 $objid = key($this->callbackregisterdata['init'][$number]);
                 $this->append_lookup_object_debug($objid);
             }
@@ -162,7 +162,7 @@ class Lookup extends RogoStaticSingleton
      */
     public function error_handling($context = null)
     {
-        $context1 = array();
+        $context1 = [];
         $context1 = error_handling($this);
         if (isset($context1['config'])) {
             $context1['config'] = 'Settings hidden';
@@ -198,7 +198,7 @@ class Lookup extends RogoStaticSingleton
                 $data->searchorder = $this->settings->searchorder;
             } else {
                 $this->debug[] = 'Setting default search order as none supplied';
-                $data->searchorder = array('modulecode');
+                $data->searchorder = ['modulecode'];
             }
         }
 
@@ -211,7 +211,7 @@ class Lookup extends RogoStaticSingleton
         $premodulelookupobj->searchorder = $data->searchorder;
         if (isset($this->callbackregister['premodulelookup'])) {
             foreach ($this->callbackregister['premodulelookup'] as $number => $callback) {
-                $premodulelookupobj = call_user_func_array($callback, array($premodulelookupobj));
+                $premodulelookupobj = call_user_func_array($callback, [$premodulelookupobj]);
                 $objid = key($this->callbackregisterdata['premodulelookup'][$number]);
                 $this->append_lookup_object_debug($objid);
             }
@@ -224,13 +224,13 @@ class Lookup extends RogoStaticSingleton
 
         if (isset($this->callbackregister['modulelookup'])) {
             foreach ($this->callbackregister['modulelookup'] as $number => $callback) {
-                $modulelookupobj = call_user_func_array($callback, array($modulelookupobj));
+                $modulelookupobj = call_user_func_array($callback, [$modulelookupobj]);
                 $objid = key($this->callbackregisterdata['modulelookup'][$number]);
                 $this->append_lookup_object_debug($objid);
 
                 if (isset($this->callbackregister['moduletranslatelookup'])) {
                     foreach ($this->callbackregister['moduletranslatelookup'] as $number => $callback) {
-                        $modulelookupobj = call_user_func_array($callback, array($modulelookupobj));
+                        $modulelookupobj = call_user_func_array($callback, [$modulelookupobj]);
                         $objid = key($this->callbackregisterdata['moduletranslatelookup'][$number]);
                         $this->append_lookup_object_debug($objid);
                     }
@@ -239,7 +239,7 @@ class Lookup extends RogoStaticSingleton
         }
 
         if (isset($data->settings->recursive) and $data->settings->recursive == true) {
-            $modulelookupobj->lookupdatasrec = array();
+            $modulelookupobj->lookupdatasrec = [];
             foreach ($modulelookupobj->lookupdatas as $key => $lkdsvalue) {
                 $block = new stdClass();
                 $block->lookupdata =& $modulelookupobj->lookupdatas[$key];
@@ -268,7 +268,7 @@ class Lookup extends RogoStaticSingleton
         $postmodulelookupobj->lookupobj = $modulelookupobj;
         if (isset($this->callbackregister['postmodulelookup'])) {
             foreach ($this->callbackregister['postmodulelookup'] as $number => $callback) {
-                $postmodulelookupobj = call_user_func_array($callback, array($postmodulelookupobj));
+                $postmodulelookupobj = call_user_func_array($callback, [$postmodulelookupobj]);
                 $objid = key($this->callbackregisterdata['postmodulelookup'][$number]);
                 $this->append_lookup_object_debug($objid);
             }
@@ -302,7 +302,7 @@ class Lookup extends RogoStaticSingleton
                 $data->searchorder = $this->settings->searchorder;
             } else {
                 $this->debug[] = 'Setting default search order as none supplied';
-                $data->searchorder = array('username', 'studentID', 'staffID', 'email', array('surname', 'firstname'));
+                $data->searchorder = ['username', 'studentID', 'staffID', 'email', ['surname', 'firstname']];
             }
         }
 
@@ -315,7 +315,7 @@ class Lookup extends RogoStaticSingleton
         $preuserlookupobj->searchorder = $data->searchorder;
         if (isset($this->callbackregister['preuserlookup'])) {
             foreach ($this->callbackregister['preuserlookup'] as $number => $callback) {
-                $preuserlookupobj = call_user_func_array($callback, array($preuserlookupobj));
+                $preuserlookupobj = call_user_func_array($callback, [$preuserlookupobj]);
                 $objid = key($this->callbackregisterdata['preuserlookup'][$number]);
                 $this->append_lookup_object_debug($objid);
             }
@@ -327,13 +327,13 @@ class Lookup extends RogoStaticSingleton
 
         if (isset($this->callbackregister['userlookup'])) {
             foreach ($this->callbackregister['userlookup'] as $number => $callback) {
-                $userlookupobj = call_user_func_array($callback, array($userlookupobj));
+                $userlookupobj = call_user_func_array($callback, [$userlookupobj]);
                 $objid = key($this->callbackregisterdata['userlookup'][$number]);
                 $this->append_lookup_object_debug($objid);
 
                 if (isset($this->callbackregister['usertranslatelookup'])) {
                     foreach ($this->callbackregister['usertranslatelookup'] as $number => $callback) {
-                        $userlookupobj = call_user_func_array($callback, array($userlookupobj));
+                        $userlookupobj = call_user_func_array($callback, [$userlookupobj]);
                         $objid = key($this->callbackregisterdata['usertranslatelookup'][$number]);
                         $this->append_lookup_object_debug($objid);
                     }
@@ -342,7 +342,7 @@ class Lookup extends RogoStaticSingleton
         }
 
         if (isset($data->settings->recursive) and $data->settings->recursive == true) {
-            $userlookupobj->lookupdatasrec = array();
+            $userlookupobj->lookupdatasrec = [];
             foreach ($userlookupobj->lookupdatas as $key => $lkdsvalue) {
                 $block = new stdClass();
                 $block->lookupdata =& $userlookupobj->lookupdatas[$key];
@@ -371,7 +371,7 @@ class Lookup extends RogoStaticSingleton
         $postuserlookupobj->lookupobj = $userlookupobj;
         if (isset($this->callbackregister['postuserlookup'])) {
             foreach ($this->callbackregister['postuserlookup'] as $number => $callback) {
-                $postuserlookupobj = call_user_func_array($callback, array($postuserlookupobj));
+                $postuserlookupobj = call_user_func_array($callback, [$postuserlookupobj]);
                 $objid = key($this->callbackregisterdata['postuserlookup'][$number]);
                 $this->append_lookup_object_debug($objid);
             }
@@ -424,10 +424,10 @@ class Lookup extends RogoStaticSingleton
         $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
         if ($insert == true) {
             array_unshift($this->callbackregister[$section], $callback);
-            array_unshift($this->callbackregisterdata[$section], array($number => $name));
+            array_unshift($this->callbackregisterdata[$section], [$number => $name]);
         } else {
             $this->callbackregister[$section][] = $callback;
-            $this->callbackregisterdata[$section][] = array($number => $name);
+            $this->callbackregisterdata[$section][] = [$number => $name];
         }
 
         return true;
@@ -435,7 +435,7 @@ class Lookup extends RogoStaticSingleton
 
     public function get_callback($section)
     {
-        return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
+        return [&$this->callbackregister[$section], &$this->callbackregisterdata[$section]];
     }
 
     public function append_lookup_object_debug($number, $desc = '')
@@ -465,17 +465,17 @@ class Lookup extends RogoStaticSingleton
 
     public function clear_debug()
     {
-        $this->debug = array();
+        $this->debug = [];
     }
 
     public function version_info($formatted = false, $advanced = false)
     {
         $data = new stdClass();
-        $data->plugins = array();
+        $data->plugins = [];
         foreach ($this->lookupPluginObj as $lookupobj) {
             $data->plugins[] = $lookupobj->get_info();
         }
-        $data->callbacks = array();
+        $data->callbacks = [];
         foreach ($this->callbacktypes as $value) {
             if (isset($this->callbackregister[$value])) {
                 foreach ($this->callbackregister[$value] as $order => $callitem) {
@@ -487,7 +487,7 @@ class Lookup extends RogoStaticSingleton
                     $data->callbacks[$value][] = $dat;
                 }
             } else {
-                $data->callbacks[$value] = array();
+                $data->callbacks[$value] = [];
             }
         }
 

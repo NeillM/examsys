@@ -77,7 +77,7 @@ class ims_enterprise_settings
             die('System Error');
         }
 
-        $settings = array();
+        $settings = [];
 
         $settings['filelocation'] = check_var('filelocation', 'post', false, false, true);
         $settings['createusers'] = check_var('createusers', 'post', false, false, true);
@@ -143,7 +143,7 @@ class ims_enterprise_settings
         $prevpath = check_var('prevpath', 'post', false, false, true);
         $prevmd5 = check_var('prevmd5', 'post', false, false, true);
 
-        $cron = array();
+        $cron = [];
         $cron['prevtime'] = $prevtime;
         $cron['prevpath'] = $prevpath;
         $cron['prevmd5'] = $prevmd5;
@@ -167,7 +167,7 @@ class ims_enterprise_settings
      */
     public function get_course_tags()
     {
-        $tags = array();
+        $tags = [];
         $tags['short'] = 'description/short';
         $tags['long'] = 'description/long';
         $tags['sourcedid'] = 'sourcedid/id';
@@ -182,7 +182,7 @@ class ims_enterprise_settings
     public function get_hierarchy_creation_options()
     {
         global $string;
-        $options = array();
+        $options = [];
         $options['orgname'] = $string['orgname'];
         $options['orgunit'] = $string['orgunit'];
         $options['relationship'] = $string['relationship'];

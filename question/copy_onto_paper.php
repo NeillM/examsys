@@ -111,7 +111,7 @@ if (!isset($_POST['submit'])) {
 
     if ($map_outcomes) {
         $yearutils = new yearutils($mysqli);
-        $vle_api_cache = array();
+        $vle_api_cache = [];
         $vle_api_data = MappingUtils::get_vle_api($_GET['module'], $yearutils->get_current_session(), $vle_api_cache, $mysqli);
     }
 
@@ -128,7 +128,7 @@ if (!isset($_POST['submit'])) {
     $q_IDs = explode(',', $_GET['q_id']);
 
     for ($i = 1; $i < count($q_IDs); $i++) {
-        $map_guid = array();
+        $map_guid = [];
 
         $result = $mysqli->prepare('SELECT
                 q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback,
@@ -242,7 +242,7 @@ if (!isset($_POST['submit'])) {
                 \QuestionsMetadata::setArray($question_id, $questionMetadata);
 
                 // Copy Question Media.
-                $newmedia = array();
+                $newmedia = [];
                 $media = QuestionUtils::getMediaAsString($q_id);
                 if ($media['id'] != '') {
                     $media_array = explode('|', $media['source']);
@@ -445,10 +445,10 @@ if (!isset($_POST['submit'])) {
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['outcomes'] = $map_outcomes;
-$render->render($miscdataset, array(), 'dataset.html');// JS utils dataset.
+$render->render($miscdataset, [], 'dataset.html');// JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/questionlinkinit.min.js"></script>
 </body>

@@ -86,7 +86,7 @@ while ($result->fetch()) {
 $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 <script src="../js/smssummaryinit.min.js"></script>
 </body>

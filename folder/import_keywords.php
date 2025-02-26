@@ -34,7 +34,7 @@ function keywords_from_file($fileName, $userObj, $db)
         $type = 'personal';
         $tmp_userID = $userObj->get_user_ID();
         // Get the existing personal keywords.
-        $existing_keywords = array();
+        $existing_keywords = [];
         $result = $db->prepare('SELECT keyword FROM keywords_user WHERE userID = ?');
         $result->bind_param('i', $tmp_userID);
         $result->execute();
@@ -47,7 +47,7 @@ function keywords_from_file($fileName, $userObj, $db)
         $type = 'team';
         $tmp_userID = $_GET['module'];
         // Get the existing team keywords for the folder.
-          $existing_keywords = array();
+          $existing_keywords = [];
         $result = $db->prepare('SELECT keyword FROM keywords_user WHERE userID = ?');
         $result->bind_param('i', $_GET['module']);
         $result->execute();

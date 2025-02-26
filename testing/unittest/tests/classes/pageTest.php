@@ -41,7 +41,7 @@ class pageTest extends unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('config', 'core');
         $this->type = 'unittest';
-        $datagenerator->change_setting(array('component' => 'core', 'setting' => 'system_install_type', 'value' => $this->type));
+        $datagenerator->change_setting(['component' => 'core', 'setting' => 'system_install_type', 'value' => $this->type]);
     }
 
     /**

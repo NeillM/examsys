@@ -61,16 +61,16 @@ class uonltitest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('lti', 'core');
-        $this->key = $datagenerator->create_key(array('name' => 'test lti'));
+        $this->key = $datagenerator->create_key(['name' => 'test lti']);
         // The externalid is the id from an external sys so place holders in this test.
-        $this->context = $datagenerator->create_context(array('oauth_consumer_key' => 'test', 'externalid' => 1, 'internalid' => $this->module));
-        $this->context2 = $datagenerator->create_context(array('oauth_consumer_key' => 'test', 'externalid' => 2, 'internalid' => $this->module));
-        $this->user = $datagenerator->create_user(array('oauth_consumer_key' => 'test', 'externalid' => 1, 'internalid' => $this->student['id']));
-        $this->user2 = $datagenerator->create_user(array('oauth_consumer_key' => 'test', 'externalid' => 2, 'internalid' => $this->admin['id']));
+        $this->context = $datagenerator->create_context(['oauth_consumer_key' => 'test', 'externalid' => 1, 'internalid' => $this->module]);
+        $this->context2 = $datagenerator->create_context(['oauth_consumer_key' => 'test', 'externalid' => 2, 'internalid' => $this->module]);
+        $this->user = $datagenerator->create_user(['oauth_consumer_key' => 'test', 'externalid' => 1, 'internalid' => $this->student['id']]);
+        $this->user2 = $datagenerator->create_user(['oauth_consumer_key' => 'test', 'externalid' => 2, 'internalid' => $this->admin['id']]);
         // The internalid is a paper id - these are placeholders in these tests.
-        $this->resource = $datagenerator->create_resource(array('oauth_consumer_key' => 'test', 'externalid' => 9, 'internalid' => 1, 'internaltype' => 'paper'));
-        $this->resource2 = $datagenerator->create_resource(array('oauth_consumer_key' => 'test', 'externalid' => 8, 'internalid' => 2, 'internaltype' => 'paper'));
-        $this->key2 = $datagenerator->create_key(array('name' => 'test lti 2', 'secret' => 'MyLittleSecret', 'oauth_consumer_key' => 'test2'));
+        $this->resource = $datagenerator->create_resource(['oauth_consumer_key' => 'test', 'externalid' => 9, 'internalid' => 1, 'internaltype' => 'paper']);
+        $this->resource2 = $datagenerator->create_resource(['oauth_consumer_key' => 'test', 'externalid' => 8, 'internalid' => 2, 'internaltype' => 'paper']);
+        $this->key2 = $datagenerator->create_key(['name' => 'test lti 2', 'secret' => 'MyLittleSecret', 'oauth_consumer_key' => 'test2']);
     }
 
     /**
@@ -97,8 +97,8 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $expected = array(
-            $this->student['id'] . '-1' => array(
+        $expected = [
+            $this->student['id'] . '-1' => [
                 'id' => $this->student['id'],
                 'title' => 'Dr',
                 'surname' => 'User1',
@@ -106,8 +106,8 @@ class uonltitest extends unittestdatabase
                 'initials' => 'A',
                 'username' => 'test1',
                 'externalid' => '1',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $lti->get_user_by_external_id('1', 'test'));
     }
 
@@ -119,8 +119,8 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $expected = array(
-            $this->admin['id'] . '-2' => array(
+        $expected = [
+            $this->admin['id'] . '-2' => [
                 'id' => $this->admin['id'],
                 'title' => 'Miss',
                 'surname' => 'Administrator',
@@ -128,8 +128,8 @@ class uonltitest extends unittestdatabase
                 'initials' => 'S',
                 'username' => 'admin',
                 'externalid' => '2',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $lti->get_links_by_username('admin', $this->key['id']));
     }
 
@@ -141,13 +141,13 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $expected = array(
+        $expected = [
             'id' => $this->key['id'],
             'oauth_consumer_key' => $this->key['oauth_consumer_key'],
             'secret' => $this->key['secret'],
             'name' => $this->key['name'],
             'context_id' => $this->key['contextid'],
-        );
+        ];
         $this->assertEquals($expected, $lti->get_lti_key($this->key['id']));
     }
 
@@ -160,13 +160,13 @@ class uonltitest extends unittestdatabase
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->delete_user_link($this->student['id'], 'test', '1');
-        $querytable = $this->query(array('table' => 'lti_user', 'columns' => array('lti_user_key', 'lti_user_equ')));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['table' => 'lti_user', 'columns' => ['lti_user_key', 'lti_user_equ']]);
+        $expectedtable = [
+            0 => [
                 'lti_user_key' => $this->user2['lti_user_key'],
                 'lti_user_equ' =>  $this->user2['lti_user_equ'],
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -191,27 +191,27 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         // Fake some page parameters, they should be used.
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'context_id' => '52',
-        );
+        ];
         $lti->init_lti0($this->db);
         $lti->add_lti_context($this->module);
-        $querytable = $this->query(array('columns' => array('lti_context_key', 'c_internal_id'), 'table' => 'lti_context'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_context_key', 'c_internal_id'], 'table' => 'lti_context']);
+        $expectedtable = [
+            0 => [
                 'lti_context_key' => $this->context['lti_context_key'],
                 'c_internal_id' =>  $this->context['c_internal_id'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'lti_context_key' => $this->context2['lti_context_key'],
                 'c_internal_id' =>  $this->context2['c_internal_id'],
-            ),
-            2 => array(
+            ],
+            2 => [
                 'lti_context_key' => 'test:52',
                 'c_internal_id' =>  $this->module,
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -224,27 +224,27 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         // Fake some page parameters, they should be ignored.
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'bandits',
             'context_id' => '52',
-        );
+        ];
         $lti->init_lti0($this->db);
         $lti->add_lti_context($this->module, 'test:9');
-        $querytable = $this->query(array('columns' => array('lti_context_key', 'c_internal_id'), 'table' => 'lti_context'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_context_key', 'c_internal_id'], 'table' => 'lti_context']);
+        $expectedtable = [
+            0 => [
                 'lti_context_key' => $this->context['lti_context_key'],
                 'c_internal_id' =>  $this->context['c_internal_id'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'lti_context_key' => $this->context2['lti_context_key'],
                 'c_internal_id' =>  $this->context2['c_internal_id'],
-            ),
-            2 => array(
+            ],
+            2 => [
                 'lti_context_key' => 'test:9',
                 'c_internal_id' =>  $this->module,
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -257,15 +257,15 @@ class uonltitest extends unittestdatabase
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->add_lti_key('My new system', 'newkey', 'IWillNeverTell');
-        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name'), 'table' => 'lti_keys',
-            'where' => array(array('column' => 'oauth_consumer_key', 'value' => 'newkey'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['oauth_consumer_key', 'secret', 'name'], 'table' => 'lti_keys',
+            'where' => [['column' => 'oauth_consumer_key', 'value' => 'newkey']]]);
+        $expectedtable = [
+            0 => [
                 'oauth_consumer_key' => 'newkey',
                 'secret' =>  'IWillNeverTell',
                 'name' =>  'My new system',
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -277,25 +277,25 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'resource_link_id' => '15',
-        );
+        ];
         $lti->add_lti_resource(2, 'paper');
-        $querytable = $this->query(array('columns' => array('lti_resource_key', 'internal_id', 'internal_type'), 'table' => 'lti_resource',
-            'where' => array(array('column' => 'internal_id', 'value' => 2))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_resource_key', 'internal_id', 'internal_type'], 'table' => 'lti_resource',
+            'where' => [['column' => 'internal_id', 'value' => 2]]]);
+        $expectedtable = [
+            0 => [
                 'lti_resource_key' => 'test:15',
                 'internal_id' =>  '2',
                 'internal_type' =>  'paper',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'lti_resource_key' => $this->resource2['lti_resource_key'],
                 'internal_id' =>  $this->resource2['internal_id'],
                 'internal_type' =>  $this->resource2['internal_type'],
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -307,25 +307,25 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'resource_link_id' => '23',
-        );
+        ];
         $lti->add_lti_resource(2, 'paper', 'bandits:16');
-        $querytable = $this->query(array('columns' => array('lti_resource_key', 'internal_id', 'internal_type'), 'table' => 'lti_resource',
-            'where' => array(array('column' => 'internal_id', 'value' => 2))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_resource_key', 'internal_id', 'internal_type'], 'table' => 'lti_resource',
+            'where' => [['column' => 'internal_id', 'value' => 2]]]);
+        $expectedtable = [
+            0 => [
                 'lti_resource_key' => 'bandits:16',
                 'internal_id' =>  '2',
                 'internal_type' =>  'paper',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'lti_resource_key' => $this->resource2['lti_resource_key'],
                 'internal_id' =>  $this->resource2['internal_id'],
                 'internal_type' =>  $this->resource2['internal_type'],
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -337,23 +337,23 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'blue',
             'user_id' => '169',
-        );
+        ];
         $lti->add_lti_user($this->student['id']);
-        $querytable = $this->query(array('columns' => array('lti_user_key', 'lti_user_equ'), 'table' => 'lti_user', 'orderby' => array('lti_user_key'),
-            'where' => array(array('column' => 'lti_user_equ', 'value' => $this->student['id']))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_user_key', 'lti_user_equ'], 'table' => 'lti_user', 'orderby' => ['lti_user_key'],
+            'where' => [['column' => 'lti_user_equ', 'value' => $this->student['id']]]]);
+        $expectedtable = [
+            0 => [
                 'lti_user_key' => 'blue:169',
                 'lti_user_equ' =>  $this->student['id'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'lti_user_key' => $this->user['lti_user_key'],
                 'lti_user_equ' =>  $this->user['lti_user_equ'],
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -365,23 +365,23 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'blue',
             'user_id' => '169',
-        );
+        ];
         $lti->add_lti_user($this->student['id'], 'bandits:69');
-        $querytable = $this->query(array('columns' => array('lti_user_key', 'lti_user_equ'), 'table' => 'lti_user', 'orderby' => array('lti_user_key'),
-            'where' => array(array('column' => 'lti_user_equ', 'value' => $this->student['id']))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_user_key', 'lti_user_equ'], 'table' => 'lti_user', 'orderby' => ['lti_user_key'],
+            'where' => [['column' => 'lti_user_equ', 'value' => $this->student['id']]]]);
+        $expectedtable = [
+            0 => [
                 'lti_user_key' => 'bandits:69',
                 'lti_user_equ' =>  $this->student['id'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'lti_user_key' => $this->user['lti_user_key'],
                 'lti_user_equ' =>  $this->user['lti_user_equ'],
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -395,24 +395,24 @@ class uonltitest extends unittestdatabase
         $lti->init_lti0($this->db);
         $lti->delete_lti_key($this->key2['id']);
         // Check that the live keys are present.
-        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name'), 'table' => 'lti_keys', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['oauth_consumer_key', 'secret', 'name'], 'table' => 'lti_keys', 'where' => [['column' => 'deleted', 'value' => null, 'operator' => 'IS']]]);
+        $expectedtable = [
+            0 => [
                 'oauth_consumer_key' => 'test',
                 'secret' =>  'testsecret',
                 'name' =>  'test lti',
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
         // Check that the deleted keys been marked as deleted and not removed completely.
-        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name'), 'table' => 'lti_keys', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS NOT'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['oauth_consumer_key', 'secret', 'name'], 'table' => 'lti_keys', 'where' => [['column' => 'deleted', 'value' => null, 'operator' => 'IS NOT']]]);
+        $expectedtable = [
+            0 => [
                 'oauth_consumer_key' => 'test2',
                 'secret' =>  'MyLittleSecret',
                 'name' =>  'test lti 2',
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -424,12 +424,12 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $expected = array(
+        $expected = [
             1,
             'paper'
-        );
+        ];
         $lookup = $lti->lookup_lti_resource('test:9');
-        $this->assertEquals($expected, array($lookup[0], $lookup[1]));
+        $this->assertEquals($expected, [$lookup[0], $lookup[1]]);
     }
 
     /**
@@ -440,16 +440,16 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'resource_link_id' => '9',
-        );
-        $expected = array(
+        ];
+        $expected = [
             1,
             'paper'
-        );
+        ];
         $lookup = $lti->lookup_lti_resource();
-        $this->assertEquals($expected, array($lookup[0], $lookup[1]));
+        $this->assertEquals($expected, [$lookup[0], $lookup[1]]);
     }
 
     /**
@@ -472,10 +472,10 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'user_id' => '2',
-        );
+        ];
         $lookup = $lti->lookup_lti_user('test:1');
         $this->assertEquals($this->student['id'], $lookup[0]);
     }
@@ -488,10 +488,10 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'user_id' => '2',
-        );
+        ];
         $lookup = $lti->lookup_lti_user();
         $this->assertEquals($this->admin['id'], $lookup[0]);
     }
@@ -504,10 +504,10 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'user_id' => '13',
-        );
+        ];
         $this->assertFalse($lti->lookup_lti_user('test:16'));
         $this->assertFalse($lti->lookup_lti_user());
     }
@@ -533,16 +533,16 @@ class uonltitest extends unittestdatabase
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->update_lti_key($this->key['id'], 'New name', 'newconsumerkey', 'DoNotTellAnyone', 'context');
-        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name', 'context_id'), 'table' => 'lti_keys',
-            'where' => array(array('column' => 'id', 'value' => $this->key['id']))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['oauth_consumer_key', 'secret', 'name', 'context_id'], 'table' => 'lti_keys',
+            'where' => [['column' => 'id', 'value' => $this->key['id']]]]);
+        $expectedtable = [
+            0 => [
                 'oauth_consumer_key' => 'newconsumerkey',
                 'secret' =>  'DoNotTellAnyone',
                 'name' =>  'New name',
                 'context_id' =>  'context',
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -554,20 +554,20 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'resource_link_id' => '8',
-        );
+        ];
         $lti->update_lti_resource(6, 'module', 'test:9');
-        $querytable = $this->query(array('columns' => array('lti_resource_key', 'internal_id', 'internal_type'), 'table' => 'lti_resource',
-            'where' => array(array('column' => 'lti_resource_key', 'value' => 'test:9'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_resource_key', 'internal_id', 'internal_type'], 'table' => 'lti_resource',
+            'where' => [['column' => 'lti_resource_key', 'value' => 'test:9']]]);
+        $expectedtable = [
+            0 => [
                 'lti_resource_key' => $this->resource['lti_resource_key'],
                 'internal_id' =>  '6',
                 'internal_type' =>  'module',
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -579,20 +579,20 @@ class uonltitest extends unittestdatabase
     {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
-        $lti->info = array(
+        $lti->info = [
             'oauth_consumer_key' => 'test',
             'resource_link_id' => '8',
-        );
+        ];
         $lti->update_lti_resource(6, 'module');
-        $querytable = $this->query(array('columns' => array('lti_resource_key', 'internal_id', 'internal_type'), 'table' => 'lti_resource',
-            'where' => array(array('column' => 'lti_resource_key', 'value' => 'test:8'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['lti_resource_key', 'internal_id', 'internal_type'], 'table' => 'lti_resource',
+            'where' => [['column' => 'lti_resource_key', 'value' => 'test:8']]]);
+        $expectedtable = [
+            0 => [
                 'lti_resource_key' => $this->resource2['lti_resource_key'],
                 'internal_id' =>  '6',
                 'internal_type' =>  'module',
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 }

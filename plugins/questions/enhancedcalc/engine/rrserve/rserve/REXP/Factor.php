@@ -27,7 +27,7 @@ class Rserve_REXP_Factor extends Rserve_REXP_Integer {
 	
 	public function asCharacters() {
 		$levels = $this->levels;
-		$r = array();
+		$r = [];
 		foreach($this->values as $v) {
 			$r[] = $levels[$v];
 		}

@@ -26,11 +26,11 @@
  */
 class RogoObject
 {
-    protected $_fields_editable = array();
-    protected $_modified_fields = array();
+    protected $_fields_editable = [];
+    protected $_modified_fields = [];
 
     // 'Compound' fields are concatenated within a question
-    protected $_fields_compound = array();
+    protected $_fields_compound = [];
 
     /**
      * Record the value of a modified field so that it can be used for change tracking

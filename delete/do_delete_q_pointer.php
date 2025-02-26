@@ -49,7 +49,7 @@ for ($i = 0; $i < count($tmp_pIDs); $i++) {
         $result->close();
 
         // Look up any std set IDs for the paper.
-        $std_setIDs = array();
+        $std_setIDs = [];
         $result = $mysqli->prepare('SELECT id FROM std_set WHERE paperID = ?');
         $result->bind_param('i', $tmp_paperID);
         $result->execute();
@@ -91,5 +91,5 @@ $mysqli->close();
 $render = new render($configObject);
 $lang['title'] = $string['questiondeleted'];
 $lang['success'] = $string['msg'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

@@ -34,7 +34,7 @@ if (!is_null($examstart)) {
 
 // Do we want to view remote summative exams.
 $remote = param::optional('remote', false, param::BOOLEAN, param::FETCH_GET);
-$properties_list = array();
+$properties_list = [];
 
 if (!$remote) {
     $current_address = NetworkUtils::get_client_address();
@@ -56,16 +56,16 @@ $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $renderpath = $texteditorplugin->get_render_paths();
 $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
 $render = new render($configObject, $renderpath);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/header.css',
         '/css/invigilator.css',
         '/css/popup_menu.css',
-    ),
-    'scripts' => array(
+    ],
+    'scripts' => [
         '/js/invigilatorinit.min.js',
-    ),
-);
+    ],
+];
 $headerdata['mathjax'] = false;
 $headerdata['three'] = false;
 $headerdata['mee'] = false;
@@ -86,7 +86,7 @@ if (!$lab_object and !$remote) {
     $lang['deniedmsg'] = $string['unknowncomputermsg'];
     $render->render($data, $lang, 'invigilator/accessdenied.html');
 } else {
-    $papers = array();
+    $papers = [];
     foreach ($properties_list as $property_object) {
         $id = $property_object->get_property_id();
         $papers[$id]['title'] = $property_object->get_paper_title();
@@ -216,6 +216,6 @@ if (!$lab_object and !$remote) {
         $miscdataset['attributes']['clarification'] = 1;
     }
     $miscdataset['attributes']['tab'] = param::optional('tab', '', param::INT, param::FETCH_GET);
-    $render->render($miscdataset, array(), 'dataset.html');
+    $render->render($miscdataset, [], 'dataset.html');
 }
-$render->render(array(), array(), 'footer.html');
+$render->render([], [], 'footer.html');

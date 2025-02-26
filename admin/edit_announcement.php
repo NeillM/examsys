@@ -81,7 +81,7 @@ require '../include/toprightmenu.inc';
 <tr>
 <td></td><td>
 <?php
-$icons = array(1 => 'news_64.png', 2 => 'new_64.png', 3 => 'tip_64.png', 4 => 'software_64.png', 5 => 'exclamation_64.png', 6 => 'sync_64.png', 7 => 'megaphone_64.png');
+$icons = [1 => 'news_64.png', 2 => 'new_64.png', 3 => 'tip_64.png', 4 => 'software_64.png', 5 => 'exclamation_64.png', 6 => 'sync_64.png', 7 => 'megaphone_64.png'];
 
 for (
     $i = 1; $i <= 7; $i++
@@ -133,6 +133,6 @@ if (mb_substr($startdate, 0, 4) < date('Y')) {
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_edit_announcement.php';
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 </html>

@@ -30,7 +30,7 @@ require_once '../include/errors.php';
 $pluginslist = plugin_manager::listplugins();
 
 if (isset($_POST['Uninstall']) or isset($_POST['Update'])) {
-    $pluginarray = array();
+    $pluginarray = [];
     foreach ($pluginslist as $plugin => $pluginns) {
         $change = check_var('chk_' . $plugin, 'POST', false, false, true);
         if (!is_null($change)) {
@@ -39,7 +39,7 @@ if (isset($_POST['Uninstall']) or isset($_POST['Update'])) {
     }
     $dbuser = check_var('dbuser', 'POST', true, false, true);
     $dbpasswd = check_var('dbpasswd', 'POST', true, false, true);
-    $error = array();
+    $error = [];
     // Uninstall.
     if (isset($_POST['Uninstall'])) {
         foreach ($pluginarray as $plugin) {
@@ -100,11 +100,11 @@ $lang['update'] = $string['update'];
 $lang['uninstall'] = $string['uninstall'];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="' . $config['cfg_root_path'] . '/css/list.css"/>';
-$breadcrumb = array($string['home'] => '../index.php', $string['administrativetools'] => '../admin/index.php');
+$breadcrumb = [$string['home'] => '../index.php', $string['administrativetools'] => '../admin/index.php'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
 $render->render_admin_content($breadcrumb, $lang);
-$plugins = array();
+$plugins = [];
 foreach ($pluginslist as $plugin => $pluginns) {
     $p = new $pluginns($mysqli);
     $newversion = $p->get_file_version();
@@ -121,12 +121,12 @@ foreach ($pluginslist as $plugin => $pluginns) {
     } else {
         $install = false;
     }
-    $plugins[$plugin] = array($newversion, $oldversion, $install, $update);
+    $plugins[$plugin] = [$newversion, $oldversion, $install, $update];
 }
-$header = array(array('class' => 'col10', 'style' => 'width:20%', 'value' => $string['plugins']),
-array('class' => 'col', 'style' => 'width:20%', 'value' => $string['newversion']),
-array('class' => 'col', 'style' => 'width:20%', 'value' => $string['oldversion']),
-array('class' => 'col', 'style' => 'width:20%', 'value' => $string['status']),
-array('class' => 'col', 'style' => 'width:20%', 'value' => ''));
+$header = [['class' => 'col10', 'style' => 'width:20%', 'value' => $string['plugins']],
+['class' => 'col', 'style' => 'width:20%', 'value' => $string['newversion']],
+['class' => 'col', 'style' => 'width:20%', 'value' => $string['oldversion']],
+['class' => 'col', 'style' => 'width:20%', 'value' => $string['status']],
+['class' => 'col', 'style' => 'width:20%', 'value' => '']];
 $render->render_admin_update($plugins, $header, $_SERVER['PHP_SELF'], $lang);
 $render->render_admin_footer();

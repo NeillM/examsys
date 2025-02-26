@@ -103,8 +103,8 @@ class OnlineHelp
         $old_title = '';
         $parent = '';
         $old_parent = '';
-        $help_toc = array();
-        $help_toc_titles = array();
+        $help_toc = [];
+        $help_toc_titles = [];
 
         $help_section = 0;
         $result = $this->db->prepare($sql);
@@ -213,7 +213,7 @@ class OnlineHelp
             return false;
         }
 
-        return array('id' => $id, 'title' => $title, 'body' => $body, 'page_type' => $page_type, 'checkout_time' => $checkout_time, 'checkout_authorID' => $checkout_authorID, 'roles' => $roles);
+        return ['id' => $id, 'title' => $title, 'body' => $body, 'page_type' => $page_type, 'checkout_time' => $checkout_time, 'checkout_authorID' => $checkout_authorID, 'roles' => $roles];
     }
 
     /**
@@ -599,7 +599,7 @@ class OnlineHelp
      */
     public function find($searchstring)
     {
-        $search_results = array();
+        $search_results = [];
 
         if ($this->type == 'student') {
             // Check if the database is using a non-standard table type that does not support full text indexing.
@@ -634,7 +634,7 @@ class OnlineHelp
         $result->execute();
         $result->bind_result($id, $title, $score);
         while ($result->fetch()) {
-            $search_results[] = array('id' => $id, 'title' => $title, 'score' => $score);
+            $search_results[] = ['id' => $id, 'title' => $title, 'score' => $score];
         }
         $result->close();
 

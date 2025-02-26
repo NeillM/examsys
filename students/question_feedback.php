@@ -58,7 +58,7 @@ if (!$propertyObj->is_question_fb_released()) {
 
 //lookup previous sessionid from log_metadata.started property_id
 if (isset($_GET['userid'])) {
-    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+    if ($userObject->has_role(['SysAdmin', 'Admin', 'Staff'])) {
         $log_metadata = new LogMetadata($_GET['userid'], $paperID, $mysqli);
     } else {
         $notice->access_denied($mysqli, $string, $string['norights'], true, true);
@@ -109,15 +109,15 @@ $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $renderpath = $texteditorplugin->get_render_paths();
 $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
 $render = new render($configObject, $renderpath);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/start.css',
         '/css/finish.css',
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
-    ),
+    ],
     'scripts' => [],
-);
+];
 $lang['title'] = $string['examscript'];
 $headerdata['mathjax'] = false;
 if ($configObject->get_setting('core', 'paper_mathjax')) {
@@ -151,13 +151,13 @@ $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_
 $contentdata['logopath'] = $logo_path;
 $contentdata['examclarification'] = '';
 $contentdata['papertitle'] = $propertyObj->get_paper_title();
-$contentdata['screen'] = array();
-$contentdata['hidden'] = array();
+$contentdata['screen'] = [];
+$contentdata['hidden'] = [];
 $render->render($contentdata, $string, 'paper/header.html');
 $current_screen = 1;
 
 if (isset($_GET['userID'])) {
-    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+    if ($userObject->has_role(['SysAdmin', 'Admin', 'Staff'])) {
         if ($_GET['userID'] != '') {
             $userID = $_GET['userID'];
         } else {
@@ -176,7 +176,7 @@ if (isset($_GET['userID'])) {
 $old_q_id = 0;
 $old_screen = 0;
 // Get any marking override for the paper
-$overrides = array();
+$overrides = [];
 $sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
       FROM marking_override m INNER JOIN users u ON m.marker_id = u.id
       INNER JOIN log{$log_type} l ON m.log_id = l.id
@@ -187,7 +187,7 @@ $result->execute();
 $result->store_result();
 $result->bind_result($o_q_id, $o_title, $o_surname, $o_date_marked, $o_new_mark_type, $o_adjmark);
 while ($result->fetch()) {
-    $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
+    $overrides[$o_q_id] = ['q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark];
 }
 $result->close();
 
@@ -199,12 +199,12 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $render = new render($configObject);
-$render->render($miscdataset, array(), 'dataset.html');
-$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render($miscdataset, [], 'dataset.html');
+$render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 $mysqli->close();
 $data = [
-    'scripts' => array(
+    'scripts' => [
         '/js/questionfeedback.min.js',
-    ),
+    ],
 ];
-$render->render($data, array(), 'footer.html');
+$render->render($data, [], 'footer.html');

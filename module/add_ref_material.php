@@ -99,7 +99,7 @@ for ($size = 200; $size < 850; $size += 50) {
 <tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', '', plugins\plugins_texteditor::TYPE_STANDARD); ?></td><td style="vertical-align:top">
 <?php
   echo '<div style="margin-top:1px; display:block; width:400px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%">';
-  $modules_array = array();
+  $modules_array = [];
   $module_array = $userObject->get_staff_accessable_modules();
 
   $module_no = 0;

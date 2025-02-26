@@ -54,7 +54,7 @@ class Exclusion
      */
     public function load()
     {
-        $this->excluded = array();
+        $this->excluded = [];
         $result = $this->db->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ? ORDER BY q_id');
         $result->bind_param('i', $this->paper_id);
         $result->execute();

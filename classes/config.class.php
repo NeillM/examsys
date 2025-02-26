@@ -32,7 +32,7 @@ class Config extends RogoStaticSingleton
      * Areas of the ExamSys system that can be configured.
      * @var array list of areas
      */
-    public static $config_area = array(
+    public static $config_area = [
         'api',
         'gradebook',
         'lti',
@@ -47,7 +47,7 @@ class Config extends RogoStaticSingleton
         'ims',
         'contact',
         'mailer'
-    );
+    ];
     /**
      * @var array
      */
@@ -710,7 +710,7 @@ class Config extends RogoStaticSingleton
                 return $this->data[$var];
             }
         } elseif (is_array($var)) {
-            $dat = array();
+            $dat = [];
             foreach ($var as $key) {
                 if (isset($this->data[$key])) {
                     $dat[$key] = $this->data[$key];

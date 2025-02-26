@@ -37,7 +37,7 @@ require '../config/index.inc';  // Get the logo
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <?php
-    if ($userObject->has_role(array('External Examiner'))) {
+    if ($userObject->has_role(['External Examiner'])) {
         ?>
   <title><?php echo $string['externalexaminerarea']; ?></title>
         <?php
@@ -71,7 +71,7 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu(1);
 
-if ($userObject->has_role(array('External Examiner'))) {
+if ($userObject->has_role(['External Examiner'])) {
     ?>
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>

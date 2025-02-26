@@ -193,14 +193,14 @@ abstract class plugins_texteditor extends \plugins\plugins
         preg_match_all('#<div class="mee">(.*?)\</div>#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
             foreach ($tex_matches[0] as $m) {
-                $new = str_replace(array('<div class="mee">','</div>'), array('[tex]','[/tex]'), $m);
+                $new = str_replace(['<div class="mee">','</div>'], ['[tex]','[/tex]'], $m);
                 $text = str_replace($m, $new, $text);
             }
         }
         preg_match_all('#<span class="mee">(.*?)\</span>#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
             foreach ($tex_matches[0] as $m) {
-                $new = str_replace(array('<span class="mee">','</span>'), array('[texi]','[/texi]'), $m);
+                $new = str_replace(['<span class="mee">','</span>'], ['[texi]','[/texi]'], $m);
                 $text = str_replace($m, $new, $text);
             }
         }
@@ -222,14 +222,14 @@ abstract class plugins_texteditor extends \plugins\plugins
         preg_match_all('#\[tex\](.*?)\[/tex\]#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
             foreach ($tex_matches[0] as $m) {
-                $new = str_replace(array('[tex]','[/tex]'), array('<div class="mee">','</div>'), $m);
+                $new = str_replace(['[tex]','[/tex]'], ['<div class="mee">','</div>'], $m);
                 $text = str_replace($m, $new, $text);
             }
         }
         preg_match_all('#\[texi\](.*?)\[/texi\]#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
             foreach ($tex_matches[0] as $m) {
-                $new = str_replace(array('[texi]','[/texi]'), array('<span class="mee">','</span>'), $m);
+                $new = str_replace(['[texi]','[/texi]'], ['<span class="mee">','</span>'], $m);
                 $text = str_replace($m, $new, $text);
             }
         }
@@ -253,7 +253,7 @@ abstract class plugins_texteditor extends \plugins\plugins
      */
     public function enable_plugin()
     {
-        $enabled = array($this->plugin);
+        $enabled = [$this->plugin];
         $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_texteditor');
     }
 
@@ -310,7 +310,7 @@ abstract class plugins_texteditor extends \plugins\plugins
      */
     public function get_render_paths()
     {
-        $renderpath = array($this->get_header_path());
+        $renderpath = [$this->get_header_path()];
         // Always get plain text editor.
         $renderpath[] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'texteditor';
         return $renderpath;

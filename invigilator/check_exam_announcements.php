@@ -19,7 +19,7 @@ require_once '../include/invigilator_auth.inc';
 
 $paperID = $_GET['paperID'];
 if (!isset($string)) {
-    $string = array();
+    $string = [];
 }
 
 $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);

@@ -51,11 +51,11 @@ class schoolutilstest extends unittestdatabase
         $this->school2 = $this->get_school_id('Training');
         $this->faculty2 = $this->get_faculty_id('Administrative and Support Units');
         $datagenerator = $this->get_datagenerator('school', 'core');
-        $this->school3 = $datagenerator->create_school(array('school' => 'Test school 3', 'facultyID' => $this->faculty, 'externalid' => 'qwerty', 'externalsys' => 'external'));
+        $this->school3 = $datagenerator->create_school(['school' => 'Test school 3', 'facultyID' => $this->faculty, 'externalid' => 'qwerty', 'externalsys' => 'external']);
         \schoolutils::delete_school($this->school3['id'], $this->db);
         $datagenerator = $this->get_datagenerator('course', 'core');
-        $datagenerator->create_course(array('schoolid' => $this->school2));
-        $course = $datagenerator->create_course(array('schoolid' => $this->school2));
+        $datagenerator->create_course(['schoolid' => $this->school2]);
+        $course = $datagenerator->create_course(['schoolid' => $this->school2]);
         \CourseUtils::delete_course_by_id($course['id'], $this->db);
     }
 
@@ -74,27 +74,27 @@ class schoolutilstest extends unittestdatabase
         // Check unsuccessful update - no faculty supplied.
         $this->assertFalse(SchoolUtils::update_school($this->school2, '', 'test update school 2', 'TST2', '678912', null, $this->db));
         // Check schools table update as expected.
-        $querytable = $this->query(array('columns' => array('school', 'facultyID', 'code', 'externalid', 'externalsys'), 'table' => 'schools'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['school', 'facultyID', 'code', 'externalid', 'externalsys'], 'table' => 'schools']);
+        $expectedtable = [
+            0 => [
                 'school' => 'test update school',
                 'facultyID' => $this->faculty,
                 'code' => null,
                 'externalid' => '123456',
-                'externalsys' => 'external'),
-            1 => array(
+                'externalsys' => 'external'],
+            1 => [
                 'school' => 'Training',
                 'facultyID' => $this->faculty2,
                 'code' => null,
                 'externalid' => 'berty',
-                'externalsys' => 'external'),
-            2 => array(
+                'externalsys' => 'external'],
+            2 => [
                 'school' => $this->school3['school'],
                 'facultyID' => $this->school3['facultyID'],
                 'code' => $this->school3['code'],
                 'externalid' => $this->school3['externalid'],
-                'externalsys' => $this->school3['externalsys'])
-        );
+                'externalsys' => $this->school3['externalsys']]
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -125,7 +125,7 @@ class schoolutilstest extends unittestdatabase
      */
     public function test_diff_external_schools_to_internal_schools()
     {
-        $external = array('ABC', 'berty', 'IJKL');
-        $this->assertEquals(array('qwerty'), SchoolUtils::diff_external_schools_to_internal_schools($external, 'external', $this->db));
+        $external = ['ABC', 'berty', 'IJKL'];
+        $this->assertEquals(['qwerty'], SchoolUtils::diff_external_schools_to_internal_schools($external, 'external', $this->db));
     }
 }

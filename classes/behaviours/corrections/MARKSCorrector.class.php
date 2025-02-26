@@ -39,7 +39,7 @@ class MARKSCorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
 
         $i = 0;
         foreach ($this->_question->options as $option) {

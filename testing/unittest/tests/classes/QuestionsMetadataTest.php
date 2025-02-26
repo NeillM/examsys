@@ -37,7 +37,7 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $this->question = $datagenerator->create_question(
-            array(
+            [
                 'type' => 'mcq',
                 'user' => 'admin',
                 'status' => 1,
@@ -53,7 +53,7 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
                 'display_method' => 'vertical',
                 'score_method' => 'Mark per Option',
                 'externalref' => 'testvalue',
-            )
+            ]
         );
     }
 
@@ -65,49 +65,49 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
     {
         // Insert.
         QuestionsMetadata::set($this->question['id'], 'testtype', 'testvalue');
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
-        $expected = array(
-            0 => array(
+        $actual = $this->query(['columns' => ['type', 'value', 'questionID'], 'table' => 'questions_metadata', 'orderby' => 'type']);
+        $expected = [
+            0 => [
                 'type' => 'externalref',
                 'value' =>  $this->question['externalref'],
                 'questionID' =>  $this->question['id'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'type' => 'testtype',
                 'value' => 'testvalue',
                 'questionID' =>  $this->question['id'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $actual);
 
         // Update and test for long strings.
         QuestionsMetadata::set($this->question['id'], 'externalref', str_repeat('9876543210', 100));
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
-        $expected = array(
-            0 => array(
+        $actual = $this->query(['columns' => ['type', 'value', 'questionID'], 'table' => 'questions_metadata', 'orderby' => 'type']);
+        $expected = [
+            0 => [
                 'type' => 'externalref',
                 'value' => str_repeat('9876543210', 100), // 1000 character string for long varchar
                 'questionID' =>  $this->question['id'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'type' => 'testtype',
                 'value' => 'testvalue',
                 'questionID' =>  $this->question['id'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $actual);
 
         // Set the test value to empty, confirm deleted
         QuestionsMetadata::set($this->question['id'], 'externalref', $this->question['externalref']);
         QuestionsMetadata::set($this->question['id'], 'testtype', '');
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
-        $expected = array(
-            0 => array(
+        $actual = $this->query(['columns' => ['type', 'value', 'questionID'], 'table' => 'questions_metadata', 'orderby' => 'type']);
+        $expected = [
+            0 => [
                 'type' => 'externalref',
                 'value' =>  $this->question['externalref'],
                 'questionID' =>  $this->question['id'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $actual);
 
         // Update and check that exception occurs attempting to set to >2500 characters
@@ -123,24 +123,24 @@ class QuestionsMetadataTest extends \testing\unittest\unittestdatabase
     {
         // Insert.
         QuestionsMetadata::setArray($this->question['id'], ['testtype' => 'testvalue', 'testtype2' => 'anothertestvalue']);
-        $actual = $this->query(array('columns' => array('type', 'value', 'questionID'), 'table' => 'questions_metadata', 'orderby' => 'type'));
-        $expected = array(
-            0 => array(
+        $actual = $this->query(['columns' => ['type', 'value', 'questionID'], 'table' => 'questions_metadata', 'orderby' => 'type']);
+        $expected = [
+            0 => [
                 'type' => 'externalref',
                 'value' =>  $this->question['externalref'],
                 'questionID' =>  $this->question['id'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'type' => 'testtype',
                 'value' => 'testvalue',
                 'questionID' =>  $this->question['id'],
-            ),
-            2 => array(
+            ],
+            2 => [
                 'type' => 'testtype2',
                 'value' => 'anothertestvalue',
                 'questionID' =>  $this->question['id'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $actual);
     }
 

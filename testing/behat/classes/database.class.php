@@ -134,7 +134,7 @@ class database
         }
 
         // Remove permissions from the DB users.
-        $usernames = array('auth' => 300, 'stu' => 301, 'staff' => 302, 'ext' => 303, 'sys' => 304, 'sct' => 305, 'inv' => 306);
+        $usernames = ['auth' => 300, 'stu' => 301, 'staff' => 302, 'ext' => 303, 'sys' => 304, 'sct' => 305, 'inv' => 306];
         foreach ($usernames as $username => $err_code) {
             $test_username = $basedb . '_' . $username;
             if (InstallUtils::does_user_exist($test_username)) {

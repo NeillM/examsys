@@ -126,8 +126,8 @@ class Rserve_Connection {
 		}
     //cczsa1 added next block to shorten timeout on sockect connection
     if (!is_null($options) and PHP_OS != 'SunOS') {
-      $valur=socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $options['seconds'], 'usec' => $options['milliseconds']));
-      $valur=socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $options['seconds'], 'usec' => $options['milliseconds']));
+      $valur=socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, ['sec' => $options['seconds'], 'usec' => $options['milliseconds']]);
+      $valur=socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ['sec' => $options['seconds'], 'usec' => $options['milliseconds']]);
     }
 
 
@@ -235,12 +235,12 @@ class Rserve_Connection {
 			}
 		}
 		$res = int32($buf);
-		return(array(
+		return([
 			'code'=>$res,
 			'is_error'=>($res & 15) != 1,
 			'error'=>($res >> 24) & 127,
 			'contents'=>$buf
-		));
+		]);
 	}
 
 	/**

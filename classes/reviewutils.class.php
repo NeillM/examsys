@@ -46,7 +46,7 @@ class ReviewUtils
     public static function get_past_papers($externalID, $db)
     {
         $config = Config::get_instance();
-        $released_papers = array();
+        $released_papers = [];
         $now = time();
         $result = $db->prepare("
             SELECT
@@ -77,11 +77,11 @@ class ReviewUtils
         $result->store_result();
         $result->bind_result($paperID, $paper_title, $crypt_name, $start_date);
         while ($result->fetch()) {
-            $released_papers[$paperID] = array(
+            $released_papers[$paperID] = [
                 'paper_title' => $paper_title,
                 'crypt_name' => $crypt_name,
                 'start_date' => date($config->get('cfg_very_short_datetime_php'), $start_date)
-            );
+            ];
         }
         $result->close();
         return $released_papers;

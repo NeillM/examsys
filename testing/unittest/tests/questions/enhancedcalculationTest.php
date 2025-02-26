@@ -32,104 +32,104 @@ class enhancedcalculationTest extends \testing\unittest\UnitTest
     public function test_process_user_answer_valid()
     {
         require_once dirname(__DIR__, 4) . '/plugins/questions/enhancedcalc/enhancedcalc.class.php';
-        $emptyarray = array();
-        $post1 = array(
+        $emptyarray = [];
+        $post1 = [
             'uans' => '10',
             'uansunit' => 'm/s',
-        );
+        ];
         $return1 = EnhancedCalc::process_user_answer($post1, $emptyarray);
         $this->assertEquals(json_encode($post1), $return1);
 
-        $post2 = array(
+        $post2 = [
             'uans' => '1.69 m/s',
-        );
+        ];
         $return2 = EnhancedCalc::process_user_answer($post2, $emptyarray);
         $this->assertEquals(json_encode($post2), $return2);
 
-        $post3 = array(
+        $post3 = [
             'uans' => '0.69',
             'uansunit' => 'μm',
-        );
+        ];
         $return3 = EnhancedCalc::process_user_answer($post3, $emptyarray);
         $this->assertEquals(json_encode($post3), $return3);
 
-        $post4 = array(
+        $post4 = [
             'uans' => '69μm',
-        );
+        ];
         $return4 = EnhancedCalc::process_user_answer($post4, $emptyarray);
         $this->assertEquals(json_encode($post4), $return4);
 
-        $post5 = array(
+        $post5 = [
             'uans' => '-0.69',
             'uansunit' => 'kg-m/s',
-        );
+        ];
         $return5 = EnhancedCalc::process_user_answer($post5, $emptyarray);
         $this->assertEquals(json_encode($post5), $return5);
 
-        $post6 = array(
+        $post6 = [
             'uans' => '-42',
             'uansunit' => 'mol',
-        );
+        ];
         $return6 = EnhancedCalc::process_user_answer($post6, $emptyarray);
         $this->assertEquals(json_encode($post6), $return6);
 
-        $post7 = array(
+        $post7 = [
             'uans' => '10',
             'uansunit' => 'Pa s',
-        );
+        ];
         $return7 = EnhancedCalc::process_user_answer($post7, $emptyarray);
         $this->assertEquals(json_encode($post7), $return7);
 
-        $post8 = array(
+        $post8 = [
             'uans' => '46658',
             'uansunit' => 'kg/m/s',
-        );
+        ];
         $return8 = EnhancedCalc::process_user_answer($post8, $emptyarray);
         $this->assertEquals(json_encode($post8), $return8);
 
-        $post9 = array(
+        $post9 = [
             'uans' => '-1.10',
             'uansunit' => 'Ω',
-        );
+        ];
         $return9 = EnhancedCalc::process_user_answer($post9, $emptyarray);
         $this->assertEquals(json_encode($post9), $return9);
 
         // Latex for power
-        $post10 = array(
+        $post10 = [
             'uans' => '2',
             'uansunit' => 'm s^2',
-        );
+        ];
         $return10 = EnhancedCalc::process_user_answer($post10, $emptyarray);
         $this->assertEquals(json_encode($post10), $return10);
 
-        $post11 = array(
+        $post11 = [
             'uans' => '31',
             'uansunit' => 'Å',
-        );
+        ];
         $return11 = EnhancedCalc::process_user_answer($post11, $emptyarray);
         $this->assertEquals(json_encode($post11), $return11);
 
         // Unicode superscript.
-        $post11 = array(
+        $post11 = [
             'uans' => '31',
             'uansunit' => 'm⁴',
-        );
+        ];
         $return11 = EnhancedCalc::process_user_answer($post11, $emptyarray);
         $this->assertEquals(json_encode($post11), $return11);
 
         // Latex for subscript
-        $post12 = array(
+        $post12 = [
             'uans' => '75231.2134554544234',
             'uansunit' => 'k_4',
-        );
+        ];
         $return12 = EnhancedCalc::process_user_answer($post12, $emptyarray);
         $this->assertEquals(json_encode($post12), $return12);
 
         // Degree symbol
-        $post13 = array(
+        $post13 = [
             'uans' => '14',
             'uansunit' => '°C',
-        );
+        ];
         $return13 = EnhancedCalc::process_user_answer($post13, $emptyarray);
         $this->assertEquals(json_encode($post13), $return13);
     }

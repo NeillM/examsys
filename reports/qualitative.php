@@ -191,7 +191,7 @@ if ($comment_flag == 0) {
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/qualitativeinit.min.js"></script>
 </body>

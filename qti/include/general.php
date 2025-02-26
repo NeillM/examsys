@@ -39,7 +39,7 @@ function GetVar($name, $default = '')
 
 function explode_no_empty($delimiter, $string)
 {
-    $result = array();
+    $result = [];
 
     $items = explode($delimiter, $string);
     foreach ($items as $item) {
@@ -83,7 +83,7 @@ function RemoveEmptyHTMLTags($in)
 function RemoveCommonInArray(&$array1, &$array2, &$common)
 {
     // build a list of common keys
-    $commonkeys = array();
+    $commonkeys = [];
     foreach ($array1 as $key => $value) {
         // does key exist in 2?
         if (array_key_exists($key, $array2)) {
@@ -114,7 +114,7 @@ function ExplodeToArray(&$array, $string, $delim = '|')
         $str2 = str_replace('<br />', '', $str2);
         ExplodeToArray($array, $str2, $delim);
     }
-    $output = array();
+    $output = [];
     $arr = explode($delim, $string);
     foreach ($arr as $value) {
         $value = mb_strtolower($value);
@@ -126,7 +126,7 @@ function ExplodeToArray(&$array, $string, $delim = '|')
 
 // will return true if the $array_to_match matches an array in $source_arrays
 // if $extra_value_list is set then will try matching with each value in it as an extra value
-function MatchArraySet(&$source_arrays, &$array_to_match, &$extra_value_list = array())
+function MatchArraySet(&$source_arrays, &$array_to_match, &$extra_value_list = [])
 {
     foreach ($source_arrays as & $source) {
         $match = true;
@@ -191,10 +191,10 @@ function ItemInArray(&$array, $item)
 function LogForQuestion($id)
 {
     global $result;
-    $errors_load = (count($result['load']['errors']) > 0 && isset($result['load']['errors'][$id])) ? $result['load']['errors'][$id] : array();
-    $warnings_load = (count($result['load']['warnings']) > 0 && isset($result['load']['warnings'][$id])) ? $result['load']['warnings'][$id] : array();
-    $errors_save = (count($result['save']['errors']) > 0 && isset($result['save']['errors'][$id])) ? $result['save']['errors'][$id] : array();
-    $warnings_save = (count($result['save']['warnings']) > 0 && isset($result['save']['warnings'][$id])) ? $result['save']['warnings'][$id] : array();
+    $errors_load = (count($result['load']['errors']) > 0 && isset($result['load']['errors'][$id])) ? $result['load']['errors'][$id] : [];
+    $warnings_load = (count($result['load']['warnings']) > 0 && isset($result['load']['warnings'][$id])) ? $result['load']['warnings'][$id] : [];
+    $errors_save = (count($result['save']['errors']) > 0 && isset($result['save']['errors'][$id])) ? $result['save']['errors'][$id] : [];
+    $warnings_save = (count($result['save']['warnings']) > 0 && isset($result['save']['warnings'][$id])) ? $result['save']['warnings'][$id] : [];
     if (count($errors_load) == 0 && count($warnings_load) == 0 && count($errors_save) == 0 && count($warnings_save) == 0) {
         echo "<div style='color:#008000'>Success</div>";
     }
@@ -230,8 +230,8 @@ function LogForQuestion($id)
 function CleanFileName($Raw)
 {
     $Raw = trim($Raw);
-    $RemoveChars = array("([\40])", '([^a-zA-Z0-9-])', '(-{2,})');
-    $ReplaceWith = array('-', '_', '-');
+    $RemoveChars = ["([\40])", '([^a-zA-Z0-9-])', '(-{2,})'];
+    $ReplaceWith = ['-', '_', '-'];
     return preg_replace($RemoveChars, $ReplaceWith, $Raw);
 }
 

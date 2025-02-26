@@ -118,7 +118,7 @@ $display_year = $yearutils->get_academic_session($session);
 
 <?php
   // Get existing modules for the user in passed calendar year.
-  $student_modules = array();
+  $student_modules = [];
   $result = $mysqli->prepare('SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ?');
   $result->bind_param('is', $userID, $session);
   $result->execute();
@@ -131,7 +131,7 @@ while ($result->fetch()) {
 
   $module_no = 0;
   $old_year = '';
-  $modules = array();
+  $modules = [];
   $mod_count = 0;
 
   // Get a list of all modules for display.
@@ -170,7 +170,7 @@ if ($mod_count == 0) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/usermodulesinit.min.js"></script>
 </body>

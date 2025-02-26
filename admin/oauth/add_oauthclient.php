@@ -38,8 +38,8 @@ if (isset($_POST['submit'])) {
     $storage = $oauth->get_storage();
     $storage->setClientDetails($client, $secret, $uri, null, null, $userid);
 
-    $manage = array('modulemanagement', 'usermanagement', 'assessmentmanagement',
-            'coursemanagement', 'schoolmanagement', 'facultymanagement');
+    $manage = ['modulemanagement', 'usermanagement', 'assessmentmanagement',
+            'coursemanagement', 'schoolmanagement', 'facultymanagement'];
     foreach ($manage as $management) {
         if (isset($_POST[$management . '/create'])) {
             $oauth->add_permission($management . '/create', $client, true);
@@ -86,7 +86,7 @@ if (isset($_POST['submit'])) {
     header('location: list_oauthclient.php', true, 303);
     exit();
 } else {
-    $users = array();
+    $users = [];
     $sql = "
     SELECT DISTINCT
         u.id, username 
@@ -105,7 +105,7 @@ if (isset($_POST['submit'])) {
     }
     $result->close();
 
-    $clientperms = array();
+    $clientperms = [];
     $result = $mysqli->prepare('SELECT action FROM permissions');
     $result->execute();
     $result->bind_result($action);
@@ -136,7 +136,7 @@ $addtionalcss = '<style type="text/css">
             border: 2px solid #800000;
           }
         </style>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['oauthkeys'] => 'list_oauth.php' , $string['listoauthclient'] => 'list_oauthclient.php');
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['oauthkeys'] => 'list_oauth.php' , $string['listoauthclient'] => 'list_oauthclient.php'];
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');

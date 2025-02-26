@@ -86,7 +86,7 @@ function setup_change_callbacks(&$changed_reviewers, &$changed_labs)
     };
 
     // Use the closures for changes
-    $callbacks = array('externals' => $reviewers_cb, 'internals' => $reviewers_cb, 'labs' => $labs_cb);
+    $callbacks = ['externals' => $reviewers_cb, 'internals' => $reviewers_cb, 'labs' => $labs_cb];
 
     return $callbacks;
 }
@@ -102,8 +102,8 @@ $modules_array = $properties->get_modules();
 $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
 
 // Build up a list of all past reviewers and labs for the 'changes' tab
-$changed_reviewers = array();
-$changed_labs = array();
+$changed_reviewers = [];
+$changed_labs = [];
 
 $change_callbacks = setup_change_callbacks($changed_reviewers, $changed_labs);
 
@@ -295,7 +295,7 @@ function format_navigation($data, $string)
 
 function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$changed_labs, $db)
 {
-    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
+    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(['Admin', 'SysAdmin'])) {
         $r1class = 'r1disabled';
         $r2class = 'r2disabled';
         $disabled = ' disabled';
@@ -351,7 +351,7 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
 
 function getSchools($staff_modules, $db)
 {
-    $schools = array();
+    $schools = [];
 
     $staff_modules_list = implode("','", $staff_modules);
 
@@ -434,7 +434,7 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu();
 // initial link of breadcrumb
-$links = array('/' => $string['home']);
+$links = ['/' => $string['home']];
 
 if ($folder) {
     // links of parent folders
@@ -573,7 +573,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo '<option value="1" selected="selected" />' . $string['progress test'] . "</option>\n";
     } else {
         echo '<select id="paper_type" name="paper_type">';
-        $tmp_types = array('formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review');
+        $tmp_types = ['formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review'];
         echo '<option value="' . $properties->get_paper_type() . '" selected="selected" />' . $string[$tmp_types[$properties->get_paper_type()]] . "</option>\n";
     }
 
@@ -836,7 +836,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
 
         // Look for any Standard Setting reviews for the paper.
-        $std_set_array = array();
+        $std_set_array = [];
         $i = 0;
 
         $std_set_details = $mysqli->prepare("SELECT std_set.id, title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, group_review FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
@@ -844,7 +844,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         $std_set_details->execute();
         $std_set_details->bind_result($std_setID, $std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $group_review);
         while ($std_set_details->fetch()) {
-            $std_set_array[$i] = array('std_setID' => $std_setID, 'title' => $std_set_title, 'surname' => $std_set_surname, 'initials' => $std_set_initials, 'reviewer' => $std_set_reviewer, 'display_date' => $std_set_display_date, 'group_review' => $group_review);
+            $std_set_array[$i] = ['std_setID' => $std_setID, 'title' => $std_set_title, 'surname' => $std_set_surname, 'initials' => $std_set_initials, 'reviewer' => $std_set_reviewer, 'display_date' => $std_set_display_date, 'group_review' => $group_review];
             $i++;
         }
         $std_set_details->close();
@@ -918,7 +918,7 @@ $properties->renderSettings('postscript');
 <table id="security" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/security_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['securityheading']; ?></td></tr>
 <?php
-if ($properties->get_summative_lock() and $userObject->has_role(array('SysAdmin'))) {
+if ($properties->get_summative_lock() and $userObject->has_role(['SysAdmin'])) {
     ?>
 <tr>
   <td>
@@ -1029,7 +1029,7 @@ for ($i = 1; $i < 32; $i++) {
 }
     echo '</select>';
    // Available from Month
-    $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+    $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
     echo "<select name=\"fmonth\" id=\"fmonth\" class=\"datecopy\"$sum_disabled>\n";
 if ($start_date == '') {
     echo '<option value=""></option>';
@@ -1341,7 +1341,7 @@ echo '<tr><td colspan="2" valign="top">';
 
 echo "<table class=\"cellpad6\" style=\"margin:15px\">\n";
 
-$feedback_reports = array('objectives' => '', 'questions' => '', 'cohort_performance' => '', 'external_examiner' => '');
+$feedback_reports = ['objectives' => '', 'questions' => '', 'cohort_performance' => '', 'external_examiner' => ''];
 
 $feedback_details = $mysqli->prepare('SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?');
 $feedback_details->bind_param('i', $paperID);
@@ -1353,7 +1353,7 @@ while ($feedback_details->fetch()) {
 }
 $feedback_details->close();
 
-if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
+if (in_array($properties->get_paper_type(), ['0', '1', '2', '4', '5'])) {
     echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
     echo '<td><input type="hidden" name="old_objectives_report" value="' . $feedback_reports['objectives'] . '" />';
     if ($feedback_reports['objectives'] === '') {
@@ -1363,7 +1363,7 @@ if (in_array($properties->get_paper_type(), array('0', '1', '2', '4', '5'))) {
     }
     echo '<td>' . $string['objectivesreport'] . '<br /><a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/objectives_feedback.php?id=' . $properties->get_crypt_name() . '" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/objectives_feedback.php?id=' . $properties->get_crypt_name() . "</a></td></tr>\n";
 }
-if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
+if ($q_feedback_enabled and in_array($properties->get_paper_type(), ['1', '2', '4', '5'])) {
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
     // Question-based Feedback
@@ -1380,7 +1380,7 @@ if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '
     echo '<a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/question_feedback.php?id=' . $properties->get_crypt_name() . '" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/question_feedback.php?id=' . $properties->get_crypt_name() . "</a></td></tr>\n";
 }
 
-if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
+if (in_array($properties->get_paper_type(), ['2', '4', '5'])) {
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
     // Cohort performance-based Feedback
@@ -1393,7 +1393,7 @@ if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
     echo '<td>' . $string['cohortperformancefeedback'] . '<br /><a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/performance_summary.php" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/performance_summary.php</a></td></tr>\n";
 }
 
-if (in_array($properties->get_paper_type(), array('1', '2'))) {
+if (in_array($properties->get_paper_type(), ['1', '2'])) {
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     echo '<tr><td><img src="../artwork/external_examiner_icon.png" width="48" height="48" />';
     // External Examiner Feedback
@@ -1456,7 +1456,7 @@ echo "</table>\n";
 echo "</td></tr>\n";
 echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
 
-if (!in_array($properties->get_paper_type(), array('2', '4'))) {
+if (!in_array($properties->get_paper_type(), ['2', '4'])) {
     echo '<tr><td colspan="2" class="headbar">&nbsp;' . $string['textualfeedback'] . "</td></tr>\n";
     echo '<tr><td style="text-align:center">' . $string['above'] . '</td><td style="text-align:center">' . $string['message'] . "</td></tr>\n";
     for ($i = 1; $i <= 10; $i++) {
@@ -1786,7 +1786,7 @@ $properties->renderSettings('reference');
 <?php
 $modules = module_utils::get_module_list_by_id($mysqli);
 
-$user_list = array();
+$user_list = [];
 if (count($changed_reviewers) > 0) {
     $reviewer_in = implode(',', array_keys($changed_reviewers));
     $results = $mysqli->prepare("SELECT id, title, surname FROM users WHERE id IN ($reviewer_in)");
@@ -1798,7 +1798,7 @@ if (count($changed_reviewers) > 0) {
     $results->close();
 }
 
-$reference_material = array();
+$reference_material = [];
 $results = $mysqli->prepare('SELECT id, title FROM reference_material');
 $results->execute();
 $results->bind_result($id, $title);
@@ -1919,11 +1919,11 @@ $dataset['attributes']['type'] = $properties->get_paper_type();
 $dataset['attributes']['id'] = $paperID;
 $dataset['attributes']['minavail'] = $minavailability;
 $dataset['attributes']['summativemanagment'] = ($sum_disabled === '');
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $mysqli->close();
 ?>
 <script src='../js/paperpropertiesinit.min.js'></script>

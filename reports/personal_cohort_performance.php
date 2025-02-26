@@ -58,15 +58,15 @@ if (count($student_marks) == 0) {   // Exit if the student does not have any mar
 $old_q_id           = 0;
 $old_display_pos    = -1;
 $old_q_type         = '';
-$old_option_text    = array();
-$old_correct        = array();
+$old_option_text    = [];
+$old_correct        = [];
 $old_display_method = '';
 $old_score_method   = '';
 $old_marks          = 0;
 $tmp_exclude        = '';
 $total_marks        = 0;
 
-$questions_marks    = array();
+$questions_marks    = [];
 
 // Get the questions (if any).
 $result = $mysqli->prepare("SELECT theme, ownerID, p_id, q_id, q_type, screen, leadin, scenario, option_text, correct, display_method, score_method, marks_correct, marks_incorrect, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_last_edited, display_pos, status, correct_fback, feedback_right, locked, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos, o_id");
@@ -78,8 +78,8 @@ while ($result->fetch()) {
     if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
         $question_marks[$old_q_id] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
 
-        $old_correct      = array();
-        $old_option_text  = array();
+        $old_correct      = [];
+        $old_option_text  = [];
     }
 
     $old_q_id           = $q_id;
