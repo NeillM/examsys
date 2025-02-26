@@ -69,20 +69,20 @@ class environment
                 'autoload' => [
                     $basedir . DIRECTORY_SEPARATOR . 'contexts',
                 ],
-            'suites' => [
-                'frontend' => [
-                    'contexts' => [
-                        'RogoBehatFrontend',
-                    ],
-                    'paths' => [
-                        $basedir . DIRECTORY_SEPARATOR . 'features',
-                    ],
-                    'settings' => [
-                        'filters' => [
-                            'tags' => '~@backend'
+                'suites' => [
+                    'frontend' => [
+                        'contexts' => [
+                            'RogoBehatFrontend',
+                        ],
+                        'paths' => [
+                            $basedir . DIRECTORY_SEPARATOR . 'features',
+                        ],
+                        'settings' => [
+                            'filters' => [
+                                'tags' => '~@backend'
+                            ],
                         ],
                     ],
-                ],
                     'backend' => [
                         'contexts' => [
                             'RogoBehatBackend',
