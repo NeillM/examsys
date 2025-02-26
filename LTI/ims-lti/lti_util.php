@@ -85,7 +85,7 @@ class BLTI
             $this->message = 'Constructor requires a secret or database information.';
             return;
         } else {
-            $key_column = $parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key';
+            $key_column = $parm['key_column'] ?: 'oauth_consumer_key';
             $table = \param::clean($parm['table'], \param::ALPHA);
             $sql = "SELECT * FROM  $table WHERE $key_column = ?";
             $result = $mysqli->prepare($sql);
@@ -99,8 +99,8 @@ class BLTI
                 return;
             } else {
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $secret = $row[$parms['secret_column'] ? $parms['secret_column'] : 'secret'];
-                    $context_id = $row[$parms['context_column'] ? $parms['context_column'] : 'context_id'];
+                    $secret = $row[$parms['secret_column'] ?: 'secret'];
+                    $context_id = $row[$parms['context_column'] ?: 'context_id'];
                     if ($context_id) {
                         $this->context_id = $context_id;
                     }
@@ -140,7 +140,7 @@ class BLTI
             if ($key == 'basiclti_submit') {
                 continue;
             }
-            if (strpos($key, 'oauth_') === false) {
+            if (!str_contains($key, 'oauth_')) {
                 $newinfo[$key] = $value;
                 continue;
             }
@@ -186,10 +186,10 @@ class BLTI
     {
         $roles = $this->info['roles'];
         $roles = strtolower($roles);
-        if (! ( strpos($roles, 'instructor') === false )) {
+        if (! ( !str_contains($roles, 'instructor') )) {
             return true;
         }
-        if (! ( strpos($roles, 'administrator') === false )) {
+        if (! ( !str_contains($roles, 'administrator') )) {
             return true;
         }
         return false;

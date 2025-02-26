@@ -32,7 +32,7 @@ if (PHP_SAPI != 'cli') {
 
 set_time_limit(0);
 
-$path = str_replace('/admin', '', str_replace('\\', '/', dirname(__FILE__)));
+$path = str_replace('/admin', '', str_replace('\\', '/', __DIR__));
 if ($path == '') {
     $path = $_SERVER['DOCUMENT_ROOT'];
 }

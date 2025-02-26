@@ -115,7 +115,7 @@ if ($cohort_size > 0) {
                 $csv .= $user_results[$i]['student_grade'] . ',' . $user_results[$i]['module'] . ",,,,No Attendance,,,,\n";
             } else {
                 // If room is unknown then it will contain HTML that we want to discard
-                $user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
+                $user_results[$i]['room'] = (str_contains($user_results[$i]['room'], 'unknown')) ? 'unknown' : $user_results[$i]['room'];
 
                 $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . '%,';
 

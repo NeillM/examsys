@@ -75,7 +75,7 @@ class user_notices extends RogoStaticSingleton
         }
 
         $configObject = Config::get_instance();
-        $root = str_replace('/classes', '/', str_replace('\\', '/', dirname(__FILE__)));
+        $root = str_replace('/classes', '/', str_replace('\\', '/', __DIR__));
         $noticedata = [];
 
         if (!file_exists($root . 'config/config.inc.php')) {

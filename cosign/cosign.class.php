@@ -203,10 +203,10 @@ class cosign
                 // check client IP address and factors
                 if (
                         $this->cosign_cfg['CosignCheckIP'] == 'always' &&
-                    !(strpos($_SERVER['REMOTE_ADDR'], ':') !== false &&
-                    strpos($cf['i'], ':') === false ||
-                    strpos($_SERVER['REMOTE_ADDR'], ':') === false &&
-                    strpos($cf['i'], ':') !== false ||
+                    !(str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+                    !str_contains($cf['i'], ':') ||
+                    !str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+                    str_contains($cf['i'], ':') ||
                     strcasecmp($cf['i'], $_SERVER['REMOTE_ADDR']) == 0)
                 ) {
                     $this->cosign_debug("$service: IP address changed from {$cf['i']} to {$_SERVER['REMOTE_ADDR']}, user {$cf['p']}");
@@ -300,7 +300,7 @@ class cosign
                 $proto = 2;
             }
             $i = 6;
-            while (substr($code[$i], -1) != ']') {
+            while (!str_ends_with($code[$i], ']')) {
                 $i++;
                 if ($i >= count($code)) {
                     $this->cosign_debug("$service: Cosign server capabilities missing end parenthesis");
@@ -476,10 +476,10 @@ class cosign
         if (
             ($this->cosign_cfg['CosignCheckIP'] == 'always' ||
             $newfile && $this->cosign_cfg['CosignCheckIP'] == 'initial') &&
-            !(strpos($_SERVER['REMOTE_ADDR'], ':') !== false &&
-            strpos($cf['i'], ':') === false ||
-            strpos($_SERVER['REMOTE_ADDR'], ':') === false &&
-            strpos($cf['i'], ':') !== false ||
+            !(str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+            !str_contains($cf['i'], ':') ||
+            !str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+            str_contains($cf['i'], ':') ||
             strcasecmp($cf['i'], $_SERVER['REMOTE_ADDR']) == 0)
         ) {
             $this->cosign_debug("$service: IP address changed from {$cf['i']} to {$_SERVER['REMOTE_ADDR']}, user {$cf['p']}");
@@ -594,7 +594,7 @@ class cosign
                 fclose($this->cosign_log);
             }
             ob_end_clean();
-            setrawcookie($service_cookie, $service_cookie_val . '/' . time(), 0, '/', '', (strncmp($dest, 'https://', 8) == 0 ? true : false), true);
+            setrawcookie($service_cookie, $service_cookie_val . '/' . time(), 0, '/', '', (str_starts_with($dest, 'https://') ? true : false), true);
             header("Location: $dest");
             exit();
         }
@@ -655,7 +655,7 @@ class cosign
                 $service_cookie = 'cosign-' . $this->cosign_cfg['CosignService'];
                 $service_cookie_file = $service_cookie . '=' . $service_cookie_val;
                 $this->cosign_debug("CosignFilter: New cookie $service_cookie_file");
-                setrawcookie($service_cookie, $service_cookie_val . '/' . time(), 0, '/', '', (strncmp($back, 'https://', 8) == 0 ? true : false), true);
+                setrawcookie($service_cookie, $service_cookie_val . '/' . time(), 0, '/', '', (str_starts_with($back, 'https://') ? true : false), true);
             } else {
                 $this->cosign_debug('CosignFilter: Redirect to login');
                 $service_cookie_file = 'cosign-' . $this->cosign_cfg['CosignService'];

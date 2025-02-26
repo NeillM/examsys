@@ -446,7 +446,7 @@ if ($folder) {
 
     // link of current folder
     $href = '/folder/index.php?folder=' . $folder;
-    $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+    $links[$href] = !str_contains($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
 } else {
     if (is_null($module)) {
         // Get the modules from paper properties
