@@ -226,9 +226,9 @@ if (!$properties->can_user_edit_paper($userObject)) {
                         <option value=""></option>
                         <?php
                         $cohort_sizes = $configObject->get_setting('core', 'summative_cohort_sizes');
-                        echo '<option value="whole cohort">' . $string['wholecohort'] . '</option>';
                         foreach ($cohort_sizes as $size) {
-                            echo '<option value="' . $size . '">' . $size . '</option>';
+                            $display_value = ($size === '<whole cohort>') ? $string['wholecohort'] : $size;
+                            echo '<option value="' . $size . '">' . $display_value . '</option>';
                         }
                         ?>
                     </select>
