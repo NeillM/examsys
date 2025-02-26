@@ -71,4 +71,4 @@ return RectorConfig::configure()
         __DIR__ . '/users',
         __DIR__ . '/webServices',
     ])
-    ->withPhpSets(php53: true);
+    ->withPhpSets(php54: true);
