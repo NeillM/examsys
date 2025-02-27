@@ -138,7 +138,7 @@ class MediaHandlerTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'source' => $source,
                 'width' => $width,
                 'height' => $height,
@@ -170,7 +170,7 @@ class MediaHandlerTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'mediaid' => $id,
                 'qid' => $this->question['id'],
                 'num' => 0,
@@ -225,7 +225,7 @@ class MediaHandlerTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'source' => $updatesource,
                 'width' => $width,
                 'height' => $height,
@@ -284,7 +284,7 @@ class MediaHandlerTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'source' => $source,
                 'width' => $updatewidth,
                 'height' => $updateheight,
@@ -337,7 +337,7 @@ class MediaHandlerTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'source' => $source,
                 'width' => $width,
                 'height' => $height,
@@ -465,11 +465,11 @@ class MediaHandlerTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'mediaid' => $id,
                 'oid' => $this->options2['id_num']
             ],
-            1 =>  [
+            1 => [
                 'mediaid' => $id2,
                 'oid' => $this->options1['id_num']
             ],
@@ -526,7 +526,7 @@ class MediaHandlerTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'mediaid' => $id2,
                 'oid' => $this->options1['id_num']
             ],

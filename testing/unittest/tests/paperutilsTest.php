@@ -773,7 +773,7 @@ class paperutilstest extends unittestdatabase
         $properties->set_end_date($now + 1800);
         $paper_display = [];
         $this->set_active_user($this->student['id']);
-        $types =  ['0', '1', '2'];
+        $types = ['0', '1', '2'];
         $exclude = '';
         $expectedarray = [];
         $this->assertEquals(

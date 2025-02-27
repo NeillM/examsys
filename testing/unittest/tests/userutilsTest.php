@@ -116,14 +116,14 @@ class userutilstest extends unittestdatabase
         $this->assertEquals($expectedtable, $querytable);
         $querytable = $this->query(['columns' => ['roleid'], 'table' => 'user_roles', 'where' => [['column' => 'userid', 'value' => $this->student['id']]]]);
         $expectedtable = [
-                0 =>  [
+                0 => [
                         'roleid' => 4,
                 ],
         ];
         $this->assertEquals($expectedtable, $querytable);
         $querytable = $this->query(['columns' => ['userID', 'student_id'], 'table' => 'sid', 'where' => [['column' => 'userID', 'value' => $this->student['id']]]]);
         $expectedtable = [
-            0 =>  [
+            0 => [
                 'userID' => $this->student['id'],
                 'student_id' => '12345678'
             ],

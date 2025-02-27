@@ -157,7 +157,7 @@ class Anomaly
         $stmt->bind_result($userid, $forename, $surname, $sid, $type, $timestamp, $details, $screen);
         $stmt->store_result();
 
-        $anomalies =  [
+        $anomalies = [
             'from' => number_format($first),
             'to' => number_format($last),
             'total' => number_format($result->total),

@@ -56,7 +56,7 @@ class AuditTest extends \testing\unittest\unittestdatabase
         // Check tables are correct.
         $queryTable = $this->query(['table' => 'retention', 'where' => [['column' => '`table`', 'value' => 'audit_log']]]);
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'table' => 'audit_log',
                 'days' => 45,
                 'lastrun' => null
@@ -89,14 +89,14 @@ class AuditTest extends \testing\unittest\unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'userID' => $this->audit['userID'],
                 'action' => $this->audit['action'],
                 'details' => $this->audit['details'],
                 'sourceID' => $this->audit['sourceID'],
                 'source' => $this->audit['source'],
             ],
-            1 =>  [
+            1 => [
                 'userID' => $this->student['id'],
                 'action' => Audit::REMOVEROLE,
                 'details' => $details,
@@ -119,7 +119,7 @@ class AuditTest extends \testing\unittest\unittestdatabase
         $actual = Audit::getEvents($starttime, $limit, $page);
         $langpack = new langpack();
         $user = $langpack->get_string('classes/audit', 'system');
-        $expected =  [
+        $expected = [
             'to' => '1',
             'from' => '1',
             'total' => '1',

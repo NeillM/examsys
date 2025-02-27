@@ -294,7 +294,7 @@ class facultymanagementtest extends unittestdatabase
         // Check that the remaining faculty are correct, when we delete a faculty we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
         $querytable = $this->query(['columns' => ['name'], 'table' => 'faculty', 'where' => [['column' => 'deleted', 'value' => null, 'operator' => 'IS']]]);
-        $expectedtable =  [
+        $expectedtable = [
             0 => [
                 'name' => 'UNKNOWN Faculty'
             ],

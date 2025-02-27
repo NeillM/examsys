@@ -215,7 +215,7 @@ class render
      */
     public function render_admin_update($plugins, $header, $action, $lang)
     {
-        $data =  ['plugins' => $plugins, 'header' => $header, 'path' => $this->config->get('cfg_root_path'),
+        $data = ['plugins' => $plugins, 'header' => $header, 'path' => $this->config->get('cfg_root_path'),
             'action' => $action, 'lang' => $lang];
         echo $this->twig->render('admin/update.html', $data);
     }
@@ -232,7 +232,7 @@ class render
         $path = $this->config->get('cfg_root_path');
         $current = count($links) > 0 ? array_pop($links) : '';
 
-        $data =  [
+        $data = [
             'path' => $path,
             'links' => $links,
             'current' => $current,

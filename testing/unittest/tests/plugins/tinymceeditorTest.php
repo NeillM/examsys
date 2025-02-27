@@ -53,7 +53,7 @@ class tinymceeditortest extends unittestdatabase
         // Check tables are correct.
         $queryTable = $this->query(['columns' => ['component', 'type', 'version'], 'table' => 'plugins']);
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'component' => 'plugin_tinymce_texteditor',
                 'type' => 'texteditor',
                 'version' => $this->newversion
@@ -62,7 +62,7 @@ class tinymceeditortest extends unittestdatabase
         $this->assertEquals($expectedTable, $queryTable);
         $queryTable = $this->query(['columns' => ['component', 'setting', 'value', 'type'], 'table' => 'config', 'orderby' => [1, 2], 'where' => [['column' => 'component', 'value' => 'plugin_tinymce_texteditor']]]);
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'component' => 'plugin_tinymce_texteditor',
                 'setting' => 'installed',
                 'value' => 1,
@@ -107,7 +107,7 @@ class tinymceeditortest extends unittestdatabase
         // Check tables are correct.
         $queryTable = $this->query(['columns' => ['component', 'type', 'version'], 'table' => 'plugins']);
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'component' => 'plugin_tinymce_texteditor',
                 'type' => 'texteditor',
                 'version' => $this->newversion

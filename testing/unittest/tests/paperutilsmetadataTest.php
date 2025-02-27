@@ -89,17 +89,17 @@ class PaperUtilsMetadataTest extends unittestdatabase
             ]
         );
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'paperID' => $this->paper['id'],
                 'name' => 'metadata',
                 'value' => $metadata[0]
             ],
-            1 =>  [
+            1 => [
                 'paperID' => $this->paper['id'],
                 'name' => 'metadata',
                 'value' => $metadata[1]
             ],
-            2 =>  [
+            2 => [
                 'paperID' => $this->paper['id'],
                 'name' => 'metadata',
                 'value' => $metadata[2]
@@ -136,12 +136,12 @@ class PaperUtilsMetadataTest extends unittestdatabase
         );
         $idx = key($this->meta1);
         $expectedTable = [
-            0 =>  [
+            0 => [
                 'paperID' => $this->paper['id'],
                 'name' => $idx,
                 'value' => $this->meta1[$idx][0]
             ],
-            1 =>  [
+            1 => [
                 'paperID' => $this->paper['id'],
                 'name' => $idx,
                 'value' => $this->meta1[$idx][1]
