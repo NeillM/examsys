@@ -3644,6 +3644,7 @@ class PaperProperties
      */
     public function can_user_edit_paper(UserObject $userObject): bool 
     {
+        $paper_modules = Paper_utils::get_modules($this->property_id, $this->db);
         // SysAdmin 
         if ($userObject->has_role('SysAdmin')) {
             return true;
@@ -3659,11 +3660,12 @@ class PaperProperties
         
         // Standards Setters
         if ($userObject->has_role('Standards Setter')) {
-            return true;
+            if (!empty($paper_modules) && in_array('SYSTEM', $paper_modules)) {
+                return true;
+            }
         }
         
         // Check if user has access through module assignment
-        $paper_modules = Paper_utils::get_modules($this->property_id, $this->db);
         if (!empty($paper_modules)) {
             $staff_modules = $userObject->get_staff_modules();
             foreach ($paper_modules as $module) {
