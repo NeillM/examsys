@@ -61,14 +61,14 @@ class restful
      * @param array $requestoptions curl options from the requestor
      * @return string response from api
      */
-    public function get($url, $requestoptions = array())
+    public function get($url, $requestoptions = [])
     {
         $curl = curl_init();
         // Curl options.
-        $options = array(CURLOPT_URL => $url,
+        $options = [CURLOPT_URL => $url,
                  CURLOPT_RETURNTRANSFER => 1,
                  CURLOPT_FAILONERROR => true
-                );
+                ];
         $options += $requestoptions;
         curl_setopt_array($curl, $options);
         $response = curl_exec($curl);

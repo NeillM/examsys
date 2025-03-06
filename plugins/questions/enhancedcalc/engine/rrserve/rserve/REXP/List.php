@@ -13,7 +13,7 @@
  */
 class Rserve_REXP_List extends Rserve_REXP_Vector implements ArrayAccess {
 
-	protected $names = array();
+	protected $names = [];
 	protected $is_named = FALSE;
 
 	public function setValues($values, $getNames = FALSE) {
@@ -44,7 +44,7 @@ class Rserve_REXP_List extends Rserve_REXP_Vector implements ArrayAccess {
 	 * return array list of names
 	 */
 	public function getNames() {
-		return ($this->is_named) ? $this->names : array();
+		return ($this->is_named) ? $this->names : [];
 	}
 
 	/**

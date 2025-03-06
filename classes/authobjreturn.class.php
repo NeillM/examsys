@@ -39,12 +39,12 @@ class authobjreturn
     public function __construct()
     {
         $this->returned     = ROGO_AUTH_OBJ_FAILED;
-        $this->returneds    = array();
-        $this->statuses     = array();
+        $this->returneds    = [];
+        $this->statuses     = [];
         $this->rogoid           = 0;
-        $this->rogoids      = array();
+        $this->rogoids      = [];
         $this->data             = new stdClass();
-        $this->datas            = array();
+        $this->datas            = [];
     }
 
     /*

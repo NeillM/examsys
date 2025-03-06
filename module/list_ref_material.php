@@ -61,7 +61,7 @@ if (!$module_code) {
 
     echo draw_toprightmenu(296);
 
-  $reference_materials = array();
+  $reference_materials = [];
 
   $result = $mysqli->prepare('SELECT reference_material.id, reference_material.title FROM reference_material, reference_modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND idMod = ? ORDER BY reference_material.id');
   $result->bind_param('i', $modID);
@@ -121,7 +121,7 @@ $mysqli->close();
 $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['module'] =  $modID;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 </body>
 </html>

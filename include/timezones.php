@@ -17,7 +17,7 @@
 
 require_once $cfg_web_root . 'lang/' . $language . '/include/timezones.php';
 
-$timezone_array = array(
+$timezone_array = [
   'Pacific/Samoa' => $string['Pacific/Samoa'],
   'Pacific/Honolulu' => $string['Pacific/Honolulu'],
   'America/Anchorage' => $string['America/Anchorage'],
@@ -51,4 +51,4 @@ $timezone_array = array(
   'Australia/Melbourne' => $string['Australia/Melbourne'],
   'Asia/Vladivostok' => $string['Asia/Vladivostok'],
   'Pacific/Auckland' => $string['Pacific/Auckland'],
-);
+];

@@ -81,7 +81,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         switch ($q_type) {
             case 'blank':
                 echo '<p>';
-                $blank_details = array();
+                $blank_details = [];
                 $blank_details = explode('[blank', $options[0]);
                 $array_size = count($blank_details);
                 $blank_count = 0;
@@ -94,7 +94,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                         $blank_options = mb_substr($blank_details[$blank_count], ($end_start_tag + 1), ($start_end_tag - 1));
                         $remainder = mb_substr($blank_details[$blank_count], ($start_end_tag + 8));
                         echo '<span style="color:#800000; font-weight:bold">[blank]</span>';
-                        $options_array = array();
+                        $options_array = [];
                         $options_array = explode(',', $blank_options);
                         // Filter the options in the same way that user's answers are.
                         $options_array = \param::clean_array($options_array, \param::TEXT);
@@ -345,14 +345,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $matching_height = explode('|', $q_media_height);
         $matching_alt = explode('|', $q_media_alt);
         $matching_num = explode('|', $q_media_num);
-        $tmp_media_array = array();
+        $tmp_media_array = [];
         for ($i = 0; $i < count($matching_source); $i++) {
-            $tmp_media_array[$matching_num[$i]] = array(
+            $tmp_media_array[$matching_num[$i]] = [
                 'source' => $matching_source[$i],
                 'width' => $matching_width[$i],
                 'height' => $matching_height[$i],
                 'alt' => $matching_alt[$i],
-            );
+            ];
         }
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $correct_buf[0]);
@@ -389,14 +389,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $matching_height = explode('|', $q_media_height);
         $matching_alt = explode('|', $q_media_alt);
         $matching_num = explode('|', $q_media_num);
-        $tmp_media_array = array();
+        $tmp_media_array = [];
         for ($i = 0; $i < count($matching_source); $i++) {
-            $tmp_media_array[$matching_num[$i]] = array(
+            $tmp_media_array[$matching_num[$i]] = [
                 'source' => $matching_source[$i],
                 'width' => $matching_width[$i],
                 'height' => $matching_height[$i],
                 'alt' => $matching_alt[$i],
-            );
+            ];
         }
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $correct_buf[0]);
@@ -433,7 +433,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
             $option_no = 1;
             foreach ($options as $individual_option) {
-                $specific_answers = array();
+                $specific_answers = [];
                 $specific_answers = explode('|', $tmp_answers_array[$i - 1]);
                 $answer_match = false;
                 for ($x = 0; $x < count($specific_answers); $x++) {
@@ -510,7 +510,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $exclude = param::optional('complete', false, param::BOOLEAN, param::FETCH_GET);
   $studentsonly = param::optional('studentsonly', 1, param::BOOLEAN);
 
-  $log_array = array();
+  $log_array = [];
   $hits = get_quantitative_log_data($_GET['paperID'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate'], $exclude, $log_array, $mysqli, $number_of_questions, $studentsonly);
 
   $module_code = '';
@@ -561,8 +561,8 @@ if ($module != '' and $module != 0) {
   $old_screen = 0;
   $old_likert_scale = '';
   $table_on = 1;
-  $options_buffer = array();
-  $correct_buffer = array();
+  $options_buffer = [];
+  $correct_buffer = [];
 
   $result = $mysqli->prepare('SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, score_method, display_method, correct FROM papers, questions, options WHERE papers.question=questions.q_id AND questions.q_id=options.o_id AND papers.paper=? ORDER BY screen, display_pos, id_num');
   $result->bind_param('i', $_GET['paperID']);
@@ -641,8 +641,8 @@ while ($result->fetch()) {
                   echo '<br /><div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
             }
         }
-        $options_buffer = array();
-        $correct_buffer = array();
+        $options_buffer = [];
+        $correct_buffer = [];
     }
     if ($q_type == 'labelling') {
         $tmp_first_split = explode(';', $correct);

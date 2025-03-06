@@ -36,7 +36,7 @@ $id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 $papertype = $propertyObj->get_paper_type();
 // Get how many screens make up the question paper.
-$screen_data = array();
+$screen_data = [];
 $row_no = 0;
 $stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calendar_year, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY screen");
 $stmt->bind_param('s', $id);
@@ -70,19 +70,19 @@ $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $renderpath = $texteditorplugin->get_render_paths();
 $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
 $render = new render($configObject, $renderpath);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/print.css',
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
-    ),
-    'scripts' => array(
+    ],
+    'scripts' => [
         '/js/printinit.min.js',
-    ),
-    'metadata' => array(
+    ],
+    'metadata' => [
         'pragma' => 'no-cache',
-    ),
-);
+    ],
+];
 if ($papertype == '3') {
     $lang['title'] = $string['survey'];
 } else {
@@ -116,14 +116,14 @@ $render->render($contentdata, $string, 'paper/header.html');
 // Initialise for scenario filtering
 $last_scenario = '';
 
-$user_answers = array();
+$user_answers = [];
 $question_no = 0;
 $q_displayed = 0;
 $marks = 0;
 $hide_notes = param::optional('hidenotes', false, param::BOOLEAN, param::FETCH_GET);
 $tmp_questions_array = $propertyObj->build_paper(false, null, null, $hide_notes);
 //look for braching and random questions and overwrite as needed
-$questions_array = array();
+$questions_array = [];
 $tmp_q_no = 0;
 foreach ($tmp_questions_array as &$question) {
     if ($question['q_type'] != 'info') {
@@ -170,13 +170,13 @@ foreach ($questions_array as &$question) {
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 
 $mysqli->close();
 
-$render->render(array(), array(), 'footer.html');
+$render->render([], [], 'footer.html');

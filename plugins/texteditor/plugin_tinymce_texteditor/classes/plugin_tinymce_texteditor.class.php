@@ -88,12 +88,12 @@ class plugin_tinymce_texteditor extends plugins_texteditor
     {
         $type = $this->get_type($type);
         $render = new \render($this->config, $this->get_render_paths());
-        $tinmymcedata = array(
+        $tinmymcedata = [
             'type' => $type,
             'id' => $id,
             'name' => $id,
             'content' => $content,
-            'style' => $styleoverwrite);
+            'style' => $styleoverwrite];
         $render->render($tinmymcedata, null, 'tinymce_admin_textarea.html');
     }
 

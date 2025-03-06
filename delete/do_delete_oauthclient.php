@@ -43,5 +43,5 @@ $oauth->delete_oauthclient($client);
 $render = new render($configObject);
 $lang['title'] = $string['oauthclientdel'];
 $lang['success'] = $string['oauthclientdelsuccess'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

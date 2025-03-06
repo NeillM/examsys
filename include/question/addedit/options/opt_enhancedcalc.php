@@ -23,7 +23,7 @@
  * @package
  */
 
-$classes = array();
+$classes = [];
 if ($index % 2 == 0) {
     $classes[] = 'alt';
 }

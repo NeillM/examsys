@@ -50,17 +50,17 @@ $sets = var_export($enhancedcalcSettings, true);
 echo "<li>Enhanced Calc is set to <b>$enhancedcalcType</b></li>";
 echo "<li>Settings are $sets</li>";
 
-$data = array();
-$data[] = array(array('$A' => 2, '$B' => 2),'$A+$B', '4');
-$data[] = array(array('$A' => 2, '$B' => 2),'$A*$B', '4');
-$data[] = array(array('$A' => 3, '$B' => 3),'$A+$B', '6');
-$data[] = array(array('$A' => 3, '$B' => 3),'$A*$B', '9');
+$data = [];
+$data[] = [['$A' => 2, '$B' => 2],'$A+$B', '4'];
+$data[] = [['$A' => 2, '$B' => 2],'$A*$B', '4'];
+$data[] = [['$A' => 3, '$B' => 3],'$A+$B', '6'];
+$data[] = [['$A' => 3, '$B' => 3],'$A*$B', '9'];
 
-$data[] = array(array('$A' => 4, '$B' => 4),'$A+$B', '8');
-$data[] = array(array('$A' => 4, '$B' => 4),'$A*$B', '16');
+$data[] = [['$A' => 4, '$B' => 4],'$A+$B', '8'];
+$data[] = [['$A' => 4, '$B' => 4],'$A*$B', '16'];
 
-$data[] = array(array('$A' => 8, '$B' => 2),'$A/$B', '4');
-$data[] = array(array('$A' => 8, '$B' => 2),'$A-$B', '6');
+$data[] = [['$A' => 8, '$B' => 2],'$A/$B', '4'];
+$data[] = [['$A' => 8, '$B' => 2],'$A-$B', '6'];
 
 // Run test for each supported function.
 $data[] = [['$A' => 2], 'abs($A)', '2'];

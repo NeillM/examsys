@@ -76,7 +76,7 @@ function display_question($question, &$question_no, $answers, $string)
     }
 
     $sct_parts = explode('~', $question['leadin']);
-    $sct_titles = array(1 => 'hypothesis', 2 => 'investigation', 3 => 'prescription', 4 => 'intervention', 5 => 'treatment');
+    $sct_titles = [1 => 'hypothesis', 2 => 'investigation', 3 => 'prescription', 4 => 'intervention', 5 => 'treatment'];
 
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
     echo '<tr><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $string[$sct_titles[$question['display_method']]] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $string['newinformation'] . "</td></tr>\n";
@@ -154,7 +154,7 @@ require '../config/start.inc';
 
 <?php
   // Get any previous answers for the current reviewer.
-  $saved_data = array();
+  $saved_data = [];
   $stmt = $mysqli->prepare('SELECT q_id, answer, reason FROM sct_reviews WHERE paperID = ? AND reviewer_name = ? AND reviewer_email = ?');
   $stmt->bind_param('iss', $paperID, $reviewer_name, $reviewer_email);
   $stmt->execute();
@@ -181,7 +181,7 @@ while ($stmt->fetch()) {
   $old_q_id = '';
   $q_no = 0;
   $question_no = 0;
-  $questions_array = array();
+  $questions_array = [];
 
   $stmt = $mysqli->prepare("SELECT q_id, theme, leadin, scenario, notes, display_method, q_option_order, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id AND q_type='sct' ORDER BY display_pos, id_num");
   $stmt->bind_param('i', $paperID);
@@ -249,7 +249,7 @@ if (count($questions_array) > 0) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/sctreviewinit.min.js"></script>
 </body>

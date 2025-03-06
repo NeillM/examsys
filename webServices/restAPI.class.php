@@ -32,7 +32,7 @@ class restAPI
 
     public function __construct()
     {
-        $this->request_vars      = array();
+        $this->request_vars      = [];
         $this->data              = '';
         if (mb_strpos($_SERVER['HTTP_ACCEPT'], 'json') !== false) {
             $this->http_accept = 'json';
@@ -143,7 +143,7 @@ class restAPI
 
     public static function getStatusCodeMessage($status)
     {
-        $codes = array(
+        $codes = [
             100 => 'Continue',
             101 => 'Switching Protocols',
             200 => 'OK',
@@ -185,7 +185,7 @@ class restAPI
             503 => 'Service Unavailable',
             504 => 'Gateway Timeout',
             505 => 'HTTP Version Not Supported'
-        );
+        ];
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 

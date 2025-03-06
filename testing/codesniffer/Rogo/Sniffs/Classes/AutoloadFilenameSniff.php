@@ -35,9 +35,9 @@ class AutoloadFilenameSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
-    );
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -46,11 +46,11 @@ class AutoloadFilenameSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_CLASS,
             T_INTERFACE,
             T_TRAIT,
-        );
+        ];
     }
 
     /**
@@ -91,10 +91,10 @@ class AutoloadFilenameSniff implements Sniff
         $phpcsFile->recordMetric($stackPtr, 'Invalid autoload filename', 'yes');
 
         $message = 'Class autoloading expects the filename to be "%s" instead "%s" was found.';
-        $data = array(
+        $data = [
             $expectedname,
             $filename,
-        );
+        ];
         $phpcsFile->addError($message, null, 'InvalidAutoloadFilename', $data);
     }
 }

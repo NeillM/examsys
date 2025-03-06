@@ -134,11 +134,11 @@ if ($vle_api != '') {
     $miscdataset['attributes']['vlename'] = $vle_name;
     $miscdataset['attributes']['vlehumanname'] = $vle_name_a;
 }
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 </body>
 </html>

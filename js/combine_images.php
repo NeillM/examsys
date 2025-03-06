@@ -17,10 +17,10 @@
 
 ob_start();
 echo '<h2>Combining Images for HTML5 activities</h2>';
-$paths = array();
+$paths = [];
 $paths[] = 'toolbar';
 
-$exclude = array();
+$exclude = [];
 
 function sortimages($a, $b)
 {
@@ -32,7 +32,7 @@ function sortimages($a, $b)
 
 $width = 800;
 
-$images = array();
+$images = [];
 
 foreach ($paths as $path) {
     $dh = opendir("images/$path");
@@ -55,7 +55,7 @@ foreach ($paths as $path) {
         list($widthx, $height, $type, $attr) = getimagesize($filename);
         ob_flush();
 
-        $img = array();
+        $img = [];
         $img['im'] = $res;
         $img['width'] = $widthx;
         $img['height'] = $height;

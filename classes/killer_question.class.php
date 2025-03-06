@@ -55,7 +55,7 @@ class Killer_Question
      */
     public function load()
     {
-        $this->questions = array();
+        $this->questions = [];
 
         $result = $this->db->prepare('SELECT q_id FROM killer_questions WHERE paperID = ?');
         $result->bind_param('i', $this->paperID);
@@ -133,7 +133,7 @@ class Killer_Question
      */
     public function get_questions()
     {
-        $this->questions = array();
+        $this->questions = [];
 
         $result = $this->db->prepare('SELECT q_id FROM killer_questions WHERE paperID = ?');
         $result->bind_param('i', $this->paperID);

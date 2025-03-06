@@ -79,7 +79,7 @@ class Breaks
     public static function getAllBreaks(int $paperID): array
     {
         $configObject = Config::get_instance();
-        $notes = array();
+        $notes = [];
         $result = $configObject->db->prepare('
             SELECT
                 userID,

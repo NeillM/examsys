@@ -72,7 +72,7 @@ $addtionalcss = '<style type="text/css">
             border: 2px solid #800000;
           }
         </style>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['computerlabs'] => '../list_labs.php', $string['campuses'] => 'list_campuses.php' );
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['computerlabs'] => '../list_labs.php', $string['campuses'] => 'list_campuses.php' ];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang, $toprightmenu);
 $render->render_admin_content($breadcrumb, $lang);

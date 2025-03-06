@@ -53,26 +53,26 @@ trait datageneration
      *
      * @var array
      */
-    protected $datagenerator_map = array(
-        'users' => array('users', 'core', 'create_user', null),
-        'papers' => array('papers', 'core', 'create_paper', 'preProcessPaper'),
-        'questions' => array('questions', 'core', 'create_question', 'preProcessQuestion'),
-        'modules' => array('modules', 'core', 'create_module', null),
-        'academic year' => array('academic_year', 'core', 'create_academic_year', null),
-        'module team members' => array('modules', 'core', 'create_module_team', null),
-        'config' => array('config', 'core', 'change_setting', null),
-        'campuses' => array('labs', 'core', 'create_campus', null),
-        'labs' => array('labs', 'core', 'create_lab', null),
-        'exam pcs' => array('labs', 'core', 'create_exam_pc', 'preProcessPC'),
-        'module keywords' => array('modules', 'core', 'createModuleKeywords', null),
-        'module enrolment' => array('modules', 'core', 'create_enrolment', 'preProcessmoduleEnrolment'),
-        'paper note' => array('users', 'core', 'addPaperNote', 'preProcessPaperNote'),
-        'access audit' => array('audit', 'core', 'create', null),
-        'courses' => array('course', 'core', 'create_course', null),
-        'reviewers' => array('papers', 'core', 'addReviewer', null),
-        'schedule' => array('papers', 'core', 'schedule', null),
-        'anomaly' => array('anomaly', 'core', 'createAnomaly', 'preProcessAnomaly'),
-    );
+    protected $datagenerator_map = [
+        'users' => ['users', 'core', 'create_user', null],
+        'papers' => ['papers', 'core', 'create_paper', 'preProcessPaper'],
+        'questions' => ['questions', 'core', 'create_question', 'preProcessQuestion'],
+        'modules' => ['modules', 'core', 'create_module', null],
+        'academic year' => ['academic_year', 'core', 'create_academic_year', null],
+        'module team members' => ['modules', 'core', 'create_module_team', null],
+        'config' => ['config', 'core', 'change_setting', null],
+        'campuses' => ['labs', 'core', 'create_campus', null],
+        'labs' => ['labs', 'core', 'create_lab', null],
+        'exam pcs' => ['labs', 'core', 'create_exam_pc', 'preProcessPC'],
+        'module keywords' => ['modules', 'core', 'createModuleKeywords', null],
+        'module enrolment' => ['modules', 'core', 'create_enrolment', 'preProcessmoduleEnrolment'],
+        'paper note' => ['users', 'core', 'addPaperNote', 'preProcessPaperNote'],
+        'access audit' => ['audit', 'core', 'create', null],
+        'courses' => ['course', 'core', 'create_course', null],
+        'reviewers' => ['papers', 'core', 'addReviewer', null],
+        'schedule' => ['papers', 'core', 'schedule', null],
+        'anomaly' => ['anomaly', 'core', 'createAnomaly', 'preProcessAnomaly'],
+    ];
 
     /**
      * Will return an array that contains only the indicies from $defaults,
@@ -312,13 +312,13 @@ trait datageneration
 
         $correct = explode(',', $row['experts']);
 
-        $text = array(
+        $text = [
             'very unlikely',
             'unlikely',
             'neither likely nor unlikely',
             'more likely',
             'very likely'
-        );
+        ];
 
         for ($i = 0; $i < count($text); $i++) {
             $defaultoption = [
@@ -928,7 +928,7 @@ trait datageneration
             }
             $row['settings'] = '{"marking":"' . $marking . '"}';
         } else {
-            $settings = array();
+            $settings = [];
             if (!empty($row['external_review_deadline'])) {
                 $settings['external_review_deadline'] = $row['external_review_deadline'];
             }

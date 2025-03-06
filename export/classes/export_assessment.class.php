@@ -31,7 +31,7 @@ class export_assessment extends exporter
      * Required fields
      * @var array
      */
-    public const DEFAULT = array(
+    public const DEFAULT = [
         'Gender',
         'Title',
         'Surname',
@@ -40,7 +40,7 @@ class export_assessment extends exporter
         'Course',
         'Year',
         'Started',
-    );
+    ];
 
     private $_hotspotIncorrect = [];
 
@@ -113,7 +113,7 @@ class export_assessment extends exporter
      */
     private static function make_safe($row)
     {
-        $safe = array();
+        $safe = [];
         foreach ($row as $r) {
             $safe[] = strip_tags($r);
         }
@@ -201,8 +201,8 @@ class export_assessment extends exporter
     public function create_dynamic_header($paper, $exclusions)
     {
         // Write out the headings.
-        $csvdata = array();
-        $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
+        $csvdata = [];
+        $numerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx'];
         for ($i = 0; $i < count($paper); $i++) {
             $tmp_question_ID = $paper[$i]['ID'];
             $externalref = \QuestionsMetadata::get($tmp_question_ID, 'externalref');
@@ -638,7 +638,7 @@ class export_assessment extends exporter
      */
     public function create_data($log_array, $paper, $exclusions, $mode, $string, $language)
     {
-        $csvdata = array();
+        $csvdata = [];
         $j = 1;
         foreach ($log_array as $individual) {
             // Write out the raw data.
@@ -959,9 +959,9 @@ class export_assessment extends exporter
                             }
                             break;
                         case 'labelling':
-                            $tmp_first_split = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode(';', $individual[$tmp_screen][$tmp_question_ID]) : array('', '');
+                            $tmp_first_split = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode(';', $individual[$tmp_screen][$tmp_question_ID]) : ['', ''];
                             $tmp_answers = explode('$', $tmp_first_split[1]);
-                            $user_answers = array();
+                            $user_answers = [];
                             for ($label_no = 0; $label_no <= count($tmp_answers) - 4; $label_no += 4) {
                                 $user_answers[$tmp_answers[$label_no] . 'x' . $tmp_answers[$label_no + 1]] = $tmp_answers[$label_no + 2];
                             }
@@ -970,9 +970,9 @@ class export_assessment extends exporter
                             $cix = 0;
                             $tmp_first_split = explode(';', $question['correct']);
                             $tmp_second_split = explode('$', $tmp_first_split[11]);
-                            $label_indexes = array();
-                            $answers = array();
-                            $correct = array();
+                            $label_indexes = [];
+                            $answers = [];
+                            $correct = [];
                             for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
                                 $tmp_third_split = explode('|', $tmp_second_split[$label_no]);
                                 $lix = mb_strstr($tmp_third_split[0], '~', true);
@@ -1059,19 +1059,19 @@ class export_assessment extends exporter
                                 if (isset($individual[$tmp_screen][$tmp_question_ID])) {
                                     $tmp_data = trim($individual[$tmp_screen][$tmp_question_ID]);
                                     // Strip leading hyphens (including after HTML tags) and newlines, swap double for single quotes
-                                    $tmp_data = trim(preg_replace(array(
+                                    $tmp_data = trim(preg_replace([
                                         "/(\r\n|\n|\r)/",
                                         '/^-/',
                                         '/^\s*<(.+?)>\s*-\s*/',
                                         '/^\s*<(.+?)>\s+/',
                                         '/"/'
-                                    ), array(
+                                    ], [
                                         ' ',
                                         '',
                                         '<\1>',
                                         '<\1>',
                                         '\'',
-                                    ), $tmp_data));
+                                    ], $tmp_data));
                                 } else {
                                     $tmp_data = '<unanswered>';
                                 }

@@ -197,7 +197,7 @@ SQL;
 
     public function load_reviews()
     {
-        $this->reviews_array = array();
+        $this->reviews_array = [];
 
         $result = $this->db->prepare('SELECT q_id, category, comment, duration, action, response FROM review_comments, review_metadata WHERE review_comments.metadataID = review_metadata.id AND paperID = ? AND reviewerID = ?');
         $result->bind_param('ii', $this->paperID, $this->reviewerID);

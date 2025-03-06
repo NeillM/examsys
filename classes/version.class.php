@@ -81,8 +81,8 @@ class version
      */
     public static function sort_version($fileversion)
     {
-        $unsorted = array();
-        $sorted = array();
+        $unsorted = [];
+        $sorted = [];
         // Filter the relase, major and minor numbers.
         foreach ($fileversion as $version) {
             preg_match(self::VERSION_FORMAT, $version, $filtered);

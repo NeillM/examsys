@@ -93,14 +93,14 @@ abstract class abstractmanagement
         if (!isset($data['externalid'])) {
             $data['externalid'] = null;
         }
-        return $response = array(
+        return $response = [
             'statuscode' => $data['statuscode'],
             'status' => $data['status'],
             'id' => $data['id'],
             'externalid' => $data['externalid'],
             'error' => $error,
             'node' => $action,
-            'nodeid' => $nodeid);
+            'nodeid' => $nodeid];
     }
 
     /**

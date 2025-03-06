@@ -58,7 +58,7 @@ $do_not_record = param::optional('dont_record', false, param::BOOLEAN, param::FE
 $refpane = param::optional('refpane', 0, param::INT, param::FETCH_POST);
 
 // Are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and $mode === 'preview');
+$is_preview_mode = ($userObject->has_role(['Staff', 'Admin', 'SysAdmin']) and $mode === 'preview');
 
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
@@ -273,17 +273,17 @@ $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $renderpath = $texteditorplugin->get_render_paths();
 $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
 $render = new render($configObject, $renderpath);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/start.css',
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
-    ),
-    'scripts' => array(),
-    'metadata' => array(
+    ],
+    'scripts' => [],
+    'metadata' => [
         'pragma' => 'no-cache',
-    ),
-);
+    ],
+];
 if ($papertype == '3') {
     $lang['title'] = $string['survey'];
 } else {
@@ -342,8 +342,8 @@ $question_no = 0;
 $q_displayed = 0;
 
 // Look for random questions and overwrite as needed
-$questions_array = array();
-$hidden = array();
+$questions_array = [];
+$hidden = [];
 foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
         $question = $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
@@ -549,7 +549,7 @@ if ($is_question_preview_mode) {
 
 $footer_data['breaks'] = -1;
 $footer_data['fire'] = 0;
-if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
+if ($userObject->has_role(['SysAdmin', 'Admin', 'Staff']) and $is_question_preview_mode) {
     $footer_data['adminview'] = true;
 } else {
     $footer_data['adminview'] = false;
@@ -574,9 +574,9 @@ if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_
         } else {
             $footer_data['previous'] = false;
         }
-        if (in_array($papertype, array('0', '1', '2'))) {
+        if (in_array($papertype, ['0', '1', '2'])) {
             $footer_data['jumpscreen'] = true;
-            $options = array();
+            $options = [];
             for ($i = 1; $i <= $no_screens; $i++) {
                 $selected = $i == ($current_screen - 1) ? ' selected' : '';
                 $options[$i] = $selected;
@@ -601,7 +601,7 @@ if (count($reference_materials) > 0) {
 }
 
 $render->render($footer_data, $string, 'paper/footer.html');
-$render->render(array(), $string, 'paper/overlays.html');
+$render->render([], $string, 'paper/overlays.html');
 // Paper dataset.
 $dataset['name'] = 'paper';
 $dataset['attributes']['pid'] = $id;
@@ -623,14 +623,14 @@ $dataset['attributes']['backoff'] = $backofffactor;
 $dataset['attributes']['saveretry'] = $retrylimit;
 $dataset['attributes']['timed'] = $timed;
 $dataset['attributes']['unanswered'] = $unanswered;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 // User dataset.
 $datasetuser['name'] = 'user';
 $datasetuser['attributes']['student'] = $userObject->has_role('Student');
 if (!is_null($remaining_time)) {
     $datasetuser['attributes']['remaining_time'] = $remaining_time;
 }
-$render->render($datasetuser, array(), 'dataset.html');
+$render->render($datasetuser, [], 'dataset.html');
 // Overwrite translation for remote summative exams.
 if ($remote) {
     $string['tryagain'] = $string['remotetryagain'];
@@ -638,16 +638,16 @@ if ($remote) {
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $miscdataset['attributes']['remotesummative'] = $remote;
 $miscdataset['attributes']['breaks'] = $footer_data['breaks'];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 
 $mysqli->close();
 
-$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-$render->render(array('scripts' => array('/js/startinit.min.js')), array(), 'footer.html');
+$render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render(['scripts' => ['/js/startinit.min.js']], [], 'footer.html');

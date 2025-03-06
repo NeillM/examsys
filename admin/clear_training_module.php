@@ -27,7 +27,7 @@ require '../include/sysadmin_auth.inc';
 
 function stripTrainModule($module_string)
 {
-    $new_modules = array();
+    $new_modules = [];
     $old_modules = explode(',', $module_string);
     foreach ($old_modules as $old_module) {
         if ($old_module != 'TRAIN') {
@@ -53,7 +53,7 @@ $result->execute();
 $result->store_result();
 $result->bind_result($paperID);
 while ($result->fetch()) {
-    Paper_utils::remove_modules(array($trainIdMod => 'TRAIN'), $paperID, $mysqli, $userObject);
+    Paper_utils::remove_modules([$trainIdMod => 'TRAIN'], $paperID, $mysqli, $userObject);
 
     $q_result = $mysqli->prepare('SELECT question FROM papers WHERE paper=?');
     $q_result->bind_param('i', $paperID);
@@ -73,7 +73,7 @@ while ($result->fetch()) {
             QuestionUtils::delete_question($questionID, $mysqli);
         } else {
             //remove from the TRAIN module dont delete ;-) its used elsewhere
-            QuestionUtils::remove_modules(array($trainIdMod => 'TRAIN'), $questionID, $mysqli);
+            QuestionUtils::remove_modules([$trainIdMod => 'TRAIN'], $questionID, $mysqli);
         }
         $check->close();
     }

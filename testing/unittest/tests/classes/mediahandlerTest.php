@@ -55,7 +55,7 @@ class MediaHandlerTest extends unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $this->question = $datagenerator->create_question(
-            array(
+            [
                 'type' => 'mcq',
                 'user' => 'admin',
                 'status' => 1,
@@ -66,37 +66,37 @@ class MediaHandlerTest extends unittestdatabase
                 'q_option_order' => 'random',
                 'display_method' => 'vertical',
                 'score_method' => 'Mark per Option'
-            )
+            ]
         );
         $this->options1 = $datagenerator->add_options_to_question(
-            array(
+            [
                 'question' => $this->question['id'],
                 'option_text' => 'true',
                 'correct' => 1,
                 'marks_correct' => 2,
                 'marks_incorrect' => -2,
                 'marks_partial' => 0
-            )
+            ]
         );
         $this->options2 = $datagenerator->add_options_to_question(
-            array(
+            [
                 'question' => $this->question['id'],
                 'option_text' => 'false',
                 'correct' => 1,
                 'marks_correct' => 2,
                 'marks_incorrect' => -2,
                 'marks_partial' => 0
-            )
+            ]
         );
         $this->options3 = $datagenerator->add_options_to_question(
-            array(
+            [
                 'question' => $this->question['id'],
                 'option_text' => 'maybe',
                 'correct' => 1,
                 'marks_correct' => 2,
                 'marks_incorrect' => -2,
                 'marks_partial' => 0
-            )
+            ]
         );
     }
 
@@ -120,32 +120,32 @@ class MediaHandlerTest extends unittestdatabase
         );
         // Media.
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'source',
                     'width',
                     'height',
                     'alt',
                     'ownerid'
-                ),
+                ],
                 'table' => 'media',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => $id
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'source' => $source,
                 'width' => $width,
                 'height' => $height,
                 'alt' => $alt,
                 'ownerid' => $owner
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
         //  Questions Media Link.
         \media_handler::linkQuestionToMedia(
@@ -154,28 +154,28 @@ class MediaHandlerTest extends unittestdatabase
             0
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'mediaid',
                     'qid',
                     'num',
-                ),
+                ],
                 'table' => 'questions_media',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'qid',
                         'value' => $this->question['id']
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'mediaid' => $id,
                 'qid' => $this->question['id'],
                 'num' => 0,
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -207,32 +207,32 @@ class MediaHandlerTest extends unittestdatabase
             $owner
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'source',
                     'width',
                     'height',
                     'alt',
                     'ownerid'
-                ),
+                ],
                 'table' => 'media',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => $id
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'source' => $updatesource,
                 'width' => $width,
                 'height' => $height,
                 'alt' => $alt,
                 'ownerid' => $owner
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -266,32 +266,32 @@ class MediaHandlerTest extends unittestdatabase
             $owner
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'source',
                     'width',
                     'height',
                     'alt',
                     'ownerid'
-                ),
+                ],
                 'table' => 'media',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => $id
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'source' => $source,
                 'width' => $updatewidth,
                 'height' => $updateheight,
                 'alt' => $updatealt,
                 'ownerid' => $owner
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -319,32 +319,32 @@ class MediaHandlerTest extends unittestdatabase
             $updatealt
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'source',
                     'width',
                     'height',
                     'alt',
                     'ownerid'
-                ),
+                ],
                 'table' => 'media',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => $id
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'source' => $source,
                 'width' => $width,
                 'height' => $height,
                 'alt' => $updatealt,
                 'ownerid' => $owner
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -377,46 +377,46 @@ class MediaHandlerTest extends unittestdatabase
             $this->question['id']
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'mediaid',
                     'qid',
                     'num',
-                ),
+                ],
                 'table' => 'questions_media',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'qid',
                         'value' => $this->question['id']
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedTable = array();
+        $expectedTable = [];
         $this->assertEquals($expectedTable, $queryTable);
         // Media.
         \media_handler::removeMedia(
             $id
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'source',
                     'width',
                     'height',
                     'alt',
                     'ownerid'
-                ),
+                ],
                 'table' => 'media',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => $id
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
-        $expectedTable = array();
+        $expectedTable = [];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -456,24 +456,24 @@ class MediaHandlerTest extends unittestdatabase
             $this->options2['id_num']
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'mediaid',
                     'oid',
-                ),
+                ],
                 'table' => 'options_media'
-            )
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'mediaid' => $id,
                 'oid' => $this->options2['id_num']
-            ),
-            1 => array (
+            ],
+            1 => [
                 'mediaid' => $id2,
                 'oid' => $this->options1['id_num']
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -517,20 +517,20 @@ class MediaHandlerTest extends unittestdatabase
             $this->options2['id_num']
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'mediaid',
                     'oid',
-                ),
+                ],
                 'table' => 'options_media',
-            )
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'mediaid' => $id2,
                 'oid' => $this->options1['id_num']
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 }

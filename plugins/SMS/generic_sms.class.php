@@ -101,7 +101,7 @@ class GENERIC_SMS extends SmsUtils
             } else {
                 $school = $lookupdata->school;
             }
-            return array( $moduleID, $moduletitle, $school );
+            return [ $moduleID, $moduletitle, $school ];
         }
     }
 
@@ -128,7 +128,7 @@ class GENERIC_SMS extends SmsUtils
                 $un_parts = explode('@', $sms->email);
                 $lookup_username = $un_parts[0];
             }
-            $users[$lookup_username] = array($sms->Title, $sms->Surname, $sms->Forename, $sms->CourseCode, $sms->Email, $sms->Gender, $sms->YearofStudy, $sms->StudentID);
+            $users[$lookup_username] = [$sms->Title, $sms->Surname, $sms->Forename, $sms->CourseCode, $sms->Email, $sms->Gender, $sms->YearofStudy, $sms->StudentID];
         }
 
 
@@ -143,13 +143,13 @@ class GENERIC_SMS extends SmsUtils
     // appears unused
     public function getStudentSources()
     {
-        return array('&lt;No lookup&gt;' => '', 'Lookup' => 'lookupclass');
+        return ['&lt;No lookup&gt;' => '', 'Lookup' => 'lookupclass'];
     }
 
     // returns an array with key as display name and value as item to save back to db for use with sms module sources
     public function getModuleSources()
     {
-        return array('Lookup' => 'lookupclass');
+        return ['Lookup' => 'lookupclass'];
     }
 
 
@@ -187,7 +187,7 @@ class GENERIC_SMS extends SmsUtils
 
 
         // Get the currently enrolled students in ExamSys for the module.
-        $current_users = array();
+        $current_users = [];
         $sql = "
         SELECT 
             m.id, u.id, username, grade, title, surname, first_names, initials, GROUP_CONCAT(r.name  SEPARATOR ','), yearofstudy, 
@@ -230,7 +230,7 @@ class GENERIC_SMS extends SmsUtils
 
         if ((isset($lookupdata->error) and $lookupdata->error != '')) {
             //log the issue
-            $variables = array( 'lookup' => &$lookupdata );
+            $variables = [ 'lookup' => &$lookupdata ];
             $this->errorinfo['moduleerrorstate'][$lookupdata->error][] = $module;
             $this->errorinfo['moduleerrorstatedata'][$lookupdata->error][] = $variables;
             $errstr = 'The module lookup for modulecode: ' . $module . ' returned an error state of ' . $lookupdata->error;
@@ -246,7 +246,7 @@ class GENERIC_SMS extends SmsUtils
         // un inverted  the logic around to make it easier
 
         if ($lookupdata === false or (isset($lookupdata->error) and $lookupdata->error != '')) {
-            $variables = array( 'lookup' => &$lookupdata );
+            $variables = [ 'lookup' => &$lookupdata ];
             $errstr = 'No Data returned from lookup for module: ' . $module;
             $this->errorinfo['modulenodata'][] = $module;
             $this->errorinfo['modulenodatadata'][] = $variables;
@@ -388,7 +388,7 @@ class GENERIC_SMS extends SmsUtils
                         }
                     }
                 } else {
-                    $variables = array( 'lookup' => &$sms, 'currentusers' => &$current_users );
+                    $variables = [ 'lookup' => &$sms, 'currentusers' => &$current_users ];
                     $errstr = 'In cron job ERROR: unable to establish username for ' . $sms->title . ' ' . $sms->surname . ', ' . $sms->forename . ' (' . $sms->studentID . ')<br />';
                     $this->errorinfo['unabletodetermineusername'][] = $errstr;
                     $this->errorinfo['unabletodetermineusernamedata'][] = $variables;

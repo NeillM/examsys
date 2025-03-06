@@ -32,7 +32,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperid, $mysqli, $st
 
 $render = new render($configObject);
 
-$headerdata = array(
+$headerdata = [
   'css' => [
     '/css/header.css',
     '/css/warnings.css',
@@ -40,7 +40,7 @@ $headerdata = array(
   ],
   'scripts' => [],
   'metadata' => [],
-);
+];
 $render->render($headerdata, $string, 'header.html');
 
 // Render the user list.
@@ -50,6 +50,6 @@ $jsdataset = [
   'name' => 'jsutils',
   'attributes' => ['xls' => json_encode($string)],
 ];
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 
 $render->render([], [], 'footer.html');

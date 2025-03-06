@@ -44,5 +44,5 @@ $oauth->delete_auth($id, $type);
 $render = new render($configObject);
 $lang['title'] = $string['oauthkeydel'];
 $lang['success'] = $string['oauthkeysuccess'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

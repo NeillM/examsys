@@ -53,7 +53,7 @@ class lti_default_integration_extended extends lti_integration
         // school as a string (gets lookedup against ExamSys to get id later,
         // a 1 for self reg enable [0 for disable]
         // and the course title.
-        return array(array('Manual', $c_internal_id, 'CampusTODO', 'UNKNOWN School', 0, "MISSING:$course_title"));
+        return [['Manual', $c_internal_id, 'CampusTODO', 'UNKNOWN School', 0, "MISSING:$course_title"]];
     }
 
     /**

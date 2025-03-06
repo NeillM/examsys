@@ -50,7 +50,7 @@ $results->fetch();
 $results->close();
 
 // Find associated addresses
-$addresses = array();
+$addresses = [];
 $result = $mysqli->prepare('SELECT address, low_bandwidth FROM client_identifiers WHERE lab = ?');
 $result->bind_param('i', $labID);
 $result->execute();
@@ -60,7 +60,7 @@ while ($result->fetch()) {
 }
 $result->close();
 
-$bad_addresses = array();
+$bad_addresses = [];
 
 $campusobj = new campus($mysqli);
 $campuses = $campusobj->get_all_campus_details();
@@ -176,10 +176,10 @@ $campuses = $campusobj->get_all_campus_details();
         $render = new render($configObject);
         $miscdataset['name'] = 'dataset';
         $miscdataset['attributes']['posturl'] = 'do_edit_lab.php?labID=' . $labID;
-        $render->render($miscdataset, array(), 'dataset.html');
+        $render->render($miscdataset, [], 'dataset.html');
         $jsdataset['name'] = 'jsutils';
         $jsdataset['attributes']['xls'] = json_encode($string);
-        $render->render($jsdataset, array(), 'dataset.html');
+        $render->render($jsdataset, [], 'dataset.html');
         ?>
         <script src="../js/labinit.min.js"></script>
     </body>

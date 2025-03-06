@@ -231,7 +231,7 @@ class RoleTest extends \testing\unittest\unittestdatabase
      */
     public function testGetApiRoles(): void
     {
-        $expected = array( 'graduate', 'Inactive Staff', 'left', 'Locked', 'Staff', 'Student', 'Suspended');
+        $expected = [ 'graduate', 'Inactive Staff', 'left', 'Locked', 'Staff', 'Student', 'Suspended'];
         self::assertEquals($expected, Role::getApiRoles());
     }
 

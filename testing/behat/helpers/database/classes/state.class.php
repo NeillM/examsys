@@ -34,9 +34,9 @@ class state
     /** @var mysqli A ExamSys database connection. */
     private static $db;
     /** @var array Stores an array of tables per named transaction that can be used to detect changes if a transaction fails. */
-    private static $tablestates = array();
+    private static $tablestates = [];
     /** @var array Stores a list of temporary tables we have created to backup ExamSys data in. */
-    private static $temptables = array();
+    private static $temptables = [];
     /** @var string Stores the database schema we connect to. */
     private static $schema;
 
@@ -239,14 +239,14 @@ class state
         $query->bind_param('s', self::$schema);
         $query->execute();
         $query->bind_result($name, $increment, $created);
-        $return = array();
+        $return = [];
         while ($query->fetch()) {
-            $return[$name] = array(
+            $return[$name] = [
             'name' => $name,
             'rows' => 0,
             'auto_increment' => $increment,
             'created' => $created,
-            );
+            ];
         }
         $query->close();
         // Row counts in the information schema seem to be inaccurate so we need to count on each table ourselves.

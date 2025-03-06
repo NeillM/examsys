@@ -140,7 +140,7 @@ class renderdata extends \questiondata
             $this->unanswered = false;
         }
         $this->id = $this->questionno . '_' . $part_id;
-        $scale = array();
+        $scale = [];
         if ($this->displayna) {
             // If n/a enabled set if selected.
             if ($useranswer == 'n/a') {

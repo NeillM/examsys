@@ -26,7 +26,7 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.php';
 
-$bad_addresses = array();
+$bad_addresses = [];
 $submit = param::optional('submit', null, param::TEXT, param::FETCH_POST);
 
 // Sanitize inputs
@@ -162,10 +162,10 @@ if (null === $campus) {
         $render = new render($configObject);
         $miscdataset['name'] = 'dataset';
         $miscdataset['attributes']['posturl'] = 'do_add_lab.php';
-        $render->render($miscdataset, array(), 'dataset.html');// JS utils dataset.
+        $render->render($miscdataset, [], 'dataset.html');// JS utils dataset.
         $jsdataset['name'] = 'jsutils';
         $jsdataset['attributes']['xls'] = json_encode($string);
-        $render->render($jsdataset, array(), 'dataset.html');
+        $render->render($jsdataset, [], 'dataset.html');
         ?>
         <script src="../js/labinit.min.js"></script>
     </body>

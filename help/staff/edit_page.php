@@ -102,7 +102,7 @@ if (isset($_POST['save_changes'])) {
     }
 
     echo '<table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr><td style="padding-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="page_title" value="' . $page_details['title'] . "\" required /></td><td style=\"text-align:right\"><select name=\"page_roles\">\n";
-    $categories = array('Staff', 'Admin', 'SysAdmin');
+    $categories = ['Staff', 'Admin', 'SysAdmin'];
     foreach ($categories as $category) {
         if ($category == $page_details['roles']) {
             echo "<option value=\"$category\" selected>$category</option>\n";
@@ -147,14 +147,14 @@ if (isset($_POST['save_changes'])) {
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     $miscdataset['name'] = 'dataset';
     if ($disabled == ' disabled') {
         $miscdataset['attributes']['editor'] = $string['pagelocked'] . " $editor_name. " . $string['isinreadonly'];
     } else {
         $miscdataset['attributes']['editor'] = '';
     }
-    $render->render($miscdataset, array(), 'dataset.html');
+    $render->render($miscdataset, [], 'dataset.html');
     $mysqli->close();
 }
 ?>

@@ -74,7 +74,7 @@ if (!Paper_utils::is_paper_title_unique($new_paper_title, $mysqli)) {           
 
 $calendar_year = $new_calendar_year = '';
 $moduleIDs = null;
-$error = array();
+$error = [];
 $copytype = param::optional('copytype', null, param::ALPHA, param::FETCH_POST);
 $update = param::optional('copyfrompaper', false, param::BOOLEAN, param::FETCH_POST);
 
@@ -121,7 +121,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     $result->execute();
     $result->store_result();
     $result->bind_result($question, $screen, $display_pos);
-    $qids = array();
+    $qids = [];
     while ($result->fetch()) {
         $qids[] = $question;
         Paper_utils::add_question($new_paper_id, $question, $screen, $display_pos, $mysqli);
@@ -176,8 +176,8 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     }
 
     // Copy the question and option data (questions and options tables)
-    $old_qids = array();
-    $new_qids = array();
+    $old_qids = [];
+    $new_qids = [];
     $q_no = 0;
     $result = $mysqli->prepare('SELECT question, screen, display_pos FROM papers WHERE paper = ? ORDER BY display_pos');
     $result->bind_param('i', $paperid);
@@ -329,7 +329,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 
                 // Copy Question Media.
                 $media = QuestionUtils::getMediaAsString($q_id);
-                $newmedia = array();
+                $newmedia = [];
                 if ($media['id'] != '') {
                     $media_array = explode('|', $media['source']);
                     $mediawidth_array = explode('|', $media['width']);

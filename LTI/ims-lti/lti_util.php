@@ -135,7 +135,7 @@ class BLTI
         }
 
         // Store the launch information in the session for later
-        $newinfo = array();
+        $newinfo = [];
         foreach ($_POST as $key => $value) {
             if ($key == 'basiclti_submit') {
                 continue;
@@ -420,7 +420,7 @@ class BLTI
     {
         $list = $this->info['launch_presentation_css_url'];
         if (strlen($list) < 1) {
-            return array();
+            return [];
         }
         return explode(',', $list);
     }
@@ -503,7 +503,7 @@ function sendOAuthBodyPOST($method, $endpoint, $oauth_consumer_key, $oauth_consu
 {
     $hash = base64_encode(sha1($body, true));
 
-    $parms = array('oauth_body_hash' => $hash);
+    $parms = ['oauth_body_hash' => $hash];
 
     $test_token = '';
     $hmac_method = new OAuthSignatureMethod_HMAC_SHA1();
@@ -611,8 +611,8 @@ function replaceResultRequest($grade, $sourcedid, $endpoint, $oauth_consumer_key
     $content_type = 'application/xml';
     $operation = 'replaceResultRequest';
     $postBody = str_replace(
-        array('SOURCEDID', 'GRADE', 'OPERATION','MESSAGE'),
-        array($sourcedid, $grade, $operation, uniqid()),
+        ['SOURCEDID', 'GRADE', 'OPERATION','MESSAGE'],
+        [$sourcedid, $grade, $operation, uniqid()],
         getPOXGradeRequest()
     );
 
@@ -625,7 +625,7 @@ function replaceResultRequest($grade, $sourcedid, $endpoint, $oauth_consumer_key
 
 function parseResponse($response)
 {
-    $retval = array();
+    $retval = [];
     try {
         $xml = new SimpleXMLElement($response);
         $imsx_header = $xml->imsx_POXHeader->children();

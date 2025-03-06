@@ -38,10 +38,10 @@ require_once '../include/load_config.php';
 class IE_Local_Load extends IE_Main
 {
     public $type = '';
-    public $q_ids = array();
-    public $p_ids = array();
+    public $q_ids = [];
+    public $p_ids = [];
     public $params;
-    public $statuses = array();
+    public $statuses = [];
 
     public function Load($params)
     {
@@ -65,7 +65,7 @@ class IE_Local_Load extends IE_Main
                 $result->questions[] = $question;
             }
         } else {
-            $questions = array();
+            $questions = [];
             foreach ($this->ids as $p_id) {
                 $paper = $this->LoadPaper($p_id);
 
@@ -89,8 +89,8 @@ class IE_Local_Load extends IE_Main
 
     public function LoadPaper($p_id)
     {
-        $paper_row = array();
-        $prop_rows = array();
+        $paper_row = [];
+        $prop_rows = [];
 
         // retrieve question row from database
         $db = new Database();
@@ -134,8 +134,8 @@ class IE_Local_Load extends IE_Main
         $userObj = UserObject::get_instance();
 
         // storage for question data
-        $q_row = array();
-        $o_rows = array();
+        $q_row = [];
+        $o_rows = [];
 
         // retrieve question row from database
         $db = new Database();
@@ -164,7 +164,7 @@ class IE_Local_Load extends IE_Main
 
         // populate class specific storage fields
         $funcname = 'LoadQuestion' . $q_type;
-        call_user_func(array($this, $funcname), $store, $q_row, $o_rows);
+        call_user_func([$this, $funcname], $store, $q_row, $o_rows);
 
         // display some debug data
         print_p($q_row);
@@ -172,7 +172,7 @@ class IE_Local_Load extends IE_Main
 
         // insert track changes record
         if ($show_debug != true) {
-            $track = array();
+            $track = [];
             $track['type'] = 'QTI Export';
             $track['typeID'] = $q_row['q_id'];
             $track['editor'] = $userObj->get_user_ID();
@@ -211,7 +211,7 @@ class IE_Local_Load extends IE_Main
         $db->AddWhere('kq.q_id', $q_row['q_id'], 'i');
         $o_rows = $db->GetMultiRow();
 
-        $keywords = array();
+        $keywords = [];
         if (count($o_rows) > 0) {
             $keywords[] = $o_rows[0]['keyword'];
             for ($i = 1; $i < count($o_rows); $i++) {
@@ -248,7 +248,7 @@ class IE_Local_Load extends IE_Main
         // load option text
         $q = $o_rows[0]['option_text'];
 
-        $question = array();
+        $question = [];
 
         // parse question into some more meaningful format
         $blankno = 1;
@@ -270,7 +270,7 @@ class IE_Local_Load extends IE_Main
             $optlist = explode(',', $midpart);
 
             // array to store resulting STQ_Blank_Option classes
-            $options = array();
+            $options = [];
 
             $optionno = 1;
             foreach ($optlist as $opt) {
@@ -297,7 +297,7 @@ class IE_Local_Load extends IE_Main
                     $optionno++;
                 }
             }
-            $store->options[$blankid] = array();
+            $store->options[$blankid] = [];
             foreach ($options as $option) {
                 $store->options[$blankid][] = $option;
             }
@@ -404,11 +404,11 @@ class IE_Local_Load extends IE_Main
 
         // split all stuff from q_row into arrays for processing
         $feedbacks = explode('|', $q_row['correct_fback']);
-        $medias = array();
-        $media_widths = array();
-        $medias_heights = array();
-        $medias_alts = array();
-        $medias_nums = array();
+        $medias = [];
+        $media_widths = [];
+        $medias_heights = [];
+        $medias_alts = [];
+        $medias_nums = [];
         $tmp_scenarios = explode('|', $q_row['scenario']);
 
         // Get media for question
@@ -430,7 +430,7 @@ class IE_Local_Load extends IE_Main
             $medias_alts[$row['num']] = $row['alt'];
         }
 
-        $scenarios = array();
+        $scenarios = [];
         $i = 0;
         foreach ($tmp_scenarios as $s) {
             if ($s != '' or isset($medias[$i + 1])) {
@@ -519,7 +519,7 @@ class IE_Local_Load extends IE_Main
         // 5 - 3 pt
         // 6 - 4 1/2 pt
         // 7 - 6 pt
-        $line_thicknesses = array();
+        $line_thicknesses = [];
         $line_thicknesses[1] = 0.75;
         $line_thicknesses[2] = 1;
         $line_thicknesses[3] = 1.25;
@@ -615,7 +615,7 @@ class IE_Local_Load extends IE_Main
         // store rest of the options in scale
         $opts = explode('|', $sm);
         $i = 1;
-        $store->scale = array();
+        $store->scale = [];
         foreach ($opts as $opt) {
             $store->scale[$i++] = $opt;
         }

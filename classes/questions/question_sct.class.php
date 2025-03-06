@@ -34,20 +34,20 @@ class QuestionSCT extends QuestionEdit
 
     protected $sct_types;
 
-    protected $_fields_editable = array('theme', 'scenario', 'hypothesis', 'new_information', 'notes', 'correct_fback', 'incorrect_fback', 'display_method', 'option_order', 'bloom', 'status', 'staffnotes');
-    protected $_fields_required = array('type', 'leadin', 'display_method', 'owner_id', 'status');
+    protected $_fields_editable = ['theme', 'scenario', 'hypothesis', 'new_information', 'notes', 'correct_fback', 'incorrect_fback', 'display_method', 'option_order', 'bloom', 'status', 'staffnotes'];
+    protected $_fields_required = ['type', 'leadin', 'display_method', 'owner_id', 'status'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-        $this->sct_types = array(
-        array($this->_lang_strings['hypothesis'], $this->_lang_strings['veryunlikely'], $this->_lang_strings['unlikely'], $this->_lang_strings['neithernorlikely'], $this->_lang_strings['morelikely'], $this->_lang_strings['verylikely']),
-        array($this->_lang_strings['investigation'], $this->_lang_strings['useless'], $this->_lang_strings['lessuseful'], $this->_lang_strings['neithernoruseful'], $this->_lang_strings['moreuseful'], $this->_lang_strings['veryuseful']),
-        array($this->_lang_strings['prescription'], $this->_lang_strings['contraindicatedtotally'], $this->_lang_strings['detrimental'], $this->_lang_strings['neithernoruseful'], $this->_lang_strings['useful'], $this->_lang_strings['necessary']),
-        array($this->_lang_strings['intervention'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated']),
-        array($this->_lang_strings['treatment'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated'])
-        );
+        $this->sct_types = [
+        [$this->_lang_strings['hypothesis'], $this->_lang_strings['veryunlikely'], $this->_lang_strings['unlikely'], $this->_lang_strings['neithernorlikely'], $this->_lang_strings['morelikely'], $this->_lang_strings['verylikely']],
+        [$this->_lang_strings['investigation'], $this->_lang_strings['useless'], $this->_lang_strings['lessuseful'], $this->_lang_strings['neithernoruseful'], $this->_lang_strings['moreuseful'], $this->_lang_strings['veryuseful']],
+        [$this->_lang_strings['prescription'], $this->_lang_strings['contraindicatedtotally'], $this->_lang_strings['detrimental'], $this->_lang_strings['neithernoruseful'], $this->_lang_strings['useful'], $this->_lang_strings['necessary']],
+        [$this->_lang_strings['intervention'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated']],
+        [$this->_lang_strings['treatment'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated']]
+        ];
 
 
         $i = 1;
@@ -57,7 +57,7 @@ class QuestionSCT extends QuestionEdit
         }
 
         // 'correct' is not a unified field for SCT questions
-        $this->_fields_unified = array();
+        $this->_fields_unified = [];
         $this->_fields_editable[] = 'correct';
     }
 

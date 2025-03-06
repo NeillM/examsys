@@ -26,7 +26,7 @@
  */
 class QuestionAREA extends QuestionEdit
 {
-    protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
+    protected $_fields_required = ['type', 'leadin', 'option_order', 'owner_id', 'status'];
 
     protected $points1 = '';
     protected $correct_full;
@@ -40,8 +40,8 @@ class QuestionAREA extends QuestionEdit
     protected $score_method = 'Allow partial Marks';
     public $max_options = 1;
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'bloom', 'status', 'correct_full', 'error_full', 'correct_partial', 'error_partial', 'staffnotes');
-    protected $_fields_settings = array('correct_full', 'error_full', 'correct_partial', 'error_partial');
+    protected $_fields_editable = ['theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'bloom', 'status', 'correct_full', 'error_full', 'correct_partial', 'error_partial', 'staffnotes'];
+    protected $_fields_settings = ['correct_full', 'error_full', 'correct_partial', 'error_partial'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
@@ -49,9 +49,9 @@ class QuestionAREA extends QuestionEdit
 
         // Convert the max number of options into a list of variables
         $this->option_order = 'display order';
-        $this->_fields_change = array('option_marks_correct', 'option_marks_partial', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
-        $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
-        $this->_score_methods = array($this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']);
+        $this->_fields_change = ['option_marks_correct', 'option_marks_partial', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial'];
+        $this->_fields_unified = ['correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']];
+        $this->_score_methods = [$this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']];
     }
 
 

@@ -59,7 +59,7 @@ class renderdata extends \questiondata
      * The labels for the hotspot
      * @var array
      */
-    public $labels = array();
+    public $labels = [];
 
     /**
      * Constructor
@@ -125,7 +125,7 @@ class renderdata extends \questiondata
                 }
                 if ($this->print) {
                     if (strstr($label_parts[4], '~')) {
-                        $this->labels[] = array(
+                        $this->labels[] = [
                             'type' => 'media',
                             'value' => $mediadirectory->url(
                                 strstr($label_parts[4], '~', true)
@@ -133,15 +133,15 @@ class renderdata extends \questiondata
                             'xpos' => $label_parts[2],
                             'ypos' => $label_parts[3],
                             'correct' => $correct,
-                        );
+                        ];
                     } else {
-                        $this->labels[] = array(
+                        $this->labels[] = [
                             'type' => 'text',
                             'value' => $label_parts[4],
                             'xpos' => $label_parts[2],
                             'ypos' => $label_parts[3],
                             'correct' => $correct,
-                        );
+                        ];
                     }
                 }
                 if (mb_strstr($label_parts[4], '-') !== false) {

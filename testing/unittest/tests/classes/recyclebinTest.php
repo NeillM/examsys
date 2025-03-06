@@ -40,32 +40,32 @@ class recyclebinTest extends unittestdatabase
     {
         $this->school2 = $this->get_school_id('Training');
         $datagenerator = $this->get_datagenerator('faculty', 'core');
-        $faculty = $datagenerator->create_faculty(array('code' => 'a100'));
+        $faculty = $datagenerator->create_faculty(['code' => 'a100']);
         \FacultyUtils::delete_faculty($faculty['id'], $this->db);
         $datagenerator = $this->get_datagenerator('school', 'core');
-        $school = $datagenerator->create_school(array('facultyID' => $faculty['id']));
+        $school = $datagenerator->create_school(['facultyID' => $faculty['id']]);
         \SchoolUtils::delete_school($school['id'], $this->db);
         $datagenerator = $this->get_datagenerator('modules', 'core');
-        $module = $datagenerator->create_module(array('fullname' => 'Module test', 'moduleid' => 'RECYLE1'));
+        $module = $datagenerator->create_module(['fullname' => 'Module test', 'moduleid' => 'RECYLE1']);
         \module_utils::delete_module($module['id'], $this->db);
         $datagenerator = $this->get_datagenerator('course', 'core');
-        $course = $datagenerator->create_course(array('name' => 'computer Science', 'description' => 'a computer Science course', 'schoolid' => $this->school2));
+        $course = $datagenerator->create_course(['name' => 'computer Science', 'description' => 'a computer Science course', 'schoolid' => $this->school2]);
         \CourseUtils::delete_course_by_id($course['id'], $this->db);
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $paper = $datagenerator->create_paper(array('papertitle' => 'test formative',
+        $paper = $datagenerator->create_paper(['papertitle' => 'test formative',
             'bidirectional' => '1',
             'fullscreen' => '0',
             'paperowner' => 'admin',
             'papertype' => '0',
-            'modulename' => 'Training Module'));
+            'modulename' => 'Training Module']);
         \Paper_utils::delete_paper($paper['id'], $this->admin['id'], $this->db);
         $datagenerator = $this->get_datagenerator('questions', 'core');
-        $datagenerator->create_question(array('user' => 'admin',
+        $datagenerator->create_question(['user' => 'admin',
             'type' => 'blank',
             'leadin' => 'Test question',
-            'deleted' => true));
+            'deleted' => true]);
         $datagenerator = $this->get_datagenerator('folder', 'core');
-        $datagenerator->create_folder(array('ownerID' => $this->admin['id'], 'deleted' => true));
+        $datagenerator->create_folder(['ownerID' => $this->admin['id'], 'deleted' => true]);
     }
 
     /**

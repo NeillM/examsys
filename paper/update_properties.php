@@ -286,7 +286,7 @@ if (!$title_unique) {
         $properties->set_internal_review_deadline($tmp_date->format('Y-m-d'));
     }
 
-    $paper_modules = array();
+    $paper_modules = [];
     $first_module_id = '';
 
     for ($i = 0; $i < $_POST['module_no']; $i++) {
@@ -301,14 +301,14 @@ if (!$title_unique) {
         }
     }
 
-    $new_externals = array();
+    $new_externals = [];
     for ($i = 0; $i < $_POST['examiner_no']; $i++) {
         if (isset($_POST["examiner$i"])) {
             $new_externals[] = intval($_POST["examiner$i"]);
         }
     }
 
-    $new_internals = array();
+    $new_internals = [];
     for ($i = 0; $i < $_POST['internal_no']; $i++) {
         if (isset($_POST["internal$i"])) {
             $new_internals[] = intval($_POST["internal$i"]);
@@ -381,10 +381,10 @@ if (!$title_unique) {
     // Save any adjusted properties to the database.
     $properties->save();
 
-    if (!$locked or $userObject->has_role(array('SysAdmin', 'Admin'))) {
+    if (!$locked or $userObject->has_role(['SysAdmin', 'Admin'])) {
         $old_modules = $properties->get_modules(true);
 
-        if (!$locked or $userObject->has_role(array('SysAdmin'))) {
+        if (!$locked or $userObject->has_role(['SysAdmin'])) {
             Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
         }
 
@@ -445,7 +445,7 @@ if (!$title_unique) {
                     Paper_utils::set_metadata(
                         $mysqli,
                         $paperID,
-                        array('seb_hash' => $seb_key_array),
+                        ['seb_hash' => $seb_key_array],
                         true
                     ); // Delete old entries, replace with new
                     $logger->track_change(
@@ -542,7 +542,7 @@ if (!$title_unique) {
         }
 
         // Get new settings
-        $textual_feedback = array();
+        $textual_feedback = [];
         for ($i = 1; $i < 10; $i++) {
             if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
                 $textual_feedback[$i]['msg'] = $_POST["feedback_msg$i"];
@@ -627,7 +627,7 @@ if (!$title_unique) {
     }
 
     // Get existing Reference Materials
-    $existing_refs = array();
+    $existing_refs = [];
     $result = $mysqli->prepare('SELECT refID FROM reference_papers WHERE paperID = ?');
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -638,7 +638,7 @@ if (!$title_unique) {
     }
     $result->close();
 
-    $new_refs = array();
+    $new_refs = [];
     for ($i = 0; $i < $_POST['reference_no']; $i++) {
         if (isset($_POST["ref$i"])) {
             $new_refs[$_POST["ref$i"]] = $_POST["ref$i"];

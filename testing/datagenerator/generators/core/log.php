@@ -45,7 +45,7 @@ class log extends generator
         }
 
         $user = \UserUtils::get_full_details_by_ID($parameters['userID'], \Config::get_instance()->db);
-        $defaults = array(
+        $defaults = [
             'started' => null,
             'ipaddress' => null,
             'student_grade' => $user['course'],
@@ -56,7 +56,7 @@ class log extends generator
             'highest_screen' => null,
             'userID' => $parameters['userID'],
             'paperID' => $parameters['paperID']
-        );
+        ];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $sql->bind_param(
@@ -96,9 +96,9 @@ class log extends generator
         if (empty($parameters['q_paper'])) {
             throw new data_error('q_paper must be provided');
         }
-        $defaults = array('started' => null, 'overall_rating' => null, 'numeric_score' => null,
+        $defaults = ['started' => null, 'overall_rating' => null, 'numeric_score' => null,
             'feedback' => null, 'student_grade' => null, 'examinerID' => null, 'osce_type' => null, 'year' => null,
-            'userID' => $parameters['userID'], 'q_paper' => $parameters['q_paper']);
+            'userID' => $parameters['userID'], 'q_paper' => $parameters['q_paper']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $sql->bind_param(
@@ -139,7 +139,7 @@ class log extends generator
         if (empty($parameters['q_id'])) {
             throw new data_error('q_id must be provided');
         }
-        $defaults = array('rating' => null, 'q_parts' => null, 'log4_overallID' => $parameters['log4_overallID'], 'q_id' => $parameters['q_id']);
+        $defaults = ['rating' => null, 'q_parts' => null, 'log4_overallID' => $parameters['log4_overallID'], 'q_id' => $parameters['q_id']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?)');
         $sql->bind_param('issi', $settings['q_id'], $settings['rating'], $settings['q_parts'], $settings['log4_overallID']);
@@ -168,8 +168,8 @@ class log extends generator
         if (empty($parameters['q_id'])) {
             throw new data_error('q_id must be provided');
         }
-        $defaults = array('mark' => null, 'adjmark' => null, 'totalpos' => null, 'metadataID' => $parameters['metadataID'],
-            'q_id' => $parameters['q_id']);
+        $defaults = ['mark' => null, 'adjmark' => null, 'totalpos' => null, 'metadataID' => $parameters['metadataID'],
+            'q_id' => $parameters['q_id']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log5 VALUES (NULL, ?, ?, ?, ?, ?)');
         $sql->bind_param('iddii', $settings['q_id'], $settings['mark'], $settings['adjmark'], $settings['totalpos'], $settings['metadataID']);
@@ -194,8 +194,8 @@ class log extends generator
         if (empty($parameters['q_id'])) {
             throw new data_error('q_id must be provided');
         }
-        $defaults = array('paperID' => null, 'reviewerID' => null, 'peerID' => null, 'started' => null, 'rating' => null,
-            'q_id' => $parameters['q_id']);
+        $defaults = ['paperID' => null, 'reviewerID' => null, 'peerID' => null, 'started' => null, 'rating' => null,
+            'q_id' => $parameters['q_id']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log6 VALUES (NULL, ?, ?, ?, ?, ?, ?)');
         $sql->bind_param('iiisii', $settings['paperID'], $settings['reviewerID'], $settings['peerID'], $settings['started'], $settings['q_id'], $settings['rating']);
@@ -300,7 +300,7 @@ class log extends generator
         if (empty($parameters['q_id'])) {
             throw new data_error('q_id must be provided');
         }
-        $defaults = array(
+        $defaults = [
             'mark' => null,
             'adjmark' => null,
             'totalpos' => null,
@@ -311,7 +311,7 @@ class log extends generator
             'updated' => null,
             'dismiss' => null,
             'option_order' => null
-        );
+        ];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
         $sql = $this->db->prepare('INSERT INTO log' . $type . ' VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');

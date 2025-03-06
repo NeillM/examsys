@@ -60,7 +60,7 @@ class renderdata extends \questiondata
     {
         $question = $this->question;
         if (!is_null($useranswer)) {
-            $d = array();
+            $d = [];
             $d['useranswer'] = $useranswer;
             $question['object']->load($d);
         }
@@ -108,7 +108,7 @@ class renderdata extends \questiondata
     {
         $question = $this->question;
         // no options for enhanced calc now stored in settings
-        $extra = array(
+        $extra = [
             'num_on_screen' => $this->questionno,
             'current_question' => $question,
             'assignednumber' => $this->assignednumber,
@@ -120,7 +120,7 @@ class renderdata extends \questiondata
             'mediabordercolour' => $this->mediabordercolour,
             'mediaurl' => $this->mediaurl,
             'mediafile' => $this->mediafile,
-        );
+        ];
         $question['object']->render_paper($extra);
     }
 }

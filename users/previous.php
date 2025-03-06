@@ -40,13 +40,13 @@ $prev_attempts = $log->loadAttempts($property_id, $userObject->get_user_ID(), $m
 
 $render = new render($configObject);
 
-$headerdata = array(
+$headerdata = [
     'css' => [
         '/css/header.css',
         '/css/warnings.css',
         '/css/list.css',
     ],
-);
+];
 $render->render($headerdata, $string, 'header.html');
 
 // Render the user list.
@@ -56,10 +56,10 @@ $jsdataset = [
     'name' => 'jsutils',
     'attributes' => ['xls' => json_encode($string)],
 ];
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $dataset['name'] = 'dataset';
 $dataset['attributes']['id'] = $id;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 
 $data = [
     'scripts' => [

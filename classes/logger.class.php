@@ -110,7 +110,7 @@ class Logger
      */
     public function get_changes($type, $typeID, $callbacks = '')
     {
-        $change_data = array();
+        $change_data = [];
 
         $query = 'SELECT title, initials, surname, old, new, part, UNIX_TIMESTAMP(changed) AS changed FROM track_changes, users WHERE track_changes.editor = users.id AND type = ? AND typeID = ? ORDER BY changed desc';
         $result = $this->_mysqli->prepare($query);
@@ -118,7 +118,7 @@ class Logger
         $result->execute();
         $result->bind_result($title, $initials, $surname, $old, $new, $part, $changed);
         while ($result->fetch()) {
-            $change_data[] = array('title' => $title, 'initials' => $initials, 'surname' => $surname, 'old' => $old, 'new' => $new, 'part' => $part, 'date' => $changed);
+            $change_data[] = ['title' => $title, 'initials' => $initials, 'surname' => $surname, 'old' => $old, 'new' => $new, 'part' => $part, 'date' => $changed];
 
             // Fire callback if defined for this part type
             if (is_array($callbacks) and isset($callbacks[$part])) {

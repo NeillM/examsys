@@ -77,8 +77,8 @@ class RogoStaticSingleton
             $inst = static::$inst;
         }
 
-        if (is_callable(array($inst,$name))) {
-            return call_user_func_array(array($inst,$name), $args);
+        if (is_callable([$inst,$name])) {
+            return call_user_func_array([$inst,$name], $args);
         } else {
             throw new Exception($name . ' not implemented by ' . static::$class_name);
         }

@@ -93,7 +93,7 @@ class Url
             $server = $_SERVER;
         }
 
-        $requiredElements = array('HTTP_HOST', 'REQUEST_URI');
+        $requiredElements = ['HTTP_HOST', 'REQUEST_URI'];
 
         foreach ($requiredElements as $element) {
             if (!isset($server[$element])) {
@@ -101,7 +101,7 @@ class Url
             }
         }
 
-        $url = (isset($server['HTTPS']) && $server['HTTPS'] && !in_array(mb_strtolower($server['HTTPS']), array('off', 'no'))) ? 'https' : 'http';
+        $url = (isset($server['HTTPS']) && $server['HTTPS'] && !in_array(mb_strtolower($server['HTTPS']), ['off', 'no'])) ? 'https' : 'http';
         $url .= '://' . $server['HTTP_HOST'];
         $url .= $server['REQUEST_URI'];
 
@@ -274,7 +274,7 @@ class Url
         if (null !== $host = $this->getHost()) {
             $canonical .= $host;
 
-            if (!in_array($port = $this->getPort(), array(80, 443))) {
+            if (!in_array($port = $this->getPort(), [80, 443])) {
                 $canonical .= ':' . $port;
             }
         }
@@ -294,10 +294,10 @@ class Url
         $query = $this->getQuery();
 
         if (null === $query or '' === trim($query)) {
-            return array();
+            return [];
         }
 
-        $values = array();
+        $values = [];
 
         foreach (explode('&', $query) as $pair) {
             $parts = explode('=', $pair);
@@ -320,7 +320,7 @@ class Url
             return $this;
         }
 
-        $query = array();
+        $query = [];
 
         foreach ($values as $name => $value) {
             $query[] = sprintf('%s=%s', $name, urlencode($value));

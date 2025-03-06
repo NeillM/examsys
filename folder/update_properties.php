@@ -53,7 +53,7 @@ $oldprefix = param::optional('old_prefix', '', param::TEXT, param::FETCH_REQUEST
 $oldfolder = param::required('old_folder', param::TEXT, param::FETCH_REQUEST);
 $color = param::required('color', param::TEXT, param::FETCH_REQUEST);
 
-$module_array = array();
+$module_array = [];
 for ($i = 0; $i < $moduleno; $i++) {
     $module = param::optional('module' . $i, null, param::INT, param::FETCH_REQUEST);
     if (!is_null($module)) {

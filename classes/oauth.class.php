@@ -78,13 +78,13 @@ class oauth
         $username = $configObject->get('cfg_db_sysadmin_user');
         $password = $configObject->get('cfg_db_sysadmin_passwd');
         // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
-        $this->storage = new \OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
+        $this->storage = new \OAuth2\Storage\Pdo(['dsn' => $dsn, 'username' => $username, 'password' => $password]);
         // Config options for server.
-        $config = array(
+        $config = [
             'access_lifetime' => $configObject->get_setting('core', 'api_oauth_access_lifetime'),
             'refresh_token_lifetime' => $configObject->get_setting('core', 'api_oauth_refresh_token_lifetime'),
             'always_issue_new_refresh_token' => $configObject->get_setting('core', 'api_oauth_always_issue_new_refresh_token')
-        );
+        ];
         // Pass a storage object or array of storage objects to the OAuth2 server class
         $this->server = new \OAuth2\Server($this->storage, $config);
         // Add the "Authorization Code" grant type
@@ -205,15 +205,15 @@ class oauth
         // validate the authorize request
         if (!$this->server->validateAuthorizeRequest($request, $response)) {
             $response->send('xml');
-            return array(false, 'Validation Failure');
+            return [false, 'Validation Failure'];
         }
         try {
             $this->server->handleAuthorizeRequest($request, $response, $authorised, $userid);
         } catch (Exception $e) {
-            return array(false, $e->getMessage());
+            return [false, $e->getMessage()];
         }
         $response->send('xml');
-        return array(true, 'OK');
+        return [true, 'OK'];
     }
 
      /**

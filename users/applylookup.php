@@ -56,7 +56,7 @@ if (isset($_SESSION['ldaplookupdata'][$lookupid])) {
     }
 
     unset($_SESSION['ldaplookupdata']);
-    echo json_encode(array('type' => 'SUCCESS',
+    echo json_encode(['type' => 'SUCCESS',
     'title' => $output->lookupdata->title,
     'surname' => $output->lookupdata->surname,
     'firstname' => $output->lookupdata->firstname,
@@ -65,9 +65,9 @@ if (isset($_SESSION['ldaplookupdata'][$lookupid])) {
     'coursecode' => $output->lookupdata->coursecode,
     'gender' => $output->lookupdata->gender,
     'yearofstudy' => $output->lookupdata->yearofstudy,
-    'studentID' => $output->lookupdata->studentID));
+    'studentID' => $output->lookupdata->studentID]);
     exit();
 } else {
     unset($_SESSION['ldaplookupdata']);
-    echo json_encode(array('type' => 'ERROR'));
+    echo json_encode(['type' => 'ERROR']);
 }

@@ -46,19 +46,19 @@ if (!$lti->lti_key_exists($lti_key)) {
 $lti_details = $lti->get_lti_key($lti_key);
 
 // Get the data to be displayed on the page.
-$formvalues = array();
+$formvalues = [];
 if (!is_null($internalid)) {
     $internal_results = $lti->get_links_by_username($internalid, $lti_details['id']);
     $formvalues['internalid'] = $internalid;
 } else {
-    $internal_results = array();
+    $internal_results = [];
 }
 
 if (!is_null($externalid)) {
     $external_results = $lti->get_user_by_external_id($externalid, $lti_details['oauth_consumer_key']);
     $formvalues['externalid'] = $externalid;
 } else {
-    $external_results = array();
+    $external_results = [];
 }
 
 $results = array_merge($external_results, $internal_results);
@@ -72,28 +72,28 @@ JS;
 $additionalcss = <<<CSS
   <link rel="stylesheet" type="text/css" href="../css/list.css"/>
 CSS;
-$breadcrumb = array(
+$breadcrumb = [
   $string['home'] => '../../index.php',
   $string['administrativetools'] => '../admin/index.php',
   $string['ltikeys'] => 'lti_keys_list.php'
-);
-$lang = array(
+];
+$lang = [
   'title' => sprintf($string['ltiusersearch'], $lti_details['name']),
   'unlink' => $string['deletelink'],
   'search' => $string['search'],
   'search_desc' => $string['searchdesc'],
   'searchinternalid' => $string['searchinternalid'],
   'searchexternalid' => $string['searchexternalid'],
-);
-$menuimages = array(
+];
+$menuimages = [
   'unlink_dimmed' => 'red_cross_grey.png',
   'unlink' => 'red_cross.png',
-);
-$menuscripts = array(
+];
+$menuscripts = [
   'search' => "?LTIkeysid=$lti_key",
   'unlink' => "../delete/check_unlink_user.php?LTIkeysid=$lti_key",
   'form' => $formvalues,
-);
+];
 
 $render->render_admin_header($lang, $additionaljs, $additionalcss);
 $render->render_admin_options($menuscripts, $menuimages, $lang, $toprightmenu, 'lti/user_search_menu.html');

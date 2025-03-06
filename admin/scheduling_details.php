@@ -50,7 +50,7 @@ if ($results->num_rows == 0) {
 }
 $results->close();
 // Get student enrolments
-$module_sizes = array();
+$module_sizes = [];
 $query = "SELECT moduleID, COUNT(modules_student.id) FROM (modules_student, modules) WHERE modules_student.idMod=modules.id AND idMod IN ($module_id_list) AND calendar_year = ? GROUP BY moduleid";
 $results = $mysqli->prepare($query);
 $results->bind_param('s', $calendar_year);
@@ -62,7 +62,7 @@ while ($results->fetch()) {
 }
 $results->close();
 // Get extra time
-$extra_time_list = array();
+$extra_time_list = [];
 $results = $mysqli->prepare("SELECT extra_time FROM (special_needs, modules_student) WHERE special_needs.userID=modules_student.userID AND idMod IN ($module_id_list) AND calendar_year = ?");
 $results->bind_param('s', $calendar_year);
 $results->execute();
@@ -121,7 +121,7 @@ if ($barriers_needed == 1) {
 } else {
     $barriers_needed = $string['No'];
 }
-  $months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
+  $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
 if ($period == '') {
     $display_period = 'unknown';
 } else {
@@ -173,7 +173,7 @@ echo '<tr><td class="f1">' . $string['notes'] . "</td><td>$notes</td></tr>\n";
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['paperid'] = $paperid;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/summativedetailsinit.min.js"></script>
 </body>

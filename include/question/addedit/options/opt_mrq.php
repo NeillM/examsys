@@ -84,12 +84,12 @@ if ($option->id != -1) {
                 <button id="filepickeroption_media<?php echo $index ?>" data-mediaid="option_media<?php echo $index ?>" class="filepicker" <?php echo $disabled ?>><?php echo $string['uploadmedia']; ?></button>
                 <div id="filepickersectionoption_media<?php echo $index ?>" class="filepickersection">
                 <?php
-                $mediadata = array(
+                $mediadata = [
                     'mediaid' => 'option_media' . $index,
                     'mediaalt' => 'alt_option_media' . $index,
                     'mediaagreement' => 'agreement_option_media' . $index,
                     'mediadecorative' => 'dec_option_media' . $index,
-                );
+                ];
                 $render = new render($configObject);
                 echo $render->render($mediadata, $string, 'filepicker.html');
                 ?>

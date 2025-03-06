@@ -27,7 +27,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 
 // Get question statuses
 $status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
-$statuses = array();
+$statuses = [];
 $default_status = -1;
 foreach ($status_tmp as $sid => $status) {
     $statuses[$sid] = $status->get_name();
@@ -137,7 +137,7 @@ $export->setStatuses(array_flip($statuses));
 $export->setDefaultStatus($default_status);
 
 // perform operation
-$result = array();
+$result = [];
 $general_params = new stdClass();
 $result['general']['params'] = $general_params;
 

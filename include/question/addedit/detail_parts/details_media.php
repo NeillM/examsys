@@ -69,14 +69,14 @@ if (!empty($current_media['filename']) and $current_media['num'] == 0) {
                 <button id="filepicker<?php echo $media_for ?>_media<?php echo $media_index ?>" data-mediaid="<?php echo $media_for ?>_media<?php echo $media_index ?>" class="filepicker" <?php echo $disabled ?>><?php echo $string['uploadmedia']; ?></button>
                   <div id="filepickersection<?php echo $media_for ?>_media<?php echo $media_index ?>" class="filepickersection">
                   <?php
-                    $mediadata = array(
+                    $mediadata = [
                         'mediaid' => $media_for . '_media' . $media_index,
                         'mediaalt' => 'alt_' . $media_for . '_media' . $media_index,
                         'mediaagreement' => 'agreement_' . $media_for . '_media' . $media_index,
                         'mediadecorative' => 'dec_' . $media_for . '_media' . $media_index,
                         'medianum' => 'num_' . $media_for . '_media' . $media_index,
                         'num' => ($media_index == '' ? 0 : $media_index)
-                    );
+                    ];
                     $render = new render($configObject);
                     echo $render->render($mediadata, $string, 'filepicker.html');
                     ?>

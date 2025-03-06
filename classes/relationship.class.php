@@ -196,9 +196,9 @@ QUERY;
     public static function find($db, $idMod = '', $calendar_year = '', $paper_id = -1, $question_id = '', $limit = 0)
     {
         $sql = 'SELECT rel_id, idMod, paper_id, question_id, obj_id, calendar_year, vle_api, map_level FROM relationships';
-        $params = array();
+        $params = [];
         $types = '';
-        $relationships = array();
+        $relationships = [];
         $and = '';
 
         if ($idMod != '' or $calendar_year != '' or $paper_id != '') {
@@ -253,7 +253,7 @@ QUERY;
             $result->store_result();
             $result->bind_result($id, $idMod, $paper_id, $question_id, $objective_id, $calendar_year, $vle_api, $map_level);
             while ($result->fetch()) {
-                $data = array(
+                $data = [
                     'id' => $id,
                     'idMod' => $idMod,
                     'paper_id' => $paper_id,
@@ -262,7 +262,7 @@ QUERY;
                     'calendar_year' => $calendar_year,
                     'vle_api' => $vle_api,
                     'map_level' => $map_level
-                );
+                ];
                 $relationships[] = new Relationship($db, $data);
             }
             $result->close();

@@ -161,7 +161,7 @@ $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_ti
 $dataset['attributes']['paperid'] = $paperID;
 $dataset['attributes']['module'] = $module;
 $dataset['attributes']['folder'] = $folder;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 <script src='../js/stdsetinit.min.js'></script>
 </body>

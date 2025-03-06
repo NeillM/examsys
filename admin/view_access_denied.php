@@ -106,10 +106,10 @@ foreach ($log_list as $log) {
 $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/accessdeniedinit.min.js"></script>
 </body>

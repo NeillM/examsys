@@ -43,9 +43,9 @@ class threed_handler extends media_handler
      */
     public static function get_js()
     {
-        $js = array(
+        $js = [
         '/js/threeinit.min.js',
-        );
+        ];
         return $js;
     }
 
@@ -55,6 +55,6 @@ class threed_handler extends media_handler
      */
     public static function get_css()
     {
-        return array('/css/three.css');
+        return ['/css/three.css'];
     }
 }

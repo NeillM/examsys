@@ -27,8 +27,8 @@
 
 class OptionEXTMATCH extends OptionEdit
 {
-    protected $all_corrects = array();
-    protected $_fields_compound = array('correct' => 'integer');
+    protected $all_corrects = [];
+    protected $_fields_compound = ['correct' => 'integer'];
 
     // ACCESSORS
 
@@ -52,9 +52,9 @@ class OptionEXTMATCH extends OptionEdit
     public function get_correct()
     {
         $stems = explode('|', $this->correct);
-        $this->all_corrects = array();
+        $this->all_corrects = [];
         foreach ($stems as $stem) {
-            $this->all_corrects[] = ($stem != '') ? explode('$', $stem) : array();
+            $this->all_corrects[] = ($stem != '') ? explode('$', $stem) : [];
         }
         return $this->correct;
     }
@@ -63,7 +63,7 @@ class OptionEXTMATCH extends OptionEdit
     {
         $stems = $this->_question->get_all_stems();
         $media = $this->_question->get_all_medias();
-        $tmp = array();
+        $tmp = [];
         for ($i = 0; $i < count($this->all_corrects); $i++) {
             // Don't save correct answer if the option is empty
             if (empty($stems[$i]) and (!isset($media[$i + 1]) or $media[$i + 1] == '')) {

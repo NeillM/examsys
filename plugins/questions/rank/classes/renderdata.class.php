@@ -87,7 +87,7 @@ class renderdata extends \questiondata
         if (!is_null($useranswer)) {
             $rank_answers = explode(',', $useranswer);
         } else {
-            $rank_answers = array();
+            $rank_answers = [];
         }
         $total_rank_no = 0;
         $require_na = false;
@@ -121,9 +121,9 @@ class renderdata extends \questiondata
 
         if ($require_na) {
             if (isset($rank_answers[$option['position'] - 1]) and $rank_answers[$option['position'] - 1] == '0') {
-                $option['selected'][0] = $option['selected'][0] = array('ordinal' => 0, 'value' => true);
+                $option['selected'][0] = $option['selected'][0] = ['ordinal' => 0, 'value' => true];
             } else {
-                $option['selected'][0] = $option['selected'][0] = array('ordinal' => 0, 'value' => false);
+                $option['selected'][0] = $option['selected'][0] = ['ordinal' => 0, 'value' => false];
             }
         }
         $option['totalrank'] = $total_rank_no;
@@ -131,9 +131,9 @@ class renderdata extends \questiondata
         for ($i = 1; $i <= $total_rank_no; $i++) {
             $ordinal = $nf->format($i);
             if (isset($rank_answers[$option['position'] - 1]) and $i == $rank_answers[$option['position'] - 1]) {
-                $option['selected'][$i] = array('ordinal' => $ordinal, 'value' => true);
+                $option['selected'][$i] = ['ordinal' => $ordinal, 'value' => true];
             } else {
-                $option['selected'][$i] = array('ordinal' => $ordinal, 'value' => false);
+                $option['selected'][$i] = ['ordinal' => $ordinal, 'value' => false];
             }
         }
         if (!is_null($userdismissed) and mb_substr($userdismissed, $option['position'] - 1, 1) == '1') {

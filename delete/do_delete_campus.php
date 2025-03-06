@@ -43,5 +43,5 @@ if ($mysqli->errno != 0) {
 $render = new render($configObject);
 $lang['title'] = $string['campusclientdel'];
 $lang['success'] = $string['campusdelsuccess'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');

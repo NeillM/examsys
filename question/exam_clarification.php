@@ -32,7 +32,7 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $clarif_types = $configObject->get_setting('core', 'summative_midexam_clarification');
-if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
+if ($properties->get_paper_type() == '2' and $userObject->has_role(['SysAdmin', 'Admin']) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
     $exam_clarifications = true;
 } else {
     $exam_clarifications = false;

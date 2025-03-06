@@ -50,16 +50,16 @@ if (!is_array($selected_array) || count($selected_array) !== 2) {
 
 // Render the page.
 $render = new render($configObject);
-$headerdata = array(
-  'css' => array(
+$headerdata = [
+  'css' => [
     '/css/check_delete.css',
-  ),
-  'scripts' => array(),
-);
-$data = array(
+  ],
+  'scripts' => [],
+];
+$data = [
   'message' => $string['areyousure'],
   'formaction' => "do_unlink_user.php?LTIkeysid=$lti_key&id=$selected",
-);
+];
 
 $render->render($headerdata, $string, 'header.html');
 $render->render($data, $string, 'admin/confirm.html');

@@ -39,7 +39,7 @@ if (!isset($properties)) {
     $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 }
 
-if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
+if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE and $userObject->has_role(['SysAdmin', 'Admin']) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
     $exam_clarifications = true;
 } else {
     $exam_clarifications = false;
@@ -60,7 +60,7 @@ if (count($moduleIDs) > 0) {
     $stmt = $mysqli->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $moduleIDs) . ')');
     $stmt->execute();
     $stmt->bind_result($tmp_checklist);
-    $check = array();
+    $check = [];
     while ($stmt->fetch()) {
         if ($tmp_checklist != '') {
             $tmp = explode(',', $tmp_checklist);
@@ -308,7 +308,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
             $render->render($item, $string, 'sidebar/summativemenuitem.html');
         } else {
             $tmp_array = $properties->get_internal_reviewers();
-            $internal_array = array();
+            $internal_array = [];
             foreach ($tmp_array as $reviewerID => $reviewer_name) {
                 $internal_array[$reviewerID] = 0;
             }
@@ -367,7 +367,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
             $render->render($item, $string, 'sidebar/summativemenuitem.html');
         } else {
             $tmp_array = $properties->get_externals();
-            $external_array = array();
+            $external_array = [];
             foreach ($tmp_array as $reviewerID => $reviewer_name) {
                 $external_array[$reviewerID] = 0;
             }
@@ -433,7 +433,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
         $mappings_complete = 0;
         $tmp_session = $properties->get_calendar_year();
 
-        $question_list = array();
+        $question_list = [];
         $stmt = $mysqli->prepare("SELECT question FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id AND q_type != 'info'");
         $stmt->bind_param('i', $paperID);
         $stmt->execute();
@@ -444,7 +444,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
         $stmt->close();
         $tmp_question_list = implode(',', array_keys($question_list));
 
-        $objIDs = array();
+        $objIDs = [];
 
         $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
         $objsBySession = getObjectives($moduleIDs, $tmp_session, $paperID, $tmp_question_list, $mysqli);
@@ -463,7 +463,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
             }
         }
 
-        $mappings = array();
+        $mappings = [];
         $rels = Relationship::find($mysqli, '', $tmp_session, $paperID);
         if ($rels !== false and is_array($rels)) {
             foreach ($rels as $rel) {
@@ -492,11 +492,11 @@ if ($properties->get_summative_lock()) {
 }
 // Initialising the "Create new Question" submenu
 if ($properties->get_paper_type() ==  \assessment::TYPE_PEERREVIEW) {
-    makeMenu(array(
+    makeMenu([
     $string['likert'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=likert$params",
-    $string['mcq'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params"));
+    $string['mcq'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=mcq$params"]);
 } else {
-    makeMenu(array(
+    makeMenu([
     $string['info'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info$params",
     $string['keyword_based'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based$params",
     $string['random'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random$params",
@@ -515,10 +515,10 @@ if ($properties->get_paper_type() ==  \assessment::TYPE_PEERREVIEW) {
     $string['rank'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank$params",
     $string['sct'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct$params",
     $string['textbox'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox$params",
-    $string['true_false'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false$params"));
+    $string['true_false'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false$params"]);
 }
 // Initialising the "Import/Export" submenu
-    $importexport_menu = array();
+    $importexport_menu = [];
 if (!$properties->get_summative_lock()) {
     $importexport_menu[$string['import']] = $configObject->get('cfg_root_path') . "/qti/import.php?paperID=$paperID&module=$module";
     $importexport_menu[$string['importraf']] = $configObject->get('cfg_root_path') . "/import/rogo_assessment_format.php?paperID=$paperID&module=$module";
@@ -539,11 +539,11 @@ if ($properties->get_question_no() > 0) {
 
     makeMenu($importexport_menu);
 
-  makeMenu(array(
+  makeMenu([
     $string['Continuous'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name(),
     $string['Continuous - hide notes'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&hidenotes=1',
     $string['Page-break per question'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1',
-    $string['Page-break per question - hide notes'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1&hidenotes=1'));
+    $string['Page-break per question - hide notes'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1&hidenotes=1']);
 
   require_once $cfg_web_root . 'include/reports_submenu.inc';
   require_once $cfg_web_root . 'include/paper_copy_submenu.inc';

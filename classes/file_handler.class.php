@@ -194,6 +194,6 @@ abstract class file_handler
      */
     public static function make_filename_safe($filename)
     {
-        return str_replace(array(' ', ','), '_', $filename);
+        return str_replace([' ', ','], '_', $filename);
     }
 }

@@ -58,7 +58,7 @@ function get_quantitative_log_data($paper_id, $course, $start_date, $end_date, $
         $result->bind_param('issi', $paper_id, $paper_id, $end_date, $number_of_questions);
         $result->execute();
         $result->bind_result($tmp_userid, $answer_no);
-        $excludedusers = array();
+        $excludedusers = [];
         while ($result->fetch()) {
             $excludedusers[] = $tmp_userid;
         }
@@ -95,7 +95,7 @@ SQL;
         $tmp_answer = str_replace('&', '&amp;', $tmp_answer);
         switch ($q_type) {
             case 'blank':
-                $tmp_answer_parts = array();
+                $tmp_answer_parts = [];
                 $tmp_answer_parts = json_decode($tmp_answer);
                 $i = 0;
                 foreach ($tmp_answer_parts as $tmp_individual_answer) {
@@ -116,7 +116,7 @@ SQL;
                 }
                 break;
             case 'enhancedcalc':
-                $tmp_score_method = array();
+                $tmp_score_method = [];
                 $tmp_score_method = explode(',', $score_method);
                 $tolerance = $tmp_score_method[1];
                 $tmp_first_split = explode('|', $tmp_answer);
@@ -254,12 +254,12 @@ SQL;
 
                 break;
             case 'extmatch':
-                $tmp_answer_parts = array();
+                $tmp_answer_parts = [];
                 $tmp_answer_parts = explode('|', $tmp_answer);
                 $i = 0;
                 foreach ($tmp_answer_parts as $tmp_individual_answer) {
                     $i++;
-                    $tmp_sub_parts = array();
+                    $tmp_sub_parts = [];
                     $tmp_sub_parts = explode('|', $tmp_individual_answer);
                     foreach ($tmp_sub_parts as $tmp_individual_part) {
                         if ($tmp_individual_answer == 'u') {
@@ -279,7 +279,7 @@ SQL;
                 }
                 break;
             case 'matrix':
-                $tmp_answer_parts = array();
+                $tmp_answer_parts = [];
                 $tmp_answer_parts = explode('|', $tmp_answer);
                 $i = 0;
                 foreach ($tmp_answer_parts as $tmp_individual_answer) {
@@ -300,7 +300,7 @@ SQL;
                 }
                 break;
             case 'rank':
-                $tmp_answer_parts = array();
+                $tmp_answer_parts = [];
                 $tmp_answer_parts = explode(',', $tmp_answer);
                 $i = 0;
                 foreach ($tmp_answer_parts as $tmp_individual_answer) {

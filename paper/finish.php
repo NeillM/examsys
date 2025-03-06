@@ -109,7 +109,7 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
 }
 
 if ($getuser) {
-    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
+    if ($userObject->has_role(['SysAdmin', 'Admin', 'Staff', 'External Examiner'])) {
         $log_metadata = new LogMetadata($getuser, $paperID, $mysqli);
     } else {   // Student is hacking the userid parameter.
         $contactemail = support::get_email();
@@ -120,7 +120,7 @@ if ($getuser) {
     $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 }
 
-if ($userObject->has_role(array('External Examiner'))) {
+if ($userObject->has_role(['External Examiner'])) {
     // No further security checks.
     if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
         $contactemail = support::get_email();
@@ -156,7 +156,7 @@ if ($userObject->has_role(array('External Examiner'))) {
 }
 
 // Are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff', 'SysAdmin')) and $mode === 'preview');
+$is_preview_mode = ($userObject->has_role(['Staff', 'SysAdmin']) and $mode === 'preview');
 $is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2');
 
 // Are we in a staff test and preview mode and on the first screen?
@@ -165,7 +165,7 @@ $is_preview_mode_first_launch = ($is_preview_mode == true and $getmode === 'prev
 // Are we in a staff single question testmode?
 $is_question_preview_mode = (!is_null($q_id));
 
-$is_exam_review_mode = ($userObject->has_role(array('Staff', 'External Examiner')) and $getuser != $userObject->get_user_ID());
+$is_exam_review_mode = ($userObject->has_role(['Staff', 'External Examiner']) and $getuser != $userObject->get_user_ID());
 
 $is_formative_review = (!empty($metadataid) and $paper_type == '0');
 
@@ -210,17 +210,17 @@ $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $renderpath = $texteditorplugin->get_render_paths();
 $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
 $render = new render($configObject, $renderpath);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/start.css',
         '/css/finish.css',
         '/css/html5.css',
         '/node_modules/mediaelement/build/mediaelementplayer.min.css',
-    ),
-    'scripts' => array(
+    ],
+    'scripts' => [
         '/js/finishinit.min.js',
-    ),
-);
+    ],
+];
 $lang['title'] = $string['examscript'];
 $headerdata['mathjax'] = false;
 if ($configObject->get_setting('core', 'paper_mathjax')) {
@@ -254,8 +254,8 @@ $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_
 $contentdata['logopath'] = $logo_path;
 $contentdata['examclarification'] = '';
 $contentdata['papertitle'] = $paper_title;
-$contentdata['screen'] = array();
-$contentdata['hidden'] = array();
+$contentdata['screen'] = [];
+$contentdata['hidden'] = [];
 $contentdata['previewmode'] = $is_question_preview_mode;
 
 
@@ -279,7 +279,7 @@ if (isset($getuser)) {
 if (is_null($q_id)) {
     if ($userObject->has_role('External Examiner')) {
         $contentdata['student']['id'] = $tmp_student_id;
-    } elseif ($paper_type < 2 or $userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
+    } elseif ($paper_type < 2 or $userObject->has_role(['Staff', 'Admin', 'SysAdmin', 'External Examiner'])) {
         $contentdata['student']['id'] = \demo::demo_replace_number($tmp_student_id, $demo);
         $contentdata['student']['name'] = $tmp_title . ' ' . \demo::demo_replace(
             $tmp_surname,
@@ -317,7 +317,7 @@ if ($show_feedback) {
 
     // Record the fact that the script has been viewed.
     $logger = new Logger($mysqli);
-    if ($userObject->has_role(array('SysAdmin','Admin','Staff','External Examiner'))) {
+    if ($userObject->has_role(['SysAdmin','Admin','Staff','External Examiner'])) {
         $logger->record_access($userObject->get_user_ID(), 'Assessment script', '/paper/finish.php?' . $_SERVER['QUERY_STRING']);    // Staff write in the URL details
     } else {
         $logger->record_access($userObject->get_user_ID(), 'Assessment script', $paperID);  // Students write in the paperID
@@ -336,15 +336,15 @@ $render->render($feedbackdata, $string, 'paper/feedback.html');
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $miscdataset['attributes']['papertype'] = $paper_type;
 $miscdataset['attributes']['remotesummative'] = $remote;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 
-$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-$render->render(array(), array(), 'footer.html');
+$render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render([], [], 'footer.html');
 $mysqli->close();

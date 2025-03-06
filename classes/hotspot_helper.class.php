@@ -34,7 +34,7 @@ class hotspot_helper extends RogoStaticSingleton
     public const ANSWER_SEPARATOR = ',';
 
     /** An unaswered question */
-    public const UNSWERED_QUESTION = array('u');
+    public const UNSWERED_QUESTION = ['u'];
 
     /**
      * The active instance of this class.
@@ -79,7 +79,7 @@ class hotspot_helper extends RogoStaticSingleton
     protected function removeLayerAnswer($layer)
     {
         $parts = explode(self::CORRECT_SEPARATOR, $layer);
-        $return = array();
+        $return = [];
         if (count($parts) > 1) {
             // Get the name.
             $return[] = array_shift($parts);
@@ -96,7 +96,7 @@ class hotspot_helper extends RogoStaticSingleton
     protected function remove_layer_coordinates($layer)
     {
         $parts = explode(self::CORRECT_SEPARATOR, $layer);
-        $return = array();
+        $return = [];
         if (count($parts) > 1) {
             // Get the name.
             $return[] = array_shift($parts);
@@ -477,7 +477,7 @@ class hotspot_helper extends RogoStaticSingleton
     public function get_lang_strings()
     {
         $lang = LangUtils::loadlangfile('question/html5_hotspot.php');
-        return array(
+        return [
         'allhotspots' => $lang['allhotspots'],
         'correctanswers' => $lang['correctanswers'],
         'hotspots' => $lang['hotspots'],
@@ -494,6 +494,6 @@ class hotspot_helper extends RogoStaticSingleton
         'help' => $lang['help'],
         'colourselect' => $lang['colourselect'],
         'cancel' => $lang['cancel'],
-        );
+        ];
     }
 }

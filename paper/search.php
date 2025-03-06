@@ -63,7 +63,7 @@ if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['s
 }
 
 $params = '';
-$variables = array();
+$variables = [];
 if (isset($_POST['searchterm']) and $_POST['searchterm'] != '') {
     $paper = 'AND paper_title LIKE ?';
     $variables[] = '%' . $mysqli->real_escape_string($_POST['searchterm']) . '%';
@@ -202,11 +202,11 @@ if (isset($_POST['submit'])) {
     $results = $mysqli->prepare($sql);
     if (count($variables) > 0) {
         array_unshift($variables, $params);
-        $vars = array();
+        $vars = [];
         foreach ($variables as &$individual_variable) {
             $vars[] = &$individual_variable;
         }
-        call_user_func_array(array($results,'bind_param'), $vars);
+        call_user_func_array([$results,'bind_param'], $vars);
     }
     $results->execute();
     $results->store_result();

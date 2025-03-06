@@ -50,7 +50,7 @@ class PaperUtilsMetadataTest extends unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->paper = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test summative',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
@@ -58,7 +58,7 @@ class PaperUtilsMetadataTest extends unittestdatabase
                 'papertype' => '2',
                 'modulename' => 'Training Module',
                 'remote' => 1
-            )
+            ]
         );
         $meta = $datagenerator->createMetadata($this->paper['id'], ['name' => 'test', 'value' => 'a value']);
         $meta2 = $datagenerator->createMetadata($this->paper['id'], ['name' => 'test', 'value' => 'another value']);
@@ -74,37 +74,37 @@ class PaperUtilsMetadataTest extends unittestdatabase
     public function testSetMetadata(): void
     {
         // Test adding new meta data. duplicate entry should be ignored and not inserted.
-        $metadata = array('aaa', 'bbb', 'ccc', 'bbb');
+        $metadata = ['aaa', 'bbb', 'ccc', 'bbb'];
         Paper_utils::set_metadata(
             $this->db,
             $this->paper['id'],
-            array('metadata' => $metadata),
+            ['metadata' => $metadata],
             true
         );
         $queryTable = $this->query(
-            array(
-                'columns' => array('paperID', 'name', 'value'),
+            [
+                'columns' => ['paperID', 'name', 'value'],
                 'table' => 'paper_metadata',
-                'where' => array(array('column' => 'name', 'value' => 'metadata'))
-            )
+                'where' => [['column' => 'name', 'value' => 'metadata']]
+            ]
         );
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'paperID' => $this->paper['id'],
                 'name' => 'metadata',
                 'value' => $metadata[0]
-            ),
-            1 => array (
+            ],
+            1 => [
                 'paperID' => $this->paper['id'],
                 'name' => 'metadata',
                 'value' => $metadata[1]
-            ),
-            2 => array (
+            ],
+            2 => [
                 'paperID' => $this->paper['id'],
                 'name' => 'metadata',
                 'value' => $metadata[2]
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -129,24 +129,24 @@ class PaperUtilsMetadataTest extends unittestdatabase
     {
         Paper_utils::delete_metadata($this->db, $this->paper['id'], 'test 2');
         $queryTable = $this->query(
-            array(
-                'columns' => array('paperID', 'name', 'value'),
+            [
+                'columns' => ['paperID', 'name', 'value'],
                 'table' => 'paper_metadata'
-            )
+            ]
         );
         $idx = key($this->meta1);
-        $expectedTable = array(
-            0 => array (
+        $expectedTable = [
+            0 => [
                 'paperID' => $this->paper['id'],
                 'name' => $idx,
                 'value' => $this->meta1[$idx][0]
-            ),
-            1 => array (
+            ],
+            1 => [
                 'paperID' => $this->paper['id'],
                 'name' => $idx,
                 'value' => $this->meta1[$idx][1]
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 }

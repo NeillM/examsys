@@ -279,11 +279,11 @@ for ($i = 0; $i < 3; $i++) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['marks'] = json_encode($marks);
 $miscdataset['attributes']['stats'] = json_encode($stats);
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src='../js/hofsteeinit.min.js'></script>
 </body>

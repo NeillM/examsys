@@ -67,7 +67,7 @@ class personal_folders
             $count = mb_substr_count($name, ';');
             $exp = explode(';', $name);
             $name = array_pop($exp);
-            $folderlst[] = array($id, $name, $team_name, $color, $count);
+            $folderlst[] = [$id, $name, $team_name, $color, $count];
         }
         $resulta->close();
         $this->folderlst = $folderlst;
@@ -80,7 +80,7 @@ class personal_folders
         foreach ($folderlst as $v) {
             list($id, $name, $team_name, $color, $count) = $v;
             $count1 = $count + 1;
-            $folderlst2[$id] = array($id, $name, $team_name, $color, $count, $parent[$count]);
+            $folderlst2[$id] = [$id, $name, $team_name, $color, $count, $parent[$count]];
             $parent[$count1] = $id;
         }
         $this->folderlst2 = $folderlst2;
@@ -97,11 +97,11 @@ class personal_folders
 
     public function getfolders($folder)
     {
-        $retlst = array();
+        $retlst = [];
         foreach ($this->folderlst2 as $v) {
             list($id, $name, $team_name, $color, $count, $parent) = $v;
             if ($parent == $folder) {
-                $retlst[] = array($id, $name, $team_name, $color, $count, $parent);
+                $retlst[] = [$id, $name, $team_name, $color, $count, $parent];
             }
         }
         return ($retlst);
@@ -115,7 +115,7 @@ class personal_folders
 
     public function gettests($folder)
     {
-        $tests = array();
+        $tests = [];
         if ($folder != 0) {
             $mysqli = $this->mysqli;
             $results = $mysqli->prepare('SELECT property_id,paper_title,start_date,end_date,paper_type,paper_ownerID,deleted,crypt_name FROM properties WHERE folder=? AND deleted IS NULL');
@@ -125,7 +125,7 @@ class personal_folders
             $results->store_result();
             if ($results->num_rows() > 0) {
                 while ($results->fetch()) {
-                    $tests[] = array($property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted, $crypt_name);
+                    $tests[] = [$property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted, $crypt_name];
                 }
             }
             $results->close();
@@ -167,7 +167,7 @@ class personal_folders
                         echo 'href="?paperlinkID=' . $plk . '">' . $paper_title . "</a></div>\n";
                         @ob_flush();
                         @flush();
-                        $_SESSION['postlookup'][$plk] = array($crypt_name, 0);
+                        $_SESSION['postlookup'][$plk] = [$crypt_name, 0];
                         $plk++;
                     }
                 }
@@ -180,6 +180,6 @@ class personal_folders
         }
         @ob_flush();
         @flush();
-        return (array($block_id, $plk));
+        return ([$block_id, $plk]);
     }
 }

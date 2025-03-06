@@ -115,7 +115,7 @@ class Url
         $startdate->setTime(12, 00);
         $enddate = new \DateTime('tomorrow');
         $enddate->setTime(13, 00);
-        $defaults = array(
+        $defaults = [
             'startdate' => $startdate->format('YmdHis'),
             'enddate' => $enddate->format('YmdHis'),
             'repmodule' => '',
@@ -127,7 +127,7 @@ class Url
             'absent' => '0',
             'studentsonly' => '1',
             'ordering' => 'asc',
-        );
+        ];
         $return = array_merge($defaults, $filters);
         $settings = array_intersect_key($return, $defaults);
         return '/reports/class_totals.php?paperID='
@@ -183,11 +183,11 @@ class Url
         if (isset($filters['enddate'])) {
             $filters['enddate'] = new \DateTime($filters['enddate']);
         }
-        $defaults = array(
+        $defaults = [
             'module' => '',
             'folder' => '',
             'studentsonly' => '1',
-        );
+        ];
         $defaults['startdate'] = new \DateTime('tomorrow');
         $defaults['startdate']->setTime(12, 00);
         $defaults['enddate'] = new \DateTime('tomorrow');

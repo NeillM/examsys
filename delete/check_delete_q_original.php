@@ -30,7 +30,7 @@ require '../include/errors.php';
 
 check_var('q_id', 'GET', true, false, false);
 
-$icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
+$icons = ['formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review'];
 
 ?>
 <!DOCTYPE html>

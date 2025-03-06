@@ -67,7 +67,7 @@ $displayDebug = false; //disable debug output in this script as it effects the o
 
 function get_correct_labels($question, $tmp_exclude)
 {
-    $correct_labels = array();
+    $correct_labels = [];
 
     $tmp_first_split = explode(';', $question['correct'][0]);
     $tmp_second_split = explode('$', $tmp_first_split[11]);
@@ -88,7 +88,7 @@ function get_correct_labels($question, $tmp_exclude)
 
     return $correct_labels;
 }
-$numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
+$numerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx'];
 
 $user_sql = '';
 if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
@@ -187,7 +187,7 @@ $result->close();
 $csv = '';
 
 if ($student_no > 0) {
-    $log_array = array();
+    $log_array = [];
     $hits = 0;
     $rowID = 0;
     // Capture the log data.
@@ -245,7 +245,7 @@ if ($student_no > 0) {
     $result->execute();
     $result->bind_result($username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $q_type, $screen, $settings);
     $old_username = '';
-    $users = array();
+    $users = [];
     while ($result->fetch()) {
         if ($old_username != $username or $old_started != $started) {
             $rowID++;
@@ -494,7 +494,7 @@ if ($student_no > 0) {
                                     }
                                 }
                                   $answer .= '                                   ';
-                                  $bonus_q = $bonus_a = array();
+                                  $bonus_q = $bonus_a = [];
                                 foreach ($question['correct'] as $qi => $question_part) {
                                     if ($question_part != 'n' and ($question['q_type'] != 'rank' or $question_part > 0)) {
                                         if ($question['score_method'] == 'Bonus Mark') {

@@ -38,9 +38,9 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPA
 
 // Lets look to see what arguments have been passed.
 $options = 'h';
-$longoptions = array(
+$longoptions = [
     'help',
-);
+];
 
 $optionslist = getopt($options, $longoptions);
 $help = 'ExamSys mail script options. Sends scheduled emails'

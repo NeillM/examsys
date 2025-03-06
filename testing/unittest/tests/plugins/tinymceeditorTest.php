@@ -51,24 +51,24 @@ class tinymceeditortest extends unittestdatabase
         $text = new plugin_tinymce_texteditor();
         $this->assertEquals('OK', $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password')));
         // Check tables are correct.
-        $queryTable = $this->query(array('columns' => array('component', 'type', 'version'), 'table' => 'plugins'));
-        $expectedTable = array(
-            0 => array (
+        $queryTable = $this->query(['columns' => ['component', 'type', 'version'], 'table' => 'plugins']);
+        $expectedTable = [
+            0 => [
                 'component' => 'plugin_tinymce_texteditor',
                 'type' => 'texteditor',
                 'version' => $this->newversion
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
-        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => 'plugin_tinymce_texteditor'))));
-        $expectedTable = array(
-            0 => array (
+        $queryTable = $this->query(['columns' => ['component', 'setting', 'value', 'type'], 'table' => 'config', 'orderby' => [1, 2], 'where' => [['column' => 'component', 'value' => 'plugin_tinymce_texteditor']]]);
+        $expectedTable = [
+            0 => [
                 'component' => 'plugin_tinymce_texteditor',
                 'setting' => 'installed',
                 'value' => 1,
                 'type' => 'boolean'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -83,15 +83,15 @@ class tinymceeditortest extends unittestdatabase
         $this->assertEquals('OK', $text->uninstall($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password')));
         // Check tables are correct.
         $this->assertEquals(0, $this->rowcount('plugins'));
-        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => 'plugin_tinymce_texteditor'))));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['columns' => ['component', 'setting', 'value', 'type'], 'table' => 'config', 'orderby' => [1, 2], 'where' => [['column' => 'component', 'value' => 'plugin_tinymce_texteditor']]]);
+        $expectedTable = [
+            0 => [
                 'component' => 'plugin_tinymce_texteditor',
                 'setting' => 'installed',
                 'value' => 0,
                 'type' => 'boolean'
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -105,14 +105,14 @@ class tinymceeditortest extends unittestdatabase
         $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
         $text->enable_plugin();
         // Check tables are correct.
-        $queryTable = $this->query(array('columns' => array('component', 'type', 'version'), 'table' => 'plugins'));
-        $expectedTable = array(
-            0 => array (
+        $queryTable = $this->query(['columns' => ['component', 'type', 'version'], 'table' => 'plugins']);
+        $expectedTable = [
+            0 => [
                 'component' => 'plugin_tinymce_texteditor',
                 'type' => 'texteditor',
                 'version' => $this->newversion
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 

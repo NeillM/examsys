@@ -49,7 +49,7 @@ require '../include/errors.php';
 
     echo draw_toprightmenu(237);
 
-  $keyword_list = array();
+  $keyword_list = [];
 
 if (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
@@ -113,7 +113,7 @@ $mysqli->close();
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $module;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/keywordlistinit.min.js"></script>
 </body>

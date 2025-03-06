@@ -52,19 +52,19 @@ if (is_null($enddate)) {
 }
 
 $render = new render($configObject);
-$headerdata = array(
-    'css' => array(
+$headerdata = [
+    'css' => [
         '/css/body.css',
         '/css/header.css',
         '/css/warnings.css',
         '/css/list.css',
         '/css/reports.css',
-    ),
-    'scripts' => array(
+    ],
+    'scripts' => [
         '/js/require.js',
         '/js/main.min.js',
-    ),
-);
+    ],
+];
 
 $properties = PaperProperties::get_paper_properties_by_id($paperid, $mysqli, $string);
 
@@ -74,7 +74,7 @@ if (!Anomaly::anomalyDetectionEnabled($properties->get_paper_type())) {
 }
 
 // initial link of breadcrumb
-$links = array('/' => $string['home']);
+$links = ['/' => $string['home']];
 
 if ($folder) {
     // links of parent folders
@@ -145,4 +145,4 @@ $data = [
         '/js/anomalyreportinit.min.js',
     ],
 ];
-$render->render($data, array(), 'footer.html');
+$render->render($data, [], 'footer.html');

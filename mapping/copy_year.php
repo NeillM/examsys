@@ -27,7 +27,7 @@ require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
 require_once '../include/mapping.inc';
 
-$errors = array();
+$errors = [];
 
 if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['moduleID'])) {
     $errors[] = 'Undefined source or destination year';
@@ -37,7 +37,7 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
     // Get the sessions for the source year
 
     $module_code = module_utils::get_moduleid_from_id($_POST['moduleID'], $mysqli);
-    $modules_array = array($_POST['moduleID'] => $module_code);
+    $modules_array = [$_POST['moduleID'] => $module_code];
     $objectives = getObjectives($modules_array, $_POST['source_y'], '', '', $mysqli);
     try {
         copyObjectives($objectives, $_POST['moduleID'], $module_code, $_POST['dest_y'], $mysqli);

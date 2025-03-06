@@ -96,18 +96,18 @@ class Audit
         switch ($action) {
             case self::ADDROLE:
             case self::REMOVEROLE:
-                $mapsto[] = array(
+                $mapsto[] = [
                     'url' => $webroot . '/users/details.php?userID=' . $userid,
                     'label' => $objects,
-                );
+                ];
                 break;
             default:
                 foreach (explode(',', $objects) as $obj) {
-                    $mapsto[] = array(
+                    $mapsto[] = [
                         'url' => $webroot . '/module/index.php?module='
                         . module_utils::get_idMod($obj, $configObject->db),
                         'label' => $obj,
-                    );
+                    ];
                 }
                 break;
         }
@@ -129,53 +129,53 @@ class Audit
         switch ($source) {
             case '/module/do_edit_team.php':
                 // In this case details equates to the module code.
-                $mapsto = array(
+                $mapsto = [
                     'url' => $webroot . '/module/index.php?module='
                     . module_utils::get_idMod($details, $configObject->db),
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'module'),
-                );
+                ];
                 break;
             case '/self_enrol.php':
                 // In this case details equates to the module code.
-                $mapsto = array(
+                $mapsto = [
                     'url' => $webroot . '/module/index.php?module='
                     . module_utils::get_idMod($details, $configObject->db),
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'selfenrol'),
-                );
+                ];
                 break;
             case '/LTI/index.php':
-                $mapsto = array(
+                $mapsto = [
                     'url' => $webroot . '/LTI/lti_keys_list.php',
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'lti'),
-                );
+                ];
                 break;
             case '/users/details.php':
             case '/users/create_new_user.php':
             case '/users/do_edit_modules.php':
             case '/module/do_edit_multi_team.php':
-                $mapsto = array(
+                $mapsto = [
                     'url' => $webroot . '/users/details.php?userID=' . $userid,
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'userdetails'),
-                );
+                ];
                 break;
             case '/api/modulemanagement/enrol':
-                $mapsto = array(
+                $mapsto = [
                     'url' => $webroot . '/admin/oauth/list_oauth.php',
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'enrolapi'),
-                );
+                ];
                 break;
             case '/api/usermanagement':
-                $mapsto = array(
+                $mapsto = [
                     'url' => $webroot . '/admin/oauth/list_oauth.php',
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'userapi'),
-                );
+                ];
                 break;
             case '/admin/do_add_module.php':
                 // This will be an SMS sync.
-                $mapsto = array(
+                $mapsto = [
                     'url' => $webroot . '/admin/sms_import_summary.php',
                     'label' => $langpack->get_string(self::LANGCOMPONENT, 'sms'),
-                );
+                ];
                 break;
             default:
                 $url = '';
@@ -192,10 +192,10 @@ class Audit
                     $url = $webroot . '/users/details.php?userID=' . $userid;
                     $source = $langpack->get_string(self::LANGCOMPONENT, 'systeminstall');
                 }
-                $mapsto = array(
+                $mapsto = [
                     'url' => $url,
                     'label' => $source,
-                );
+                ];
                 break;
         }
 
@@ -229,7 +229,7 @@ class Audit
 
         $stmt->bind_result($userID, $action, $time, $sourceID, $source, $details);
         $stmt->store_result();
-        $events = array();
+        $events = [];
         while ($stmt->fetch()) {
             if ($sourceID > 0) {
                 $sourceuser = UserUtils::get_username($sourceID, $configObject->db);
@@ -248,18 +248,18 @@ class Audit
             $events['total'] = number_format($result->total);
             $events['pages'] = $pages;
             $langpack = new langpack();
-            $events['items'][] = array(
+            $events['items'][] = [
                 'object' => self::mapObject($objects, $action, $userID),
                 'objecttype' => self::getObjectType($action),
                 'time' => $time,
                 'user' => $sourceuser,
-                'affecteduser' => array(
+                'affecteduser' => [
                     'url' => $webroot . '/users/details.php?userID=' . $userID,
                     'label' => UserUtils::get_username($userID, Config::get_instance()->db),
-                ),
+                ],
                 'source' => self::mapSource($source, $objects, $userID),
                 'eventtype' => $langpack->get_string(self::LANGCOMPONENT, $action),
-            );
+            ];
         }
         $stmt->close();
         return $events;

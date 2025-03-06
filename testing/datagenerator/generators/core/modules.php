@@ -52,12 +52,12 @@ class modules extends generator
         if (empty($parameters['fullname'])) {
             throw new data_error('fullname must be provided');
         }
-        $defaults = array(
+        $defaults = [
             'active' => 1, 'schoolID' => 1, 'vle_api' => null, 'sms_api' => null, 'selfEnroll' => null,
             'peer' => null, 'external' => null, 'stdset' => null, 'mapping' => null, 'neg_marking' => 0, 'ebel_grid_template' => null,
             'db' => $this->db, 'sms_import' => 0, 'timed_exams' => 0, 'exam_q_feedback' => 1, 'add_team_members' => 1,
             'map_level' => 0, 'academic_year_start' => '07/01', 'externalID' => null, 'moduleid' => $parameters['moduleid'],
-            'fullname' => $parameters['fullname']);
+            'fullname' => $parameters['fullname']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $modid = module_utils::add_modules($settings['moduleid'], $settings['fullname'], $settings['active'], $settings['schoolID'], $settings['vle_api'], $settings['sms_api'], $settings['selfEnroll'], $settings['peer'], $settings['external'], $settings['stdset'], $settings['mapping'], $settings['neg_marking'], $settings['ebel_grid_template'], $settings['db'], $settings['sms_import'], $settings['timed_exams'], $settings['exam_q_feedback'], $settings['add_team_members'], $settings['map_level'], $settings['academic_year_start'], $settings['externalID']);
         if (empty($modid)) {
@@ -109,11 +109,11 @@ class modules extends generator
         }
         $moduleid = $parameters['moduleid'];
         $userid = $parameters['userid'];
-        $defaults = array(
+        $defaults = [
             'attempt' => 1,
             'calendar_year' => null,
             'auto_update' => 0,
-        );
+        ];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         if (is_null($settings['calendar_year'])) {
             $yearutils = new yearutils($this->db);

@@ -37,14 +37,14 @@ $paperID = check_var('paperID', 'REQUEST', false, false, true);
 if (!is_null($paperID) and !Paper_utils::paper_exists($paperID, $mysqli)) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-    echo json_encode(array('response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)));
+    echo json_encode(['response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)]);
     exit();
 }
 // Does the student exist?
 if (!UserUtils::userid_exists($userID, $mysqli)) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-    echo json_encode(array('response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)));
+    echo json_encode(['response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)]);
     exit();
 }
 
@@ -58,4 +58,4 @@ if ($note_id == '' or $note_id == '0') {
     StudentNotes::update_note($note, $note_id, $mysqli);
 }
 
-echo json_encode(array('response' => 'SUCCESS', 'type' => $calling));
+echo json_encode(['response' => 'SUCCESS', 'type' => $calling]);

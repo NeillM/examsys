@@ -124,7 +124,7 @@ if (isset($_GET['sortby'])) {
     echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
     echo "<thead>\n";
     echo '<tr>';
-    $table_order = array('#1' => 18, '#2' => 18, $string['question'] => 400, $string['type'] => 100, $string['modified'] => 100, $string['status'] => 120);
+    $table_order = ['#1' => 18, '#2' => 18, $string['question'] => 400, $string['type'] => 100, $string['modified'] => 100, $string['status'] => 120];
     foreach ($table_order as $display => $col_width) {
         if ($display[0] == '#') {
             echo '<th style="width:' . $col_width . "px\" class=\"vert_div\"></th>\n";
@@ -253,7 +253,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $jsdataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../../js/addquestionsinit.min.js"></script>
 </body>

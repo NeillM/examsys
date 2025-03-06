@@ -49,7 +49,7 @@ class questions extends generator
         $username = $data['user'];
         $userid = UserUtils::username_exists($username, $this->db);
 
-        $defaults = array(
+        $defaults = [
             'q_type' => null,
             'theme' => '',
             'leadin' => 'test question leadin',
@@ -86,7 +86,7 @@ class questions extends generator
             'incorrect_fback' => '',
             'modules' => '',
             'externalref' => '',
-        );
+        ];
         $qdata = $this->set_defaults_and_clean($defaults, $data);
         $now = date('Y-m-d H:i:s');
         if ($qdata['deleted']) {
@@ -305,7 +305,7 @@ class questions extends generator
         if (empty($parameters['question'])) {
             throw new data_error('question must be provided');
         }
-        $defaults = array(
+        $defaults = [
             'option_text' => null,
             'o_media_id' => -1,
             'o_media' => '',
@@ -319,7 +319,7 @@ class questions extends generator
             'marks_correct' => null,
             'marks_incorrect' => null,
             'marks_partial' => null,
-        );
+        ];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
         $result = $this->db->prepare('
@@ -396,7 +396,7 @@ class questions extends generator
             $modules = $parameters['module'];
         } else {
             $moduleid = \module_utils::get_moduleid_from_id($parameters['module'], $this->db);
-            $modules = array($parameters['module'] => $moduleid);
+            $modules = [$parameters['module'] => $moduleid];
         }
         QuestionUtils::add_modules($modules, $parameters['question'], $this->db);
     }
@@ -440,7 +440,7 @@ class questions extends generator
 
         $keywordsstring = implode('","', $keywords);
         $keywordsstring = '"' . $keywordsstring . '"';
-        $keywordarray = array();
+        $keywordarray = [];
 
         $sql = 'SELECT id FROM keywords_user WHERE keyword IN (' . $keywordsstring . ')';
         $result = $this->db->prepare($sql);

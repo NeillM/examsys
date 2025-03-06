@@ -36,7 +36,7 @@ if (!$module_details) {
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
+if (!$userObject->has_role(['SysAdmin', 'Admin'])) {
     if ($module_details['add_team_members'] == 0) {
         $contactemail = support::get_email();
         $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
@@ -136,9 +136,9 @@ while ($result->fetch()) {
   $render = new render($configObject);
   $jsdataset['name'] = 'jsutils';
   $jsdataset['attributes']['xls'] = json_encode($string);
-  $render->render($jsdataset, array(), 'dataset.html');
+  $render->render($jsdataset, [], 'dataset.html');
   $dataset['name'] = 'dataset';
   $dataset['attributes']['posturl'] = 'do_edit_team.php';
-  $render->render($dataset, array(), 'dataset.html');
+  $render->render($dataset, [], 'dataset.html');
   $mysqli->close();
 

@@ -114,7 +114,7 @@ if ($folderID != '') {
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"  style=\"width:100%\">\n";
     $old_p_id = 0;
     $row_no = 0;
-    $temp_array = array();
+    $temp_array = [];
 
     $result = $mysqli->prepare("SELECT random_mark, total_mark, paper_ownerID, ownerID, p_id, q_id, q_type, screen, leadin, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
     $result->bind_param('ii', $paperID, $paperID);
@@ -290,7 +290,7 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['paper'] = $paperID;
 $miscdataset['attributes']['folder'] = $folderID;
 $miscdataset['attributes']['module'] = $moduleID;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 </body>
 </html>

@@ -35,9 +35,9 @@ class BoilerplateSniff implements Sniff
      *
      * @var array
      */
-    public $supportedTokenizers = array(
+    public $supportedTokenizers = [
         'PHP',
-    );
+    ];
 
     /**
      * Returns an array of tokens this test wants to listen for.
@@ -46,9 +46,9 @@ class BoilerplateSniff implements Sniff
      */
     public function register()
     {
-        return array(
+        return [
             T_OPEN_TAG,
-        );
+        ];
     }
 
     /**
@@ -69,7 +69,7 @@ class BoilerplateSniff implements Sniff
             // We only want to check the Boilerplate after the initial opening tag.
             return;
         }
-        $expected_boilderplate = array(
+        $expected_boilderplate = [
             2 => '// This file is part of ExamSys',
             3 => '//',
             4 => '// ExamSys is free software: you can redistribute it and/or modify',
@@ -84,33 +84,33 @@ class BoilerplateSniff implements Sniff
             13 => '//',
             14 => '// You should have received a copy of the GNU General Public License',
             15 => '// along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.',
-        );
+        ];
         foreach ($expected_boilderplate as $offset => $value) {
             $next_comment = $phpcsFile->findNext(T_COMMENT, $stackPtr + $offset);
             $expected_line = $tokens[$stackPtr]['line'] + $offset;
             if ($next_comment === false) {
                 // No comment found, so we need to exit.
                 $message = 'Expected "%s" on line "%s"';
-                $data = array(
+                $data = [
                     $value,
                     $expected_line,
-                );
+                ];
                 $phpcsFile->addError($message, $next_comment, 'MissingLicense', $data);
                 break;
             } elseif (trim($tokens[$next_comment]['content']) !== trim($value)) {
                 $message = 'Expected "%s" found "%s"';
-                $data = array(
+                $data = [
                     $value,
                     $tokens[$next_comment]['content'],
-                );
+                ];
                 $phpcsFile->addError($message, $next_comment, 'MissingLicense', $data);
             } elseif ($tokens[$next_comment]['line'] != $expected_line) {
                 $message = 'Expected "%s" on line "%s" found on line "%s" instead.';
-                $data = array(
+                $data = [
                     $value,
                     $tokens[$stackPtr]['line'] + $offset,
                     $expected_line,
-                );
+                ];
                 $phpcsFile->addError($message, $next_comment, 'IncorrectLicense', $data);
                 break;
             }

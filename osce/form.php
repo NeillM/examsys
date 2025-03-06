@@ -147,23 +147,23 @@ if (isset($_POST) and count($_POST) > 0) {
     switch ($marking) {
         case '3':
             $labels = $string['marking3'];
-            $colors = array('#D99594', '#FABF8F', '#C2D69B');
+            $colors = ['#D99594', '#FABF8F', '#C2D69B'];
             break;
         case '4':
             $labels = $string['marking4'];
-            $colors = array('#D99694', '#E5B9B7', '#FFC169', '#D7E3BC', '#C2D69B');
+            $colors = ['#D99694', '#E5B9B7', '#FFC169', '#D7E3BC', '#C2D69B'];
             break;
         case '5':
             $labels = $string['marking5'];
-            $colors = array('#D99594', '#C2D69B');
+            $colors = ['#D99594', '#C2D69B'];
             break;
         case '6':
             $labels = $string['marking6'];
-            $colors = array('#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B');
+            $colors = ['#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B'];
             break;
         case '7':
             $labels = $string['marking7'];
-            $colors = array('#D99594', '#C2D69B');
+            $colors = ['#D99594', '#C2D69B'];
             break;
     }
 
@@ -179,7 +179,7 @@ if (isset($_POST) and count($_POST) > 0) {
 
     if ($test == false) {
         // Query Log4 just in case form has already been submitted for this user.
-        $stored_results = array();
+        $stored_results = [];
         $result = $mysqli->prepare('SELECT q_id, rating, q_parts, feedback, overall_rating FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND q_paper = ? AND userID = ?');
         $result->bind_param('ii', $paperID, $userID);
         $result->execute();
@@ -194,7 +194,7 @@ if (isset($_POST) and count($_POST) > 0) {
     // Get the questions.
     $question_no = 1;
     $max_cols = 0;
-    $cell_colors = array('#D99694', '#E5B9B7', '#FFC169', '#C2D69B', '#C2DFFF','#5ea2ef','#4b0082', '#4b00FF','#9400d3','#9400FF');
+    $cell_colors = ['#D99694', '#E5B9B7', '#FFC169', '#C2D69B', '#C2DFFF','#5ea2ef','#4b0082', '#4b00FF','#9400d3','#9400FF'];
     /**
      * Getting the max column number
      */
@@ -248,7 +248,7 @@ if (isset($_POST) and count($_POST) > 0) {
     }
     $result->close();
 
-    $elements = array('level1','level2','level3','level4','level5','level6','level7','level8','level9','level10');
+    $elements = ['level1','level2','level3','level4','level5','level6','level7','level8','level9','level10'];
     echo '<tr><td></td>';
     for ($i = 0; $i < $max_cols; $i++) {
         echo "<td class=\"totals r\"><input type=\"text\" name=\"$elements[$i]\" id=\"$elements[$i]\" size=\"4\" style=\"font-size:60%; font-weight:bold; border:0px; text-align:right; background-color:#EAEAEA\" value=\"0\" /></td>";
@@ -307,7 +307,7 @@ if (isset($_POST) and count($_POST) > 0) {
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render = new render($configObject);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     // Dataset.
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['number_of_qs'] = $number_of_qs;
@@ -317,7 +317,7 @@ if (isset($_POST) and count($_POST) > 0) {
     $miscdataset['attributes']['timeout'] = $configObject->get_setting('core', 'paper_autosave_settimeout');
     $miscdataset['attributes']['retry'] = $configObject->get_setting('core', 'paper_autosave_retrylimit');
     $miscdataset['attributes']['backoff'] = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
-    $render->render($miscdataset, array(), 'dataset.html');
+    $render->render($miscdataset, [], 'dataset.html');
     ?>
 
 </body>

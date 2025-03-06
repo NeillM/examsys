@@ -68,13 +68,13 @@ $review = new Review($paperID, $userObject->get_user_ID(), $review_type, $mysqli
 
 // Get standards setting data
 if ($marking[0] == '2') {
-    $standards_setting = array();
+    $standards_setting = [];
     $tmp_parts = explode(',', $marking);
 
     $standard_setting = new StandardSetting($mysqli);
     $standards_setting = $standard_setting->get_ratings_by_question($tmp_parts[1]);
 } else {
-    $standards_setting = array();
+    $standards_setting = [];
 }
 
 // Load any reference materials.
@@ -226,14 +226,14 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
     $old_theme = '';
     $previous_q_type = '';
 
-    $user_answers = array();
+    $user_answers = [];
     $questions_array = $propertyObj->build_paper(false, null, null);
 
     echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
     echo "<col width=\"40\"><col>\n";
 
     // Random / Keyword questions.
-    $tmp_questions_array = array();
+    $tmp_questions_array = [];
     $tmp_q_no = 0;
     foreach ($questions_array as &$question) {
         if ($question['q_type'] != 'info') {
@@ -328,10 +328,10 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
 <?php
 
 if (count($reference_materials) > 0) {
-    $refdata = array(
+    $refdata = [
     'ref' => $reference_materials,
     'refpane' => $refpane
-    );
+    ];
     $render->render($refdata, $string, 'paper/refmaterial.html');
 }
 $mysqli->close();
@@ -341,7 +341,7 @@ echo '</div>';
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
@@ -349,12 +349,12 @@ $miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $miscdataset['attributes']['bidirectional'] = (bool)$propertyObj->get_bidirectional();
 $miscdataset['attributes']['id'] = $id;
 $miscdataset['attributes']['self'] = $_SERVER['PHP_SELF'];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 // Paper dataset.
 $dataset['name'] = 'paper';
 $dataset['attributes']['refcount'] = count($reference_materials);
-$render->render($dataset, array(), 'dataset.html');
-$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render($dataset, [], 'dataset.html');
+$render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 <input type="hidden" name="refpane" id="refpane" value="<?php echo $refpane; ?>" />
 <script src='../js/reviewinit.min.js'></script>

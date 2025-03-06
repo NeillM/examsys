@@ -345,6 +345,6 @@ function renderPasswordForm(array $string): void
         $data['url'] .= '?' . $_SERVER['QUERY_STRING'];
     }
     $render->render($data, $string, 'paper/password.html');
-    $render->render(array(), array(), 'footer.html');
+    $render->render([], [], 'footer.html');
     $notice->exit_php();
 }

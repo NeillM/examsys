@@ -504,7 +504,7 @@ if (isset($_POST['banksave']) and $_POST['banksave'] == '1') {
 }
 
 if ($tmp_method == 'Ebel') {
-    $id_array = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
+    $id_array = ['EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2'];
 
     $std_query = $mysqli->prepare('INSERT INTO ebel VALUES (?, ?, ?)');
     foreach ($id_array as $individualID) {
@@ -541,9 +541,9 @@ if (isset($_POST['alterpassmark']) and $_POST['alterpassmark'] == 1) {
     if ($tmp_method == 'Angoff (Yes/No)' or $tmp_method = 'Modified Angoff') {
         $pass_mark = round($total_rating / $total_parts);
         $assessment = new assessment($mysqli, $configObject);
-        $update_params = array(
-        'pass_mark' => array('i', $pass_mark)
-        );
+        $update_params = [
+        'pass_mark' => ['i', $pass_mark]
+        ];
         $assessment->db_update_assessment($paperID, $update_params);
     }
 }

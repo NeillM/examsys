@@ -112,7 +112,7 @@ if ($low_bandwidth == 0) {
   echo '<br /><div><strong>' . $string['timetabling'] . "</strong></div>\n<div>$timetabling</div>\n";
   echo '<br /><div><strong>' . $string['itsupport'] . "</strong></div>\n<div>$it_support</div>\n";
   echo '<br /><div><strong>' . $string['plagarism'] . "</strong></div>\n<div>$plagarism</div>\n";
-if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+if ($userObject->has_role(['SysAdmin', 'Admin'])) {
     echo "<br /><br /><input type=\"button\" onclick=\"window.location='edit_lab.php?labID=" . $_GET['labID'] . "'\" value=\"" . $string['edit'] . "\" style=\"width:120px\" />\n";
 }
   echo "</td></tr>\n</table>\n";

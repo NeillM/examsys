@@ -159,7 +159,7 @@ if (isset($_GET['sortby'])) {
 }
 
   echo '<tr>';
-  $table_order = array('1' => '', '2' => '', $string['question'] => 'leadin', $string['type'] => 'q_type', $string['modified'] => 'last_edited', $string['status'] => 'status');
+  $table_order = ['1' => '', '2' => '', $string['question'] => 'leadin', $string['type'] => 'q_type', $string['modified'] => 'last_edited', $string['status'] => 'status'];
 foreach ($table_order as $display => $key) {
     if ($key == '') {
         echo '<th></th>';
@@ -259,7 +259,7 @@ if ($search and ($searchterm != '' and ($qtype != '%' or $owner != ''))) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 
 <script src="../../js/addquestionslistinit.min.js"></script>

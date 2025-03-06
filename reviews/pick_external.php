@@ -103,7 +103,7 @@ $miscdataset['attributes']['paper'] = $paperID;
 $miscdataset['attributes']['mode'] = $mode;
 $miscdataset['attributes']['module'] = $module;
 $miscdataset['attributes']['external'] = $externalID;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 
 $mysqli->close();
 ?>

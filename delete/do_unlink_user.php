@@ -54,19 +54,19 @@ $lti->delete_user_link($selected_array[0], $lti_details['oauth_consumer_key'], $
 
 // Display a confirmation it is done.
 $render = new render($configObject);
-$headerdata = array(
-  'css' => array(
+$headerdata = [
+  'css' => [
     '/css/check_delete.css',
-  ),
-  'scripts' => array(
+  ],
+  'scripts' => [
     '/js/require.js',
     '/js/main.min.js',
-  ),
-);
-$data = array(
+  ],
+];
+$data = [
   'message' => $string['unlinked'],
   'button' => $string['ok'],
-);
+];
 
 $render->render($headerdata, $string, 'header.html');
 $render->render($data, $string, 'message.html');

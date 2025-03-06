@@ -125,7 +125,7 @@ function get_list($list, $db)
 $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 <script src="../js/smsdetailinit.min.js"></script>
 </body>

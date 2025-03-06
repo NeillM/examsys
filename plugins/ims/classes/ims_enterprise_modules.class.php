@@ -39,11 +39,11 @@ class ims_enterprise_modules
      */
     public function __construct()
     {
-        $this->imsnames = array(
+        $this->imsnames = [
         'short' => 'short',
         'long' => 'long',
-        'full' => 'full');
-        $this->moduleattrs = array('moduleid', 'fullname');
+        'full' => 'full'];
+        $this->moduleattrs = ['moduleid', 'fullname'];
     }
 
     /**

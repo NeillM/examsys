@@ -21,8 +21,8 @@ $setup->test = 'html5images';
 // Define all the Javascript that should be loaded for the test.
 // Should be the complete path relative to the root of ExamSys.
 // The files will be loaded in the order they are in the array.
-$setup->required_js = array(
-);
+$setup->required_js = [
+];
 // Should store any text wanted in the #qunit-fixture div for the suite.
 $setup->fixture_html = <<<FIXTURE
 FIXTURE;

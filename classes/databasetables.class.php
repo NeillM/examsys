@@ -25,7 +25,7 @@
  */
 class databaseTables
 {
-    private $tableList = array();
+    private $tableList = [];
 
     public function __construct($charset, $engine = 'InnoDB', $helpEngine = 'MyISAM')
     {

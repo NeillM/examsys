@@ -7,7 +7,7 @@
 require '../Connection.php';
 require_once 'config.php';
 
-function testBinary($values, $type, $options = array(), $msg = '') {
+function testBinary($values, $type, $options = [], $msg = '') {
 	echo 'Test '.$type.' '.$msg.'<br/>';
 	$cn = 'Rserve_REXP_'.$type;
 	$r = new $cn();
@@ -35,8 +35,8 @@ function testBinary($values, $type, $options = array(), $msg = '') {
 	}
 }
 
-testBinary(array(1,2,3), 'Integer'  );
+testBinary([1,2,3], 'Integer'  );
 
-testBinary(array(1.1,2.2,3.3), 'Double'  );
+testBinary([1.1,2.2,3.3], 'Double'  );
 
-testBinary( array(TRUE, FALSE, TRUE, NULL), 'Logical');
+testBinary( [TRUE, FALSE, TRUE, NULL], 'Logical');

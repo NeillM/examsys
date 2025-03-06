@@ -30,7 +30,7 @@ use UserUtils;
 class users extends generator
 {
     /** @var string[] An array of surnames that can be used for users. */
-    protected static $surnames = array(
+    protected static $surnames = [
         'Ahmed',
         'Attack',
         'Baxter',
@@ -74,9 +74,9 @@ class users extends generator
         'Wright',
         'Xue',
         'Zhōng',
-    );
+    ];
     /** @var string[] An array of forenames that can be used for users. */
-    protected static $forenames = array(
+    protected static $forenames = [
         'Aleš',
         'Alvaro',
         'Andy',
@@ -129,17 +129,17 @@ class users extends generator
         'Wolfgang',
         'Yijun',
         'Zbyšek'
-    );
+    ];
     /** @var string[] An array of titles that can be used for users. */
-    protected static $titles = array('Dr', 'Miss', 'Mr', 'Mrs', 'Mx', 'Prof');
+    protected static $titles = ['Dr', 'Miss', 'Mr', 'Mrs', 'Mx', 'Prof'];
     /** @var string[] All the valid roles for a user. */
-    protected static $roles = array('Student', 'Staff', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner', 'Invigilator', 'Inactive Staff', 'Internal Reviewer', 'Standards Setter', 'Locked', 'Suspended');
+    protected static $roles = ['Student', 'Staff', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner', 'Invigilator', 'Inactive Staff', 'Internal Reviewer', 'Standards Setter', 'Locked', 'Suspended'];
     /** @var string[] Possible genders. */
-    protected static $gender = array('Female', 'Male', 'Other');
+    protected static $gender = ['Female', 'Male', 'Other'];
     /** @var string[] possible years of study. */
-    protected static $yearofstudy = array('0', '1', '2', '3', '4', '5');
+    protected static $yearofstudy = ['0', '1', '2', '3', '4', '5'];
     /** @var string[] Possible values for the grade field. */
-    protected static $grades = array(
+    protected static $grades = [
         'University Admin',
         'University Lecturer',
         'Technical Staff',
@@ -149,10 +149,10 @@ class users extends generator
         'Standards Setter',
         'none',
         '',
-    );
+    ];
     /** @var string[] Possible initials for users. */
-    protected static $initials = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-        'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+    protected static $initials = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+        'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
     /** @var int Stores how many userd have been created. */
     protected static $userscreated = 0;
@@ -192,13 +192,13 @@ class users extends generator
             throw new data_error("Module {$moduleid} does not exist");
         }
         $yearutils = new \yearutils($this->db);
-        $defaults = array(
+        $defaults = [
             'userID' => $userid,
             'idMod' => $moduleid,
             'type' => 'SomeType',
             'value' => 'Default',
             'calendar_year' => $yearutils->get_current_session(),
-        );
+        ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
         $this->insert_metadata($values);
         return $values;
@@ -228,7 +228,7 @@ class users extends generator
             throw new data_error('Must pass an array or object');
         }
         $usernumber = ++self::$userscreated;
-        $defaults = array(
+        $defaults = [
             'username' => self::$defaultusername . $usernumber,
             'surname' => $this->random_value('surnames'),
             'first_names' => $this->random_value('forenames'),
@@ -244,7 +244,7 @@ class users extends generator
             'initials' => $this->random_value('initials'),
             'password' => null,
             'sid' => null
-        );
+        ];
 
         // If a username has been sent in the parameters base the default email on it.
         if (!empty($parameters['email'])) {
@@ -310,10 +310,10 @@ class users extends generator
             throw new data_error('Error in | userID | paperID | authorID |');
         }
 
-        $default = array(
+        $default = [
             'note' => '',
             'noteID' => 0
-        );
+        ];
         $settings = $this->set_defaults_and_clean($default, $parameters);
         if ($settings['noteID'] === 0) {
             \StudentNotes::add_note(
@@ -438,7 +438,7 @@ class users extends generator
      */
     protected function insertSpecial($userID, $special): array
     {
-        $default_needs = array(
+        $default_needs = [
             'background' => null,
             'foreground' => null,
             'textsize' => 0,
@@ -455,7 +455,7 @@ class users extends generator
             'globalthemecolour' => null,
             'globalthemefont_colour' => null,
             'highlight_bgcolour' => null
-        );
+        ];
         $special = $this->set_defaults_and_clean($default_needs, $special);
         $result = $this->db->prepare('INSERT INTO special_needs VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $result->bind_param(

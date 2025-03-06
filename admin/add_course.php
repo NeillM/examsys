@@ -130,10 +130,10 @@ $mysqli->close();
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_add_course.php';
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/courseinit.min.js"></script>
 </body>

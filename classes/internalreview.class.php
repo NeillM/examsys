@@ -66,7 +66,7 @@ class internalreview
      */
     public function get_review_papers($userID)
     {
-        $papers = array();
+        $papers = [];
         $result = $this->db->prepare("SELECT
             paper_title,
             property_id,
@@ -87,7 +87,7 @@ class internalreview
         $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name, $paper_type);
         $result->store_result();
         while ($result->fetch()) {
-            $papers[$property_id] = array('paper_title' => $paper_title, 'crypt_name' => $crypt_name, 'fullscreen' => $fullscreen, 'reviewed' => '', 'internal_review_deadline' => $internal_review_deadline, 'type' => $paper_type);
+            $papers[$property_id] = ['paper_title' => $paper_title, 'crypt_name' => $crypt_name, 'fullscreen' => $fullscreen, 'reviewed' => '', 'internal_review_deadline' => $internal_review_deadline, 'type' => $paper_type];
         }
         $result->close();
         $result2 = $this->db->prepare('SELECT paperID,

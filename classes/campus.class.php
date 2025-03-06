@@ -59,9 +59,9 @@ class campus
         $result->execute();
         $result->store_result();
         $result->bind_result($campusid, $campusname, $isdefault);
-        $campuses = array();
+        $campuses = [];
         while ($result->fetch()) {
-            $campuses[$campusid] = array('campusname' => $campusname, 'isdefault' => $isdefault);
+            $campuses[$campusid] = ['campusname' => $campusname, 'isdefault' => $isdefault];
         }
         $result->close();
         return $campuses;
@@ -82,7 +82,7 @@ class campus
         $result->fetch();
         if ($result->num_rows > 0) {
             $result->close();
-            return array('campusid' => $campusid, 'campusname' => $campusname, 'isdefault' => $isdefault);
+            return ['campusid' => $campusid, 'campusname' => $campusname, 'isdefault' => $isdefault];
         }
         $result->close();
         return false;

@@ -36,7 +36,7 @@ class HOTSPOTCorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
 
         $option = reset($this->_question->options);
         $old_correct = $option->get_correct();

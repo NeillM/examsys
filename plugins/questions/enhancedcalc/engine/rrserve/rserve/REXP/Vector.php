@@ -16,7 +16,7 @@ class Rserve_REXP_Vector extends Rserve_REXP {
 	protected $values;
 
 	public function __construct() {
-		$this->values = array();
+		$this->values = [];
 	}
 
 	/**

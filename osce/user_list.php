@@ -44,7 +44,7 @@ $modules        = $properties->get_modules();
 
 $student_no = 0;
 $old_letter = '';
-$user_list  = array();
+$user_list  = [];
 $result = $mysqli->prepare('SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id = log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id AND users.id = sid.userID AND modules_student.idMod IN (' . implode(',', array_keys($modules)) . ') AND calendar_year = ? and initials = ? ORDER BY surname, initials');
 $result->bind_param('iss', $paperID, $calendar_year, $initial);
 $result->execute();
@@ -52,7 +52,7 @@ $result->store_result();
 $result->bind_result($tmp_userID, $surname, $first_names, $title, $student_id, $started);
 
 while ($result->fetch()) {
-    $user_list[] = array($tmp_userID, $surname, $first_names, $title, $student_id, $started);
+    $user_list[] = [$tmp_userID, $surname, $first_names, $title, $student_id, $started];
 }
 $mysqli->close();
 

@@ -55,7 +55,7 @@ class random_utils
         $random->execute();
         $random->store_result();
         $random->bind_result($q_id);
-        $qids = array();
+        $qids = [];
         while ($random->fetch()) {
             $qids[] = $q_id;
         }

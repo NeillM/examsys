@@ -77,7 +77,7 @@ foreach ($extsys as $i => $s) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/addfacultyinit.min.js"></script>
 </body>

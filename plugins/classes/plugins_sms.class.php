@@ -113,7 +113,7 @@ abstract class plugins_sms extends \plugins\plugins
             $data['prevenabled'] = true;
         }
         $render = new \render($configObject);
-        $render->render($data, array(), 'module/syncoptions.html');
+        $render->render($data, [], 'module/syncoptions.html');
     }
 
     /**
@@ -128,10 +128,10 @@ abstract class plugins_sms extends \plugins\plugins
                     $enabled[] = $this->plugin;
                 }
             } else {
-                $enabled = array($enabled, $this->plugin);
+                $enabled = [$enabled, $this->plugin];
             }
         } else {
-            $enabled = array($this->plugin);
+            $enabled = [$this->plugin];
         }
         $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_SMS');
     }
@@ -142,7 +142,7 @@ abstract class plugins_sms extends \plugins\plugins
     {
         $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
         if (!is_null($enabled)) {
-            $newenabled = array();
+            $newenabled = [];
             $key = array_search($this->plugin, $enabled);
             foreach ($enabled as $sms) {
                 if ($key !== false and $this->plugin === $sms) {

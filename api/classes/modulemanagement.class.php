@@ -36,7 +36,7 @@ class modulemanagement extends \api\abstractmanagement
     /**
      * Status codes
      */
-    private $statuscodes = array(
+    private $statuscodes = [
         'OK' => 100,
         'MODULE_NOT_DELETED' => 500,
         'MODULE_DOES_NOT_EXIST' => 501,
@@ -53,7 +53,7 @@ class modulemanagement extends \api\abstractmanagement
         'MODULE_NOTHING_TO_UPDATE' => 512,
         'MODULE_SCHOOL_EXTID_INVALID' => 513,
         'MODULE_USER_ALREADY_ENROLLED' => 514
-    );
+    ];
 
     /**
      * Enrol student on a Module.
@@ -66,7 +66,7 @@ class modulemanagement extends \api\abstractmanagement
         $langpack = new \langpack();
         $strings = $langpack->get_strings(
             $this->langcomponent,
-            array('user_not_enrolled', 'user_does_not_exist', 'user_already_enrolled')
+            ['user_not_enrolled', 'user_does_not_exist', 'user_already_enrolled']
         );
         $userexists = false;
         if (isset($params['userid'])) {
@@ -114,36 +114,36 @@ class modulemanagement extends \api\abstractmanagement
                 // Already enrolled so just update. Essential the web service taking ownership.
                 $id = \UserUtils::get_enrolement_id($params['userid'], $modid, $session, $this->db);
                 \UserUtils::update_module_enrolement($id, $params['attempt'], 1, $this->db);
-                $data = array(
+                $data = [
                     'statuscode' => $this->statuscodes['MODULE_USER_ALREADY_ENROLLED'],
                     'status' => 'OK',
                     'id' => $id,
                     'externalid' => null
-                );
+                ];
             } else {
                 if ($ret) {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['OK'],
                         'status' => 'OK',
                         'id' => $ret,
                         'externalid' => null
-                    );
+                    ];
                 } else {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['MODULE_USER_NOT_ENROLLED'],
                         'status' => $strings['user_not_enrolled'],
                         'id' => null,
                         'externalid' => null
-                    );
+                    ];
                 }
             }
         } else {
-            $data = array(
+            $data = [
                 'statuscode' => $this->statuscodes['MODULE_INVALID_USER'],
                 'status' => $strings['user_does_not_exist'],
                 'id' => null,
                 'externalid' => null
-            );
+            ];
         }
         return $this->get_response($data, 'enrol', $params['nodeid']);
     }
@@ -159,7 +159,7 @@ class modulemanagement extends \api\abstractmanagement
         $langpack = new \langpack();
         $strings = $langpack->get_strings(
             $this->langcomponent,
-            array('user_not_unenrolled', 'user_does_not_exist', 'session_not_supplied')
+            ['user_not_unenrolled', 'user_does_not_exist', 'session_not_supplied']
         );
         $userexists = false;
         if (isset($params['userid'])) {
@@ -191,12 +191,12 @@ class modulemanagement extends \api\abstractmanagement
             }
             $yearutils = new \yearutils($this->db);
             if (empty($params['session'])) {
-                $data = array(
+                $data = [
                     'statuscode' => $this->statuscodes['MODULE_SESSION_NOT_SUPPLIED'],
                     'status' => $strings['session_not_supplied'],
                     'id' => null,
                     'externalid' => null
-                );
+                ];
             } else {
                 $session = $params['session'];
                 if (isset($params['userid'])) {
@@ -210,28 +210,28 @@ class modulemanagement extends \api\abstractmanagement
                     );
                 }
                 if ($ret) {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['OK'],
                         'status' => 'OK',
                         'id' => $ret,
                         'externalid' => null
-                    );
+                    ];
                 } else {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['MODULE_USER_NOT_UNENROLLED'],
                         'status' => $strings['user_not_unenrolled'],
                         'id' => null,
                         'externalid' => null
-                    );
+                    ];
                 }
             }
         } else {
-            $data = array(
+            $data = [
                 'statuscode' => $this->statuscodes['MODULE_INVALID_USER'],
                 'status' => $strings['user_does_not_exist'],
                 'id' => null,
                 'externalid' => null
-            );
+            ];
         }
         return $this->get_response($data, 'unenrol', $params['nodeid']);
     }
@@ -247,13 +247,13 @@ class modulemanagement extends \api\abstractmanagement
         $langpack = new \langpack();
         $strings = $langpack->get_strings(
             $this->langcomponent,
-            array(
+            [
                 'module_not_created',
                 'module_already_exists',
                 'faculty_not_supplied',
                 'school_not_supplied',
                 'external_school_invalid'
-            )
+            ]
         );
         $faculty = true;
         $schoolid = false;
@@ -268,12 +268,12 @@ class modulemanagement extends \api\abstractmanagement
             // Get school id if school external id provided.
             $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $params['sms'], $this->db);
             if (!$schoolid) {
-                $data = array(
+                $data = [
                     'statuscode' => $this->statuscodes['MODULE_SCHOOL_EXTID_INVALID'],
                     'status' => $strings['external_school_invalid'],
                     'id' => null,
                     'externalid' => null
-                );
+                ];
                 return $this->get_response($data, 'create', $params['nodeid']);
             }
         } elseif (!empty($params['school'])) {
@@ -307,12 +307,12 @@ class modulemanagement extends \api\abstractmanagement
         }
         if ($modcodeinuse or $modextidinuse) {
             $details = \module_utils::get_full_details_by_ID($idMod, $this->db);
-            $data = array(
+            $data = [
                 'statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'],
                 'status' => $strings['module_already_exists'],
                 'id' => $idMod,
                 'externalid' => $details['externalid']
-            );
+            ];
         } else {
             if ($faculty) {
                 // Default null externalid.
@@ -343,27 +343,27 @@ class modulemanagement extends \api\abstractmanagement
                     $params['externalid']
                 );
                 if ($id) {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['OK'],
                         'status' => 'OK',
                         'id' => $id,
                         'externalid' => $params['externalid']
-                    );
+                    ];
                 } else {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['MODULE_NOT_CREATED'],
                         'status' => $strings['module_not_created'],
                         'id' => null,
                         'externalid' => null
-                    );
+                    ];
                 }
             } else {
-                $data = array(
+                $data = [
                     'statuscode' => $this->statuscodes['MODULE_INVALID_FACULTY'],
                     'status' => $strings['faculty_not_supplied'],
                     'id' => null,
                     'externalid' => null
-                );
+                ];
             }
         }
         return $this->get_response($data, 'create', $params['nodeid']);
@@ -380,7 +380,7 @@ class modulemanagement extends \api\abstractmanagement
         $langpack = new \langpack();
         $strings = $langpack->get_strings(
             $this->langcomponent,
-            array(
+            [
                 'module_not_updated',
                 'module_does_not_exist',
                 'faculty_not_supplied',
@@ -388,7 +388,7 @@ class modulemanagement extends \api\abstractmanagement
                 'module_nothing_to_update',
                 'external_school_invalid',
                 'module_already_exists'
-            )
+            ]
         );
         $faculty = true;
         $moduleid = false;
@@ -406,12 +406,12 @@ class modulemanagement extends \api\abstractmanagement
         }
 
         if (!$moduleid) {
-            $data = array(
+            $data = [
                 'statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'],
                 'status' => $strings['module_does_not_exist'],
                 'id' => null,
                 'externalid' => null
-            );
+            ];
             return $this->get_response($data, 'update', $params['nodeid']);
         }
 
@@ -423,7 +423,7 @@ class modulemanagement extends \api\abstractmanagement
         if (!empty($params['name'])) {
             $params['fullname'] = $params['name'];
         }
-        $checkparameter = array('moduleid', 'fullname', 'sms');
+        $checkparameter = ['moduleid', 'fullname', 'sms'];
         $change = $this->check_if_updated($checkparameter, $details, $params);
 
         // Use external school/faculty id if provided
@@ -431,12 +431,12 @@ class modulemanagement extends \api\abstractmanagement
             // Get school id if school external id provided.
             $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $params['sms'], $this->db);
             if (!$schoolid) {
-                $data = array(
+                $data = [
                     'statuscode' => $this->statuscodes['MODULE_SCHOOL_EXTID_INVALID'],
                     'status' => $strings['external_school_invalid'],
                     'id' => null,
                     'externalid' => null
-                );
+                ];
                 return $this->get_response($data, 'update', $params['nodeid']);
             }
         // Get school id if school name provided.
@@ -475,12 +475,12 @@ class modulemanagement extends \api\abstractmanagement
             $change = true;
         }
         if ($modcodeinuse) {
-            $data = array(
+            $data = [
                 'statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'],
                 'status' => $strings['module_already_exists'],
                 'id' => $modid,
                 'externalid' => null
-            );
+            ];
         } else {
             if ($faculty) {
                 // Get module code if not provided.
@@ -500,12 +500,12 @@ class modulemanagement extends \api\abstractmanagement
                 if ($change) {
                     // If faculty supplied, school must be supplied.
                     if (empty($params['school']) and !empty($params['faculty'])) {
-                        $data = array(
+                        $data = [
                             'statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'],
                             'status' => $strings['school_not_supplied'],
                             'id' => null,
                             'externalid' => null
-                        );
+                        ];
                     } else {
                         $update = \module_utils::update_module_by_id(
                             $params['id'],
@@ -517,36 +517,36 @@ class modulemanagement extends \api\abstractmanagement
                             $details['externalid']
                         );
                         if ($update) {
-                            $data = array(
+                            $data = [
                                 'statuscode' => $this->statuscodes['OK'],
                                 'status' => 'OK',
                                 'id' => $params['id'],
                                 'externalid' => $details['externalid']
-                            );
+                            ];
                         } else {
-                            $data = array(
+                            $data = [
                                 'statuscode' => $this->statuscodes['MODULE_NOT_UPDATED'],
                                 'status' => $strings['module_not_updated'],
                                 'id' => null,
                                 'externalid' => null
-                            );
+                            ];
                         }
                     }
                 } else {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['MODULE_NOTHING_TO_UPDATE'],
                         'status' => $strings['module_nothing_to_update'],
                         'id' => null,
                         'externalid' => null
-                    );
+                    ];
                 }
             } else {
-                $data = array(
+                $data = [
                     'statuscode' => $this->statuscodes['MODULE_INVALID_FACULTY'],
                     'status' => $strings['faculty_not_supplied'],
                     'id' => null,
                     'externalid' => null
-                );
+                ];
             }
         }
         return $this->get_response($data, 'update', $params['nodeid']);
@@ -561,8 +561,8 @@ class modulemanagement extends \api\abstractmanagement
     public function delete($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('module_not_deleted_inuse', 'module_not_deleted',
-            'module_does_not_exist'));
+        $strings = $langpack->get_strings($this->langcomponent, ['module_not_deleted_inuse', 'module_not_deleted',
+            'module_does_not_exist']);
         if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
@@ -582,37 +582,37 @@ class modulemanagement extends \api\abstractmanagement
             $inuse = \module_utils::module_in_use($params['id'], $this->db);
             $details = \module_utils::get_full_details_by_ID($params['id'], $this->db);
             if ($inuse) {
-                $data = array(
+                $data = [
                     'statuscode' => $this->statuscodes['MODULE_NOT_DELETED_INUSE'],
                     'status' => $strings['module_not_deleted_inuse'],
                     'id' => null,
                     'externalid' => null
-                );
+                ];
             } else {
                 $deleted = \module_utils::delete_module($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['OK'],
                         'status' => 'OK',
                         'id' => $params['id'],
                         'externalid' => $details['externalid']
-                    );
+                    ];
                 } else {
-                    $data = array(
+                    $data = [
                         'statuscode' => $this->statuscodes['MODULE_NOT_DELETED'],
                         'status' => $strings['module_not_deleted'],
                         'id' => null,
                         'externalid' => null
-                    );
+                    ];
                 }
             }
         } else {
-             $data = array(
+             $data = [
                  'statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'],
                  'status' => $strings['module_does_not_exist'],
                  'id' => null,
                  'externalid' => null
-             );
+             ];
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }

@@ -27,11 +27,11 @@ require_once '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
 $SMS = SMSutils::GetSmsUtils();
-$cfg_sms_sources = array();
+$cfg_sms_sources = [];
 if (is_object($SMS)) {
     $cfg_sms_sources =  $SMS->getModuleSources();
 }
-$cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
+$cfg_sms_sources = [$string['nolookup'] => ''] + $cfg_sms_sources;
 
 $vle_api = '';
 $map_level = 0;
@@ -57,7 +57,7 @@ $map_level = 0;
 if (count($vle_apis) > 0) {
     $mu = module_utils::get_instance();
     $vle_apis = $mu->get_vle_api_data($vle_apis);
-    $map_levels = array(iCMAPI::LEVEL_SESSION => $string['session'], iCMAPI::LEVEL_MODULE => $string['module']);
+    $map_levels = [iCMAPI::LEVEL_SESSION => $string['session'], iCMAPI::LEVEL_MODULE => $string['module']];
 }
 ?>
 
@@ -170,7 +170,7 @@ foreach ($vle_apis as $vle_name => $vle_api_data) {
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_add_module.php';
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/moduleinit.min.js"></script>
 </body>

@@ -39,7 +39,7 @@ class IE_qti_Load extends IE_Main
 
         global $import_directory;
 
-        $xml_files = array();
+        $xml_files = [];
 
         //print_p($params);
         $this->params = $params;
@@ -111,10 +111,10 @@ class IE_qti_Load extends IE_Main
             }
         }
 
-        $files['qti12'] = array(); // qti 1.2 files, each unrelated to the rest
-        $files['manifest'] = array(); // manifest files
-        $files['item'] = array(); // qti 2 questions
-        $files['paper'] = array(); // qti 2 test files
+        $files['qti12'] = []; // qti 1.2 files, each unrelated to the rest
+        $files['manifest'] = []; // manifest files
+        $files['item'] = []; // qti 2 questions
+        $files['paper'] = []; // qti 2 test files
 
         foreach ($xml_files as $filename => $fullpath) {
             $type = $this->DetectFileType($fullpath);
@@ -127,7 +127,7 @@ class IE_qti_Load extends IE_Main
         }
 
         $result = new stdClass();
-        $result->questions = array();
+        $result->questions = [];
 
         // process qti 1.2 files
         foreach ($files['qti12'] as $filename => $fullpath) {

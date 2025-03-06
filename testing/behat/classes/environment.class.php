@@ -45,17 +45,17 @@ class environment
         $config = Config::get_instance();
 
         // We allow Selenium to be configured via the behat.xml config file.
-        $seleniumconfig = array(
+        $seleniumconfig = [
             // Allow the browser used to be configured.
             'browser' => $config->get('cfg_behat_browser') ?? 'chrome',
-            'capabilities' => array(
-                'extra_capabilities' => array(
-                    'chromeOptions' => array(
+            'capabilities' => [
+                'extra_capabilities' => [
+                    'chromeOptions' => [
                         'w3c' => false,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         if ($wd_host = $config->get('cfg_behat_wd_host')) {
             // We should allow some extra configuration of the location of selenium.
@@ -64,51 +64,51 @@ class environment
 
         $basedir = self::get_basedir();
 
-        $config = array(
-            'default' => array(
-                'autoload' => array(
+        $config = [
+            'default' => [
+                'autoload' => [
                     $basedir . DIRECTORY_SEPARATOR . 'contexts',
-                ),
-            'suites' => array(
-                'frontend' => array(
-                    'contexts' => array(
-                        'RogoBehatFrontend',
-                    ),
-                    'paths' => array(
-                        $basedir . DIRECTORY_SEPARATOR . 'features',
-                    ),
-                    'settings' => array(
-                        'filters' => array(
-                            'tags' => '~@backend'
-                        ),
-                    ),
-                ),
-                    'backend' => array(
-                        'contexts' => array(
-                            'RogoBehatBackend',
-                        ),
-                        'paths' => array(
+                ],
+                'suites' => [
+                    'frontend' => [
+                        'contexts' => [
+                            'RogoBehatFrontend',
+                        ],
+                        'paths' => [
                             $basedir . DIRECTORY_SEPARATOR . 'features',
-                        ),
-                        'settings' => array(
-                            'filters' => array(
+                        ],
+                        'settings' => [
+                            'filters' => [
+                                'tags' => '~@backend'
+                            ],
+                        ],
+                    ],
+                    'backend' => [
+                        'contexts' => [
+                            'RogoBehatBackend',
+                        ],
+                        'paths' => [
+                            $basedir . DIRECTORY_SEPARATOR . 'features',
+                        ],
+                        'settings' => [
+                            'filters' => [
                                 'tags' => '@backend'
-                            ),
-                        ),
-                    ),
-                ),
-                'formatters' => array(
+                            ],
+                        ],
+                    ],
+                ],
+                'formatters' => [
                     'progress' => null,
-                ),
-                'extensions' => array(
-                    'Behat\MinkExtension' => array(
+                ],
+                'extensions' => [
+                    'Behat\MinkExtension' => [
                         'base_url' => self::get_behat_website(),
                         'browserkit_http' => null,
                         'selenium2' => $seleniumconfig,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+            ],
+        ];
 
         if (!file_put_contents(self::get_yml_location(), Yaml::dump($config, 10, 2))) {
             throw new \Exception('Could not write the behat.yml page.');

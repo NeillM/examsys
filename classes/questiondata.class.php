@@ -508,7 +508,7 @@ abstract class questiondata
     public function get_opt($id)
     {
         if (empty($this->options[$id])) {
-            return array();
+            return [];
         } else {
             return $this->options[$id];
         }
@@ -609,7 +609,7 @@ abstract class questiondata
         $this->negativemarking = $neg_marking;
 
         // Process the order
-        $question['option_order'] = array();
+        $question['option_order'] = [];
         if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
             if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
                 if ($question['q_option_order'] == 'random') {
@@ -618,7 +618,7 @@ abstract class questiondata
                     }
                     shuffle($question['option_order']);
                 } elseif ($question['q_option_order'] == 'alphabetic') {
-                    $tmp_order_array = array();
+                    $tmp_order_array = [];
                     for ($i = 0; $i < $option_no; $i++) {
                         $tmp_order_array[$i] = mb_strtolower($question['options'][$i]['option_text']);
                     }
@@ -638,7 +638,7 @@ abstract class questiondata
             }
 
             // Re-arrange the options array
-            $new_options = array();
+            $new_options = [];
             for ($i = 0; $i < $option_no; $i++) {
                 $new_options[$i] = $question['options'][$question['option_order'][$i]];
             }
@@ -709,14 +709,14 @@ abstract class questiondata
         $this->set_question($screen_pre_submitted, $useranswer, $userdismissed);
 
         // Processing for each stem.
-        $this->options = array();
+        $this->options = [];
         $this->marks = $this->get_base_marks();
 
         foreach ($question['options'] as $display_option) {
             $part_id++;
             $this->partid = $part_id;
             $tmp_part_id = $question['option_order'][$part_id - 1] + 1;
-            $this->set_opt($part_id, array(
+            $this->set_opt($part_id, [
                 'optiontext' => $display_option['option_text'],
                 'omedia' => $display_option['o_media'],
                 'markscorrect' => $display_option['marks_correct'],
@@ -724,7 +724,7 @@ abstract class questiondata
                 'correct' => $display_option['correct'],
                 'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
                 'position' => $tmp_part_id
-            ));
+            ]);
             $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], $display_option['o_media_alt'], '', false, -1, false, $part_id);
 
             // Set question options.
@@ -786,7 +786,7 @@ abstract class questiondata
         $mediatype = null;
         $mediaborder = true;
         $url = $mediadirectory->url($filename);
-        $extra = array();
+        $extra = [];
 
         // Set file type.
         $ext = '';
@@ -865,7 +865,7 @@ abstract class questiondata
         // Set option media to question media.
         if (!is_null($part_id)) {
             $option = $this->get_opt($part_id);
-            $option['optionmedia'] = array(
+            $option['optionmedia'] = [
                 'mediaid' => $imageid,
                 'mediafile' => $filename,
                 'mediawidth' => $width,
@@ -880,7 +880,7 @@ abstract class questiondata
                 'mediaext' => $ext,
                 'mediadelay' => $delay,
                 'mediaextra' => $extra,
-            );
+            ];
             $this->set_opt($part_id, $option);
         } else {
             $this->mediaid = $imageid;

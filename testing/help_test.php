@@ -43,8 +43,8 @@ $target = param::optional('target', 'staff', param::ALPHA);
 $targettable = $target . '_help';
 $dbresult = $mysqli->prepare('SELECT id, body, title, type FROM ' . $targettable . ' ORDER BY id');
 $dbresult->execute();
-$help_toc = array();
-$help_img = array();
+$help_toc = [];
+$help_img = [];
 $dbresult->bind_result($id, $body, $title, $type);
 
 while ($dbresult->fetch()) {
@@ -61,7 +61,7 @@ echo '<a href="help_test.php?target=student">student</a>';
 echo '<h1>Help pages internal consistency test</h1>';
 
 //reading image files' names
-$avail_images = array();
+$avail_images = [];
 $help_directory = rogo_directory::get_directory('help_' . $target);
 $pubs = $help_directory->location();
 
@@ -116,7 +116,7 @@ $helpimage_regexp = '#src="' // Image tags all have a src attribute.
     . '( height="(?<height>.*?)")?#';
 
 foreach ($help_toc as $help_item) {
-    $test = array();
+    $test = [];
     $imagecount = preg_match_all($helpimage_regexp, $help_item['body'], $test);
     if ($imagecount > 0) {
         for ($i = 0; $i < $imagecount; $i++) {
@@ -129,7 +129,7 @@ foreach ($help_toc as $help_item) {
                 'directory' => $test['directory'][$i],
             ];
             if (!isset($help_img[$code])) {
-                $help_img[$code] = array();
+                $help_img[$code] = [];
             }
             array_push($help_img[$code], $details);
         }
@@ -147,7 +147,7 @@ foreach ($help_toc as $help_item) {
                     'directory' => '',
                 ];
                 if (!isset($help_img[$code[1]])) {
-                    $help_img[$code[1]] = array();
+                    $help_img[$code[1]] = [];
                 }
                 if (count($code) >= 2) {
                     array_push($help_img[$code[1]], $details);
@@ -161,8 +161,8 @@ $result1 = '';
 $result2 = '';
 $result3 = '';
 $elsewehereimages = '';
-$result_array_2 = array();
-$result_array_3 = array();
+$result_array_2 = [];
+$result_array_3 = [];
 $i = 0;
 
 $from_help_dir = 0;

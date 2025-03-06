@@ -59,12 +59,12 @@ class BreaksTest extends unittestdatabase
         $this->student3 = $usergen->create_user(['roles' => 'Student', 'sid' => '65478', 'surname' => 'Peterson']);
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->pid1 = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'Test summative',
                 'papertype' => '2',
                 'paperowner' => 'admin',
                 'modulename' => 'Training Module'
-            )
+            ]
         );
     }
 
@@ -76,20 +76,20 @@ class BreaksTest extends unittestdatabase
     {
         $this->assertIsInt(Breaks::addBreak($this->student1['id'], $this->pid1['id']));
         $querytable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'userID',
                     'paperID'
-                ),
+                ],
                 'table' => 'breaks'
-            )
+            ]
         );
-        $expectedtable = array(
-            0 => array(
+        $expectedtable = [
+            0 => [
                 'userID' => $this->student1['id'],
                 'paperID' => $this->pid1['id']
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -103,18 +103,18 @@ class BreaksTest extends unittestdatabase
         Breaks::addBreak($this->student1['id'], $this->pid1['id']);
         Breaks::addBreak($this->student3['id'], $this->pid1['id']);
         $expectedtable = $this->query(
-            array(
-                'columns' => array(
+            [
+                'columns' => [
                     'break_taken',
-                ),
+                ],
                 'table' => 'breaks',
-                'where' => array(
-                    array(
+                'where' => [
+                    [
                         'column' => 'id',
                         'value' => $bid
-                    )
-                )
-            )
+                    ]
+                ]
+            ]
         );
         $tmp_cfg_long_date_time = str_replace('%', '', $this->config->get('cfg_long_date_time'));
         $expected = date_format(date_create($expectedtable[0]['break_taken']), $tmp_cfg_long_date_time);
@@ -136,6 +136,6 @@ class BreaksTest extends unittestdatabase
         $expected[$this->student2['id']][0] = $bid3;
         $expected[$this->student1['id']][1] = $bid4;
         $this->assertEquals($expected, Breaks::getAllBreaks($this->pid1['id']));
-        $this->assertEquals(array(), Breaks::getAllBreaks(99));
+        $this->assertEquals([], Breaks::getAllBreaks(99));
     }
 }

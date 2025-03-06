@@ -84,8 +84,8 @@ class versiontest extends UnitTest
      */
     public function test_sort_version()
     {
-        $versions = array('2.0.10', '2.0.2', '2.1.0', '2.0.1', '10.0.0', '0.0.1');
-        $sorted = array('0.0.1', '2.0.1', '2.0.2', '2.0.10', '2.1.0', '10.0.0');
+        $versions = ['2.0.10', '2.0.2', '2.1.0', '2.0.1', '10.0.0', '0.0.1'];
+        $sorted = ['0.0.1', '2.0.1', '2.0.2', '2.0.10', '2.1.0', '10.0.0'];
         $this->assertEquals($sorted, \version::sort_version($versions));
     }
 }

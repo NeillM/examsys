@@ -106,7 +106,7 @@ class renderdata extends \questiondata
         if (!is_null($useranswer)) {
             $this->usersanswers = explode('|', $useranswer);
         } else {
-            $this->usersanswers = array();
+            $this->usersanswers = [];
         }
     }
 
@@ -140,14 +140,14 @@ class renderdata extends \questiondata
         $matching_height = explode('|', $this->qmediaheight);
         $matching_alt = explode('|', $this->qmediaalt);
         $matching_num = explode('|', $this->qmedianum);
-        $matching_media = array();
+        $matching_media = [];
         for ($i = 0; $i < count($matching_source); $i++) {
-            $matching_media[$matching_num[$i]] = array(
+            $matching_media[$matching_num[$i]] = [
                 'source' => $matching_source[$i],
                 'width' => $matching_width[$i],
                 'height' => $matching_height[$i],
                 'alt' => $matching_alt[$i],
-            );
+            ];
         }
         $matching_scenarios = $this->scenarios;
         $matching_options = $this->matchoptions;
@@ -179,7 +179,7 @@ class renderdata extends \questiondata
         $col1_no = ceil(count($matching_options) / 2);
         $this->split = $col1_no - 1;
         $this->matchoptionsno = count($matching_options);
-        $matchstem = array();
+        $matchstem = [];
         $marks = $this->marks;
         for ($id = 1; $id <= $scenario_no; $id++) {
             if (isset($matching_answers[$id - 1])) {
@@ -213,7 +213,7 @@ class renderdata extends \questiondata
             if (isset($matching_answers[$id - 1])) {
                 $sub_answers = explode('$', $matching_answers[$id - 1]);
             } else {
-                $sub_answers = array();
+                $sub_answers = [];
             }
             $list_size = 10;
             if (count($matching_options) < 10) {
@@ -238,7 +238,7 @@ class renderdata extends \questiondata
                 }
             }
 
-            $multi_answers = array();
+            $multi_answers = [];
             if (isset($matching_users_answers[$id - 1])) {
                 $multi_answers = explode('$', $matching_users_answers[$id - 1]);
             }

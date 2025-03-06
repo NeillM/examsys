@@ -45,7 +45,7 @@ class StandardSetting
 
     public function get_ratings_by_question($std_setID)
     {
-        $std_set_array = array();
+        $std_set_array = [];
 
         $result = $this->db->prepare('SELECT questionID, rating FROM std_set_questions WHERE std_setID = ?');
         $result->bind_param('i', $std_setID);
@@ -68,7 +68,7 @@ class StandardSetting
         $result->fetch();
         $result->close();
 
-        return array('pass_score' => $pass_score, 'distinction_score' => $distinction_score);
+        return ['pass_score' => $pass_score, 'distinction_score' => $distinction_score];
     }
 
     /**

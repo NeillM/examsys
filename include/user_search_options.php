@@ -136,7 +136,7 @@ if (isset($state['chkbox5']) and $state['chkbox5'] == 'true') {
 } else {
     echo '<div><input class="chk chkstaff" type="checkbox" id="chkbox5" name="staff" /><label for="chkbox5">' . $string['staff'] . "</label></div>\n";
 }
-if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+if ($userObject->has_role(['SysAdmin', 'Admin'])) {
     if (isset($state['chkbox6']) and $state['chkbox6'] == 'true') {
         echo '<div><input class="chk chkstaff" type="checkbox" id="chkbox6" name="adminstaff" checked /><label for="chkbox6">' . $string['staffadmin'] . "</label></div>\n";
     } else {
@@ -205,7 +205,7 @@ if (isset($state['chkbox9']) and $state['chkbox9'] == 'true') {
 <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/user_file_icon_grey_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
 <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/report_grey_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
-if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+if ($userObject->has_role(['Admin', 'SysAdmin'])) {
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
     if ($userObject->has_role('SysAdmin')) {
         echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="' . $string['deleteuser'] . '" />' . $string['deleteuser'] . '</div>';
@@ -220,7 +220,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
 <div class="menuitem viewprofile"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
 <div class="menuitem" id="performancesummary2b"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
-if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+if ($userObject->has_role(['Admin', 'SysAdmin'])) {
     echo '<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/small_user_icon_grey.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</div>';
     echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
     echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
@@ -232,13 +232,13 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
 <div class="menuitem viewprofile"><img class="sidebar_icon" src="../artwork/user_file_icon_16.gif" alt="<?php echo $string['viewuserfile'] ?>" /><?php echo $string['viewuserfile'] ?></div>
 <div class="menuitem" id="performancesummary2c"><img class="sidebar_icon" src="../artwork/report_16.png" alt="<?php echo $string['performsummary'] ?>" /><?php echo $string['performsummary'] ?></div>
 <?php
-if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
+if ($userObject->has_role(['Admin', 'SysAdmin'])) {
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
 }
 if ($userObject->has_role('SysAdmin')) {
     echo '<div class="menuitem" id="deleteuser"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="' . $string['deleteuser'] . '" /><a href="#">' . $string['deleteuser'] . '</a></div>';
 }
-if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+if ($userObject->has_role(['SysAdmin', 'Admin'])) {
     echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';
     echo '<div class="menuitem"><a href="import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importmodules'] . '" />' . $string['importmodules'] . '</a></div>';
 }

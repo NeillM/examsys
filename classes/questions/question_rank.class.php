@@ -34,8 +34,8 @@ class QuestionRANK extends QuestionEdit
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-        $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial'], $this->_lang_strings['bonusmark']);
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
+        $this->_score_methods = [$this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial'], $this->_lang_strings['bonusmark']];
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']];
 
         // 'correct' is not a unified field for Rank questions
         $this->_fields_editable[] = 'correct';

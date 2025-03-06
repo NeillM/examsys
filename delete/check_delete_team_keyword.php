@@ -28,7 +28,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 $keywordIDs = check_var('keywordID', 'GET', true, false, true);
-$keyword_names = array();
+$keyword_names = [];
 $result = $mysqli->prepare('SELECT keyword FROM keywords_user WHERE id IN (' . mb_substr($keywordIDs, 1) . ')');
 $result->execute();
 $result->bind_result($keyword);

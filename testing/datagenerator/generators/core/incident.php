@@ -46,9 +46,9 @@ class incident extends generator
         if (empty($parameters['paperid'])) {
             throw new data_error('paperid must be provided');
         }
-        $defaults = array('screen' => 1, 'ipaddress' => '127.0.0.1', 'status' => 'test',
+        $defaults = ['screen' => 1, 'ipaddress' => '127.0.0.1', 'status' => 'test',
             'request_url' => 'Test request', 'response_data' => 'This is response data',
-            'userid' => $parameters['userid'], 'paperid' => $parameters['paperid']);
+            'userid' => $parameters['userid'], 'paperid' => $parameters['paperid']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
         $now = time();
@@ -92,8 +92,8 @@ class incident extends generator
         if (empty($parameters['page'])) {
             throw new data_error('paperid must be provided');
         }
-        $defaults = array('ipaddress' => '127.0.0.1', 'title' => 'fatal error',
-            'msg' => 'page not loading', 'created' => date('Y-m-d H:i:s'));
+        $defaults = ['ipaddress' => '127.0.0.1', 'title' => 'fatal error',
+            'msg' => 'page not loading', 'created' => date('Y-m-d H:i:s')];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
         $sql = $this->db->prepare('INSERT INTO denied_log VALUES (NULL, ?, ?, ?, ?, ?, ?)');

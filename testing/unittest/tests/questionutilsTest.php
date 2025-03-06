@@ -54,7 +54,7 @@ class QuestionUtilsTest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('questions', 'core');
-        $this->question = $datagenerator->create_question(array('type' => 'mcq',
+        $this->question = $datagenerator->create_question(['type' => 'mcq',
             'user' => 'admin',
             'status' => 1,
             'theme' => 'test theme',
@@ -67,8 +67,8 @@ class QuestionUtilsTest extends unittestdatabase
             'q_media_alt' => 'question image',
             'q_option_order' => 'random',
             'display_method' => 'vertical',
-            'score_method' => 'Mark per Option'));
-        $this->options1 = $datagenerator->add_options_to_question(array('question' => $this->question['id'],
+            'score_method' => 'Mark per Option']);
+        $this->options1 = $datagenerator->add_options_to_question(['question' => $this->question['id'],
             'option_text' => 'true',
             'correct' => 1,
             'o_media' => '1517409282.jpg',
@@ -77,24 +77,24 @@ class QuestionUtilsTest extends unittestdatabase
             'o_media_alt' => 'option image',
             'marks_correct' => 2,
             'marks_incorrect' => -2,
-            'marks_partial' => 0));
-        $this->options2 = $datagenerator->add_options_to_question(array('question' => $this->question['id'],
+            'marks_partial' => 0]);
+        $this->options2 = $datagenerator->add_options_to_question(['question' => $this->question['id'],
             'option_text' => 'false',
             'correct' => 1,
             'marks_correct' => 2,
             'marks_incorrect' => -2,
-            'marks_partial' => 0));
-        $this->options3 = $datagenerator->add_options_to_question(array('question' => $this->question['id'],
+            'marks_partial' => 0]);
+        $this->options3 = $datagenerator->add_options_to_question(['question' => $this->question['id'],
             'option_text' => 'maybe',
             'correct' => 1,
             'marks_correct' => 2,
             'marks_incorrect' => -2,
-            'marks_partial' => 0));
+            'marks_partial' => 0]);
         $datagenerator = $this->get_datagenerator('log', 'core');
-        $meta = $datagenerator->create_metadata(array('userID' => $this->admin['id'], 'paperID' => 1, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00'));
-        $datagenerator->create_summative(array('q_id' => 88, 'metadataID' => $meta['id']));
-        $meta = $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => 2, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00'));
-        $datagenerator->create_summative(array('q_id' => 33, 'metadataID' => $meta['id']));
+        $meta = $datagenerator->create_metadata(['userID' => $this->admin['id'], 'paperID' => 1, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00']);
+        $datagenerator->create_summative(['q_id' => 88, 'metadataID' => $meta['id']]);
+        $meta = $datagenerator->create_metadata(['userID' => $this->student['id'], 'paperID' => 2, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00']);
+        $datagenerator->create_summative(['q_id' => 33, 'metadataID' => $meta['id']]);
     }
 
     /**
@@ -118,7 +118,7 @@ class QuestionUtilsTest extends unittestdatabase
      */
     public function testGetCorrectAnswer()
     {
-        $question = array();
+        $question = [];
         $expected['ID'] = $this->question['id'];
         $expected['type'] = $this->question['q_type'];
         $expected['score_method'] = $this->question['score_method'];
@@ -148,7 +148,7 @@ class QuestionUtilsTest extends unittestdatabase
      */
     public function testGetMedia()
     {
-        $expected = array(
+        $expected = [
             new \MediaObject(
                 $this->question['q_media_id'],
                 $this->question['q_media'],
@@ -158,7 +158,7 @@ class QuestionUtilsTest extends unittestdatabase
                 $this->question['q_media_owner'],
                 $this->question['q_media_num'],
             )
-        );
+        ];
         $this->assertEquals($expected, QuestionUtils::getMedia($this->question['id']));
     }
 
@@ -186,7 +186,7 @@ class QuestionUtilsTest extends unittestdatabase
      */
     public function testGetMediaAsString()
     {
-        $expected = array(
+        $expected = [
             'id' => $this->question['q_media_id'],
             'source' => $this->question['q_media'],
             'width' => $this->question['q_media_width'],
@@ -194,7 +194,7 @@ class QuestionUtilsTest extends unittestdatabase
             'alt' => $this->question['q_media_alt'],
             'owner' => $this->question['q_media_owner'],
             'num' => $this->question['q_media_num'],
-        );
+        ];
         $this->assertEquals($expected, QuestionUtils::getMediaAsString($this->question['id']));
     }
 

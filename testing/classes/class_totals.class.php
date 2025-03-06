@@ -87,7 +87,7 @@ class class_totals
     public function processPapers($mysqli, $userid, $start_dateSQL, $end_dateSQL, $string, $userObject, $paperid = '')
     {
         global $display_correct_answer, $display_students_response, $display_feedback, $display_question_mark;
-        $papers = array();
+        $papers = [];
 
         if ($paperid != '') {
             $result = $mysqli->prepare('
@@ -131,14 +131,14 @@ class class_totals
             $display_start_date = date($configObject->get('cfg_long_date_php'), $start_date);
             $start_date = date('YmdHis', $start_date);
             $end_date = date('YmdHis', $end_date);
-            $papers[] = array(
+            $papers[] = [
                 'crypt_name' => $crypt_name,
                 'paperID' => $paperID,
                 'title' => $title,
                 'display_start_date' => $display_start_date,
                 'start_date' => $start_date,
                 'end_date' => $end_date
-            );
+            ];
         }
         $result->close();
 
@@ -209,7 +209,7 @@ class class_totals
 
             $errors = '';
             if ($marks_set === false) {
-                $marks_set = array();
+                $marks_set = [];
                 $errors = "<ul><li>Couldn't access class totals</li>\n";
             }
 

@@ -72,8 +72,8 @@ class StringUtils
      */
     public static function clean_and_trim($string)
     {
-        $searches = array('&nbsp;');
-        $replaces = array(' ');
+        $searches = ['&nbsp;'];
+        $replaces = [' '];
 
         $string = str_replace($searches, $replaces, $string);
 
@@ -87,7 +87,7 @@ class StringUtils
      */
     public static function wordToUtf8($str)
     {
-        $wordChr = array(
+        $wordChr = [
         '&',
             '<',
             '>',
@@ -102,9 +102,9 @@ class StringUtils
             "\\xe2\\x80\\x9c",        // double quote opening
             "\\xe2\\x80\\x9d",        // double quote closing
             "\\xe2\\x80\\xa2"        // dot used for bullet points
-        );
+        ];
 
-        $utf8Chr = array(
+        $utf8Chr = [
             '&amp;',
             '&lt;',
             '&gt;',
@@ -119,7 +119,7 @@ class StringUtils
             '"',
             '"',
             '*'
-        );
+        ];
 
         $str = str_replace($wordChr, $utf8Chr, $str);
         return $str;

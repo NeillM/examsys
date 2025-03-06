@@ -109,7 +109,7 @@ $result->store_result();
 $render = new render($configObject);
 $miscdataset['name'] = 'jsutils';
 $miscdataset['attributes']['xls'] = json_encode($string);
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/moduleadmininit.min.js"></script>
 </body>

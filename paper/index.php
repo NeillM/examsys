@@ -40,7 +40,7 @@ if ($userObject->has_role('External Examiner') or $userObject->has_role('Interna
 
 function get_labs($mysqli, $lablist)
 {
-    $lab_list = array();
+    $lab_list = [];
     if ($lablist != '') {
         $stmt = $mysqli->prepare("SELECT room_no, name FROM labs WHERE id IN ({$lablist})");
         $stmt->execute();
@@ -58,8 +58,8 @@ $logger = new Logger($mysqli);
 $logger->record_access($userObject->get_user_ID(), 'Summative homepage', '/paper/');
 
 $paper_utils = Paper_utils::get_instance();
-$paper_display = array();
-$paper_no = $paper_utils->get_active_papers($paper_display, array('1', '2'), $userObject, $mysqli);     // Get active Progress Tests and Summative Exams.
+$paper_display = [];
+$paper_no = $paper_utils->get_active_papers($paper_display, ['1', '2'], $userObject, $mysqli);     // Get active Progress Tests and Summative Exams.
 
 // Go straight to paper if only one exam and no password set (or remote summatives in operation).
 $remote = false;
@@ -75,12 +75,12 @@ if (
     exit();
 } else {
     $render = new render($configObject);
-    $headerdata = array(
-        'css' => array(
+    $headerdata = [
+        'css' => [
             '/css/rogo_logo.css',
             '/css/index.css',
-        ),
-    );
+        ],
+    ];
     $lang['title'] = $string['exams'];
     $render->render($headerdata, $lang, 'header.html');
 
@@ -108,18 +108,18 @@ if (
         }
         $computer_lab_short = ($computer_lab_short == '') ? $computer_lab : $computer_lab_short;
         $ip_info->close();
-        $data['issues']['ip'] = array(
+        $data['issues']['ip'] = [
             'name' => $string['IPaddress'],
             'desc' => NetworkUtils::get_client_address() . ' ' . $computer_lab
-        );
-        $data['issues']['time'] = array(
+        ];
+        $data['issues']['time'] = [
             'name' => $string['Time/Date'],
             'desc' => date($configObject->get('cfg_long_datetime_php'))
-        );
+        ];
         if ($userObject->get_year() == '') {
-            $data['issues'][$string['yearofstudy']] = array('name' => $string['yearofstudy'], 'desc' => 0);
+            $data['issues'][$string['yearofstudy']] = ['name' => $string['yearofstudy'], 'desc' => 0];
         } else {
-            $data['issues']['year'] = array('name' => $string['yearofstudy'], 'desc' => $userObject->get_year());
+            $data['issues']['year'] = ['name' => $string['yearofstudy'], 'desc' => $userObject->get_year()];
         }
         $last_cal_year = '';
         $info = $mysqli->prepare('SELECT moduleID, calendar_year FROM modules_student, modules WHERE modules.id = modules_student.idMod AND userID = ? ORDER BY calendar_year DESC, moduleID');
@@ -128,9 +128,9 @@ if (
         $info->bind_result($user_moduleID, $user_calendar_year);
         $info->store_result();
         if ($info->num_rows() == 0) {
-            $data['issues']['modules'] = array('name' => $string['Modules'], 'desc' => 0);
+            $data['issues']['modules'] = ['name' => $string['Modules'], 'desc' => 0];
         } else {
-            $mod = array();
+            $mod = [];
             while ($info->fetch()) {
                 if ($last_cal_year != $user_calendar_year) {
                     $mod[$user_calendar_year] = '';
@@ -143,11 +143,11 @@ if (
                 $last_cal_year = $user_calendar_year;
                 $i++;
             }
-            $data['issues']['modules'] = array('name' => $string['Modules'], 'desc' => $mod);
+            $data['issues']['modules'] = ['name' => $string['Modules'], 'desc' => $mod];
         }
         $info->close();
         $userRolesArray = $userObject->list_user_roles();
-        $users = array();
+        $users = [];
         foreach ($userRolesArray as $key => $ur) {
             if ($ur != 'Student') {
                 $ur = str_replace('Demo', '', $ur);
@@ -164,7 +164,7 @@ if (
                 }
             }
         }
-        $data['issues']['user'] = array('name' => $string['UserRoles'], 'desc' => $users);
+        $data['issues']['user'] = ['name' => $string['UserRoles'], 'desc' => $users];
 
         $link = $configObject->get_setting('core', 'summative_issuelink');
         $data['summativeissuelink'] = $link;
@@ -173,7 +173,7 @@ if (
             if (!isset($staff_modules)) {
                 $staff_modules = $userObject->get_staff_modules();
             }
-            $papers = array();
+            $papers = [];
             $now = time();
             $utc_timezone = new DateTimeZone('UTC');
             $datetime = new DateTime('now', $utc_timezone);
@@ -226,7 +226,7 @@ if (
                 );
                 while ($paper_q->fetch()) {
                     $start_date = date($configObject->get('cfg_long_full_datetime_php'), $start_date);
-                    $papers[$moduleID][] = array(
+                    $papers[$moduleID][] = [
                         'id' => $property_id,
                         'screens' => $screens,
                         'title' => $paper_title,
@@ -235,22 +235,22 @@ if (
                         'crypt_name' => $crypt_name,
                         'fullscreen' => $fullscreen,
                         'labs' => $labs
-                    );
+                    ];
                 }
                 $paper_q->close();
             }
             $data['futurepapers'] = count($papers);
-            $data['future'] = array();
+            $data['future'] = [];
             if ($data['futurepapers'] > 0) {
                 $staff_module = '';
                 $hourwarning = $configObject->get_setting('core', 'summative_hour_warning');
                 foreach ($papers as $moduleID => $paper_list) {
                     if ($moduleID != $staff_module) {
                         $staff_module = $moduleID;
-                        $data['future'][$moduleID] = array();
+                        $data['future'][$moduleID] = [];
                     }
                     foreach ($paper_list as $paper) {
-                        $warnings = array();
+                        $warnings = [];
                         $screen_plural = ($paper['screens'] > 1) ? 'screens' : 'screen';
                         $start_hour = mb_substr($paper['start_date'], 11, 2);
                         if (intval($start_hour) < $hourwarning) {
@@ -267,7 +267,7 @@ if (
                         } else {
                             $duration = $paper['duration'] . $string['mins'];
                         }
-                        $data['future'][$moduleID][$paper['crypt_name']] = array(
+                        $data['future'][$moduleID][$paper['crypt_name']] = [
                             'fullscreen' => $paper['fullscreen'],
                             'title' => $paper['title'],
                             'screens' => $paper['screens'] . ' ' . ucfirst($string[$screen_plural]),
@@ -276,7 +276,7 @@ if (
                             'warnings' => $warnings,
                             'labs' => $labs,
                             'currentlab' => $computer_lab_short,
-                        );
+                        ];
                     }
                 }
             }
@@ -284,7 +284,7 @@ if (
         $render->render($data, $string, 'paper/indexnopapers.html');
         exit;
     } else {
-        $exams = array();
+        $exams = [];
         for ($i = 0; $i < $paper_no; $i++) {
             $exams[$i]['cryptname'] = $paper_display[$i]['crypt_name'];
             $exams[$i]['title'] = $paper_display[$i]['paper_title'];
@@ -308,4 +308,4 @@ if (
     }
 }
 $mysqli->close();
-$render->render(array(), array(), 'footer.html');
+$render->render([], [], 'footer.html');

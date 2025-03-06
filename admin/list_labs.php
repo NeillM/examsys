@@ -59,8 +59,8 @@
 </div>
 
 <?php
-$labs = array();
-$campus_sizes = array();
+$labs = [];
+$campus_sizes = [];
 
 $lab_data = $mysqli->prepare('SELECT l.id, l.name, count(ci.address) AS pc_number, c.name, l.building, ci.low_bandwidth
   FROM campus c
@@ -72,7 +72,7 @@ $lab_data->execute();
 $lab_data->store_result();
 $lab_data->bind_result($id, $name, $pc_number, $campus, $building, $low_bandwidth);
 while ($lab_data->fetch()) {
-    $labs[] = array('id' => $id, 'name' => $name, 'pc_number' => $pc_number, 'campus' => $campus, 'building' => $building, 'low_bandwidth' => $low_bandwidth);
+    $labs[] = ['id' => $id, 'name' => $name, 'pc_number' => $pc_number, 'campus' => $campus, 'building' => $building, 'low_bandwidth' => $low_bandwidth];
 }
 $lab_data->close();
 

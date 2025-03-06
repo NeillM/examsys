@@ -93,10 +93,10 @@ $result->close();
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_edit_academic_session.php?year=' . $year;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
         <script src="../js/sessioninit.min.js"></script>
     </body>

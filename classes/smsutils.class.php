@@ -45,14 +45,14 @@ abstract class SmsUtils
 
     public function __construct()
     {
-        $this->errorinfo['usernamematch'] = array();
-        $this->errorinfo['usernamematchdata'] = array();
-        $this->errorinfo['unabletodetermineusername'] = array();
-        $this->errorinfo['unabletodetermineusernamedata'] = array();
-        $this->errorinfo['moduleerrorstate'] = array();
-        $this->errorinfo['moduleerrorstatedata'] = array();
-        $this->errorinfo['modulenodata'] = array();
-        $this->errorinfo['modulenodatadata'] = array();
+        $this->errorinfo['usernamematch'] = [];
+        $this->errorinfo['usernamematchdata'] = [];
+        $this->errorinfo['unabletodetermineusername'] = [];
+        $this->errorinfo['unabletodetermineusernamedata'] = [];
+        $this->errorinfo['moduleerrorstate'] = [];
+        $this->errorinfo['moduleerrorstatedata'] = [];
+        $this->errorinfo['modulenodata'] = [];
+        $this->errorinfo['modulenodatadata'] = [];
     }
 
     public function geterrors()

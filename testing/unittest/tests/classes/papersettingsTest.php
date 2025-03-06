@@ -47,7 +47,7 @@ class PaperSetttingsTest extends unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->paper = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test summative',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
@@ -55,17 +55,17 @@ class PaperSetttingsTest extends unittestdatabase
                 'papertype' => '2',
                 'modulename' => 'Training Module',
                 'remote' => 1
-            )
+            ]
         );
         $this->paper2 = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test formative',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
                 'paperowner' => 'admin',
                 'papertype' => '0',
                 'modulename' => 'Training Module'
-            )
+            ]
         );
     }
 
@@ -76,34 +76,34 @@ class PaperSetttingsTest extends unittestdatabase
     public function testUpdateSetting(): void
     {
         $queryTable = $this->query(
-            array(
-                'columns' => array('paperid', 'setting', 'value'),
+            [
+                'columns' => ['paperid', 'setting', 'value'],
                 'table' => 'paper_settings'
-            )
+            ]
         );
-        $expectedTable = array(
-            0 => array(
+        $expectedTable = [
+            0 => [
                 'setting' => 'remote_summative',
                 'value' => '1',
                 'paperid' => $this->paper['id'],
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
         $paper_settings = new \PaperSettings($this->paper['id'], $this->paper['papertype']);
         $paper_settings->updateSetting('remote_summative', 0, $this->paper['id']);
         $queryTable = $this->query(
-            array(
-                'columns' => array('paperid', 'setting', 'value'),
+            [
+                'columns' => ['paperid', 'setting', 'value'],
                 'table' => 'paper_settings'
-            )
+            ]
         );
-        $expectedTable = array(
-            0 => array(
+        $expectedTable = [
+            0 => [
                 'setting' => 'remote_summative',
                 'value' => '0',
                 'paperid' => $this->paper['id'],
-            )
-        );
+            ]
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -114,12 +114,12 @@ class PaperSetttingsTest extends unittestdatabase
     public function testGet(): void
     {
         $paper_settings = new \PaperSettings($this->paper['id'], $this->paper['papertype']);
-        $expected['remote_summative'] = array('value' => 1, 'type' => \Config::BOOLEAN, 'category' => 'security');
-        $expected['seb_enabled'] = array('value' => null, 'type' => \Config::BOOLEAN, 'category' => 'seb');
+        $expected['remote_summative'] = ['value' => 1, 'type' => \Config::BOOLEAN, 'category' => 'security'];
+        $expected['seb_enabled'] = ['value' => null, 'type' => \Config::BOOLEAN, 'category' => 'seb'];
         $this->assertEquals($expected, $paper_settings->get());
         // Not supported.
         $paper_settings = new \PaperSettings($this->paper2['id'], $this->paper2['papertype']);
-        $expected = array();
+        $expected = [];
         $this->assertEquals($expected, $paper_settings->get());
     }
 
@@ -162,45 +162,45 @@ class PaperSetttingsTest extends unittestdatabase
      */
     public function testCreatePaperSettingsCategories(): void
     {
-        PaperSettings::createPaperSettingsCategories($this->db, array('test'));
+        PaperSettings::createPaperSettingsCategories($this->db, ['test']);
         $queryTable = $this->query(
-            array(
-                'columns' => array('category'),
+            [
+                'columns' => ['category'],
                 'table' => 'paper_settings_category'
-            )
+            ]
         );
-        $expectedTable = array(
-            0 => array(
+        $expectedTable = [
+            0 => [
                 'category' => 'feedback',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'category' => 'general',
-            ),
-            2 => array(
+            ],
+            2 => [
                 'category' => 'postscript',
-            ),
-            3 => array(
+            ],
+            3 => [
                 'category' => 'prologue',
-            ),
-            4 => array(
+            ],
+            4 => [
                 'category' => 'reference',
-            ),
-            5 => array(
+            ],
+            5 => [
                 'category' => 'reviewers',
-            ),
-            6 => array(
+            ],
+            6 => [
                 'category' => 'rubric',
-            ),
-            7 => array(
+            ],
+            7 => [
                 'category' => 'seb',
-            ),
-            8 => array(
+            ],
+            8 => [
                 'category' => 'security',
-            ),
-            9 => array(
+            ],
+            9 => [
                 'category' => 'test',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -213,31 +213,31 @@ class PaperSetttingsTest extends unittestdatabase
         $supported = '{"osce": 0, "survey": 0, "offline": 0, "progress": 1, "formative": 1, "summative": 1, "peer_review": 0}';
         PaperSettings::createPaperSettingsSetting($this->db, 'test', 'general', 'boolean', $supported);
         $queryTable = $this->query(
-            array(
-                'columns' => array('setting', 'category', 'type', 'supported'),
+            [
+                'columns' => ['setting', 'category', 'type', 'supported'],
                 'table' => 'paper_settings_setting'
-            )
+            ]
         );
-        $expectedTable = array(
-            0 => array(
+        $expectedTable = [
+            0 => [
                 'setting' => 'remote_summative',
                 'category' => 'security',
                 'type' => 'boolean',
                 'supported' => '{"osce": 0, "survey": 0, "offline": 0, "progress": 0, "formative": 0, "summative": 1, "peer_review": 0}'
-            ),
-            1 => array(
+            ],
+            1 => [
                 'setting' => 'seb_enabled',
                 'category' => 'seb',
                 'type' => 'boolean',
                 'supported' => '{"osce": 0, "survey": 0, "offline": 0, "progress": 1, "formative": 0, "summative": 1, "peer_review": 0}'
-            ),
-            2 => array(
+            ],
+            2 => [
                 'setting' => 'test',
                 'category' => 'general',
                 'type' => 'boolean',
                 'supported' => $supported
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 

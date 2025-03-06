@@ -46,7 +46,7 @@ $paper_type = $properties->get_paper_type();
 $error = false;
 
 // Get the enhanced calculation questions on the paper.
-$q_ids = array();
+$q_ids = [];
 $result = $mysqli->prepare("SELECT question, settings FROM papers, questions WHERE papers.question = questions.q_id AND q_type = 'enhancedcalc' AND paper = ?");
 $result->bind_param('i', $paperID);
 $result->execute();
@@ -56,7 +56,7 @@ while ($result->fetch()) {
 }
 $result->close();
 
-$possible = array();
+$possible = [];
 
 // Check random blocks questions for calculation questions
 $random = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
@@ -96,7 +96,7 @@ if (count($possible) > 0) {
 
 $server_connection = true;
 
-$statuses = array();
+$statuses = [];
 // Should not get here but if we do throw a critical error.
 if (count($q_ids) == 0) {
     // Critical error
@@ -120,7 +120,7 @@ foreach ($q_ids as $q_id => $setting) {
     $statuses[$q_id] = $data;
 }
 
-$problem_questions = array();
+$problem_questions = [];
 
 foreach ($statuses as $qid => $data) {
     if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {     // Record unmarked and marking error problems.

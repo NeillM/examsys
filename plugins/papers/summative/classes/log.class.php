@@ -44,10 +44,10 @@ class log extends \log
      */
     public function get_log()
     {
-        $user_answers = array();
-        $user_dismiss = array();
-        $user_order = array();
-        $used_questions = array();
+        $user_answers = [];
+        $user_dismiss = [];
+        $user_order = [];
+        $used_questions = [];
         $log_data = $this->db->prepare('SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log2 WHERE metadataID = ? ORDER BY id');
         $log_data->bind_param('i', $this->metadataid);
         $log_data->execute();
@@ -61,12 +61,12 @@ class log extends \log
             $this->process_screen_variables($log_screen, $log_duration);
         }
         $log_data->close();
-        return array('used_questions' => $used_questions,
+        return ['used_questions' => $used_questions,
         'user_answers' => $user_answers,
         'user_dismiss' => $user_dismiss,
         'user_order' => $user_order,
         'previous_duration' => $this->previousduration,
         'screen_pre_submitted' => $this->screenpresubmitted,
-        'current_screen' => $this->currentscreen);
+        'current_screen' => $this->currentscreen];
     }
 }

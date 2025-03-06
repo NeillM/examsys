@@ -26,7 +26,7 @@
 define('AJAX_REQUEST', true);
 
 require '../../include/staff_auth.inc';
-$questionsarray = array();
+$questionsarray = [];
 $questions_to_add = param::required('questions_to_add', param::TEXT, param::FETCH_POST);
 $questions = explode(',', $questions_to_add);
 foreach ($questions as $item) {

@@ -28,7 +28,7 @@ namespace testing\javascript;
 class TestLoader
 {
     /** @var array An array of all the Javascript unit tests. */
-    public $tests = array();
+    public $tests = [];
 
     /** @var \stdClass The configuration for the suite. */
     public $config;

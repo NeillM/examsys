@@ -74,10 +74,10 @@ require '../include/sysadmin_auth.inc';
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_add_academic_session.php';
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
         <script src="../js/sessioninit.min.js"></script>
     </body>

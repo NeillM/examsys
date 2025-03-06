@@ -36,8 +36,8 @@ class UoNSaturnTranslation_lookup extends outline_lookup
 
     public function register_callback_routines()
     {
-        $callbackarray[] = array(array($this, 'usertranslatelookup'), 'usertranslatelookup', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'moduletranslatelookup'), 'moduletranslatelookup', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'usertranslatelookup'], 'usertranslatelookup', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'moduletranslatelookup'], 'moduletranslatelookup', $this->number, $this->name];
         return $callbackarray;
     }
 
@@ -81,8 +81,8 @@ class UoNSaturnTranslation_lookup extends outline_lookup
         }
 
         if (isset($datapart->rawmembership)) {
-            $fields = array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus','Faculty' => 'faculty', 'ReasonForLeaving' => 'reasonforleaving', 'Username' => 'username');
-            $students = array();
+            $fields = ['StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus','Faculty' => 'faculty', 'ReasonForLeaving' => 'reasonforleaving', 'Username' => 'username'];
+            $students = [];
             foreach ($datapart->rawmembership->Student as $v) {
                     $studenti = new stdClass();
                 foreach ($fields as $keyf => $keyo) {
@@ -120,12 +120,12 @@ class UoNSaturnTranslation_lookup extends outline_lookup
 
     public function usertranslate($datapart)
     {
-        if (isset($datapart->role) and $this->orsearchlist($datapart->role, array('Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'))) {
+        if (isset($datapart->role) and $this->orsearchlist($datapart->role, ['Undergraduate', 'Postgraduate', 'UG', 'PGT', 'PG'])) {
             $this->savetodebug('Detected Student, correcting role');
             $datapart->role = 'Student';
         }
 
-        if ((isset($datapart->role) and $this->orsearchlist($datapart->role, array('S'))) or isset($datapart->staffID)) {
+        if ((isset($datapart->role) and $this->orsearchlist($datapart->role, ['S'])) or isset($datapart->staffID)) {
             $this->savetodebug('Detected staff, correcting role and filling in fields');
             $datapart->role = 'Staff';
             $datapart->coursecode = 'University Lecturer';

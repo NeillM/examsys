@@ -38,10 +38,10 @@ class ldap_auth extends outline_authentication
 
     public function register_callback_routines()
     {
-        $callbackarray[] = array(array($this, 'auth'), 'auth', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'createnewuserassociation'), 'postauthsuccess', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'failauth'], 'postauthfail', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'createnewuserassociation'], 'postauthsuccess', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'errordisp'], 'displayerrform', $this->number, $this->name];
         return $callbackarray;
     }
 
@@ -162,7 +162,7 @@ class ldap_auth extends outline_authentication
             $this->savetodebug('Sucessfull initial bind to ldap server');
             if (is_array($ldap_search_dn)) {
                     $ldpcount = count($ldap_search_dn);
-                    $ldapconn = array();
+                    $ldapconn = [];
                 for (
                     $i = 0; $i < $ldpcount; $i++
                 ) {

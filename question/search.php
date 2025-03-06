@@ -129,7 +129,7 @@ if (isset($_GET['submit'])) {
     }
 
     $params = '';
-    $variables = array();
+    $variables = [];
     $keywordsSQL = '';
     if ($_GET['keywordID'] != '') {
         $keywordsSQL = 'AND keywordID = ?';
@@ -312,7 +312,7 @@ if (isset($_GET['submit'])) {
         foreach ($variables as $key => $value) {
             $tmp[$key] = &$variables[$key];
         }
-        call_user_func_array(array($result,'bind_param'), $tmp);
+        call_user_func_array([$result,'bind_param'], $tmp);
     }
     $result->execute();
     $result->store_result();
@@ -402,7 +402,7 @@ if (isset($_GET['submit'])) {
 $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 ?>
 <script src="../js/questionsearchinit.min.js"></script>
 </body>

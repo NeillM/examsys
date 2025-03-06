@@ -58,9 +58,9 @@ class encryp
         }
         // Revert to default password generation if no dictionary.
         if (is_null($this->file) or !file_exists($this->file)) {
-            $this->dictionary = array();
+            $this->dictionary = [];
         } else {
-            $words = array();
+            $words = [];
             $f = fopen($this->file, 'r');
             while (!feof($f)) {
                 $word = fgets($f);
@@ -71,7 +71,7 @@ class encryp
             fclose($f);
             // Revert to default password generation if dictionary too small.
             if (count($words) < 10000) {
-                $this->dictionary = array();
+                $this->dictionary = [];
             } else {
                 $this->dictionary = $words;
             }
@@ -152,7 +152,7 @@ class encryp
             $special  = '!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-';
 
             $pass = '';
-            $chars = array($lower, $lower, $lower, $special, $num, $num, $upper, $upper);
+            $chars = [$lower, $lower, $lower, $special, $num, $num, $upper, $upper];
             for ($i = 0; $i < $len; $i++) {
                 if ($i < 7) {
                     $pass .= mb_substr($chars[$i], rand(0, 51), 1);
@@ -160,7 +160,7 @@ class encryp
                     $pass .= mb_substr($chars[rand(2, 6)], rand(0, 51), 1);
                 }
             }
-            return array('password' => $pass, 'display_password' => $pass);
+            return ['password' => $pass, 'display_password' => $pass];
         }
 
         $pass = '';
@@ -172,7 +172,7 @@ class encryp
             $disppass .= $word . ' ';
         }
 
-        return array('password' => $pass, 'display_password' => rtrim($disppass));
+        return ['password' => $pass, 'display_password' => rtrim($disppass)];
     }
 
     /**

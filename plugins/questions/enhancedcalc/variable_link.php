@@ -66,7 +66,7 @@ function parse_leadin($id, $question, $type, $question_screen, $settings, $cur_s
  */
 function render_legacy_calc($id, $question, $question_screen, $cur_screen)
 {
-    $variables = array ('A','B','C','D','E','F','G','H');
+    $variables =  ['A','B','C','D','E','F','G','H'];
 
     foreach ($variables as $variable) {
         if ($question_screen < $cur_screen) {
@@ -146,7 +146,7 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen)
   $old_screen = 0;
   $previous_question = true;
 
-  $paper_details = array();
+  $paper_details = [];
   $q_no = 0;
 
   $result = $mysqli->prepare('SELECT q_id, leadin, q_type, settings, screen FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos');
@@ -211,6 +211,6 @@ $render = new render($configObject);
 $jsmiscdataset['name'] = 'dataset';
 $jsmiscdataset['attributes']['elementid'] = $elementid;
 $jsmiscdataset['attributes']['iconid'] = $iconid;
-$render->render($jsmiscdataset, array(), 'dataset.html');
+$render->render($jsmiscdataset, [], 'dataset.html');
 ?>
 </html>

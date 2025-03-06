@@ -22,7 +22,7 @@ class ST_Paper
 
     public $paper_title;
     public $rubric;
-    public $screens = array(); // array of ST_Paper_Screen key by screen no
+    public $screens = []; // array of ST_Paper_Screen key by screen no
 
     public $nextscreen = 1;
     public $nextquestion = 1;
@@ -44,5 +44,5 @@ class ST_Paper
 
 class ST_Paper_Screen
 {
-    public $question_ids = array(); // array of question ids key by ordering
+    public $question_ids = []; // array of question ids key by ordering
 }

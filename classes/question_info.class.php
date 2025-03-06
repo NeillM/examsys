@@ -157,8 +157,8 @@ class question_info
     {
         global  $configObject, $string;
 
-        $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer');
-        $performance = array();
+        $icons = ['formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer'];
+        $performance = [];
 
         //get performace data from all papers this question has appered on
         $result = $db->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\" {$configObject->get('cfg_short_date')}\"), part_no, p, d "
@@ -168,7 +168,7 @@ class question_info
         $result->execute();
         $result->bind_result($paperID, $cohort_size, $taken, $part_no, $p, $d);
         while ($result->fetch()) {
-            $performance[$paperID]['performance'][$part_no] = array('cohort' => $cohort_size, 'taken' => $taken, 'p' => $p, 'd' => $d);
+            $performance[$paperID]['performance'][$part_no] = ['cohort' => $cohort_size, 'taken' => $taken, 'p' => $p, 'd' => $d];
         }
         $result->close();
 
@@ -211,7 +211,7 @@ class question_info
     public static function display_parts($perform_data, $q_type)
     {
         $html = '';
-        $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
+        $numerals = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii'];
         if (question_info::multi_part_question($q_type)) {
             for ($i = 0; $i < count($perform_data); $i++) {
                 $html .= $numerals[$i] . '.<br />';
@@ -301,7 +301,7 @@ class question_info
     {
         $row_number = 0;
         $data_no = 0;
-        $data = array();
+        $data = [];
 
         // Get the ID of the original question.
         $copy_data = $db->prepare("SELECT old FROM track_changes WHERE type='Copied Question' AND typeID = ? LIMIT 1");
@@ -353,10 +353,10 @@ class question_info
     public static function check_copied($q_id, $db)
     {
         $data_no = 0;
-        $data = array();
+        $data = [];
 
         // Get the ID of the original question.
-        $ids = array();
+        $ids = [];
         $copy_data = $db->prepare("SELECT typeID FROM track_changes WHERE type='Copied Question' AND old = ? AND typeID != ?");
         $copy_data->bind_param('ii', $q_id, $q_id);
         $copy_data->execute();

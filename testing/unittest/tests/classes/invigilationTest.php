@@ -58,38 +58,38 @@ class InvigilationTest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2015, 'academic_year' => '2015/16'));
+        $datagenerator->create_academic_year(['calendar_year' => 2015, 'academic_year' => '2015/16']);
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $datagenerator->create_campus(array('name' => 'Test Campus', 'isdefault' => 1));
+        $datagenerator->create_campus(['name' => 'Test Campus', 'isdefault' => 1]);
         $lab = $datagenerator->create_lab(
-            array(
+            [
                 'name' => 'Test lab',
                 'building' => 'Test building',
                 'room' => 1
-            )
+            ]
         );
-        $this->pc = $datagenerator->create_exam_pc(array('lab' => $lab['name']));
+        $this->pc = $datagenerator->create_exam_pc(['lab' => $lab['name']]);
         $datagenerator = $this->get_datagenerator('users', 'core');
         $this->user = $datagenerator->create_user(
-            array(
+            [
                 'surname' => 'test3',
                 'username' => 'unit3',
                 'grade' => 'TEST2',
                 'sid' => '141516171819',
-                'special_needs' => array('breaks' => 'one an hour'),
-            )
+                'special_needs' => ['breaks' => 'one an hour'],
+            ]
         );
         $datagenerator = $this->get_datagenerator('modules', 'core');
         $module3 = $datagenerator->create_module(
-            array('fullname' => 'Test module 3', 'moduleid' => 'TEST3', 'timed_exams' => 1)
+            ['fullname' => 'Test module 3', 'moduleid' => 'TEST3', 'timed_exams' => 1]
         );
         $datagenerator->create_enrolment(
-            array('userid' => $this->user['id'], 'moduleid' => $module3['id'], 'calendar_year' => 2015)
+            ['userid' => $this->user['id'], 'moduleid' => $module3['id'], 'calendar_year' => 2015]
         );
         $this->config->set_setting('cfg_summative_mgmt', false, \Config::BOOLEAN);
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->paper = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test summative',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
@@ -100,10 +100,10 @@ class InvigilationTest extends unittestdatabase
                 'remote' => 1,
                 'calendaryear' => 2015,
                 'duration' => 60
-            )
+            ]
         );
         $this->paper2 = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test summative 2',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
@@ -113,64 +113,64 @@ class InvigilationTest extends unittestdatabase
                 'calendaryear' => 2015,
                 'duration' => 60,
                 'labs' => $lab['name']
-            )
+            ]
         );
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $question = $datagenerator->create_question(
-            array(
+            [
                 'user' => 'admin',
                 'type' => 'enhancedcalc',
                 'leadin' => 'test'
-            )
+            ]
         );
         $datagenerator->add_question_to_paper(
-            array(
+            [
                 'paper' => $this->paper['id'],
                 'question' => $question['id'],
                 'screen' => 1,
                 'displaypos' => 1
-            )
+            ]
         );
         $datagenerator->add_question_to_paper(
-            array(
+            [
                 'paper' => $this->paper2['id'],
                 'question' => $question['id'],
                 'screen' => 1,
                 'displaypos' => 1
-            )
+            ]
         );
         $logdatagenerator = $this->get_datagenerator('log', 'core');
         $meta = $logdatagenerator->create_metadata(
-            array(
+            [
                 'userID' => $this->user['id'],
                 'paperID' => $this->paper['id'],
                 'year' => 1,
                 'started' => '2015-01-01 09:00:00'
-            )
+            ]
         );
         $meta2 = $logdatagenerator->create_metadata(
-            array(
+            [
                 'userID' => $this->user['id'],
                 'paperID' => $this->paper2['id'],
                 'year' => 1,
                 'started' => '2015-01-01 09:00:00'
-            )
+            ]
         );
         $logdatagenerator->create_summative(
-            array(
+            [
                 'q_id' => $question['id'],
                 'metadataID' => $meta['id'],
                 'screen' => 1,
                 'user_answer' => 1
-            )
+            ]
         );
         $logdatagenerator->create_summative(
-            array(
+            [
                 'q_id' => $question['id'],
                 'metadataID' => $meta2['id'],
                 'screen' => 1,
                 'user_answer' => 1
-            )
+            ]
         );
         $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
     }
@@ -186,11 +186,11 @@ class InvigilationTest extends unittestdatabase
         $contact1 = $this->config->get_setting('core', 'emergency_support_contact1');
         $contact2 = $this->config->get_setting('core', 'emergency_support_contact2');
         $contact3 = $this->config->get_setting('core', 'emergency_support_contact3');
-        $expected = array(
+        $expected = [
             $contact1['name'] => $contact1['number'],
             $contact2['name'] => $contact2['number'],
             $contact3['name'] => $contact3['number']
-        );
+        ];
         $this->assertEquals($expected, $inv->emergencyNumbers());
     }
 
@@ -201,12 +201,12 @@ class InvigilationTest extends unittestdatabase
     public function testGetStudents(): void
     {
         $inv = new Invigilation();
-        $string = array();
+        $string = [];
         $paper = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, $string);
         $modules = array_keys($paper->get_modules());
         $labend = null;
         $timing = module_utils::modules_allow_timing($modules, $this->db);
-        $data = array(
+        $data = [
             'warn' => false,
             'id' => $this->paper['id'] . '_' . $this->user['id'],
             'paperid' => $this->paper['id'],
@@ -226,7 +226,7 @@ class InvigilationTest extends unittestdatabase
             'medical' => '',
             'breaks' => $this->user['breaks'],
             'username' => $this->user['username'],
-        );
+        ];
         $expected[] = $data;
         $this->assertEquals($expected, $inv->getStudents(implode(',', $modules), $paper, $labend, $timing));
     }
@@ -238,14 +238,14 @@ class InvigilationTest extends unittestdatabase
     public function testGetStudentsLab(): void
     {
         $inv = new Invigilation();
-        $string = array();
+        $string = [];
         $paper = PaperProperties::get_paper_properties_by_id($this->paper2['id'], $this->db, $string);
         $modules = array_keys($paper->get_modules());
         $lab = new LabFactory($this->db);
         $lab_object = $lab->get_lab_based_on_client($this->pc['address']);
         $labend = $paper->getLogLabEndTime($lab_object->get_id());
         $timing = module_utils::modules_allow_timing($modules, $this->db);
-        $data = array(
+        $data = [
             'warn' => false,
             'id' => $this->paper2['id'] . '_' . $this->user['id'],
             'paperid' => $this->paper2['id'],
@@ -265,7 +265,7 @@ class InvigilationTest extends unittestdatabase
             'medical' => '',
             'breaks' => $this->user['breaks'],
             'username' => $this->user['username'],
-        );
+        ];
         $expected[] = $data;
         $this->assertEquals($expected, $inv->getStudents(implode(',', $modules), $paper, $labend, $timing));
     }

@@ -49,7 +49,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
     $moduleIDs = Paper_utils::get_modules($paperID, $db);
 
     // Get the questions on the paper.
-    $paper = array();
+    $paper = [];
     $question_no = 0;
     $result = $db->prepare('SELECT question, sum(marks_correct) AS sum FROM papers, options WHERE paper = ? AND papers.question = options.o_id GROUP BY question, screen, display_pos ORDER BY screen, display_pos');
     $result->bind_param('i', $paperID);
@@ -63,7 +63,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
     $result->close();
 
     // Get student data.
-    $students = array();
+    $students = [];
     $modids = implode(',', array_keys($moduleIDs));
     $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade, title, surname, first_names FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($modids) AND calendar_year = ?");
     $result->bind_param('s', $session);
@@ -349,10 +349,10 @@ if (isset($_POST['submit']) and $_POST['submit']) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $dataset['name'] = 'dataset';
 $dataset['attributes']['paperid'] =  $paperID;
 $dataset['attributes']['module'] =  $moduleID;
 $dataset['attributes']['folder'] =  $folderID;
-$render->render($dataset, array(), 'dataset.html');
+$render->render($dataset, [], 'dataset.html');
 $mysqli->close();

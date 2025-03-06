@@ -126,7 +126,7 @@ if ($keyword != '%' and $keyword != '') {
 } elseif (isset($_GET['bloom'])) {
     $bank_type = ': ' . $_GET['type'];
 } elseif ($_GET['type'] == 'performance') {
-    $types = array('veryeasy' => 'Very Easy', 'easy' => 'Easy', 'moderate' => 'Moderate', 'hard' => 'Hard', 'veryhard' => 'Very Hard', 'highest' => 'Highest', 'high' => 'High', 'intermediate'  => 'Intermediate', 'low'  => 'Low');
+    $types = ['veryeasy' => 'Very Easy', 'easy' => 'Easy', 'moderate' => 'Moderate', 'hard' => 'Hard', 'veryhard' => 'Very Hard', 'highest' => 'Highest', 'high' => 'High', 'intermediate'  => 'Intermediate', 'low'  => 'Low'];
     $bank_type = ': ' . $types[$_GET['subtype']];
 } elseif ($module != '') {
     $bank_type = ": $module_code";
@@ -188,7 +188,7 @@ if ($keyword != '%' and $keyword != '') {
 
   $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
 
-    $questions = array();
+    $questions = [];
 
 if (isset($_GET['sortby'])) {
     $sortby = $_GET['sortby'];
@@ -229,7 +229,7 @@ if ($_GET['module'] == '0') {
     $sql = "SELECT DISTINCT bloom AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules) WHERE questions.q_id = questions_modules.q_id $module_sql $staff_modules_sql $statusSQL AND deleted IS NULL AND status NOT IN ($retired_in)";
 } elseif ($_GET['type'] == 'objective') {
     $yearutils = new yearutils($mysqli);
-    $vle_api_cache = array();
+    $vle_api_cache = [];
     $vle_api_data = MappingUtils::get_vle_api($module, $yearutils->get_current_session(), $vle_api_cache, $mysqli);
     $sql = "SELECT DISTINCT GROUP_CONCAT(obj_id SEPARATOR ' ') AS extra_field, NULL AS p, NULL AS d, questions.q_id, theme, leadin AS leadin, q_type, last_edited, DATE_FORMAT(last_edited, '{$configObject->get('cfg_long_date')}') AS modified, locked, status, bloom FROM (questions, questions_modules, relationships) WHERE questions.q_id = questions_modules.q_id AND questions.q_id = relationships.question_id AND relationships.vle_api = '{$vle_api_data['api']}' AND relationships.map_level = '{$vle_api_data['level']}' $module_sql $staff_modules_sql $statusSQL AND deleted IS NULL AND status NOT IN ($retired_in) GROUP BY question_id";
 } else {
@@ -245,13 +245,13 @@ if ($_GET['module'] == '0') {
   $search_results->store_result();
 
 if ($type == 'keyword') {
-    $table_order = array($string['question'] => 800, $string['type'] => 100, 'Keyword' => 100, $string['modified'] => 70, $string['status'] => 70);
+    $table_order = [$string['question'] => 800, $string['type'] => 100, 'Keyword' => 100, $string['modified'] => 70, $string['status'] => 70];
 } elseif ($type == 'bloom') {
-    $table_order = array($string['question'] => 800, $string['type'] => 100, 'Bloom\'s Taxonomy' => 100, $string['modified'] => 70, $string['status'] => 70);
+    $table_order = [$string['question'] => 800, $string['type'] => 100, 'Bloom\'s Taxonomy' => 100, $string['modified'] => 70, $string['status'] => 70];
 } elseif ($type == 'performance') {
-    $table_order = array($string['question'] => 800, $string['type'] => 100, 'P' => 50, 'D' => 50, $string['modified'] => 70, $string['status'] => 70);
+    $table_order = [$string['question'] => 800, $string['type'] => 100, 'P' => 50, 'D' => 50, $string['modified'] => 70, $string['status'] => 70];
 } else {
-    $table_order = array($string['question'] => 800, $string['type'] => 100, $string['modified'] => 70, $string['status'] => 70);
+    $table_order = [$string['question'] => 800, $string['type'] => 100, $string['modified'] => 70, $string['status'] => 70];
 }
 
 if (isset($_GET['type']) and $_GET['type'] == 'all' and $search_results->num_rows == 0) {
@@ -394,7 +394,7 @@ $miscdataset = [
   'name' => 'jsutils',
   'attributes' => ['xls' => json_encode($string)],
 ];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/questionlistinit.min.js"></script>
 </body>

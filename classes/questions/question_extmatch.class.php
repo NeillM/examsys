@@ -27,7 +27,7 @@
 class QuestionEXTMATCH extends QuestionEdit
 {
     /** @var string[] The stem text for the scenarios. */
-    protected $stems = array();
+    protected $stems = [];
 
     /**
      * An array of the names of the media files used in the question.
@@ -36,7 +36,7 @@ class QuestionEXTMATCH extends QuestionEdit
      *
      * @var string[]
      */
-    protected $all_media_names = array();
+    protected $all_media_names = [];
 
     /**
      * An array of the heights of the media files used in the question.
@@ -45,7 +45,7 @@ class QuestionEXTMATCH extends QuestionEdit
      *
      * @var int[]
      */
-    protected $all_media_heights = array();
+    protected $all_media_heights = [];
 
     /**
      * An array of the widths of the media files used in the question.
@@ -54,7 +54,7 @@ class QuestionEXTMATCH extends QuestionEdit
      *
      * @var int[]
      */
-    protected $all_media_widths = array();
+    protected $all_media_widths = [];
 
     /**
      * An array of the alternate text for the media files used in the question.
@@ -63,7 +63,7 @@ class QuestionEXTMATCH extends QuestionEdit
      *
      * @var int[]
      */
-    protected $all_media_alts = array();
+    protected $all_media_alts = [];
 
     /**
      * An array of the owners for the media files used in the question.
@@ -72,7 +72,7 @@ class QuestionEXTMATCH extends QuestionEdit
      *
      * @var int[]
      */
-    protected $all_media_owners = array();
+    protected $all_media_owners = [];
 
     /**
      * An array of the number for the media files used in the question.
@@ -81,13 +81,13 @@ class QuestionEXTMATCH extends QuestionEdit
      *
      * @var int[]
      */
-    protected $all_media_nums = array();
+    protected $all_media_nums = [];
 
     /** @var string[] The feedback given when answered correctly for the scenarios. */
-    protected $all_feedback = array();
+    protected $all_feedback = [];
 
     /** @var string[] The feedback given when answered incorrectly for the scenarios. */
-    protected $_answer_negative = array();
+    protected $_answer_negative = [];
 
     /** @var int The maximum number of options in the question. */
     public $max_options = 26;
@@ -98,16 +98,16 @@ class QuestionEXTMATCH extends QuestionEdit
     /** @var int The maximum number of scenarios in the question. */
     public $max_stems = 10;
 
-    protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
-    protected $_fields_editable = array('theme', 'leadin', 'notes', 'score_method', 'option_order', 'bloom', 'status', 'staffnotes');
-    protected $_fields_compound = array('stem', 'media', 'correct_fback');
+    protected $_fields_required = ['type', 'leadin', 'option_order', 'owner_id', 'status'];
+    protected $_fields_editable = ['theme', 'leadin', 'notes', 'score_method', 'option_order', 'bloom', 'status', 'staffnotes'];
+    protected $_fields_compound = ['stem', 'media', 'correct_fback'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
         // 'correct' is not a unified field for Extmatch because it is compound
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
     }
 
     // ACCESSORS
@@ -138,7 +138,7 @@ class QuestionEXTMATCH extends QuestionEdit
     public function get_all_media()
     {
         $this->get_media();
-        return array('filenames' => $this->all_media_names, 'widths' => $this->all_media_widths, 'heights' => $this->all_media_heights, 'alts' => $this->all_media_alts, 'owners' => $this->all_media_owners, 'nums' => $this->all_media_nums);
+        return ['filenames' => $this->all_media_names, 'widths' => $this->all_media_widths, 'heights' => $this->all_media_heights, 'alts' => $this->all_media_alts, 'owners' => $this->all_media_owners, 'nums' => $this->all_media_nums];
     }
 
     /**

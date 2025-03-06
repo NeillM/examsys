@@ -32,7 +32,7 @@ class authtypereturn
 
     public function __construct()
     {
-        $this->debug = array();
+        $this->debug = [];
         $this->debugpointer = 0;
         $this->success = false;
         $this->rogoid = 0;

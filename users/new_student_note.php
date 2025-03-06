@@ -65,14 +65,14 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
 <form action="" method="post" name="theform" id="theform" autocomplete="off">
 <?php
 $disabled = '';
-$note_details = array('note_id' => 0, 'note' => '');
+$note_details = ['note_id' => 0, 'note' => ''];
 $student_details = UserUtils::get_user_details($userID, $mysqli);
 if (isset($_GET['paperID'])) {
     echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . "\" />\n";
 
     $note_details = StudentNotes::get_note($_GET['paperID'], $userID, $mysqli);
     if ($note_details === false) {
-        $note_details = array('note_id' => 0, 'note' => '');
+        $note_details = ['note_id' => 0, 'note' => ''];
     }
     if ($calling === 'class_totals') {
         echo '<strong>' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['initials'] . '</strong><br />';
@@ -81,7 +81,7 @@ if (isset($_GET['paperID'])) {
     $student_modules = UserUtils::load_student_modules($userID, $mysqli);
     $yearutils = new yearutils($mysqli);
     $current_year = $yearutils->get_current_session();
-    $module_IDs = array();
+    $module_IDs = [];
     if (isset($student_modules[$current_year])) {
         foreach ($student_modules[$current_year] as $moduleID => $module_code) {
             $module_IDs[] = $moduleID;
@@ -135,7 +135,7 @@ echo '<div style="text-align:center"><textarea name="note" id="note" required>' 
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/studentnoteinit.min.js"></script>
 </body>

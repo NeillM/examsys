@@ -33,7 +33,7 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 // Get any questions to exclude.
-$exclude = array();
+$exclude = [];
 $result = $mysqli->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ?');
 $result->bind_param('i', $paperID);
 $result->execute();
@@ -44,7 +44,7 @@ while ($result->fetch()) {
 $result->close();
 
 // Calculate marks for the current paper.
-$marks_array = array();
+$marks_array = [];
 ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 ?>
 <!DOCTYPE html>

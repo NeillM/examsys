@@ -28,12 +28,12 @@
 require '../../include/sysadmin_auth.inc';
 require '../../include/toprightmenu.inc';
 
-$clients = array();
+$clients = [];
 $result = $mysqli->prepare('SELECT client_id, client_secret, redirect_uri, username FROM oauth_clients o LEFT OUTER JOIN users u ON u.id = o.user_id');
 $result->execute();
 $result->bind_result($client_id, $client_secret, $redriect_uri, $username);
 while ($result->fetch()) {
-    $clients[$client_id] = array($username, $client_id, $client_secret, $redriect_uri);
+    $clients[$client_id] = [$username, $client_id, $client_secret, $redriect_uri];
 }
 $result->close();
 $render = new render($configObject);
@@ -42,14 +42,14 @@ $lang['title'] = $string['oauthclients'];
 $lang['create'] = $string['addoauthclient'];
 $lang['view'] = $string['editoauthclient'];
 $lang['delete'] = $string['deleteoauthclient'];
-$header = array(array('class' => 'col10', 'style' => 'width:20%', 'value' => $string['username']),
-array('class' => 'col', 'style' => 'width:20%', 'value' => $string['client']),
-array('class' => 'col', 'style' => 'width:20%', 'value' => $string['secret']),
-array('class' => 'col', 'style' => 'width:20%', 'value' => $string['uri']));
+$header = [['class' => 'col10', 'style' => 'width:20%', 'value' => $string['username']],
+['class' => 'col', 'style' => 'width:20%', 'value' => $string['client']],
+['class' => 'col', 'style' => 'width:20%', 'value' => $string['secret']],
+['class' => 'col', 'style' => 'width:20%', 'value' => $string['uri']]];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
-$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
- $string['oauthkeys'] => 'list_oauth.php');
+$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
+ $string['oauthkeys'] => 'list_oauth.php'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
 $render->render_admin_content($breadcrumb, $lang);

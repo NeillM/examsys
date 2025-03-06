@@ -31,7 +31,7 @@ class file_not_found extends Exception
      */
     public function __construct($file)
     {
-        $strings = LangUtils::loadlangfile('exceptions/messages.php', array());
+        $strings = LangUtils::loadlangfile('exceptions/messages.php', []);
         $message = sprintf($strings['filenotfound'], $file);
         parent::__construct($message);
     }

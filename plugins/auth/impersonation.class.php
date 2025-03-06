@@ -38,9 +38,9 @@ class impersonation_auth extends outline_authentication
 
     public function register_callback_routines()
     {
-        $callbackarray[] = array(array($this, 'checkwhattodo'), 'preauth', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'changewhoiam'), 'getauthobj', $this->number, $this->name);
-        $callbackarray[] = array(array($this, 'storedata'), 'sessionstore', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'checkwhattodo'], 'preauth', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'changewhoiam'], 'getauthobj', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'storedata'], 'sessionstore', $this->number, $this->name];
         return $callbackarray;
     }
 
@@ -119,7 +119,7 @@ class impersonation_auth extends outline_authentication
 
         if (is_array(($callbacklist))) {
             foreach ($callbacklist as $number => $callback) {
-                call_user_func_array($callback, array($this->lookupuserobj));
+                call_user_func_array($callback, [$this->lookupuserobj]);
                 $objid = key($callbackregisterdatalist[$number]);
                 $new_messages = $this->get_new_debug_messages($objid);
                 foreach ($new_messages as $key => $value) {

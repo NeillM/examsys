@@ -77,7 +77,7 @@ class keyword_utils
         $keyword->execute();
         $keyword->store_result();
         $keyword->bind_result($question);
-        $keywordarray = array();
+        $keywordarray = [];
         while ($keyword->fetch()) {
             $keywordarray[] = $question;
         }

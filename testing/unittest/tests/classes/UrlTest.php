@@ -49,32 +49,32 @@ class UrlTest extends UnitTest
      */
     public function fromGlobalsProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'http://localhost/script.php',
-                array('HTTP_HOST' => 'localhost', 'REQUEST_URI' => '/script.php')
-            ),
-            array(
+                ['HTTP_HOST' => 'localhost', 'REQUEST_URI' => '/script.php']
+            ],
+            [
                 'http://localhost/script.php',
-                array('HTTP_HOST' => 'localhost:80', 'REQUEST_URI' => '/script.php')
-            ),
-            array(
+                ['HTTP_HOST' => 'localhost:80', 'REQUEST_URI' => '/script.php']
+            ],
+            [
                 'http://localhost/script.php',
-                array('HTTP_HOST' => 'localhost:443', 'REQUEST_URI' => '/script.php')
-            ),
-            array(
+                ['HTTP_HOST' => 'localhost:443', 'REQUEST_URI' => '/script.php']
+            ],
+            [
                 'http://localhost:8080/script.php',
-                array('HTTP_HOST' => 'localhost:8080', 'REQUEST_URI' => '/script.php')
-            ),
-            array(
+                ['HTTP_HOST' => 'localhost:8080', 'REQUEST_URI' => '/script.php']
+            ],
+            [
                 'https://localhost/script.php',
-                array('HTTP_HOST' => 'localhost', 'REQUEST_URI' => '/script.php', 'HTTPS' => 'on')
-            ),
-            array(
+                ['HTTP_HOST' => 'localhost', 'REQUEST_URI' => '/script.php', 'HTTPS' => 'on']
+            ],
+            [
                 'http://localhost/script.php?foo=bar',
-                array('HTTP_HOST' => 'localhost', 'REQUEST_URI' => '/script.php?foo=bar')
-            ),
-        );
+                ['HTTP_HOST' => 'localhost', 'REQUEST_URI' => '/script.php?foo=bar']
+            ],
+        ];
     }
 
     /**
@@ -99,17 +99,17 @@ class UrlTest extends UnitTest
      */
     public function getPartProvider()
     {
-        return array(
-            array('http', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::SCHEME, null),
-            array('user', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::USER, null),
-            array('pass', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::PASS, null),
-            array('localhost', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::HOST, null),
-            array(8080, 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::PORT, null),
-            array('/path', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::PATH, null),
-            array('foo=bar', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::QUERY, null),
-            array('anchor', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::FRAGMENT, null),
-            'non-ascii query' => array('www.example.com', 'http://www.example.com/file.php?name=Majeský', Url::HOST, null),
-        );
+        return [
+            ['http', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::SCHEME, null],
+            ['user', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::USER, null],
+            ['pass', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::PASS, null],
+            ['localhost', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::HOST, null],
+            [8080, 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::PORT, null],
+            ['/path', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::PATH, null],
+            ['foo=bar', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::QUERY, null],
+            ['anchor', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::FRAGMENT, null],
+            'non-ascii query' => ['www.example.com', 'http://www.example.com/file.php?name=Majeský', Url::HOST, null],
+        ];
     }
 
     /**

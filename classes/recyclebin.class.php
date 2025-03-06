@@ -39,7 +39,7 @@ class RecycleBin
      */
     public function __construct()
     {
-        $this->recycle_bin = array();
+        $this->recycle_bin = [];
         $configObject = Config::get_instance();
         $this->db = $configObject->db;
         $userObj = UserObject::get_instance();

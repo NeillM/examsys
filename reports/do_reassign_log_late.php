@@ -39,7 +39,7 @@ if ($propertyObj->is_live()) {
 
 // Get questions that are already in the standard log
 $row_no = 0;
-$logged_qns = array();
+$logged_qns = [];
 $log_check = $mysqli->prepare("SELECT lm.id, l.id, l.q_id FROM log_metadata lm LEFT JOIN log$log_type l ON l.metadataID = lm.id WHERE lm.userID = ? AND lm.paperID = ? AND lm.id = ?");
 $log_check->bind_param('iis', $userID, $paperID, $metadataID);
 $log_check->execute();

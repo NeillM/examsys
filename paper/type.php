@@ -191,11 +191,11 @@ $jsdataset['name'] = 'dataset';
 $jsdataset['attributes']['module'] = $module;
 $jsdataset['attributes']['type'] = $type;
 $jsdataset['attributes']['language'] = $language;
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 </body>
 </html>

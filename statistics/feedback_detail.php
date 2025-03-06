@@ -84,7 +84,7 @@ switch ($_GET['type']) {
             <?php
             $data = $yearutils->generateTabs($current_year, 'academic', $extra);
             $render = new render($configObject);
-            $render->render($data, array(), 'admin/yeartabs.html');
+            $render->render($data, [], 'admin/yeartabs.html');
             ?>
         </div>
     </th>
@@ -165,7 +165,7 @@ function count_feedback_views(&$papers, $db)
 
 function get_modules($schoolID, $db)
 {
-    $moduleIDs = array();
+    $moduleIDs = [];
 
     $result = $db->prepare('SELECT id FROM modules WHERE schoolid = ? AND active = 1 AND mod_deleted IS NULL');
     $result->bind_param('i', $schoolID);
@@ -183,7 +183,7 @@ function get_papers_for_school($date_range, $moduleIDs, $db)
 {
     // Get the papers.
 
-    $papers = array();
+    $papers = [];
 
     $result = $db->prepare("SELECT DISTINCT properties.property_id, paper_title, start_date, end_date FROM properties, properties_modules WHERE properties.property_id = properties_modules.property_id $date_range AND paper_type = '2' AND idMod IN (" . implode(',', $moduleIDs) . ') AND deleted IS NULL GROUP BY property_id ORDER BY paper_title');
     $result->execute();

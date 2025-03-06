@@ -36,7 +36,7 @@ class coursemanagement extends \api\abstractmanagement
     /**
      * Status codes
      */
-    private $statuscodes = array(
+    private $statuscodes = [
         'OK' => 100,
         'COURSE_NOT_DELETED' => 300,
         'COURSE_DOES_NOT_EXIST' => 301,
@@ -48,7 +48,7 @@ class coursemanagement extends \api\abstractmanagement
         'COURSE_INVALID_SCHOOL' => 307,
         'COURSE_NOTHING_TO_UPDATE' => 308,
         'COURSE_SCHOOL_EXTID_INVALID' => 309
-    );
+    ];
 
     /**
      * Update course
@@ -59,8 +59,8 @@ class coursemanagement extends \api\abstractmanagement
     public function update($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('course_not_updated', 'course_does_not_exist',
-            'course_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'course_nothing_to_update', 'external_school_invalid'));
+        $strings = $langpack->get_strings($this->langcomponent, ['course_not_updated', 'course_does_not_exist',
+            'course_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'course_nothing_to_update', 'external_school_invalid']);
         $faculty = true;
         if (isset($params['id']) and $params['id'] !== '') {
             // Using internal ExamSys id to update course.
@@ -81,10 +81,10 @@ class coursemanagement extends \api\abstractmanagement
         if ($courseid) {
             $details = \CourseUtils::get_course_details_by_id($params['id'], $this->db);
             // Check if anything has been updated.
-            $checkparameter = array('name', 'description');
+            $checkparameter = ['name', 'description'];
             $change = $this->check_if_updated($checkparameter, $details, $params);
         } else {
-            $data = array('statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
+            $data = ['statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null];
             return $this->get_response($data, 'update', $params['nodeid']);
         }
 
@@ -95,7 +95,7 @@ class coursemanagement extends \api\abstractmanagement
             if ($schoolid) {
                 $faculty = true;
             } else {
-                $data = array('statuscode' => $this->statuscodes['COURSE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null);
+                $data = ['statuscode' => $this->statuscodes['COURSE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null];
                 return $this->get_response($data, 'update', $params['nodeid']);
             }
         // Get school id if school name not provided.
@@ -132,20 +132,20 @@ class coursemanagement extends \api\abstractmanagement
             // Update Course.
             if ($change) {
                 if ($schoolid == $details['schoolid'] and isset($params['faculty']) and $params['faculty'] !== '') {
-                    $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null, 'externalid' => null);
+                    $data = ['statuscode' => $this->statuscodes['COURSE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null, 'externalid' => null];
                 } else {
                     $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $params['externalid'], $details['externalsys'], $this->db);
                     if ($update) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
+                        $data = ['statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']];
                     } else {
-                        $data = array('statuscode' => $this->statuscodes['COURSE_NOT_UPDATED'], 'status' => $strings['course_not_updated'], 'id' => null, 'externalid' => null);
+                        $data = ['statuscode' => $this->statuscodes['COURSE_NOT_UPDATED'], 'status' => $strings['course_not_updated'], 'id' => null, 'externalid' => null];
                     }
                 }
             } else {
-                $data = array('statuscode' => $this->statuscodes['COURSE_NOTHING_TO_UPDATE'], 'status' => $strings['course_nothing_to_update'], 'id' => null, 'externalid' => null);
+                $data = ['statuscode' => $this->statuscodes['COURSE_NOTHING_TO_UPDATE'], 'status' => $strings['course_nothing_to_update'], 'id' => null, 'externalid' => null];
             }
         } else {
-            $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null);
+            $data = ['statuscode' => $this->statuscodes['COURSE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null];
         }
         return $this->get_response($data, 'update', $params['nodeid']);
     }
@@ -159,7 +159,7 @@ class coursemanagement extends \api\abstractmanagement
     public function create($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('course_not_created', 'course_already_exists', 'faculty_not_supplied', 'external_school_invalid'));
+        $strings = $langpack->get_strings($this->langcomponent, ['course_not_created', 'course_already_exists', 'faculty_not_supplied', 'external_school_invalid']);
         $faculty = true;
         $schoolid = false;
         // Default null externalid.
@@ -177,7 +177,7 @@ class coursemanagement extends \api\abstractmanagement
             // Get school id if school external id provided.
             $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $params['externalsys'], $this->db);
             if (!$schoolid) {
-                $data = array('statuscode' => $this->statuscodes['COURSE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null);
+                $data = ['statuscode' => $this->statuscodes['COURSE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null];
                 return $this->get_response($data, 'create', $params['nodeid']);
             }
         } elseif (isset($params['school']) and $params['school'] !== '') {
@@ -200,17 +200,17 @@ class coursemanagement extends \api\abstractmanagement
             if (!$courseid) {
                 $id = \CourseUtils::add_course($schoolid, $params['name'], $params['description'], $params['externalid'], $params['externalsys'], $this->db);
                 if ($id) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']);
+                    $data = ['statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']];
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['COURSE_NOT_CREATED'], 'status' => $strings['course_not_created'], 'id' => null, 'externalid' => null);
+                    $data = ['statuscode' => $this->statuscodes['COURSE_NOT_CREATED'], 'status' => $strings['course_not_created'], 'id' => null, 'externalid' => null];
                 }
             } else {
                 $details = \CourseUtils::get_course_details_by_id($courseid, $this->db);
                 $externalid = $details['externalid'];
-                $data = array('statuscode' => $this->statuscodes['COURSE_ALREADY_EXISTS'], 'status' => $strings['course_already_exists'], 'id' => $courseid, 'externalid' => $externalid);
+                $data = ['statuscode' => $this->statuscodes['COURSE_ALREADY_EXISTS'], 'status' => $strings['course_already_exists'], 'id' => $courseid, 'externalid' => $externalid];
             }
         } else {
-            $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null);
+            $data = ['statuscode' => $this->statuscodes['COURSE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null];
         }
         return $this->get_response($data, 'create', $params['nodeid']);
     }
@@ -224,8 +224,8 @@ class coursemanagement extends \api\abstractmanagement
     public function delete($params, $userid)
     {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('course_not_deleted_inuse', 'course_not_deleted'
-            , 'course_does_not_exist'));
+        $strings = $langpack->get_strings($this->langcomponent, ['course_not_deleted_inuse', 'course_not_deleted'
+            , 'course_does_not_exist']);
         if (isset($params['id']) and $params['id'] !== '') {
             // Try using ExamSys internal id to delete course.
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
@@ -246,17 +246,17 @@ class coursemanagement extends \api\abstractmanagement
             // Only delete course if it contains no users.
             $users = \CourseUtils::count_users_on_course($details['name'], $this->db);
             if (isset($users) and $users > 0) {
-                $data = array('statuscode' => $this->statuscodes['COURSE_NOT_DELETED_INUSE'], 'status' => $strings['course_not_deleted_inuse'], 'id' => null, 'externalid' => null);
+                $data = ['statuscode' => $this->statuscodes['COURSE_NOT_DELETED_INUSE'], 'status' => $strings['course_not_deleted_inuse'], 'id' => null, 'externalid' => null];
             } else {
                 $deleted = \CourseUtils::delete_course_by_id($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
+                    $data = ['statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']];
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['COURSE_NOT_DELETED'], 'status' => $strings['course_not_deleted'], 'id' => null, 'externalid' => null);
+                    $data = ['statuscode' => $this->statuscodes['COURSE_NOT_DELETED'], 'status' => $strings['course_not_deleted'], 'id' => null, 'externalid' => null];
                 }
             }
         } else {
-             $data = array('statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
+             $data = ['statuscode' => $this->statuscodes['COURSE_DOES_NOT_EXIST'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null];
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }

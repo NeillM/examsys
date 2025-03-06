@@ -40,7 +40,7 @@ $exclusions->load();
 $excludedSql = '';
 
 if (!empty($exclusions->excluded)) {
-    $excluded = array();
+    $excluded = [];
 
     foreach ($exclusions->excluded as $key => $value) {
         $excluded[] = $key;
@@ -78,11 +78,11 @@ if ($stmt) {
 
     $csvHeader = $string['date'] . ',' . $string['standardsetter'];
 
-    $questions = array();
-    $q_id_ssq_id_array = array();
+    $questions = [];
+    $q_id_ssq_id_array = [];
     $prev_ss_id = 0;
     $question_number = 0;
-    $ratingColumnCount = array();
+    $ratingColumnCount = [];
 
     while ($stmt->fetch()) {
         $ratingColumns = explode(',', $rating);
@@ -163,7 +163,7 @@ if ($stmt) {
     // Remove last comma
     $csv = rtrim($csv, ',');
 
-    $additionalCommas = array();
+    $additionalCommas = [];
     // Replace placeholders with correct number of columns
     foreach ($ratingColumnCount as $key => $value) {
         $additionalCommasCurrent = '';

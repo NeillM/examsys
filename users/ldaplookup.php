@@ -54,11 +54,11 @@ if (isset($_POST['submit'])) {
     $data->lookupdata = new stdClass();
     if ($_REQUEST['username'] != '') {
         $data->lookupdata->username = $_REQUEST['username'];
-        $data->searchorder = array('username');
+        $data->searchorder = ['username'];
     }
     if ($_REQUEST['surname'] != '') {
         $data->lookupdata->surname = $_REQUEST['surname'];
-        $data->searchorder = array('surname');
+        $data->searchorder = ['surname'];
     }
 
     $data->settings = new stdClass();
@@ -98,7 +98,7 @@ if (isset($_POST['submit'])) {
             <?php
             exit();
         } else {
-            $user_data = array();
+            $user_data = [];
             $user = 0;
             echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%; background-color:white\">\n";
             echo '<tr style="cursor:pointer"><th>' . $string['title'] . '</th><th>' . $string['first_names'] . '</th><th>' . $string['surname'] . '</th><th>' . $string['username'] . '</th><th>' . $string['email'] . '</th><th>' . $string['role'] . "</th></tr>\n";
@@ -171,7 +171,7 @@ if (isset($_POST['submit'])) {
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     echo "<script src='../js/ldaplookupinit.min.js'></script>";
     echo "</body>\n</html>\n";
     exit();
@@ -203,7 +203,7 @@ if (isset($_POST['submit'])) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/ldaplookupinit.min.js"></script>
 </body>

@@ -31,7 +31,7 @@
  */
 
 require dirname(__DIR__) . '/include/sysadmin_auth.inc';
-$papers = array();
+$papers = [];
 $now = time();
 $result = $mysqli->prepare("
     SELECT
@@ -54,7 +54,7 @@ $result->execute();
 $result->bind_result($paperID, $title, $display_start_date);
 while ($result->fetch()) {
     $display_start_date = date($configObject->get('cfg_long_date_php'), $display_start_date);
-    $papers[] = array('paperID' => $paperID, 'title' => $title, 'display_start_date' => $display_start_date);
+    $papers[] = ['paperID' => $paperID, 'title' => $title, 'display_start_date' => $display_start_date];
 }
 $result->close();
 ?>

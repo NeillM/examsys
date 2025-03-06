@@ -106,7 +106,7 @@ class ims_enterprise
     /** @var string Xml file location */
     protected $filename;
     /** @var array A cache of group relationships */
-    protected $grouprelationships = array();
+    protected $grouprelationships = [];
     /** $var string The node to get the moduleid from */
     protected $mapmoduleid;
     /** $var string The node to get the module full name from */
@@ -722,7 +722,7 @@ class ims_enterprise
                     }
                     return $moduleid;
                 }
-                $update = array();
+                $update = [];
                 $update['moduleid'] = $modulecode;
                 $update['fullname'] = $fullname;
                 $update['active'] = $active;
@@ -1015,7 +1015,7 @@ class ims_enterprise
             return self::RECORD_CREATE;
         }
         $recstatus = (string) $node['recstatus'];
-        if (!in_array($recstatus, array(self::RECORD_CREATE, self::RECORD_UPDATE, self::RECORD_DELETE))) {
+        if (!in_array($recstatus, [self::RECORD_CREATE, self::RECORD_UPDATE, self::RECORD_DELETE])) {
             $recstatus = self::RECORD_UNDEFINED;
         }
         return $recstatus;
@@ -1207,9 +1207,9 @@ class ims_enterprise
     {
         $langpack = new \langpack();
         $configObject = \Config::get_instance();
-        return array(
+        return [
             'url' => $configObject->get('cfg_root_path') . '/plugins/ims/ims_settings.php',
             'label' => $langpack->get_string(self::LANGCOMPONENT, 'ims'),
-        );
+        ];
     }
 }

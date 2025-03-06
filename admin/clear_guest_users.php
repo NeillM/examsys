@@ -114,7 +114,7 @@ echo draw_toprightmenu(243);
                     <th><?php echo $string['assessmenttaken'] ?></th>
                 </tr>
                 <?php
-                $used = array();
+                $used = [];
 
                 $result = $mysqli->prepare("SELECT id, first_names, surname, title, student_id, assigned_account, DATE_FORMAT(reserved,'%d/%m/%Y %H:%i:%s'), reserved FROM temp_users");
                 $result->execute();
@@ -199,7 +199,7 @@ echo draw_toprightmenu(243);
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src='../js/clearguestusersinit.min.js'></script>
 </body>

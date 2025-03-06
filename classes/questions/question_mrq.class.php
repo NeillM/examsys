@@ -30,13 +30,13 @@ require_once 'question_mcq.class.php';
 class QuestionMRQ extends QuestionEdit
 {
     protected $min_options = 3;
-    protected $_fields_force = array('display_method');
+    protected $_fields_force = ['display_method'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
 
         // 'correct' is not a unified field for MRQ
         $this->_fields_editable[] = 'correct';

@@ -94,15 +94,15 @@ require '../include/toprightmenu.inc';
   <tr><td colspan="5"><table border="0" class="subsect" style="width:98%"><tr><td><nobr><?php echo $string['unscheduled']; ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
 <?php
   $rowID = 0;
-$months = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-$papers = array();
+$months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+$papers = [];
 $results = $mysqli->prepare('SELECT properties.property_id, paper_title, moduleid, period, barriers_needed, cohort_size, campus FROM (properties, properties_modules, modules, scheduling) WHERE start_date IS NULL AND properties.property_id=scheduling.paperID AND properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND deleted IS NULL ORDER BY period');
 $results->execute();
 $results->store_result();
 $results->bind_result($property_id, $paper_title, $moduleID, $period, $barriers_needed, $cohort_size, $campus);
 while ($results->fetch()) {
     if (!isset($papers[$property_id])) {
-        $papers[$property_id] = array('paper_title' => $paper_title, 'period' => $period, 'barriers_needed' => $barriers_needed, 'cohort_size' => $cohort_size, 'campus' => $campus);
+        $papers[$property_id] = ['paper_title' => $paper_title, 'period' => $period, 'barriers_needed' => $barriers_needed, 'cohort_size' => $cohort_size, 'campus' => $campus];
     }
     $papers[$property_id]['modules'][] = $moduleID;
 }
@@ -132,7 +132,7 @@ foreach ($papers as $property_id => $paper_details) {
   <tr><td colspan="5">&nbsp;</td></tr>
   <tr><td colspan="5"><table border="0" class="subsect" style="width:98%"><tr><td><nobr><?php echo $string['scheduled']; ?></nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table></td></tr>
 <?php
-$papers = array();
+$papers = [];
 $now = time();
 $results = $mysqli->prepare('
     SELECT
@@ -166,7 +166,7 @@ $results->store_result();
 $results->bind_result($property_id, $paper_title, $moduleID, $period, $barriers_needed, $cohort_size, $campus, $start_date, $end_date, $labs);
 while ($results->fetch()) {
     if (!isset($papers[$property_id])) {
-        $papers[$property_id] = array(
+        $papers[$property_id] = [
             'paper_title' => $paper_title,
             'period' => $period,
             'barriers_needed' => $barriers_needed,
@@ -174,7 +174,7 @@ while ($results->fetch()) {
             'campus' => $campus,
             'start_date' => date($configObject->get('cfg_very_short_datetime_php'), $start_date),
             'end_date' => $end_date,
-            'labs' => $labs);
+            'labs' => $labs];
     }
     $papers[$property_id]['modules'][] = $moduleID;
 }

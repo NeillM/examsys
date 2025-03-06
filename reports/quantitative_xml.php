@@ -139,7 +139,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
                         echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>N/A</w:t></w:r></w:p></w:tc>';
                     }
                     for ($point = 0; $point < $new_size; $point++) {
-                        echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>' . str_replace(array('<br>', '<br />'), '</w:t></w:r><w:r><w:br/></w:r><w:r><w:rPr><w:b/></w:rPr><w:t>', strip_tags($current_properties[$point], '<br>,<br />')) . '</w:t></w:r></w:p></w:tc>';
+                        echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>' . str_replace(['<br>', '<br />'], '</w:t></w:r><w:r><w:br/></w:r><w:r><w:rPr><w:b/></w:rPr><w:t>', strip_tags($current_properties[$point], '<br>,<br />')) . '</w:t></w:r></w:p></w:tc>';
                     }
                     echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Unanswered</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Mean</w:t></w:r></w:p></w:tc></w:tr>';
                     $table_on = 1;
@@ -330,7 +330,7 @@ echo '</o:DocumentProperties><w:fonts><w:defaultFonts w:ascii="Times New Roman" 
 echo '<w:body><wx:sect><wx:sub-section>';
 echo '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>' . StringUtils::wordToUtf8($paper) . '</w:t></w:r></w:p>';
 
-$log_array = array();
+$log_array = [];
 $hits = get_quantitative_log_data($paperID, $_GET['repcourse'], $startdate, $enddate, $exclude, $log_array, $mysqli, $number_of_questions, $studentsonly);
 
 $table_on = 0;
@@ -343,8 +343,8 @@ if ($hits > 0) {
     $respondents = 0;
     $old_likert_scale = '';
     $old_screen = 0;
-    $options_buffer = array();
-    $correct_buffer = array();
+    $options_buffer = [];
+    $correct_buffer = [];
 
     $result = $mysqli->prepare('SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, correct FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
     $result->bind_param('i', $paperID);
@@ -418,8 +418,8 @@ if ($hits > 0) {
                     }
                 }
             }
-            $options_buffer = array();
-            $correct_buffer = array();
+            $options_buffer = [];
+            $correct_buffer = [];
         }
         if ($q_type == 'labelling') {
             $tmp_first_split = explode(';', $correct);

@@ -137,7 +137,7 @@ class QuestionUtils
      */
     public static function get_keywords($q_id, $db)
     {
-        $keywords = array();
+        $keywords = [];
 
         $stmt = $db->prepare('SELECT keywordID, keyword FROM keywords_question, keywords_user WHERE q_id = ? and keywords_question.keywordID = keywords_user.id');
         $stmt->bind_param('i', $q_id);
@@ -159,7 +159,7 @@ class QuestionUtils
      */
     public static function multi_get_modules($q_ids, $db)
     {
-        $modules = array();
+        $modules = [];
 
         $stmt = $db->prepare('SELECT q_id, idMod FROM questions_modules WHERE q_id IN (' . implode(',', $q_ids) . ')');
         $stmt->execute();
@@ -180,7 +180,7 @@ class QuestionUtils
      */
     public static function get_modules($q_id, $db)
     {
-        $modules = array();
+        $modules = [];
 
         $stmt = $db->prepare('SELECT idMod, moduleID FROM questions_modules, modules WHERE q_id = ? AND questions_modules.idMod = modules.id');
         $stmt->bind_param('i', $q_id);
@@ -214,7 +214,7 @@ SQL;
         $update->bind_param('i', $q_id);
         $update->execute();
         $update->bind_result($tmp_idMod);
-        $on_idMod = array();
+        $on_idMod = [];
         while ($update->fetch()) {
             $on_idMod[$tmp_idMod] = $tmp_idMod;
         }
@@ -405,7 +405,7 @@ SQL;
         $options->execute();
         $options->store_result();
         $options->bind_result($optionstext);
-        $optionsarray = array();
+        $optionsarray = [];
         while ($options->fetch()) {
             $optionsarray[] = $optionstext;
         }
@@ -441,7 +441,7 @@ SQL;
     public static function get_random_question($q_id, $q_type)
     {
         $configObject = Config::get_instance();
-        $possible = array();
+        $possible = [];
         $random = $configObject->db->prepare('SELECT q.q_id FROM questions q, random_link r WHERE q.q_id = r.q_id AND q_type = ? and r.id = ?');
         $random->bind_param('is', $q_id, $q_type);
         $random->execute();
@@ -463,7 +463,7 @@ SQL;
     public static function get_keyword_question($q_id, $q_type)
     {
         $configObject = Config::get_instance();
-        $possible = array();
+        $possible = [];
         $random = $configObject->db->prepare('SELECT q_id FROM questions WHERE q_type = ? AND q_id in ('
             . 'SELECT keywords_question.q_id FROM keywords_question, keywords_link WHERE keywordID = keyword_id AND keywords_link.q_id = ?)');
         $random->bind_param('is', $q_id, $q_type);
@@ -484,7 +484,7 @@ SQL;
      */
     public static function is_in_random_block($q_id, $db)
     {
-        $questions = array();
+        $questions = [];
         // We are checking the question is on a paper in order to display the list of papers to the end user.
         $query = $db->prepare('SELECT question FROM questions, random_link, papers WHERE question = questions.q_id AND '
             . "questions.q_id = random_link.id AND q_type ='random' AND random_link.q_id = ?");
@@ -506,7 +506,7 @@ SQL;
      */
     public static function is_in_keyword_block($q_id, $db)
     {
-        $questions = array();
+        $questions = [];
         // We are checking the question is on a paper in order to display the list of papers to the end user.
         $query = $db->prepare('SELECT question FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND '
             . 'keywordID = keyword_id AND keywords_question.q_id = ?');
@@ -645,7 +645,7 @@ SQL;
             $q_media_owner,
             $q_media_num
         );
-        $media = array();
+        $media = [];
         while ($mediasql->fetch()) {
             $media[] = new \MediaObject(
                 $q_media_id,
@@ -670,7 +670,7 @@ SQL;
     public static function getMediaAsString(int $qid): array
     {
         $media = self::getMedia($qid);
-        $mediaarray = array(
+        $mediaarray = [
             'source' => [],
             'width' => [],
             'height' => [],
@@ -678,7 +678,7 @@ SQL;
             'num' => [],
             'owner' => [],
             'id' => [],
-        );
+        ];
         foreach ($media as $m) {
             $mediaarray['id'][] = $m->id;
             $mediaarray['source'][] = $m->source;
@@ -958,7 +958,7 @@ SQL;
             if ($i >= $limit) {
                 $userObject = UserObject::get_instance();
                 $logger = new Logger($configObject->db);
-                $logger->record_application_warning($userObject->get_user_ID(), 'Question Lineage', sprintf($string['history_exceeded_parent_limit'], $limit), __FILE__, __LINE__ - 3, array('qID' => $qID));
+                $logger->record_application_warning($userObject->get_user_ID(), 'Question Lineage', sprintf($string['history_exceeded_parent_limit'], $limit), __FILE__, __LINE__ - 3, ['qID' => $qID]);
                 break;
             }
         }
@@ -1043,7 +1043,7 @@ SQL;
         $result->bind_result($qID, $type, $part, $old, $new, $display_changed, $title, $initials, $surname, $changeID);
         $changes = [];
         while ($result->fetch()) {
-            $changes[] = array('qID' => $qID, 'date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname);
+            $changes[] = ['qID' => $qID, 'date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname];
         }
         $result->close();
         return $changes;

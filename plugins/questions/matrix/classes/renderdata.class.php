@@ -89,7 +89,7 @@ class renderdata extends \questiondata
         if (!is_null($useranswer)) {
             $this->usersanswers = explode('|', $useranswer);
         } else {
-            $this->usersanswers = array();
+            $this->usersanswers = [];
         }
     }
 
@@ -117,7 +117,7 @@ class renderdata extends \questiondata
     {
         $part_id = 1;
         $option = $this->get_opt($part_id);
-        $matchscenario = array();
+        $matchscenario = [];
         $matching_users_answers = $this->usersanswers;
         $option_order = explode(',', $this->optionorder);
         foreach ($this->scenarios as $single_scenario) {

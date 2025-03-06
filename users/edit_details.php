@@ -142,7 +142,7 @@ if ($user_details['gender'] == 'Male') {
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     ?>
   <script src="../js/edituserdetailsinit.min.js"></script>
 </body>

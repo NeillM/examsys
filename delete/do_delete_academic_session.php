@@ -44,7 +44,7 @@ if ($success == true) {
 } else {
     $lang['success'] =  $string['failure'];
 }
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');
 
 $mysqli->close();

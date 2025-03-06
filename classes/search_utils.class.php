@@ -35,14 +35,14 @@ class search_utils
      */
     public static function get_keywords($db, $teams, $user_id)
     {
-        $keywords = array('team' => array(), 'personal' => array());
+        $keywords = ['team' => [], 'personal' => []];
 
         $teams = (is_array($teams)) ? implode("','", $teams) : $teams;
         $result = $db->prepare("SELECT m.moduleid, k.keyword, k.id FROM keywords_user k INNER JOIN modules m ON k.userID = m.id WHERE k.keyword_type = 'team' AND m.moduleid IN ('$teams') ORDER BY m.moduleid, k.keyword");
         $result->execute();
         $result->bind_result($moduleID, $keyword, $keywordID);
         while ($result->fetch()) {
-            $keywords['team'][] = array('module_id' => $moduleID, 'keyword_id' => $keywordID, 'keyword' => $keyword);
+            $keywords['team'][] = ['module_id' => $moduleID, 'keyword_id' => $keywordID, 'keyword' => $keyword];
         }
         $result->close();
 
@@ -51,7 +51,7 @@ class search_utils
         $result->execute();
         $result->bind_result($keyword, $keywordID);
         while ($result->fetch()) {
-            $keywords['personal'][] = array('keyword_id' => $keywordID, 'keyword' => $keyword);
+            $keywords['personal'][] = ['keyword_id' => $keywordID, 'keyword' => $keyword];
         }
         $result->close();
 
@@ -113,7 +113,7 @@ class search_utils
             . 'user_roles ur JOIN roles r ON r.id = ur.roleid ';
         $order = 'ORDER BY surname, initials';
         $roles = "u.id = ur.userid AND r.name IN ('Staff', 'Inactive Staff')";
-        if ($userObj->has_role(array('SysAdmin','Admin'))) {
+        if ($userObj->has_role(['SysAdmin','Admin'])) {
             $stmt = $db->prepare("$select WHERE $roles $order");
         } else {
             $team_sql = implode(',', array_keys($userObj->get_staff_modules()));
@@ -124,7 +124,7 @@ class search_utils
         }
         $stmt->execute();
         $stmt->bind_result($id, $title, $initials, $surname);
-        $owners = array();
+        $owners = [];
         while ($stmt->fetch()) {
             $owners[$id]['title'] = $title;
             $owners[$id]['initials'] = $initials;
@@ -183,7 +183,7 @@ class search_utils
      */
     public static function display_status($status_array, $state)
     {
-        $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
+        $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : [];
 
         $html = '';
 
@@ -216,7 +216,7 @@ STATUS;
         echo "<select style=\"width:185px\" class=\"statechange\" data-type=\"bloom\" name=\"bloom\">\n";
         echo '<option value="%">' . $string['alllevels'] . "</option>\n";
 
-        $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');
+        $blooms_array = ['Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation'];
         foreach ($blooms_array as $individual_bloom) {
             if (isset($state['bloom']) and $state['bloom'] == $individual_bloom) {
                 echo "<option value=\"$individual_bloom\" selected>" . $string[mb_strtolower($individual_bloom)] . '</option>';

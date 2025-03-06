@@ -57,10 +57,10 @@ if ($unlock and $userObject->has_role('SysAdmin')) {
     $tmp_end_date = $tmp_date->format('Ymd' . '100000');
 
     // Update the paper date so that it does not immediately re-lock
-    $update_params = array(
-    'start_date' => array('s', $tmp_start_date),
-    'end_date' => array('s', $tmp_end_date)
-    );
+    $update_params = [
+    'start_date' => ['s', $tmp_start_date],
+    'end_date' => ['s', $tmp_end_date]
+    ];
     $assessment->db_update_assessment($paperID, $update_params);
 
     // Update the questions to take lock off
@@ -74,7 +74,7 @@ if ($unlock and $userObject->has_role('SysAdmin')) {
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 // Redirect students to their page.
-if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
+if ($userObject->has_role('Student') and !($userObject->has_role(['Staff', 'Admin', 'SysAdmin']))) {
     if ($properties->get_paper_type() == '2') {
         // Display 'Page not Found' for summative exams. For these go to the proper summative exam homepage.
         $contactemail = support::get_email();
@@ -90,7 +90,7 @@ if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 
 $paper_ownerID = Paper_utils::get_ownerID($paperID, $mysqli);
 
 // This papers' modules
-$paper_modules = array();
+$paper_modules = [];
 
 $on_staff_module = false;
 if ($userObject->has_role('SysAdmin') or $paper_ownerID == $userObject->get_user_ID()) {
@@ -250,7 +250,7 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
         }
         if ($q_type == 'mcq') {  // Check duplicate options
             $have_text = false;
-            $option_text_check = array();
+            $option_text_check = [];
             foreach ($option_text as $option) {
                 if ($option != '') {
                     $have_text = true;
@@ -302,13 +302,13 @@ function have_valid_labels($correct)
 function randomDetails($questionID, $configObject, $db)
 {
     $question_no = 0;
-    $random_questions = array();
+    $random_questions = [];
     $old_q_id = '';
     $old_score_method = '';
     $old_q_media_width = '';
     $old_q_media_height = '';
-    $old_correct = array();
-    $old_option_text = array();
+    $old_correct = [];
+    $old_option_text = [];
 
     $result = $db->prepare("SELECT theme, options1.q_id, leadin, scenario, options2.correct, options2.marks_correct, options2.option_text, q_type, display_method, score_method, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}'), status, settings FROM random_link AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.q_id=questions.q_id AND options1.id=? ");
     $result->bind_param('i', $questionID);
@@ -334,8 +334,8 @@ function randomDetails($questionID, $configObject, $db)
                 $random_questions[$question_no]['display_last_edited'] = $display_last_edited;
                 $random_questions[$question_no]['marks'] = qMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
                 $random_questions[$question_no]['random_mark'] = qRandomMarks($old_q_type, '', $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
-                $old_correct = array();
-                $old_option_text = array();
+                $old_correct = [];
+                $old_option_text = [];
                 $question_no++;
             }
             $old_theme = $theme;
@@ -487,12 +487,12 @@ if ($properties->get_deleted() != '') {
   $row_no             = 0;
   $row_no2            = 0;
   $old_display_pos    = -1;
-  $temp_array         = array();
+  $temp_array         = [];
   $old_q_id           = 0;
   $old_q_type         = '';
   $old_marks          = 0;
-  $old_option_text    = array();
-  $old_o_media        = array();
+  $old_option_text    = [];
+  $old_o_media        = [];
   $old_correct        = '';
   $old_display_method = '';
   $old_score_method   = '';
@@ -504,7 +504,7 @@ if ($properties->get_deleted() != '') {
   $total_marks        = 0;
   $options            = 0;
   $neg_marking        = false;
-  $q_mod_check        = array();
+  $q_mod_check        = [];
 
   // Get the questions (if any).
   $result = $mysqli->prepare("
@@ -555,7 +555,7 @@ if ($properties->get_deleted() != '') {
           if ($old_display_pos != -1) {
               $temp_array[$row_no2]['options'] = $options;
               if (empty($old_o_media)) {
-                  $temp_array[$row_no2]['o_media'] = array();
+                  $temp_array[$row_no2]['o_media'] = [];
               } else {
                   $temp_array[$row_no2]['o_media'] = $old_o_media;
               }
@@ -586,9 +586,9 @@ if ($properties->get_deleted() != '') {
           if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
               checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
           }
-          $old_correct      = array();
-          $old_option_text  = array();
-          $old_o_media      = array();
+          $old_correct      = [];
+          $old_option_text  = [];
+          $old_o_media      = [];
           $old_marks = 0;
           $row_no2++;
 
@@ -610,7 +610,7 @@ if ($properties->get_deleted() != '') {
           $temp_array[$row_no]['correct']         = $correct;
           $temp_array[$row_no]['status']          = $status;
           $temp_array[$row_no]['warnings']        = [];
-          $temp_array[$row_no]['random']          = array();
+          $temp_array[$row_no]['random']          = [];
 
           $q_mod_check[] = $q_id;
 
@@ -648,7 +648,7 @@ if ($properties->get_deleted() != '') {
       }
       $old_marks          = $marks_correct;
 
-      if (!empty($option_text) or (!empty($correct) and (in_array($q_type, array('labelling', 'hotspot', 'area', 'true_false')))) or in_array($q_type, array('info', 'likert', 'flash', 'enhancedcalc'))) {
+      if (!empty($option_text) or (!empty($correct) and (in_array($q_type, ['labelling', 'hotspot', 'area', 'true_false']))) or in_array($q_type, ['info', 'likert', 'flash', 'enhancedcalc'])) {
           $options++;
       }
   }
@@ -706,10 +706,10 @@ if ($properties->get_deleted() != '') {
       $random_mark_diff = round($total_random_mark ?? 0.0, 4) != round($properties->get_random_mark(), 4);
       $total_mark_diff = $total_marks != $properties->get_total_mark();
       if (($random_mark_diff or $total_mark_diff) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
-          $update_params = array(
-              'random_mark' => array('d', $total_random_mark ?? 0.0),
-              'total_mark' => array('i', $total_marks),
-          );
+          $update_params = [
+              'random_mark' => ['d', $total_random_mark ?? 0.0],
+              'total_mark' => ['i', $total_marks],
+          ];
           $assessment->db_update_assessment($paperID, $update_params);
 
           // We should also update the values stored in the properties object
@@ -769,7 +769,7 @@ if ($properties->get_deleted() != '') {
   $exam_announcements = $exam_announcementObj->get_announcements();
 
   // initial link of breadcrumb
-  $links = array('/' => $string['home']);
+  $links = ['/' => $string['home']];
 
 if ($folder) {
     // links of parent folders
@@ -843,7 +843,7 @@ if ($properties->get_retired() == '') {
     <th class="d vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
   <?php
-    if ($properties->get_paper_type() == '4' & in_array($properties->get_marking(), array(1, 5))) {           // OSCE stations
+    if ($properties->get_paper_type() == '4' & in_array($properties->get_marking(), [1, 5])) {           // OSCE stations
         ?>
     <tr>
       <td colspan="6">
@@ -887,13 +887,13 @@ if ($properties->get_retired() == '') {
         }
     }
 
-    $q_screen = array();
+    $q_screen = [];
     $screen_marks = 0;
     $old_screen = 0;
     $question_number = 0;
     $marks_incorrect_error = false;
-    $paper_warnings = array();
-    $nooptions = array('keyword_based', 'random');
+    $paper_warnings = [];
+    $nooptions = ['keyword_based', 'random'];
     for ($x = 1; $x <= $row_no; $x++) {
         $status = $status_array[$temp_array[$x]['status']];
         if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and !in_array($temp_array[$x]['q_type'], $nooptions) and ($temp_array[$x]['q_type'] != 'textbox' or $temp_array[$x]['correct'] != 'placeholder')) {
@@ -1118,9 +1118,9 @@ if ($properties->get_retired() == '') {
 
     if (!$properties->get_summative_lock()) {
         if ($properties->get_marking() == 1 and $neg_marking == true) {     // Can't use random mark with negative marking
-            $update_params = array(
-            'marking' => array('s', 0)
-            );
+            $update_params = [
+            'marking' => ['s', 0]
+            ];
             $assessment->db_update_assessment($paperID, $update_params);
         }
     }
@@ -1142,11 +1142,11 @@ if ($properties->get_retired() == '') {
     if ($properties->get_recache_marks() == 1 and count($temp_array) > 0) {
         $dataset['attributes']['recache'] =  true;
     }
-    $render->render($dataset, array(), 'dataset.html');
+    $render->render($dataset, [], 'dataset.html');
     // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
+    $render->render($jsdataset, [], 'dataset.html');
     $mysqli->close();
     ?>
 

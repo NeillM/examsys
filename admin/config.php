@@ -31,9 +31,9 @@ if (isset($_POST['submit'])) {
     foreach ($configObject->get_setting('core') as $setting => $value) {
         $type = $configObject->get_setting_type('core', $setting);
         if ($type === Config::ASSOC) {
-            $new_value = array();
+            $new_value = [];
             // Associative settings with a boolean value.
-            $booleanassocs = array('system_mediatypes', 'paper_types', 'paper_anomaly_detection');
+            $booleanassocs = ['system_mediatypes', 'paper_types', 'paper_anomaly_detection'];
             if (in_array($setting, $booleanassocs)) {
                 foreach ($value as $name => $oldval) {
                     $enabled = param::optional($setting . '_' . str_replace('.', '_', $name), false, param::BOOLEAN, param::FETCH_POST);
@@ -53,7 +53,7 @@ if (isset($_POST['submit'])) {
             $new_value = param::optional($setting, '', param::RAW, param::FETCH_POST);
             // Timezones are display in a multi selectbox so the post will be an array.
             if ($setting == 'paper_timezones') {
-                $arrayvalue = array();
+                $arrayvalue = [];
                 foreach ($new_value as $v) {
                     $parts = explode('|', $v);
                     $arrayvalue[$parts[0]] = $parts[1];
@@ -77,13 +77,13 @@ $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/config.css"/>';
-$breadcrumb = array($string['home'] => '../index.php', $string['administrativetools'] => 'index.php');
+$breadcrumb = [$string['home'] => '../index.php', $string['administrativetools'] => 'index.php'];
 $render->render_admin_header($string, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/options_empty.html');
 $render->render_admin_content($breadcrumb, $string);
 $data['action'] = Url::fromGlobals();
 $render->render($data, $string, 'admin/config/config_header.html');
-$displayconfigs = array();
+$displayconfigs = [];
 $configs = $configObject->get_setting('core');
 foreach (Config::$config_area as $area) {
     foreach ($configs as $setting => $value) {
@@ -96,7 +96,7 @@ foreach ($displayconfigs as $area => $conf) {
     $data['area'] = $area;
     $render->render($data, $string, 'admin/config/config_area.html');
     foreach ($conf as $setting => $value) {
-        $data = array();
+        $data = [];
         $data['setting'] = $setting;
         $data['value'] = $value;
         $type = $configObject->get_setting_type('core', $setting);
@@ -139,13 +139,13 @@ foreach ($displayconfigs as $area => $conf) {
             $render->render($data, $string, 'admin/config/config_tz.html');
         } elseif ($type === Config::EDITOR) {
             // Hardcoded list of editors plus mathjax if available
-            $editors = array('plain' => $string['editor_plaintext'], 'WYSIWYG' => $string['editor_wysiwyg']);
+            $editors = ['plain' => $string['editor_plaintext'], 'WYSIWYG' => $string['editor_wysiwyg']];
             if ($configObject->get_setting('core', 'paper_mathjax')) {
                 $editors['mathjax'] = $string['editor_mathjax'];
             }
 
             foreach ($editors as $editor => $editor_label) {
-                $data['editors'][$editor] = array('editor_label' => $editor_label, 'editor' => $editor, 'selected' => ($editor == $value) ? 'selected' : '');
+                $data['editors'][$editor] = ['editor_label' => $editor_label, 'editor' => $editor, 'selected' => ($editor == $value) ? 'selected' : ''];
             }
 
             $render->render($data, $string, 'admin/config/config_editor.html');
@@ -173,7 +173,7 @@ foreach ($displayconfigs as $area => $conf) {
     }
 }
 
-$render->render(array(), $string, 'admin/config/config_footer.html');
+$render->render([], $string, 'admin/config/config_footer.html');
 $js = [
     '/js/config.min.js',
 ];

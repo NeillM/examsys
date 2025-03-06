@@ -40,7 +40,7 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPA
 
 // Lets look to see what arguments have been passed.
 $options = '';
-$longoptions = array(
+$longoptions = [
     'help',
     'archive',
     'commit',
@@ -51,7 +51,7 @@ $longoptions = array(
     'skip::',
     'noprogress::',
     'noformative::'
-);
+];
 
 $optionslist = getopt($options, $longoptions);
 $help = 'ExamSys archive script options. Archives all graduated and left accounts, unless the target param is specified'
@@ -231,7 +231,7 @@ if ($target != 1) {
     $numusers = $stmt->num_rows();
     cli_utils::prompt($numusers . ' users to potentially archive');
 }
-$potential_users = array();
+$potential_users = [];
 while ($stmt->fetch()) {
     $potential_users[] = $user_to_archive;
 }

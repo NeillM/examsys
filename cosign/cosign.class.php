@@ -66,7 +66,7 @@ class cosign
     }
 
     // configuration is merged from global cosign_config.php, .cosign.php
-    public function cosign_auth($cfg = array(), $obstart = true)
+    public function cosign_auth($cfg = [], $obstart = true)
     {
         if ($obstart) {
             ob_start();
@@ -182,7 +182,7 @@ class cosign
                 $this->cosign_debug("$service: Cannot read cookie file $service_cookie_file");
                 $ts = 0;    // skip to file expiration
             } else {
-                $cf = array();
+                $cf = [];
                 while (($line = fgets($fh)) !== false) {
                     switch ($line[0]) {
                         case 'i':
@@ -242,7 +242,7 @@ class cosign
         }
 
         // no valid service cookie file and service cookie set
-        $context = stream_context_create(array('ssl' => array('local_cert' => $this->cosign_cfg['CosignCryptoLocalCert'], 'capture_peer_cert' => true, 'capture_peer_chain' => true)));
+        $context = stream_context_create(['ssl' => ['local_cert' => $this->cosign_cfg['CosignCryptoLocalCert'], 'capture_peer_cert' => true, 'capture_peer_chain' => true]]);
         if (isset($this->cosign_cfg['CosignCryptoVerifyPeer'])) {
             stream_context_set_option($context, 'ssl', 'verify_peer', $this->cosign_cfg['CosignCryptoVerifyPeer']);
         }

@@ -53,7 +53,7 @@ class plugin_managertest extends unittestdatabase
     public function test_plugin_installed()
     {
         $datagenerator = $this->get_datagenerator('config', 'core');
-        $datagenerator->change_setting(array('component' => 'plugin_plain_texteditor', 'setting' => 'installed', 'value' => 0));
+        $datagenerator->change_setting(['component' => 'plugin_plain_texteditor', 'setting' => 'installed', 'value' => 0]);
         $this->assertTrue(plugin_manager::plugin_installed('plugin_tinymce_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('plugin_plain_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('unknowntestplugin'));

@@ -51,11 +51,11 @@ class schoolmanagementtest extends unittestdatabase
         $this->faculty2 = $this->get_faculty_id('Administrative and Support Units');
         $this->school2 = $this->get_school_id('Training');
         $datagenerator = $this->get_datagenerator('school', 'core');
-        $this->school3 = $datagenerator->create_school(array('school' => 'Test school 3', 'facultyID' => $this->faculty));
+        $this->school3 = $datagenerator->create_school(['school' => 'Test school 3', 'facultyID' => $this->faculty]);
         $datagenerator = $this->get_datagenerator('modules', 'core');
-        $datagenerator->create_module(array('moduleid' => 'TEST', 'fullname' => 'Another test module', 'schoolID' => $this->school3['id']));
+        $datagenerator->create_module(['moduleid' => 'TEST', 'fullname' => 'Another test module', 'schoolID' => $this->school3['id']]);
         $datagenerator = $this->get_datagenerator('course', 'core');
-        $datagenerator->create_course(array('name' => 'TEST', 'description' => 'Test course', 'schoolid' => $this->school2));
+        $datagenerator->create_course(['name' => 'TEST', 'description' => 'Test course', 'schoolid' => $this->school2]);
     }
 
     /**
@@ -64,14 +64,14 @@ class schoolmanagementtest extends unittestdatabase
      */
     private function create_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->school3['id'] + 1,
             'externalid' => null,
             'error' => null,
             'node' => 'create',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -80,12 +80,12 @@ class schoolmanagementtest extends unittestdatabase
      */
     private function create_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'name' => 'CREATE',
             'faculty' => 'Test faculty',
             'code' => 'TST',
-            'externalid' => 'xyz');
+            'externalid' => 'xyz'];
     }
 
     /**
@@ -94,14 +94,14 @@ class schoolmanagementtest extends unittestdatabase
      */
     private function update_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->school,
             'externalid' => null,
             'error' => null,
             'node' => 'update',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -110,11 +110,11 @@ class schoolmanagementtest extends unittestdatabase
      */
     private function update_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
             'id' => $this->school,
             'name' => 'Test school update',
-            'faculty' => 'Test faculty');
+            'faculty' => 'Test faculty'];
     }
 
     /**
@@ -123,14 +123,14 @@ class schoolmanagementtest extends unittestdatabase
      */
     private function delete_response_array()
     {
-        return array(
+        return [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $this->school,
             'externalid' => null,
             'error' => null,
             'node' => 'delete',
-            'nodeid' => 1);
+            'nodeid' => 1];
     }
 
     /**
@@ -139,9 +139,9 @@ class schoolmanagementtest extends unittestdatabase
      */
     private function delete_param_array()
     {
-        return array(
+        return [
             'nodeid' => 1,
-            'id' => $this->school);
+            'id' => $this->school];
     }
 
     /**
@@ -172,10 +172,10 @@ class schoolmanagementtest extends unittestdatabase
         $responsearray['status'] = 'School already exists';
         $responsearray['id'] = $this->school;
         $responsearray['externalid'] = 'ABC';
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'name' => 'UNKNOWN School',
-            'faculty' => 'UNKNOWN Faculty');
+            'faculty' => 'UNKNOWN Faculty'];
         $this->assertEquals($responsearray, $school->create($params, $this->admin['id']));
     }
 
@@ -190,10 +190,10 @@ class schoolmanagementtest extends unittestdatabase
         $responsearray['statuscode'] = 606;
         $responsearray['status'] = 'School already exists';
         $responsearray['id'] = $this->school3['id'];
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'name' => 'Test school 3',
-            'faculty' => 'UNKNOWN Faculty');
+            'faculty' => 'UNKNOWN Faculty'];
         $this->assertEquals($responsearray, $school->create($params, $this->admin['id']));
     }
 
@@ -210,10 +210,10 @@ class schoolmanagementtest extends unittestdatabase
         $responsearray['statuscode'] = 605;
         $responsearray['status'] = 'Faculty not supplied';
         $responsearray['id'] = null;
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'name' => 'CREATE 2',
-            'faculty' => '');
+            'faculty' => ''];
         $this->assertEquals($responsearray, $school->create($params, $this->admin['id']));
     }
 
@@ -232,16 +232,16 @@ class schoolmanagementtest extends unittestdatabase
         // Test with no faculty provided i.e. school name update.
         $responsearray['id'] = $this->school2;
         $responsearray['externalid'] = null;
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->school3['id'],
-            'name' => 'Test school 3 update');
+            'name' => 'Test school 3 update'];
         $this->assertEquals($responsearray, $school->update($params, $this->admin['id']));
         // Test with no name provided i.e. faculty update.
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->school3['id'],
-            'faculty' => 'Administrative and Support Units');
+            'faculty' => 'Administrative and Support Units'];
         $this->assertEquals($responsearray, $school->update($params, $this->admin['id']));
     }
 
@@ -252,11 +252,11 @@ class schoolmanagementtest extends unittestdatabase
     public function test_update_exception_noupdate()
     {
         $responsearray = $this->update_response_array();
-        $params = array(
+        $params = [
             'nodeid' => 1,
             'id' => $this->school,
             'name' => 'UNKNOWN School',
-            'faculty' => 'UNKNOWN Faculty');
+            'faculty' => 'UNKNOWN Faculty'];
         $school = new \api\schoolmanagement($this->db, 'test1');
         $responsearray['statuscode'] = 607;
         $responsearray['status'] = 'Request updates nothing';
@@ -330,17 +330,17 @@ class schoolmanagementtest extends unittestdatabase
         $this->assertEquals($responsearray, $school->delete($params, $this->admin['id']));
         // Check that the remaining schools are correct, when we delete a school we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
-        $querytable = $this->query(array('columns' => array('school', 'facultyID'), 'table' => 'schools', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS'))));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['school', 'facultyID'], 'table' => 'schools', 'where' => [['column' => 'deleted', 'value' => null, 'operator' => 'IS']]]);
+        $expectedtable = [
+            0 => [
                 'school' => 'Training',
                 'facultyID' => $this->faculty2
-            ),
-            1 => array(
+            ],
+            1 => [
                 'school' => 'Test school 3',
                 'facultyID' => $this->faculty
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -360,8 +360,8 @@ class schoolmanagementtest extends unittestdatabase
         $params['id'] = 0;
         $this->assertEquals($responsearray, $school->delete($params, $this->admin['id']));
         // Test no school id supplued.
-        $params = array(
-            'nodeid' => 1);
+        $params = [
+            'nodeid' => 1];
         $this->assertEquals($responsearray, $school->delete($params, $this->admin['id']));
     }
 

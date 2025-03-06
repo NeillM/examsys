@@ -35,7 +35,7 @@ class mathutilstest extends UnitTest
      */
     public function test_percentile()
     {
-        $data = array(100, 50, 25, 0);
+        $data = [100, 50, 25, 0];
         $test = \MathsUtils::percentile($data, 0.50);
         $this->assertEquals(37.5, $test);
         $test = \MathsUtils::percentile($data, 0.55);
@@ -47,7 +47,7 @@ class mathutilstest extends UnitTest
      */
     public function test_percentile_nonnumeric()
     {
-        $data = array(100, 50, null, 0);
+        $data = [100, 50, null, 0];
         $test = \MathsUtils::percentile($data, 0.25);
         $this->assertEquals(0.0, $test);
     }
@@ -57,7 +57,7 @@ class mathutilstest extends UnitTest
      */
     public function test_percentile_outofrange()
     {
-        $data = array(100, 50, 25, 0);
+        $data = [100, 50, 25, 0];
         $test = \MathsUtils::percentile($data, 101);
         $this->assertEquals(0.0, $test);
     }
@@ -67,7 +67,7 @@ class mathutilstest extends UnitTest
      */
     public function test_percentile_nonfloat()
     {
-        $data = array(100, 50, 25, 0);
+        $data = [100, 50, 25, 0];
         $test = \MathsUtils::percentile($data, 25);
         $this->assertEquals(62.5, $test);
     }

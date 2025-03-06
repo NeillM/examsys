@@ -39,9 +39,9 @@ class questiondatatest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2018, 'academic_year' => '2018/19'));
+        $datagenerator->create_academic_year(['calendar_year' => 2018, 'academic_year' => '2018/19']);
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'test formative',
+        $this->pid1 = $datagenerator->create_paper(['papertitle' => 'test formative',
             'startdate' => '2018-02-19 00:00:00',
             'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
@@ -50,9 +50,9 @@ class questiondatatest extends unittestdatabase
             'paperowner' => 'admin',
             'labs' => '1',
             'papertype' => '0',
-            'modulename' => 'Training Module'));
-        $datagenerator->set_post_creation_settings($this->pid1['id'], array(
-            'paper_prologue' => 'paper test prologue'));
+            'modulename' => 'Training Module']);
+        $datagenerator->set_post_creation_settings($this->pid1['id'], [
+            'paper_prologue' => 'paper test prologue']);
     }
 
     /**
@@ -65,8 +65,8 @@ class questiondatatest extends unittestdatabase
         $data = questiondata::get_datastore('mcq');
         $screen_pre_submitted = 1;
         $q_displayed = 0;
-        $string = array();
-        $question = array(
+        $string = [];
+        $question = [
             'theme' => 'question test theme',
             'scenario' => 'question test scenario',
             'notes' => 'question test notes',
@@ -74,7 +74,7 @@ class questiondatatest extends unittestdatabase
             'assigned_number' => 1,
             'q_type' => 'mcq',
             'q_id' => 4,
-            'settings' => array(),
+            'settings' => [],
             'q_media' => '1517406311.png',
             'q_media_width' => '480',
             'q_media_height' => '105',
@@ -82,8 +82,8 @@ class questiondatatest extends unittestdatabase
             'q_media_num' => 0,
             'score_method' => 'Mark per Option',
             'display_method' => 'vertical',
-            'options' => array(
-                0 => array(
+            'options' => [
+                0 => [
                     'correct' => '1',
                     'option_text' => '<div>True</div>',
                     'o_media' => '',
@@ -93,8 +93,8 @@ class questiondatatest extends unittestdatabase
                     'marks_correct' => 2,
                     'marks_incorrect' => -1,
                     'marks_partial' => 0
-                ),
-                1 => array(
+                ],
+                1 => [
                     'correct' => '1',
                     'option_text' => '<div>False</div>',
                     'o_media' => '1517409282.jpg',
@@ -106,9 +106,9 @@ class questiondatatest extends unittestdatabase
                     'marks_partial' => 0,
                     'mediaext' => 'jpg',
                     'mediadelay' => false,
-                    'mediaextra' => array(),
-                ),
-                2 => array(
+                    'mediaextra' => [],
+                ],
+                2 => [
                     'correct' => '1',
                     'option_text' => '<div>Maybe</div>',
                     'o_media' => '1517411342.png',
@@ -120,9 +120,9 @@ class questiondatatest extends unittestdatabase
                     'marks_partial' => 0,
                     'mediaext' => 'png',
                     'mediadelay' => false,
-                    'mediaextra' => array(),
-                ),
-                3 => array(
+                    'mediaextra' => [],
+                ],
+                3 => [
                     'correct' => '1',
                     'option_text' => '<div>Depends on which country you\'re in</div>',
                     'o_media' => '',
@@ -132,15 +132,15 @@ class questiondatatest extends unittestdatabase
                     'marks_correct' => 2,
                     'marks_incorrect' => -1,
                     'marks_partial' => 0
-                ),
-            ),
-            'option_order' => array(
+                ],
+            ],
+            'option_order' => [
                 0 => 0,
                 1 => 1,
                 2 => 2,
                 3 => 3
-            ),
-        );
+            ],
+        ];
         $current_screen = 1;
         $question_no = 0;
         $user_answers[1][4] = 1;
@@ -162,14 +162,14 @@ class questiondatatest extends unittestdatabase
         $this->assertEquals('question test leadin', $data->leadin);
         $this->assertEquals($question, $data->question);
         $this->assertEquals($user_answers, $data->useranswers);
-        $this->assertEquals(array(), $data->settings);
+        $this->assertEquals([], $data->settings);
         $this->assertEquals($question_no, $data->questionno);
         $this->assertEquals('vertical', $data->displaymethod);
         $this->assertEquals('Mark per Option', $data->scoremethod);
         $this->assertEquals(2, $data->marks);
         $cfg_root_path = $this->config->get('cfg_root_path');
-        $optionsdata = array(
-            1 => array(
+        $optionsdata = [
+            1 => [
                 'correct' => '1',
                 'optiontext' => '<div>True</div>',
                 'omedia' => '',
@@ -177,7 +177,7 @@ class questiondatatest extends unittestdatabase
                 'marksincorrect' => -1,
                 'optionno' => 'q1_1',
                 'position' => 1,
-                'optionmedia' => array(
+                'optionmedia' => [
                     'mediaid' => -1,
                     'mediafile' => '',
                     'mediawidth' => '',
@@ -191,14 +191,14 @@ class questiondatatest extends unittestdatabase
                     'mediabordercolour' => '',
                     'mediaext' => '',
                     'mediadelay' => false,
-                    'mediaextra' => array(),
-                ),
+                    'mediaextra' => [],
+                ],
                 'selected' => true,
                 'optiontextdisplay' => true,
                 'displayoptionmedia' => false,
                 'inact' => false,
-            ),
-            2 => array(
+            ],
+            2 => [
                 'correct' => '1',
                 'optiontext' => '<div>False</div>',
                 'omedia' => '1517409282.jpg',
@@ -206,7 +206,7 @@ class questiondatatest extends unittestdatabase
                 'marksincorrect' => -1,
                 'optionno' => 'q1_2',
                 'position' => 2,
-                'optionmedia' => array(
+                'optionmedia' => [
                     'mediaid' => -1,
                     'mediafile' => '1517409282.jpg',
                     'mediawidth' => '951',
@@ -220,14 +220,14 @@ class questiondatatest extends unittestdatabase
                     'mediabordercolour' => '',
                     'mediaext' => 'jpg',
                     'mediadelay' => false,
-                    'mediaextra' => array(),
-                ),
+                    'mediaextra' => [],
+                ],
                 'selected' => false,
                 'optiontextdisplay' => true,
                 'displayoptionmedia' => true,
                 'inact' => false,
-            ),
-            3 => array(
+            ],
+            3 => [
                 'correct' => '1',
                 'optiontext' => '<div>Maybe</div>',
                 'omedia' => '1517411342.png',
@@ -235,7 +235,7 @@ class questiondatatest extends unittestdatabase
                 'marksincorrect' => -1,
                 'optionno' => 'q1_3',
                 'position' => 3,
-                'optionmedia' => array(
+                'optionmedia' => [
                     'mediaid' => -1,
                     'mediafile' => '1517411342.png',
                     'mediawidth' => '693',
@@ -249,14 +249,14 @@ class questiondatatest extends unittestdatabase
                     'mediabordercolour' => '',
                     'mediaext' => 'png',
                     'mediadelay' => false,
-                    'mediaextra' => array(),
-                ),
+                    'mediaextra' => [],
+                ],
                 'selected' => false,
                 'optiontextdisplay' => true,
                 'displayoptionmedia' => true,
                 'inact' => false,
-            ),
-            4 => array(
+            ],
+            4 => [
                 'correct' => '1',
                 'optiontext' => '<div>Depends on which country you\'re in</div>',
                 'omedia' => '',
@@ -264,7 +264,7 @@ class questiondatatest extends unittestdatabase
                 'marksincorrect' => -1,
                 'optionno' => 'q1_4',
                 'position' => 4,
-                'optionmedia' => array(
+                'optionmedia' => [
                     'mediaid' => -1,
                     'mediafile' => '',
                     'mediawidth' => '',
@@ -278,14 +278,14 @@ class questiondatatest extends unittestdatabase
                     'mediabordercolour' => '',
                     'mediaext' => '',
                     'mediadelay' => false,
-                    'mediaextra' => array(),
-                ),
+                    'mediaextra' => [],
+                ],
                 'selected' => false,
                 'optiontextdisplay' => true,
                 'displayoptionmedia' => false,
                 'inact' => false,
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($optionsdata, $data->options);
         $this->assertEquals(4, $data->partid);
         $this->assertEquals('0,1,2,3', $data->optionorder);
@@ -312,9 +312,9 @@ class questiondatatest extends unittestdatabase
     public function test_get_set_opt()
     {
         $data = questiondata::get_datastore('area');
-        $option2 = array('test' => 2, 'test2' => array(2, 1));
+        $option2 = ['test' => 2, 'test2' => [2, 1]];
         $data->set_opt(2, $option2);
-        $option1 = array('test' => 1, 'test2' => array(1, 2));
+        $option1 = ['test' => 1, 'test2' => [1, 2]];
         $data->set_opt(1, $option1);
         $this->assertEquals($option2, $data->get_opt(2));
     }
@@ -351,7 +351,7 @@ class questiondatatest extends unittestdatabase
         // Test option media.
         $part_id = 2;
         $data->set_media($filename, $width, $height, $alt, $border_color, false, $imageid, $locked, $part_id);
-        $option['optionmedia'] = array(
+        $option['optionmedia'] = [
             'mediaid' => $imageid,
             'mediafile' => $filename,
             'mediawidth' => $width,
@@ -365,8 +365,8 @@ class questiondatatest extends unittestdatabase
             'mediabordercolour' => $border_color,
             'mediaext' => 'png',
             'mediadelay' => false,
-            'mediaextra' => array(),
-        );
+            'mediaextra' => [],
+        ];
         $this->assertEquals($option, $data->get_opt($part_id));
     }
 

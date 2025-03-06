@@ -37,13 +37,13 @@ $current = param::required('current', param::TEXT, param::FETCH_POST);
 $properties = PaperProperties::get_paper_properties_by_id($paperid, $mysqli, $string);
 
 if (Anomaly::anomalyDetectionEnabled($properties->get_paper_type())) {
-    $data = array(
+    $data = [
         'userid' => $userObject->get_user_ID(),
         'paperid' => $paperid,
         'screen' => $screen,
         'previous' => $previous,
         'current' => $current,
-    );
+    ];
     $anomaly = new ClockAnomaly($data);
     $anomaly->insert();
 }

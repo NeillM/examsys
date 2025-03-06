@@ -51,7 +51,7 @@ class requirements
      */
     public static function check_php_extensions()
     {
-        $ext = array();
+        $ext = [];
         $configObject = Config::get_instance();
         $phpModules = get_loaded_extensions();
         $extensions = $configObject->getxml('php', 'extensions');

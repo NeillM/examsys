@@ -34,14 +34,14 @@ $paper_type = $propertyObj->get_paper_type();
 
 function load_marks($paperID, $q_id, $phase, $db)
 {
-    $marks = array();
+    $marks = [];
 
     $result = $db->prepare('SELECT answer_id, mark, comments FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = ?');
     $result->bind_param('iii', $paperID, $q_id, $phase);
     $result->execute();
     $result->bind_result($answer_id, $mark, $comment);
     while ($result->fetch()) {
-        $marks[$answer_id] = array('mark' => $mark, 'comment' => $comment);
+        $marks[$answer_id] = ['mark' => $mark, 'comment' => $comment];
     }
     $result->close();
 
@@ -120,12 +120,12 @@ if (isset($_POST['submit'])) {
 
     $render = new render($configObject);
     $lang['title'] =  $string['finalisemarks'];
-    $headerdata = array(
-        'css' => array(
+    $headerdata = [
+        'css' => [
             '/css/header.css',
             '/css/textbox_finalise_marks.css',
-        ),
-    );
+        ],
+    ];
     $headerdata['mathjax'] = false;
     if ($configObject->get_setting('core', 'paper_mathjax')) {
         $headerdata['mathjax'] = true;
@@ -285,10 +285,10 @@ SQL;
 
     <?php
     $data = [
-        'scripts' => array(
+        'scripts' => [
             '/js/textboxfinaliseinit.min.js',
-        ),
+        ],
     ];
-    $render->render($data, array(), 'footer.html');
+    $render->render($data, [], 'footer.html');
 }
 ?>

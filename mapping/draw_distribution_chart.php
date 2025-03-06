@@ -23,7 +23,7 @@
  * @package
  */
 
-$mydata = array();
+$mydata = [];
 $mydata = unserialize(urldecode($_GET['disdata']));
 $max_frequency = 0;
 $TotalMarks = 0;

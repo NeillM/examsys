@@ -63,7 +63,7 @@ $password       = $propertyObj->get_password();
  *
  */
 // Are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff','SysAdmin')) and $mode === 'preview');
+$is_preview_mode = ($userObject->has_role(['Staff','SysAdmin']) and $mode === 'preview');
 // Are we in a staff test and preview mode and on the first screen?
 $is_preview_mode_first_launch = ($is_preview_mode == true and $getmode === 'preview');
 // Are we in a staff single question testmode

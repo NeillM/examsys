@@ -40,7 +40,7 @@ $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css"
           .field {text-align:right; padding-right:6px; width:120px}
         </style>';
 
-$breadcrumb = array($string['home'] => '../index.php');
+$breadcrumb = [$string['home'] => '../index.php'];
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 include '../include/user_search_options.php';
@@ -234,7 +234,7 @@ if (isset($new_password)) {
 
     $old_optgroup = '';
 
-    $roles_array = array('#Staff', 'Staff');
+    $roles_array = ['#Staff', 'Staff'];
     if ($userObject->has_role('SysAdmin')) {
         $roles_array[] = 'Staff,Admin';
         $roles_array[] = 'Staff,SysAdmin';

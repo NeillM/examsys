@@ -31,5 +31,5 @@ class QuestionINFO extends QuestionEdit
     protected $_use_bloom = false;
     public $max_options = 1;
 
-    protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
+    protected $_fields_required = ['type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status'];
 }

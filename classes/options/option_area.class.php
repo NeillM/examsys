@@ -27,7 +27,7 @@
 
 class OptionAREA extends OptionEdit
 {
-    protected $_fields_required = array('question_id', 'marks_correct', 'correct');
+    protected $_fields_required = ['question_id', 'marks_correct', 'correct'];
 
     /**
      * Is this option blank?

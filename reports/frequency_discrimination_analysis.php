@@ -96,16 +96,16 @@ $enddate = check_var('enddate', 'GET', true, false, true);
 $gradebook = new gradebook($mysqli);
 $graded = $gradebook->paper_graded($paperID);
 
-$pstats_array = array();
-$dstats_array = array();
+$pstats_array = [];
+$dstats_array = [];
 $ex_no = 0;
 
 $cohort_percent = param::optional('percent', 100, param::INT, param::FETCH_GET);
 if ($cohort_percent == 100) {
     $cohort_percent = 27;
 }
-$pstats = array('ve' => 0, 'e' => 0, 'm' => 0, 'h' => 0, 'vh' => 0);
-$dstats = array('highest' => 0, 'high' => 0, 'intermediate' => 0, 'low' => 0);
+$pstats = ['ve' => 0, 'e' => 0, 'm' => 0, 'h' => 0, 'vh' => 0];
+$dstats = ['highest' => 0, 'high' => 0, 'intermediate' => 0, 'low' => 0];
 
 $d_no = 0;
 $d_total = 0;
@@ -143,11 +143,11 @@ $repmodule = param::optional('repmodule', '', param::INT, param::FETCH_GET);
 $repcourse = param::required('repcourse', param::TEXT, param::FETCH_GET);
 
 // Capture the log data first.
-$freq_array = array();
-$bottom_log_array = array();
-$top_log_array = array();
-$bottom_cohort = array();
-$top_cohort = array();
+$freq_array = [];
+$bottom_log_array = [];
+$top_log_array = [];
+$bottom_cohort = [];
+$top_cohort = [];
 $user_no = 0;
 $user_total = 0;
 

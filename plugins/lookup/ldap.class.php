@@ -34,7 +34,7 @@ class ldap_lookup extends outline_lookup
 
     public function register_callback_routines()
     {
-        $callbackarray[] = array(array($this, 'userlookup'), 'userlookup', $this->number, $this->name);
+        $callbackarray[] = [[$this, 'userlookup'], 'userlookup', $this->number, $this->name];
         return $callbackarray;
     }
 
@@ -222,7 +222,7 @@ class ldap_lookup extends outline_lookup
         }
         $lookupobj->lookupdatas[] = $lookupdatas;
         // Store all the values returned by LDAP event when they are not used by ExamSys.
-        $datablockstore = array();
+        $datablockstore = [];
         foreach ($datablock as $key => $value) {
             if (!is_int($key)) {
                 if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {

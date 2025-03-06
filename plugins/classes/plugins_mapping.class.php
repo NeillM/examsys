@@ -63,7 +63,7 @@ abstract class plugins_mapping extends \plugins\plugins
      */
     public function enable_plugin()
     {
-        $enabled = array($this->plugin);
+        $enabled = [$this->plugin];
         $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_mapping');
     }
     /**
@@ -74,7 +74,7 @@ abstract class plugins_mapping extends \plugins\plugins
     {
         $enabled = $this->config->get_setting('plugin_mapping', 'enabled_plugin');
         if ($this->plugin == $enabled[0]) {
-            $this->config->set_setting('enabled_plugin', array(), \Config::JSON, 'plugin_mapping');
+            $this->config->set_setting('enabled_plugin', [], \Config::JSON, 'plugin_mapping');
         }
     }
     /**

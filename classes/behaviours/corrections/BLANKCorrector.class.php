@@ -36,7 +36,7 @@ class BLANKCorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
         if ($changes) {
             $new_correct_val = $new_correct['option_correct'];
 
@@ -60,8 +60,8 @@ class BLANKCorrector extends Corrector
                     $no_answers = count($blank_details) - 1;
                     $have_answer = false;
 
-                    $answer_lists = array();
-                    $part_marks = array();
+                    $answer_lists = [];
+                    $part_marks = [];
 
                     for ($i = 1; $i <= $no_answers; $i++) {
                         if (preg_match('|mark="([0-9]{1,3})"|', $blank_details[$i], $mark_matches)) {
@@ -79,7 +79,7 @@ class BLANKCorrector extends Corrector
 
                         $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
                         if ($display_method != 'textboxes') {
-                              $answer_list = array($answer_list[0]);
+                              $answer_list = [$answer_list[0]];
                         }
                         $answer_list = array_map('mb_strtolower', $answer_list);
                         $answer_list = array_map('trim', $answer_list);

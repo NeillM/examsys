@@ -52,9 +52,9 @@ class Anonymise
     public function __construct($db)
     {
         $this->db             = $db;
-        $this->male_names     = array();
-        $this->female_names   = array();
-        $this->unknown_names  = array();
+        $this->male_names     = [];
+        $this->female_names   = [];
+        $this->unknown_names  = [];
         $this->male_no        = 0;
         $this->female_no      = 0;
         $this->unknown_no     = 0;
@@ -82,11 +82,11 @@ class Anonymise
         while ($result->fetch()) {
             $first_names = str_replace('  ', ' ', $first_names);
             if ($gender == 'male' or mb_strtolower($title) == 'mr') {
-                $this->male_names[] = array('first_names' => $first_names, 'surname' => $surname);
+                $this->male_names[] = ['first_names' => $first_names, 'surname' => $surname];
             } elseif ($gender == 'female' or mb_strtolower($title) == 'ms' or mb_strtolower($title) == 'mrs' or mb_strtolower($title) == 'miss') {
-                $this->female_names[] = array('first_names' => $first_names, 'surname' => $surname);
+                $this->female_names[] = ['first_names' => $first_names, 'surname' => $surname];
             } else {
-                $this->unknown_names[] = array('first_names' => $first_names, 'surname' => $surname);
+                $this->unknown_names[] = ['first_names' => $first_names, 'surname' => $surname];
             }
         }
         $result->close();

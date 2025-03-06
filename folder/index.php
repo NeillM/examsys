@@ -277,12 +277,12 @@ $mysqli->close();
 $render = new render($configObject);
 $jsdataset['name'] = 'dataset';
 $jsdataset['attributes']['folder'] = $folder;
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset = [
   'name' => 'jsutils',
   'attributes' => ['xls' => json_encode($string)],
 ];
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../js/folderinit.min.js"></script>
 </body>

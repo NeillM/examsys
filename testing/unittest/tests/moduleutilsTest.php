@@ -72,41 +72,41 @@ class moduleutilstest extends unittestdatabase
         $this->module2 = $this->get_module_id('SYSTEM');
         $this->school2 = $this->get_school_id('Training');
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator->create_academic_year(['calendar_year' => 2016, 'academic_year' => '2016/17']);
         $datagenerator = $this->get_datagenerator('modules', 'core');
-        $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module , 'calendar_year' => 2016));
-        $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module2, 'calendar_year' => 2016));
-        $datagenerator->create_enrolment(array('userid' => $this->user, 'moduleid' => $this->module2, 'calendar_year' => 2016));
+        $datagenerator->create_enrolment(['userid' => $this->student['id'], 'moduleid' => $this->module , 'calendar_year' => 2016]);
+        $datagenerator->create_enrolment(['userid' => $this->student['id'], 'moduleid' => $this->module2, 'calendar_year' => 2016]);
+        $datagenerator->create_enrolment(['userid' => $this->user, 'moduleid' => $this->module2, 'calendar_year' => 2016]);
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid = $datagenerator->create_paper(array('papertitle' => 'Test create formative',
+        $this->pid = $datagenerator->create_paper(['papertitle' => 'Test create formative',
             'calendaryear' => 2016,
             'modulename' => 'Training Module',
             'paperowner' => 'admin',
             'papertype' => '0',
             'duration' => 60,
-            'labs' => '1'));
-        $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'Test create formative 2',
+            'labs' => '1']);
+        $this->pid2 = $datagenerator->create_paper(['papertitle' => 'Test create formative 2',
             'calendaryear' => 2016,
-            'modulename' => array('Training Module', 'Online Help'),
+            'modulename' => ['Training Module', 'Online Help'],
             'paperowner' => 'admin',
             'papertype' => '0',
             'duration' => 60,
-            'labs' => '1'));
+            'labs' => '1']);
         $datagenerator = $this->get_datagenerator('modules', 'core');
         $this->module3 = $datagenerator->create_module(
-            array(
+            [
                 'moduleid' => 'TEST',
                 'fullname' => 'Another test module',
                 'schoolID' => $this->school2
-            )
+            ]
         );
         $this->module4 = $datagenerator->create_module(
-            array(
+            [
                 'moduleid' => 'TEST2',
                 'fullname' => 'Yet another test module',
                 'schoolID' => $this->school2,
                 'academic_year_start' => '03/01'
-            )
+            ]
         );
     }
 
@@ -116,11 +116,11 @@ class moduleutilstest extends unittestdatabase
      */
     public function test_get_modules_for_paper()
     {
-        $modules = array(array('moduleid' => 'TRAIN', 'fullname' => 'Training Module', 'externalid' => 'abc123def'), array('moduleid' => 'SYSTEM', 'fullname' => 'Online Help', 'externalid' => null));
+        $modules = [['moduleid' => 'TRAIN', 'fullname' => 'Training Module', 'externalid' => 'abc123def'], ['moduleid' => 'SYSTEM', 'fullname' => 'Online Help', 'externalid' => null]];
         $this->assertEquals($modules, module_utils::get_modules_for_paper($this->pid2['id'], $this->student['id'], $this->db));
-        $modules = array(array('moduleid' => 'TRAIN', 'fullname' => 'Training Module', 'externalid' => 'abc123def'));
+        $modules = [['moduleid' => 'TRAIN', 'fullname' => 'Training Module', 'externalid' => 'abc123def']];
         $this->assertEquals($modules, module_utils::get_modules_for_paper($this->pid['id'], $this->student['id'], $this->db));
-        $modules = array();
+        $modules = [];
         $this->assertEquals($modules, module_utils::get_modules_for_paper($this->pid['id'], $this->user, $this->db));
     }
 
@@ -130,7 +130,7 @@ class moduleutilstest extends unittestdatabase
      */
     public function test_get_full_details_internalid()
     {
-        $detailsarray = array('idMod' => $this->module2,
+        $detailsarray = ['idMod' => $this->module2,
             'moduleid' => 'SYSTEM',
             'fullname' => 'Online Help',
             'school' => 'Training',
@@ -148,7 +148,7 @@ class moduleutilstest extends unittestdatabase
             'map_level' => 7,
             'academic_year_start' => '07/01',
             'externalid' => null,
-            'syncpreviousyear' => 0);
+            'syncpreviousyear' => 0];
         $details = module_utils::get_full_details('internal', $this->module2, $this->db);
         $this->assertEquals($detailsarray, $details);
     }
@@ -159,7 +159,7 @@ class moduleutilstest extends unittestdatabase
      */
     public function test_get_full_details_by_ID()
     {
-        $detailsarray = array('idMod' => $this->module2,
+        $detailsarray = ['idMod' => $this->module2,
             'moduleid' => 'SYSTEM',
             'fullname' => 'Online Help',
             'school' => 'Training',
@@ -177,7 +177,7 @@ class moduleutilstest extends unittestdatabase
             'map_level' => 7,
             'academic_year_start' => '07/01',
             'externalid' => null,
-            'syncpreviousyear' => 0);
+            'syncpreviousyear' => 0];
         $details = module_utils::get_full_details_by_ID($this->module2, $this->db);
         $this->assertEquals($detailsarray, $details);
     }
@@ -188,7 +188,7 @@ class moduleutilstest extends unittestdatabase
      */
     public function test_get_full_details_externalid()
     {
-        $detailsarray = array('idMod' => $this->module,
+        $detailsarray = ['idMod' => $this->module,
             'moduleid' => 'TRAIN',
             'fullname' => 'Training Module',
             'school' => 'Training',
@@ -206,7 +206,7 @@ class moduleutilstest extends unittestdatabase
             'map_level' => 7,
             'academic_year_start' => '07/01',
             'externalid' => 'abc123def',
-            'syncpreviousyear' => 1);
+            'syncpreviousyear' => 1];
         $details = module_utils::get_full_details('external', 'abc123def', $this->db, 'test ExamSys api');
         $this->assertEquals($detailsarray, $details);
     }
@@ -227,7 +227,7 @@ class moduleutilstest extends unittestdatabase
      */
     public function test_get_sync_previous_year_modules()
     {
-        $expected = array('abc123def');
+        $expected = ['abc123def'];
         $actual = module_utils::get_sync_previous_year_modules('test ExamSys api');
         $this->assertEquals($expected, $actual);
     }
@@ -252,7 +252,7 @@ class moduleutilstest extends unittestdatabase
      */
     public function testStudentAccessiblityInfo()
     {
-        $modules = array($this->module, $this->module2);
+        $modules = [$this->module, $this->module2];
         $actual = module_utils::getStudentAccessiblityInfo(implode(',', $modules), 2016);
         $expected[$this->student['id']]['user_ID'] = $this->student['id'];
         $expected[$this->student['id']]['surname'] = $this->student['surname'];

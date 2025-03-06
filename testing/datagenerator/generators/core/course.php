@@ -50,7 +50,7 @@ class course extends generator
             $parameters['schoolid'] = \SchoolUtils::get_school_id_by_name($parameters['school'], $this->db);
         }
         $coursenumber = ++self::$coursescreated;
-        $defaults = array('name' => 'TEST' . $coursenumber, 'description' => 'a course description ' . $coursenumber, 'externalid' => null, 'externalsys' => null, 'schoolid' => $parameters['schoolid']);
+        $defaults = ['name' => 'TEST' . $coursenumber, 'description' => 'a course description ' . $coursenumber, 'externalid' => null, 'externalsys' => null, 'schoolid' => $parameters['schoolid']];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $courseid = CourseUtils::add_course($parameters['schoolid'], $settings['name'], $settings['description'], $settings['externalid'], $settings['externalsys'], $this->db);
         if (!$courseid) {

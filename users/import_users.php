@@ -58,12 +58,12 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
     ?>
     <div id="content" class="content">
         <?php
-        echo $render->render_admin_navigation(array(
+        echo $render->render_admin_navigation([
             '/' => $string['home'],
             '/admin/index.php' => $string['admintools'],
             '/users/search.php' => $string['usermanagement'],
             '/users/import_users.php' => $string['importusers'],
-        ));
+        ]);
         ?>
         <?php
         $file_problem = false;

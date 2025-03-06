@@ -32,7 +32,7 @@ if (isset($_GET['paperID'])) {
     $paper_id = $_GET['paperID'];
 }
 
-$student = array();
+$student = [];
 $student['user_ID'] = $student_id;
 $stmt = $mysqli->prepare('SELECT title, initials, surname FROM users WHERE user_deleted IS NULL AND id = ?');
 $stmt->bind_param('i', $student_id);

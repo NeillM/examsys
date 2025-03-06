@@ -165,7 +165,7 @@ if (isset($_POST['submit'])) {
     $miscdataset['attributes']['paper'] = $paperID;
     $miscdataset['attributes']['mode'] = $mode;
     $miscdataset['attributes']['module'] = $module;
-    $render->render($miscdataset, array(), 'dataset.html');
+    $render->render($miscdataset, [], 'dataset.html');
 }
 $mysqli->close();
 ?>

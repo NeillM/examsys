@@ -28,10 +28,10 @@ class QuestionRANDOM extends QuestionEdit
 {
     public $max_options = 1000;  // Probably irrelevant
     protected $_allow_change_marking_method = false;
-    protected $questions = array();
+    protected $questions = [];
     protected $_allow_correction = false;
 
-    protected $_fields_editable = array('leadin', 'status', 'staffnotes');
+    protected $_fields_editable = ['leadin', 'status', 'staffnotes'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {

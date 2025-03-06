@@ -46,33 +46,33 @@ class Killer_Questiontest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid = $datagenerator->create_paper(array('papertitle' => 'test osce',
+        $this->pid = $datagenerator->create_paper(['papertitle' => 'test osce',
             'startdate' => '2018-02-19 00:00:00',
             'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
             'paperowner' => 'admin',
             'labs' => '1',
             'papertype' => '4',
-            'modulename' => 'Training Module'));
-        $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'test osce 2',
+            'modulename' => 'Training Module']);
+        $this->pid2 = $datagenerator->create_paper(['papertitle' => 'test osce 2',
             'startdate' => '2018-02-19 00:00:00',
             'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
             'paperowner' => 'admin',
             'labs' => '1',
             'papertype' => '4',
-            'modulename' => 'Training Module'));
+            'modulename' => 'Training Module']);
         $datagenerator = $this->get_datagenerator('questions', 'core');
-        $this->question = $datagenerator->create_question(array('user' => 'admin',
+        $this->question = $datagenerator->create_question(['user' => 'admin',
             'type' => 'true_false',
             'leadin' => 'Is the world round or flat?',
-            'scenario' => 'This is a test'));
-        $datagenerator->add_question_to_paper(array('paper' => $this->pid['id'], 'question' => $this->question['id'], 'screen' => 1, 'displaypos' => 1));
-        $this->question2 = $datagenerator->create_question(array('user' => 'admin',
+            'scenario' => 'This is a test']);
+        $datagenerator->add_question_to_paper(['paper' => $this->pid['id'], 'question' => $this->question['id'], 'screen' => 1, 'displaypos' => 1]);
+        $this->question2 = $datagenerator->create_question(['user' => 'admin',
             'type' => 'true_false',
             'leadin' => 'Is the world round?',
-            'scenario' => 'This is a test2'));
-        $datagenerator->add_question_to_paper(array('paper' => $this->pid['id'], 'question' => $this->question2['id'], 'screen' => 1, 'displaypos' => 1));
+            'scenario' => 'This is a test2']);
+        $datagenerator->add_question_to_paper(['paper' => $this->pid['id'], 'question' => $this->question2['id'], 'screen' => 1, 'displaypos' => 1]);
     }
 
     /**
@@ -120,17 +120,17 @@ class Killer_Questiontest extends unittestdatabase
         $killer_question->copy_killer_questions($this->pid2['id']);
         $killer_question_new = new Killer_Question($this->pid2['id'], $this->db);
         $this->assertEquals(1, count($killer_question_new->get_questions()));
-        $querytable = $this->query(array('columns' => array('paperID', 'q_id'), 'table' => 'killer_questions'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['paperID', 'q_id'], 'table' => 'killer_questions']);
+        $expectedtable = [
+            0 => [
                 'paperID' => $this->pid['id'],
                 'q_id' => $this->question['id']
-            ),
-            1 => array(
+            ],
+            1 => [
                 'paperID' => $this->pid2['id'],
                 'q_id' => $this->question['id']
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 

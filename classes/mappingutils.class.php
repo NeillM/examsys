@@ -53,7 +53,7 @@ class MappingUtils
                 $stmt->close();
             }
 
-            $vle_api_data = array('api' => $vle_api, 'level' => $map_level);
+            $vle_api_data = ['api' => $vle_api, 'level' => $map_level];
             $vle_api_cache[$idMod][$session] = $vle_api_data;
         } else {
             $vle_api_data = $vle_api_cache[$idMod][$session];

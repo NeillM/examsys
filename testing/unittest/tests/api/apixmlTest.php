@@ -39,15 +39,15 @@ class apixmltest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
-        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator->create_academic_year(['calendar_year' => 2016, 'academic_year' => '2016/17']);
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'Test create formative',
+        $this->pid1 = $datagenerator->create_paper(['papertitle' => 'Test create formative',
             'calendaryear' => 2016,
             'modulename' => 'Training Module',
             'paperowner' => 'admin',
             'papertype' => '0',
             'duration' => 60,
-            'labs' => '1'));
+            'labs' => '1']);
     }
 
     /**
@@ -85,7 +85,7 @@ class apixmltest extends unittestdatabase
     public function test_validate_faculty_success()
     {
         $api = new \api\apixml($this->facultyxml);
-        $this->assertEquals(array(), $api->validate('facultymanagement', 'managementrequest'));
+        $this->assertEquals([], $api->validate('facultymanagement', 'managementrequest'));
     }
 
     /**
@@ -97,31 +97,31 @@ class apixmltest extends unittestdatabase
         $api = new \api\apixml($this->facultyxml);
         $api->validate('facultymanagement', 'managementrequest');
         $requestobject = new \api\facultymanagement($this->db);
-        $fields = array('id', 'name', 'code', 'externalid');
-        $actions = array('create');
+        $fields = ['id', 'name', 'code', 'externalid'];
+        $actions = ['create'];
         $perm['create'] = true;
         $create = $api->parse($requestobject, $fields, $actions, $perm, $this->admin['id']);
-        $responsearray = array(
+        $responsearray = [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $create[0]['id'],
             'externalid' => null,
             'error' => null,
             'node' => 'create',
-            'nodeid' => 'str1234');
-        $this->assertEquals(array($responsearray), $create);
-        $querytable = $this->query(array('columns' => array('name'), 'table' => 'faculty'));
-        $expectedtable = array(
-            0 => array(
+            'nodeid' => 'str1234'];
+        $this->assertEquals([$responsearray], $create);
+        $querytable = $this->query(['columns' => ['name'], 'table' => 'faculty']);
+        $expectedtable = [
+            0 => [
                 'name' => 'UNKNOWN Faculty'
-            ),
-            1 => array(
+            ],
+            1 => [
                 'name' => 'Administrative and Support Units'
-            ),
-            2 => array(
+            ],
+            2 => [
                 'name' => 'abc'
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 
@@ -132,7 +132,7 @@ class apixmltest extends unittestdatabase
     public function test_validate_assessment_success()
     {
         $api = new \api\apixml(sprintf($this->assessmentxml, $this->admin['id']));
-        $this->assertEquals(array(), $api->validate('assessmentmanagement', 'managementrequest'));
+        $this->assertEquals([], $api->validate('assessmentmanagement', 'managementrequest'));
     }
 
     /**
@@ -144,24 +144,24 @@ class apixmltest extends unittestdatabase
         $api = new \api\apixml(sprintf($this->assessmentxml, $this->admin['id']));
         $api->validate('assessmentmanagement', 'managementrequest');
         $requestobject = new \api\assessmentmanagement($this->db);
-        $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
-            'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
-        $actions = array('create');
+        $fields = ['id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
+            'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration'];
+        $actions = ['create'];
         $perm['create'] = true;
         $create = $api->parse($requestobject, $fields, $actions, $perm, $this->admin['id']);
-        $responsearray = array(
+        $responsearray = [
             'statuscode' => 100,
             'status' => 'OK',
             'id' => $create[0]['id'],
             'externalid' => null,
-            'error' => array(),
+            'error' => [],
             'node' => 'create',
-            'nodeid' => 'str1234');
-        $this->assertEquals(array($responsearray), $create);
-        $querytable = $this->query(array('columns' => array('paper_title', 'exam_duration',
-            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'), 'table' => 'properties'));
-        $expectedtable = array(
-            0 => array(
+            'nodeid' => 'str1234'];
+        $this->assertEquals([$responsearray], $create);
+        $querytable = $this->query(['columns' => ['paper_title', 'exam_duration',
+            'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'], 'table' => 'properties']);
+        $expectedtable = [
+            0 => [
                 'paper_title' => 'Test create formative',
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
@@ -169,8 +169,8 @@ class apixmltest extends unittestdatabase
                 'paper_ownerID' => $this->admin['id'],
                 'labs' => '1',
                 'paper_type' => '0',
-            ),
-            1 => array(
+            ],
+            1 => [
                 'paper_title' => 'Test',
                 'exam_duration' => null,
                 'calendar_year' => 2016,
@@ -178,20 +178,20 @@ class apixmltest extends unittestdatabase
                 'paper_ownerID' => $this->admin['id'],
                 'labs' => '',
                 'paper_type' => '0',
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
-        $querytable = $this->query(array('columns' => array('property_id', 'idMod'), 'table' => 'properties_modules'));
-        $expectedtable = array(
-            0 => array(
+        $querytable = $this->query(['columns' => ['property_id', 'idMod'], 'table' => 'properties_modules']);
+        $expectedtable = [
+            0 => [
                'property_id' => $this->pid1['id'],
                'idMod' => $this->module
-            ),
-            1 => array(
+            ],
+            1 => [
                 'property_id' => $create[0]['id'],
                 'idMod' =>  $this->module
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedtable, $querytable);
     }
 }

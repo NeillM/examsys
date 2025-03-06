@@ -39,11 +39,11 @@ class mappingutilsstest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('objective', 'core');
-        $session = $datagenerator->create_session(array('idMod' => $this->module, 'occurrence' => '2017-01-09 11:00:00'));
+        $session = $datagenerator->create_session(['idMod' => $this->module, 'occurrence' => '2017-01-09 11:00:00']);
         $this->sessid = $session['identifier'];
-        $datagenerator->create_objective(array('idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'a'));
-        $datagenerator->create_objective(array('idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'b', 'sequence' => 2));
-        $datagenerator->create_objective(array('idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'c', 'sequence' => 3));
+        $datagenerator->create_objective(['idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'a']);
+        $datagenerator->create_objective(['idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'b', 'sequence' => 2]);
+        $datagenerator->create_objective(['idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'c', 'sequence' => 3]);
     }
 
     /**

@@ -33,7 +33,7 @@ class autoloader
      */
     public static function init()
     {
-        spl_autoload_register(array('autoloader', 'load_class'));
+        spl_autoload_register(['autoloader', 'load_class']);
         $vendordirectory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor';
         if (file_exists($vendordirectory)) {
             // vendor

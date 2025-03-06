@@ -134,7 +134,7 @@ class demo
      */
     public static function demo_replace_name($no)
     {
-        $names = array('Bloggs, J. Dr', 'Plinge, W. Dr', 'Frost, J. Mr', 'Doe, J. Dr', 'Smith, J. Dr', 'Nordmann, O. Dr', 'Jobs, S. Mr', 'Shmoe, J. Dr', 'Atkins, T. Mr', 'Bloggs, F. Mr', 'Gates, B. Mr', 'Berners-Lee, T. Mr', 'Andreessen, M. Mr', 'Ellison, L. Mr', 'Bush, V. Prof', 'Gosling, J. Mr', 'Torvalds, L. Mr', 'Clark, A. Mr');
+        $names = ['Bloggs, J. Dr', 'Plinge, W. Dr', 'Frost, J. Mr', 'Doe, J. Dr', 'Smith, J. Dr', 'Nordmann, O. Dr', 'Jobs, S. Mr', 'Shmoe, J. Dr', 'Atkins, T. Mr', 'Bloggs, F. Mr', 'Gates, B. Mr', 'Berners-Lee, T. Mr', 'Andreessen, M. Mr', 'Ellison, L. Mr', 'Bush, V. Prof', 'Gosling, J. Mr', 'Torvalds, L. Mr', 'Clark, A. Mr'];
 
         if (isset($names[$no])) {
             $selected = $names[$no];

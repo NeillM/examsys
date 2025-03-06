@@ -66,7 +66,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
         <?php
         $data = $yearutils->generateTabs($current_year, 'academic');
         $render = new render($configObject);
-        $render->render($data, array(), 'admin/yeartabs.html');
+        $render->render($data, [], 'admin/yeartabs.html');
         ?>
     </div>
 </th>
@@ -75,7 +75,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 </table>
 
 <?php
-$master_array = array();
+$master_array = [];
 
 $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
 $result->execute();
@@ -83,13 +83,13 @@ $result->bind_result($id, $code, $school, $faculty_code, $faculty);
 while ($result->fetch()) {
     $master_array[$code . ' ' . $school]['id'] = $id;
     $master_array[$code . ' ' . $school]['faculty'] = $faculty_code . ' ' . $faculty;
-    $master_array[$code . ' ' . $school]['paper_types'] = array(0, 0, 0, 0, 0, 0, 0);
+    $master_array[$code . ' ' . $school]['paper_types'] = [0, 0, 0, 0, 0, 0, 0];
 }
 $result->close();
 
 foreach ($master_array as $school => $data) {
     // Get the modules which belong in the school first.
-    $moduleIDs = array();
+    $moduleIDs = [];
 
     $result = $mysqli->prepare('SELECT id FROM modules WHERE schoolid = ? AND active = 1 AND mod_deleted IS NULL');
     $result->bind_param('i', $data['id']);
@@ -162,7 +162,7 @@ foreach ($master_array as $school => $data) {
 }
 
 $old_faculty = '';
-$faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
+$faculty_stats = [0, 0, 0, 0, 0, 0, 0];
 $newtable = false;
 foreach ($master_array as $school => $data) {
     if ($old_faculty != $data['faculty']) {
@@ -171,7 +171,7 @@ foreach ($master_array as $school => $data) {
         }
         echo '<table id="' . ltrim($data['faculty']) . '" class="stats">';
         echo '<caption class="faculty">' . $data['faculty'] . '</caption>';
-        $faculty_stats = array(0, 0, 0, 0, 0, 0, 0);
+        $faculty_stats = [0, 0, 0, 0, 0, 0, 0];
         $newtable = true;
     }
     echo '<tr>

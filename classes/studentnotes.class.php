@@ -46,7 +46,7 @@ class StudentNotes
         $result->fetch();
         $result->close();
 
-        return array('note_id' => $note_id, 'note' => $note, 'date' => $note_date, 'author_title' => $author_title, 'author_initials' => $author_initials, 'author_surname' => $author_surname, 'student_title' => $student_title, 'student_initials' => $student_initials, 'student_surname' => $student_surname, 'student_id' => $student_id, 'student_username' => $student_username);
+        return ['note_id' => $note_id, 'note' => $note, 'date' => $note_date, 'author_title' => $author_title, 'author_initials' => $author_initials, 'author_surname' => $author_surname, 'student_title' => $student_title, 'student_initials' => $student_initials, 'student_surname' => $student_surname, 'student_id' => $student_id, 'student_username' => $student_username];
     }
 
     /**

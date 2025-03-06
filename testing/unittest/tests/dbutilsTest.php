@@ -39,7 +39,7 @@ class dbutilstest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $this->campus = $datagenerator->create_campus(array('name' => 'Main Campus', 'isdefault' => 1));
+        $this->campus = $datagenerator->create_campus(['name' => 'Main Campus', 'isdefault' => 1]);
     }
 
     /**
@@ -49,19 +49,19 @@ class dbutilstest extends unittestdatabase
     public function test_exec_db_insert()
     {
         $table = 'campus';
-        $params = array('name' => array('s', 'Test Campus'), 'isdefault' => array('i', 0));
+        $params = ['name' => ['s', 'Test Campus'], 'isdefault' => ['i', 0]];
         DBUtils::exec_db_insert($table, $params, $this->db);
-        $queryTable = $this->query(array('table' => 'campus', 'columns' => array('name', 'isdefault')));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'campus', 'columns' => ['name', 'isdefault']]);
+        $expectedTable = [
+            0 => [
                 'name' => $this->campus['name'],
                 'isdefault' => 1
-            ),
-            1 => array(
+            ],
+            1 => [
                 'name' => 'Test Campus',
                 'isdefault' => 0
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 
@@ -71,38 +71,38 @@ class dbutilstest extends unittestdatabase
      */
     public function test_check_sqlparams()
     {
-        $bindtype = array('i', 'i', 's');
-        $bindvalue = array(4, 7, 'hello');
+        $bindtype = ['i', 'i', 's'];
+        $bindvalue = [4, 7, 'hello'];
         $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertTrue($checker);
 
-        $bindtype = array('i', 'i', 's');
-        $bindvalue = array('4', 7, 'hello'); // "4" is not int
+        $bindtype = ['i', 'i', 's'];
+        $bindvalue = ['4', 7, 'hello']; // "4" is not int
         $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array('i', 'i', 's', 'd'); // More types than values
-        $bindvalue = array(4, 7, 'hello');
+        $bindtype = ['i', 'i', 's', 'd']; // More types than values
+        $bindvalue = [4, 7, 'hello'];
         $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array('i', 'i', 's');
-        $bindvalue = array(4, 7, 'hello', '100'); // More value than types
+        $bindtype = ['i', 'i', 's'];
+        $bindvalue = [4, 7, 'hello', '100']; // More value than types
         $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array('i', 'i', 's');
-        $bindvalue = array(4, 7, 'hello');
+        $bindtype = ['i', 'i', 's'];
+        $bindvalue = [4, 7, 'hello'];
         $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? but notwant = ?'; // More ? than value/type
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array('i', 'i', 's');
-        $bindvalue = array(4, 7, 5); // 5 is not string
+        $bindtype = ['i', 'i', 's'];
+        $bindvalue = [4, 7, 5]; // 5 is not string
         $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
@@ -116,15 +116,15 @@ class dbutilstest extends unittestdatabase
     {
         $table = 'campus';
         $tableid = 'id';
-        $params = array('isdefault' => array('i', 0));
+        $params = ['isdefault' => ['i', 0]];
         DBUtils::exec_db_update($table, $tableid, $params, $this->campus['id'], $this->db);
-        $queryTable = $this->query(array('table' => 'campus', 'columns' => array('name', 'isdefault')));
-        $expectedTable = array(
-            0 => array(
+        $queryTable = $this->query(['table' => 'campus', 'columns' => ['name', 'isdefault']]);
+        $expectedTable = [
+            0 => [
                 'name' => $this->campus['name'],
                 'isdefault' => 0
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expectedTable, $queryTable);
     }
 }

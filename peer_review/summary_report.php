@@ -127,7 +127,7 @@ if (isset($_GET['meta1'])) {
 
   // Write out headings
   $query_string = "percent=$percent&paperID=$paperID&startdate=$startdate&enddate=$enddate&repmodule=" . $_GET['repmodule'] . '&repcourse=' . $_GET['repcourse'] . "&meta1=$meta1";
-$heading = array('title' => $string['title'], 'surname' => $string['surname'], 'first_names' => $string['firstnames'], 'student_id' => $string['studentid'], 'have_review' => $string['reviewed'], 'group' => $type);
+$heading = ['title' => $string['title'], 'surname' => $string['surname'], 'first_names' => $string['firstnames'], 'student_id' => $string['studentid'], 'have_review' => $string['reviewed'], 'group' => $type];
 if ($review_type == 1) {
     $heading['review_no'] = $string['reviews'];
 }
@@ -156,7 +156,7 @@ foreach ($heading as $k => $h) {
   <tbody>
 <?php
   // Take the arrays and form one master array which can be sorted for on-screen display.
-  $master_array = array();
+  $master_array = [];
 $user_number = 0;
 foreach ($user_data as $student_userID => $student) {
     if ($student_userID > 0) {

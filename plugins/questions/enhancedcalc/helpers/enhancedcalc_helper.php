@@ -29,7 +29,7 @@ require_once dirname(__DIR__) . '/enhancedcalc.class.php';
 
 function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mode = 'unmarked')
 {
-    $status = array(-13 => 0, -12 => 0, -11 => 0, -10 => 0, -9 => 0, -8 => 0, -7 => 0, -6 => 0, -5 => 0, -4 => 0, -3 => 0, -2 => 0, -1 => 0, 0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0);
+    $status = [-13 => 0, -12 => 0, -11 => 0, -10 => 0, -9 => 0, -8 => 0, -7 => 0, -6 => 0, -5 => 0, -4 => 0, -3 => 0, -2 => 0, -1 => 0, 0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0];
     $configObject = Config::get_instance();
     $enhancedcalc = new EnhancedCalc($configObject);
     $data['settings'] = $settings;

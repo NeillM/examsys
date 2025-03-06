@@ -59,7 +59,7 @@ $result->close();
 $render = new render($configObject);
 $lang['title'] = $string['title'];
 $lang['success'] = $string['msg'];
-$data = array();
+$data = [];
 $render->render($data, $lang, 'admin/do_delete.html');
 
 $mysqli->close();

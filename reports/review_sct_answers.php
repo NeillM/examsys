@@ -68,7 +68,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db)
 
     $sct_parts = explode('~', $question['leadin']);
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-    $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
+    $sct_titles = [1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']];
     echo '<tr><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">{$string['newinformation']}</td></tr>\n";
     echo '<tr><td style="width:49%; vertical-align:top">' . $sct_parts[0] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; vertical-align:top">' . $sct_parts[1] . "</td></tr>\n";
     echo "</table>\n";
@@ -170,8 +170,8 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
 <col width="40"><col>
 <?php
   //Capture reviewer data
-  $reviewer_data = array();
-$reviewer_list = array();
+  $reviewer_data = [];
+$reviewer_list = [];
 $stmt = $mysqli->prepare('SELECT reviewer_name, q_id, answer, reason FROM sct_reviews WHERE paperID = ?');
 $stmt->bind_param('i', $paperID);
 $stmt->execute();

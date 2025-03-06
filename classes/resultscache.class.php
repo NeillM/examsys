@@ -90,7 +90,7 @@ class ResultsCache
      */
     public function get_paper_cache($paperID)
     {
-        $stats = array();
+        $stats = [];
 
         $result = $this->db->prepare('SELECT max_mark, max_percent, min_mark, min_percent, q1, q2, q3, mean_mark, mean_percent, stdev_mark, stdev_percent FROM cache_paper_stats WHERE paperID = ?');
         $result->bind_param('i', $paperID);
@@ -110,7 +110,7 @@ class ResultsCache
      */
     public function get_paper_marks_by_student($userID)
     {
-        $marks = array();
+        $marks = [];
 
         $result = $this->db->prepare('SELECT paperID, percent FROM cache_student_paper_marks WHERE userID = ?');
         $result->bind_param('i', $userID);
@@ -132,7 +132,7 @@ class ResultsCache
      */
     public function get_median_question_marks_by_paper($paperID)
     {
-        $marks = array();
+        $marks = [];
 
         $result = $this->db->prepare('SELECT questionID, median FROM cache_median_question_marks WHERE paperID = ?');
         $result->bind_param('i', $paperID);
@@ -156,7 +156,7 @@ class ResultsCache
      */
     public function get_student_question_marks_by_paper($userID, $log_type, $paperID)
     {
-        $marks = array();
+        $marks = [];
 
         if ($log_type == '4') {   // OSCE table structure is completely different.
             $result = $this->db->prepare('SELECT q_id, rating FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND userID = ? AND q_paper = ?');
@@ -183,7 +183,7 @@ class ResultsCache
      */
     public function get_paper_marks_by_paper($paperID, $sort_data = false)
     {
-        $marks = array();
+        $marks = [];
 
         if ($sort_data) {
             $sql = 'SELECT userID, percent FROM cache_student_paper_marks WHERE paperID = ? ORDER BY percent';

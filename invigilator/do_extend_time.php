@@ -32,7 +32,7 @@ $student_id = param::optional('userID', 0, param::INT, param::FETCH_POST);
 if ($student_id !== 0) {
     $paper_id = param::optional('paperID', 0, param::INT, param::FETCH_POST);
     if ($paper_id !== 0) {
-        $student = array();
+        $student = [];
         $student['user_ID'] = $student_id;
 
         $current_address = NetworkUtils::get_client_address();

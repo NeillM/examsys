@@ -63,9 +63,9 @@ class textboxtest extends unittestdatabase
     public function test_set_option_answer_mathjax()
     {
         $data = questiondata::get_datastore('textbox');
-        $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'mathjax'));
+        $data->settings = json_encode(['columns' => 40, 'rows' => 10, 'editor' => 'mathjax']);
         $data->questionno = 2;
-        $data->textboxesseen = array(1);
+        $data->textboxesseen = [1];
         $option['markscorrect'] = 1;
         $data->set_opt(0, $option);
         $data->marks = 1;
@@ -76,7 +76,7 @@ class textboxtest extends unittestdatabase
         $this->assertEquals('', $data->useranswer);
         $this->assertTrue($data->unanswered);
         $this->assertTrue($data->editormathjax);
-        $this->assertEquals(array(1, 2), $data->textboxesseen);
+        $this->assertEquals([1, 2], $data->textboxesseen);
         $this->assertEquals(2, $data->marks);
         $data->questionno = 3;
         $data->set_option_answer(0, 'test', '', 1);
@@ -92,9 +92,9 @@ class textboxtest extends unittestdatabase
     {
         ob_start(); // Start output buffering
         $data = questiondata::get_datastore('textbox');
-        $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'WYSIWYG'));
+        $data->settings = json_encode(['columns' => 40, 'rows' => 10, 'editor' => 'WYSIWYG']);
         $data->questionno = 2;
-        $data->textboxesseen = array(1);
+        $data->textboxesseen = [1];
         $option['markscorrect'] = 1;
         $data->set_opt(0, $option);
         $data->marks = 1;
@@ -107,7 +107,7 @@ class textboxtest extends unittestdatabase
         $this->assertEquals($editor, $data->editor);
         $this->assertTrue($data->unanswered);
         $this->assertFalse($data->editormathjax);
-        $this->assertEquals(array(1, 2), $data->textboxesseen);
+        $this->assertEquals([1, 2], $data->textboxesseen);
         $this->assertEquals(2, $data->marks);
         $data->questionno = 3;
         $data->set_option_answer(0, 'test', '', 1);

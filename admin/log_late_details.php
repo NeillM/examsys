@@ -71,8 +71,8 @@
 </thead>
 <tbody>
 <?php
-    $icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif');
-    $data = array();
+    $icons = ['formative_16.gif', 'progress_16.gif', 'summative_16.gif'];
+    $data = [];
 
     $sql = "
     SELECT DISTINCT 

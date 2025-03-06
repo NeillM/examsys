@@ -96,7 +96,7 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['qno'] = $_GET['q_no'];
 $miscdataset['attributes']['qlist'] = $questionlist;
 $miscdataset['attributes']['questionno'] = $question_no;
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 <script src="../../js/randomquestionsframeinit.min.js"></script>
 </body>

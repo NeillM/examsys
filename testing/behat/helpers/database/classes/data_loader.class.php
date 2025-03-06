@@ -76,10 +76,10 @@ abstract class Data_Loader
         $db = state::get_db();
         $db->autocommit(false);
         // An array of the names of the files we expect to be present, that contain the records to insert help.
-        $help = array(
+        $help = [
             'staff_help' => 'staff_help.sql',
             'student_help' => 'student_help.sql',
-        );
+        ];
         foreach ($help as $file) {
             $sql = file_get_contents($this->help_base . $file);
             $db->multi_query($sql);

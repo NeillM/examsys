@@ -330,8 +330,8 @@ trait frontend_hooks
         $language = \LangUtils::getLang($cfg_web_root);
         require __DIR__ . '/../../../../include/timezones.php';
         $encoded_timezones = json_encode($timezone_array);
-        $encoded_cohorts = json_encode(array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
-        '301-400', '401-500'));
+        $encoded_cohorts = json_encode(['<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
+        '301-400', '401-500']);
         $configObject->set_db_object(state::get_db());
         $configObject->set_setting('timezones', $encoded_timezones, \Config::JSON);
         $configObject->set_setting('cohort_sizes', $encoded_cohorts, \Config::JSON);

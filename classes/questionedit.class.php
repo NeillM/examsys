@@ -57,7 +57,7 @@ class QuestionEdit extends RogoObject
     protected $media_owner = null;
     /** @var int|string media file number(s). */
     protected $media_num = 0;
-    protected $teams = array();
+    protected $teams = [];
     protected $checkout_time = null;
     protected $checkout_author_id = '';
     protected $created = null;
@@ -67,9 +67,9 @@ class QuestionEdit extends RogoObject
     protected $status = -1;
     protected $settings = '';
     protected $guid = null;
-    public $options = array();
+    public $options = [];
     /** @var array the current questin media */
-    protected $currentmedia = array();
+    protected $currentmedia = [];
 
     public $max_options = 20;
     protected $min_options = 1;
@@ -88,28 +88,28 @@ class QuestionEdit extends RogoObject
     protected $_use_bloom = true;
 
     protected $_user_id;
-    protected $_qfields = array('type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
-    protected $_fields = array('id', 'type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid');
-    public static $_metafields = array('staffnotes');
-    protected $_mfields = array('media_source', 'media_width', 'media_height', 'media_alt', 'media_owner');
-    protected $_qmfields = array('media', 'id', 'media_num');
+    protected $_qfields = ['type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid'];
+    protected $_fields = ['id', 'type', 'theme', 'scenario', 'scenario_plain', 'leadin', 'leadin_plain', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'standards_setting', 'bloom', 'owner_id', 'checkout_time', 'checkout_author_id', 'created', 'last_edited', 'locked', 'deleted', 'status', 'settings','guid'];
+    public static $_metafields = ['staffnotes'];
+    protected $_mfields = ['media_source', 'media_width', 'media_height', 'media_alt', 'media_owner'];
+    protected $_qmfields = ['media', 'id', 'media_num'];
 
-    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status', 'staffnotes');
-    protected $_fields_required = array('type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status');
+    protected $_fields_editable = ['theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'display_method', 'option_order', 'bloom', 'status', 'staffnotes'];
+    protected $_fields_required = ['type', 'leadin', 'score_method', 'option_order', 'owner_id', 'status'];
     /** @var array metadata fields required for this question type */
-    protected $_metafields_required = array();
+    protected $_metafields_required = [];
 
-    protected $_fields_settings = array();
+    protected $_fields_settings = [];
     //  protected $_score_methods = array('Mark per Question', 'Mark per Option', 'Allow partial Marks', 'Bonus Mark');
     protected $_score_methods;
-    protected $_display_methods = array();
+    protected $_display_methods = [];
     protected $_option_orders;
     protected $_mysqli = null;
     protected $_logger = null;
-    protected $_data = array();
-    protected $_metadata = array();
-    protected $_mdata = array();
-    protected $_omdata = array();
+    protected $_data = [];
+    protected $_metadata = [];
+    protected $_mdata = [];
+    protected $_omdata = [];
 
     // These properties will be lazily loaded
     protected $_keywords = null;
@@ -122,20 +122,20 @@ class QuestionEdit extends RogoObject
     protected $_allow_option_edit = false;
 
     // These fields will be forced to the negative answer value. Useful for checkboxes that won't have a value posted if unset
-    protected $_fields_force = array();
+    protected $_fields_force = [];
 
     // 'Unified' fields are set to the same value for all options
     protected $_fields_unified;
-    protected $_unified_field_modifications = array();
+    protected $_unified_field_modifications = [];
 
     // These are the fields that are relevant for post-exam corrections
-    protected $_fields_change = array('option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'correct_fback');
+    protected $_fields_change = ['option_correct', 'option_marks_correct', 'option_marks_incorrect', 'option_marks_partial', 'correct_fback'];
 
     // Map our 'nice' property names to the database fields and 'parts' in track changes
-    protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
+    protected $_field_map = ['type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date'];
     protected $_change_field_map;
     protected $_pretty_names;
-    public static $types = array('blank', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area', 'enhancedcalc');
+    public static $types = ['blank', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area', 'enhancedcalc'];
 
     // Always store English values in the database so need to look up score method against English version
     protected $_score_methods_db;
@@ -144,7 +144,7 @@ class QuestionEdit extends RogoObject
     protected $_lang_strings = null;
 
     // A list of correction behaviours that will be called sequentially for the Correct operation
-    protected $_correctors = array();
+    protected $_correctors = [];
 
     /** @var string Language component name. */
     protected $langcomponent = 'classes/questionedit';
@@ -174,15 +174,15 @@ class QuestionEdit extends RogoObject
         $this->_lang_strings = $lang_strings;
 
         // Initialise language specific elements
-        $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']);
-        $this->_option_orders = array('display order' => $this->_lang_strings['displayorder'], 'alphabetic' => $this->_lang_strings['alphabetic'], 'random' => $this->_lang_strings['random']);
-        $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-        $this->_change_field_map = array('scenario_plain' => 'scenario', 'leadin_plain' => 'leadin', 'correct' => $this->_lang_strings['correctanswer']);
+        $this->_score_methods = [$this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']];
+        $this->_option_orders = ['display order' => $this->_lang_strings['displayorder'], 'alphabetic' => $this->_lang_strings['alphabetic'], 'random' => $this->_lang_strings['random']];
+        $this->_fields_unified = ['correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
+        $this->_change_field_map = ['scenario_plain' => 'scenario', 'leadin_plain' => 'leadin', 'correct' => $this->_lang_strings['correctanswer']];
         // TODO: check if some question types need 'Display Method' instead of 'Presentation'
-        $this->_pretty_names = array('type' => $this->_lang_strings['type'], 'leadin' => $this->_lang_strings['leadin'], 'score_method' => $this->_lang_strings['markingmethod'], 'display_method' => $this->_lang_strings['presentation'], 'option_order' => $this->_lang_strings['optionorder'], 'owner_id' => $this->_lang_strings['owner'], 'status' => $this->_lang_strings['status']);
+        $this->_pretty_names = ['type' => $this->_lang_strings['type'], 'leadin' => $this->_lang_strings['leadin'], 'score_method' => $this->_lang_strings['markingmethod'], 'display_method' => $this->_lang_strings['presentation'], 'option_order' => $this->_lang_strings['optionorder'], 'owner_id' => $this->_lang_strings['owner'], 'status' => $this->_lang_strings['status']];
 
-        $this->_score_methods_db = array($this->_lang_strings['markperquestion'] => 'Mark per Question', $this->_lang_strings['markperoption'] => 'Mark per Option', $this->_lang_strings['allowpartial'] => 'Allow partial Marks', $this->_lang_strings['bonusmark'] => 'Bonus Mark');
-        $this->_blooms_db = array('' => '', $this->_lang_strings['knowledge'] => 'Knowledge', $this->_lang_strings['comprehension'] => 'Comprehension', $this->_lang_strings['application'] => 'Application', $this->_lang_strings['analysis'] => 'Analysis', $this->_lang_strings['synthesis'] => 'Synthesis', $this->_lang_strings['evaluation'] => 'Evaluation');
+        $this->_score_methods_db = [$this->_lang_strings['markperquestion'] => 'Mark per Question', $this->_lang_strings['markperoption'] => 'Mark per Option', $this->_lang_strings['allowpartial'] => 'Allow partial Marks', $this->_lang_strings['bonusmark'] => 'Bonus Mark'];
+        $this->_blooms_db = ['' => '', $this->_lang_strings['knowledge'] => 'Knowledge', $this->_lang_strings['comprehension'] => 'Comprehension', $this->_lang_strings['application'] => 'Application', $this->_lang_strings['analysis'] => 'Analysis', $this->_lang_strings['synthesis'] => 'Synthesis', $this->_lang_strings['evaluation'] => 'Evaluation'];
 
         $langpack = new \langpack();
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);
@@ -229,7 +229,7 @@ class QuestionEdit extends RogoObject
      * @param array $exclude a list of fields to exclude from the population process
      * @param string $prefix a prefix to apply to field names when used as keys into data array
      */
-    public function populate($fields, $data, $exclude = array(), $prefix = '')
+    public function populate($fields, $data, $exclude = [], $prefix = '')
     {
         foreach ($fields as $section_name) {
             if (count($this->_fields_force) > 0 and !isset($data[$section_name]) and in_array($section_name, $this->_fields_force)) {
@@ -277,7 +277,7 @@ class QuestionEdit extends RogoObject
             // Delete existing media if asked
             if (isset($post_data['delete_media0']) and $post_data['delete_media0'] == 'on') {
                 media_handler::deleteMedia($old_media['filename']);
-                $this->set_media(array('filename' => '', 'width' => 0, 'height' => 0, 'alt' => '', 'owner' => null, 'num' => -1));
+                $this->set_media(['filename' => '', 'width' => 0, 'height' => 0, 'alt' => '', 'owner' => null, 'num' => -1]);
             }
         }
     }
@@ -289,7 +289,7 @@ class QuestionEdit extends RogoObject
      * @param array $exclude a list of fields to exclude from the population process
      * @param string $prefix a prefix to apply to field names when used as keys into data array
      */
-    public function populate_compound($fields, $data, $exclude = array(), $prefix = '')
+    public function populate_compound($fields, $data, $exclude = [], $prefix = '')
     {
         foreach ($fields as $section_name) {
             if (!in_array($section_name, $exclude)) {
@@ -414,7 +414,7 @@ class QuestionEdit extends RogoObject
                 $this->last_edited = date('Y-m-d H:i:s');
                 $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());
                 $this->guid = $server_ipaddress . uniqid('', true);
-                $params = array_merge(array('ssssssssssssssisisssssss'), $this->_qdata);
+                $params = array_merge(['ssssssssssssssisisssssss'], $this->_qdata);
                 $query = <<< QUERY
 INSERT INTO questions (q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes, correct_fback, incorrect_fback, score_method,
 display_method, q_option_order, std, bloom, ownerID, checkout_time, checkout_authorID,
@@ -423,7 +423,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
                 // Otherwise we're updating an existing one
-                $params = array_merge(array('ssssssssssssssisisssssssi'), $this->_qdata, array(&$this->id));
+                $params = array_merge(['ssssssssssssssisisssssssi'], $this->_qdata, [&$this->id]);
                 $this->last_edited = date('Y-m-d H:i:s');
                 $query = <<< QUERY
 UPDATE questions
@@ -435,7 +435,7 @@ QUERY;
             }
 
             $result = $this->_mysqli->prepare($query);
-            call_user_func_array(array($result,'bind_param'), $params);
+            call_user_func_array([$result,'bind_param'], $params);
             $result->execute();
             $success = ($result->affected_rows > -1);
             if ($this->_mysqli->error) {
@@ -456,7 +456,7 @@ QUERY;
                 $media = explode('|', $this->_qmdata['media'] ?? '');
                 $source = explode('|', $this->_mdata['media_source'] ?? '');
                 if (!isset($this->currentmedia['num'])) {
-                    $current_num = array();
+                    $current_num = [];
                 } else {
                     $current_num = explode('|', $this->currentmedia['num']);
                 }
@@ -466,37 +466,37 @@ QUERY;
                 $alt = explode('|', $this->_mdata['media_alt'] ?? '');
                 $owner = explode('|', $this->_mdata['media_owner'] ?? '');
 
-                $insertmediaparams = array();
-                $updatemediaparams = array();
-                $numarray = array();
+                $insertmediaparams = [];
+                $updatemediaparams = [];
+                $numarray = [];
                 for ($i = 0; $i < count($source); $i++) {
                     if ($source[$i] != '') {
                         if (in_array($num[$i], $current_num)) {
                             // Update.
-                            $updatemediaparams[] = array(
+                            $updatemediaparams[] = [
                                 'source' => $source[$i],
                                 'width' => $width[$i],
                                 'height' => $height[$i],
                                 'alt' => $alt[$i],
                                 'owner' => $owner[$i],
                                 'id' => $media[$i]
-                            );
+                            ];
                         } else {
                             // Insert.
-                            $insertmediaparams[] = array(
+                            $insertmediaparams[] = [
                                 'source' => $source[$i],
                                 'width' => $width[$i],
                                 'height' => $height[$i],
                                 'alt' => $alt[$i],
                                 'owner' => $owner[$i]
-                            );
+                            ];
                             $numarray[] = $num[$i];
                         }
                     }
                 }
 
                 // Insert media rows.
-                $mediaids = array();
+                $mediaids = [];
                 if (count($insertmediaparams) > 0) {
                     foreach ($insertmediaparams as $mparam) {
                         $id = \media_handler::insertMedia(
@@ -531,13 +531,13 @@ QUERY;
 
                 // Insert questions_media rows.
                 if (count($mediaids) > 0) {
-                    $questionmediaparams = array();
+                    $questionmediaparams = [];
                     for ($i = 0; $i < count($mediaids); $i++) {
-                        $questionmediaparams[] = array(
+                        $questionmediaparams[] = [
                             'mediaid' => $mediaids[$i],
                             'qid' => $this->id,
                             'num' => $numarray[$i]
-                        );
+                        ];
                     }
                     foreach ($questionmediaparams as $qmparam) {
                         $ok = \media_handler::linkQuestionToMedia(
@@ -551,20 +551,20 @@ QUERY;
                     }
                 }
 
-                $deletemediaparams = array();
-                $deletequestionmediaparams = array();
+                $deletemediaparams = [];
+                $deletequestionmediaparams = [];
                 $i = 0;
                 foreach ($num as $n) {
                     // If media number set to -1 delete it.
                     if ($n != '' and $n == -1) {
                         // Delete.
-                        $deletemediaparams[] = array(
+                        $deletemediaparams[] = [
                             'id' => $media[$i],
-                        );
-                        $deletequestionmediaparams[] = array(
+                        ];
+                        $deletequestionmediaparams[] = [
                             'id' => $media[$i],
                             'qid' => $this->id,
-                        );
+                        ];
                     }
                     $i++;
                 }
@@ -616,7 +616,7 @@ QUERY;
                 $success = $this->save_options();
             }
 
-            $this->_modified_fields = array();
+            $this->_modified_fields = [];
         } else {
             throw new ValidationException($valid);
         }
@@ -704,7 +704,7 @@ QUERY;
         $category = ($category == null) ? $this->_lang_strings['editquestion'] : $category;
 
         if (!in_array($field, $this->_unified_field_modifications)) {
-            $this->_unified_field_modifications[$field] = array($category, $label, $old_value, $new_value);
+            $this->_unified_field_modifications[$field] = [$category, $label, $old_value, $new_value];
         }
     }
 
@@ -742,14 +742,14 @@ QUERY;
     public function add_default_correction_behaviours($cfg_web_root)
     {
         $file_base = 'behaviours/corrections/';
-        $classdetails = array();
+        $classdetails = [];
 
         if ($this->allow_correction()) {
-            $classdetails[] = array('file' => $file_base . 'MARKSCorrector.class.php', 'name' => 'MARKSCorrector');
+            $classdetails[] = ['file' => $file_base . 'MARKSCorrector.class.php', 'name' => 'MARKSCorrector'];
             $type = mb_strtoupper($this->get_type());
-            $classdetails[] = array('file' => $file_base . $type . 'Corrector.class.php', 'name' => $type . 'Corrector');
+            $classdetails[] = ['file' => $file_base . $type . 'Corrector.class.php', 'name' => $type . 'Corrector'];
         } else {
-            $classdetails[] = array('file' => $file_base . 'NullCorrector.class.php', 'name' => 'NullCorrector');
+            $classdetails[] = ['file' => $file_base . 'NullCorrector.class.php', 'name' => 'NullCorrector'];
         }
         foreach ($classdetails as $class) {
             $classname = '';
@@ -781,7 +781,7 @@ QUERY;
      */
     public function update_correct($new_correct, $paper_id)
     {
-        $errors = array();
+        $errors = [];
 
         $paper_type = $this->get_paper_type($paper_id);
         if ($paper_type == -1) {
@@ -1346,7 +1346,7 @@ QUERY;
      */
     public function get_media()
     {
-        return array('filename' => $this->media_source, 'width' => $this->media_width, 'height' => $this->media_height, 'alt' => $this->media_alt, 'owner' => $this->media_owner, 'num' => $this->media_num);
+        return ['filename' => $this->media_source, 'width' => $this->media_width, 'height' => $this->media_height, 'alt' => $this->media_alt, 'owner' => $this->media_owner, 'num' => $this->media_num];
     }
 
     /**
@@ -1581,11 +1581,11 @@ QUERY;
     public function get_changes()
     {
         if ($this->id == -1) {
-            return array();
+            return [];
         }
 
         if (!is_array($this->_changes)) {
-            $this->_changes = array();
+            $this->_changes = [];
             // Load the changes into an array
             $result = $this->_mysqli->prepare("SELECT type, part, old, new, DATE_FORMAT(changed, '%d/%m/%Y') AS display_changed, title, initials, surname FROM (track_changes, users) WHERE track_changes.editor=users.id AND typeID=? ORDER BY changed DESC, users.id LIMIT 200");
             $result->bind_param('i', $this->id);
@@ -1598,7 +1598,7 @@ QUERY;
                     $new = $this->$localise_method($new);
                 }
 
-                $this->_changes[] = array('date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname);
+                $this->_changes[] = ['date' => $display_changed, 'action' => $type, 'section' => $part, 'old' => $old, 'new' => $new, 'user' => $title . ' ' . $initials . ' ' . $surname];
             }
             $result->close();
         }
@@ -1617,7 +1617,7 @@ QUERY;
     public function get_full_history(int $limit, array &$string)
     {
         if ($this->id == -1) {
-            return array();
+            return [];
         }
 
         if (!is_array($this->_changes)) {
@@ -1643,7 +1643,7 @@ QUERY;
     public function get_keywords()
     {
         if (!is_array($this->_keywords)) {
-            $this->_keywords = array();
+            $this->_keywords = [];
 
             // Load the keywords into an array
             $result = $this->_mysqli->prepare('SELECT keywordID FROM keywords_question WHERE q_id=?');
@@ -1677,11 +1677,11 @@ QUERY;
     public function get_comments($paper_id = -1)
     {
         if ($this->id == -1) {
-            return array();
+            return [];
         }
 
         if (!is_array($this->_comments)) {
-            $this->_comments = array();
+            $this->_comments = [];
 
             if ($paper_id != -1) {
                 $query = <<< QUERY
@@ -1705,7 +1705,7 @@ QUERY;
             $result->execute();
             $result->bind_result($paper_title, $id, $category, $comment, $reviewed, $title, $initials, $surname, $action, $response, $review_type);
             while ($result->fetch()) {
-                $this->_comments[$id] = array('paper' => $paper_title, 'category' => $category, 'comment' => $comment, 'date' => $reviewed, 'name' => $title . ' ' . $initials . ' ' . $surname, 'action' => $action, 'response' => $response, 'type' => $review_type);
+                $this->_comments[$id] = ['paper' => $paper_title, 'category' => $category, 'comment' => $comment, 'date' => $reviewed, 'name' => $title . ' ' . $initials . ' ' . $surname, 'action' => $action, 'response' => $response, 'type' => $review_type];
             }
             $result->close();
         }
@@ -1863,7 +1863,7 @@ QUERY;
         $result->bind_param('i', $this->id);
         $result->execute();
         $result->store_result();
-        call_user_func_array(array($result, 'bind_result'), $this->_data);
+        call_user_func_array([$result, 'bind_result'], $this->_data);
         if ($result->fetch()) {
             $success = true;
             $found = $result->num_rows;
@@ -1905,8 +1905,8 @@ QUERY;
 
             // Build array of references to option data for use in call_user_func_array
             $opt_fields = OptionEdit::get_field_array();
-            $opt_data = array();
-            $params = array();
+            $opt_data = [];
+            $params = [];
             $params[] = &$opt_data['id'];
             foreach ($opt_fields as $field) {
                 $params[] = &$opt_data[$field];
@@ -1926,7 +1926,7 @@ QUERY;
             $result->bind_param('i', $this->id);
             $result->execute();
             $result->store_result();
-            call_user_func_array(array($result, 'bind_result'), $params);
+            call_user_func_array([$result, 'bind_result'], $params);
             // TODO: handle 'correctness' more nicely
             $i = 1;
             if ($result->num_rows > 0) {
@@ -2028,7 +2028,7 @@ QUERY;
      */
     protected function serialize_settings()
     {
-        $extra = array();
+        $extra = [];
 
         foreach ($this->_fields_settings as $field) {
             if (isset($this->$field)) {
@@ -2106,7 +2106,7 @@ QUERY;
         foreach ($this->_unified_field_modifications as $mod) {
             $this->_logger->track_change($mod[0], $this->id, $this->_user_id, $mod[2], $mod[3], $mod[1]);
         }
-        $this->_unified_field_modifications = array();
+        $this->_unified_field_modifications = [];
     }
 
     private function get_paper_type($paper_id)

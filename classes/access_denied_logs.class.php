@@ -34,7 +34,7 @@ class access_denied_logs
     {
         $configObject = Config::get_instance();
         $this->db = $configObject->db;
-        $this->logs = array();
+        $this->logs = [];
     }
 
     /**
@@ -54,13 +54,13 @@ class access_denied_logs
      */
     public function get_access_denied_logs()
     {
-        $this->logs = array();
+        $this->logs = [];
         $result = $this->db->prepare('SELECT denied_log.id, UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried DESC LIMIT 10000');
         $result->execute();
         $result->store_result();
         $result->bind_result($id, $tried, $ipaddress, $page, $msg, $userID, $title, $initials, $surname);
         while ($result->fetch()) {
-            $this->logs[] = array('id' => $id, 'tried' => $tried, 'ipaddress' => $ipaddress, 'page' => $page, 'msg' => $msg, 'userID' => $userID, 'title' => $title, 'initials' => $initials, 'surname' => $surname);
+            $this->logs[] = ['id' => $id, 'tried' => $tried, 'ipaddress' => $ipaddress, 'page' => $page, 'msg' => $msg, 'userID' => $userID, 'title' => $title, 'initials' => $initials, 'surname' => $surname];
         }
         $result->close();
         return $this->logs;

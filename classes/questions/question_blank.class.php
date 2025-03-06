@@ -33,8 +33,8 @@ class QuestionBLANK extends QuestionEdit
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-        $this->_fields_unified = array('text' => $this->_lang_strings['questionstem'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-        $this->_display_methods = array('dropdown' => $this->_lang_strings['dropdownlists'], 'textboxes' => $this->_lang_strings['textboxes']);
+        $this->_fields_unified = ['text' => $this->_lang_strings['questionstem'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
+        $this->_display_methods = ['dropdown' => $this->_lang_strings['dropdownlists'], 'textboxes' => $this->_lang_strings['textboxes']];
 
         // 'correct' is not a unified field for Fill in the Blank questions
         $this->_fields_editable[] = 'correct';

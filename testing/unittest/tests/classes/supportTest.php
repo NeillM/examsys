@@ -34,7 +34,7 @@ class supporttest extends unittestdatabase
     public function datageneration(): void
     {
         $datagenerator = $this->get_datagenerator('config', 'core');
-        $datagenerator->change_setting(array('component' => 'core', 'setting' => 'support_contact_email', 'value' => array('test@example.com', 'joseph.baxter@example.com')));
+        $datagenerator->change_setting(['component' => 'core', 'setting' => 'support_contact_email', 'value' => ['test@example.com', 'joseph.baxter@example.com']]);
     }
 
     /**

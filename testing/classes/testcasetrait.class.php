@@ -91,7 +91,7 @@ trait testcasetrait
         // Base users.
         $datagenerator = $this->get_datagenerator('users', 'core');
         $datagenerator->create_user(
-            array(
+            [
                 'surname' => 'Administrator',
                 'username' => 'admin',
                 'roles' => 'Staff,SysAdmin',
@@ -101,10 +101,10 @@ trait testcasetrait
                 'email' => 'admin@example.com',
                 'first_names' => 'System',
                 'gender' => null
-            )
+            ]
         );
         $datagenerator->create_user(
-            array(
+            [
                 'surname' => 'User1',
                 'username' => 'test1',
                 'roles' => 'Student',
@@ -114,15 +114,15 @@ trait testcasetrait
                 'first_names' => 'A',
                 'sid' => '1234567890',
                 'gender' => null,
-                'special_needs' => array(
+                'special_needs' => [
                     'extra_time' => 5,
                     'breaks' => 'yes',
                     'break_time' => 10
-                )
-            )
+                ]
+            ]
         );
         $datagenerator->create_user(
-            array(
+            [
                 'surname' => 'User2',
                 'username' => 'test2',
                 'roles' => 'Student',
@@ -132,7 +132,7 @@ trait testcasetrait
                 'first_names' => 'A',
                 'sid' => '00000001',
                 'gender' => null
-            )
+            ]
         );
     }
 
@@ -200,7 +200,7 @@ trait testcasetrait
         }
         $sql->execute();
         $result = $sql->get_result();
-        $data = array();
+        $data = [];
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $data[] = $row;
         }

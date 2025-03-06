@@ -85,7 +85,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     echo '</table>';
 } else {
     // List of files that should be kept
-    $exempt = array('formulary.gif', 'formulary.html');
+    $exempt = ['formulary.gif', 'formulary.html'];
 
     function getImages($html)
     {
@@ -94,7 +94,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         $regexp = str_replace('&', '&amp;', $regexp);
         $regexp = str_replace('?', '\?', $regexp);
 
-        $image_array = array();
+        $image_array = [];
 
         $parts = explode('<img', $html);
         if (count($parts) > 0) {
@@ -104,7 +104,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
                 $second_split = explode('src="', $image_line);
                 $third_split = explode('"', $second_split[1]);
                 $image_src = $third_split[0];
-                $matches = array();
+                $matches = [];
                 preg_match($regexp, $image_src, $matches);
                 if (!empty($matches[1])) {
                     $image_src = $matches[1];
@@ -116,8 +116,8 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         return $image_array;
     }
 
-    $file_array = array();
-    $missing_array = array();
+    $file_array = [];
+    $missing_array = [];
 
     //- Get all the files from the 'media' directory first. ------------------------------
     $default_dir = $mediadirectory->location();
@@ -217,7 +217,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     $mysqli->close();
 
     $tmp_date = mktime(0, 0, 0, date('m'), date('d') - 2, date('Y'));
-    $deletefiles = array();
+    $deletefiles = [];
     // Run through the array and remove any files not used.
     echo '<h1>' . $string['deletingfiles'] . "</h1>\n<ul>\n";
     $fileusedcount = 0;

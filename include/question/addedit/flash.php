@@ -33,7 +33,7 @@ if ($num_options > 0) {
     $option_media = $option->get_media();
     $option_id = $option->id;
 } else {
-    $option_media = array('filename' => '', 'width' => '0', 'height' => '0');
+    $option_media = ['filename' => '', 'width' => '0', 'height' => '0'];
     $option_id = -1;
 }
 

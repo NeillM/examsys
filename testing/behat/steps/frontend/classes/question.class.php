@@ -127,7 +127,7 @@ trait Question
         // Pop is using iframes so need to switch to it in order to be able to select the checkboxes.
         $this->iFocusOnIframe('iframeurl');
         $rows = $data->getRows();
-        $questions = array();
+        $questions = [];
         foreach ($rows as $row) {
             $question = array_shift($row);
             $leadin = $this->find('bank_question_leadin', $question);
@@ -205,7 +205,7 @@ trait Question
         // Get coordinates and validate them.
         $coords = explode(',', $fields['coordinates']);
         if (!empty($coords) and count($coords) % 2 == 0) {
-            $coordinates = array();
+            $coordinates = [];
             $count = 0;
             for ($i = 0; $i < count($coords); $i++) {
                 $coordinates[$count]['x'] = $coords[$i];
@@ -356,7 +356,7 @@ trait Question
         $this->fillField('notes', $fields['notes']);
         $this->fillTinyMCE('scenario', $fields['scenario']);
         // Draw Hotspots.
-        $hotspots = array($fields['hotspot_1'], $fields['hotspot_2'], $fields['hotspot_3']);
+        $hotspots = [$fields['hotspot_1'], $fields['hotspot_2'], $fields['hotspot_3']];
         $layer = 0;
         $last = count($hotspots) - 1;
         foreach ($hotspots as $h) {
@@ -372,7 +372,7 @@ trait Question
             // Draw hotspot.
             // Get coordinates and validate them.
             if (!empty($coords) and count($coords) % 2 == 0) {
-                $coordinates = array();
+                $coordinates = [];
                 $count = 0;
                 for ($i = 0; $i < count($coords); $i++) {
                     $coordinates[$count]['x'] = $coords[$i];
@@ -407,7 +407,7 @@ trait Question
         // Get coordinates and validate them.
         $coords = explode(',', $fields['coordinates']);
         if (!empty($coords) and count($coords) % 2 == 0) {
-            $coordinates = array();
+            $coordinates = [];
             $count = 0;
             for ($i = 0; $i < count($coords); $i++) {
                 $coordinates[$count]['x'] = $coords[$i];
@@ -428,7 +428,7 @@ trait Question
     {
         $fields = $data->getRowsHash();
         $this->genericfields($fields);
-        $this->fillDropDown('scale_type', array($fields['scale']));
+        $this->fillDropDown('scale_type', [$fields['scale']]);
     }
 
     /**
@@ -474,7 +474,7 @@ trait Question
     {
         $fields = $data->getRowsHash();
         $this->fillField('leadin', $fields['description']);
-        $this->fillDropDown('option_text1', array($fields['keyword']));
+        $this->fillDropDown('option_text1', [$fields['keyword']]);
     }
 
     /**
@@ -488,9 +488,9 @@ trait Question
         $this->fillField('leadin', $fields['description']);
         $this->i_click('Add Question(s)', 'button');
         $questions = json_decode($fields['questions']);
-        $questionarray = array();
+        $questionarray = [];
         foreach ($questions as $q) {
-            $questionarray[] = array($q);
+            $questionarray[] = [$q];
         }
         $questionstable = new TableNode($questionarray);
         $this->iAddTheFollowingQuestionsVia('Questions Bank', $questionstable);
@@ -508,9 +508,9 @@ trait Question
         $this->fillField('option_text1', $fields['option_1']);
         $this->fillField('option_text2', $fields['option_2']);
         $this->fillField('option_text3', $fields['option_3']);
-        $this->fillDropDown('option_correct1', array($fields['rank_1']));
-        $this->fillDropDown('option_correct2', array($fields['rank_2']));
-        $this->fillDropDown('option_correct3', array($fields['rank_3']));
+        $this->fillDropDown('option_correct1', [$fields['rank_1']]);
+        $this->fillDropDown('option_correct2', [$fields['rank_2']]);
+        $this->fillDropDown('option_correct3', [$fields['rank_3']]);
     }
 
     /**
@@ -525,11 +525,11 @@ trait Question
         $this->fillField('notes', $fields['notes']);
         $this->fillTinyMCE('scenario', $fields['clinical vignette']);
         $this->fillTinyMCE('hypothesis', $fields['hypothesis']);
-        $this->fillDropDown('option_correct1', array($fields['experts_1']));
-        $this->fillDropDown('option_correct2', array($fields['experts_2']));
-        $this->fillDropDown('option_correct3', array($fields['experts_3']));
-        $this->fillDropDown('option_correct4', array($fields['experts_4']));
-        $this->fillDropDown('option_correct5', array($fields['experts_5']));
+        $this->fillDropDown('option_correct1', [$fields['experts_1']]);
+        $this->fillDropDown('option_correct2', [$fields['experts_2']]);
+        $this->fillDropDown('option_correct3', [$fields['experts_3']]);
+        $this->fillDropDown('option_correct4', [$fields['experts_4']]);
+        $this->fillDropDown('option_correct5', [$fields['experts_5']]);
     }
 
     /**

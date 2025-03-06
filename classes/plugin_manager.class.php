@@ -33,17 +33,17 @@ class plugin_manager
      * Whitelist of plugin types supported by rogo.
      * @const PLUGINTYPE_WHITELIST
      */
-    public const PLUGINTYPE_WHITELIST = array('mapping', 'SMS', 'texteditor');
+    public const PLUGINTYPE_WHITELIST = ['mapping', 'SMS', 'texteditor'];
 
     /**
      * Define core plugins.
      * Associate array (plugin namespace, enabled by default flag)
      * @const CORE_PLUGINS
      */
-    public const CORE_PLUGINS = array(
-        array('namespace' => 'plugins\texteditor\plugin_tinymce_texteditor\plugin_tinymce_texteditor', 'enabled' => true),
-        array('namespace' => 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor', 'enabled' => false)
-    );
+    public const CORE_PLUGINS = [
+        ['namespace' => 'plugins\texteditor\plugin_tinymce_texteditor\plugin_tinymce_texteditor', 'enabled' => true],
+        ['namespace' => 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor', 'enabled' => false]
+    ];
 
     /**
      * List available plugins.
@@ -53,7 +53,7 @@ class plugin_manager
     {
         $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
         $folders = glob($directory, GLOB_ONLYDIR);
-        $plugins = array();
+        $plugins = [];
         foreach ($folders as $folder) {
             $type = basename($folder);
             if (in_array($type, self::PLUGINTYPE_WHITELIST)) {
@@ -74,7 +74,7 @@ class plugin_manager
     {
         $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
         $folders = glob($directory, GLOB_ONLYDIR);
-        $plugintype = array();
+        $plugintype = [];
         foreach ($folders as $folder) {
             if (in_array(basename($folder), self::PLUGINTYPE_WHITELIST)) {
                 $plugintype[] = 'plugin_' . basename($folder);
@@ -89,7 +89,7 @@ class plugin_manager
      */
     public static function get_all_enabled_plugins()
     {
-        $enabledplugins = array();
+        $enabledplugins = [];
         $plugintypes = self::listplugintypes();
         foreach ($plugintypes as $type) {
             $enabled = self::get_plugin_type_enabled($type);
@@ -109,7 +109,7 @@ class plugin_manager
         $enabled = $config->get_setting($type, 'enabled_plugin');
         if (!is_null($enabled)) {
             $enabledarray = $enabled;
-            $newenabled = array();
+            $newenabled = [];
             $changed = false;
             // Check existing enabled plugins and disable those not installed.
             foreach ($enabledarray as $e) {
@@ -123,7 +123,7 @@ class plugin_manager
                 $config->set_setting('enabled_plugin', $newenabled, Config::JSON, 'plugin_' . $type);
             }
         } else {
-            $newenabled = array();
+            $newenabled = [];
         }
         return $newenabled;
     }

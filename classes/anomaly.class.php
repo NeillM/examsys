@@ -111,7 +111,7 @@ class Anomaly
         $stmt->execute();
         $id = $stmt->insert_id;
         $stmt->close();
-        return array('id' => $id, 'timestamp' => $time);
+        return ['id' => $id, 'timestamp' => $time];
     }
 
     /**
@@ -157,13 +157,13 @@ class Anomaly
         $stmt->bind_result($userid, $forename, $surname, $sid, $type, $timestamp, $details, $screen);
         $stmt->store_result();
 
-        $anomalies = array (
+        $anomalies = [
             'from' => number_format($first),
             'to' => number_format($last),
             'total' => number_format($result->total),
             'pages' => $pages,
             'items' => []
-        );
+        ];
         while ($stmt->fetch()) {
             $anomaly = new \AnomalyItem();
             $anomaly->userid = $userid;

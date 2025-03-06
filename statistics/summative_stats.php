@@ -34,11 +34,11 @@ $lang['title'] = $string['summativeexamstats'];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/statistics.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/tabs.css"/>';
-$breadcrumb = array(
+$breadcrumb = [
     $string['home'] => '../index.php',
     $string['administrativetools'] => '../admin/index.php',
     $string['statistics'] => 'index.php',
-);
+];
 $lang['title'] .= ': ' . $current_year . '/' . (mb_substr($current_year, 2, 2) + 1);
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/no_sidebar.html');
@@ -52,13 +52,13 @@ $month_min = 99999;
 $month_max = 0;
 $old_month = '';
 $month_papers_unused = 0;
-$distinct_users = array();
+$distinct_users = [];
 $stats = new Statistics();
 
 // Get summative papers running in academic year.
 $papers = $stats->getSummativePapers($current_year);
-$renderdata = array();
-$labdata = array();
+$renderdata = [];
+$labdata = [];
 foreach ($papers as $pid => $data) {
     $labdata[] = $data['labs'];
     $paper_count = 0;

@@ -71,7 +71,7 @@ $result->close();
 
 $owner = $title . ' ' . $initials . ', ' . $surname;
 
-$folder_staff_modules = array();
+$folder_staff_modules = [];
 $result = $mysqli->prepare('SELECT idMod, moduleID FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND modules.id = folders_modules_staff.idMod AND folders.id = ?');
 $result->bind_param('i', $folderID);
 $result->execute();
@@ -181,7 +181,7 @@ $result->close();
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $mysqli->close();
 ?>
 

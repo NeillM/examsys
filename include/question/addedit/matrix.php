@@ -30,9 +30,9 @@ if ($num_options > 0) {
     $first = reset($options);
     $correct_answers = $first->get_all_corrects();
 } else {
-    $correct_answers = array();
+    $correct_answers = [];
 }
-$option_texts = array();
+$option_texts = [];
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 
 // Stem for this question type is a compound field

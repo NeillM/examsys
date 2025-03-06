@@ -77,7 +77,7 @@ class csv_handlerTest extends unittestdatabase
     public function test_get_line()
     {
         $csv = new \csv\csv_handler('test.csv', $this->get_test_dir());
-        $line = array('a' => '1', 'b' => '2', 'c' => '3');
+        $line = ['a' => '1', 'b' => '2', 'c' => '3'];
         $this->assertEquals($line, $csv->get_line());
     }
 }

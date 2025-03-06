@@ -28,7 +28,7 @@
 require '../include/staff_auth.inc';
 $paper_name = param::optional('paper_name', '', param::TEXT, param::FETCH_GET);
 $paper_type = param::optional('paper_type', '', param::TEXT, param::FETCH_GET);
-$paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
+$paper_types = ['formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -110,12 +110,12 @@ if (isset($_GET['module'])) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['warn'] = $configObject->get_setting('core', 'summative_warn_external');
 if (isset($_GET['type'])) {
     $miscdataset['attributes']['type'] = $paper_types[$_GET['type']];
 }
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
 </html>

@@ -30,7 +30,7 @@ $userID       = check_var('userID', 'GET', true, false, true);
 $temp_userID  = check_var('temp_userID', 'GET', true, false, true);
 
 // Get start time of the paper.
-$papers = array();
+$papers = [];
 $paper_no = 0;
 $result = $mysqli->prepare('SELECT DISTINCT paperID, started FROM log_metadata WHERE userID = ?');
 $result->bind_param('i', $temp_userID);

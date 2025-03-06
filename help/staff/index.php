@@ -71,10 +71,10 @@ if (isset($_GET['highlight'])) {
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['srcofy'] = param::optional('srcOfY', 0, param::FLOAT, param::FETCH_GET);
-$render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, [], 'dataset.html');
 ?>
     <script type="text/javascript" src="../../js/helpinit.min.js"></script>
   </body>

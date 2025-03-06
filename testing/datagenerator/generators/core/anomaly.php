@@ -69,15 +69,15 @@ class Anomaly extends generator
             'time' => null,
         ];
         $values = $this->set_defaults_and_clean($defaults, $parameters);
-        $data = array(
+        $data = [
             'userid' => $values['userid'],
             'paperid' => $values['paperid'],
             'screen' => $values['screen'],
-        );
+        ];
         if ($values['type'] == \Anomaly::CLOCK) {
             $data['previous'] = $values['previous'];
             $data['current'] = $values['current'];
-            $values['details'] = array('previous' => $values['previous'], 'current' => $values['current']);
+            $values['details'] = ['previous' => $values['previous'], 'current' => $values['current']];
             $anomaly = new \ClockAnomaly($data);
             $insert = $anomaly->insert();
             $values['timestamp'] = $insert['timestamp'];

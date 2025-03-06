@@ -77,7 +77,7 @@ foreach ($statuses as $status) {
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 ?>
 <script src="../js/liststatusesinit.min.js"></script>
 </body>

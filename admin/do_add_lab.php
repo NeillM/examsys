@@ -55,8 +55,8 @@ if ($hostname_lookup) {
     $test_re = '/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
 }
 
-$ipInvalid = array();
-$ipInUse = array();
+$ipInvalid = [];
+$ipInUse = [];
 
 foreach ($addresses as $address) {
     $address = trim($address);
@@ -70,7 +70,7 @@ foreach ($addresses as $address) {
 }
 
 if ($bad_addresses > 0) {
-    echo json_encode(array('INVALID', $ipInvalid, $ipInUse));
+    echo json_encode(['INVALID', $ipInvalid, $ipInUse]);
     exit();
 } else {
     // Insert into Lab table.
@@ -81,7 +81,7 @@ if ($bad_addresses > 0) {
     $result->close();
 
     if ($mysqli->errno != 0) {
-        echo json_encode(array('ERROR', $mysqli->errno));
+        echo json_encode(['ERROR', $mysqli->errno]);
         exit();
     }
 
@@ -98,5 +98,5 @@ if ($bad_addresses > 0) {
         $result->execute();
         $result->close();
     }
-    echo json_encode(array('OK', $labID));
+    echo json_encode(['OK', $labID]);
 }

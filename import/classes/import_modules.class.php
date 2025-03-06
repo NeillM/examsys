@@ -49,17 +49,17 @@ class import_modules extends importer
      * Required fields
      * @var array
      */
-    public const REQUIRED = array(
+    public const REQUIRED = [
         'moduleid',
         'fullname',
         'school',
-    );
+    ];
 
     /**
      * Optional feilds
      * @var array
      */
-    public const OPTIONAL = array(
+    public const OPTIONAL = [
         'schoolcode',
         'smsapi',
         'objectiveapi',
@@ -75,7 +75,7 @@ class import_modules extends importer
         'addteammember',
         'yearstart',
         'externalid',
-    );
+    ];
 
     /**
      * Filter true/false responses
@@ -98,9 +98,9 @@ class import_modules extends importer
      */
     public function execute()
     {
-        $this->modulefailed = array();
-        $this->moduleadded = array();
-        $this->moduleexists = array();
+        $this->modulefailed = [];
+        $this->moduleadded = [];
+        $this->moduleexists = [];
 
         // Set the required headers.
         $this->handler->required_header(self::REQUIRED);
@@ -122,7 +122,7 @@ class import_modules extends importer
                 $line['school'] = $schools;
             }
             if (\module_utils::module_exists($line['moduleid'], $this->config->db)) {
-                $updateData = array();
+                $updateData = [];
                 $checklist = '';
                 $checked = false;
                 if (isset($line['smsapi'])) {

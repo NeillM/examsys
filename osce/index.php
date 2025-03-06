@@ -28,7 +28,7 @@
 require '../include/staff_auth.inc';
 
 $paper_no = 0;
-$paper_display = array();
+$paper_display = [];
 
 // Get a list of OSCE stations that are live.
 $result = $mysqli->prepare("

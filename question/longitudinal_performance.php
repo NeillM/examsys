@@ -73,7 +73,7 @@ $q_id = check_var('q_id', 'GET', true, false, true);
   $question_data->fetch();
   $question_data->close();
 
-  $q_id_list = array();
+  $q_id_list = [];
 
   $found = false;
   $target_id = $q_id;
@@ -100,7 +100,7 @@ for ($i = 0; $i < $rows; $i++) {
     }
 }
 
-  $display_data = array();
+  $display_data = [];
 
   $row = -1;
 foreach ($q_id_list as $lookup_q_id) {

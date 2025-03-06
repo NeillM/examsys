@@ -45,7 +45,7 @@ class AnomalySearchTest extends testing\unittest\unittestdatabase
         $this->student1 = $usergen->create_user(['roles' => 'Student', 'sid' => '24680', 'surname' => 'Smith']);
         $datagenerator = $this->get_datagenerator('papers', 'core');
         $this->paper = $datagenerator->create_paper(
-            array(
+            [
                 'papertitle' => 'test summative',
                 'bidirectional' => '1',
                 'fullscreen' => '1',
@@ -53,28 +53,28 @@ class AnomalySearchTest extends testing\unittest\unittestdatabase
                 'papertype' => '2',
                 'modulename' => 'Training Module',
                 'remote' => 1
-            )
+            ]
         );
         $datagenerator = $this->get_datagenerator('anomaly', 'core');
         $this->anomaly[] = $datagenerator->createAnomaly(
-            array(
+            [
                 'userid' => $this->student1['id'],
                 'paperid' => $this->paper['id'],
                 'screen' => 2,
                 'type' => \Anomaly::CLOCK,
                 'previous' => 'Tue Aug 19 1975 23:15:30 GMT+0200 (CEST)',
                 'current' => 'Tue Aug 19 1975 23:10:30 GMT+0200 (CEST)'
-            )
+            ]
         );
         $this->anomaly[] = $datagenerator->createAnomaly(
-            array(
+            [
                 'userid' => $this->admin['id'],
                 'paperid' => $this->paper['id'],
                 'screen' => 1,
                 'type' => \Anomaly::CLOCK,
                 'previous' => 'Tue Aug 20 1976 07:30:30 GMT+0200 (CEST)',
                 'current' => 'Tue Aug 20 1976 07:10:30 GMT+0200 (CEST)'
-            )
+            ]
         );
     }
 

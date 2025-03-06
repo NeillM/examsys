@@ -43,7 +43,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
     {
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $this->question = $datagenerator->create_question(
-            array(
+            [
                 'type' => 'mcq',
                 'user' => 'admin',
                 'status' => 1,
@@ -59,7 +59,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
                 'display_method' => 'vertical',
                 'score_method' => 'Mark per Option',
                 'externalref' => 'testvalue',
-            )
+            ]
         );
 
         $this->option = $datagenerator->add_options_to_question([
@@ -83,7 +83,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
         // Insert.
         OptionsMetadata::set($this->option['id_num'], 'testtype', 'testvalue');
         OptionsMetadata::set($this->option['id_num'], 'longtest', str_repeat('testvalue1', 100));
-        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
+        $actual = $this->query(['columns' => ['type', 'value', 'optionID'], 'table' => 'options_metadata', 'orderby' => 'type']);
         $expected = [
             [
                 'type' => 'longtest',
@@ -99,7 +99,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
 
         // Update.
         OptionsMetadata::set($this->option['id_num'], 'testtype', 'newvalue');
-        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
+        $actual = $this->query(['columns' => ['type', 'value', 'optionID'], 'table' => 'options_metadata', 'orderby' => 'type']);
         $expected = [
             [
                 'type' => 'longtest',
@@ -115,7 +115,7 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
 
         // Set the test value to empty, confirm deleted
         OptionsMetadata::set($this->option['id_num'], 'testtype', '');
-        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
+        $actual = $this->query(['columns' => ['type', 'value', 'optionID'], 'table' => 'options_metadata', 'orderby' => 'type']);
         $expected = [
             [
                 'type' => 'longtest',
@@ -138,19 +138,19 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
     {
         // Insert.
         OptionsMetadata::setArray($this->option['id_num'], ['testtype' => 'testvalue', 'testtype2' => 'anothertestvalue']);
-        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata', 'orderby' => 'type'));
-        $expected = array(
-            0 => array(
+        $actual = $this->query(['columns' => ['type', 'value', 'optionID'], 'table' => 'options_metadata', 'orderby' => 'type']);
+        $expected = [
+            0 => [
                 'type' => 'testtype',
                 'value' => 'testvalue',
                 'optionID' => $this->option['id_num'],
-            ),
-            1 => array(
+            ],
+            1 => [
                 'type' => 'testtype2',
                 'value' => 'anothertestvalue',
                 'optionID' => $this->option['id_num'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $actual);
     }
 
@@ -200,31 +200,31 @@ class OptionsMetadataTest extends \testing\unittest\unittestdatabase
         OptionsMetadata::set($this->option['id_num'], 'testtype', 'testvalue');
         OptionsMetadata::set($this->option['id_num'], 'deletetest', 'nothere');
         OptionsMetadata::delete($this->option['id_num'], 'deletetest');
-        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata'));
-        $expected = array(
-            0 => array(
+        $actual = $this->query(['columns' => ['type', 'value', 'optionID'], 'table' => 'options_metadata']);
+        $expected = [
+            0 => [
                 'type' => 'testtype',
                 'value' =>  'testvalue',
                 'optionID' =>  $this->option['id_num'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $actual);
 
         OptionsMetadata::setArray($this->option['id_num'], ['deletetest' => 'nothere', 'delete2' => 'alsogone']);
         OptionsMetadata::delete($this->option['id_num'], ['deletetest', 'delete2']);
-        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata'));
-        $expected = array(
-            0 => array(
+        $actual = $this->query(['columns' => ['type', 'value', 'optionID'], 'table' => 'options_metadata']);
+        $expected = [
+            0 => [
                 'type' => 'testtype',
                 'value' =>  'testvalue',
                 'optionID' =>  $this->option['id_num'],
-            ),
-        );
+            ],
+        ];
         $this->assertEquals($expected, $actual);
 
         OptionsMetadata::setArray($this->option['id_num'], ['deletetest' => 'nothere', 'delete2' => 'alsogone']);
         OptionsMetadata::delete($this->option['id_num']);
-        $actual = $this->query(array('columns' => array('type', 'value', 'optionID'), 'table' => 'options_metadata'));
+        $actual = $this->query(['columns' => ['type', 'value', 'optionID'], 'table' => 'options_metadata']);
         $expected = [];
         $this->assertEquals($expected, $actual);
     }

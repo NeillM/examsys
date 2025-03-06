@@ -34,7 +34,7 @@ $get_repcourse = param::optional('repcourse', '%', param::TEXT, param::FETCH_GET
 $complete = param::optional('completerpt', null, param::INT, param::FETCH_GET);
 $studentsonly = param::optional('studentsonly', 1, param::BOOLEAN);
 
-$bind_types = array();
+$bind_types = [];
 $queryParams[] = $paper_id;
 $bind_types[] = 'i';
 if (!empty($get_repyear)) {
@@ -57,7 +57,7 @@ $queryParams[] = $enddate;
 $bind_types[] = 'i';
 
 // Capture the paper makeup.
-$paper_buffer = array();
+$paper_buffer = [];
 $question_no = 0;
 
 $old_q_id = 0;
@@ -129,7 +129,7 @@ if ($complete == 1) {
     $stmt->close();
 }
 
-$log_array = array();
+$log_array = [];
 $hits = 0;
 
 if ($studentsonly) {
@@ -151,12 +151,12 @@ SQL;
 
 $bind_types_str = implode('', $bind_types);
 $stmt = $mysqli->prepare($sql);
-$bind_arr = array_merge(array($bind_types_str), $queryParams);
-$bind_values_ref = array();
+$bind_arr = array_merge([$bind_types_str], $queryParams);
+$bind_values_ref = [];
 foreach ($bind_arr as $key => $value) {
     $bind_values_ref[$key] = &$bind_arr[$key];
 }
-call_user_func_array(array($stmt, 'bind_param'), $bind_values_ref);
+call_user_func_array([$stmt, 'bind_param'], $bind_values_ref);
 $stmt->execute();
 $stmt->bind_result($student_id, $username, $title, $surname, $initials, $grade, $gender, $year, $started, $q_id, $user_answer, $screen);
 

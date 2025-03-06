@@ -85,7 +85,7 @@ class renderdata extends \questiondata
     {
         $option = $this->get_opt($part_id);
         $ans = '';
-        $blank_mark = array();
+        $blank_mark = [];
         // Get possible answers.
         $option['optiontext'] = str_replace('&nbsp;', ' ', $option['optiontext']);
         // Create an array of all blurbs.
@@ -100,13 +100,13 @@ class renderdata extends \questiondata
             $useranswer = str_replace('&nbsp;', ' ', $useranswer);
             $blank_user_answers = json_decode($useranswer);
         } else {
-            $blank_user_answers = array();
+            $blank_user_answers = [];
         }
         // Create options, assign preivous user answers etc.
         $count = 0;
         $itemcount = 1;
         $j = 0;
-        $blankoption = array();
+        $blankoption = [];
         foreach ($blurbs as $blurb) {
             $count++;
             $blankoption[$count]['itemtype'] = 'blurb';
@@ -147,9 +147,9 @@ class renderdata extends \questiondata
                     // If question previsouly answered auto select option.
                     for ($i = 0; $i < count($answer_list); $i++) {
                         if (isset($answer_list[$i]) and isset($blank_user_answers[$itemcount - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim($blank_user_answers[$itemcount - 1]))) {
-                            $blankoption[$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => true);
+                            $blankoption[$count]['itemvalue'][] = ['answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => true];
                         } else {
-                            $blankoption[$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => false);
+                            $blankoption[$count]['itemvalue'][] = ['answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => false];
                         }
                     }
                     // Set question as unanswered if not attempted.

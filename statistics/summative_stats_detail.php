@@ -36,22 +36,22 @@ $lang['title'] = $string['summativeexamstats'];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/statistics.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/tabs.css"/>';
-$breadcrumb = array(
+$breadcrumb = [
     $string['home'] => '../index.php',
     $string['administrativetools'] => '../admin/index.php',
     $string['statistics'] => 'index.php',
     $string['summativeexamstats'] => 'summative_stats.php?calyear=' . $current_year,
-);
+];
 $stats = new Statistics();
 $lang['title'] .= ': ' . $stats->getDisplayMonth($current_month) . ' ' . $current_year . '/' . (mb_substr($current_year, 2, 2) + 1);
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/no_sidebar.html');
 $render->render_admin_content($breadcrumb, $lang);
 $total_student_no = 0;
-$distinct_users = array();
+$distinct_users = [];
 // Get paper details.
-$renderdata = array();
-$renderdata['papers'] = array();
+$renderdata = [];
+$renderdata['papers'] = [];
 $details = $stats->getSummativePapersDetails($current_month, $current_year);
 foreach ($details as $pid => $data) {
     // Get distinct user count for a paper.
@@ -65,12 +65,12 @@ foreach ($details as $pid => $data) {
     } else {
         $class = '';
     }
-    $renderdata['papers'][] = array(
+    $renderdata['papers'][] = [
             'link' => '../paper/details.php?paperID=' . $pid,
             'linklabel' => $data['title'],
             'class' => $class,
             'userno' => $user_no,
-    );
+    ];
     $total_student_no += $user_no;
 }
 

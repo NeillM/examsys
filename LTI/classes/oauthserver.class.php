@@ -26,7 +26,7 @@ namespace LTI;
 class OAuthServer {
   protected $timestamp_threshold = 300; // in seconds, five minutes
   protected $version = 1.0;             // hi blaine
-  protected $signature_methods = array();
+  protected $signature_methods = [];
 
   protected $data_store;
 
@@ -90,7 +90,7 @@ class OAuthServer {
     $consumer = $this->get_consumer($request);
     $token = $this->get_token($request, $consumer, "access");
     $this->check_signature($request, $consumer, $token);
-    return array($consumer, $token);
+    return [$consumer, $token];
   }
 
   // Internals from here

@@ -51,12 +51,12 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
   echo draw_toprightmenu();
 ?>
 <?php
-  $breadcrumb = array(
+  $breadcrumb = [
     $string['home'] => '/',
     $string['admintools'] => '/admin/index.php',
     $string['modules'] => '/admin/list_modules.php',
     $string['bulkmoduleimport'] => '/users/bulk_import_modules.php',
-  );
+  ];
   $render->render_admin_content($breadcrumb, $lang);
   $data['onclick'] = "window.location='list_modules.php'";
   if (isset($_POST['submit'])) {
@@ -72,11 +72,11 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
               $data['added'] = $import->get_added();
               $data['failed'] = $import->get_failed();
           } catch (\csv\csv_load_exception $e) {
-              $data['failed'] = array($e->getMessage());
+              $data['failed'] = [$e->getMessage()];
           }
           $csv->delete_temp_file();
       } catch (\csv\csv_load_exception $e) {
-          $data['failed'] = array($e->getMessage());
+          $data['failed'] = [$e->getMessage()];
       }
       $render->render($data, $string, 'admin/upload_complete.html');
   } else {

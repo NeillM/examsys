@@ -68,7 +68,7 @@ class UoN_LTI extends BLTI
     /**
      * @var array|bool
      */
-    private $parm = array('dbtype' => 'mysqli', 'table_prefix' => '');
+    private $parm = ['dbtype' => 'mysqli', 'table_prefix' => ''];
 
     public function __construct()
     {
@@ -204,7 +204,7 @@ class UoN_LTI extends BLTI
         }
 
         // Store the launch information in the session for later
-        $newinfo = array();
+        $newinfo = [];
         foreach ($_POST as $key => $value) {
             if ($key == 'basiclti_submit') {
                 continue;
@@ -265,7 +265,7 @@ class UoN_LTI extends BLTI
         if (!isset($this->db)) {
             throw new Exception('lti_no_database');
         }
-        $return = array();
+        $return = [];
         $sql = 'SELECT u.id, u.title, u.surname, u.first_names, u.initials, u.username '
             . 'FROM ' . $this->parm['table_prefix'] . 'lti_user lu '
             . 'JOIN users u ON lu.lti_user_equ = u.id '
@@ -276,7 +276,7 @@ class UoN_LTI extends BLTI
         $result->execute();
         $result->bind_result($id, $title, $surname, $firstnames, $initials, $username);
         while ($result->fetch()) {
-            $return["$id-$externalid"] = array(
+            $return["$id-$externalid"] = [
                   'id' => $id,
                   'title' => $title,
                   'surname' => $surname,
@@ -284,7 +284,7 @@ class UoN_LTI extends BLTI
                   'initials' => $initials,
                   'username' => $username,
                   'externalid' => $externalid,
-            );
+            ];
         }
         return $return;
     }
@@ -302,7 +302,7 @@ class UoN_LTI extends BLTI
         if (!isset($this->db)) {
             throw new Exception('lti_no_database');
         }
-        $return = array();
+        $return = [];
         $sql = 'SELECT u.id, u.title, u.surname, u.first_names, u.initials, u.username, lu.lti_user_key, k.oauth_consumer_key '
             . 'FROM ' . $this->parm['table_prefix'] . 'lti_user lu '
             . 'JOIN users u ON lu.lti_user_equ = u.id '
@@ -314,7 +314,7 @@ class UoN_LTI extends BLTI
         $result->bind_result($id, $title, $surname, $firstnames, $initials, $username, $rawexternalid, $consumer_key);
         while ($result->fetch()) {
             $externalid = mb_substr($rawexternalid, mb_strlen("$consumer_key:"));
-            $return["$id-$externalid"] = array(
+            $return["$id-$externalid"] = [
                   'id' => $id,
                   'title' => $title,
                   'surname' => $surname,
@@ -322,7 +322,7 @@ class UoN_LTI extends BLTI
                   'initials' => $initials,
                   'username' => $username,
                   'externalid' => $externalid,
-            );
+            ];
         }
         return $return;
     }
@@ -346,7 +346,7 @@ class UoN_LTI extends BLTI
         if (!isset($this->db)) {
             throw new Exception('lti_no_database');
         }
-        $return = array();
+        $return = [];
         $sql = 'SELECT id, oauth_consumer_key, secret, name, context_id '
             . 'FROM ' . $this->parm['table_prefix'] . 'lti_keys WHERE id = ? '
             . 'AND deleted IS NULL LIMIT 1';
@@ -361,7 +361,7 @@ class UoN_LTI extends BLTI
 
     public function get_lti_keys($deleted = false)
     {
-        $dataret = array();
+        $dataret = [];
         $db = $this->db;
         if ($db->error) {
             echo $this->strings['showerror'] . '<br />';
@@ -379,7 +379,7 @@ class UoN_LTI extends BLTI
         $stmt->bind_result($lti_keys_id, $lti_keys_key, $lti_keys_secret, $lti_keys_name, $lti_keys_context_id, $lti_keys_deleted, $lti_keys_updated_on);
         $rows = $stmt->num_rows;
         while ($stmt->fetch()) {
-            $dataret[$lti_keys_id] = array('lti_keys_id' => $lti_keys_id, 'lti_keys_key' => $lti_keys_key, 'lti_keys_secret' => $lti_keys_secret, 'lti_keys_name' => $lti_keys_name, 'lti_keys_context_id' => $lti_keys_context_id, 'lti_keys_deleted' => $lti_keys_deleted, 'lti_keys_updated_on' => $lti_keys_updated_on);
+            $dataret[$lti_keys_id] = ['lti_keys_id' => $lti_keys_id, 'lti_keys_key' => $lti_keys_key, 'lti_keys_secret' => $lti_keys_secret, 'lti_keys_name' => $lti_keys_name, 'lti_keys_context_id' => $lti_keys_context_id, 'lti_keys_deleted' => $lti_keys_deleted, 'lti_keys_updated_on' => $lti_keys_updated_on];
         }
         $stmt->close();
         return $dataret;
@@ -514,7 +514,7 @@ class UoN_LTI extends BLTI
         $stmt->bind_result($rogo_id, $updated);
         $stmt->fetch();
         $stmt->close();
-        return (array($rogo_id, $updated));
+        return ([$rogo_id, $updated]);
     }
 
     /**
@@ -577,7 +577,7 @@ class UoN_LTI extends BLTI
         $stmt->bind_result($paperret, $otherret, $updated_on);
         $stmt->fetch();
         $stmt->close();
-        return (array($paperret, $otherret, $updated_on));
+        return ([$paperret, $otherret, $updated_on]);
     }
 
     /**
@@ -676,7 +676,7 @@ class UoN_LTI extends BLTI
         $stmt->bind_result($moduleid, $updated_on);
         $stmt->fetch();
         $stmt->close();
-        return (array($moduleid, $updated_on));
+        return ([$moduleid, $updated_on]);
     }
 
     public function get_consumer_secret()

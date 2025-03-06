@@ -87,14 +87,14 @@ for ($i = 0; $i < count($all_media); $i++) {
                 <button id="filepicker<?php echo $index ?>" data-mediaid="question_media<?php echo $index ?>" class="filepicker" <?php echo $disabled ?>><?php echo $string['uploadmedia']; ?></button>
                 <div id="filepickersection<?php echo $index ?>" class="filepickersection">
                   <?php
-                    $mediadata = array(
+                    $mediadata = [
                       'mediaid' => 'question_media' . $index,
                       'mediaalt' => 'alt_question_media' . $index,
                       'mediaagreement' => 'agreement_question_media' . $index,
                       'mediadecorative' => 'dec_question_media' . $index,
                       'medianum' => 'num_question_media' . $index,
                       'num' => $index,
-                    );
+                    ];
                       $render = new render($configObject);
                     echo $render->render($mediadata, $string, 'filepicker.html');
                     ?>

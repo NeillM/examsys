@@ -26,21 +26,21 @@
  */
 class QuestionMATRIX extends QuestionEdit
 {
-    protected $stems = array();
+    protected $stems = [];
     protected $_answer_negative = 0;
     public $max_options = 10;
     public $max_stems = 10;
 
-    protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
-    protected $_fields_editable = array('theme', 'leadin', 'notes', 'correct_fback', 'score_method', 'option_order', 'bloom', 'status', 'staffnotes');
-    protected $_fields_compound = array('stem');
+    protected $_fields_required = ['type', 'leadin', 'option_order', 'owner_id', 'status'];
+    protected $_fields_editable = ['theme', 'leadin', 'notes', 'correct_fback', 'score_method', 'option_order', 'bloom', 'status', 'staffnotes'];
+    protected $_fields_compound = ['stem'];
 
     public function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
         // 'correct' is not a unified field for Matrix because it is compound
-        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+        $this->_fields_unified = ['marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']];
     }
 
     // ACCESSORS

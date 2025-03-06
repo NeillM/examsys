@@ -38,7 +38,7 @@ abstract class rogo_directory
      *
      * @var rogo_directory[]
      */
-    protected static $loaded = array();
+    protected static $loaded = [];
 
     /**
      * Language pack component.

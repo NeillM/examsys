@@ -50,7 +50,7 @@ class csv_handler extends \file_handler
     public static function move_upload_to_temp($from, $to)
     {
         $langpack = new \langpack();
-        $string = $langpack->get_strings(parent::LANGCOMPONENT, array('nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue'));
+        $string = $langpack->get_strings(parent::LANGCOMPONENT, ['nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue']);
         if ($from['name'] == '') {
             throw new csv_load_exception($string['nofilename']);
         }
@@ -128,7 +128,7 @@ class csv_handler extends \file_handler
             $this->load();
         }
         $line = fgetcsv($this->read_file_handle);
-        $return = array();
+        $return = [];
         if (!empty($line)) {
             // Create an associative array of the csv line, where the
             // keys match the header of their row.

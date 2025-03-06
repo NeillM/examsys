@@ -42,7 +42,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 function getModules($userID, $mysqlidb, $properties)
 {
 
-    $modules = array();
+    $modules = [];
     // The session we get student modules for should be based on that of the year the paper is set for.
     $session = $properties->get_calendar_year();
     $result = $mysqlidb->prepare('SELECT idmod FROM modules_student WHERE calendar_year = ? AND userID = ?');
@@ -113,7 +113,7 @@ if ($properties->is_live()) {
     exit;
 }
 $target_userID = '';
-$target_student = array();
+$target_student = [];
 // Look up the temporary information in 'users'.
 if ($temp_student_id != '') {
     // Try student number lookup.

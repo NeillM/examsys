@@ -26,7 +26,7 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
-$data = array();
+$data = [];
 
 $s_id = (isset($_REQUEST['id'])) ? $_REQUEST['id'] : -1;
 
@@ -34,7 +34,7 @@ if ($s_id != -1) {
     $q_status = new QuestionStatus($mysqli, $string, $s_id);
     $title = $string['edit'] . ' ' . $string['status'];
 } else {
-    $q_status = new QuestionStatus($mysqli, $string, array());
+    $q_status = new QuestionStatus($mysqli, $string, []);
     $title = $string['add'] . ' ' . $string['status'];
 }
 

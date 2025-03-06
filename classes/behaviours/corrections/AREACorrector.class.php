@@ -36,7 +36,7 @@ class AREACorrector extends Corrector
      */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
-        $errors = array();
+        $errors = [];
 
         $first = reset($this->_question->options);
         $marks_correct = $first->get_marks_correct();
