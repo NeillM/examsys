@@ -33,7 +33,7 @@ require_once './config/index.inc';
 $userObject = UserObject::get_instance();
 
 // Redirect Students (if not also staff), External Examiners and Invigilators to their own areas.
-if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
+if ($userObject->has_role('Student') and !($userObject->has_role(['Staff', 'Admin', 'SysAdmin']))) {
     header('location: ./paper/');
     exit();
 } elseif ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer')) {
@@ -222,10 +222,10 @@ if ($paper_utils->count_unassigned_papers($userObject->get_user_ID(), $mysqli) o
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
-$render->render($jsdataset, array(), 'dataset.html');
+$render->render($jsdataset, [], 'dataset.html');
 $jsmiscdataset['name'] = 'dataset';
 $jsmiscdataset['attributes']['duplicate'] = $duplicate_folder;
-$render->render($jsmiscdataset, array(), 'dataset.html');
+$render->render($jsmiscdataset, [], 'dataset.html');
 ?>
 <script src="js/staffindexinit.min.js"></script>
 </body>
