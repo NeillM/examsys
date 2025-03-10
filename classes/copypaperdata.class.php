@@ -204,6 +204,8 @@ class CopyPaperData
         
         return [
             'paperID' => $paperID,
+            'module' => $module,
+            'folder' => $folder,
             'summative_mgmt' => $configObject->get_setting('core', 'cfg_summative_mgmt'),
             'max_duration' => $configObject->get_setting('core', 'paper_max_duration'),
             'paper_title' => $properties->get_paper_title(),
@@ -213,7 +215,8 @@ class CopyPaperData
             'campuses' => $this->getCampusDetails($mysqli),
             'months' => $this->getMonthOptions(),
             'cohort_sizes' => $this->getCohortSizeOptions($configObject),
-            'sittings' => $this->getSittingOptions($configObject)
+            'sittings' => $this->getSittingOptions($configObject),
+            'scripts' => ['/js/copypaperinit.min.js']
         ];
     }
 }
