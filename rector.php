@@ -27,6 +27,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Php54\Rector\Array_\LongArrayToShortArrayRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -72,4 +73,11 @@ return RectorConfig::configure()
         __DIR__ . '/webServices',
     ])
     ->withRootFiles()
-    ->withPhpSets(php54: true);
+    ->withFileExtensions(['php', 'inc'])
+    ->withPhpSets(php54: true)
+    ->withSkip([
+        // We are temporarily disabling this rule as it would result in a large change with
+        // multiple rules being applied. It will be back to being applied in the next
+        // configuration change to rector.
+        LongArrayToShortArrayRector::class,
+    ]);
