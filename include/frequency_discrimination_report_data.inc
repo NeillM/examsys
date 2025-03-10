@@ -408,7 +408,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
                 }
             } else {
                 $count_answer = strlen($answer);
-                if (strpos($answer, 'y') === false) {
+                if (!str_contains($answer, 'y')) {
                     // force unanswered on all
                     $answer = str_repeat('u', $count_answer);
                 }
