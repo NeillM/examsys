@@ -83,7 +83,7 @@ if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_
 <form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?mod=' . $module ?>" autocomplete="off">
 <?php
 
-  $years = array($session, $session + 1);
+  $years = [$session, $session + 1];
 echo '<br /><div align="center"><table cellpadding="0" cellspacing="0" style="width:500px; border:1px #C8C8C8 solid">';
 echo '<tr><td class="topbar" style="text-align:right; width:55px"><img src="./artwork/modules_icon.png" width="48" height="48" alt="modules" /></td><td class="topbar" style="padding-left:15px; text-align:left">' . $string['moduleselfenrolment'] . '</td></tr>';
 echo '<tr><td colspan="2">&nbsp;</td></tr>';
