@@ -24,21 +24,13 @@
     <html>
     <head>
         <title>{{ lang.copypaper }}</title>
-        <link rel="stylesheet" type="text/css" href="../css/source/copy_paper.css">
-        <script id="rogoconfig" data-root="{{ path }}" src="../js/rogoconfig.js"></script>
-        <script src='../js/require.js'></script>
-        <script src='../js/main.min.js'></script>
-        <script>
-            // Configure RequireJS paths
-            require.config({
-                paths: {
-                    'copypaper': '../js/src/modules/copypaper'
-                }
-            });
-            
-            // Load the initialization script
-            require(['../js/src/copypaperinit']);
-        </script>
+        <link rel="stylesheet" type="text/css" href="{{path}}/css/source/copy_paper.css">
+        <script id="rogoconfig" data-root="{{ path }}" src="{{path}}/js/rogoconfig.js"></script>
+        <script src='{{path}}/js/require.js'></script>
+        <script src='{{path}}/js/main.min.js'></script>
+        {% for scriptname in data.scripts %}
+            <script src="{{path}}{{scriptname}}"></script>
+        {% endfor %}
     </head>
     <body>
         <div id="content">
@@ -49,9 +41,14 @@
             </div>
             <h1>{{ lang.copypaper }}</h1>
             
+            {% if data.summative_mgmt %}
             <form method="post" action="copy.php" 
                   id="checkcopy" 
                   class="copy-form" autocomplete="off">
+            {% else %}
+            <form method="post" action="copy.php" 
+                  class="copy-form" autocomplete="off">
+            {% endif %}
             
             <div id="step1" class="form-step active">
                 <div class="form-row">
@@ -181,6 +178,10 @@
                 </div>
             </div>
     
+            <input type="hidden" name="paperID" value="{{ data.paperID }}" />
+            <input type="hidden" name="module" value="{{ data.module }}" />
+            <input type="hidden" name="folder" value="{{ data.folder }}" />
+            
             <div class="form-buttons">
                 <input type="button" id="next_button" value="{{ lang.next }}" />
                 <input type="submit" id="submit_button" value="{{ lang.copypaper }}" />
