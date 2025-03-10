@@ -166,6 +166,8 @@ class CopyPaperData
         $options = [];
         $maxSittings = $configObject->get_setting('core', 'summative_max_sittings');
         
+        $maxSittings = max(1, intval($maxSittings));
+        
         for ($i = 1; $i <= $maxSittings; $i++) {
             $options[] = [
                 'value' => $i,
