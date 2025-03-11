@@ -43,3 +43,9 @@ $string['cohortsize'] = 'Cohort Size';
 $string['wholecohort'] = 'whole cohort';
 $string['sittings'] = 'Number of Sittings';
 $string['notes'] = 'Notes';
+
+// Validation messages
+$string['fieldrequired'] = 'This field is required';
+$string['invalidduration'] = 'Please enter a valid duration';
+$string['maxdurationexceeded'] = 'Duration cannot exceed the maximum allowed';
+
