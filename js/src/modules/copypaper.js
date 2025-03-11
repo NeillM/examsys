@@ -155,15 +155,21 @@ define(['jquery'], function($) {
             
             // For summative exams, validate all required fields
             if (isSummative) {
+                var errors = [];
+                var firstErrorField = null;
+                
+                // Check all required fields
                 for (var i = 0; i < this.summativeRequiredFields.length; i++) {
                     var fieldId = this.summativeRequiredFields[i];
                     var $field = $('#' + fieldId);
                     var value = $field.val();
 
                     if (!value || value.trim() === '') {
-                        alert('Please complete all required fields');
-                        $field.focus();
-                        return false;
+                        if (!firstErrorField) {
+                            firstErrorField = $field;
+                        }
+                        errors.push('Please complete all required fields');
+                        break; 
                     }
                 }
 
@@ -173,20 +179,51 @@ define(['jquery'], function($) {
                 var totalMinutes = (hours * 60) + mins;
                 
                 if (hours === 0 && mins === 0) {
-                    alert('Please enter a valid duration');
-                    $('#duration_hours').focus();
-                    return false;
+                    if (!firstErrorField) {
+                        firstErrorField = $('#duration_hours');
+                    }
+                    errors.push('Please enter a valid duration');
                 }
                 
                 var maxDuration = parseInt($('#dataset').attr('data-max-duration'));
                 if (totalMinutes > maxDuration) {
-                    alert('Duration cannot exceed ' + maxDuration + ' minutes');
-                    $('#duration_hours').focus();
+                    var formattedMaxDuration = this.formatMinutesToHoursMinutes(maxDuration);
+                    var formattedUserDuration = this.formatMinutesToHoursMinutes(totalMinutes);
+                    if (!firstErrorField) {
+                        firstErrorField = $('#duration_hours');
+                    }
+                    errors.push('Duration cannot exceed ' + formattedMaxDuration + ' (you entered ' + formattedUserDuration + ')');
+                }
+                
+                // If there are any errors, display them and prevent form submission
+                if (errors.length > 0) {
+                    alert(errors.join('\n\n'));
+                    if (firstErrorField) {
+                        firstErrorField.focus();
+                    }
                     return false;
                 }
             }
 
             return true;
+        };
+
+        /**
+         * Format minutes into hours and minutes string (e.g., "2 hours 30 minutes" or "45 minutes")
+         * @param {number} totalMinutes - Total minutes to format
+         * @returns {string} Formatted time string
+         */
+        this.formatMinutesToHoursMinutes = function(totalMinutes) {
+            var hours = Math.floor(totalMinutes / 60);
+            var minutes = totalMinutes % 60;
+            
+            if (hours > 0 && minutes > 0) {
+                return hours + ' hour' + (hours !== 1 ? 's' : '') + ' ' + minutes + ' minute' + (minutes !== 1 ? 's' : '');
+            } else if (hours > 0) {
+                return hours + ' hour' + (hours !== 1 ? 's' : '');
+            } else {
+                return minutes + ' minute' + (minutes !== 1 ? 's' : '');
+            }
         };
 
         /**
