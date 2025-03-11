@@ -218,6 +218,11 @@ class CopyPaperData
             'months' => $this->getMonthOptions(),
             'cohort_sizes' => $this->getCohortSizeOptions($configObject),
             'sittings' => $this->getSittingOptions($configObject),
+            'validation_strings' => [
+                'required_field' => $this->string['fieldrequired'],
+                'invalid_duration' => $this->string['invalidduration'],
+                'max_duration_exceeded' => $this->string['maxdurationexceeded']
+            ],
             'scripts' => ['/js/copypaperinit.min.js']
         ];
     }
