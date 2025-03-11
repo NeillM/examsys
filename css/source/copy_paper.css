@@ -235,3 +235,26 @@ h1 {
 #back_button {
     display: none;
 }
+
+/* Form validation error styles */
+.field-error {
+    color: #d9534f;
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+}
+
+.error-field {
+    border-color: #d9534f !important;
+}
+
+.error-field:focus {
+    border-color: #d9534f !important;
+    box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25) !important;
+}
+
+.field-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
