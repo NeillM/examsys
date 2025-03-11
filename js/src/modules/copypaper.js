@@ -32,6 +32,13 @@ define(['jquery'], function($) {
         this.$cancelButton = $('#cancel');
         this.$step1 = $('#step1');
         this.$step2 = $('#step2');
+
+        // Get validation strings from data attributes
+        this.validationStrings = {
+            requiredField: $('#dataset').data('required-field') || 'This field is required',
+            invalidDuration: $('#dataset').data('invalid-duration') || 'Please enter a valid duration',
+            maxDurationExceeded: $('#dataset').data('max-duration-exceeded') || 'Duration cannot exceed the maximum allowed'
+        };
         
         // Required fields for summative exams
         this.summativeRequiredFields = [
@@ -151,11 +158,14 @@ define(['jquery'], function($) {
          * @returns {boolean} Whether to allow form submission
          */
         this.handleSubmit = function() {
+            // Clear previous errors
+            this.clearErrors();
+            
             var isSummative = this.$paperType.val() === '2';
             
             // For summative exams, validate all required fields
             if (isSummative) {
-                var errors = [];
+                var fieldErrors = {};
                 var firstErrorField = null;
                 
                 // Check all required fields
@@ -168,8 +178,9 @@ define(['jquery'], function($) {
                         if (!firstErrorField) {
                             firstErrorField = $field;
                         }
-                        errors.push('Please complete all required fields');
-                        break; 
+                        
+                        // Add to field errors
+                        fieldErrors[fieldId] = this.validationStrings.requiredField;
                     }
                 }
 
@@ -182,22 +193,28 @@ define(['jquery'], function($) {
                     if (!firstErrorField) {
                         firstErrorField = $('#duration_hours');
                     }
-                    errors.push('Please enter a valid duration');
+                    
+                    // Add to field errors
+                    fieldErrors['duration'] = this.validationStrings.invalidDuration;
                 }
                 
                 var maxDuration = parseInt($('#dataset').attr('data-max-duration'));
                 if (totalMinutes > maxDuration) {
                     var formattedMaxDuration = this.formatMinutesToHoursMinutes(maxDuration);
                     var formattedUserDuration = this.formatMinutesToHoursMinutes(totalMinutes);
+                    
                     if (!firstErrorField) {
                         firstErrorField = $('#duration_hours');
                     }
-                    errors.push('Duration cannot exceed ' + formattedMaxDuration + ' (you entered ' + formattedUserDuration + ')');
+                    
+                    // Add to field errors
+                    fieldErrors['duration'] = this.validationStrings.maxDurationExceeded + ' ' + 
+                        formattedMaxDuration + ' (you entered ' + formattedUserDuration + ')';
                 }
                 
                 // If there are any errors, display them and prevent form submission
-                if (errors.length > 0) {
-                    alert(errors.join('\n\n'));
+                if (Object.keys(fieldErrors).length > 0) {
+                    this.displayErrors(fieldErrors);
                     if (firstErrorField) {
                         firstErrorField.focus();
                     }
@@ -206,6 +223,39 @@ define(['jquery'], function($) {
             }
 
             return true;
+        };
+
+        /**
+         * Display validation errors
+         * @param {Object} fieldErrors - Map of field IDs to error messages
+         */
+        this.displayErrors = function(fieldErrors) {
+            // Display field-specific errors
+            for (var fieldId in fieldErrors) {
+                var errorMessage = fieldErrors[fieldId];
+                var $errorSpan = $('#' + fieldId + '-error');
+                
+                // Handle special case for duration which has two fields
+                if (fieldId === 'duration') {
+                    $errorSpan = $('#duration-error');
+                    $('#duration_hours, #duration_mins').addClass('error-field');
+                } else {
+                    $('#' + fieldId).addClass('error-field');
+                }
+                
+                if ($errorSpan.length) {
+                    $errorSpan.text(errorMessage).show();
+                }
+            }
+        };
+        
+        /**
+         * Clear all validation errors
+         */
+        this.clearErrors = function() {
+            // Clear field errors
+            $('.field-error').hide().text('');
+            $('.error-field').removeClass('error-field');
         };
 
         /**
