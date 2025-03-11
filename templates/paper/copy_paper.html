@@ -37,7 +37,10 @@
             <div id="dataset" 
                  data-paperid="{{ data.paperID }}"
                  data-summative-mgmt="{{ data.summative_mgmt }}"
-                 data-max-duration="{{ data.max_duration }}">
+                 data-max-duration="{{ data.max_duration }}"
+                 data-required-field="{{ data.validation_strings.required_field }}"
+                 data-invalid-duration="{{ data.validation_strings.invalid_duration }}"
+                 data-max-duration-exceeded="{{ data.validation_strings.max_duration_exceeded }}">
             </div>
             <h1>{{ lang.copypaper }}</h1>
             
@@ -133,32 +136,41 @@
     
                     <div class="form-row">
                         <label for="duration">{{ lang.duration }}</label>
-                        <div class="duration-inputs">
-                            <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" />
-                            <label class="inline-label">{{ lang.hrs }}</label>
-                            <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" />
-                            <label class="inline-label">{{ lang.mins }}</label>
+                        <div class="field-container">
+                            <div class="duration-inputs">
+                                <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" />
+                                <label class="inline-label">{{ lang.hrs }}</label>
+                                <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" />
+                                <label class="inline-label">{{ lang.mins }}</label>
+                            </div>
+                            <span id="duration-error" class="field-error" style="display: none;"></span>
                         </div>
                     </div>
     
                     <div class="form-row">
                         <label for="period">{{ lang.daterequired }}</label>
-                        <select name="date_required" id="period">
-                            <option value=""></option>
-                            {% for month in data.months %}
-                                <option value="{{ month.value }}">{{ month.text }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="field-container">
+                            <select name="date_required" id="period">
+                                <option value=""></option>
+                                {% for month in data.months %}
+                                    <option value="{{ month.value }}">{{ month.text }}</option>
+                                {% endfor %}
+                            </select>
+                            <span id="period-error" class="field-error" style="display: none;"></span>
+                        </div>
                     </div>
     
                     <div class="form-row">
                         <label for="cohort_size">{{ lang.cohortsize }}</label>
-                        <select name="cohort_size" id="cohort_size">
-                            <option value=""></option>
-                            {% for size in data.cohort_sizes %}
-                                <option value="{{ size.value }}">{{ size.text }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="field-container">
+                            <select name="cohort_size" id="cohort_size">
+                                <option value=""></option>
+                                {% for size in data.cohort_sizes %}
+                                    <option value="{{ size.value }}">{{ size.text }}</option>
+                                {% endfor %}
+                            </select>
+                            <span id="cohort_size-error" class="field-error" style="display: none;"></span>
+                        </div>
                     </div>
     
                     <div class="form-row">
