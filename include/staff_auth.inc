@@ -28,7 +28,7 @@
 require_once 'staff_student_auth.inc';
 $userObject = UserObject::get_instance();
 
-if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron', 'Invigilator', 'Internal Reviewer'))) {
+if (!$userObject->has_role(['Staff', 'External Examiner', 'SysCron', 'Invigilator', 'Internal Reviewer'])) {
     // Current user is not Staff, External Examiner or the system cron so display warning and exit.
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
@@ -40,7 +40,7 @@ if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron', 'Invig
 // CAN access all other pages should redirect to the /reviews/ section
 $url = Url::fromGlobals();
 $path = $url->getRogoPath();
-$external_allowed_pages = array(
+$external_allowed_pages = [
                               '/help/staff/index.php' => 1,
                               '/help/staff/search.php' => 1,
                               '/help/staff/toolbar.php' => 1,
@@ -57,9 +57,9 @@ $external_allowed_pages = array(
                               '/ajax/reports/getAccessibility.php' => 1,
                               '/osce/form.php' => 1,
                               '/reviews/' => 1
-                            );
+                            ];
 
-$internal_allowed_pages = array(
+$internal_allowed_pages = [
                               '/help/staff/index.php' => 1,
                               '/help/staff/search.php' => 1,
                               '/help/staff/toolbar.php' => 1,
@@ -70,9 +70,9 @@ $internal_allowed_pages = array(
                               '/reviews/start.php' => 1,
                               '/reviews/finish.php' => 1,
                               '/reviews/' => 1
-                            );
+                            ];
 
-$invigilator_allowed_pages = array(
+$invigilator_allowed_pages = [
                               '/ajax/invigilator/refresh_cohort_list.php' => 1,
                               '/ajax/invigilator/paper_break.php' => 1,
                               '/invigilator/check_exam_announcements.php' => 1,
@@ -83,9 +83,9 @@ $invigilator_allowed_pages = array(
                               '/invigilator/new_paper_note.php' => 1,
                               '/invigilator/new_student_note.php' => 1,
                               '/invigilator/' => 1
-                            );
+                            ];
 
-$standards_setter_allowed_pages = array(
+$standards_setter_allowed_pages = [
                                       '/index.php' => 1,
                                       '/module/index.php' => 1,
                                       '/paper/type.php' => 1,
@@ -97,7 +97,7 @@ $standards_setter_allowed_pages = array(
                                       '/delete/check_delete_review.php' => 1,
                                       '/delete/do_delete_review.php' => 1,
                                       '/' => 1
-                            );
+                            ];
 
 $standards_setter_allowed_pages = array_merge($external_allowed_pages, $standards_setter_allowed_pages);
 
@@ -122,7 +122,7 @@ if ($userObject->has_role('External Examiner')) {
 // Redirect the system cron if it is straying
 // $cron_allowed_pages is an array that contains the set of scripts that the system cron
 // CAN access all other pages should exit the cron
-$cron_allowed_pages = array('/testing/testing/class_totals_with_script_cli.php');
+$cron_allowed_pages = ['/testing/testing/class_totals_with_script_cli.php'];
 
 if ($userObject->has_role('SysCron')) {
     if (!isset($cron_allowed_pages[$path])) {
@@ -134,12 +134,12 @@ if ($userObject->has_role('SysCron')) {
 
 // Get teams if the user is not an External Examiner, internal reviewer, sys cron or and invigilator.
 if ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer') or $userObject->has_role('SysCron') or $userObject->has_role('Invigilator')) {
-    $staff_modules = array();
+    $staff_modules = [];
 } else {
     $staff_modules = $userObject->get_staff_modules();
 }
 
-$types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
+$types_array = ['Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review'];
 
 // The SYSTEM module is special, get its ID
 $system_id = module_utils::get_idMod('SYSTEM', $mysqli);

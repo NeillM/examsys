@@ -33,8 +33,8 @@
 <tr>
 
 <?php
-$month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-$month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
+$month_names = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+$month_nos = ['01','02','03','04','05','06','07','08','09','10','11','12'];
 $date_array = getdate();
 $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
 $now_time = date('U', strtotime($now_data));
@@ -129,7 +129,7 @@ if (count($moduleIDs) > 0) {
     $stmt = $mysqli->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $ids) . ')');
     $stmt->execute();
     $stmt->bind_result($tmp_checklist);
-    $check = array();
+    $check = [];
     while ($stmt->fetch()) {
         if ($tmp_checklist != '') {
             $tmp = explode(',', $tmp_checklist);
@@ -172,7 +172,7 @@ if ($properties->get_paper_type() != '3') {
 echo '<tr><td colspan="2"><label for="absent">' . $string['incabsentcandidates'] . '</label>&nbsp;<input type="checkbox" name="absent" id="absent" value="1" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="studentsonly">' . $string['studentsonly'] . '</label>&nbsp;<input type="checkbox" name="studentsonly" id="studentsonly" value="1" checked="checked" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_studentattempts'] . "\" /></td></tr>\n";
 if ($properties->get_paper_type() == '3') {
     echo '<tr><td>' . $string['year'] . "</td><td><select name=\"repyear\" id=\"repyear\">\n";
-    $years = array('%' => $string['anyyear'],'1' => $string['year'] . ' 1','2' => $string['year'] . ' 2','3' => $string['year'] . ' 3','4' => $string['year'] . ' 4','5' => $string['year'] . ' 5');
+    $years = ['%' => $string['anyyear'],'1' => $string['year'] . ' 1','2' => $string['year'] . ' 2','3' => $string['year'] . ' 3','4' => $string['year'] . ' 4','5' => $string['year'] . ' 5'];
     foreach ($years as $key => $value) {
         echo "<option value=\"$key\">$value</option>\n";
     }
@@ -181,7 +181,7 @@ if ($properties->get_paper_type() == '3') {
 }
 
 // Get any metadata fields
-$metadata = array();
+$metadata = [];
 if (count($moduleIDs) > 0) {
     $result = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.moduleid IN ('" . implode("','", $moduleIDs) . "') ORDER BY type, value");
     $result->execute();

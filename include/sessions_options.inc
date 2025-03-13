@@ -26,7 +26,7 @@
 $idMod = $_GET['module'];
 $yearutils = new yearutils($mysqli);
 $session = $yearutils->get_current_session();
-$vle_api_cache = array();
+$vle_api_cache = [];
 $vle_api_data = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mysqli);
 $vle_api = $vle_api_data['api'];
 $map_level = $vle_api_data['level'];
@@ -43,7 +43,7 @@ if ($vle_api != '') {
     }
 } else {
     require_once '../include/mapping.inc';
-    $modules_array = array($idMod => $module_code);
+    $modules_array = [$idMod => $module_code];
     $objsBySession = getObjectives($modules_array, $session, '', '', $mysqli, 'all');
 }
 ?>

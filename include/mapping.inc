@@ -38,7 +38,7 @@ function render_objectives_mapping_form($db, $paper_id, &$string)
     global $vle_api_cache;
 
     // Get module and session from paper ID.
-    $modules_array = array();
+    $modules_array = [];
     $query = <<<QUERY
 SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id = pm.property_id INNER JOIN modules m ON pm.idMod = m.id WHERE p.property_id = ?
 QUERY;
@@ -188,7 +188,7 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id)
 
         foreach ($modules as $idMod) {
             $session = param::optional($idMod . '_session', null, param::INT, param::FETCH_POST);
-            $relationships = array();
+            $relationships = [];
             if (!is_null($session)) {
                 $old_mappings = param::optional($idMod . '_old_mappings', '', param::TEXT, param::FETCH_POST);
                 $vle_api = param::optional($idMod . '_vle_api', '', param::TEXT, param::FETCH_POST);
@@ -196,14 +196,14 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id)
                 $objectives = param::optional($idMod . '_objectives', null, param::RAW, param::FETCH_POST);
                 if (!is_null($objectives)) {
                     foreach ($objectives as $objective_id) {
-                        $data = array(
+                        $data = [
                         'idMod' => $idMod,
                         'paper_id' => $paper_id,
                         'question_id' => $question_id,
                         'objective_id' => $objective_id,
                         'calendar_year' => $session,
                         'vle_api' => $vle_api,
-                        'map_level' => $map_level);
+                        'map_level' => $map_level];
                         $relationships[] = new Relationship($db, $data);
                         $new_mappings .= $objective_id . ',';
                     }
@@ -211,14 +211,14 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id)
                 $noneoftheabove = param::optional($idMod . 'none_of_the_above', null, param::INT, param::FETCH_POST);
                 //check for none of the above
                 if ($noneoftheabove == -1 and count($relationships) == 0) {
-                    $data = array(
+                    $data = [
                     'idMod' => $idMod,
                     'paper_id' => $paper_id,
                     'question_id' => $question_id,
                     'objective_id' => -1,
                     'calendar_year' => $session,
                     'vle_api' => $vle_api,
-                    'map_level' => $map_level);
+                    'map_level' => $map_level];
                     $relationships[] = new Relationship($db, $data);
                     $new_mappings .= '-1,';
                 } else {
@@ -262,8 +262,8 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id)
  *
  */
 
-$objsBySession_cache = array();
-$vle_api_cache = array(); // Cache the vle api to save some queries
+$objsBySession_cache = [];
+$vle_api_cache = []; // Cache the vle api to save some queries
 
 /**
  * Get any mapped objectives for a question.
@@ -284,12 +284,12 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
 {
     global $objsBySession_cache, $vle_api_cache,  $configObject;
     $original_thisModuleid = $thisModuleid;
-    $objsBySession = array();
+    $objsBySession = [];
 
     $module_list = $thisModuleid;
 
     if (!is_array($module_list)) {
-        $module_list = array($thisModuleid);
+        $module_list = [$thisModuleid];
     }
 
     foreach ($module_list as $thisidMod => $thisModuleid) {
@@ -371,7 +371,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
     }
 
     //START:: get the currently mapped objectives in ExamSys.
-    $mapped = array();
+    $mapped = [];
     if ($questionID != '') {
         $rels = Relationship::find($db, array_keys($original_thisModuleid), $session, $paperID, explode(',', $questionID));
         if ($rels !== false and is_array($rels)) {
@@ -425,7 +425,7 @@ function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, 
 {
 
     $objsBySession = getObjectives($thisModuleid, $session, $paperID, $questionID, $db);
-    $objsByMapping = array();
+    $objsByMapping = [];
 
     if (isset($objsBySession['none_of_the_above']['mapped']) and $objsBySession['none_of_the_above']['mapped'] == 1) {
         $objsByMapping['none_of_the_above']['mapped'] = 1;
@@ -506,7 +506,7 @@ function copyObjectives($objectives, $idMod, $module, $dest_session, $db)
  */
 function getYearsForModules($api_name, $moduleID, $db)
 {
-    $cal_years = array();
+    $cal_years = [];
     $id_mod_in = implode(',', array_keys($moduleID));
 
     $sql = "SELECT distinct calendar_year FROM relationships WHERE calendar_year IS NOT NULL AND idMod IN ($id_mod_in) AND vle_api = ? ORDER BY calendar_year";

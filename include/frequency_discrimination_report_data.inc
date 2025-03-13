@@ -44,7 +44,7 @@ function calcDiscrimination($no_students, &$top_log_q_id, &$bottom_log_q_id, $i,
     $bottom_key_value = 0;
 
     if (!is_array($keys)) {
-        $keys = array($keys);
+        $keys = [$keys];
     }
 
     foreach ($keys as $key) {
@@ -160,7 +160,7 @@ function dStats(float $value, int $qid, int $part_no, array &$dstats, array &$ds
 function xStats(string &$q_type, int &$q_id, array &$freq_log, int &$user_total, $part_no = 1)
 {
     if ($user_total == 0) {
-        return array('percent' => null, 'count' => null);
+        return ['percent' => null, 'count' => null];
     }
     switch ($q_type) {
         case 'area':
@@ -198,7 +198,7 @@ function xStats(string &$q_type, int &$q_id, array &$freq_log, int &$user_total,
             throw new \Exception('Unhandled question type in unanswered stats function ' . $q_type);
     }
 
-    return array('percent' => $unanswered_percent, 'count' => $unanswered_count);
+    return ['percent' => $unanswered_percent, 'count' => $unanswered_count];
 }
 
 
@@ -217,7 +217,7 @@ function xStats(string &$q_type, int &$q_id, array &$freq_log, int &$user_total,
  */
 function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $mark, $totalpos, $analysis_type)
 {
-    $stop_words = array('-', 'a', 'about', 'above', 'across', 'after', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also', 'although', 'always', 'among', 'an', 'and', 'another', 'any', 'anybody', 'anyone', 'anything', 'anywhere', 'are', 'area', 'areas', 'around', 'as', 'ask', 'asked', 'asking', 'asks', 'at', 'away', 'b', 'back', 'backed', 'backing', 'backs', 'be', 'became', 'because', 'become', 'becomes', 'been', 'before', 'began', 'behind', 'being', 'beings', 'best', 'better', 'between', 'big', 'both', 'but', 'by', 'c', 'came', 'can', 'cannot', 'case', 'cases', 'certain', 'certainly', 'clear', 'clearly', 'come', 'could', 'd', 'did', 'differ', 'different', 'differently', 'do', 'does', 'done', 'down', 'downed', 'downing', 'downs', 'during', 'e', 'each', 'early', 'either', 'end', 'ended', 'ending', 'ends', 'enough', 'even', 'evenly', 'ever', 'every', 'everybody', 'everyone', 'everything', 'everywhere', 'f', 'face', 'faces', 'fact', 'facts', 'far', 'felt', 'few', 'find', 'finds', 'first', 'for', 'four', 'from', 'full', 'fully', 'further', 'furthered', 'furthering', 'furthers', 'g', 'gave', 'general', 'generally', 'get', 'gets', 'give', 'given', 'gives', 'go', 'going', 'good', 'goods', 'got', 'great', 'greater', 'greatest', 'group', 'grouped', 'grouping', 'groups', 'h', 'had', 'has', 'have', 'having', 'he', 'her', 'here', 'herself', 'high', 'higher', 'highest', 'him', 'himself', 'his', 'how', 'however', 'i', 'if', 'important', 'in', 'interest', 'interested', 'interesting', 'interests', 'into', 'is', 'it', 'its', 'itself', 'j', 'just', 'k', 'keep', 'keeps', 'kind', 'knew', 'know', 'known', 'knows', 'l', 'large', 'largely', 'last', 'later', 'latest', 'least', 'less', 'let', 'lets', 'like', 'likely', 'long', 'longer', 'longest', 'm', 'made', 'make', 'making', 'man', 'many', 'may', 'me', 'member', 'members', 'men', 'might', 'more', 'most', 'mostly', 'mr', 'mrs', 'much', 'must', 'my', 'myself', 'n', 'necessary', 'need', 'needed', 'needing', 'needs', 'never', 'new', 'newer', 'newest', 'next', 'no', 'nobody', 'non', 'noone', 'not', 'nothing', 'now', 'nowhere', 'number', 'numbers', 'o', 'of', 'off', 'often', 'old', 'older', 'oldest', 'on', 'once', 'one', 'only', 'open', 'opened', 'opening', 'opens', 'or', 'order', 'ordered', 'ordering', 'orders', 'other', 'others', 'our', 'out', 'over', 'p', 'part', 'parted', 'parting', 'parts', 'per', 'perhaps', 'place', 'places', 'point', 'pointed', 'pointing', 'points', 'possible', 'present', 'presented', 'presenting', 'presents', 'problem', 'problems', 'put', 'puts', 'q', 'quite', 'r', 'rather', 'really', 'right', 'room', 'rooms', 's', 'said', 'same', 'saw', 'say', 'says', 'second', 'seconds', 'see', 'seem', 'seemed', 'seeming', 'seems', 'sees', 'several', 'shall', 'she', 'should', 'show', 'showed', 'showing', 'shows', 'side', 'sides', 'since', 'small', 'smaller', 'smallest', 'so', 'some', 'somebody', 'someone', 'something', 'somewhere', 'state', 'states', 'still', 'such', 'sure', 't', 'take', 'taken', 'than', 'that', 'the', 'their', 'them', 'then', 'there', 'therefore', 'these', 'they', 'thing', 'things', 'think', 'thinks', 'this', 'those', 'though', 'thought', 'thoughts', 'three', 'through', 'thus', 'to', 'today', 'together', 'too', 'took', 'toward', 'turn', 'turned', 'turning', 'turns', 'two', 'u', 'under', 'until', 'up', 'upon', 'us', 'use', 'used', 'uses', 'v', 'very', 'w', 'want', 'wanted', 'wanting', 'wants', 'was', 'way', 'ways', 'we', 'well', 'wells', 'went', 'were', 'what', 'when', 'where', 'whether', 'which', 'while', 'who', 'whole', 'whose', 'why', 'will', 'with', 'within', 'without', 'work', 'worked', 'working', 'works', 'would', 'x', 'y', 'year', 'years', 'yet', 'you', 'young', 'younger', 'youngest', 'your', 'yours', 'z');
+    $stop_words = ['-', 'a', 'about', 'above', 'across', 'after', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also', 'although', 'always', 'among', 'an', 'and', 'another', 'any', 'anybody', 'anyone', 'anything', 'anywhere', 'are', 'area', 'areas', 'around', 'as', 'ask', 'asked', 'asking', 'asks', 'at', 'away', 'b', 'back', 'backed', 'backing', 'backs', 'be', 'became', 'because', 'become', 'becomes', 'been', 'before', 'began', 'behind', 'being', 'beings', 'best', 'better', 'between', 'big', 'both', 'but', 'by', 'c', 'came', 'can', 'cannot', 'case', 'cases', 'certain', 'certainly', 'clear', 'clearly', 'come', 'could', 'd', 'did', 'differ', 'different', 'differently', 'do', 'does', 'done', 'down', 'downed', 'downing', 'downs', 'during', 'e', 'each', 'early', 'either', 'end', 'ended', 'ending', 'ends', 'enough', 'even', 'evenly', 'ever', 'every', 'everybody', 'everyone', 'everything', 'everywhere', 'f', 'face', 'faces', 'fact', 'facts', 'far', 'felt', 'few', 'find', 'finds', 'first', 'for', 'four', 'from', 'full', 'fully', 'further', 'furthered', 'furthering', 'furthers', 'g', 'gave', 'general', 'generally', 'get', 'gets', 'give', 'given', 'gives', 'go', 'going', 'good', 'goods', 'got', 'great', 'greater', 'greatest', 'group', 'grouped', 'grouping', 'groups', 'h', 'had', 'has', 'have', 'having', 'he', 'her', 'here', 'herself', 'high', 'higher', 'highest', 'him', 'himself', 'his', 'how', 'however', 'i', 'if', 'important', 'in', 'interest', 'interested', 'interesting', 'interests', 'into', 'is', 'it', 'its', 'itself', 'j', 'just', 'k', 'keep', 'keeps', 'kind', 'knew', 'know', 'known', 'knows', 'l', 'large', 'largely', 'last', 'later', 'latest', 'least', 'less', 'let', 'lets', 'like', 'likely', 'long', 'longer', 'longest', 'm', 'made', 'make', 'making', 'man', 'many', 'may', 'me', 'member', 'members', 'men', 'might', 'more', 'most', 'mostly', 'mr', 'mrs', 'much', 'must', 'my', 'myself', 'n', 'necessary', 'need', 'needed', 'needing', 'needs', 'never', 'new', 'newer', 'newest', 'next', 'no', 'nobody', 'non', 'noone', 'not', 'nothing', 'now', 'nowhere', 'number', 'numbers', 'o', 'of', 'off', 'often', 'old', 'older', 'oldest', 'on', 'once', 'one', 'only', 'open', 'opened', 'opening', 'opens', 'or', 'order', 'ordered', 'ordering', 'orders', 'other', 'others', 'our', 'out', 'over', 'p', 'part', 'parted', 'parting', 'parts', 'per', 'perhaps', 'place', 'places', 'point', 'pointed', 'pointing', 'points', 'possible', 'present', 'presented', 'presenting', 'presents', 'problem', 'problems', 'put', 'puts', 'q', 'quite', 'r', 'rather', 'really', 'right', 'room', 'rooms', 's', 'said', 'same', 'saw', 'say', 'says', 'second', 'seconds', 'see', 'seem', 'seemed', 'seeming', 'seems', 'sees', 'several', 'shall', 'she', 'should', 'show', 'showed', 'showing', 'shows', 'side', 'sides', 'since', 'small', 'smaller', 'smallest', 'so', 'some', 'somebody', 'someone', 'something', 'somewhere', 'state', 'states', 'still', 'such', 'sure', 't', 'take', 'taken', 'than', 'that', 'the', 'their', 'them', 'then', 'there', 'therefore', 'these', 'they', 'thing', 'things', 'think', 'thinks', 'this', 'those', 'though', 'thought', 'thoughts', 'three', 'through', 'thus', 'to', 'today', 'together', 'too', 'took', 'toward', 'turn', 'turned', 'turning', 'turns', 'two', 'u', 'under', 'until', 'up', 'upon', 'us', 'use', 'used', 'uses', 'v', 'very', 'w', 'want', 'wanted', 'wanting', 'wants', 'was', 'way', 'ways', 'we', 'well', 'wells', 'went', 'were', 'what', 'when', 'where', 'whether', 'which', 'while', 'who', 'whole', 'whose', 'why', 'will', 'with', 'within', 'without', 'work', 'worked', 'working', 'works', 'would', 'x', 'y', 'year', 'years', 'yet', 'you', 'young', 'younger', 'youngest', 'your', 'yours', 'z'];
 
     if (!isset($log_array[$qID]['mark'])) {
         $log_array[$qID]['mark'] = 0;
@@ -258,7 +258,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             }
             break;
         case 'blank':
-            $tmp_answer_parts = array();
+            $tmp_answer_parts = [];
             $tmp_answer_parts = json_decode($answer);
             $i = 0;
             foreach ($tmp_answer_parts as $tmp_individual_answer) {
@@ -425,12 +425,12 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             $log_array[$qID]['totalpos'] += $totalpos;
             break;
         case 'extmatch':
-            $tmp_answer_parts = array();
+            $tmp_answer_parts = [];
             $tmp_answer_parts = explode('|', $answer);
             $i = 0;
             foreach ($tmp_answer_parts as $tmp_individual_answer) {
                 $i++;
-                $tmp_sub_parts = array();
+                $tmp_sub_parts = [];
                 $tmp_sub_parts = explode('$', $tmp_individual_answer);
                 foreach ($tmp_sub_parts as $tmp_individual_part) {
                     if ($tmp_individual_answer == 'u' or $tmp_individual_answer == '') {
@@ -471,7 +471,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             }
             break;
         case 'rank':
-            $tmp_answer_parts = array();
+            $tmp_answer_parts = [];
             $tmp_answer_parts = explode(',', $answer);
             $i = 0;
             foreach ($tmp_answer_parts as $tmp_individual_answer) {
@@ -579,7 +579,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
  */
 function refresh_performance_stats(\mysqli $mysqli, int $paperID, string $started, int $percent, array &$pstats, array &$dstats, array &$pstats_array, array &$dstats_array, int $user_total, array $string)
 {
-    $id_list = array();
+    $id_list = [];
     $result = $mysqli->prepare('SELECT id FROM performance_main WHERE paperID = ?');
 
     if ($mysqli->error) {
@@ -617,8 +617,8 @@ function refresh_performance_stats(\mysqli $mysqli, int $paperID, string $starte
         // Write records into performance_main
         $sql = '';
         $params = '';
-        $variables = array();
-        $tmp = array();
+        $variables = [];
+        $tmp = [];
 
         foreach ($dstats_array as $qid => $question_data) {
             if ($sql == '') {
@@ -640,14 +640,14 @@ function refresh_performance_stats(\mysqli $mysqli, int $paperID, string $starte
         foreach ($variables as $key => $value) {
             $tmp[$key] = & $variables[$key];
         }
-        call_user_func_array(array($record, 'bind_param'), $tmp);
+        call_user_func_array([$record, 'bind_param'], $tmp);
 
         $record->execute();
         $record->close();
 
         // Write records into performance_details
         //----------------------------------------------------------------------------------------------
-        $q_rec_ids = array();
+        $q_rec_ids = [];
         // First a quick query to get the IDs from performance_main to use in performance_details
         $result = $mysqli->prepare('SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?');
         $result->bind_param('is', $paperID, $date_started);
@@ -660,8 +660,8 @@ function refresh_performance_stats(\mysqli $mysqli, int $paperID, string $starte
 
         $sql = '';
         $params = '';
-        $variables = array();
-        $tmp = array();
+        $variables = [];
+        $tmp = [];
         foreach ($dstats_array as $qid => $question_data) {
             foreach ($question_data as $part_no => $d_value) {
                 if ($sql == '') {
@@ -683,7 +683,7 @@ function refresh_performance_stats(\mysqli $mysqli, int $paperID, string $starte
         foreach ($variables as $key => $value) {
             $tmp[$key] = & $variables[$key];
         }
-        call_user_func_array(array($record, 'bind_param'), $tmp);
+        call_user_func_array([$record, 'bind_param'], $tmp);
 
         $record->execute();
         $record->close();
@@ -731,7 +731,7 @@ function refresh_performance_stats(\mysqli $mysqli, int $paperID, string $starte
 function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $scenario, $leadin, $q_type, $q_media, $q_media_width, $q_media_height, $q_media_alt, $q_media_num, $options, $bottom_log, $top_log, $freq_log, $user_no, $score_method, $display_method, $themecolor, $std, &$ex_no, &$d_no, &$d_total, &$pstats, &$pstats_array, &$dstats, &$dstats_array, &$user_total, &$language, $string)
 {
     // Initialise return data array
-    $question_data = array(
+    $question_data = [
         'theme' => $theme,
         'theme_color' => $themecolor,
         'type' => $q_type,
@@ -744,9 +744,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         'std' => $std,
         'excluded' => $exclusions->is_question_excluded($q_id),
         'parts' => [],
-    );
+    ];
 
-    $tmp_std_array = (!empty($std)) ? explode(',', $std) : array();
+    $tmp_std_array = (!empty($std)) ? explode(',', $std) : [];
     $parts = count($tmp_std_array);
     for ($i = 0; $i < $parts; $i++) {
         $tmp_std_array[$i] = str_replace('exclude_', '', $tmp_std_array[$i]);
@@ -763,7 +763,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
 
         switch ($q_type) {
             case 'area':
-                $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '#7F9DB9', true);
+                $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '#7F9DB9', true];
 
                 $ex_no++;
                 $question_data['ex_no'] = $ex_no;
@@ -822,7 +822,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'blank':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
 
                 // Strip mark/size strings
@@ -873,7 +873,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                         $unique_blank_options = array_map('mb_strtolower', $unique_blank_options);
 
                         // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
-                        $new_blank_options = array();
+                        $new_blank_options = [];
                         foreach ($unique_blank_options as $blank_option) {
                             $new_blank_options[] = trim($blank_option);
                         }
@@ -921,7 +921,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'dichotomous':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
                 if ($score_method == 'Mark per Question') {
                     $ex_no++;
@@ -993,7 +993,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'enhancedcalc':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
 
                 if (!isset($freq_log[$q_id][1]['correct'])) {
@@ -1037,7 +1037,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'true_false':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
 
                 if (!isset($log[$q_id][1]['t'])) {
@@ -1135,7 +1135,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 $max_col2 -= 10;
 
                 $question_data['max_label'] = max($max_col1, $max_col2);
-                $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '#FFC0C0');
+                $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '#FFC0C0'];
                 $question_data['correct_answer'] = $options[0]['correct']; // may not be as simple as this, also consider 'correct' as possible varname (conflicts elsewhere)
 
                 $i = 1;
@@ -1197,7 +1197,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
             case 'flash':
                 $ex_no++;
                 $question_data['ex_no'] = $ex_no;
-                $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 break;
             case 'hotspot':
                 $layers = explode('|', $options[0]['correct']);
@@ -1222,7 +1222,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 $question_data['tmp_correct'] = str_replace('&nbsp;', ' ', $question_data['tmp_correct']);
                 $question_data['tmp_correct'] = htmlentities(preg_replace('/\r\n/', '', $question_data['tmp_correct']));
 
-                $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
 
                 for ($i = 1; $i <= count($layers); $i++) {
                     $question_data['parts'][$i]['option_text'] = mb_substr($layers[$i - 1], 0, mb_strpos($layers[$i - 1], '~'));
@@ -1249,7 +1249,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'likert':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
 
                 $question_data['scale'] = explode('|', $display_method);
@@ -1264,7 +1264,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'mcq':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
                 if ($question_data['excluded']) {
                     $question_data['exclusions'] = $exclusions->get_exclusions_by_qid($q_id);
@@ -1302,7 +1302,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                         $question_data['parts'][$i]['option_text'] = $individual_option['option_text'];
                     }
                     if (!empty($individual_option['o_media'])) {
-                        $question_data['parts'][$i]['media'] = array($individual_option['o_media'], $individual_option['o_media_width'], $individual_option['o_media_height'], $individual_option['o_media_alt'], '', true);
+                        $question_data['parts'][$i]['media'] = [$individual_option['o_media'], $individual_option['o_media_width'], $individual_option['o_media_height'], $individual_option['o_media_alt'], '', true];
                     }
                 }
 
@@ -1330,7 +1330,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'mrq':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
 
                 if ($question_data['excluded']) {
@@ -1377,7 +1377,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                         $question_data['parts'][$i]['option_text'] = $individual_option['option_text'];
                     }
                     if (!empty($individual_option['o_media'])) {
-                        $question_data['parts'][$i]['media'] = array($individual_option['o_media'], $individual_option['o_media_width'], $individual_option['o_media_height'], $individual_option['o_media_alt'], '', true);
+                        $question_data['parts'][$i]['media'] = [$individual_option['o_media'], $individual_option['o_media_width'], $individual_option['o_media_height'], $individual_option['o_media_alt'], '', true];
                     }
                 }
 
@@ -1410,7 +1410,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'rank':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
 
                 $rank_no = 0;
@@ -1480,7 +1480,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 break;
             case 'sct':
                 if (!empty($q_media)) {
-                    $question_data['media'] = array($q_media, $q_media_width, $q_media_height, $q_media_alt, '', true);
+                    $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 }
 
                 if ($question_data['excluded']) {
@@ -1564,7 +1564,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         $sortby = 'used';
         $ordering = 'ASC';
 
-        $top_words = array();
+        $top_words = [];
         if (isset($top_log[$q_id]['words'])) {
             $i = 0;
             foreach ($top_log[$q_id]['words'] as $word => $used) {
@@ -1575,7 +1575,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         }
         $top_words = \sort::array_csort($top_words, $sortby, $ordering);
 
-        $bottom_words = array();
+        $bottom_words = [];
         if (isset($bottom_log[$q_id]['words'])) {
             $i = 0;
             foreach ($bottom_log[$q_id]['words'] as $word => $used) {
@@ -1586,10 +1586,10 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         }
         $bottom_words = \sort::array_csort($bottom_words, $sortby, $ordering);
 
-        $question_data['mean_word_count'] = array(
+        $question_data['mean_word_count'] = [
             'top' => (isset($top_log[$q_id]) and $user_no != 0) ? $top_log[$q_id]['word_count'] / $user_no : 0,
             'bottom' => (isset($bottom_log[$q_id]) and $user_no != 0) ? $bottom_log[$q_id]['word_count'] / $user_no : 0
-        );
+        ];
         for ($i = 0; $i < 40; $i++) {
             if (isset($top_words[$i]['word']) or isset($bottom_words[$i]['word'])) {
                 if (isset($top_words[$i]['word'])) {
@@ -1628,14 +1628,14 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         $matching_height = explode('|', $q_media_height);
         $matching_alt = explode('|', $q_media_alt);
         $matching_num = explode('|', $q_media_num);
-        $tmp_media_array = array();
+        $tmp_media_array = [];
         for ($i = 0; $i < count($matching_source); $i++) {
-            $tmp_media_array[$matching_num[$i]] = array(
+            $tmp_media_array[$matching_num[$i]] = [
                 'source' => $matching_source[$i],
                 'width' => $matching_width[$i],
                 'height' => $matching_height[$i],
                 'alt' => $matching_alt[$i],
-            );
+            ];
         }
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $options[0]['correct']);
@@ -1717,14 +1717,14 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         $matching_num = explode('|', $q_media_num);
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $options[0]['correct']); // Seems to be duplicated on each array entry
-        $tmp_media_array = array();
+        $tmp_media_array = [];
         for ($i = 0; $i < count($matching_source); $i++) {
-            $tmp_media_array[$matching_num[$i]] = array(
+            $tmp_media_array[$matching_num[$i]] = [
                 'source' => $matching_source[$i],
                 'width' => $matching_width[$i],
                 'height' => $matching_height[$i],
                 'alt' => $matching_alt[$i],
-            );
+            ];
         }
         $tmp_text_no = 0;
         for ($part_id = 0; $part_id < 10; $part_id++) {
@@ -1746,7 +1746,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         }
 
         if (!empty($tmp_media_array[0]['source'])) {
-            $question_data['media'] = array($tmp_media_array[0]['source'], $tmp_media_array[0]['width'], $tmp_media_array[0]['height'], $tmp_media_array[0]['alt'], '', true);
+            $question_data['media'] = [$tmp_media_array[0]['source'], $tmp_media_array[0]['width'], $tmp_media_array[0]['height'], $tmp_media_array[0]['alt'], '', true];
         }
 
         $std_part = 0;
@@ -1756,7 +1756,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
             $tmp_correct_no = 0;
             $correct_stems = 0;
             if (!empty($tmp_media_array[$i]['source'])) {
-                $question_data['parts'][$i]['media'] = array($tmp_media_array[$i]['source'], $tmp_media_array[$i]['width'], $tmp_media_array[$i]['height'], $tmp_media_array[$i]['alt'], '', true);
+                $question_data['parts'][$i]['media'] = [$tmp_media_array[$i]['source'], $tmp_media_array[$i]['width'], $tmp_media_array[$i]['height'], $tmp_media_array[$i]['alt'], '', true];
             }
 
             if (isset($tmp_ext_scenarios[$i - 1])) {
@@ -1895,7 +1895,7 @@ function get_exam_questions(\mysqli $mysqli, $paperID, $qids = false)
     $question_data = [];
     while ($result->fetch()) {
         $media = QuestionUtils::getMediaAsString($q_id);
-        $question_data[$q_id] = array(
+        $question_data[$q_id] = [
             'screen_no' => $screen_no,
             'q_type' => $q_type,
             'theme' => $theme,
@@ -1908,7 +1908,7 @@ function get_exam_questions(\mysqli $mysqli, $paperID, $qids = false)
             'q_media_height' => $media['height'],
             'q_media_alt' => $media['alt'],
             'q_media_num' => $media['num']
-        );
+        ];
     }
     $result->free_result();
     return $question_data;
@@ -1948,14 +1948,14 @@ function get_exam_options(\mysqli $mysqli, $paperID, $qids = false)
     $option_data = [];
 
     while ($result->fetch()) {
-        $option_data[$o_id][] = array(
+        $option_data[$o_id][] = [
             'option_text' => $option_text,
             'o_media' => $o_media,
             'o_media_width' => $o_media_width,
             'o_media_height' => $o_media_height,
             'o_media_alt' => $o_media_alt,
             'correct' => $correct
-        );
+        ];
     }
     $result->free_result();
 
@@ -2091,7 +2091,7 @@ function capture_log_data(
     $result->store_result();
 
     $student_no = 0;
-    $bottom_cohort = array();
+    $bottom_cohort = [];
     $user_no = round(($result->num_rows / 100) * $cohort_percent);
     $user_total = $result->num_rows;
 

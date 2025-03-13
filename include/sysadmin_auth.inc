@@ -35,4 +35,4 @@ if (!$userObject->has_role('SysAdmin')) {
 
 // Get staff_modules.
 $staff_modules = $userObject->get_staff_modules();
-$types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
+$types_array = ['Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review'];

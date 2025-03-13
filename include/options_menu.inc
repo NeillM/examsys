@@ -65,5 +65,5 @@ if (!$userObject->has_role('Standards Setter')) {
 
 <?php
 if (!$userObject->has_role('Standards Setter')) {
-    makeMenu(array($string['questions'] => "{$configObject->get('cfg_root_path')}/question/search.php",$string['papers'] => "{$configObject->get('cfg_root_path')}/paper/search.php",$string['people'] => "{$configObject->get('cfg_root_path')}/users/search.php"));
+    makeMenu([$string['questions'] => "{$configObject->get('cfg_root_path')}/question/search.php",$string['papers'] => "{$configObject->get('cfg_root_path')}/paper/search.php",$string['people'] => "{$configObject->get('cfg_root_path')}/users/search.php"]);
 }

@@ -27,7 +27,7 @@
 
 require_once 'staff_student_auth.inc';
 
-if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
+if (!$userObject->has_role(['SysAdmin', 'Admin'])) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/exclamation_48.png', '#C00000', true, true);
@@ -36,4 +36,4 @@ if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
 // Get staff_modules.
 $staff_modules = $userObject->get_staff_modules();
 
-$types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
+$types_array = ['Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review'];

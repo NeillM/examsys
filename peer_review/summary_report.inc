@@ -46,7 +46,7 @@ function padDecimals($number, $rounding)
 }
 
 // Get questions on the paper
-$questions = array();
+$questions = [];
 $sql = 'SELECT q_type, question, leadin, display_method, option_text '
     . 'FROM (papers, questions, options) '
     . 'WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ? AND options.o_id = papers.question '
@@ -83,8 +83,8 @@ foreach ($_GET as $key => $value) {
 }
 
 // Load basic user information
-$user_data = array();
-$groups = array();
+$user_data = [];
+$groups = [];
 $modules_array = Paper_utils::get_modules($paperID, $mysqli);
 $calendar_year = $propertyObj->get_calendar_year();
 if ($group == '%') {
@@ -116,7 +116,7 @@ $questionids = implode(',', array_keys($questions));
 
 if ($users != '' and $questionids != '') {
     // Load results from Log6
-    $reviewers = array();
+    $reviewers = [];
 
     $review_sql = 'SELECT reviewerID, peerID, q_id, rating '
         . 'FROM log6 '

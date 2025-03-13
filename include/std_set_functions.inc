@@ -32,10 +32,10 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
     global $marking, $question_no, $part_id, $labelcolor, $old_likert_label, $li_set, $bgcolor, $total_marks, $old_correct_fback, $stdID, $std_excluded, $string;
     static $allanswers;
     if (!isset($allanswers)) {
-        $allanswers = array();
+        $allanswers = [];
     }
 
-    $display_inline = array('dichotomous', 'mrq', 'rank', 'flash');
+    $display_inline = ['dichotomous', 'mrq', 'rank', 'flash'];
     $mediadirectory = rogo_directory::get_directory('media');
 
     $configObj = Config::get_instance();
@@ -112,20 +112,20 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         $matching_height = explode('|', $options[0]['q_media_height']);
         $matching_alt = explode('|', $options[0]['q_media_alt']);
         $matching_num = explode('|', $options[0]['q_media_num']);
-        $matching_media = array();
+        $matching_media = [];
         for ($i = 0; $i < count($matching_source); $i++) {
-            $matching_media[$matching_num[$i]] = array(
+            $matching_media[$matching_num[$i]] = [
                 'source' => $matching_source[$i],
                 'width' => $matching_width[$i],
                 'height' => $matching_height[$i],
                 'alt' => $matching_alt[$i],
-            );
+            ];
         }
-        $matching_options = array();
+        $matching_options = [];
         $matching_users_answers = explode('|', $options[0]['correct']);
     }
 
-    if (!in_array($options[0]['q_type'], array('info', 'keyword_based', 'random'))) {
+    if (!in_array($options[0]['q_type'], ['info', 'keyword_based', 'random'])) {
         $i = 0;
         foreach ($options as $display_option) {
             $part_id++;
@@ -208,7 +208,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             $question['object']->load_all_user_answers($allanswers);
             $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
             $stdset = reviewScale($question_no, '', $marks, $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
-            $extra = array('num_on_screen' => $question_no, 'reviewers' => true, 'stdset' => $stdset);
+            $extra = ['num_on_screen' => $question_no, 'reviewers' => true, 'stdset' => $stdset];
 
             echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
             $question['object']->render_paper($extra);
@@ -530,7 +530,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'dichotomous') {
             echo '</blockquote>';
         }
-        if ($q_type < 3 and !in_array($options[0]['q_type'], array('info', 'keyword_based', 'random'))) {
+        if ($q_type < 3 and !in_array($options[0]['q_type'], ['info', 'keyword_based', 'random'])) {
             echo "<div class=\"mk\">($marks ";
             if ($marks == 1) {
                 echo $string['mark'];

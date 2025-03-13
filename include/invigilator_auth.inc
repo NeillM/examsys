@@ -26,7 +26,7 @@
  */
 
 require_once 'staff_student_auth.inc';
-if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Invigilator'))) {
+if (!$userObject->has_role(['SysAdmin', 'Admin', 'Invigilator'])) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);

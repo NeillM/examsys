@@ -78,7 +78,7 @@ META;
 
 META;
 
-        $bloom_array = array('', $string['knowledge'], $string['comprehension'], $string['application'], $string['analysis'], $string['synthesis'], $string['evaluation']);
+        $bloom_array = ['', $string['knowledge'], $string['comprehension'], $string['application'], $string['analysis'], $string['synthesis'], $string['evaluation']];
         $blooms = $question->get_bloom();
         foreach ($bloom_array as $individual_bloom) {
             $selected =  ($individual_bloom == $blooms) ? ' selected="selected"' : '';
@@ -300,7 +300,7 @@ function keyword_id_to_text($list, $db)
 function getKeywords()
 {
     $keywords = '';
-    $tmp_list = array();
+    $tmp_list = [];
     for ($i = 0; $i < $_POST['keyword_no']; $i++) {
         if (isset($_POST["keyword$i"])) {
             $tmp_list[] = $_POST["keyword$i"];
@@ -312,12 +312,12 @@ function getKeywords()
 function save_keywords($question, $userID, $edit, $db, &$string)
 {
     $keyword_changes = false;
-    $updated_list = (isset($_POST['keywords'])) ? $_POST['keywords'] : array();
+    $updated_list = (isset($_POST['keywords'])) ? $_POST['keywords'] : [];
 
     if ($edit == true) {
         $existing_list = $question->get_keywords();
     } else {
-        $existing_list = array();
+        $existing_list = [];
     }
 
     // First go through the list of updated keywords looking for new ones to add.

@@ -46,10 +46,10 @@ if ($paper_password == '') {
     $notice->access_denied($mysqli, $string, $string['notallowed'], true, true);
 }
 
-$newauth = array(
-  array('loginformfields', array('storedata' => true, 'fields' => array(array('name' => 'reviewer_name', 'description' => $string['name'], 'type' => 'text', 'defaultvalue' => ''), array('name' => 'reviewer_email', 'description' => $string['email'], 'type' => 'text', 'defaultvalue' => ''))), 'SCT Reviewer Data Info'),
-  array('fixedlist', array('authusers' => array('sctreviewer' => $paper_password)), 'SCT Reviewer List')
-);
+$newauth = [
+  ['loginformfields', ['storedata' => true, 'fields' => [['name' => 'reviewer_name', 'description' => $string['name'], 'type' => 'text', 'defaultvalue' => ''], ['name' => 'reviewer_email', 'description' => $string['email'], 'type' => 'text', 'defaultvalue' => '']]], 'SCT Reviewer Data Info'],
+  ['fixedlist', ['authusers' => ['sctreviewer' => $paper_password]], 'SCT Reviewer List']
+];
 $configObject->set('authentication', $newauth);
 session_name('RogoAuthentication');
 $return = session_start();

@@ -33,7 +33,7 @@ function updateDB($review, $db)
 
 function load_ebel_percents($id, $mysqli)
 {
-    $percents = array();
+    $percents = [];
 
     $result = $mysqli->prepare('SELECT category, percentage FROM ebel WHERE std_setID = ?');
     $result->bind_param('i', $id);
@@ -50,7 +50,7 @@ function load_ebel_percents($id, $mysqli)
 
 function load_question_ratings($id, $mysqli)
 {
-    $ratings = array();
+    $ratings = [];
 
     $result = $mysqli->prepare('SELECT q_type, questionID, rating FROM std_set_questions, questions WHERE std_set_questions.questionID = questions.q_id AND std_setID = ?');
     $result->bind_param('i', $id);
@@ -58,7 +58,7 @@ function load_question_ratings($id, $mysqli)
     $result->store_result();
     $result->bind_result($q_type, $questionID, $rating);
     while ($result->fetch()) {
-        $ratings[] = array('q_type' => $q_type, 'questionID' => $questionID, 'rating' => $rating);
+        $ratings[] = ['q_type' => $q_type, 'questionID' => $questionID, 'rating' => $rating];
     }
     $result->close();
 
@@ -70,7 +70,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
     $configObject = Config::get_instance();
 
     $configObject->get('cfg_long_date_time');
-    $reviews = array();
+    $reviews = [];
 
     $standard_setting = new StandardSetting($mysqli);
 
@@ -80,7 +80,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
     $result->store_result();
     $result->bind_result($std_setID, $std_set, $display_date, $method, $group_review, $title, $initials, $surname, $setterID, $distinction_score);
     while ($result->fetch()) {
-        $reviews[] = array(
+        $reviews[] = [
         'std_setID' => $std_setID,
         'group_review' => $group_review,
         'review_total' => 0,
@@ -92,14 +92,14 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
         'method' => $method,
         'distinction_score' => $distinction_score,
         'pass_score' => 0,
-        'name' => "$title $initials $surname");
+        'name' => "$title $initials $surname"];
     }
     $result->close();
 
     $no_reviews = count($reviews);
     for ($i = 0; $i < $no_reviews; $i++) {
         // Get any questions to exclude.
-        $exclude = array();
+        $exclude = [];
 
         // TODO: use exlcude class.
         $exclude_result = $mysqli->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ?');
@@ -113,7 +113,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
         $exclude_result->close();
 
         // Calculate marks for the current paper.
-        $marks_array = array();
+        $marks_array = [];
         ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 
         if ($reviews[$i]['method'] == 'Ebel') {
@@ -123,7 +123,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
         $angoff_review_marks = 0;
         $std_total = 0;
         $question_no = 0;
-        $ebel_marks = array('EE' => 0, 'EI' => 0, 'EN' => 0, 'ME' => 0, 'MI' => 0, 'MN' => 0, 'HE' => 0, 'HI' => 0, 'HN' => 0, 'EE2' => 0, 'EI2' => 0, 'EN2' => 0, 'ME2' => 0, 'MI2' => 0, 'MN2' => 0, 'HE2' => 0, 'HI2' => 0, 'HN2' => 0, 'exclude_EE' => 0, 'exclude_EI' => 0, 'exclude_EN' => 0, 'exclude_ME' => 0, 'exclude_MI' => 0, 'exclude_MN' => 0, 'exclude_HE' => 0, 'exclude_HI' => 0, 'exclude_HN' => 0);
+        $ebel_marks = ['EE' => 0, 'EI' => 0, 'EN' => 0, 'ME' => 0, 'MI' => 0, 'MN' => 0, 'HE' => 0, 'HI' => 0, 'HN' => 0, 'EE2' => 0, 'EI2' => 0, 'EN2' => 0, 'ME2' => 0, 'MI2' => 0, 'MN2' => 0, 'HE2' => 0, 'HI2' => 0, 'HN2' => 0, 'exclude_EE' => 0, 'exclude_EI' => 0, 'exclude_EN' => 0, 'exclude_ME' => 0, 'exclude_MI' => 0, 'exclude_MN' => 0, 'exclude_HE' => 0, 'exclude_HI' => 0, 'exclude_HN' => 0];
 
         $ratings = load_question_ratings($reviews[$i]['std_setID'], $mysqli);
         $rating_no = count($ratings);
@@ -739,7 +739,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                 while ($blank_count < $array_size) {
                     $reviewScale = '';
                     $blank_parts = explode('[/blank]', $blank_details[$blank_count]);
-                    $results = array();
+                    $results = [];
                     $not_used = preg_match('|size="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
 
                     if (isset($results[1]) and $results[1] != '') {
@@ -747,7 +747,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                     } else {
                         $blank_size[$blank_count] = 15;
                     }
-                    $results = array();
+                    $results = [];
                     $not_used = preg_match('|mark="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
                     if (isset($results[1])) {
                           $blank_mark[$blank_count] = $results[1];
@@ -961,7 +961,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
             break;
         case 'ebel':
             $html .= "<select id=\"valstd$stdID\" name=\"std$qID\" class=\"$dropdown_class recountcat\">\n<option value=\"\"></option>";
-            $options = array('EE' => $string['ee_full'],'EI' => $string['ei_full'],'EN' => $string['en_full'],'ME' => $string['me_full'],'MI' => $string['mi_full'],'MN' => $string['mn_full'],'HE' => $string['he_full'],'HI' => $string['hi_full'],'HN' => $string['hn_full']);
+            $options = ['EE' => $string['ee_full'],'EI' => $string['ei_full'],'EN' => $string['en_full'],'ME' => $string['me_full'],'MI' => $string['mi_full'],'MN' => $string['mn_full'],'HE' => $string['he_full'],'HI' => $string['hi_full'],'HN' => $string['hn_full']];
             foreach ($options as $ebel_value => $title) {
                 if ($valid and str_replace('exclude_', '', $value) == $ebel_value) {
                     $html .= '<option value="' . $extra . $ebel_value . "\" selected=\"selected\">$ebel_value: $title</option>\n";
@@ -987,7 +987,7 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
                 if (isset($prev_reviews[$q_id]) and $prev_reviews[$q_id] != '') {
                     $sub_reviews = explode(',', $prev_reviews[$q_id]);
                 } else {
-                    $sub_reviews = array('','','','','','','','','','','','','','','');
+                    $sub_reviews = ['','','','','','','','','','','','','','',''];
                 }
                 if ($q_type == 'mrq' or $q_type == 'dichotomous' or $q_type == 'rank' or $q_type == 'extmatch' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'labelling' or $q_type == 'hotspot') {
                     $current_review = (mb_strlen($sub_reviews[$part_no - 1]) > 0) ? $sub_reviews[$part_no - 1] : '';
@@ -1002,7 +1002,7 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
                     if (isset($prev_reviews[$q_id])) {
                         $sub_reviews = explode(',', $prev_reviews[$q_id]);
                     } else {
-                        $sub_reviews = array('','','','','','','','','','','','','','','');
+                        $sub_reviews = ['','','','','','','','','','','','','','',''];
                     }
                     $current_review = (empty($sub_reviews[$part_no - 1])) ? '' : $sub_reviews[$part_no - 1];
                 } else {
@@ -1016,7 +1016,7 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
     if ($is_group) {
         $rating_string = '';
         $prev_review = 0;
-        $ratings_array = array();
+        $ratings_array = [];
         $rating_total = 0;
         $min = 100;
         $max = 0;
@@ -1056,7 +1056,7 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
             $prev_review = $current_review;
         }
 
-        $current_review = array('raw_mean' => $raw_mean, 'mean' => $review_mean, 'prev_review' => $prev_review, 'string' => $rating_string, 'valid' => ($max <= $min + 10));
+        $current_review = ['raw_mean' => $raw_mean, 'mean' => $review_mean, 'prev_review' => $prev_review, 'string' => $rating_string, 'valid' => ($max <= $min + 10)];
     }
 
     return $current_review;

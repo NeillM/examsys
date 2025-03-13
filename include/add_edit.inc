@@ -102,7 +102,7 @@ function wysiwyg_editor($name, $replace, $content = '', $type = '')
 
 function option_order($selected = '')
 {
-    $items = array('Display Order','Alphabetic','Random');
+    $items = ['Display Order','Alphabetic','Random'];
 
     $html = "<select id=\"option_order\" name=\"option_order\">\n";
     foreach ($items as $item) {
@@ -299,16 +299,16 @@ HTML;
         foreach ($comments as $id => $comment) {
             switch ($comment['category']) {
                 case 1:
-                    $status = array('ok', $string['ok']);
+                    $status = ['ok', $string['ok']];
                     break;
                 case 2:
-                    $status = array('minor', $string['minor']);
+                    $status = ['minor', $string['minor']];
                     break;
                 case 3:
-                    $status = array('major', $string['major']);
+                    $status = ['major', $string['major']];
                     break;
                 default:
-                    $status = array('cannot', $string['cannot']);
+                    $status = ['cannot', $string['cannot']];
                     break;
             }
             $img_status = $status[0];
@@ -327,7 +327,7 @@ HTML;
 
 HTML;
 
-            $actions = array('Not actioned' => $string['notactioned'], 'Read - disagree' => $string['readdisagree'], 'Read - actioned' => $string['readactioned']);
+            $actions = ['Not actioned' => $string['notactioned'], 'Read - disagree' => $string['readdisagree'], 'Read - actioned' => $string['readactioned']];
 
             foreach ($actions as $action => $act_text) {
                 $sel = ($comment['action'] == $action) ? ' selected="selected"' : '';
