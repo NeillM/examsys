@@ -61,16 +61,16 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
         // Get the current session
         $yearutils = new \yearutils($this->db);
         $this->currentSession = $yearutils->get_current_session();
-        
+
         // Create modules
         $moduleGen = $this->get_datagenerator('modules', 'core');
-        
+
         // Create the test module and assign the system module
         $this->testModule = $moduleGen->create_module(['fullname' => 'Test Module', 'moduleid' => 'TEST123']);
 
         $systemModuleId = \module_utils::get_idMod('SYSTEM', $this->db);
         $this->systemModule = ['id' => $systemModuleId, 'moduleid' => 'SYSTEM'];
-        
+
         // Create users with different roles
         $userGen = $this->get_datagenerator('users', 'core');
         $this->paperOwner = $userGen->create_user(['roles' => 'Staff', 'sid' => '12345', 'surname' => 'Owner']);
@@ -81,10 +81,10 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
 
         // Regular enrollment for students
         $moduleGen->create_enrolment(['moduleid' => $this->testModule['id'], 'userid' => $this->regularUser['id']]);
-        
+
         // Add staff user as a team member on the module (not just enrolled)
         $moduleGen->create_module_team([
-            'moduleid' => $this->testModule['moduleid'], 
+            'moduleid' => $this->testModule['moduleid'],
             'username' => $this->staffUser['username']
         ]);
 
@@ -110,7 +110,7 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
         // Get a SysAdmin user
         $admin = $this->get_base_admin();
         $this->set_active_user($admin['id']);
-        
+
         // Get the paper properties
         $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
 
@@ -127,7 +127,7 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
     {
         // Set the paper owner as the active user
         $this->set_active_user($this->paperOwner['id']);
-        
+
         // Get the paper properties
         $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
 
@@ -144,7 +144,7 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
     {
         // Set the staff user as the active user
         $this->set_active_user($this->staffUser['id']);
-        
+
         // Get the paper properties
         $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
 
@@ -161,7 +161,7 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
     {
         // Set the staff user without module access as the active user
         $this->set_active_user($this->staffWithoutAccess['id']);
-        
+
         // Get the paper properties
         $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
 
@@ -178,7 +178,7 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
     {
         // Set the standards setter as the active user
         $this->set_active_user($this->standardsSetter['id']);
-        
+
         // Get the paper properties
         $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
 
@@ -195,7 +195,7 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
     {
         // Set the regular user as the active user
         $this->set_active_user($this->regularUser['id']);
-        
+
         // Get the paper properties
         $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
 

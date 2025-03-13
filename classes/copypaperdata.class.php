@@ -46,7 +46,7 @@ class CopyPaperData
     public function getPaperTypeOptions(int $currentType): array
     {
         $options = [];
-        
+
         switch ($currentType) {
             case \assessment::TYPE_FORMATIVE:
             case \assessment::TYPE_PROGRESS:
@@ -96,7 +96,7 @@ class CopyPaperData
                 ];
                 break;
         }
-        
+
         return $options;
     }
 
@@ -120,16 +120,16 @@ class CopyPaperData
     public function getMonthOptions(): array
     {
         $months = [];
-        $month_keys = ['january', 'february', 'march', 'april', 'may', 'june', 
+        $month_keys = ['january', 'february', 'march', 'april', 'may', 'june',
                       'july', 'august', 'september', 'october', 'november', 'december'];
-        
+
         for ($i = 1; $i <= 12; $i++) {
             $months[] = [
                 'value' => $i,
-                'text' => $this->string[$month_keys[$i-1]]
+                'text' => $this->string[$month_keys[$i - 1]]
             ];
         }
-        
+
         return $months;
     }
 
@@ -143,7 +143,7 @@ class CopyPaperData
     {
         $options = [];
         $cohort_sizes = $configObject->get_setting('core', 'summative_cohort_sizes');
-        
+
         foreach ($cohort_sizes as $size) {
             $display_value = ($size === '<whole cohort>') ? $this->string['wholecohort'] : $size;
             $options[] = [
@@ -151,7 +151,7 @@ class CopyPaperData
                 'text' => $display_value
             ];
         }
-        
+
         return $options;
     }
 
@@ -165,16 +165,16 @@ class CopyPaperData
     {
         $options = [];
         $maxSittings = $configObject->get_setting('core', 'summative_max_sittings');
-        
+
         $maxSittings = max(1, intval($maxSittings));
-        
+
         for ($i = 1; $i <= $maxSittings; $i++) {
             $options[] = [
                 'value' => $i,
                 'text' => $i
             ];
         }
-        
+
         return $options;
     }
 
@@ -203,7 +203,7 @@ class CopyPaperData
             $properties->get_calendar_year(),
             $this->string
         );
-        
+
         return [
             'paperID' => $paperID,
             'module' => $module,

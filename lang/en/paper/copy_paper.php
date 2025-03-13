@@ -48,4 +48,3 @@ $string['notes'] = 'Notes';
 $string['fieldrequired'] = 'This field is required';
 $string['invalidduration'] = 'Please enter a valid duration';
 $string['maxdurationexceeded'] = 'Duration cannot exceed the maximum allowed';
-
