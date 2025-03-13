@@ -3668,11 +3668,7 @@ class PaperProperties
         // Check if user has access through module assignment
         if (!empty($paper_modules)) {
             $staff_modules = $userObject->get_staff_modules();
-            foreach ($paper_modules as $module) {
-                if (in_array($module, $staff_modules)) {
-                    return true;
-                }
-            }
+            return !empty(array_intersect($paper_modules, $staff_modules));
         }
         
         return false;
