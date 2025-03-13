@@ -44,6 +44,9 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
     /** @var array Details of a staff user with module access. */
     protected $staffUser;
 
+    /** @var array Details of a staff user without module access. */
+    protected $staffWithoutAccess;
+
     /** @var array Details of a user with no special access. */
     protected $regularUser;
 
@@ -73,10 +76,17 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
         $this->paperOwner = $userGen->create_user(['roles' => 'Staff', 'sid' => '12345', 'surname' => 'Owner']);
         $this->standardsSetter = $userGen->create_user(['roles' => 'Standards Setter', 'sid' => '23456', 'surname' => 'Setter']);
         $this->staffUser = $userGen->create_user(['roles' => 'Staff', 'sid' => '34567', 'surname' => 'Staff']);
+        $this->staffWithoutAccess = $userGen->create_user(['roles' => 'Staff', 'sid' => '56789', 'surname' => 'NoAccess']);
         $this->regularUser = $userGen->create_user(['roles' => 'Student', 'sid' => '45678', 'surname' => 'Regular']);
 
-        // Create module enrollments
-        $moduleGen->create_enrolment(['moduleid' => $this->testModule['id'], 'userid' => $this->staffUser['id']]);
+        // Regular enrollment for students
+        $moduleGen->create_enrolment(['moduleid' => $this->testModule['id'], 'userid' => $this->regularUser['id']]);
+        
+        // Add staff user as a team member on the module (not just enrolled)
+        $moduleGen->create_module_team([
+            'moduleid' => $this->testModule['moduleid'], 
+            'username' => $this->staffUser['username']
+        ]);
 
         // Create a paper
         $paperGen = $this->get_datagenerator('papers', 'core');
@@ -106,5 +116,90 @@ class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
 
         // Test that the SysAdmin can edit the paper
         $this->assertTrue($property->can_user_edit_paper($this->userobject));
+    }
+
+    /**
+     * Test that the paper owner can edit the paper.
+     *
+     * @group paper
+     */
+    public function testPaperOwnerCanEditPaper()
+    {
+        // Set the paper owner as the active user
+        $this->set_active_user($this->paperOwner['id']);
+        
+        // Get the paper properties
+        $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
+
+        // Test that the paper owner can edit the paper
+        $this->assertTrue($property->can_user_edit_paper($this->userobject));
+    }
+
+    /**
+     * Test that a staff user with module access can edit the paper.
+     *
+     * @group paper
+     */
+    public function testStaffWithModuleAccessCanEditPaper()
+    {
+        // Set the staff user as the active user
+        $this->set_active_user($this->staffUser['id']);
+        
+        // Get the paper properties
+        $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
+
+        // Test that the staff user with module access can edit the paper
+        $this->assertTrue($property->can_user_edit_paper($this->userobject));
+    }
+
+    /**
+     * Test that a staff user without module access cannot edit the paper.
+     *
+     * @group paper
+     */
+    public function testStaffWithoutModuleAccessCannotEditPaper()
+    {
+        // Set the staff user without module access as the active user
+        $this->set_active_user($this->staffWithoutAccess['id']);
+        
+        // Get the paper properties
+        $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
+
+        // Test that the staff user without module access cannot edit the paper
+        $this->assertFalse($property->can_user_edit_paper($this->userobject));
+    }
+
+    /**
+     * Test that a standards setter cannot edit a regular paper.
+     *
+     * @group paper
+     */
+    public function testStandardsSetterCannotEditRegularPaper()
+    {
+        // Set the standards setter as the active user
+        $this->set_active_user($this->standardsSetter['id']);
+        
+        // Get the paper properties
+        $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
+
+        // Test that the standards setter cannot edit a regular paper (they can only edit papers associated with the SYSTEM module)
+        $this->assertFalse($property->can_user_edit_paper($this->userobject));
+    }
+
+    /**
+     * Test that a regular user cannot edit the paper.
+     *
+     * @group paper
+     */
+    public function testRegularUserCannotEditPaper()
+    {
+        // Set the regular user as the active user
+        $this->set_active_user($this->regularUser['id']);
+        
+        // Get the paper properties
+        $property = PaperProperties::get_paper_properties_by_id($this->paper['id'], $this->db, '', false);
+
+        // Test that a regular user cannot edit the paper
+        $this->assertFalse($property->can_user_edit_paper($this->userobject));
     }
 }
