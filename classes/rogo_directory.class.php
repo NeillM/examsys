@@ -348,7 +348,7 @@ abstract class rogo_directory
             $webroot .= '/';
         }
         // Build the parameters for the url.
-        $get = '?type=' . get_called_class();
+        $get = '?type=' . static::class;
         $get .= '&filename=' . $filename;
         if ($forcedownload) {
             $get .= '&forcedownload=1';
