@@ -54,7 +54,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
     }
 
 
-    if ($paper_ownerID == $userObj->get_user_ID() or $userObj->has_role(array('Admin', 'SysAdmin')) or ($icon_type != '2' and $icon_type != '4')) {
+    if ($paper_ownerID == $userObj->get_user_ID() or $userObj->has_role(['Admin', 'SysAdmin']) or ($icon_type != '2' and $icon_type != '4')) {
         echo '<a class="blacklink" href="' . $href . '">' . Paper_utils::displayIcon($icon_type, $title, $initials, $surname, $locked, $retired) . "</a></div>\n";
         echo '<div class="file_details"><a href="' . $href . "\" class=\"$title_class\">" . $paper_title . '</a>';
         if ($password != '') {

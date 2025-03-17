@@ -35,7 +35,7 @@ function shutdownHandler()
     $configObject = Config::get_instance();
     $erratshut = $configObject->get('errorshutdownhandling');
     if ($error = error_get_last() and $erratshut !== false) {
-        customErrorHandler($error['type'], 'At Shutdown:: ' . $error['message'], $error['file'], $error['line'], array());
+        customErrorHandler($error['type'], 'At Shutdown:: ' . $error['message'], $error['file'], $error['line'], []);
     }
 }
 
@@ -54,7 +54,7 @@ function exceptionHandler($exception)
     $trace = $exception->getTrace();
 
     // build your tracelines
-    $result = array();
+    $result = [];
     foreach ($trace as $key => $stackPoint) {
         if (!isset($stackPoint['file'])) {
             $stackPoint['file'] = 'UNKNOWN';
@@ -131,7 +131,7 @@ function exceptionHandler($exception)
         $userid = $userObject->get_user_ID();
         $username = $userObject->get_username();
     }
-    $valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Error');
+    $valid_errors = ['Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Error'];
     if (!in_array($error_type, $valid_errors)) {
         $error_type = 'Unknown';
     }
@@ -161,7 +161,7 @@ function error_handling($context = null)
     }
 
     $configObject = Config::get_instance();
-    $context1 = array();
+    $context1 = [];
 
     $errorcontexthandling = $configObject->get('errorcontexthandling');
 
@@ -193,7 +193,7 @@ function error_handling($context = null)
             } elseif (is_array($value) and $key === 'string' and (!($configObject->get('debug_lang_string') === true))) {
                 $context1[$key] = 'Language Abstraction String - hidden by config option';
             } elseif (is_array($value) and ($key === '_POST' or $key === '_REQUEST')) {
-                $tmp = array();
+                $tmp = [];
                 foreach ($value as $key1 => $value1) {
                     if ($key != 'ROGO_PW') {
                         $tmp[$key1] = $value1;
@@ -358,7 +358,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context = [])
                 $variables = base64_encode(serialize($context));
             } catch (Exception $e) {
                 try {
-                    $context = array( 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($context, true) );
+                    $context = [ 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($context, true) ];
                     $variables = base64_encode(serialize($context));
                 } catch (Exception $e) {
                     $context = 'Couldnt capture context on 2nd attempt due to exception:: ' . $e->getMessage();
@@ -373,7 +373,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context = [])
             $userid = $userObject->get_user_ID();
             $username = $userObject->get_username();
         }
-        $valid_errors = array('Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Warning', 'Application Error');
+        $valid_errors = ['Notice', 'Warning', 'Fatal Error', 'Unknown', 'Application Warning', 'Application Error'];
         if (!in_array($error_type, $valid_errors)) {
             $error_type = 'Unknown';
         }
@@ -453,7 +453,7 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
             $variables = base64_encode(serialize($variables));
         } catch (Exception $e) {
             try {
-                $variables = array( 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($variables, true) );
+                $variables = [ 'Had a problem with the capture context due to exception:: ' . $e->getMessage(), 'using alternative method var_export to string instead', var_export($variables, true) ];
                 $variables = base64_encode(serialize($variables));
             } catch (Exception $e) {
                 $variables = 'Couldnt capture context on 2nd attempt due to exception:: ' . $e->getMessage();

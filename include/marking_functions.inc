@@ -58,7 +58,7 @@ function time_to_seconds($seconds)
  */
 function get_log_ids_and_lock($paper_log_type, $screen_no, $metadataID, $db)
 {
-    $log_ids = array();
+    $log_ids = [];
     $log_check = $db->prepare("SELECT id, q_id FROM log$paper_log_type WHERE metadataID = ? AND screen = ? FOR UPDATE");
     $log_check->bind_param('ii', $metadataID, $screen_no);
     $log_check->execute();
@@ -162,7 +162,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
     $extra_duration = param::required('previous_duration', param::INT, param::FETCH_POST);
 
     // Load the structure of the paper into a local array.
-    $paper_array = array();
+    $paper_array = [];
     $tmp_question_no = 0;
     $old_q_id = 0;
     $old_display_pos = 0;
@@ -185,7 +185,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             if ($q_type != 'info') {
                 $tmp_question_no++;
             }
-            $selected_q_id = array();
+            $selected_q_id = [];
             $random_on = false;
         }
         if ($q_type == 'random' or $q_type == 'keyword_based') {
@@ -225,7 +225,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         $media = QuestionUtils::getMediaAsString($q_id);
                         $q_media = $media['source'];
                         $q_media_num = $media['num'];
-                        $paper_array[] = array(
+                        $paper_array[] = [
                             'q_id' => $new_q_id,
                             'scenario' => $scenario,
                             'q_type' => $q_type,
@@ -241,7 +241,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                             'marks_partial' => $marks_partial,
                             'question_no' => $tmp_question_no,
                             'display_pos' => $display_pos
-                        );
+                        ];
                     }
                       /*
                       if ($random_data->num_rows == 0) {
@@ -253,14 +253,14 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                        */
                       $random_data->close();
                 }
-                $selected_q_id = array();
+                $selected_q_id = [];
                 $random_on = true;
             }
         } else {
             $media = QuestionUtils::getMediaAsString($q_id);
             $q_media = $media['source'];
             $q_media_num = $media['num'];
-            $paper_array[] = array(
+            $paper_array[] = [
                 'q_id' => $q_id,
                 'scenario' => $scenario,
                 'q_type' => $q_type,
@@ -276,7 +276,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 'marks_partial' => $marks_partial,
                 'question_no' => $tmp_question_no,
                 'display_pos' => $display_pos
-            );
+            ];
         }
         $old_q_type = $q_type;
         $old_q_id = $q_id;
@@ -311,7 +311,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
     $dismiss = '';
 
     // Record posted data for saving later
-    $response_data = array();
+    $response_data = [];
 
     foreach ($paper_array as &$row) {
         $q_id = $row['q_id'];
@@ -346,7 +346,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 }
                 $tmp_duration += $extra_duration;
 
-                $response_data[] = array('q_id' => $log_id, 'mark' => $mark, 'totalpos' => $totalpos, 'saved_response' => $saved_response, 'screen_no' => $screen_no, 'tmp_duration' => $tmp_duration, 'dismiss' => $dismiss, 'option_order' => $option_order);
+                $response_data[] = ['q_id' => $log_id, 'mark' => $mark, 'totalpos' => $totalpos, 'saved_response' => $saved_response, 'screen_no' => $screen_no, 'tmp_duration' => $tmp_duration, 'dismiss' => $dismiss, 'option_order' => $option_order];
 
                 $saved_response = '';
                 $dismiss = '';
@@ -526,7 +526,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         }
                     }
 
-                    $matching_media = array();
+                    $matching_media = [];
                     $matching_source = explode('|', $q_media);
                     $matching_num = explode('|', $q_media_num);
                     for ($i = 0; $i < count($matching_source); $i++) {
@@ -550,7 +550,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         if (isset($correct_options[$option_no - 1])) {
                               $correct_answers = explode('$', $correct_options[$option_no - 1]);
                         } else {
-                            $correct_answers = array();
+                            $correct_answers = [];
                         }
                         // Can only compare user answer and correct answer if correct answer exists.
                         if ($correct_answers !== false) {
@@ -758,7 +758,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $no_answers = count($blank_details) - 1;
                 $have_answer = false;
 
-                $saved_response = array();
+                $saved_response = [];
                 for ($i = 1; $i <= $no_answers; $i++) {
                     $qid = 'q' . $question_no . '_' . $i;
                     // If the parameter is not sent for some reason assume the part is unanswered.
@@ -900,10 +900,10 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $user_answer = param::clean_array(explode('$', $tmp_first_split[1]), param::TEXT);
                 $saved_response = implode(
                     ';',
-                    array(
+                    [
                     implode('$', $tmp_second_split),
                     implode('$', $user_answer),
-                    )
+                    ]
                 );
 
                 break;
@@ -934,7 +934,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         }
         $tmp_duration += $extra_duration;
 
-        $response_data[] = array('q_id' => $log_id, 'mark' => $mark, 'totalpos' => $totalpos, 'saved_response' => $saved_response, 'screen_no' => $screen_no, 'tmp_duration' => $tmp_duration, 'dismiss' => $dismiss, 'option_order' => $option_order);
+        $response_data[] = ['q_id' => $log_id, 'mark' => $mark, 'totalpos' => $totalpos, 'saved_response' => $saved_response, 'screen_no' => $screen_no, 'tmp_duration' => $tmp_duration, 'dismiss' => $dismiss, 'option_order' => $option_order];
 
         $saved_response = '';
         $dismiss = '';

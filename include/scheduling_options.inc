@@ -42,7 +42,7 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 </div>
 <div id="menu1c">
 <?php
-if ($userObject->has_role(array('SysAdmin'))) {
+if ($userObject->has_role(['SysAdmin'])) {
     $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
     foreach ($smsplugin_name as $name) {
         $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;

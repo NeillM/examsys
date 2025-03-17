@@ -250,7 +250,7 @@ function getBlinePassmk($user_results, $user_no, $propertyObj)
 {
     $passmark = 0;
 
-    $borderlines = array();
+    $borderlines = [];
 
     for ($i = 0; $i < $user_no; $i++) {
         if (isBorderline($user_results[$i]['rating'], $propertyObj)) {
@@ -328,7 +328,7 @@ function load_osce_results($propertyObj, $demo, $configObj, $question_no, $db, $
     }
     $result->execute();
     $result->bind_result($metadataID, $userID, $gender, $grade, $year, $surname, $initials, $first_names, $title, $student_id, $started, $display_started, $overall_rating, $numeric_score, $feedback, $examiner_title, $examiner_surname, $examiner_initials);
-    $user_results = array();
+    $user_results = [];
     while ($result->fetch()) {
         $user_results[$user_no]['metadataID']       = $metadataID;
         $user_results[$user_no]['name']             = $surname . $initials;
@@ -437,7 +437,7 @@ function check_killer_answers(&$user_results, $killer_questions, $db, $studentso
  */
 function load_osce_medians($db, $studentsonly)
 {
-    $q_medians = array();
+    $q_medians = [];
     $time_int = \log::getStartInterval(\assessment::TYPE_OSCE);
     if ($studentsonly) {
         $rolesjoin = \log::get_student_only('lo.userID');
@@ -455,7 +455,7 @@ function load_osce_medians($db, $studentsonly)
     $result->bind_param('ssi', $_GET['startdate'], $_GET['enddate'], $_GET['paperID']);
     $result->execute();
     $result->bind_result($q_id, $rating, $userID);
-    $user_results = array();
+    $user_results = [];
     while ($result->fetch()) {
         $q_medians[$q_id][] = (int)$rating;
     }
@@ -533,25 +533,25 @@ function get_labels($propertyObj)
 {
     switch ($propertyObj->get_marking()) {
         case '1':
-            $labels = array(1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR');
+            $labels = [1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR'];
             break;
         case '3':
-            $labels = array(1 => 'Clear Fail', 2 => 'Borderline', 3 => 'Clear Pass', 'ERROR' => 'ERROR');
+            $labels = [1 => 'Clear Fail', 2 => 'Borderline', 3 => 'Clear Pass', 'ERROR' => 'ERROR'];
             break;
         case '4':
-            $labels = array(1 => 'Fail', 2 => 'Borderline fail', 3 => 'Borderline pass', 4 => 'Pass', 5 => 'Good pass', 'ERROR' => 'ERROR');
+            $labels = [1 => 'Fail', 2 => 'Borderline fail', 3 => 'Borderline pass', 4 => 'Pass', 5 => 'Good pass', 'ERROR' => 'ERROR'];
             break;
         case '5':
-            $labels = array('fail' => 'Unsatisfactory', 'pass' => 'Competent', 'ERROR' => 'ERROR');
+            $labels = ['fail' => 'Unsatisfactory', 'pass' => 'Competent', 'ERROR' => 'ERROR'];
             break;
         case '6':
-            $labels = array(1 => 'Clear FAIL', 2 => 'BORDERLINE', 3 => 'Clear PASS', 4 => 'Honours PASS', 'ERROR' => 'ERROR');
+            $labels = [1 => 'Clear FAIL', 2 => 'BORDERLINE', 3 => 'Clear PASS', 4 => 'Honours PASS', 'ERROR' => 'ERROR'];
             break;
         case '7':
-            $labels = array(1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR');
+            $labels = [1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR'];
             break;
         default:
-            $labels = array();
+            $labels = [];
             break;
     }
     return $labels;

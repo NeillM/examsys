@@ -27,17 +27,17 @@
 
 ini_set('auto_detect_line_endings', true);
 
-$header = array();
-$needed_cols1 = array('student_id','first names','surname','title','course code','year of course','local email');
-$needed_cols2 = array('id','forenames','family name','title','course','year of study','email');
-$optional_cols = array('type','modules','session');
+$header = [];
+$needed_cols1 = ['student_id','first names','surname','title','course code','year of course','local email'];
+$needed_cols2 = ['id','forenames','family name','title','course','year of study','email'];
+$optional_cols = ['type','modules','session'];
 
 function add_users_from_file($fileName)
 {
     global $header, $needed_cols1, $needed_cols2, $optional_cols, $mysqli, $string;
 
-    $courses = array();
-    $users[] = array();
+    $courses = [];
+    $users[] = [];
 
     $users['html'] = "<table style=\"width:100%\">\n";
 
@@ -56,7 +56,7 @@ function add_users_from_file($fileName)
             //build the header array
             $tmp_orig_header = explode($split_on, $separate_line);
             $separate_line = mb_strtolower($separate_line);
-            $error = array();
+            $error = [];
             $tmp_header = explode($split_on, $separate_line);
             foreach ($tmp_header as $tmp_string) {
                 $tmp_string = str_replace('"', '', $tmp_string);
@@ -70,7 +70,7 @@ function add_users_from_file($fileName)
             }
 
             $i = 0;
-            $col_errors = array();
+            $col_errors = [];
             $users['html'] .= '<tr>';
             $users['html'] .= '<th></th>';
             foreach ($tmp_orig_header as $field) {

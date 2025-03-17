@@ -53,7 +53,7 @@ if (!$userObject->has_role('Standards Setter')) {
                 if ($userObject->has_role('Demo')) {
                     $tmp_html .= '<li><span style="color:black">' . \demo::demo_replace_name($i) . "</span></li>\n";
                     $i++;
-                } elseif ($userObject->has_role(array('SysAdmin', 'Admin'))) {
+                } elseif ($userObject->has_role(['SysAdmin', 'Admin'])) {
                     $tmp_html .= '<li><a style="color:black" href="../users/details.php?userID=' . $team_member['userID'] . "&module=$module\">" . $team_member['surname'] . ', ' . $team_member['initials'] . '. ' . $team_member['title'] . "</a></li>\n";
                 } else {
                     $tmp_html .= '<li><span style="color:black">' . $team_member['surname'] . ', ' . $team_member['initials'] . '. ' . $team_member['title'] . "</span></li>\n";
@@ -67,7 +67,7 @@ if (!$userObject->has_role('Standards Setter')) {
             }
 
             echo '<br /><br />';
-            if ($add_member == true or $userObject->has_role(array('SysAdmin', 'Admin'))) {
+            if ($add_member == true or $userObject->has_role(['SysAdmin', 'Admin'])) {
                 echo '<div style="float:left; width:225px; font-size:170%"><div style="float:left">' . $string['teammembers'] . '</div><div style="float:right"><img src="../artwork/pencil_16.png" width="16" height="16" alt="' . $string['edit'] . '" id="addteammember" /></div></div>';
             } else {
                 echo '<div style="float:left; width:225px; font-size:170%">' . $string['teammembers'] . '</div>';
@@ -85,5 +85,5 @@ if (!$userObject->has_role('Standards Setter')) {
 <?php
 
 if (!$userObject->has_role('Standards Setter')) {
-    makeMenu(array($string['questions'] => "{$configObject->get('cfg_root_path')}/question/search.php?module=$module", $string['papers'] => "{$configObject->get('cfg_root_path')}/paper/search.php?module=$module", $string['people'] => "{$configObject->get('cfg_root_path')}/users/search.php?module=$module"));
+    makeMenu([$string['questions'] => "{$configObject->get('cfg_root_path')}/question/search.php?module=$module", $string['papers'] => "{$configObject->get('cfg_root_path')}/paper/search.php?module=$module", $string['people'] => "{$configObject->get('cfg_root_path')}/users/search.php?module=$module"]);
 }

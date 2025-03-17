@@ -36,8 +36,8 @@ function render_head(render $render, array $string)
     $configObject = Config::get_instance();
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 
-    $headerdata = array(
-        'css' => array(
+    $headerdata = [
+        'css' => [
             '/css/header.css',
             '/css/key.css',
             '/css/finish.css',
@@ -45,11 +45,11 @@ function render_head(render $render, array $string)
             '/css/html5.css',
             '/css/fdreport.css',
             '/node_modules/mediaelement/build/mediaelementplayer.min.css',
-        ),
-        'scripts' => array(
+        ],
+        'scripts' => [
             '/js/freqdiscinit.min.js',
-        ),
-    );
+        ],
+    ];
 
     $headerdata['mathjax'] = 0; // Changed from false to 0 for HTML display to match previous output
     if ($configObject->get_setting('core', 'paper_mathjax')) {
@@ -174,13 +174,13 @@ function render_footer($paperID, $startdate, $enddate, $language, $cfg_root_path
     $dataset['attributes']['language'] = $language;
     $dataset['attributes']['studentsonly'] = $studentsonly;
     $dataset['attributes']['rootpath'] = $cfg_root_path;
-    $render->render($dataset, array(), 'dataset.html');
+    $render->render($dataset, [], 'dataset.html');
     // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
-    $render->render($jsdataset, array(), 'dataset.html');
-    $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-    $render->render(array(), array(), 'footer.html');
+    $render->render($jsdataset, [], 'dataset.html');
+    $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+    $render->render([], [], 'footer.html');
 }
 
 /**
@@ -356,12 +356,12 @@ function display_question(render $render, array $question_data, array $string, s
     }
     echo "<tr>\n";
 
-    if (!in_array($question_data['type'], array('extmatch', 'matrix', 'textbox'))) {
+    if (!in_array($question_data['type'], ['extmatch', 'matrix', 'textbox'])) {
         if ($question_data['type'] == 'info') {
             echo '<td colspan="2" style="padding-left:15px">' . $question_data['leadin'] . "\n";
         } else {
             echo '<td class="q_no" data-qno="' . $question_data['no'] . '" data-qtype="' . $question_data['type'] . '" data-qmedia="' . ($question_data['media'][0] ?? '') . '" data-qcorrect="' . $question_data['legacy_correct'] . '">' . $question_data['no'] . '.&nbsp;</td><td><div';
-            if ((in_array($question_data['type'], array('dichotomous', 'labelling', 'blank', 'hotspot')) and $question_data['score_method'] == 'Mark per Question') or $question_data['type'] == 'flash') {
+            if ((in_array($question_data['type'], ['dichotomous', 'labelling', 'blank', 'hotspot']) and $question_data['score_method'] == 'Mark per Question') or $question_data['type'] == 'flash') {
                 echo ' id="q_' . ($question_data['ex_no']) . '_1"';
                 if ($question_data['excluded']) {
                     echo ' class="excluded"';
@@ -371,17 +371,17 @@ function display_question(render $render, array $question_data, array $string, s
             if (!empty($question_data['scenario'])) {
                 echo $question_data['scenario'] . '<br /><br />' . "\n";
             }
-            if (!in_array($question_data['type'], array('hotspot', 'enhancedcalc', 'flash', 'area'))) {
+            if (!in_array($question_data['type'], ['hotspot', 'enhancedcalc', 'flash', 'area'])) {
                 echo $question_data['leadin'] . '</div>' . "\n";
             }
 
-            if (isset($question_data['media']) and !in_array($question_data['type'], array('hotspot', 'labelling', 'flash', 'area'))) {
+            if (isset($question_data['media']) and !in_array($question_data['type'], ['hotspot', 'labelling', 'flash', 'area'])) {
                 echo '<div class="mediadiv">';
                 $question->set_media(...$question_data['media']);
                 $render->render($question, $string, 'paper/media.html');
                 echo "</div>\n";
             }
-            if (!in_array($question_data['type'], array('hotspot', 'labelling', 'enhancedcalc', 'blank', 'flash', 'area'))) {
+            if (!in_array($question_data['type'], ['hotspot', 'labelling', 'enhancedcalc', 'blank', 'flash', 'area'])) {
                 echo '<p>' . "\n" . '<table cellpadding="4" cellspacing="0" border="0">' . "\n";
             }
         }
@@ -934,7 +934,7 @@ function display_question(render $render, array $question_data, array $string, s
                 . '<td>' . format_xStats($question_data['x_stats']) . '</td></tr>';
                 break;
         }
-        if (!in_array($question_data['type'], array('info', 'blank', 'flash'))) {
+        if (!in_array($question_data['type'], ['info', 'blank', 'flash'])) {
             echo '</table></p>' . "\n";
         }
     } elseif ($question_data['type'] == 'textbox') {

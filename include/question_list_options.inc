@@ -149,7 +149,7 @@ if ($module != 0 and mb_strpos($module_details['checklist'], 'mapping') === fals
 </div>
 <?php
 
-  makeMenu(array(
+  makeMenu([
     $string['info'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=info&module=$module",
     $string['keyword_based'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=keyword_based&module=$module",
     $string['random'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=random&module=$module",
@@ -168,4 +168,4 @@ if ($module != 0 and mb_strpos($module_details['checklist'], 'mapping') === fals
     $string['rank'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=rank&module=$module",
     $string['sct'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=sct&module=$module",
     $string['textbox'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=textbox&module=$module",
-    $string['true_false'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false&module=$module"));
+    $string['true_false'] => "{$configObject->get('cfg_root_path')}/question/edit/index.php?type=true_false&module=$module"]);

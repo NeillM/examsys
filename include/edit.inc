@@ -60,9 +60,9 @@ function redirect($userObj, $q_id, $configObj, $db)
     $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_POST);
     if ($calling == 'paper' && !is_null($paperID) && $paperID != '-1') {
         // Redirect back to paper the question was edited from
-        $param_array = array(
+        $param_array = [
         'paperID' => $paperID
-        );
+        ];
         if (!is_null($scrOfY)) {
             $param_array['scrOfY'] = $scrOfY;
         }
@@ -292,10 +292,10 @@ function insert_into_papers($p_id, $q_id, $db)
 
     // Force random mark to recalculate.
     $assessment = new assessment($db, $configObject);
-    $update_params = array(
-    'random_mark' => array('d', null),
-    'total_mark' => array('i', null)
-    );
+    $update_params = [
+    'random_mark' => ['d', null],
+    'total_mark' => ['i', null]
+    ];
     $assessment->db_update_assessment($p_id, $update_params);
 
 

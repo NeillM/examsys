@@ -47,7 +47,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
                     $tmp_first_part = mb_substr($blank_details[$blank_count], 0, $closing_blank_pos);
                     $choice_no = mb_substr_count($tmp_first_part, ',') + 1;
                     if (mb_substr($tmp_exclude, $blank_count - 1, 1) == '0') {
-                        $results = array();
+                        $results = [];
                         if (preg_match('|mark="([0-9]{1,3})"|', $blank_details[$blank_count], $results)) {
                             $marks += $results[1];
                         } else {
@@ -438,7 +438,7 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
                 $tmp_first_part = mb_substr($blank_details[$blank_count], 0, $closing_blank_pos);
                 $choice_no = mb_substr_count($tmp_first_part, ',') + 1;
                 if ($display_method == 'dropdown' and mb_substr($tmp_exclude, $blank_count - 1, 1) == '0') {
-                    $results = array();
+                    $results = [];
                     if ($score_method == 'Mark per Option') {
                         if (preg_match('|mark="([0-9]{1,3})"|', $blank_details[$blank_count], $results)) {
                             $random_mark += (1 / $choice_no) * $results[1];
@@ -477,7 +477,7 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
                     $coords_array = explode(';', $tmp_layer);
                     $master_area_total = 0;
                     for ($area_no = 0; $area_no < (count($coords_array) - 1); $area_no += 3) {
-                        $individual_coords = array();
+                        $individual_coords = [];
                         $individual_coords = explode(',', $coords_array[$area_no + 1]);
                         if ($coords_array[$area_no] == 'polygon') {
                             $individual_coords[] = $individual_coords[0];

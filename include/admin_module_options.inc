@@ -74,7 +74,7 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
     ?>
 
     <?php
-    if ($userObject->has_role(array('SysAdmin'))) {
+    if ($userObject->has_role(['SysAdmin'])) {
         foreach ($smsplugin_name as $name) {
             $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
             $smsplugin = new $smspluginns($userObject->get_user_ID());

@@ -44,8 +44,8 @@ function makeMenu($options)
 
 
     $line = 0;
-    $myoptions = array();
-    $myurls = array();
+    $myoptions = [];
+    $myurls = [];
     foreach ($options as $title => $url) {
         $tmp_parts = explode('[BR]', $title);
         if (count($tmp_parts) > 1) {

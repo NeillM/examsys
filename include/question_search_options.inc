@@ -41,7 +41,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
 <div><strong><?php echo $string['questiontype']; ?></strong><br /><select name="searchtype" style="max-width:195px">
 <option value="%"><?php echo $string['alltypes']; ?></option>
 <?php
-  $qTypes = array('area' => $string['area'],'enhancedcalc' => $string['calculation'],'dichotomous' => $string['dichotomous'],'extmatch' => $string['extmatch'],'blank' => $string['blank'],'flash' => $string['flash'],'hotspot' => $string['hotspot'],'info' => $string['info'],'labelling' => $string['labelling'],'likert' => $string['likert'],'matrix' => $string['matrix'],'mcq' => $string['mcq'],'mrq' => $string['mrq'],'rank' => $string['rank'],'sct' => $string['sct'],'textbox' => $string['textbox'],'true_false' => $string['true_false']);
+  $qTypes = ['area' => $string['area'],'enhancedcalc' => $string['calculation'],'dichotomous' => $string['dichotomous'],'extmatch' => $string['extmatch'],'blank' => $string['blank'],'flash' => $string['flash'],'hotspot' => $string['hotspot'],'info' => $string['info'],'labelling' => $string['labelling'],'likert' => $string['likert'],'matrix' => $string['matrix'],'mcq' => $string['mcq'],'mrq' => $string['mrq'],'rank' => $string['rank'],'sct' => $string['sct'],'textbox' => $string['textbox'],'true_false' => $string['true_false']];
 foreach ($qTypes as $tmp_type => $tmp_title) {
     if (isset($_GET['searchtype']) and $_GET['searchtype'] == $tmp_type) {
         echo "<option value=\"$tmp_type\" selected>$tmp_title</option>\n";
@@ -61,11 +61,11 @@ if (isset($state['checkbox10']) and $state['checkbox10'] == 'true') {
 ?>
 <br />
 <?php
-  $filtercorrect = array(
+  $filtercorrect = [
       '' => $string['answers_unselected'],
       'blank' => $string['answers_blank'],
       'nonblank' => $string['answers_nonblank'],
-  );
+  ];
   $getfiltercorrect = param::optional('filtercorrect', '', param::ALPHANUM, param::FETCH_GET);
   echo '<select name="filtercorrect" style="max-width:195px">';
   foreach ($filtercorrect as $value => $label) {
@@ -148,7 +148,7 @@ if (isset($state['menu6'])) {
 }
   echo '<tr><td colspan="2">';
 
-  $date_options = array('dont remember' => $string['dont remember'], 'week' => $string['week'], 'month' => $string['month'], 'year' => $string['year'], 'specify' => $string['specify']);
+  $date_options = ['dont remember' => $string['dont remember'], 'week' => $string['week'], 'month' => $string['month'], 'year' => $string['year'], 'specify' => $string['specify']];
   $i = 1;
 foreach ($date_options as $date_value => $date_label) {
     if ((isset($_GET['question_date']) and $_GET['question_date'] == $date_value) or (!isset($_GET['question_date']) and $date_value == 'dont remember')) {

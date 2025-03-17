@@ -40,7 +40,7 @@ function get_folders($staff_modules, $userID, $db)
     if (count($staff_modules) > 0) {
         $staff_modules_string = ' OR idMod IN(' . implode(',', array_keys($staff_modules)) . ')';
     }
-    $my_folders_array = array();
+    $my_folders_array = [];
     $result = $db->prepare("SELECT id, name FROM folders, folders_modules_staff WHERE folders.id = folders_modules_staff.folders_id AND (ownerID = ? $staff_modules_string) AND deleted IS NULL ORDER BY name");
     $result->bind_param('i', $userID);
     $result->execute();
@@ -85,8 +85,8 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db)
     }
 
     if (count($my_folders_array) > 0) {
-        $divider = array('-' => '-');
-        $full_modules_array = array();
+        $divider = ['-' => '-'];
+        $full_modules_array = [];
         $full_modules_array += $my_folders_array;
         if (count($modules_array) > 0) {
             $full_modules_array += $divider + $modules_array;
@@ -110,7 +110,7 @@ function get_staff_module_links($staff_modules, $db)
 {
     $configObject = Config::get_instance();
 
-    $modules_array = array();
+    $modules_array = [];
 
     if (count($staff_modules) > 0) {
         $staff_modules_sql = implode(',', array_keys($staff_modules));
@@ -140,10 +140,10 @@ function get_keywords($teams, $userID, $db)
     $configObject = Config::get_instance();
 
     if (count($teams) == 0) {
-        return array();
+        return [];
     }
 
-    $keywords_array = array();
+    $keywords_array = [];
 
     $keyword_no = 0;
     $old_moduleID = '';

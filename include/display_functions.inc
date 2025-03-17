@@ -36,7 +36,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             $configObject = Config::get_instance();
             $tmp_answer_no = count($screen_data[$i]);
 
-            $answers = array();
+            $answers = [];
             $a = 1;
             foreach ($user_answers[$i] as $q_id => $individual_answer) {
                 $answers[$q_id] = $individual_answer;
@@ -216,7 +216,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     }
 
     // Process the order
-    $question['option_order'] = array();
+    $question['option_order'] = [];
     if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
         if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
             if ($question['q_option_order'] == 'random') {
@@ -225,7 +225,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 shuffle($question['option_order']);
             } elseif ($question['q_option_order'] == 'alphabetic') {
-                $tmp_order_array = array();
+                $tmp_order_array = [];
                 for ($i = 0; $i < $option_no; $i++) {
                     $tmp_order_array[$i] = mb_strtolower($question['options'][$i]['option_text']);
                 }
@@ -245,7 +245,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
 
         // Re-arrange the options array
-        $new_options = array();
+        $new_options = [];
         for ($i = 0; $i < $option_no; $i++) {
             $new_options[$i] = $question['options'][$question['option_order'][$i]];
         }
@@ -258,7 +258,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     }
 
     $question_no++;
-    $textboxes_seen = array();
+    $textboxes_seen = [];
 
     $li_set = 0;
     if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
@@ -308,7 +308,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 echo '</td><td>';
             }
             $li_set = 1;
-            if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
+            if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], ['extmatch', 'matrix', 'enhancedcalc']))) {
                 echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
             }
             if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') {
@@ -342,7 +342,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     switch ($question['q_type']) {
         case 'enhancedcalc':
             if (isset($user_answers[$current_screen][$q_id])) {
-                $d = array();
+                $d = [];
                 $d['useranswer'] = $user_answers[$current_screen][$q_id];
                 $question['object']->load($d);
             }
@@ -450,20 +450,20 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             $matching_height = explode('|', $question['q_media_height']);
             $matching_alt = explode('|', $question['q_media_alt']);
             $matching_num = explode('|', $question['q_media_num']);
-            $matching_media = array();
+            $matching_media = [];
             for ($i = 0; $i < count($matching_source); $i++) {
-                $matching_media[$matching_num[$i]] = array(
+                $matching_media[$matching_num[$i]] = [
                     'source' => $matching_source[$i],
                     'width' => $matching_width[$i],
                     'height' => $matching_height[$i],
                     'alt' => $matching_alt[$i],
-                );
+                ];
             }
-            $matching_options = array();
+            $matching_options = [];
             if (isset($user_answers[$current_screen][$q_id])) {
                 $matching_users_answers = explode('|', $user_answers[$current_screen][$q_id]);
             } else {
-                $matching_users_answers = array();
+                $matching_users_answers = [];
             }
             $matching_answers = explode('|', $question['options'][0]['correct']);
             break;
@@ -498,7 +498,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 
             $sct_parts = explode('~', $question['leadin']);
             echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
-            $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
+            $sct_titles = [1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']];
             echo '<tr><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $sct_titles[$question['display_method']] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $string['newinformation'] . "</td></tr>\n";
             echo '<tr><td style="width:49%; vertical-align:top">' . $sct_parts[0] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; vertical-align:top">' . $sct_parts[1] . "</td></tr>\n";
             echo "</table>\n";
@@ -619,10 +619,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             case 'enhancedcalc':
                 // no options for enhanced calc now stored in settings
 
-                $extra = array(
+                $extra = [
                 'num_on_screen' => $question_no,
                 'current_question' => $question,
-                );
+                ];
 
                 $question['object']->render_paper($extra);
                 $question['object']->load_all_user_answers($user_answers);
@@ -916,7 +916,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 break;
             case 'blank':
                 $ans = '';
-                $blank_mark = array();
+                $blank_mark = [];
                 $display_option['option_text'] = str_replace('&nbsp;', ' ', $display_option['option_text']);
                 $blank_details = explode('[blank', $display_option['option_text']);
                 if (isset($user_answers[$current_screen][$q_id])) {
@@ -926,16 +926,16 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if (isset($user_answers[$current_screen][$q_id])) {
                     $blank_user_answers = json_decode($user_answers[$current_screen][$q_id]);
                 } else {
-                    $blank_user_answers = array();
+                    $blank_user_answers = [];
                 }
 
                 if ($question['display_method'] == 'textboxes') {
-                    $screen_output = array();
+                    $screen_output = [];
                     $array_size = count($blank_details);
                     $blank_count = 1;
                     while ($blank_count < $array_size) {
                         $blank_details[$blank_count] = '[blank]' . $blank_details[$blank_count];
-                        $results = array();
+                        $results = [];
                         $not_used = preg_match('|size="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
 
                         if (isset($results[1]) and $results[1] != '') {
@@ -943,7 +943,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         } else {
                             $blank_size[$blank_count] = 15;
                         }
-                        $results = array();
+                        $results = [];
                         $not_used = preg_match('|mark="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
                         if (isset($results[1]) and $results[1] != '') {
                             $blank_mark[$blank_count] = $results[1];
@@ -1241,7 +1241,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         } elseif ($question['display_method'] == 'dropdown') {
             echo '</select></div>';
         }
-    } elseif (in_array($question['q_type'], array('dichotomous', 'mrq', 'rank'))) {
+    } elseif (in_array($question['q_type'], ['dichotomous', 'mrq', 'rank'])) {
         $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
         if ($question['display_method'] == 'other') {
             $part_id++;
@@ -1329,7 +1329,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             if (isset($matching_answers[$part_id - 1])) {
                 $sub_answers = explode('$', $matching_answers[$part_id - 1]);
             } else {
-                $sub_answers = array();
+                $sub_answers = [];
             }
             $list_size = 10;
             if (count($matching_options) < 10) {
@@ -1353,7 +1353,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
             }
 
-            $multi_answers = array();
+            $multi_answers = [];
             if (isset($matching_users_answers[$part_id - 1])) {
                 $multi_answers = explode('$', $matching_users_answers[$part_id - 1]);
             }
@@ -1425,7 +1425,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     }
 
     // Write out the hidden field for the dismiss facility.
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'rank'))) {
+    if (in_array($question['q_type'], ['mcq', 'mrq', 'rank'])) {
         if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
             echo "\n<div><input type=\"hidden\" name=\"dismiss$question_no\" id=\"dismiss$question_no\" value=\"" . $user_dismiss[$current_screen][$q_id] . "\" /></div>\n";
         } else {
@@ -1434,7 +1434,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     }
 
     // Display possible marks for question (if not Survey)
-    if (!in_array($question['q_type'], array('hotspot', 'likert', 'info', 'enhancedcalc', 'matrix'))) {
+    if (!in_array($question['q_type'], ['hotspot', 'likert', 'info', 'enhancedcalc', 'matrix'])) {
         echo '</blockquote>';
     }
     if ($paper_type < 3) {

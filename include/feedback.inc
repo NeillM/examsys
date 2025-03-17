@@ -180,7 +180,7 @@ function getCohortData(
     $result->close();
 
     //get the excluded questions
-    $excluded = array();
+    $excluded = [];
     $result = $mysqli->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ?');
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -199,7 +199,7 @@ function getCohortData(
     //get users log data
     $qid_list = '';
     $user_count = 0;
-    $question_data = array();
+    $question_data = [];
 
     if ($student_list != '') {
         if ($paper_type == '4') {

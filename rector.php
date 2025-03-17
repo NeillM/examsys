@@ -74,10 +74,4 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withFileExtensions(['php', 'inc'])
-    ->withPhpSets(php54: true)
-    ->withSkip([
-        // We are temporarily disabling this rule as it would result in a large change with
-        // multiple rules being applied. It will be back to being applied in the next
-        // configuration change to rector.
-        LongArrayToShortArrayRector::class,
-    ]);
+    ->withPhpSets(php54: true);

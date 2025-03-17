@@ -44,7 +44,7 @@ function draw_toprightmenu($helpID = 1)
         $html .= '<div class="trm_div" id="admintools">' . $string['administrativetools'] . '</div>';
     }
     $role = 'student';
-    if ($userObject->has_role(array('Staff'))) {
+    if ($userObject->has_role(['Staff'])) {
         $role = 'staff';
     }
     $html .= "<div tabindex='0' class=\"trm_div\" id=\"helplink\" data-role=\"$role\" data-id=\"$helpID\">" . $string['helpsupport'] . '</div>';

@@ -38,7 +38,7 @@ function display_std($std_value, $inline = 1)
         } elseif ($std_value != '') {
             $std_value = str_replace('exclude_', '', $std_value);
 
-            $titles = array('EE' => 'Easy/Essential','EI' => 'Easy/Important','EN' => 'Easy/Nice to know','ME' => 'Medium/Essential','MI' => 'Medium/Important','MN' => 'Medium/Nice to know','HE' => 'Hard/Essential','HI' => 'Hard/Important','HN' => 'Hard/Nice to know');
+            $titles = ['EE' => 'Easy/Essential','EI' => 'Easy/Important','EN' => 'Easy/Nice to know','ME' => 'Medium/Essential','MI' => 'Medium/Important','MN' => 'Medium/Nice to know','HE' => 'Hard/Essential','HI' => 'Hard/Important','HN' => 'Hard/Nice to know'];
             $html .= ' title="' . $titles[$std_value] . '">&nbsp;' . $std_value . '&nbsp;</span>';
         }
     }
@@ -70,7 +70,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     }
 
     // Process the order
-    $question['option_order'] = array();
+    $question['option_order'] = [];
     if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
         if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
             if ($question['q_option_order'] == 'random') {
@@ -79,7 +79,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 shuffle($question['option_order']);
             } elseif ($question['q_option_order'] == 'alphabetic') {
-                $tmp_order_array = array();
+                $tmp_order_array = [];
                 for ($i = 0; $i < $option_no; $i++) {
                     $tmp_order_array[$i] = $question['options'][$i]['option_text'];
                 }
@@ -99,7 +99,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
 
         // Re-arrange the options array
-        $new_options = array();
+        $new_options = [];
         for ($i = 0; $i < $option_no; $i++) {
             $new_options[$i] = $question['options'][$question['option_order'][$i]];
         }
@@ -160,7 +160,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 echo '</td><td>';
             }
             $li_set = 1;
-            if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix')))) {
+            if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], ['extmatch', 'matrix']))) {
                 echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . '</strong>&nbsp;' . $question['notes'] . '</p>';
             }
             if ($question['q_type'] != 'hotspot') {
@@ -187,7 +187,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     $option_no = count($question['options']);
     $part_id = 0;
     $marks = 0;
-    $calc_original_vars = array();
+    $calc_original_vars = [];
     if ($question['q_type'] != 'likert') {
         $old_likert_label = '';
     }
@@ -289,18 +289,18 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             $matching_height = explode('|', $question['q_media_height']);
             $matching_alt = explode('|', $question['q_media_alt']);
             $matching_num = explode('|', $question['q_media_num']);
-            $matching_media = array();
+            $matching_media = [];
             for ($i = 0; $i < count($matching_source); $i++) {
                 if ($matching_num[$i] != '') {
-                    $matching_media[$matching_num[$i]] = array(
+                    $matching_media[$matching_num[$i]] = [
                         'source' => $matching_source[$i],
                         'width' => $matching_width[$i],
                         'height' => $matching_height[$i],
                         'alt' => $matching_alt[$i],
-                    );
+                    ];
                 }
             }
-            $matching_options = array();
+            $matching_options = [];
             $matching_answers = explode('|', $question['options'][0]['correct']);
             break;
         case 'sct':
@@ -333,7 +333,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             }
 
             $sct_parts = explode('~', $question['leadin']);
-            $sct_titles = array(1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']);
+            $sct_titles = [1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']];
             echo '<table cellpadding="2" cellspacing="0" border="0">';
             echo '<tr><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $sct_parts[0] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $sct_parts[1] . "</td></tr>\n";
             echo '</table>';
@@ -393,7 +393,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             break;
     }
 
-    $textboxes_seen = array();
+    $textboxes_seen = [];
     // Processing for each stem.
     foreach ($question['options'] as $display_option) {
         $part_id++;
@@ -469,7 +469,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 // Load old question data from the session (NB reviewer screens).
                 $question['object']->load_all_user_answers($_SESSION['allans']);
 
-                $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
+                $extra = ['num_on_screen' => $question_no, 'reviewers' => true];
 
                 echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
                 $question['object']->render_paper($extra);
@@ -675,7 +675,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 break;
             case 'blank':
-                $blank_mark = array();
+                $blank_mark = [];
                 $blank_details = explode('[blank', $display_option['option_text']);
                 if ($question['score_method'] == 'textboxes') {
                     $array_size = count($blank_details);
@@ -688,14 +688,14 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         // Filter the options in the same way that user's answers are.
                         $answer_list = \param::clean_array($answer_list, \param::TEXT);
 
-                        $results = array();
+                        $results = [];
                         $not_used = preg_match('|size="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
                         if (isset($results[1]) and $results[1] != '') {
                             $blank_size[$blank_count] = $results[1];
                         } else {
                             $blank_size[$blank_count] = 15;
                         }
-                        $results = array();
+                        $results = [];
                         $not_used = preg_match('|mark="([0-9]{1,3})"|', $blank_details[$blank_count], $results);
                         if (isset($results[1]) and $results[1] != '') {
                             $blank_mark[$blank_count] = $results[1];
@@ -857,7 +857,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             case 'labelling':
                 $tmp_answer = '';
                 $labels_correct = 0;
-                $labels_correct_array = array();
+                $labels_correct_array = [];
                 $tmp_labels = 0;
                 $max_col1 = 0;
                 $max_col2 = 0;
@@ -1225,7 +1225,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         echo '<table cellspacing="0" cellpadding="0" border="0" style="width:700px; font-size:100%">';
         echo '<tr><td style="width:300px; font-weight:bold">' . sprintf($string['qcomments'], ($question_no + $question_offset)) . '</td>';
 
-        $categories = array('ok_comment' => $string['questionok'], 'minor_comment' => $string['minorproblems'], 'major_comment' => $string['majorproblems'], 'cannot_comment' => $string['cannotcomment']);
+        $categories = ['ok_comment' => $string['questionok'], 'minor_comment' => $string['minorproblems'], 'major_comment' => $string['majorproblems'], 'cannot_comment' => $string['cannotcomment']];
 
         $value_no = 0;
         foreach ($categories as $class => $text) {

@@ -41,4 +41,4 @@ if ($folder_ownerID == $userObject->get_user_ID()) {
   <div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search" data-action="openSubMenu" type="button"><a href="#" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></a></div>
 </div>
 <?php
-  makeMenu(array($string['questions'] => "{$configObject->get('cfg_root_path')}/question/search.php",$string['papers'] => "{$configObject->get('cfg_root_path')}/paper/search.php",$string['people'] => "{$configObject->get('cfg_root_path')}/users/search.php"));
+  makeMenu([$string['questions'] => "{$configObject->get('cfg_root_path')}/question/search.php",$string['papers'] => "{$configObject->get('cfg_root_path')}/paper/search.php",$string['people'] => "{$configObject->get('cfg_root_path')}/users/search.php"]);
