@@ -64,5 +64,13 @@ $templateData = $copyPaperData->prepareTemplateData(
     $folder
 );
 
-// Render the template
+// Render the header template
+$headerData = $copyPaperData->prepareHeaderData($configObject);
+$render->render($headerData, $string, 'header.html');
+
+// Render the main content template
 $render->render($templateData, $string, 'paper/copy_paper.html');
+
+// Render the footer template
+$footerData = $copyPaperData->prepareFooterData();
+$render->render($footerData, $string, 'footer.html');
