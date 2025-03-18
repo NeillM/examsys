@@ -254,7 +254,7 @@ define(['jquery'], function($) {
          */
         this.clearErrors = function() {
             // Clear field errors
-            $('.field-error').hide().text('');
+            $('.error-message').hide().text('');
             $('.error-field').removeClass('error-field');
         };
 

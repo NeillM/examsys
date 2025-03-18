@@ -237,7 +237,7 @@ h1 {
 }
 
 /* Form validation error styles */
-.field-error {
+.error-message {
     color: #d9534f;
     font-size: 0.8rem;
     margin-top: 5px;
