@@ -262,7 +262,7 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
             if ($score_method == 'Mark per Option') {
                 $random_mark = 0.5 * $correct_no * $marks_correct;
             } else {
-                $random_mark = ($correct_no == 0) ? 0 : pow(0.5, $correct_no) * $marks_correct;
+                $random_mark = ($correct_no == 0) ? 0 : 0.5 ** $correct_no * $marks_correct;
             }
             break;
         case 'labelling':
@@ -342,7 +342,7 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
             if ($score_method == 'Mark per Option') {
                 $random_mark = (1 / count($option_text)) * $correct_no * $marks_correct;
             } else {
-                $random_mark = pow((1 / count($option_text)), $correct_no) * $marks_correct;
+                $random_mark = (1 / count($option_text)) ** $correct_no * $marks_correct;
             }
             break;
         case 'extmatch':
