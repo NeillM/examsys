@@ -51,7 +51,6 @@ if (!$properties->can_user_edit_paper($userObject)) {
 }
 
 // Initialize the data class and render class
-require_once '../classes/copypaperdata.class.php';
 $copyPaperData = new CopyPaperData($string);
 $render = new render($configObject);
 
