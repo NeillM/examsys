@@ -315,10 +315,7 @@ class QuestionBank
 
         if (count($outcomes) > 0) {
             uasort($outcomes, function ($a, $b) {
-                if ($a['label'] == $b['label']) {
-                    return 0;
-                }
-                return ($a['label'] < $b['label']) ? -1 : 1;
+                return $a['label'] <=> $b['label'];
             });
         }
 

@@ -643,7 +643,7 @@ class webServiceRestAPI extends restAPI
 
         foreach ($fields as $field) {
             if (isset($xml->$field) and $xml->$field != '') {
-                $$field = $xml->$field;
+                ${$field} = $xml->$field;
             } else {
                 return 'Missing data: ' . $field;
             }

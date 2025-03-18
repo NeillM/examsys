@@ -1472,11 +1472,7 @@ class EnhancedCalc extends Question implements questionInterface
 
     public function get_uans_data()
     {
-        if (isset($this->useranswer['ans'])) {
-            return $this->useranswer['ans'];
-        }
-
-        return null;
+        return $this->useranswer['ans'] ?? null;
     }
 
     /*
