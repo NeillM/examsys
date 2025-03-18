@@ -16,7 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Data class that handles the creation of data for the copy_paper.php page.
+ * Data class that handles the creation of data for the copy_paper.html template.
  *
  * @author Iyud Dissanayake
  * @copyright Copyright (c) 2025 The University of Nottingham
