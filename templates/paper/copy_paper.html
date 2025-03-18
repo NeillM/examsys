@@ -19,6 +19,26 @@
     
     @author Iyud Dissanayake
     @copyright 2025 The University of Nottingham
+
+    Required variables:
+    data - Object containing copy paper properties:
+        paperID - ID of the paper being copied
+        module - Module ID
+        folder - Folder ID
+        summative_mgmt - Summative management setting
+        max_duration - Maximum paper duration
+        paper_title - Title of the paper being copied
+        paper_types - Array of paper type options
+        calendar_year_options - Array of calendar year options
+        stdset_copy_std_setting - Standard setting copy setting
+        campuses - Array of campus options
+        months - Array of month options
+        cohort_sizes - Array of cohort size options
+        sittings - Array of sitting options
+        validation_strings - Object containing validation messages:
+            required_field - Message for required fields
+            invalid_duration - Message for invalid duration
+            max_duration_exceeded - Message for exceeding maximum duration
     #}
     
     <div id="content">
