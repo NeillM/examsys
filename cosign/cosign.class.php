@@ -464,7 +464,7 @@ class cosign
                 !$newfile &&
                 $cf['f'] != $factors
             ) {
-                ${$this}->cosign_debug("$service: factors changed from {$cf['f']} to $factors");
+                $this->cosign_debug("$service: factors changed from {$cf['f']} to $factors");
                 $newfile = true;
             }
             $cf['f'] = $factors;
