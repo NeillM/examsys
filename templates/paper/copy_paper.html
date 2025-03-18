@@ -20,187 +20,173 @@
     @author Iyud Dissanayake
     @copyright 2025 The University of Nottingham
     #}
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>{{ lang.copypaper }}</title>
-        <link rel="stylesheet" type="text/css" href="{{path}}/css/source/copy_paper.css">
-        <script id="rogoconfig" data-root="{{ path }}" src="{{path}}/js/rogoconfig.js"></script>
-        <script src='{{path}}/js/require.js'></script>
-        <script src='{{path}}/js/main.min.js'></script>
-        {% for scriptname in data.scripts %}
-            <script src="{{path}}{{scriptname}}"></script>
-        {% endfor %}
-    </head>
-    <body>
-        <div id="content">
-            <div id="dataset" 
-                 data-paperid="{{ data.paperID }}"
-                 data-summative-mgmt="{{ data.summative_mgmt }}"
-                 data-max-duration="{{ data.max_duration }}"
-                 data-required-field="{{ data.validation_strings.required_field }}"
-                 data-invalid-duration="{{ data.validation_strings.invalid_duration }}"
-                 data-max-duration-exceeded="{{ data.validation_strings.max_duration_exceeded }}">
-            </div>
-            <h1>{{ lang.copypaper }}</h1>
-            
-            {% if data.summative_mgmt %}
-            <form method="post" action="copy.php" 
-                  id="checkcopy" 
-                  class="copy-form" autocomplete="off">
-            {% else %}
-            <form method="post" action="copy.php" 
-                  class="copy-form" autocomplete="off">
-            {% endif %}
-            
-            <div id="step1" class="form-step active">
-                <div class="form-row">
-                    <label for="new_paper">{{ lang.copyname }}</label>
-                    <input type="text" 
-                           id="new_paper" 
-                           name="new_paper" 
-                           maxlength="255" 
-                           value="{{ data.paper_title }}" 
-                           required />
-                </div>
     
+    <div id="content">
+        <div id="dataset" 
+             data-paperid="{{ data.paperID }}"
+             data-summative-mgmt="{{ data.summative_mgmt }}"
+             data-max-duration="{{ data.max_duration }}"
+             data-required-field="{{ data.validation_strings.required_field }}"
+             data-invalid-duration="{{ data.validation_strings.invalid_duration }}"
+             data-max-duration-exceeded="{{ data.validation_strings.max_duration_exceeded }}">
+        </div>
+        <h1>{{ lang.copypaper }}</h1>
+        
+        {% if data.summative_mgmt %}
+        <form method="post" action="copy.php" 
+              id="checkcopy" 
+              class="copy-form" autocomplete="off">
+        {% else %}
+        <form method="post" action="copy.php" 
+              class="copy-form" autocomplete="off">
+        {% endif %}
+        
+        <div id="step1" class="form-step active">
+            <div class="form-row">
+                <label for="new_paper">{{ lang.copyname }}</label>
+                <input type="text" 
+                       id="new_paper" 
+                       name="new_paper" 
+                       maxlength="255" 
+                       value="{{ data.paper_title }}" 
+                       required />
+            </div>
+
+            <div class="form-row">
+                <label for="paper_type">{{ lang.type }}</label>
+                <select name="paper_type" id="paper_type" class="changepapertype">
+                    {% for type in data.paper_types %}
+                        <option value="{{ type.value }}" {% if type.selected %}selected{% endif %}>
+                            {{ type.text }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="session">{{ lang.academicsession }}</label>
+                <select name="session" id="session">
+                    {{ data.calendar_year_options|raw }}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label></label>
+                <input type="checkbox" name="copy_std_setting" id="copy_std_setting" 
+                       {% if data.stdset_copy_std_setting %}checked{% endif %} />
+                <label for="copy_std_setting" class="checkbox-label">{{ lang.copystdsetting }}</label>
+            </div>
+
+            <div class="form-row" id="copytype_selector">
+                <label>{{ lang.copytype }}</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" name="copytype" id="copytype_paperonly" value="paperonly" />
+                        <label for="copytype_paperonly">
+                            <span>{{ lang.paperonly }}</span>
+                            <img src="../artwork/copy_paper_only.png" width="120" height="130" alt="" />
+                        </label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="copytype" id="copytype_paperquestions" value="paperquestions" checked />
+                        <label for="copytype_paperquestions">
+                            <span>{{ lang.paperandquestions }}</span>
+                            <img src="../artwork/copy_paper_questions.png" width="120" height="130" alt="" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step2" class="form-step">
+            <div class="step-header">
+                <h2>{{ lang.summativedetails }}</h2>
+            </div>
+            
+            <!-- Summative exam fields -->
+            <div id="summative_fields">
                 <div class="form-row">
-                    <label for="paper_type">{{ lang.type }}</label>
-                    <select name="paper_type" id="paper_type" class="changepapertype">
-                        {% for type in data.paper_types %}
-                            <option value="{{ type.value }}" {% if type.selected %}selected{% endif %}>
-                                {{ type.text }}
+                    <label for="campus">{{ lang.campus }}</label>
+                    <select name="campus" id="campus">
+                        {% for campus in data.campuses %}
+                            <option value="{{ campus.campusname }}" {% if campus.isdefault %}selected{% endif %}>
+                                {{ campus.campusname }}
                             </option>
                         {% endfor %}
                     </select>
                 </div>
-    
-                <div class="form-row">
-                    <label for="session">{{ lang.academicsession }}</label>
-                    <select name="session" id="session">
-                        {{ data.calendar_year_options|raw }}
-                    </select>
-                </div>
-    
+
                 <div class="form-row">
                     <label></label>
-                    <input type="checkbox" name="copy_std_setting" id="copy_std_setting" 
-                           {% if data.stdset_copy_std_setting %}checked{% endif %} />
-                    <label for="copy_std_setting" class="checkbox-label">{{ lang.copystdsetting }}</label>
+                    <input type="checkbox" name="barriers_needed" id="barriers_needed" />
+                    <label for="barriers_needed" class="checkbox-label">{{ lang.barriersneeded }}</label>
                 </div>
-    
-                <div class="form-row" id="copytype_selector">
-                    <label>{{ lang.copytype }}</label>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" name="copytype" id="copytype_paperonly" value="paperonly" />
-                            <label for="copytype_paperonly">
-                                <span>{{ lang.paperonly }}</span>
-                                <img src="../artwork/copy_paper_only.png" width="120" height="130" alt="" />
-                            </label>
+
+                <div class="form-row">
+                    <label for="duration">{{ lang.duration }}</label>
+                    <div class="field-container">
+                        <div class="duration-inputs">
+                            <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" />
+                            <label class="inline-label">{{ lang.hrs }}</label>
+                            <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" />
+                            <label class="inline-label">{{ lang.mins }}</label>
                         </div>
-                        <div class="radio-option">
-                            <input type="radio" name="copytype" id="copytype_paperquestions" value="paperquestions" checked />
-                            <label for="copytype_paperquestions">
-                                <span>{{ lang.paperandquestions }}</span>
-                                <img src="../artwork/copy_paper_questions.png" width="120" height="130" alt="" />
-                            </label>
-                        </div>
+                        <span id="duration-error" class="field-error" style="display: none;"></span>
                     </div>
                 </div>
-            </div>
-    
-            <div id="step2" class="form-step">
-                <div class="step-header">
-                    <h2>{{ lang.summativedetails }}</h2>
-                </div>
-                
-                <!-- Summative exam fields -->
-                <div id="summative_fields">
-                    <div class="form-row">
-                        <label for="campus">{{ lang.campus }}</label>
-                        <select name="campus" id="campus">
-                            {% for campus in data.campuses %}
-                                <option value="{{ campus.campusname }}" {% if campus.isdefault %}selected{% endif %}>
-                                    {{ campus.campusname }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-    
-                    <div class="form-row">
-                        <label></label>
-                        <input type="checkbox" name="barriers_needed" id="barriers_needed" />
-                        <label for="barriers_needed" class="checkbox-label">{{ lang.barriersneeded }}</label>
-                    </div>
-    
-                    <div class="form-row">
-                        <label for="duration">{{ lang.duration }}</label>
-                        <div class="field-container">
-                            <div class="duration-inputs">
-                                <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" />
-                                <label class="inline-label">{{ lang.hrs }}</label>
-                                <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" />
-                                <label class="inline-label">{{ lang.mins }}</label>
-                            </div>
-                            <span id="duration-error" class="field-error" style="display: none;"></span>
-                        </div>
-                    </div>
-    
-                    <div class="form-row">
-                        <label for="period">{{ lang.daterequired }}</label>
-                        <div class="field-container">
-                            <select name="date_required" id="period">
-                                <option value=""></option>
-                                {% for month in data.months %}
-                                    <option value="{{ month.value }}">{{ month.text }}</option>
-                                {% endfor %}
-                            </select>
-                            <span id="period-error" class="field-error" style="display: none;"></span>
-                        </div>
-                    </div>
-    
-                    <div class="form-row">
-                        <label for="cohort_size">{{ lang.cohortsize }}</label>
-                        <div class="field-container">
-                            <select name="cohort_size" id="cohort_size">
-                                <option value=""></option>
-                                {% for size in data.cohort_sizes %}
-                                    <option value="{{ size.value }}">{{ size.text }}</option>
-                                {% endfor %}
-                            </select>
-                            <span id="cohort_size-error" class="field-error" style="display: none;"></span>
-                        </div>
-                    </div>
-    
-                    <div class="form-row">
-                        <label for="sittings">{{ lang.sittings }}</label>
-                        <select name="sittings" id="sittings">
+
+                <div class="form-row">
+                    <label for="period">{{ lang.daterequired }}</label>
+                    <div class="field-container">
+                        <select name="date_required" id="period">
                             <option value=""></option>
-                            {% for sitting in data.sittings %}
-                                <option value="{{ sitting.value }}">{{ sitting.text }}</option>
+                            {% for month in data.months %}
+                                <option value="{{ month.value }}">{{ month.text }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-    
-                    <div class="form-row">
-                        <label for="notes">{{ lang.notes }}</label>
-                        <textarea name="notes" id="notes" rows="4"></textarea>
+                        <span id="period-error" class="field-error" style="display: none;"></span>
                     </div>
                 </div>
+
+                <div class="form-row">
+                    <label for="cohort_size">{{ lang.cohortsize }}</label>
+                    <div class="field-container">
+                        <select name="cohort_size" id="cohort_size">
+                            <option value=""></option>
+                            {% for size in data.cohort_sizes %}
+                                <option value="{{ size.value }}">{{ size.text }}</option>
+                            {% endfor %}
+                        </select>
+                        <span id="cohort_size-error" class="field-error" style="display: none;"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="sittings">{{ lang.sittings }}</label>
+                    <select name="sittings" id="sittings">
+                        <option value=""></option>
+                        {% for sitting in data.sittings %}
+                            <option value="{{ sitting.value }}">{{ sitting.text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="notes">{{ lang.notes }}</label>
+                    <textarea name="notes" id="notes" rows="4"></textarea>
+                </div>
             </div>
-    
-            <input type="hidden" name="paperID" value="{{ data.paperID }}" />
-            <input type="hidden" name="module" value="{{ data.module }}" />
-            <input type="hidden" name="folder" value="{{ data.folder }}" />
-            
-            <div class="form-buttons">
-                <input type="button" id="next_button" value="{{ lang.next }}" />
-                <input type="submit" id="submit_button" value="{{ lang.copypaper }}" />
-                <input type="button" id="cancel" value="{{ lang.cancel }}" />
-                <input type="button" id="back_button" class="back-button" value="{{ lang.back }}" />
-            </div>
-            </form>
         </div>
-    </body>
-    </html>
+
+        <input type="hidden" name="paperID" value="{{ data.paperID }}" />
+        <input type="hidden" name="module" value="{{ data.module }}" />
+        <input type="hidden" name="folder" value="{{ data.folder }}" />
+        
+        <div class="form-buttons">
+            <input type="button" id="next_button" value="{{ lang.next }}" />
+            <input type="submit" id="submit_button" value="{{ lang.copypaper }}" />
+            <input type="button" id="cancel" value="{{ lang.cancel }}" />
+            <input type="button" id="back_button" class="back-button" value="{{ lang.back }}" />
+        </div>
+        </form>
+    </div>
