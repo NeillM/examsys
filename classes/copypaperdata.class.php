@@ -210,6 +210,35 @@ class CopyPaperData
     }
 
     /**
+     * Prepare data for the dataset template
+     *
+     * @param int $paperID Paper ID
+     * @param string $summative_mgmt Summative management setting
+     * @param string $max_duration Maximum duration setting
+     * @param array $validation_strings Validation strings for form validation
+     * @return array Data for the dataset template
+     */
+    public function prepareDatasetData(
+        int $paperID, 
+        string $summative_mgmt, 
+        string $max_duration,
+        array $validation_strings
+    ): array
+    {
+        return [
+            'name' => 'dataset',
+            'attributes' => [
+                'paperid' => $paperID,
+                'summative-mgmt' => $summative_mgmt,
+                'max-duration' => $max_duration,
+                'required-field' => $validation_strings['required_field'],
+                'invalid-duration' => $validation_strings['invalid_duration'],
+                'max-duration-exceeded' => $validation_strings['max_duration_exceeded']
+            ]
+        ];
+    }
+
+    /**
      * Prepare data for the copy paper template
      *
      * @param PaperProperties $properties Paper properties
