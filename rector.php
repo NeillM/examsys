@@ -74,4 +74,4 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withFileExtensions(['php', 'inc'])
-    ->withPhpSets(php55: true);
+    ->withPhpSets(php56: true);

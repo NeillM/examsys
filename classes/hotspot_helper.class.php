@@ -316,8 +316,8 @@ class hotspot_helper extends RogoStaticSingleton
         }
         // The equation for determining is a point is in an ellipse is:
         // ((x - centre_x)^2/(x_radius)^2) - ((y - centre_y)^2/(y_radius)^2) <= 1
-        $check_x = pow($answer[0] - $centre_x, 2) / pow($radius_x, 2);
-        $check_y = pow($answer[1] - $centre_y, 2) / pow($radius_y, 2);
+        $check_x = ($answer[0] - $centre_x) ** 2 / $radius_x ** 2;
+        $check_y = ($answer[1] - $centre_y) ** 2 / $radius_y ** 2;
         $check = $check_x + $check_y;
         return ($check <= 1);
     }

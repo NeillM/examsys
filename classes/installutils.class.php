@@ -879,7 +879,7 @@ class InstallUtils
         $maxsize = preg_replace('/[^0-9\.]/', '', $maxsize);
         if ($unit) {
             // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
-            $maxsize = round($maxsize * pow(1024, stripos('bkmgtpezy', $unit[0])));
+            $maxsize = round($maxsize * 1024 ** stripos('bkmgtpezy', $unit[0]));
         } else {
             $maxsize = round($maxsize);
         }
