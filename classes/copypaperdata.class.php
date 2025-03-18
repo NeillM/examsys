@@ -179,6 +179,37 @@ class CopyPaperData
     }
 
     /**
+     * Prepare data for the header template
+     *
+     * @param Config $configObject Config object
+     * @return array Data for the header template
+     */
+    public function prepareHeaderData(Config $configObject): array
+    {
+        return [
+            'css' => ['/css/source/copy_paper.css'],
+            'metadata' => [],
+            'mathjax' => $configObject->get_setting('core', 'cfg_mathjax_path'),
+            'three' => $configObject->get_setting('core', 'cfg_three_path'),
+            'editor' => $configObject->get_setting('core', 'cfg_editor_path'),
+            'texteditor' => '',
+            'scripts' => []
+        ];
+    }
+
+    /**
+     * Prepare data for the footer template
+     *
+     * @return array Data for the footer template
+     */
+    public function prepareFooterData(): array
+    {
+        return [
+            'scripts' => ['/js/copypaperinit.min.js']
+        ];
+    }
+
+    /**
      * Prepare data for the copy paper template
      *
      * @param PaperProperties $properties Paper properties
@@ -222,8 +253,7 @@ class CopyPaperData
                 'required_field' => $this->string['fieldrequired'],
                 'invalid_duration' => $this->string['invalidduration'],
                 'max_duration_exceeded' => $this->string['maxdurationexceeded']
-            ],
-            'scripts' => ['/js/copypaperinit.min.js']
+            ]
         ];
     }
 }
