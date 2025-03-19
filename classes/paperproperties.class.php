@@ -3213,10 +3213,7 @@ class PaperProperties
         $checktype = $type[$this->get_paper_type()];
         $config = Config::get_instance();
         $settings = $config->get_setting('core', 'paper_types');
-        if (isset($settings[$checktype])) {
-            return $settings[$checktype];
-        }
-        return false;
+        return $settings[$checktype] ?? false;
     }
 
     /**

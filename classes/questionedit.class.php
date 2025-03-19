@@ -310,7 +310,7 @@ class QuestionEdit extends RogoObject
                     }
                 }
                 $method = "set_all_{$section_name}s";
-                $this->$method($$section_name);
+                $this->$method(${$section_name});
             }
         }
     }

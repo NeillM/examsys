@@ -217,7 +217,7 @@ class OptionEdit extends RogoObject
                         ${$section_name}[] = '';
                     }
                 }
-                $existing_values[$section_name] = $$section_name;
+                $existing_values[$section_name] = ${$section_name};
             }
             $method = "set_all_{$section_name}s";
             $this->$method($existing_values[$section_name]);

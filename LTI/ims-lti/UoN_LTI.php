@@ -681,10 +681,7 @@ class UoN_LTI extends BLTI
 
     public function get_consumer_secret()
     {
-        if (isset($this->info['oauth_consumer_secret'])) {
-            return $this->info['oauth_consumer_secret'];
-        }
-        return false;
+        return $this->info['oauth_consumer_secret'] ?? false;
     }
 
     public function send_grade($grade)

@@ -51,9 +51,9 @@ if (isset($_POST['submit'])) {
     $types = ['EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2'];
     foreach ($types as $type) {
         if (isset($_POST[$type])) {
-            $$type = (int)$_POST[$type];
+            ${$type} = (int)$_POST[$type];
         } else {
-            $$type = 0;
+            ${$type} = 0;
         }
     }
 

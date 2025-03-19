@@ -24,10 +24,7 @@ $exclude = [];
 
 function sortimages($a, $b)
 {
-    if ($a['height'] == $b['height']) {
-        return 0;
-    }
-    return ($a['height'] < $b['height']) ? -1 : 1;
+    return $a['height'] <=> $b['height'];
 }
 
 $width = 800;
