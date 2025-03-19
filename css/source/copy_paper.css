@@ -244,13 +244,21 @@ h1 {
     display: none;
 }
 
-.error-field {
-    border-color: #d9534f !important;
+.form-row input[type="text"].error-field,
+.form-row input[type="number"].error-field,
+.form-row select.error-field,
+.form-row textarea.error-field,
+.duration-inputs input[type="number"].error-field {
+    border-color: #d9534f;
 }
 
-.error-field:focus {
-    border-color: #d9534f !important;
-    box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25) !important;
+.form-row input[type="text"].error-field:focus,
+.form-row input[type="number"].error-field:focus,
+.form-row select.error-field:focus,
+.form-row textarea.error-field:focus,
+.duration-inputs input[type="number"].error-field:focus {
+    border-color: #d9534f;
+    box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
 }
 
 .field-container {
