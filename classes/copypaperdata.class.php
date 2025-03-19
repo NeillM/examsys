@@ -156,26 +156,15 @@ class CopyPaperData
     }
 
     /**
-     * Get sitting options
+     * Get maximum number of sittings
      *
      * @param Config $configObject Config object
-     * @return array Array of sitting options
+     * @return int Maximum number of sittings
      */
-    public function getSittingOptions(Config $configObject): array
+    public function getSittingOptions(Config $configObject): int
     {
-        $options = [];
         $maxSittings = $configObject->get_setting('core', 'summative_max_sittings');
-
-        $maxSittings = max(1, intval($maxSittings));
-
-        for ($i = 1; $i <= $maxSittings; $i++) {
-            $options[] = [
-                'value' => $i,
-                'text' => $i
-            ];
-        }
-
-        return $options;
+        return max(1, intval($maxSittings));
     }
 
     /**

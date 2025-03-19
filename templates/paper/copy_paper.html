@@ -198,12 +198,10 @@
 
                 <div class="form-row">
                     <label for="sittings">{{ lang.sittings }}</label>
-                    <select name="sittings" id="sittings">
-                        <option value=""></option>
-                        {% for sitting in data.sittings %}
-                            <option value="{{ sitting.value }}">{{ sitting.text }}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="field-container">
+                        <input type="number" name="sittings" id="sittings" min="1" max="{{ data.sittings }}" />
+                        <span id="sittings-error" class="error-message"></span>
+                    </div>
                 </div>
 
                 <div class="form-row">
