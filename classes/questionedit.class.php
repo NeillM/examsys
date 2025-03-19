@@ -296,7 +296,7 @@ class QuestionEdit extends RogoObject
                 $get_method = "get_all_{$section_name}s";
                 $original_vals = $this->$get_method();
                 for ($i = 1; $i <= $this->max_stems; $i++) {
-                    $old_val = (isset($original_vals[$i - 1])) ? $original_vals[$i - 1] : '';
+                    $old_val = $original_vals[$i - 1] ?? '';
                     if (isset($data["{$prefix}{$section_name}{$i}"]) and $data["{$prefix}{$section_name}{$i}"] != '') {
                         ${$section_name}[] = $data["{$prefix}{$section_name}{$i}"];
                         if (!isset($old_val) or $data["{$prefix}{$section_name}{$i}"] != $old_val) {
@@ -330,7 +330,7 @@ class QuestionEdit extends RogoObject
         // We need to check all media on the question edit UI.
         for ($i = 0; $i <= $this->max_stems; $i++) {
             $post_field = ($i == 0) ? $general_field : "{$prefix}$i";
-            $media_name = (isset($old_media['filenames'][$i])) ? $old_media['filenames'][$i] : '';
+            $media_name = $old_media['filenames'][$i] ?? '';
             // If the media element has something new to upload process it.
             if (isset($media_data[$post_field]['name']) and $media_data[$post_field]['name'] != $media_name and ($media_data[$post_field]['name'] != 'none' and $media_data[$post_field]['name'] != '')) {
                 // Delete the old media associated with this media element.
@@ -956,7 +956,7 @@ QUERY;
         $result->fetch();
         $result->close();
 
-        $p_count = (isset($p_count)) ? $p_count : 0;
+        $p_count = $p_count ?? 0;
 
         return $p_count;
     }

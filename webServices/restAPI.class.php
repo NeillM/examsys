@@ -186,7 +186,7 @@ class restAPI
             504 => 'Gateway Timeout',
             505 => 'HTTP Version Not Supported'
         ];
-        return (isset($codes[$status])) ? $codes[$status] : '';
+        return $codes[$status] ?? '';
     }
 
     public function __destruct()

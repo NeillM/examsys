@@ -35,13 +35,13 @@ $startdate = check_var('startdate', 'GET', true, false, true);
 $enddate   = check_var('enddate', 'GET', true, false, true);
 $studentsonly = param::optional('studentsonly', 1, param::BOOLEAN);
 
-$percent      = (isset($_GET['percent'])) ? $_GET['percent'] : 100;
-$ordering     = (isset($_GET['ordering'])) ? $_GET['ordering'] : 'asc';
-$absent       = (isset($_GET['absent'])) ? $_GET['absent'] : 0;
-$sortby       = (isset($_GET['sortby'])) ? $_GET['sortby'] : 'name';
-$studentsonly = (isset($_GET['studentsonly'])) ? $_GET['studentsonly'] : 1;
-$repcourse    = (isset($_GET['repcourse'])) ? $_GET['repcourse'] : '%';
-$repmodule    = (isset($_GET['repmodule'])) ? $_GET['repmodule'] : '';
+$percent      = $_GET['percent'] ?? 100;
+$ordering     = $_GET['ordering'] ?? 'asc';
+$absent       = $_GET['absent'] ?? 0;
+$sortby       = $_GET['sortby'] ?? 'name';
+$studentsonly = $_GET['studentsonly'] ?? 1;
+$repcourse    = $_GET['repcourse'] ?? '%';
+$repmodule    = $_GET['repmodule'] ?? '';
 
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);

@@ -274,12 +274,12 @@ foreach ($allsession as $moduleID => $module) {
         foreach ($session['objectives'] as $objID => $obj) {
             echo "<tr>\n\t<td style=\"width:2%\">&nbsp;</td><td style=\"width:48%\" class=\"obj\"><li>" . strip_tags($obj['content'], '<b><i><strong><em><sub><sup>') . "</li></td>\n";
             foreach ($objsBySession as $p_id => $s) {
-                $identifier = isset($guid_id_map[$guid][$p_id]) ? $guid_id_map[$guid][$p_id] : -1;
+                $identifier = $guid_id_map[$guid][$p_id] ?? -1;
 
                 if (isset($s[$moduleID]) and array_key_exists($identifier, $s[$moduleID])) {
                     $mapped = false;
                     if (isset($s[$moduleID][$identifier]['objectives'])) {
-                        $objID = isset($obj['id_by_paper'][$p_id]) ? $obj['id_by_paper'][$p_id] : -1;
+                        $objID = $obj['id_by_paper'][$p_id] ?? -1;
                         foreach ($s[$moduleID][$identifier]['objectives'] as $tmpObj) {
                             if ($tmpObj['id'] == $objID) {
                                 if (is_array($tmpObj['mapped'])) {

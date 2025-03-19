@@ -31,7 +31,7 @@ if (count($question->options) > 0) {
     $option_id = -1;
     $option_text = '';
 }
-$q_teams = isset($q_teams) ? $q_teams : $question->get_teams();
+$q_teams = $q_teams ?? $question->get_teams();
 $user_teams = $userObject->get_staff_modules();
 $all_teams = array_unique(array_merge($q_teams, $user_teams));
 $keywords = $question->get_user_keywords($all_teams);

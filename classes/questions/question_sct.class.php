@@ -142,7 +142,7 @@ class QuestionSCT extends QuestionEdit
         if ($this->leadin != '') {
             $parts = explode('~', $this->leadin);
             $this->hypothesis = $parts[0];
-            $this->new_information = (isset($parts[1])) ? $parts[1] : '';
+            $this->new_information = $parts[1] ?? '';
         }
         return $this->leadin;
     }

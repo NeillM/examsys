@@ -2240,7 +2240,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                                 echo '<td>';
                             }
                             echo '<div align="center">' . display_response($tmp_display_students_response, 'blank') . '<input type="radio" name="q' . $question . '_' . $row_no . '" value="' . $answer_no . '"';
-                            $tmp_answer = (isset($user_answers[$row_no])) ? $user_answers[$row_no] : 'u';
+                            $tmp_answer = $user_answers[$row_no] ?? 'u';
                             if ($tmp_answer == $tmp_col_no) {
                                 echo ' checked';
                             }

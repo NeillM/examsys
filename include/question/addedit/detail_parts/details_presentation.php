@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-$presentation_label = (isset($presentation_label)) ? $presentation_label :  $string['presentation'];
+$presentation_label = $presentation_label ?? $string['presentation'];
 $disp_method_class = (isset($disp_method_class)) ? ' class="' . $disp_method_class . '"' : '';
 $disabled = ($dis_class == '') ? '' : ' disabled="disabled"';
 ?>

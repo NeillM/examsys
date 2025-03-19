@@ -73,7 +73,7 @@ if ($metadataid === null) {
     $notice->access_denied($mysqli, $string, $string['nottaken'], true, true);
 }
 
-$preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
+$preview_q_id = $_GET['q_id'] ?? null;
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 if ($userObject->has_role('Student')) {

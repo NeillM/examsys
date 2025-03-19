@@ -118,7 +118,7 @@ $question_no = 0;
 $paper_type = 0;
 $unanswered = false;
 $user_answers[1] = [];
-$question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
+$question['assigned_number'] = $_GET['qNo'] ?? 1;
 ?>
 <!DOCTYPE html>
 <html>

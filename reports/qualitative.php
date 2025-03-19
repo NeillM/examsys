@@ -72,8 +72,8 @@ if (isset($_GET['keywords'])) {
 echo '<br /><input type="checkbox" name="collapse" id="collapse" value="1" />&nbsp;<label for ="collapse">' . $string['collapse'] . '</label>';
 echo '&nbsp;&nbsp;&nbsp;&nbsp;';
 echo '<br /><input type="checkbox" name="casesensitive" id="casesensitive" value="1" />&nbsp;<label for ="casesensitive">' . $string['casesensitive'] . '</label>';
-$module = (isset($_GET['module']) ? $_GET['module'] : '');
-$folder = (isset($_GET['folder']) ? $_GET['folder'] : '');
+$module = ($_GET['module'] ?? '');
+$folder = ($_GET['folder'] ?? '');
 echo '<input type="hidden" name="paperID" value="' . $_GET['paperID'] . '" />';
 echo '<input type="hidden" name="startdate" value="' . $_GET['startdate'] . '" />';
 echo '<input type="hidden" name="enddate" value="' . $_GET['enddate'] . '" />';

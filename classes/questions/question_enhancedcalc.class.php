@@ -253,13 +253,13 @@ class QuestionENHANCEDCALC extends QuestionEdit
         } else {
             $cur_parts = explode(' ', $this->get_answer_precision());
             $cur_val = $cur_parts[0];
-            $cur_type = (isset($cur_parts[1])) ? $cur_parts[1] : '';
-            $cur_zeros = (isset($cur_parts[2])) ? $cur_parts[2] : '';
+            $cur_type = $cur_parts[1] ?? '';
+            $cur_zeros = $cur_parts[2] ?? '';
 
             $new_parts = explode(' ', $value);
             $val = $new_parts[0];
             $type = $new_parts[1];
-            $zeros = (isset($new_parts[2])) ? $new_parts[2] : '';
+            $zeros = $new_parts[2] ?? '';
 
             $changed = ($val != $cur_val or $type != $cur_type or $zeros != $cur_zeros);
 

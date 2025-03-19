@@ -312,7 +312,7 @@ function getKeywords()
 function save_keywords($question, $userID, $edit, $db, &$string)
 {
     $keyword_changes = false;
-    $updated_list = (isset($_POST['keywords'])) ? $_POST['keywords'] : [];
+    $updated_list = $_POST['keywords'] ?? [];
 
     if ($edit == true) {
         $existing_list = $question->get_keywords();

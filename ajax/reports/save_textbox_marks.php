@@ -35,11 +35,11 @@ $q_id = check_var('q_id', 'POST', true, false, true);
 $log_id = check_var('log_id', 'POST', true, false, true);
 $marker_id = check_var('marker_id', 'POST', true, false, true);
 $mark = check_var('mark', 'POST', true, false, true);
-$comments = isset($_POST['comments']) ? $_POST['comments'] : '';
+$comments = $_POST['comments'] ?? '';
 $phase = check_var('phase', 'POST', true, false, true);
 $log = check_var('log', 'POST', true, false, true);
 $user_id = check_var('user_id', 'POST', true, false, true);
-$reminders = isset($_POST['reminders']) ? $_POST['reminders'] : '';
+$reminders = $_POST['reminders'] ?? '';
 
 if ($mark != 'NULL') {
     $sql = <<< QUERY

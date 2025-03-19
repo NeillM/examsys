@@ -921,9 +921,9 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     // Process the passed values for group reviews
     if ($is_group) {
         $review_string = ($value['string'] === 0 or !empty($value['string'])) ? $value['string'] : '';
-        $mean = (isset($value['raw_mean'])) ? $value['raw_mean'] : 0;
-        $valid = (isset($value['valid'])) ? $value['valid'] : false;
-        $tmp_value = (isset($value['mean'])) ? $value['mean'] : 0;
+        $mean = $value['raw_mean'] ?? 0;
+        $valid = $value['valid'] ?? false;
+        $tmp_value = $value['mean'] ?? 0;
         if ($valid) {
             $review_string = "mean=$mean%, $review_string\n";
         } else {
