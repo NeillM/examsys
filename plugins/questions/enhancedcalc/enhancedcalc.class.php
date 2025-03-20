@@ -1326,7 +1326,7 @@ class EnhancedCalc extends Question implements questionInterface
     {
         $this->decode_settings();
 
-        return (isset($this->settings['vars'])) ? $this->settings['vars'] : [];
+        return $this->settings['vars'] ?? [];
     }
 
     /**
@@ -1352,9 +1352,9 @@ class EnhancedCalc extends Question implements questionInterface
     public function get_question_marks()
     {
         $this->decode_settings();
-        $marks_full = isset($this->settings['marks_correct']) ? $this->settings['marks_correct'] : false;
-        $marks_partial = isset($this->settings['marks_partial']) ? $this->settings['marks_partial'] : false;
-        $marks_incorrect = isset($this->settings['marks_incorrect']) ? $this->settings['marks_incorrect'] : 0;
+        $marks_full = $this->settings['marks_correct'] ?? false;
+        $marks_partial = $this->settings['marks_partial'] ?? false;
+        $marks_incorrect = $this->settings['marks_incorrect'] ?? 0;
 
         if ($marks_full !== false and $marks_partial !== false) {
             return ['correct' => $marks_full, 'partial' => $marks_partial, 'incorrect' => $marks_incorrect];
@@ -1404,7 +1404,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function get_user_answer_raw()
     {
-        return (isset($this->useranswer['uans'])) ? $this->useranswer['uans'] : '';
+        return $this->useranswer['uans'] ?? '';
     }
 
     public function get_user_answer_full()
@@ -1422,7 +1422,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function get_user_answer_units()
     {
-        return (isset($this->useranswer['uansunit'])) ? $this->useranswer['uansunit'] : '';
+        return $this->useranswer['uansunit'] ?? '';
     }
 
     /**
@@ -1431,7 +1431,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function get_user_answer_units_used()
     {
-        return (isset($this->useranswer['ans']['units_used'])) ? $this->useranswer['ans']['units_used'] : '';
+        return $this->useranswer['ans']['units_used'] ?? '';
     }
 
     /**

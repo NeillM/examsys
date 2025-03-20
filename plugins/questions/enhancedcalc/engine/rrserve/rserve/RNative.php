@@ -26,7 +26,7 @@ class Rserve_RNative implements ArrayAccess {
     }
     
     public function getAttr($name) {
-        return (isset($this->attr[$name])) ? $this->attr[$name] : NULL;
+        return $this->attr[$name] ?? NULL;
     }
     
     public function hasAttr($name) {
@@ -51,7 +51,7 @@ class Rserve_RNative implements ArrayAccess {
     }
     
     public function offsetGet($offset) {
-        return isset($this->data[$offset]) ? $this->data[$offset] : null;
+        return $this->data[$offset] ?? null;
     }
     
 }

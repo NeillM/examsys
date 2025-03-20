@@ -99,7 +99,7 @@ if (!$scale_found) {
 <?php
 $custom_scale = ($mode == 'Add' and isset($state['likert_format'])) ? explode('|', $state['likert_format']) : $question->get_all_custom_scales();
 for ($i = 1; $i <= $question->max_stems; $i++) :
-    $val = (isset($custom_scale[$i - 1])) ? $custom_scale[$i - 1] : '';
+    $val = $custom_scale[$i - 1] ?? '';
     ?>
                   <dt><label for="question_custom_scale<?php echo $i ?>"><?php echo $i ?>.</label></dt>
                   <dd>

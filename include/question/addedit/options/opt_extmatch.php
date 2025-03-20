@@ -30,9 +30,9 @@ if ($index % 2 == 0) {
 } else {
     $alt = $alt_c = '';
 }
-$stem = (isset($stems[$index - 1])) ? $stems[$index - 1] : '';
-$feedback = (isset($all_feedback[$index - 1])) ? $all_feedback[$index - 1] : '';
-$selected = (isset($correct_answers[$index - 1])) ? $correct_answers[$index - 1] : '';
+$stem = $stems[$index - 1] ?? '';
+$feedback = $all_feedback[$index - 1] ?? '';
+$selected = $correct_answers[$index - 1] ?? '';
 $select_size = (count($option_texts) < 10) ? count($option_texts) : 10;
 $locked = ($dis_class != '');
 ?>

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Php70\Rector\FuncCall\RandomFunctionRector;
-use Rector\Php70\Rector\Ternary\TernaryToNullCoalescingRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -80,7 +79,6 @@ return RectorConfig::configure()
         [
             // We are temporarily removing these rules so that we can have reasonably sized
             // changes for review. We will stop skipping them in the next few changes.
-            TernaryToNullCoalescingRector::class,
             RandomFunctionRector::class,
         ]
     );

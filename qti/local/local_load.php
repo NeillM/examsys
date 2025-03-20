@@ -195,7 +195,7 @@ class IE_Local_Load extends IE_Main
         $store->leadin = $q_row['leadin'];
         $store->theme = $q_row['theme'];
         $store->notes = $q_row['notes'];
-        $store->q_group = isset($q_row['q_group']) ? $q_row['q_group'] : '';
+        $store->q_group = $q_row['q_group'] ?? '';
         $store->bloom = $q_row['bloom'];
         $store->score_method = $q_row['score_method'] ?? '';
 

@@ -23,12 +23,12 @@
  * @package
  */
 
-$media_for = (isset($media_for)) ? $media_for : 'q';
-$media_index = (isset($media_index)) ? $media_index : '';
+$media_for = $media_for ?? 'q';
+$media_index = $media_index ?? '';
 $media_index_display = ($media_index == '') ? '0' : $media_index;
-$current_media = (isset($current_media)) ? $current_media : $question->get_media();
-$media_label = (isset($media_label)) ? $media_label : $string['media'];
-$media_alt_label = (isset($media_alt_label)) ? $media_alt_label : $string['mediaalt'];
+$current_media = $current_media ?? $question->get_media();
+$media_label = $media_label ?? $string['media'];
+$media_alt_label = $media_alt_label ?? $string['mediaalt'];
 if ($dis_class != '') {
     $disabled = ' disabled="disabled"';
     $locked = true;

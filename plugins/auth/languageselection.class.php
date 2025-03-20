@@ -77,7 +77,7 @@ class Languageselection_auth extends outline_authentication
         $newfield->description = '';
         $newfield->default = LangUtils::getLang($this->settings['cfg_web_root']);
         $newfield->name = 'ROGO_language';
-        $newfield->options = isset($this->settings['available_languages']) ? $this->settings['available_languages'] : ['English' => 'en'];
+        $newfield->options = $this->settings['available_languages'] ?? ['English' => 'en'];
         $display_std_form_obj->fields[] = $newfield;
 
         return $display_std_form_obj;

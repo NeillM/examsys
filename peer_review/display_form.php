@@ -206,7 +206,7 @@ function display_user($review_type, $q_type, $questions, $saved_results, $cfg_we
     }
     echo "</tr>\n";
     foreach ($questions as $questionID => $details) {
-        $rating = (isset($saved_results[$member_userID][$questionID]['rating'])) ? $saved_results[$member_userID][$questionID]['rating'] : -99;
+        $rating = $saved_results[$member_userID][$questionID]['rating'] ?? -99;
         if ($q_type == 'mcq') {
             render_mcq($details, $parts, $marking, $columns, $member_userID, $rating, $row_no);
         } else {

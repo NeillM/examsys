@@ -683,7 +683,7 @@ if ($properties->get_deleted() != '') {
           $temp_array[$row_no2]['original_marks'] = random_qMarks($temp_array[$row_no2]['random']);
           if ($do_marking) {
               $temp_array[$row_no2]['marks'] = $temp_array[$row_no2]['original_marks'];
-              $total_random_mark += isset($temp_array[$row_no2]['random'][0]['random_mark']) ?  $temp_array[$row_no2]['random'][0]['random_mark'] : 0;
+              $total_random_mark += $temp_array[$row_no2]['random'][0]['random_mark'] ?? 0;
           }
       } else {
           $temp_array[$row_no2]['original_marks'] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);

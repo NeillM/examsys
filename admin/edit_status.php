@@ -28,7 +28,7 @@ require_once '../include/errors.php';
 
 $data = [];
 
-$s_id = (isset($_REQUEST['id'])) ? $_REQUEST['id'] : -1;
+$s_id = $_REQUEST['id'] ?? -1;
 
 if ($s_id != -1) {
     $q_status = new QuestionStatus($mysqli, $string, $s_id);

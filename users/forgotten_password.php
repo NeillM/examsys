@@ -38,7 +38,7 @@ $mysqli = DBUtils::get_mysqli_link(
     $configObject->get('cfg_db_port')
 );
 $configObject->set_db_object($mysqli);
-$email = (isset($_GET['email'])) ? $_GET['email'] : '';
+$email = $_GET['email'] ?? '';
 $message = '';
 $errors = [];
 $form_util = new FormUtils();

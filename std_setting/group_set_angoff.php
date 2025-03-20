@@ -43,8 +43,8 @@ $rater_names   = [];
 $review_string = '';
 
 if (isset($_GET['reviewers'])) {
-    $module = (isset($_GET['module'])) ? $_GET['module'] : '';
-    $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
+    $module = $_GET['module'] ?? '';
+    $folder = $_GET['folder'] ?? '';
 
     $review_string = $_GET['reviewers'];
 } else {

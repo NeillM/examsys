@@ -168,7 +168,7 @@ function xStats(string &$q_type, int &$q_id, array &$freq_log, int &$user_total,
         case 'mcq':
         case 'mrq':
         case 'textbox':
-            $unanswered_count = (isset($freq_log[$q_id]['u'])) ? $freq_log[$q_id]['u'] : 0;
+            $unanswered_count = $freq_log[$q_id]['u'] ?? 0;
             $unanswered_percent = ($unanswered_count / $user_total) * 100;
             break;
         case 'dichotomous':
@@ -178,7 +178,7 @@ function xStats(string &$q_type, int &$q_id, array &$freq_log, int &$user_total,
         case 'sct':
         case 'matrix':
         case 'true_false':
-            $unanswered_count = (isset($freq_log[$q_id][$part_no]['u'])) ? $freq_log[$q_id][$part_no]['u'] : 0;
+            $unanswered_count = $freq_log[$q_id][$part_no]['u'] ?? 0;
             $unanswered_percent = ($unanswered_count / $user_total) * 100;
             break;
         case 'labelling':
@@ -186,12 +186,12 @@ function xStats(string &$q_type, int &$q_id, array &$freq_log, int &$user_total,
             $unanswered_percent = ($unanswered_count / $user_total) * 100;
             break;
         case 'hotspot':
-            $unanswered_count = (isset($freq_log[$q_id][$part_no]['u'])) ? $freq_log[$q_id][$part_no]['u'] : 0; // Layer unanswered
-            $unanswered_count += (isset($freq_log[$q_id]['u'])) ? $freq_log[$q_id]['u'] : 0; // Question unanswered
+            $unanswered_count = $freq_log[$q_id][$part_no]['u'] ?? 0; // Layer unanswered
+            $unanswered_count += $freq_log[$q_id]['u'] ?? 0; // Question unanswered
             $unanswered_percent = ($unanswered_count / $user_total) * 100;
             break;
         case 'rank':
-            $unanswered_count = (isset($freq_log[$q_id][$part_no]['u'])) ? $freq_log[$q_id][$part_no]['u'] : 0;
+            $unanswered_count = $freq_log[$q_id][$part_no]['u'] ?? 0;
             $unanswered_percent = ($unanswered_count / $user_total) * 100;
             break;
         default:
@@ -1156,9 +1156,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                                 $question_data['parts'][$i]['options'][$option_no]['std'] = '';
                             }
 
-                            $tmp_correct_no = (isset($freq_log[$q_id][$individual_coord][$text_only])) ? $freq_log[$q_id][$individual_coord][$text_only] : 0;
-                            $tmp_top_no = (isset($top_log[$q_id][$individual_coord][$text_only])) ? $top_log[$q_id][$individual_coord][$text_only] : 0;
-                            $tmp_bottom_no = (isset($bottom_log[$q_id][$individual_coord][$text_only])) ? $bottom_log[$q_id][$individual_coord][$text_only] : 0;
+                            $tmp_correct_no = $freq_log[$q_id][$individual_coord][$text_only] ?? 0;
+                            $tmp_top_no = $top_log[$q_id][$individual_coord][$text_only] ?? 0;
+                            $tmp_bottom_no = $bottom_log[$q_id][$individual_coord][$text_only] ?? 0;
 
                             $question_data['parts'][$i]['options'][$option_no]['p'] = ($user_total != 0) ? $tmp_correct_no / $user_total : 0;
                             $question_data['parts'][$i]['options'][$option_no]['p_top'] = ($user_no != 0) ? $tmp_top_no / $user_no : 0;
@@ -1226,12 +1226,12 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
 
                 for ($i = 1; $i <= count($layers); $i++) {
                     $question_data['parts'][$i]['option_text'] = mb_substr($layers[$i - 1], 0, mb_strpos($layers[$i - 1], '~'));
-                    $question_data['parts'][$i]['std'] = (isset($std_parts[$i - 1])) ? $std_parts[$i - 1] : '';
+                    $question_data['parts'][$i]['std'] = $std_parts[$i - 1] ?? '';
 
                     $question_data['parts'][$i]['d'] = calcDiscrimination($user_no, $top_log[$q_id], $bottom_log[$q_id], $i, 1);
-                    $tmp_correct_no = (isset($freq_log[$q_id][$i][1])) ? $freq_log[$q_id][$i][1] : 0;
-                    $tmp_top_no = (isset($top_log[$q_id][$i][1])) ? $top_log[$q_id][$i][1] : 0;
-                    $tmp_bottom_no = (isset($bottom_log[$q_id][$i][1])) ? $bottom_log[$q_id][$i][1] : 0;
+                    $tmp_correct_no = $freq_log[$q_id][$i][1] ?? 0;
+                    $tmp_top_no = $top_log[$q_id][$i][1] ?? 0;
+                    $tmp_bottom_no = $bottom_log[$q_id][$i][1] ?? 0;
                     $question_data['parts'][$i]['p'] = ($user_total != 0) ? $tmp_correct_no / $user_total : 0;
                     $question_data['parts'][$i]['p_top'] = ($user_no != 0) ? $tmp_top_no / $user_no : 0;
                     $question_data['parts'][$i]['p_bottom'] = ($user_no != 0) ? $tmp_bottom_no / $user_no : 0;
@@ -1293,7 +1293,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                     }
                     if ($options[0]['correct'] == $i) {
                         $question_data['d'] = calcDiscrimination($user_no, $top_log[$q_id], $bottom_log[$q_id], 1, $i);
-                        $tmp_correct_no = (isset($freq_log[$q_id][1][$i])) ? $freq_log[$q_id][1][$i] : 0;
+                        $tmp_correct_no = $freq_log[$q_id][1][$i] ?? 0;
                         $question_data['parts'][$i]['correct'] = true;
                     } else {
                         $question_data['parts'][$i]['correct'] = false;
@@ -1467,9 +1467,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 } else {
                     $question_data['d'] = ($top_log[$q_id]['mark'] / $top_log[$q_id]['totalpos']) - ($bottom_log[$q_id]['mark'] / $bottom_log[$q_id]['totalpos']);
                 }
-                $question_data['std'] = (isset($tmp_std_array[$i])) ? $tmp_std_array[$i] : '';
-                $tmp_correct_no = (isset($top_log[$q_id]['all_correct'])) ? $top_log[$q_id]['all_correct'] : 0;
-                $tmp_bottom_no = (isset($bottom_log[$q_id]['all_correct'])) ? $bottom_log[$q_id]['all_correct'] : 0;
+                $question_data['std'] = $tmp_std_array[$i] ?? '';
+                $tmp_correct_no = $top_log[$q_id]['all_correct'] ?? 0;
+                $tmp_bottom_no = $bottom_log[$q_id]['all_correct'] ?? 0;
 
                 $question_data['u'] = ($tmp_correct_no / $user_no) * 100;
                 $question_data['l'] = ($tmp_bottom_no / $user_no) * 100;
@@ -1494,9 +1494,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 $i = 0;
                 foreach ($options as $individual_option) {
                     $i++;
-                    $tmp_correct_no = (isset($freq_log[$q_id][1][$i])) ? $freq_log[$q_id][1][$i] : 0;
-                    $tmp_top_no = (isset($top_log[$q_id][1][$i])) ? $top_log[$q_id][1][$i] : 0;
-                    $tmp_bottom_no = (isset($bottom_log[$q_id][1][$i])) ? $bottom_log[$q_id][1][$i] : 0;
+                    $tmp_correct_no = $freq_log[$q_id][1][$i] ?? 0;
+                    $tmp_top_no = $top_log[$q_id][1][$i] ?? 0;
+                    $tmp_bottom_no = $bottom_log[$q_id][1][$i] ?? 0;
 
                     $max_correct = 0;
                     $correct_answer_no = 0;
@@ -1670,9 +1670,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                         $correct_answer = $tmp_answers_array[$i - 1];
                         $question_data['parts'][$i]['d'] = calcDiscrimination($user_no, $top_log[$q_id], $bottom_log[$q_id], $i, $correct_answer);
 
-                        $tmp_correct_no = (isset($freq_log[$q_id][$i][$correct_answer])) ? $freq_log[$q_id][$i][$correct_answer] : 0;
-                        $tmp_top_no = (isset($top_log[$q_id][$i][$correct_answer])) ? $top_log[$q_id][$i][$correct_answer] : 0;
-                        $tmp_bottom_no = (isset($bottom_log[$q_id][$i][$correct_answer])) ? $bottom_log[$q_id][$i][$correct_answer] : 0;
+                        $tmp_correct_no = $freq_log[$q_id][$i][$correct_answer] ?? 0;
+                        $tmp_top_no = $top_log[$q_id][$i][$correct_answer] ?? 0;
+                        $tmp_bottom_no = $bottom_log[$q_id][$i][$correct_answer] ?? 0;
 
                         if ($question_data['score_method'] == 'Mark per Option') {
                             $question_data['parts'][$i]['excluded'] = $exclusions->is_question_part_excluded($q_id, $i - 1); // Might be better to set at question / part level?

@@ -1242,7 +1242,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             echo '</select></div>';
         }
     } elseif (in_array($question['q_type'], ['dichotomous', 'mrq', 'rank'])) {
-        $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
+        $answer = $user_answers[$current_screen][$q_id] ?? '';
         if ($question['display_method'] == 'other') {
             $part_id++;
             if ($answer != '' and mb_substr($answer, ($part_id - 1), 1) == 'y') {

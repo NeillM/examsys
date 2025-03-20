@@ -339,7 +339,7 @@ if (!$title_unique) {
         } else {
             $properties->set_marking($_POST['marking']);
         }
-        $tmp_pass_mark = (isset($_POST['pass_mark'])) ? $_POST['pass_mark'] : 0;
+        $tmp_pass_mark = $_POST['pass_mark'] ?? 0;
         if ($tmp_pass_mark == '') {
             $tmp_pass_mark = 40;
         }
@@ -350,7 +350,7 @@ if (!$title_unique) {
     }
 
     if ($properties->get_summative_lock() === false or $userObject->has_role('SysAdmin')) {
-        $tmp_calculator = (isset($_POST['calculator'])) ? $_POST['calculator'] : 0;
+        $tmp_calculator = $_POST['calculator'] ?? 0;
         $properties->set_calculator($tmp_calculator);
     }
 

@@ -154,7 +154,7 @@ class OptionEdit extends RogoObject
                     $data[$field] = $this->_question->get_answer_negative();
                 }
 
-                $value = (isset($data[$field])) ? $data[$field] : '';
+                $value = $data[$field] ?? '';
                 $method = "set_$section_name";
                 $this->$method($value);
             }
@@ -204,7 +204,7 @@ class OptionEdit extends RogoObject
                 $get_method = "get_all_{$section_name}s";
                 $original_vals = $this->$get_method();
                 for ($i = 1; $i <= $this->_question->max_stems; $i++) {
-                    $old_val = (isset($original_vals[$i - 1])) ? $original_vals[$i - 1] : '';
+                    $old_val = $original_vals[$i - 1] ?? '';
                     if (isset($_POST["{$prefix}{$section_name}{$i}"]) and $data["{$prefix}{$section_name}{$i}"] != '') {
                         ${$section_name}[] = $data["{$prefix}{$section_name}{$i}"];
                         if (!isset($old_val) or $data["{$prefix}{$section_name}{$i}"] != $old_val) {

@@ -25,7 +25,7 @@
 
 // TODO: hide
 $alt_c = ($index % 2 == 1) ? ' class="alt"' : '';
-$stem = (isset($stems[$index - 1])) ? $stems[$index - 1] : '';
+$stem = $stems[$index - 1] ?? '';
 ?>
           <tr<?php echo $alt_c ?>>
             <th class="separated">

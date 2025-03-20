@@ -245,7 +245,7 @@ foreach ($papers as $paper) {
         $min = $paper['stats']['min_percent'];
         $max = $paper['stats']['max_percent'];
         $pass_mark = $paper['pass_mark'];
-        $mark = (isset($marks[$paper['paperID']])) ? $marks[$paper['paperID']] : '';
+        $mark = $marks[$paper['paperID']] ?? '';
         $exam = $paper['paper_title'];
 
         if ($userObject->has_role('Student')) {

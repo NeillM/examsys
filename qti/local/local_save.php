@@ -144,7 +144,7 @@ class IE_Local_Save extends IE_Main
             $this->q_row['last_edited'] = date('Y-m-d H:i:s');
             $this->q_row['q_type'] = $question->type;
 
-            $this->q_row['status'] = isset($this->statuses[$question->status]) ? $this->statuses[$question->status] : $this->default_status;
+            $this->q_row['status'] = $this->statuses[$question->status] ?? $this->default_status;
 
             $this->q_row['theme'] = $question->theme;
             $this->q_row['notes'] = $question->notes;

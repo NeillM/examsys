@@ -548,8 +548,8 @@ if (isset($_POST['alterpassmark']) and $_POST['alterpassmark'] == 1) {
     }
 }
 
-$module = (isset($_GET['module'])) ? $_GET['module'] : '';
-$folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
+$module = $_GET['module'] ?? '';
+$folder = $_GET['folder'] ?? '';
 
 if (isset($_POST['continue'])) {
     // Clicking continue does not leave the page, so we need to recalculate the paper marks here.

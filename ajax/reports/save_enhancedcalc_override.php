@@ -39,7 +39,7 @@ $marker_id = check_var('marker_id', 'POST', true, false, true);
 $mark_type = check_var('mark_type', 'POST', true, false, true);
 $log = check_var('log', 'POST', true, false, true);
 
-$reason = (isset($_POST['reason'])) ? $_POST['reason'] : '';
+$reason = $_POST['reason'] ?? '';
 
 $mysqli->autocommit(false);
 
