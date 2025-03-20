@@ -27,7 +27,6 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
-use Rector\Php70\Rector\FuncCall\RandomFunctionRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -74,11 +73,4 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withFileExtensions(['php', 'inc'])
-    ->withPhpSets(php70: true)
-    ->withSkip(
-        [
-            // We are temporarily removing these rules so that we can have reasonably sized
-            // changes for review. We will stop skipping them in the next few changes.
-            RandomFunctionRector::class,
-        ]
-    );
+    ->withPhpSets(php70: true);
