@@ -482,7 +482,7 @@ class InstallUtils
         $salt = '';
         $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         for ($i = 0; $i < 16; $i++) {
-            $salt .= mb_substr($characters, rand(0, 61), 1);
+            $salt .= mb_substr($characters, random_int(0, 61), 1);
         }
         $cfg_encrypt_salt = $salt;
 

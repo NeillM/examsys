@@ -64,7 +64,7 @@ if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
                 $errors[] = $string['emailaddressnotfound'];
             } else {
                 // If they do exist, create a token and send it to them in an email
-                  $token = mb_substr(md5(rand(10000000, 99999999)), 0, 15);
+                  $token = mb_substr(md5(random_int(10000000, 99999999)), 0, 15);
                 // Check if there is already a token for the user and update reather than continually adding new ones
                   // if they refresh the browser
                   $stmt = $mysqli->prepare('SELECT id FROM password_tokens WHERE user_id=? ORDER BY id DESC LIMIT 1');

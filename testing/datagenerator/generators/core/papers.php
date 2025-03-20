@@ -450,7 +450,7 @@ class papers extends generator
             'sittings' => 1,
             'campus' => 'Main Campus',
             'duration' => \date_utils::HOURSECS,
-            'month' => rand(0, 11), // 0 is January, 11 is December.
+            'month' => random_int(0, 11), // 0 is January, 11 is December.
             'session' => $yearutils->get_current_session(),
             'remote' => 0,
         ];

@@ -155,9 +155,9 @@ class encryp
             $chars = [$lower, $lower, $lower, $special, $num, $num, $upper, $upper];
             for ($i = 0; $i < $len; $i++) {
                 if ($i < 7) {
-                    $pass .= mb_substr($chars[$i], rand(0, 51), 1);
+                    $pass .= mb_substr($chars[$i], random_int(0, 51), 1);
                 } else {
-                    $pass .= mb_substr($chars[rand(2, 6)], rand(0, 51), 1);
+                    $pass .= mb_substr($chars[random_int(2, 6)], random_int(0, 51), 1);
                 }
             }
             return ['password' => $pass, 'display_password' => $pass];
@@ -167,7 +167,7 @@ class encryp
         $disppass = '';
         $max = count($this->dictionary) - 1;
         for ($i = 0; $i < 3; $i++) {
-            $word = rtrim($this->dictionary[rand(0, $max)]);
+            $word = rtrim($this->dictionary[random_int(0, $max)]);
             $pass .= $word;
             $disppass .= $word . ' ';
         }

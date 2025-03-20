@@ -187,13 +187,13 @@ class Anonymise
     private function pick_first_names($type)
     {
         if ($type == 'male') {
-            $picked = (rand(1, $this->male_no)) - 1;
+            $picked = (random_int(1, $this->male_no)) - 1;
             $first_name = $this->male_names[$picked]['first_names'];
         } elseif ($type == 'female') {
-            $picked = (rand(1, $this->female_no)) - 1;
+            $picked = (random_int(1, $this->female_no)) - 1;
             $first_name = $this->female_names[$picked]['first_names'];
         } else {
-            $picked = (rand(1, $this->unknown_no)) - 1;
+            $picked = (random_int(1, $this->unknown_no)) - 1;
             $first_name = $this->unknown_names[$picked]['first_names'];
         }
 
@@ -208,13 +208,13 @@ class Anonymise
     private function pick_surname($type)
     {
         if ($type == 'male') {
-            $picked = (rand(1, $this->male_no)) - 1;
+            $picked = (random_int(1, $this->male_no)) - 1;
             $surname = $this->male_names[$picked]['surname'];
         } elseif ($type == 'female') {
-            $picked = (rand(1, $this->female_no)) - 1;
+            $picked = (random_int(1, $this->female_no)) - 1;
             $surname = $this->female_names[$picked]['surname'];
         } else {
-            $picked = (rand(1, $this->unknown_no)) - 1;
+            $picked = (random_int(1, $this->unknown_no)) - 1;
             $surname = $this->unknown_names[$picked]['surname'];
         }
 

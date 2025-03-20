@@ -609,7 +609,7 @@ $dataset['attributes']['paperid'] = $paperID;
 $dataset['attributes']['urlmod'] = html_entity_decode($url_mod);
 $dataset['attributes']['submittype'] = $submitype;
 $dataset['attributes']['refcount'] = count($reference_materials);
-$dataset['attributes']['savefreq'] = (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5, 5)) * 1000);
+$dataset['attributes']['savefreq'] = (($configObject->get_setting('core', 'paper_autosave_frequency') + random_int(-5, 5)) * 1000);
 $dataset['attributes']['page'] = $page;
 $dataset['attributes']['anomaly'] = Anomaly::anomalyDetectionEnabled($papertype);
 // Set the time out of one requst to be the maximum total time plus 5s for network latency

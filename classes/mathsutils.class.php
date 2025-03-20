@@ -65,7 +65,7 @@ class MathsUtils
             if (mb_strpos($min, 'var') !== false or mb_strpos($min, 'ans') !== false or mb_strpos($max, 'var') !== false or mb_strpos($max, 'ans') !== false) {
                 $gen_no = 0;
             } else {
-                $gen_no = rand(intval($min), intval($max));
+                $gen_no = random_int(intval($min), intval($max));
             }
         } else {
             $new_max = ($max - $min) / $increment;
@@ -74,7 +74,7 @@ class MathsUtils
             // (10 - 0) / 4 = 2.5
             // In a case we need to discard the decimal place which means that the maximum will
             // never be returned because it is mathematically impossible to generate.
-            $gen_no = rand(0, intval($new_max));
+            $gen_no = random_int(0, intval($new_max));
             $gen_no *= $increment;
             $gen_no += $min;
         }

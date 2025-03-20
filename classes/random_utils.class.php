@@ -39,7 +39,7 @@ class random_utils
         }
         //  Get random question.
         $random_q_no = count($randomids);
-        $selected_no = rand(0, $random_q_no - 1);
+        $selected_no = random_int(0, $random_q_no - 1);
         return $randomids[$selected_no];
     }
     /**
