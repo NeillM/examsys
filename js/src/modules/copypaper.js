@@ -35,9 +35,9 @@ define(['jquery'], function($) {
 
         // Get validation strings from data attributes
         this.validationStrings = {
-            requiredField: $('#dataset').data('required-field') || 'This field is required',
-            invalidDuration: $('#dataset').data('invalid-duration') || 'Please enter a valid duration',
-            maxDurationExceeded: $('#dataset').data('max-duration-exceeded') || 'Duration cannot exceed the maximum allowed'
+            requiredField: $('#dataset').data('required-field'),
+            invalidDuration: $('#dataset').data('invalid-duration'),
+            maxDurationExceededFormatted: $('#dataset').data('max-duration-exceeded-formatted')
         };
         
         // Required fields for summative exams
@@ -207,9 +207,12 @@ define(['jquery'], function($) {
                         firstErrorField = $('#duration_hours');
                     }
                     
-                    // Add to field errors
-                    fieldErrors['duration'] = this.validationStrings.maxDurationExceeded + ' ' + 
-                        formattedMaxDuration + ' (you entered ' + formattedUserDuration + ')';
+                    // Add to field errors using the localized formatted string
+                    var formattedMessage = this.validationStrings.maxDurationExceededFormatted
+                        .replace('%s', formattedMaxDuration)
+                        .replace('%s', formattedUserDuration);
+                    
+                    fieldErrors['duration'] = formattedMessage;
                 }
                 
                 // If there are any errors, display them and prevent form submission

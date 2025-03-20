@@ -47,5 +47,5 @@ $string['notes'] = 'Notes';
 // Validation messages
 $string['fieldrequired'] = 'This field is required';
 $string['invalidduration'] = 'Please enter a valid duration';
-$string['maxdurationexceeded'] = 'Duration cannot exceed the maximum allowed';
+$string['maxdurationexceededformatted'] = 'Duration cannot exceed the maximum allowed: %s (you entered %s)';
 $string['requiredfields'] = 'Fields marked with asterisks are required';

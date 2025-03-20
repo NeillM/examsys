@@ -79,7 +79,7 @@ $datasetData = $copyPaperData->prepareDatasetData(
     [
         'required_field' => $string['fieldrequired'],
         'invalid_duration' => $string['invalidduration'],
-        'max_duration_exceeded' => $string['maxdurationexceeded']
+        'max_duration_exceeded_formatted' => $string['maxdurationexceededformatted']
     ]
 );
 $render->render($datasetData, $string, 'dataset.html');
