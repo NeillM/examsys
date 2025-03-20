@@ -236,6 +236,22 @@ h1 {
     display: none;
 }
 
+/* Required field styles */
+.required-indicator {
+    color: #d9534f;
+    margin-right: 0.25rem;
+}
+
+.required-fields-note {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.form-info {
+    margin-bottom: 1.5rem;
+}
+
 /* Form validation error styles */
 .error-message {
     color: #d9534f;
