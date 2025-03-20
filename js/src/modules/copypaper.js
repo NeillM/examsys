@@ -173,9 +173,16 @@ define(['jquery'], function($) {
             // Clear previous errors
             this.clearErrors();
             
+            if (!this.$newPaper.val().trim()) {
+                var fieldError = {'new_paper': this.validationStrings.enterPaperName};
+                this.displayErrors(fieldError);
+                this.$newPaper.focus();
+                return false;
+            }
+            
             var isSummative = this.$paperType.val() === '2';
             
-            // For summative exams, validate all required fields
+            // For summative exams, validate additional required fields
             if (isSummative) {
                 var fieldErrors = {};
                 var firstErrorField = null;
