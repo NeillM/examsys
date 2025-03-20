@@ -37,7 +37,8 @@ define(['jquery'], function($) {
         this.validationStrings = {
             requiredField: $('#dataset').data('required-field'),
             invalidDuration: $('#dataset').data('invalid-duration'),
-            maxDurationExceededFormatted: $('#dataset').data('max-duration-exceeded-formatted')
+            maxDurationExceededFormatted: $('#dataset').data('max-duration-exceeded-formatted'),
+            enterPaperName: $('#dataset').data('enter-paper-name')
         };
         
         // Required fields for summative exams
@@ -136,9 +137,12 @@ define(['jquery'], function($) {
                 return;
             }
 
+            this.clearErrors();
+
             // Validate paper name
             if (!this.$newPaper.val().trim()) {
-                alert('Please enter a paper name');
+                var fieldError = {'new_paper': this.validationStrings.enterPaperName};
+                this.displayErrors(fieldError);
                 this.$newPaper.focus();
                 return;
             }

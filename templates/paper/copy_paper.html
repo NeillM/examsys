@@ -79,12 +79,15 @@
         <div id="step1" class="form-step active">
             <div class="form-row">
                 <label for="new_paper"><span class="required-indicator">*</span> {{ lang.copyname }}</label>
-                <input type="text" 
-                       id="new_paper" 
-                       name="new_paper" 
-                       maxlength="255" 
-                       value="{{ data.paper_title }}" 
-                       aria-required="true" />
+                <div class="field-container">
+                    <input type="text" 
+                           id="new_paper" 
+                           name="new_paper" 
+                           maxlength="255" 
+                           value="{{ data.paper_title }}" 
+                           aria-required="true" />
+                    <span id="new_paper-error" class="error-message"></span>
+                </div>
             </div>
 
             <div class="form-row">

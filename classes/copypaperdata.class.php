@@ -222,7 +222,8 @@ class CopyPaperData
                 'max-duration' => $max_duration,
                 'required-field' => $validation_strings['required_field'],
                 'invalid-duration' => $validation_strings['invalid_duration'],
-                'max-duration-exceeded-formatted' => $validation_strings['max_duration_exceeded_formatted']
+                'max-duration-exceeded-formatted' => $validation_strings['max_duration_exceeded_formatted'],
+                'enter-paper-name' => $validation_strings['enter_paper_name']
             ]
         ];
     }
