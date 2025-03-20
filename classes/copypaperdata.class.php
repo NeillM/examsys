@@ -223,7 +223,11 @@ class CopyPaperData
                 'required-field' => $validation_strings['required_field'],
                 'invalid-duration' => $validation_strings['invalid_duration'],
                 'max-duration-exceeded-formatted' => $validation_strings['max_duration_exceeded_formatted'],
-                'enter-paper-name' => $validation_strings['enter_paper_name']
+                'enter-paper-name' => $validation_strings['enter_paper_name'],
+                'hour' => $validation_strings['hour'],
+                'hours' => $validation_strings['hours'],
+                'minute' => $validation_strings['minute'],
+                'minutes' => $validation_strings['minutes']
             ]
         ];
     }

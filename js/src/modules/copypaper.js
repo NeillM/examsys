@@ -41,6 +41,14 @@ define(['jquery'], function($) {
             enterPaperName: $('#dataset').data('enter-paper-name')
         };
         
+        // Time format strings
+        this.timeStrings = {
+            hour: $('#dataset').data('hour'),
+            hours: $('#dataset').data('hours'),
+            minute: $('#dataset').data('minute'),
+            minutes: $('#dataset').data('minutes')
+        };
+        
         // Required fields for summative exams
         this.summativeRequiredFields = [
             'duration_hours',
@@ -275,11 +283,12 @@ define(['jquery'], function($) {
             var minutes = totalMinutes % 60;
             
             if (hours > 0 && minutes > 0) {
-                return hours + ' hour' + (hours !== 1 ? 's' : '') + ' ' + minutes + ' minute' + (minutes !== 1 ? 's' : '');
+                return hours + ' ' + (hours !== 1 ? this.timeStrings.hours : this.timeStrings.hour) + ' ' + 
+                       minutes + ' ' + (minutes !== 1 ? this.timeStrings.minutes : this.timeStrings.minute);
             } else if (hours > 0) {
-                return hours + ' hour' + (hours !== 1 ? 's' : '');
+                return hours + ' ' + (hours !== 1 ? this.timeStrings.hours : this.timeStrings.hour);
             } else {
-                return minutes + ' minute' + (minutes !== 1 ? 's' : '');
+                return minutes + ' ' + (minutes !== 1 ? this.timeStrings.minutes : this.timeStrings.minute);
             }
         };
 

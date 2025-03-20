@@ -50,3 +50,7 @@ $string['invalidduration'] = 'Please enter a valid duration';
 $string['maxdurationexceededformatted'] = 'Duration cannot exceed the maximum allowed: %s (you entered %s)';
 $string['requiredfields'] = 'Fields marked with asterisks are required';
 $string['enterpapername'] = 'Please enter a paper name';
+$string['hour'] = 'hour';
+$string['hours'] = 'hours';
+$string['minute'] = 'minute';
+$string['minutes'] = 'minutes';

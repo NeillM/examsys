@@ -80,7 +80,11 @@ $datasetData = $copyPaperData->prepareDatasetData(
         'required_field' => $string['fieldrequired'],
         'invalid_duration' => $string['invalidduration'],
         'max_duration_exceeded_formatted' => $string['maxdurationexceededformatted'],
-        'enter_paper_name' => $string['enterpapername']
+        'enter_paper_name' => $string['enterpapername'],
+        'hour' => $string['hour'],
+        'hours' => $string['hours'],
+        'minute' => $string['minute'],
+        'minutes' => $string['minutes']
     ]
 );
 $render->render($datasetData, $string, 'dataset.html');
