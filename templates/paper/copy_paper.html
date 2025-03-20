@@ -84,7 +84,7 @@
                        name="new_paper" 
                        maxlength="255" 
                        value="{{ data.paper_title }}" 
-                       required />
+                       aria-required="true" />
             </div>
 
             <div class="form-row">
@@ -161,9 +161,9 @@
                     <label for="duration">{{ lang.duration }}</label>
                     <div class="field-container">
                         <div class="duration-inputs">
-                            <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" />
+                            <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" aria-required="true" />
                             <label class="inline-label">{{ lang.hrs }}</label>
-                            <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" />
+                            <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" aria-required="true" />
                             <label class="inline-label">{{ lang.mins }}</label>
                         </div>
                         <span id="duration-error" class="error-message"></span>
@@ -173,7 +173,7 @@
                 <div class="form-row">
                     <label for="period">{{ lang.daterequired }}</label>
                     <div class="field-container">
-                        <select name="date_required" id="period">
+                        <select name="date_required" id="period" aria-required="true">
                             <option value=""></option>
                             {% for month in data.months %}
                                 <option value="{{ month.value }}">{{ month.text }}</option>
@@ -186,7 +186,7 @@
                 <div class="form-row">
                     <label for="cohort_size">{{ lang.cohortsize }}</label>
                     <div class="field-container">
-                        <select name="cohort_size" id="cohort_size">
+                        <select name="cohort_size" id="cohort_size" aria-required="true">
                             <option value=""></option>
                             {% for size in data.cohort_sizes %}
                                 <option value="{{ size.value }}">{{ size.text }}</option>
@@ -199,7 +199,7 @@
                 <div class="form-row">
                     <label for="sittings">{{ lang.sittings }}</label>
                     <div class="field-container">
-                        <input type="number" name="sittings" id="sittings" min="1" max="{{ data.sittings }}" />
+                        <input type="number" name="sittings" id="sittings" min="1" max="{{ data.sittings }}" aria-required="true" />
                         <span id="sittings-error" class="error-message"></span>
                     </div>
                 </div>
