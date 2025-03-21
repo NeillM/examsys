@@ -144,7 +144,7 @@ class GuestAccountManager
         // Reset password on the chosen guest account.
         $color = ['blue', 'green', 'orange', 'gold', 'silver', 'purple', 'white', 'black', 'yellow'];
         $max = count($color) - 1;
-        $account->password = $color[rand(0, $max)] . rand(10, 99);
+        $account->password = $color[random_int(0, $max)] . random_int(10, 99);
         UserUtils::update_password($account->username, $account->password, $userid, Config::get_instance()->db);
 
         return $account;

@@ -984,7 +984,7 @@ if ($properties->get_retired() == '') {
 
         echo '<td id="icon_' . ($question_number + 1) . "\" class=\"{$killer_class}{$info_class}\">";
         if ($temp_array[$x]['q_type'] == 'random') {
-            $dice_no = rand(1, 6);
+            $dice_no = random_int(1, 6);
             if ($temp_array[$x]['leadin'] == '') {
                 $temp_array[$x]['leadin'] = 'Random question block';
             }

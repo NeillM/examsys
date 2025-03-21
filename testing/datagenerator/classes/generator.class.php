@@ -47,7 +47,7 @@ class generator
             throw new data_error("$class::\$$variable is not an array");
         }
         $size = count($class::${$variable});
-        $position = rand(0, $size - 1);
+        $position = random_int(0, $size - 1);
         return $class::${$variable}[$position];
     }
 
