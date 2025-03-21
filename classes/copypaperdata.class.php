@@ -208,12 +208,11 @@ class CopyPaperData
      * @return array Data for the dataset template
      */
     public function prepareDatasetData(
-        int $paperID, 
-        string $summative_mgmt, 
+        int $paperID,
+        string $summative_mgmt,
         string $max_duration,
         array $validation_strings
-    ): array
-    {
+    ): array {
         return [
             'name' => 'dataset',
             'attributes' => [
