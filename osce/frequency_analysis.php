@@ -160,7 +160,7 @@ if ($user_no == 0) {
         echo "$leadin</td>";
 
         for ($i = 0; $i < $cols; $i++) {
-            if (!isset($frequencies[$q_id][$i]) or $frequencies[$q_id][$i] == '') {
+            if (!isset($frequencies[$q_id][$i]) or $frequencies[$q_id][$i] == 0) {
                 $frequencies[$q_id][$i] = 0;
             }
             echo '<td class="rating" style="background-color:' . $cell_colors[$i] . '">' . $frequencies[$q_id][$i] . '</td><td class="rating" style="background-color:' . $cell_colors[$i] . '">' . round(($frequencies[$q_id][$i] / $user_no) * 100) . '%</td>';

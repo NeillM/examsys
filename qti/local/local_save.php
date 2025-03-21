@@ -589,7 +589,7 @@ class IE_Local_Save extends IE_Main
         $this->q_row['score_method'] = 'Mark per Option';
 
         $lt = $line_thicknesses[(string)$question->line_thickness];
-        if ($lt == '') {
+        if ($lt == 0) {
             $lt = 1;
         }
         $data = $question->line_color . ';' . $lt . ';' . $question->box_color . ';' . $question->font_size . ';' . $question->font_color . ';' . $question->width . ';' . $question->height . ';' . $question->label_type . ';';
