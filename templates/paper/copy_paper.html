@@ -73,12 +73,12 @@
         {% endif %}
         
         <div class="form-info">
-            <p class="required-fields-note"><span class="required-indicator">*</span> {{ lang.requiredfields }}</p>
+            <p class="required-fields-note" aria-hidden="true"><span class="required-indicator">*</span> {{ lang.requiredfields }}</p>
         </div>
         
         <div id="step1" class="form-step active">
             <div class="form-row">
-                <label for="new_paper"><span class="required-indicator">*</span> {{ lang.copyname }}</label>
+                <label for="new_paper"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.copyname }}</label>
                 <div class="field-container">
                     <input type="text" 
                            id="new_paper" 
@@ -161,7 +161,7 @@
                 </div>
 
                 <div class="form-row">
-                    <label for="duration"><span class="required-indicator">*</span> {{ lang.duration }}</label>
+                    <label for="duration"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.duration }}</label>
                     <div class="field-container">
                         <div class="duration-inputs">
                             <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" aria-required="true" />
@@ -174,7 +174,7 @@
                 </div>
 
                 <div class="form-row">
-                    <label for="period"><span class="required-indicator">*</span> {{ lang.daterequired }}</label>
+                    <label for="period"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.daterequired }}</label>
                     <div class="field-container">
                         <select name="date_required" id="period" aria-required="true">
                             <option value=""></option>
@@ -187,7 +187,7 @@
                 </div>
 
                 <div class="form-row">
-                    <label for="cohort_size"><span class="required-indicator">*</span> {{ lang.cohortsize }}</label>
+                    <label for="cohort_size"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.cohortsize }}</label>
                     <div class="field-container">
                         <select name="cohort_size" id="cohort_size" aria-required="true">
                             <option value=""></option>
@@ -200,7 +200,7 @@
                 </div>
 
                 <div class="form-row">
-                    <label for="sittings"><span class="required-indicator">*</span> {{ lang.sittings }}</label>
+                    <label for="sittings"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.sittings }}</label>
                     <div class="field-container">
                         <input type="number" name="sittings" id="sittings" min="1" max="{{ data.sittings }}" aria-required="true" />
                         <span id="sittings-error" class="error-message"></span>
