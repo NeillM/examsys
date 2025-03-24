@@ -26,6 +26,12 @@ class CopyPaperData
 {
     /** @var array Language strings used for the page */
     private $string;
+    
+    /** @var Config The configuration object */
+    private $config;
+    
+    /** @var mysqli The database connection */
+    private $db;
 
     /**
      * Constructor for CopyPaperData
@@ -35,6 +41,8 @@ class CopyPaperData
     public function __construct(array $string)
     {
         $this->string = $string;
+        $this->config = Config::get_instance();
+        $this->db = $this->config->db;
     }
 
     /**
@@ -103,12 +111,11 @@ class CopyPaperData
     /**
      * Get all campus details
      *
-     * @param mysqli $mysqli Database connection
      * @return array Array of campus details
      */
-    public function getCampusDetails(mysqli $mysqli): array
+    public function getCampusDetails(): array
     {
-        $campusobj = new campus($mysqli);
+        $campusobj = new campus($this->db);
         return $campusobj->get_all_campus_details();
     }
 
@@ -136,13 +143,12 @@ class CopyPaperData
     /**
      * Get cohort size options
      *
-     * @param Config $configObject Config object
      * @return array Array of cohort size options
      */
-    public function getCohortSizeOptions(Config $configObject): array
+    public function getCohortSizeOptions(): array
     {
         $options = [];
-        $cohort_sizes = $configObject->get_setting('core', 'summative_cohort_sizes');
+        $cohort_sizes = $this->config->get_setting('core', 'summative_cohort_sizes');
 
         foreach ($cohort_sizes as $size) {
             $display_value = ($size === '<whole cohort>') ? $this->string['wholecohort'] : $size;
@@ -158,29 +164,27 @@ class CopyPaperData
     /**
      * Get maximum number of sittings
      *
-     * @param Config $configObject Config object
      * @return int Maximum number of sittings
      */
-    public function getSittingOptions(Config $configObject): int
+    public function getSittingOptions(): int
     {
-        $maxSittings = $configObject->get_setting('core', 'summative_max_sittings');
+        $maxSittings = $this->config->get_setting('core', 'summative_max_sittings');
         return max(1, intval($maxSittings));
     }
 
     /**
      * Prepare data for the header template
      *
-     * @param Config $configObject Config object
      * @return array Data for the header template
      */
-    public function prepareHeaderData(Config $configObject): array
+    public function prepareHeaderData(): array
     {
         return [
             'css' => ['/css/source/copy_paper.css'],
             'metadata' => [],
-            'mathjax' => $configObject->get_setting('core', 'cfg_mathjax_path'),
-            'three' => $configObject->get_setting('core', 'cfg_three_path'),
-            'editor' => $configObject->get_setting('core', 'cfg_editor_path'),
+            'mathjax' => $this->config->get_setting('core', 'cfg_mathjax_path'),
+            'three' => $this->config->get_setting('core', 'cfg_three_path'),
+            'editor' => $this->config->get_setting('core', 'cfg_editor_path'),
             'texteditor' => '',
             'scripts' => []
         ];
@@ -212,7 +216,8 @@ class CopyPaperData
         string $summative_mgmt,
         string $max_duration,
         array $validation_strings
-    ): array {
+    ): array
+    {
         return [
             'name' => 'dataset',
             'attributes' => [
@@ -236,8 +241,6 @@ class CopyPaperData
      *
      * @param PaperProperties $properties Paper properties
      * @param int $paperID Paper ID
-     * @param Config $configObject Config object
-     * @param mysqli $mysqli Database connection
      * @param string $module Module ID
      * @param string $folder Folder ID
      * @return array Data for the template
@@ -245,12 +248,11 @@ class CopyPaperData
     public function prepareTemplateData(
         PaperProperties $properties,
         int $paperID,
-        Config $configObject,
-        mysqli $mysqli,
         $module,
         $folder
-    ): array {
-        $yearutils = new yearutils($mysqli);
+    ): array
+    {
+        $yearutils = new yearutils($this->db);
         $calendar_year_options = $yearutils->get_calendar_year_dropdown_options(
             $properties->get_paper_type(),
             $properties->get_calendar_year(),
@@ -261,16 +263,16 @@ class CopyPaperData
             'paperID' => $paperID,
             'module' => $module,
             'folder' => $folder,
-            'summative_mgmt' => $configObject->get_setting('core', 'cfg_summative_mgmt'),
-            'max_duration' => $configObject->get_setting('core', 'paper_max_duration'),
+            'summative_mgmt' => $this->config->get_setting('core', 'cfg_summative_mgmt'),
+            'max_duration' => $this->config->get_setting('core', 'paper_max_duration'),
             'paper_title' => $properties->get_paper_title(),
             'paper_types' => $this->getPaperTypeOptions($properties->get_paper_type()),
             'calendar_year_options' => $calendar_year_options,
-            'stdset_copy_std_setting' => $configObject->get_setting('core', 'stdset_copy_std_setting'),
-            'campuses' => $this->getCampusDetails($mysqli),
+            'stdset_copy_std_setting' => $this->config->get_setting('core', 'stdset_copy_std_setting'),
+            'campuses' => $this->getCampusDetails(),
             'months' => $this->getMonthOptions(),
-            'cohort_sizes' => $this->getCohortSizeOptions($configObject),
-            'sittings' => $this->getSittingOptions($configObject)
+            'cohort_sizes' => $this->getCohortSizeOptions(),
+            'sittings' => $this->getSittingOptions()
         ];
     }
 }

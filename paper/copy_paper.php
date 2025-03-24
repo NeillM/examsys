@@ -58,14 +58,12 @@ $render = new render($configObject);
 $templateData = $copyPaperData->prepareTemplateData(
     $properties,
     $paperID,
-    $configObject,
-    $mysqli,
     $module,
     $folder
 );
 
 // Render the header template
-$headerData = $copyPaperData->prepareHeaderData($configObject);
+$headerData = $copyPaperData->prepareHeaderData();
 $render->render($headerData, $string, 'header.html');
 
 // Render the main content template
