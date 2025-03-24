@@ -758,18 +758,18 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $no_answers = count($blank_details) - 1;
                 $have_answer = false;
 
-                $saved_response = [];
+                $temp_response = [];
                 for ($i = 1; $i <= $no_answers; $i++) {
                     $qid = 'q' . $question_no . '_' . $i;
                     // If the parameter is not sent for some reason assume the part is unanswered.
                     $blank_answer = param::optional($qid, 'u', param::TEXT, param::FETCH_POST);
                     if (trim($blank_answer) === '') {
                           // Assume an answer composed only of spaces is unanswered.
-                          $saved_response[] = 'u';
+                          $temp_response[] = 'u';
                     } else {
                         // Encode commas.
                         $blank_answer = str_replace(',', '&#44;', $blank_answer);
-                        $saved_response[] = $blank_answer;
+                        $temp_response[] = $blank_answer;
                     }
 
                     if (preg_match('|mark="([0-9]{1,3})"|', $blank_details[$i], $mark_matches)) {
@@ -818,7 +818,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     }
                     $totalpos = $marks_correct;
                 }
-                $saved_response = json_encode($saved_response);
+                $saved_response = json_encode($temp_response);
                 break;
             case 'textbox':
                 $qid = 'q' . $question_no;

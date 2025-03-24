@@ -588,10 +588,7 @@ class IE_Local_Save extends IE_Main
         $this->q_row['correct_fback'] = $question->feedback;
         $this->q_row['score_method'] = 'Mark per Option';
 
-        $lt = $line_thicknesses[(string)$question->line_thickness];
-        if ($lt == '') {
-            $lt = 1;
-        }
+        $lt = $line_thicknesses[(string)$question->line_thickness] ?? 1;
         $data = $question->line_color . ';' . $lt . ';' . $question->box_color . ';' . $question->font_size . ';' . $question->font_color . ';' . $question->width . ';' . $question->height . ';' . $question->label_type . ';';
 
         $count = 0;

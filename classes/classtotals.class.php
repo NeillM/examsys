@@ -946,7 +946,7 @@ class ClassTotals
                                 $correct += $question['marks_incorrect'];
                                 $tmp_user_mark_array[$q_id][$index] = $question['marks_incorrect'];
                             } else {
-                                if (isset($index) && $index != '') {
+                                if (isset($index) && $index != 0) {
                                     $tmp_user_mark_array[$q_id][$index] = 0;
                                 }
                             }
