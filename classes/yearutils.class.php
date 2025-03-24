@@ -165,7 +165,7 @@ class yearutils
 
         // Second check date
         $year = date('Y');
-        list($month, $day) = explode('/', $specific_year_start);
+        [$month, $day] = explode('/', $specific_year_start);
         return checkdate($month, $day, $year);
     }
 

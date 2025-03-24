@@ -1547,11 +1547,11 @@ SQL;
                         $linked[] = $question['object']->parse_linked_ans($var_data['max']);
                     }
                     if ($question['object']->is_linked_question_var($var_data['min'])) {
-                        list($var, $qid) = $question['object']->parse_linked_question_var($var_data['min']);
+                        [$var, $qid] = $question['object']->parse_linked_question_var($var_data['min']);
                         $linked[] = $qid;
                     }
                     if ($question['object']->is_linked_question_var($var_data['max'])) {
-                        list($var, $qid) = $question['object']->parse_linked_question_var($var_data['max']);
+                        [$var, $qid] = $question['object']->parse_linked_question_var($var_data['max']);
                         $linked[] = $qid;
                     }
                 }

@@ -100,8 +100,8 @@ class UserSearch extends Search
         $fields = implode(', ', $this->getFields());
 
         // Generate the conditional SQL.
-        list($studentmods, $staffmods) = $this->generateModuleSQL();
-        list($year, $staffyear) = $this->generateYearSQL();
+        [$studentmods, $staffmods] = $this->generateModuleSQL();
+        [$year, $staffyear] = $this->generateYearSQL();
         $name = $this->generateNameSQL();
         $username = $this->generateUsernameSQL();
         $idnumber = $this->generateIDNumberSQL();
@@ -742,8 +742,8 @@ class UserSearch extends Search
     protected function totalResults(): int
     {
         // Generate the conditional SQL.
-        list($studentmods, $staffmods) = $this->generateModuleSQL();
-        list($year, $staffyear) = $this->generateYearSQL();
+        [$studentmods, $staffmods] = $this->generateModuleSQL();
+        [$year, $staffyear] = $this->generateYearSQL();
         $name = $this->generateNameSQL();
         $username = $this->generateUsernameSQL();
         $idnumber = $this->generateIDNumberSQL();

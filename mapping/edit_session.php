@@ -187,8 +187,8 @@ if (isset($_POST['Edit'])) {
     $validfrom .= "</select></td></tr>\n";
     echo $validfrom;
 
-    list($date,$time) = explode(' ', $sess['occurrence']);
-    list($y,$m,$d) = explode('-', $date);
+    [$date, $time] = explode(' ', $sess['occurrence']);
+    [$y, $m, $d] = explode('-', $date);
 
     echo '<tr><td class="field">' . $string['date'] . '</td><td>';
 

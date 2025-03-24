@@ -170,7 +170,7 @@ class XML_lookup extends outline_lookup
         }
 
 
-        list($callbacklist, $callbackregisterdatalist) = $this->get_callback('modulelookupxmltranslate');
+        [$callbacklist, $callbackregisterdatalist] = $this->get_callback('modulelookupxmltranslate');
         //  run any appropriate translation callbacks
 
         if (is_array(($callbacklist))) {
@@ -289,7 +289,7 @@ class XML_lookup extends outline_lookup
             return $lookupobj;
         }
         //do translate lookup
-        list($callbacklist, $callbackregisterdatalist) = $this->get_callback('userlookupxmltranslate');
+        [$callbacklist, $callbackregisterdatalist] = $this->get_callback('userlookupxmltranslate');
         //  run this when needing to store auth data to session
 
         if (is_array(($callbacklist))) {

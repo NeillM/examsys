@@ -334,13 +334,13 @@ class IE_Local_Load extends IE_Main
         $store->feedback = $q_row['correct_fback'] ?? '';
         $store->formula = $o_rows[0]['correct'];
 
-        list($store->decimals, $store->tolerance, $store->units) = explode(',', $q_row['display_method']);
+        [$store->decimals, $store->tolerance, $store->units] = explode(',', $q_row['display_method']);
 
         $calcvar = 0;
         foreach ($o_rows as $o_row) {
             $calcvarletter = chr(ord('A') + $calcvar);
             $var = new STQ_Calc_Vars();
-            list($var->min, $var->max, $var->inc, $var->dec) = explode(',', $o_row['option_text']);
+            [$var->min, $var->max, $var->inc, $var->dec] = explode(',', $o_row['option_text']);
             $store->variables[$calcvarletter] = $var;
 
             $store->marks_correct = $o_row['marks_correct'];

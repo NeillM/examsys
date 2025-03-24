@@ -576,7 +576,7 @@ trait datageneration
         chmod($fullpath, 0664);
 
         $filetype = media_handler::SUPPORTED[$ext];
-        list($width, $height, $problem) = media_handler::getFileInfo($fullpath, $filetype);
+        [$width, $height, $problem] = media_handler::getFileInfo($fullpath, $filetype);
 
         return [
             $prefix . 'media' => $uniquename,

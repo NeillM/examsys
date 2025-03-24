@@ -416,7 +416,7 @@ class IE_qti12_Load extends IE_Main
                 return 'calculation';
             }
 
-            list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($question);
+            [$positive, $zero, $negative] = $this->GetRespConditionMarkCounts($question);
 
             return 'blank';
         }
@@ -713,7 +713,7 @@ class IE_qti12_Load extends IE_Main
             $this->AddError($string['blanktypeerror'], $source->load_id);
         }
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
         $dest->marks_partial = $marks_partial;
@@ -960,7 +960,7 @@ class IE_qti12_Load extends IE_Main
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-        list($marks_incorrect, $marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
         $dest->marks_partial = $marks_partial;
@@ -1007,7 +1007,7 @@ class IE_qti12_Load extends IE_Main
             echo 'Calculation importing variables<br>';
             foreach ($source->params['VARIABLE'] as $var) {
                 $varc = new STQ_Calc_Vars();
-                list($var_id, $varc->min, $varc->max, $varc->dec, $varc->inc) = explode('|', $var);
+                [$var_id, $varc->min, $varc->max, $varc->dec, $varc->inc] = explode('|', $var);
                 $dest->variables[$var_id] = $varc;
                 $datatemp = [];
                 $datatemp['min'] = $varc->min;
@@ -1112,12 +1112,12 @@ class IE_qti12_Load extends IE_Main
         }
 
         // count up response conditions
-        list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
+        [$positive, $zero, $negative] = $this->GetRespConditionMarkCounts($source);
         if ($negative > 0) {
             $mark_negative = true;
         }
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
 
         // set the display type
         if ($mark_tf) {
@@ -1306,7 +1306,7 @@ class IE_qti12_Load extends IE_Main
                 }
             }
 
-            list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+            [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
             $dest->marks_correct = $marks_correct;
             $dest->marks_incorrect = $marks_incorrect;
             $dest->marks_partial = $marks_partial;
@@ -1349,7 +1349,7 @@ class IE_qti12_Load extends IE_Main
         $dest->type = 'hotspot';
         $dest->score_method = 'Mark per Option';
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
         $dest->marks_partial = $marks_partial;
@@ -1430,7 +1430,7 @@ class IE_qti12_Load extends IE_Main
         $dest->type = 'labelling';
         $dest->score_method = 'Mark per Option';
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
         $dest->marks_partial = $marks_partial;
@@ -1598,7 +1598,7 @@ class IE_qti12_Load extends IE_Main
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
         $dest->marks_partial = $marks_partial;
@@ -1670,7 +1670,7 @@ class IE_qti12_Load extends IE_Main
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
 
         $choiceno = 1;
         foreach ($response->labels as $label) {
@@ -1693,7 +1693,7 @@ class IE_qti12_Load extends IE_Main
         }
 
         // count up response conditions
-        list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
+        [$positive, $zero, $negative] = $this->GetRespConditionMarkCounts($source);
 
         if ($positive == 0) {
             $this->AddWarning($string['nocorrect'], $source->load_id);
@@ -1793,7 +1793,7 @@ class IE_qti12_Load extends IE_Main
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
 
         $conds = $this->GetRespConditions($source, 1);
         foreach ($conds as $condition) {
@@ -1832,7 +1832,7 @@ class IE_qti12_Load extends IE_Main
         }
 
         // count up response conditions
-        list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
+        [$positive, $zero, $negative] = $this->GetRespConditionMarkCounts($source);
 
         if ($positive == 0) {
             $this->AddWarning($string['nocorrect'], $source->load_id);
@@ -1916,8 +1916,8 @@ class IE_qti12_Load extends IE_Main
         global $string;
 
         // count up response conditions
-        list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$positive, $zero, $negative] = $this->GetRespConditionMarkCounts($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
 
         $dest = new ST_Question_Mrq();
 
@@ -2106,7 +2106,7 @@ class IE_qti12_Load extends IE_Main
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
         $dest->marks_partial = $marks_partial;
@@ -2161,7 +2161,7 @@ class IE_qti12_Load extends IE_Main
         }
 
         // decide if 1 per correct or 1 for all
-        list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
+        [$positive, $zero, $negative] = $this->GetRespConditionMarkCounts($source);
 
         if ($positive == 1) {
             $dest->score_method = 'Mark per Option';
@@ -2208,7 +2208,7 @@ class IE_qti12_Load extends IE_Main
             $dest->marks += $condition->mark;
         }
 
-        list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
+        [$marks_incorrect, $marks_partial, $marks_correct] = $this->getMarksFromRespConditions($source);
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
 
