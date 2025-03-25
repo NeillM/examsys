@@ -198,7 +198,17 @@ class CopyPaperData
     public function prepareFooterData(): array
     {
         return [
-            'scripts' => ['/js/copypaperinit.min.js']
+            'scripts' => ['/js/copypaperinit.min.js'],
+            'lang_strings' => [
+                'fieldrequired' => $this->string['fieldrequired'],
+                'invalidduration' => $this->string['invalidduration'],
+                'maxdurationexceededformatted' => $this->string['maxdurationexceededformatted'],
+                'enterpapername' => $this->string['enterpapername'],
+                'hour' => $this->string['hour'],
+                'hours' => $this->string['hours'],
+                'minute' => $this->string['minute'],
+                'minutes' => $this->string['minutes']
+            ]
         ];
     }
 
@@ -214,8 +224,7 @@ class CopyPaperData
     public function prepareDatasetData(
         int $paperID,
         string $summative_mgmt,
-        string $max_duration,
-        array $validation_strings
+        string $max_duration
     ): array
     {
         return [
@@ -223,15 +232,7 @@ class CopyPaperData
             'attributes' => [
                 'paperid' => $paperID,
                 'summative-mgmt' => $summative_mgmt,
-                'max-duration' => $max_duration,
-                'required-field' => $validation_strings['required_field'],
-                'invalid-duration' => $validation_strings['invalid_duration'],
-                'max-duration-exceeded-formatted' => $validation_strings['max_duration_exceeded_formatted'],
-                'enter-paper-name' => $validation_strings['enter_paper_name'],
-                'hour' => $validation_strings['hour'],
-                'hours' => $validation_strings['hours'],
-                'minute' => $validation_strings['minute'],
-                'minutes' => $validation_strings['minutes']
+                'max-duration' => $max_duration
             ]
         ];
     }
