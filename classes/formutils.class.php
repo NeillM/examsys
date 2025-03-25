@@ -184,7 +184,7 @@ class FormUtils
             return false;
         }
         foreach ($domains as $d) {
-            if (stripos($email, $d)) {
+            if (stripos($email, (string) $d)) {
                 return true;
             }
         }

@@ -75,10 +75,10 @@ if (isset($_POST['owner']) and $_POST['owner'] != '') {
     $owner = 'AND paper_ownerID = ?';
     $variables[] = $_POST['owner'];
     $params .= 'i';
-    setcookie('papersearch[2]', $_POST['owner'], time() + 60 * 60 * 24 * 365);
+    setcookie('papersearch[2]', $_POST['owner'], ['expires' => time() + 60 * 60 * 24 * 365]);
 } else {
     $owner = '';
-    setcookie('papersearch[2]', '', time() + 60 * 60 * 24 * 365);
+    setcookie('papersearch[2]', '', ['expires' => time() + 60 * 60 * 24 * 365]);
 }
 if (isset($_POST['lab']) and $_POST['lab'] != '') {
     $lab = 'AND labs LIKE ?';
