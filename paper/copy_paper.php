@@ -73,20 +73,10 @@ $render->render($templateData, $string, 'paper/copy_paper.html');
 $datasetData = $copyPaperData->prepareDatasetData(
     $paperID,
     $configObject->get_setting('core', 'cfg_summative_mgmt'),
-    $configObject->get_setting('core', 'paper_max_duration'),
-    [
-        'required_field' => $string['fieldrequired'],
-        'invalid_duration' => $string['invalidduration'],
-        'max_duration_exceeded_formatted' => $string['maxdurationexceededformatted'],
-        'enter_paper_name' => $string['enterpapername'],
-        'hour' => $string['hour'],
-        'hours' => $string['hours'],
-        'minute' => $string['minute'],
-        'minutes' => $string['minutes']
-    ]
+    $configObject->get_setting('core', 'paper_max_duration')
 );
 $render->render($datasetData, $string, 'dataset.html');
 
 // Render the footer template
 $footerData = $copyPaperData->prepareFooterData();
-$render->render($footerData, $string, 'footer.html');
+$render->render($footerData, $string, 'paper/copy_paper_footer.html');
