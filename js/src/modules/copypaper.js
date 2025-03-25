@@ -18,7 +18,7 @@
 // @author Iyud Dissanayake
 // @copyright Copyright (c) 2025 The University of Nottingham
 //
-define(['jquery'], function($) {
+define(['jquery', 'lang'], function($, Lang) {
     return function() {
         var self = this;
 
@@ -33,20 +33,20 @@ define(['jquery'], function($) {
         this.$step1 = $('#step1');
         this.$step2 = $('#step2');
 
-        // Get validation strings from data attributes
+        // Get validation strings from language module
         this.validationStrings = {
-            requiredField: $('#dataset').data('required-field'),
-            invalidDuration: $('#dataset').data('invalid-duration'),
-            maxDurationExceededFormatted: $('#dataset').data('max-duration-exceeded-formatted'),
-            enterPaperName: $('#dataset').data('enter-paper-name')
+            requiredField: Lang.get_string('fieldrequired', 'copy_paper'),
+            invalidDuration: Lang.get_string('invalidduration', 'copy_paper'),
+            maxDurationExceededFormatted: Lang.get_string('maxdurationexceededformatted', 'copy_paper'),
+            enterPaperName: Lang.get_string('enterpapername', 'copy_paper')
         };
         
         // Time format strings
         this.timeStrings = {
-            hour: $('#dataset').data('hour'),
-            hours: $('#dataset').data('hours'),
-            minute: $('#dataset').data('minute'),
-            minutes: $('#dataset').data('minutes')
+            hour: Lang.get_string('hour', 'copy_paper'),
+            hours: Lang.get_string('hours', 'copy_paper'),
+            minute: Lang.get_string('minute', 'copy_paper'),
+            minutes: Lang.get_string('minutes', 'copy_paper')
         };
         
         // Required fields for summative exams
