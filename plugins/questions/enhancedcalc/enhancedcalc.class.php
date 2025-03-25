@@ -939,7 +939,7 @@ class EnhancedCalc extends Question implements questionInterface
         // Variable reference
         if ($this->is_linked_question_var($inputVal)) {
             // 1. Get variable and associated question.
-            list($find_var, $find_qid) = $this->parse_linked_question_var($inputVal);
+            [$find_var, $find_qid] = $this->parse_linked_question_var($inputVal);
             // 2. Error if user answers not set.
             if (!is_array($user_answers) or empty($user_answers)) {
                 $user_answers = [];

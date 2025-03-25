@@ -261,7 +261,7 @@ if ($propertyObj->get_bidirectional() == 0 and $do_restart) {   // Linear
 }
 
 // Load any reference materials.
-list($reference_materials, $max_ref_width) = $propertyObj->load_reference_materials();
+[$reference_materials, $max_ref_width] = $propertyObj->load_reference_materials();
 
 if (isset($low_bandwidth) and $low_bandwidth == 1) {
     // Lowbandwidth

@@ -115,7 +115,7 @@ class impersonation_auth extends outline_authentication
             $this->lookupuserobj->username = $usernameparts[1];
             $this->lookupuserobj->found = false;
         }
-        list($callbacklist, $callbackregisterdatalist) = $this->get_callback('lookupuser');
+        [$callbacklist, $callbackregisterdatalist] = $this->get_callback('lookupuser');
 
         if (is_array(($callbacklist))) {
             foreach ($callbacklist as $number => $callback) {

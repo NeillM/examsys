@@ -78,7 +78,7 @@ class personal_folders
         $folderlst = $this->folderlst;
         $parent[0] = 0;
         foreach ($folderlst as $v) {
-            list($id, $name, $team_name, $color, $count) = $v;
+            [$id, $name, $team_name, $color, $count] = $v;
             $count1 = $count + 1;
             $folderlst2[$id] = [$id, $name, $team_name, $color, $count, $parent[$count]];
             $parent[$count1] = $id;
@@ -99,7 +99,7 @@ class personal_folders
     {
         $retlst = [];
         foreach ($this->folderlst2 as $v) {
-            list($id, $name, $team_name, $color, $count, $parent) = $v;
+            [$id, $name, $team_name, $color, $count, $parent] = $v;
             if ($parent == $folder) {
                 $retlst[] = [$id, $name, $team_name, $color, $count, $parent];
             }
@@ -145,7 +145,7 @@ class personal_folders
         global $icons;
         $lst = $this->getfolders($folder);
         foreach ($lst as $v) {
-            list($id, $name, $team_name, $color, $count, $parent) = $v;
+            [$id, $name, $team_name, $color, $count, $parent] = $v;
             $cntfold = $this->countfolders($id);
             $cnttest = $this->counttests($id);
             if (($cnttest + $cntfold) > 0) {
@@ -154,12 +154,12 @@ class personal_folders
                 @ob_flush();
                 @flush();
                 if ($cntfold > 0) {
-                    list($block_id, $plk) = $this->listtree($id, $block_id + 1, $plk, 0);
+                    [$block_id, $plk] = $this->listtree($id, $block_id + 1, $plk, 0);
                 }
                 if ($cnttest > 0) {
                     $lst2 = $this->gettests($id);
                     foreach ($lst2 as $v2) {
-                        list($property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted, $crypt_name) = $v2;
+                        [$property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted, $crypt_name] = $v2;
                         echo '<div style="padding-left:24px"><a href="?paperlinkID=' . $plk . '"><img src="../artwork/' . $icons[$paper_type] . '_16.gif" width="16" height="16" border="0" alt="' . $paper_type . '" /></a>&nbsp;<a class="recent"';
                         if (mb_strpos($paper_title, '[deleted') !== false) {
                                 echo ' style="color:#808080"';

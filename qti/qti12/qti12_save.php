@@ -206,7 +206,7 @@ class IE_qti12_Save extends IE_Main
     public function SaveBlank(&$question)
     {
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question, false);
+        [$headertext, $title] = $this->MakeQuestionHeader($question, false);
 
         //echo "Doing SaveBlank - " . $question->displaymode . "<br>";
         $ob = new OB();
@@ -263,7 +263,7 @@ class IE_qti12_Save extends IE_Main
 
         $question->leadin = $q_text;
 
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
         $type = 'Calculation';
 
 
@@ -305,7 +305,7 @@ class IE_qti12_Save extends IE_Main
         }
 
         // header stuff
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
         $type = 'Dichotomous';
 
         $ob = new OB();
@@ -331,7 +331,7 @@ class IE_qti12_Save extends IE_Main
         // format the text for the question
         $this->AddWarning('QMP Cannot import extended matching questions correctly, it cannot handle the multiple select options', $question->load_id);
 
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         $type = 'Extended Matching';
         $ob = new OB();
@@ -360,7 +360,7 @@ class IE_qti12_Save extends IE_Main
     public function SaveHotspot(&$question)
     {
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question, true, false);
+        [$headertext, $title] = $this->MakeQuestionHeader($question, true, false);
 
         $type = 'Hotspot';
         $ob = new OB();
@@ -373,7 +373,7 @@ class IE_qti12_Save extends IE_Main
     public function SaveInfo(&$question)
     {
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         $type = 'Explanation';
         $ob = new OB();
@@ -387,7 +387,7 @@ class IE_qti12_Save extends IE_Main
     public function SaveLabelling(&$question)
     {
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question, true, false);
+        [$headertext, $title] = $this->MakeQuestionHeader($question, true, false);
 
         $type = 'Labelling';
         $ob = new OB();
@@ -400,7 +400,7 @@ class IE_qti12_Save extends IE_Main
     public function SaveLikert(&$question)
     {
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         $type = 'Likert Scale';
         $ob = new OB();
@@ -415,7 +415,7 @@ class IE_qti12_Save extends IE_Main
         // NO FEEDBACK ON MATRIX!!!
 
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
         $max_score = count($question->scenarios);
 
         $type = 'Matrix';
@@ -437,7 +437,7 @@ class IE_qti12_Save extends IE_Main
         // all options listed ok
 
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         $type = 'Multiple Choice';
         $ob = new OB();
@@ -459,7 +459,7 @@ class IE_qti12_Save extends IE_Main
         // all options listed ok
 
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         $type = 'True False';
         $ob = new OB();
@@ -484,7 +484,7 @@ class IE_qti12_Save extends IE_Main
 
         $this->AddWarning('QMP doesnt correctly import the maximum number of options from QTI', $question->load_id);
 
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         // work out how many correct answers we have
         $maxanswers = 0;
@@ -547,7 +547,7 @@ class IE_qti12_Save extends IE_Main
     public function SaveRank(&$question)
     {
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         //build list of options
         $optlist = [];
@@ -594,7 +594,7 @@ class IE_qti12_Save extends IE_Main
     public function SaveTextBox(&$question)
     {
         // format the text for the question
-        list($headertext, $title) = $this->MakeQuestionHeader($question);
+        [$headertext, $title] = $this->MakeQuestionHeader($question);
 
         $this->AddWarning('Terms are not exported to QTI with this question type', $question->load_id);
 

@@ -78,7 +78,7 @@ if ($marking[0] == '2') {
 }
 
 // Load any reference materials.
-list($reference_materials, $max_ref_width) = $propertyObj->load_reference_materials();
+[$reference_materials, $max_ref_width] = $propertyObj->load_reference_materials();
 
 // Extract the posted variables.
 $current_screen = 1;

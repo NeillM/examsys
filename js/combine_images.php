@@ -49,7 +49,7 @@ foreach ($paths as $path) {
 
         ob_flush();
         $res = imagecreatefrompng($filename);
-        list($widthx, $height, $type, $attr) = getimagesize($filename);
+        [$widthx, $height, $type, $attr] = getimagesize($filename);
         ob_flush();
 
         $img = [];

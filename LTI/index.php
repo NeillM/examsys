@@ -85,7 +85,7 @@ if (!$lti->valid) {
     exit;
 }
 
-list($lti_user, $user_updated) = $lti->lookup_lti_user();
+[$lti_user, $user_updated] = $lti->lookup_lti_user();
 if ($lti_user !== $userObject->get_user_ID()) {
     // The LTi request is not for the logged in user or the user has not had their external account properly connected to ExamSys,
     // so force a logout and display a message.
@@ -102,7 +102,7 @@ if (!isset($lti_i)) {
 }
 
 if (isset($_REQUEST['paperlinkID'])) {
-    list($retlookup, $retlookup2) = $_SESSION['postlookup'][$_REQUEST['paperlinkID']];
+    [$retlookup, $retlookup2] = $_SESSION['postlookup'][$_REQUEST['paperlinkID']];
     unset($_SESSION['postlookup']);
     if ($retlookup > 0) {
         $info = $lti->getResourceKey(1);
@@ -327,7 +327,7 @@ END;
         foreach ($data as $moduleinfo) {
             $moduleid = $moduleinfo[1];
 
-            list($block_id, $plk) = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
+            [$block_id, $plk] = listtreemodules($mysqli, $moduleid, $block_id, $plk, true);
         }
         echo '<br /><div><input type="submit" name="submit" value="' . $string['ok'] . "\" class=\"ok\" style=\"margin-left:20px\" /></form></div></form>\n";
         echo '<br />';

@@ -211,7 +211,7 @@ class media_handler
 
         chmod($fullpath, 0664);
 
-        list($file_width, $file_height, $problem) = self::getFileInfo($fullpath, $filetype);
+        [$file_width, $file_height, $problem] = self::getFileInfo($fullpath, $filetype);
         $bad_file = $bad_file || $problem;
 
         // MIME specific checks.

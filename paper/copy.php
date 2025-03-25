@@ -428,7 +428,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                     $linked_q_id = 0;
 
                     if ($q->is_linked_question_var($var_data['min'])) {
-                        list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['min']);
+                        [$linked_var_name, $linked_q_id] = $q->parse_linked_question_var($var_data['min']);
                         if (isset($calculation_qid_map[$linked_q_id])) {
                             $vars[$var_name]['min'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
                             $questionChanged = true;
@@ -436,7 +436,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                     }
 
                     if ($q->is_linked_question_var($var_data['max'])) {
-                        list($linked_var_name,$linked_q_id) = $q->parse_linked_question_var($var_data['max']);
+                        [$linked_var_name, $linked_q_id] = $q->parse_linked_question_var($var_data['max']);
                         if (isset($calculation_qid_map[$linked_q_id])) {
                             $vars[$var_name]['max'] = 'var' . $linked_var_name . $calculation_qid_map[$linked_q_id];
                             $questionChanged = true;

@@ -838,7 +838,7 @@ class ST_QTI12_Material // <material>
         $imagefile = FindFile($import_directory, $basename);
         echo "Converted \"$image\" to base name \"$imagefile\"<br>";
         if ($imagefile == '' and $wct == 1) {
-            list($discard, $split) = explode('=', $image);
+            [$discard, $split] = explode('=', $image);
             $pathinfo = pathinfo((string)$load_params->sourcefile);
 
             $imagefile = FindFileSub2($pathinfo['dirname'], '', '*' . $split . '*.' . pathinfo($imgnam, PATHINFO_EXTENSION));
