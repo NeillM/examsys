@@ -36,6 +36,6 @@ if (session_status() == PHP_SESSION_ACTIVE) {
     session_destroy();
 }
 session_write_close();
-setcookie(session_name(), '', ['expires' => 0, 'path' => '/']);
+setcookie(session_name(), '', ['path' => '/']);
 header('Location: ./');
 exit;
