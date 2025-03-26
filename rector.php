@@ -74,7 +74,7 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withFileExtensions(['php', 'inc'])
-    ->withPhpSets(php73: true)
+    ->withPhpSets(php74: true)
     ->withSkip([
         // We cannot run this rule because it breaks ExamSys.
         // We have several functions with the same name, but using different numbers of parameters.
