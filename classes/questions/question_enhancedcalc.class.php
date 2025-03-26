@@ -571,9 +571,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
     {
         $this->answers = [];
 
-        $all_ans = array_filter($this->options, function ($var) {
-            return ($var->get_formula() != '');
-        });
+        $all_ans = array_filter($this->options, fn($var) => $var->get_formula() != '');
 
         foreach ($all_ans as $option) {
             $formula = $option->get_formula();

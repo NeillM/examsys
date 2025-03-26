@@ -65,9 +65,7 @@ require_once 'detail_parts/details_general_feedback.php';
 <?php
 $index = 1;
 
-$options = array_filter($question->options, function ($var) {
-    return ($var->get_variable() != '');
-});
+$options = array_filter($question->options, fn($var) => $var->get_variable() != '');
 
 foreach ($options as $variable) {
     include 'options/opt_enhancedcalc.php';
@@ -109,9 +107,7 @@ if ($question->get_locked() == '') {
           </thead>
 <?php
 $index = 1;
-$all_ans = array_filter($question->options, function ($var) {
-    return ($var->get_formula() != '');
-});
+$all_ans = array_filter($question->options, fn($var) => $var->get_formula() != '');
 foreach ($all_ans as $answer) {
     include 'options/ans_enhancedcalc.php';
     $index++;

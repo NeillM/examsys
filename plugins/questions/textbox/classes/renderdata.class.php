@@ -147,7 +147,7 @@ class renderdata extends \questiondata
     {
         global $string;
         // We want to stop errors with the user answer when they have never visited the exam page.
-        $useranswer = $useranswer ?? '';
+        $useranswer ??= '';
 
         $option = $this->get_opt($part_id);
         $textboxes_seen = $this->textboxesseen;
