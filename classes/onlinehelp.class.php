@@ -362,7 +362,7 @@ class OnlineHelp
         $offset = 0;
         if ($this->highlight !== null) {
             do {
-                $found = stripos($page_details['body'], $this->highlight, $offset);
+                $found = stripos($page_details['body'], (string) $this->highlight, $offset);
                 if ($found !== false) {
                     $first_part = mb_substr($page_details['body'], 0, $found);
                     $open_bracket = mb_strrpos($first_part, '<');

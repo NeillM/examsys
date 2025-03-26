@@ -92,7 +92,7 @@ if ($lti_user !== $userObject->get_user_ID()) {
     session_unset();
     session_destroy();
     session_write_close();
-    setcookie(session_name(), '', 0, '/');
+    setcookie(session_name(), '', ['path' => '/']);
     UserNotices::display_notice($string['LTIFAILURE'], $string['invaliduser'], '../artwork/access_denied.png', '#C00000');
     die();
 }

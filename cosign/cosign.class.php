@@ -594,7 +594,7 @@ class cosign
                 fclose($this->cosign_log);
             }
             ob_end_clean();
-            setrawcookie($service_cookie, $service_cookie_val . '/' . time(), 0, '/', '', (str_starts_with($dest, 'https://') ? true : false), true);
+            setrawcookie($service_cookie, $service_cookie_val . '/' . time(), ['path' => '/', 'secure' => str_starts_with($dest, 'https://') ? true : false, 'httponly' => true]);
             header("Location: $dest");
             exit();
         }
@@ -655,7 +655,7 @@ class cosign
                 $service_cookie = 'cosign-' . $this->cosign_cfg['CosignService'];
                 $service_cookie_file = $service_cookie . '=' . $service_cookie_val;
                 $this->cosign_debug("CosignFilter: New cookie $service_cookie_file");
-                setrawcookie($service_cookie, $service_cookie_val . '/' . time(), 0, '/', '', (str_starts_with($back, 'https://') ? true : false), true);
+                setrawcookie($service_cookie, $service_cookie_val . '/' . time(), ['path' => '/', 'secure' => str_starts_with($back, 'https://') ? true : false, 'httponly' => true]);
             } else {
                 $this->cosign_debug('CosignFilter: Redirect to login');
                 $service_cookie_file = 'cosign-' . $this->cosign_cfg['CosignService'];

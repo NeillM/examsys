@@ -48,7 +48,7 @@ class OAuthRequest {
               : 'https';
     $port = "";
     if ( $_SERVER['SERVER_PORT'] != "80" && $_SERVER['SERVER_PORT'] != "443" &&
-        strpos(':', $_SERVER['HTTP_HOST']) < 0 ) {
+        strpos(':', (string) $_SERVER['HTTP_HOST']) < 0 ) {
       $port =  ':' . $_SERVER['SERVER_PORT'] ;
     }
     @$http_url or $http_url = $scheme .
