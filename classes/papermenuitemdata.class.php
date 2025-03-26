@@ -320,18 +320,21 @@ class PaperMenuItemData
     /**
      * Generates menu item data for copying a paper.
      *
+     * @param int $paperID The ID of the paper
+     * @param string|null $module The module code
+     * @param string|null $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getCopyPaperItem(): array
+    public function getCopyPaperItem(int $paperID, $module = null, $folder = null): array
     {
         return [
-            'classes' => 'cascade',
-            'id' => 'copypaper',
+            'classes' => 'copypaper',
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copypaper'],
-            'href' => '#',
-            'hasPopup' => true,
-            'popupType' => 'dialog',
+            'href' => $this->rootPath . "/paper/copy_paper.php?paperID=$paperID"
+                . ($module ? "&module=$module" : '')
+                . ($folder ? "&folder=$folder" : ''),
+            'action' => 'directUrl'
         ];
     }
 
