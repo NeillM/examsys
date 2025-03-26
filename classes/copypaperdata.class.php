@@ -26,10 +26,10 @@ class CopyPaperData
 {
     /** @var array Language strings used for the page */
     private $string;
-    
+
     /** @var Config The configuration object */
     private $config;
-    
+
     /** @var mysqli The database connection */
     private $db;
 
@@ -225,8 +225,7 @@ class CopyPaperData
         int $paperID,
         string $summative_mgmt,
         string $max_duration
-    ): array
-    {
+    ): array {
         return [
             'name' => 'dataset',
             'attributes' => [
@@ -251,8 +250,7 @@ class CopyPaperData
         int $paperID,
         $module,
         $folder
-    ): array
-    {
+    ): array {
         $yearutils = new yearutils($this->db);
         $calendar_year_options = $yearutils->get_calendar_year_dropdown_options(
             $properties->get_paper_type(),

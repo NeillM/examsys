@@ -332,8 +332,8 @@ class PaperMenuItemData
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copypaper'],
             'href' => $this->rootPath . "/paper/copy_paper.php?paperID=$paperID"
-                . ($module ? "&module=$module" : '')
-                . ($folder ? "&folder=$folder" : ''),
+        . ($module ? "&module=$module" : '')
+        . ($folder ? "&folder=$folder" : ''),
             'action' => 'directUrl'
         ];
     }
