@@ -42,7 +42,7 @@ class AnomalyItem
     /**
      * @var ?int $sid the users student id
      */
-    public ?int $sid;
+    public ?int $sid = null;
 
     /**
      * @var string $type the type of anomaly

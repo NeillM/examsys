@@ -314,9 +314,7 @@ class QuestionBank
         }
 
         if (count($outcomes) > 0) {
-            uasort($outcomes, function ($a, $b) {
-                return $a['label'] <=> $b['label'];
-            });
+            uasort($outcomes, fn($a, $b) => $a['label'] <=> $b['label']);
         }
 
         // Filter local mappings to remove duplicates

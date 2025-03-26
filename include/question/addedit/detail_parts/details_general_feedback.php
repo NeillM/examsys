@@ -23,7 +23,7 @@
  * @package
  */
 
-$show_incorrect = $show_incorrect ?? false;
+$show_incorrect ??= false;
 $mandatory_editor = false;
 $field_editor = $field_correct ?? 'correct_fback';
 $label_editor = $label_correct ?? '<label for="' . $field_editor . '">' . $string['generalfeedback'] . '</label>';

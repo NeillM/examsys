@@ -956,7 +956,7 @@ QUERY;
         $result->fetch();
         $result->close();
 
-        $p_count = $p_count ?? 0;
+        $p_count ??= 0;
 
         return $p_count;
     }

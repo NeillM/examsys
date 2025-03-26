@@ -292,7 +292,7 @@ class Config extends RogoStaticSingleton
      */
     private function checkurl($parsedurl)
     {
-        $parsedurl['port'] = $parsedurl['port'] ?? 80;
+        $parsedurl['port'] ??= 80;
         $parsedurl['path'] = rtrim($parsedurl['path'], '/');
 
         $requestedhost = $_SERVER['HTTP_HOST'] ?? '';

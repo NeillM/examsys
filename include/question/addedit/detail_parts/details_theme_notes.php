@@ -23,7 +23,7 @@
  * @package
  */
 
-$show_notes = $show_notes ?? true;
+$show_notes ??= true;
 ?>
             <tr>
               <th><label for="theme"><?php echo $string['theme'] ?></label></th>

@@ -24,9 +24,9 @@
  */
 
 $mandatory = (isset($mandatory_editor) and $mandatory_editor) ? '<span class="mandatory">*</span> ' : '';
-$field_editor = $field_editor ?? 'scenario';
-$label_editor = $label_editor ?? '<label for="' . $field_editor . '">' . $string['scenario'] . '</label><br /><span class="note">' . $string['scenariomsg'] . '</span>';
-$value_editor = $value_editor ?? $question->get_scenario();
+$field_editor ??= 'scenario';
+$label_editor ??= '<label for="' . $field_editor . '">' . $string['scenario'] . '</label><br /><span class="note">' . $string['scenariomsg'] . '</span>';
+$value_editor ??= $question->get_scenario();
 $index_editor = (isset($index_editor)) ? $index_editor++ : 1;
 ?>
             <tr>
