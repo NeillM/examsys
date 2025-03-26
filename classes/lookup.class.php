@@ -416,12 +416,12 @@ class Lookup extends RogoStaticSingleton
         if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
             //attempting to register callback to invalid section
             //maybe log name of function as well?
-            $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
+            $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . $callback[0]::class . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
             $this->lookupPluginObj[$number]->set_error("Failed to register callback for section ($section) with function ($callback[1])");
 
             return false;
         }
-        $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
+        $this->debug[] = 'register_callback success ' . $section . ' from ' . $callback[0]::class . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
         if ($insert == true) {
             array_unshift($this->callbackregister[$section], $callback);
             array_unshift($this->callbackregisterdata[$section], [$number => $name]);

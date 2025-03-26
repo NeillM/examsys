@@ -52,7 +52,7 @@ class ST_Question
     public $score_method; //
 }
 
-class STQ_Blank_Option
+class STQ_Blank_Option implements \Stringable
 {
     public $display = '';
     public $correct = 0;
@@ -61,7 +61,7 @@ class STQ_Blank_Option
     public $marks_incorrect;
     public $marks_partial;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->display . '=' . ($this->correct ? 'True' : 'False');
     }
@@ -75,14 +75,14 @@ class ST_Question_Blank extends ST_Question
     public $options = []; // array of STQ_Blank_Option, key as blank id in text ($BLANK_1$ etc)
 }
 
-class STQ_Calc_Vars
+class STQ_Calc_Vars implements \Stringable
 {
     public $min = 0;
     public $max = 0;
     public $dec = 0;
     public $inc = 1;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->min . ',' . $this->max . ',' . $this->dec . ',' . $this->inc;
     }
@@ -104,7 +104,7 @@ class ST_Question_enhancedcalc extends ST_Question_Calculation
 {
 }
 
-class STQ_Dic_Options
+class STQ_Dic_Options implements \Stringable
 {
     public $text;
     public $iscorrect;
@@ -120,7 +120,7 @@ class STQ_Dic_Options
     public $marks_incorrect;
     public $marks_partial;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->text . '=' . ($this->iscorrect ? 'True' : 'False');
     }
@@ -134,7 +134,7 @@ class ST_Question_Dichotomous extends ST_Question
     public $options = [];
 }
 
-class STQ_Extm_Scenario
+class STQ_Extm_Scenario implements \Stringable
 {
     public $stem = '';
     public $media;
@@ -149,13 +149,13 @@ class STQ_Extm_Scenario
     public $marks_incorrect;
     public $marks_partial;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->stem . '=' . implode('|', $this->correctans);
     }
 }
 
-class STQ_Extm_Option
+class STQ_Extm_Option implements \Stringable
 {
     public $option;
     public $id;
@@ -164,7 +164,7 @@ class STQ_Extm_Option
     public $marks_incorrect;
     public $marks_partial;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->id . '=' . $this->option;
     }
@@ -176,12 +176,12 @@ class ST_Question_Extmatch extends ST_Question
     public $scenarios = []; // array of STQ_Extm_Scenario, key as scenarion no
 }
 
-class STQ_Hotspot_Spot
+class STQ_Hotspot_Spot implements \Stringable
 {
     public $type;
     public $coords = [];
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->type . '=' . implode(',', $this->coords);
     }
@@ -201,7 +201,7 @@ class ST_Question_Info extends ST_Question
     // nothing in this question type
 }
 
-class STQ_Labelling_Label
+class STQ_Labelling_Label implements \Stringable
 {
     public $tag;
     public $left;
@@ -210,18 +210,18 @@ class STQ_Labelling_Label
     public $width;
     public $height;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->tag . '=' . $this->left . ',' . $this->top . '=' . count($this->matches);
     }
 }
 
-class STQ_Labelling_Arrow
+class STQ_Labelling_Arrow implements \Stringable
 {
     public $type;
     public $coords = [];
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->type . '=' . implode(',', $this->coords);
     }
@@ -263,12 +263,12 @@ class ST_Question_Likert extends ST_Question
     public $hasna = 0;
 }
 
-class STQ_Matrix_Scenario
+class STQ_Matrix_Scenario implements \Stringable
 {
     public $scenario;
     public $answer;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->scenario . '=' . $this->answer;
     }
@@ -281,7 +281,7 @@ class ST_Question_Matrix extends ST_Question
     public $scenarios = []; // array of STQ_Matrix_Scenario, key as row
 }
 
-class STQ_Mcq_Option
+class STQ_Mcq_Option implements \Stringable
 {
     public $stem = '';
 
@@ -295,9 +295,9 @@ class STQ_Mcq_Option
     public $marks_incorrect;
     public $marks_partial;
 
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->stem;
+        return (string) $this->stem;
     }
 }
 
@@ -325,7 +325,7 @@ class ST_Question_TrueFalse extends ST_Question
     public $answer;
 }
 
-class STQ_Mrq_Option
+class STQ_Mrq_Option implements \Stringable
 {
     public $stem = '';
     public $is_correct = 0;
@@ -341,7 +341,7 @@ class STQ_Mrq_Option
     public $marks_incorrect;
     public $marks_partial;
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->stem . '=' . ($this->is_correct ? 'True' : 'False');
     }
@@ -356,7 +356,7 @@ class ST_Question_Mrq extends ST_Question
     public $feedback;
 }
 
-class STQ_Rank_Options
+class STQ_Rank_Options implements \Stringable
 {
     public $stem = '';
     public $order = 9990;
@@ -367,7 +367,7 @@ class STQ_Rank_Options
 
     // order - 1-15, or 0 as blank, and 9990 as N/A
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->stem . '=' . $this->order;
     }

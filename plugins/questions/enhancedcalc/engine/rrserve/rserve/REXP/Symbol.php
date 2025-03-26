@@ -11,7 +11,7 @@
 /**
 * R symbol element
 */
-class Rserve_REXP_Symbol extends Rserve_REXP {
+class Rserve_REXP_Symbol extends Rserve_REXP implements \Stringable {
 	
 	protected $name;
 	
@@ -33,7 +33,7 @@ class Rserve_REXP_Symbol extends Rserve_REXP {
 	 return '<div class="rexp xt_'.$this->getType().'"><span class="typename">'.Rserve_Parser::xtName($this->getType()).'</span>'.$this->name.$this->attrToHTML().'</div>';	
 	}
 
-	public function __toString() {
+	public function __toString(): string {
 		return '"'.$this->name.'"';
 	}
 	

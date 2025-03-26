@@ -104,7 +104,7 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
         } else {
             //echo '<tr><td colspan=2 style="background-color:#333333;"><strong>';
             //echo '<font color=white>+ * - OBJECT Type: '.get_class($elem).'</font></strong></td></tr>';
-            $title = "<img src='$base_dir/qti/artwork/class.png' width='16' height='16'> Object Type: " . get_class($elem);
+            $title = "<img src='$base_dir/qti/artwork/class.png' width='16' height='16'> Object Type: " . $elem::class;
 
             //            if (is_callable(array(get_class($elem),"__toString")))
             if (is_callable([$elem, '__toString'])) {

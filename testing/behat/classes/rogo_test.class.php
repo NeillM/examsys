@@ -288,7 +288,7 @@ class rogo_test extends MinkContext
      */
     public function running_javascript()
     {
-        return get_class($this->getSession()->getDriver()) !== \Behat\Mink\Driver\BrowserKitDriver::class;
+        return $this->getSession()->getDriver()::class !== \Behat\Mink\Driver\BrowserKitDriver::class;
     }
 
     /**
@@ -382,7 +382,7 @@ class rogo_test extends MinkContext
      */
     protected static function runningJavascriptInSession(Session $session): bool
     {
-        return get_class($session->getDriver()) !== \Behat\Mink\Driver\BrowserKitDriver::class;
+        return $session->getDriver()::class !== \Behat\Mink\Driver\BrowserKitDriver::class;
     }
 
     /**

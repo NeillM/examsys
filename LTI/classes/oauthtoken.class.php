@@ -23,7 +23,7 @@
 
 namespace LTI;
 
-class OAuthToken {
+class OAuthToken implements \Stringable {
   // access tokens and request tokens
   public $key;
   public $secret;
@@ -48,7 +48,7 @@ class OAuthToken {
            OAuthUtil::urlencode_rfc3986($this->secret);
   }
 
-  function __toString() {
-    return $this->to_string();
+  function __toString(): string {
+    return (string) $this->to_string();
   }
 }
