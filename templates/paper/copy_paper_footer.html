@@ -21,10 +21,6 @@
     @copyright 2025 The University of Nottingham
 #}
 
-{% for scriptname in data.scripts %}
-    <script type="text/javascript" src="{{path}}{{scriptname}}"></script>
-{% endfor %}
-
 <script>
     requirejs(['lang'], function(lang) {
         var strings = {};
@@ -34,6 +30,10 @@
         lang.set_strings(strings, 'copy_paper');
     });
 </script>
+
+{% for scriptname in data.scripts %}
+    <script type="text/javascript" src="{{path}}{{scriptname}}"></script>
+{% endfor %}
 
     </body>
 </html>
