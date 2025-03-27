@@ -39,7 +39,7 @@ class generator
      */
     protected function random_value($variable)
     {
-        $class = get_class($this);
+        $class = static::class;
         if (!property_exists($class, $variable)) {
             throw new data_error("$class::\$$variable not found");
         }

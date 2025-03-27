@@ -86,7 +86,7 @@ function exceptionHandler($exception)
     // write tracelines into main template
     $msg = sprintf(
         $msg,
-        get_class($exception),
+        $exception::class,
         $exception->getMessage(),
         $exception->getFile(),
         $exception->getLine(),
@@ -172,21 +172,21 @@ function error_handling($context = null)
             if ($key == 'this') {
             } elseif (is_object($value) and method_exists($value, 'error_handling')) {
                 $context1[$key] = $value->error_handling();
-            } elseif (is_object($value) and get_class($value) === 'mysqli') {
+            } elseif (is_object($value) and $value::class === 'mysqli') {
                 $context1[$key] = 'MYSQLi Object';
-            } elseif (is_object($value) and get_class($value) === 'mysqli_stmt') {
+            } elseif (is_object($value) and $value::class === 'mysqli_stmt') {
                 $context1[$key] = 'MYSQLi statement Object';
-            } elseif (is_object($value) and get_class($value) === 'ZipArchive') {
+            } elseif (is_object($value) and $value::class === 'ZipArchive') {
                 $context1[$key] = 'ZipArchive';
-            } elseif (is_object($value) and get_class($value) === 'SimpleXMLElement') {
+            } elseif (is_object($value) and $value::class === 'SimpleXMLElement') {
                 $context1[$key] = 'SimpleXMLElement';
-            } elseif (is_object($value) and get_class($value) === 'XMLWriter') {
+            } elseif (is_object($value) and $value::class === 'XMLWriter') {
                 $context1[$key] = 'XMLWriter';
-            } elseif (is_object($value) and get_class($value) === 'XMLReader') {
+            } elseif (is_object($value) and $value::class === 'XMLReader') {
                 $context1[$key] = 'XMLReader';
-            } elseif (is_object($value) and (get_class($value) === 'ErrorException' or get_class($value) === 'Exception')) {
+            } elseif (is_object($value) and ($value::class === 'ErrorException' or $value::class === 'Exception')) {
                 $context1[$key] = 'ErrorException Object';
-            } elseif (is_object($value) and get_class($value) === 'Error') {
+            } elseif (is_object($value) and $value::class === 'Error') {
                 $context1[$key] = 'Error';
             } elseif (is_object($value)) {
                 $context1[$key] = clone $value;

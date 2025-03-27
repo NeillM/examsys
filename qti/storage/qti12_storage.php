@@ -399,7 +399,7 @@ class ST_QTI12_Question // <item
 }
 
 // object to store question parts
-class ST_QTI12_Response // <response_
+class ST_QTI12_Response implements \Stringable // <response_
 {
     public $id; // <response_lid ident=
 
@@ -516,7 +516,7 @@ class ST_QTI12_Response // <response_
             }
         }
     }
-    public function __toString()
+    public function __toString(): string
     {
         $labeltxt = [];
         foreach ($this->labels as $label) {
@@ -532,7 +532,7 @@ class ST_QTI12_Response // <response_
 }
 
 // object to store labels
-class ST_QTI12_Label // <response_label
+class ST_QTI12_Label implements \Stringable // <response_label
 {
     public $id; // <response_label ident=
     public $material; // <material>
@@ -559,14 +559,14 @@ class ST_QTI12_Label // <response_label
             $this->material->add($xml->flow_mat->material);
         }
     }
-    public function __toString()
+    public function __toString(): string
     {
         return $this->id . '=' . $this->material->__toString();
     }
 }
 
 // store each response processing condition
-class ST_QTI12_RespCondition // <respcondition>
+class ST_QTI12_RespCondition implements \Stringable // <respcondition>
 {
     public $title; // <respcondition title=
     public $action = ''; // <setvar action=
@@ -656,7 +656,7 @@ class ST_QTI12_RespCondition // <respcondition>
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $conditions = [];
         foreach ($this->conditions as $condition) {
@@ -672,7 +672,7 @@ class ST_QTI12_RespCondition // <respcondition>
 }
 
 // variable for each response proc condition
-class ST_QTI12_CondVar // <conditionvar>
+class ST_QTI12_CondVar implements \Stringable // <conditionvar>
 {
     public $not = 0; // <not>
     public $respident; // <varequal respident=
@@ -691,7 +691,7 @@ class ST_QTI12_CondVar // <conditionvar>
         $this->type = $xml->getName();
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->not) {
             return $this->respident . '!=' . $this->value;
@@ -702,7 +702,7 @@ class ST_QTI12_CondVar // <conditionvar>
 }
 
 // feedback storage
-class ST_QTI12_Itemfeedback // <itemfeedback>
+class ST_QTI12_Itemfeedback implements \Stringable // <itemfeedback>
 {
     public $id; // <itemfeedback ident=
     public $material; // <material>
@@ -723,7 +723,7 @@ class ST_QTI12_Itemfeedback // <itemfeedback>
         }
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return '<i>ID</i>: ' . $this->id . ', <i>Text</i>: ' . $this->material->__toString();
     }
@@ -753,7 +753,7 @@ class ST_QTI12_Material_Inner
     }
 }
 
-class ST_QTI12_Material // <material>
+class ST_QTI12_Material implements \Stringable // <material>
 {
     public $count = 0;
     public $chunks = []; // array of ST_QTI12_Material_Inner
@@ -1005,11 +1005,11 @@ class ST_QTI12_Material // <material>
         return $labels;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $text = $this->GetText();
         if (trim($text)) {
-            return $text;
+            return (string) $text;
         }
 
         return "<font color='green'>EMPTY</font>";

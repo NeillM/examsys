@@ -27,7 +27,7 @@ function testBinary($values, $type, $options = [], $msg = '') {
 	var_dump(Rserve_Parser::parseDebug($bin, 0));
 	$r2 = Rserve_Parser::parseREXP($bin, 0);
 	var_dump($r2);
-	$cn2 = get_class($r2);
+	$cn2 = $r2::class;
 	if( strtolower($cn2) != strtolower($cn)) {
 		echo 'Differentes classes';
 	} else {

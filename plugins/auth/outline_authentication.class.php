@@ -214,7 +214,7 @@ class outline_authentication
         $data = new stdClass();
         $data->name = $this->name;
         $data->number = $this->number;
-        $data->classname = get_class($this);
+        $data->classname = static::class;
         $data->classname = mb_substr($data->classname, 0, mb_strpos($data->classname, '_auth'));
         $data->version = $this->version;
         $data->settings = $this->settings;

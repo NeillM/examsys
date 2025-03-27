@@ -26,7 +26,7 @@
  *
  * Designed to hold the config options in a class for easier access.
  */
-class Config extends RogoStaticSingleton
+class Config extends RogoStaticSingleton implements \Stringable
 {
     /**
      * Areas of the ExamSys system that can be configured.
@@ -140,7 +140,7 @@ class Config extends RogoStaticSingleton
      */
     public const EMAIL = 'email';
 
-    public function __toString()
+    public function __toString(): string
     {
         return 'ConfigObject!';
     }

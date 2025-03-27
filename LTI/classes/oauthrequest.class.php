@@ -23,7 +23,7 @@
 
 namespace LTI;
 
-class OAuthRequest {
+class OAuthRequest implements \Stringable {
   private $parameters;
   private $http_method;
   private $http_url;
@@ -245,8 +245,8 @@ class OAuthRequest {
     return $out;
   }
 
-  public function __toString() {
-    return $this->to_url();
+  public function __toString(): string {
+    return (string) $this->to_url();
   }
 
 

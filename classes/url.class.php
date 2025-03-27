@@ -23,7 +23,7 @@
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package classes
  */
-class Url
+class Url implements \Stringable
 {
     /**
      * URL part names.
@@ -351,7 +351,7 @@ class Url
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getCanonical();
     }

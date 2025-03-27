@@ -239,13 +239,13 @@ class Authentication
         if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
             //attempting to register callback to invalid section
             //maybe log name of function as well?
-            $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
+            $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . $callback[0]::class . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
             $this->authPluginObj[$number]->set_error($string['Authentication_callback_failure1'] . "($section)" . $string['Authentication_callback_failure2'] . " ($callback[1])");
 
             return false;
         }
 
-        $this->debug[] = 'register_callback success ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
+        $this->debug[] = 'register_callback success ' . $section . ' from ' . $callback[0]::class . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
 
         if ($insert == true) {
             array_unshift($this->callbackregister[$section], $callback);
@@ -580,7 +580,7 @@ class Authentication
 
         if (isset($this->callbackregister['postauthsuccess'])) {
             foreach ($this->callbackregister['postauthsuccess'] as $number => $callback) {
-                $this->debug[] = 'run authsuccess callback ' . get_class($callback[0]) . ':' . $callback[1];
+                $this->debug[] = 'run authsuccess callback ' . $callback[0]::class . ':' . $callback[1];
                 $postauthsuccessobj = call_user_func_array($callback, [$postauthsuccessobj]);
                 $objid = key($this->callbackregisterdata['postauthsuccess'][$number]);
                 $this->append_auth_object_debug($objid);
@@ -713,7 +713,7 @@ class Authentication
 
         if (isset($this->callbackregister['getauthobj'])) {
             foreach ($this->callbackregister['getauthobj'] as $number => $callback) {
-                $this->debug[] = 'run getauthobj callback ' . get_class($callback[0]) . ':' . $callback[1];
+                $this->debug[] = 'run getauthobj callback ' . $callback[0]::class . ':' . $callback[1];
                 $getauthobj = call_user_func_array($callback, [$getauthobj]);
                 $objid = key($this->callbackregisterdata['getauthobj'][$number]);
                 $this->append_auth_object_debug($objid);

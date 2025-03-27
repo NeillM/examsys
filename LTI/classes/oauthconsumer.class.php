@@ -23,7 +23,7 @@
 
 namespace LTI;
 
-class OAuthConsumer {
+class OAuthConsumer implements \Stringable {
   public $key;
   public $secret;
 
@@ -33,7 +33,7 @@ class OAuthConsumer {
     $this->callback_url = $callback_url;
   }
 
-  function __toString() {
+  function __toString(): string {
     return "OAuthConsumer[key=$this->key,secret=$this->secret]";
   }
 }
