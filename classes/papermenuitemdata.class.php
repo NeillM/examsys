@@ -327,13 +327,19 @@ class PaperMenuItemData
      */
     public function getCopyPaperItem(int $paperID, $module = null, $folder = null): array
     {
+        $href = $this->rootPath . "/paper/copy_paper.php?paperID=$paperID";
+        if ($module) {
+            $href .= "&module=$module";
+        }
+        if ($folder) {
+            $href .= "&folder=$folder";
+        }
+
         return [
             'classes' => 'copypaper',
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copypaper'],
-            'href' => $this->rootPath . "/paper/copy_paper.php?paperID=$paperID"
-        . ($module ? "&module=$module" : '')
-        . ($folder ? "&folder=$folder" : ''),
+            'href' => $href,
             'action' => 'directUrl'
         ];
     }
