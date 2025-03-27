@@ -319,13 +319,12 @@ class PaperMenuItemData
 
     /**
      * Generates menu item data for copying a paper.
-     *
-     * @param int $paperID The ID of the paper
      * @param string|null $module The module code
      * @param string|null $folder The folder name
+     * @param int $paperID The ID of the paper
      * @return array Menu item data structure with UI properties
      */
-    public function getCopyPaperItem(int $paperID, $module = null, $folder = null): array
+    public function getCopyPaperItem(int $paperID, $module=null, $folder=null): array
     {
         $href = $this->rootPath . "/paper/copy_paper.php?paperID=$paperID";
         if ($module) {
