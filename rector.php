@@ -30,7 +30,6 @@ use Rector\Config\RectorConfig;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
-use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -81,7 +80,6 @@ return RectorConfig::configure()
     ->withSkip([
         // PHP 8.0 rules we are temporarily not using.
         RemoveUnusedVariableInCatchRector::class,
-        ChangeSwitchToMatchRector::class,
         ClassPropertyAssignToConstructorPromotionRector::class,
         // We cannot run this rule because it breaks ExamSys.
         // We have several functions with the same name, but using different numbers of parameters.
