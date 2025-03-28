@@ -199,29 +199,16 @@ function format_marking($marking, $string)
 
     $marking_type = $marking[0];
 
-    switch ($marking_type) {
-        case MARK_NO_ADJUSTMENT:
-            $marking_string = $string['noadjustment'];
-            break;
-        case MARK_RANDOM:
-            $marking_string = $string['calculatrrandommark'];
-            break;
-        case MARK_STD_SET:
-            $marking_string = $string['stdset'];
-            break;
-        case '3':
-            $marking_string = $string['overallclass2'];
-            break;
-        case '4':
-            $marking_string = $string['overallclass3'];
-            break;
-        case '6':
-            $marking_string = $string['overallclass4'];
-            break;
-        case '7':
-            $marking_string = $string['overallclass5'];
-            break;
-    }
+    $marking_string = match ($marking_type) {
+        MARK_NO_ADJUSTMENT => $string['noadjustment'],
+        MARK_RANDOM => $string['calculatrrandommark'],
+        MARK_STD_SET => $string['stdset'],
+        '3' => $string['overallclass2'],
+        '4' => $string['overallclass3'],
+        '6' => $string['overallclass4'],
+        '7' => $string['overallclass5'],
+        default => $marking_string,
+    };
 
     return $marking_string;
 }

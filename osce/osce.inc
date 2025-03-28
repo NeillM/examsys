@@ -531,28 +531,14 @@ function rating_num_text(&$user_results, $user_no, $propertyObj, $string)
  */
 function get_labels($propertyObj)
 {
-    switch ($propertyObj->get_marking()) {
-        case '1':
-            $labels = [1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR'];
-            break;
-        case '3':
-            $labels = [1 => 'Clear Fail', 2 => 'Borderline', 3 => 'Clear Pass', 'ERROR' => 'ERROR'];
-            break;
-        case '4':
-            $labels = [1 => 'Fail', 2 => 'Borderline fail', 3 => 'Borderline pass', 4 => 'Pass', 5 => 'Good pass', 'ERROR' => 'ERROR'];
-            break;
-        case '5':
-            $labels = ['fail' => 'Unsatisfactory', 'pass' => 'Competent', 'ERROR' => 'ERROR'];
-            break;
-        case '6':
-            $labels = [1 => 'Clear FAIL', 2 => 'BORDERLINE', 3 => 'Clear PASS', 4 => 'Honours PASS', 'ERROR' => 'ERROR'];
-            break;
-        case '7':
-            $labels = [1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR'];
-            break;
-        default:
-            $labels = [];
-            break;
-    }
+    $labels = match ($propertyObj->get_marking()) {
+        '1' => [1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR'],
+        '3' => [1 => 'Clear Fail', 2 => 'Borderline', 3 => 'Clear Pass', 'ERROR' => 'ERROR'],
+        '4' => [1 => 'Fail', 2 => 'Borderline fail', 3 => 'Borderline pass', 4 => 'Pass', 5 => 'Good pass', 'ERROR' => 'ERROR'],
+        '5' => ['fail' => 'Unsatisfactory', 'pass' => 'Competent', 'ERROR' => 'ERROR'],
+        '6' => [1 => 'Clear FAIL', 2 => 'BORDERLINE', 3 => 'Clear PASS', 4 => 'Honours PASS', 'ERROR' => 'ERROR'],
+        '7' => [1 => 'Fail', 2 => 'Pass', 'ERROR' => 'ERROR'],
+        default => [],
+    };
     return $labels;
 }

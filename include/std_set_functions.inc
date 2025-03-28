@@ -131,18 +131,11 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             $part_id++;
             $review_val = (in_array($options[0]['q_type'], $display_inline)) ? get_review($options[0]['q_type'], $std_method, $q_id, $part_id, $tmp_reviews, $is_group) : 0;
 
-            switch ($options[0]['q_type']) {
-                case 'blank':
-                    $exclude_this = $tmp_exclude;
-                    break;
-                case 'mcq':       // MRQs and MCQs have multiple parts but are excluded as a whole
-                case 'mrq':
-                    $exclude_this = mb_substr($tmp_exclude, 0, 1);
-                    break;
-                default:
-                    $exclude_this = mb_substr($tmp_exclude, ($part_id - 1), 1);
-                    break;
-            }
+            $exclude_this = match ($options[0]['q_type']) {
+                'blank' => $tmp_exclude,
+                'mcq', 'mrq' => mb_substr($tmp_exclude, 0, 1),
+                default => mb_substr($tmp_exclude, ($part_id - 1), 1),
+            };
             $feedback = ($options[0]['q_type'] == 'textbox') ? $old_correct_fback : '';
             display_option($options[0], $q_id, $question_no, $part_id, $display_option, $std_method, $is_group, $marks, $exclude_this, $review_val, $matching_options, 0, $tmp_reviews, $option_no, $stdID, $std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback);
             $i++;

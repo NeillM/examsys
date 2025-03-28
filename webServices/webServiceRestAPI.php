@@ -562,32 +562,17 @@ class webServiceRestAPI extends restAPI
         }
         $staff_modules_ids_str = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ') ';
 
-        switch ($types) {
-            case 'formative':
-                $typeSQL = " AND paper_type='0'";
-                break;
-            case 'progresstest':
-                $typeSQL = " AND paper_type='1'";
-                break;
-            case 'summative':
-                $typeSQL = " AND paper_type='2'";
-                break;
-            case 'survey':
-                $typeSQL = " AND paper_type='3'";
-                break;
-            case 'osce':
-                $typeSQL = " AND paper_type='4'";
-                break;
-            case 'offline':
-                $typeSQL = " AND paper_type='5'";
-                break;
-            case 'notsummative':
-                $typeSQL = " AND paper_type!='2'";
-                break;
-            default:  // return all paper types
-                $typeSQL = '';
-                break;
-        }
+        $typeSQL = match ($types) {
+            'formative' => " AND paper_type='0'",
+            'progresstest' => " AND paper_type='1'",
+            'summative' => " AND paper_type='2'",
+            'survey' => " AND paper_type='3'",
+            'osce' => " AND paper_type='4'",
+            'offline' => " AND paper_type='5'",
+            'notsummative' => " AND paper_type!='2'",
+            // return all paper types
+            default => '',
+        };
 
         $papers = [];
         $paper_no = 0;

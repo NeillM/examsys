@@ -131,23 +131,13 @@ function display_response($show_response, $type)
     $response = '';
 
     if ($show_response == '1') {
-        switch ($type) {
-            case 'tick':
-                $response = '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />';
-                break;
-            case 'half':
-                $response = '<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" />';
-                break;
-            case 'cross':
-                $response = '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />';
-                break;
-            case 'blank':
-                $response = '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />';
-                break;
-            default:
-                $response = '';
-                break;
-        }
+        $response = match ($type) {
+            'tick' => '<img src="../artwork/tick.gif" width="17" height="16" alt="Tick" />',
+            'half' => '<img src="../artwork/tick_half.gif" width="17" height="16" alt="Half Right" />',
+            'cross' => '<img src="../artwork/cross.gif" width="17" height="16" alt="Cross" />',
+            'blank' => '<img src="../artwork/blank_tick_cross.gif" width="17" height="16" alt="" />',
+            default => '',
+        };
     }
 
     return $response;

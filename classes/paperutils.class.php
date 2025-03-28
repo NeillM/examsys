@@ -604,29 +604,16 @@ SQL;
 
     public function type_to_name($type, $string)
     {
-        switch ($type) {
-            case '0':
-                $name = $string['formative self-assessments'];
-                break;
-            case '1':
-                $name = $string['progress tests'];
-                break;
-            case '2':
-                $name = $string['summative exams'];
-                break;
-            case '3':
-                $name = $string['surveys'];
-                break;
-            case '4':
-                $name = $string['osce stations'];
-                break;
-            case '5':
-                $name = $string['offline papers'];
-                break;
-            case '6':
-                $name = $string['peer review'];
-                break;
-        }
+        $name = match ($type) {
+            '0' => $string['formative self-assessments'],
+            '1' => $string['progress tests'],
+            '2' => $string['summative exams'],
+            '3' => $string['surveys'],
+            '4' => $string['osce stations'],
+            '5' => $string['offline papers'],
+            '6' => $string['peer review'],
+            default => $name,
+        };
 
         return $name;
     }
@@ -658,35 +645,18 @@ SQL;
             $alt = $paper_type_string . ' - ' . $title;
         }
 
-        switch ($paper_type) {
-            case '0':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/formative' . $retired . ".png\" alt=\"$alt\" />";
-                break;
-            case '1':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/progress' . $retired . ".png\" alt=\"$alt\" />";
-                break;
-            case '2':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/summative' . $retired . $locked . ".png\" alt=\"$alt\" />";
-                break;
-            case '3':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/survey' . $retired . ".png\" alt=\"$alt\" />";
-                break;
-            case '4':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/osce' . $retired . ".png\" alt=\"$alt\" />";
-                break;
-            case '5':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/offline' . $retired . ".png\" alt=\"$alt\" />";
-                break;
-            case '6':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/peer_review' . $retired . ".png\" alt=\"$alt\" />";
-                break;
-            case 'objectives':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/feedback_release_icon.png" alt="Objectives Feedback" />';
-                break;
-            case 'questions':
-                $html = '<img src="' . $configObj->get('cfg_root_path') . '/artwork/question_release_icon.png" alt="Questions Feedback" />';
-                break;
-        }
+        $html = match ($paper_type) {
+            '0' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/formative' . $retired . ".png\" alt=\"$alt\" />",
+            '1' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/progress' . $retired . ".png\" alt=\"$alt\" />",
+            '2' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/summative' . $retired . $locked . ".png\" alt=\"$alt\" />",
+            '3' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/survey' . $retired . ".png\" alt=\"$alt\" />",
+            '4' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/osce' . $retired . ".png\" alt=\"$alt\" />",
+            '5' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/offline' . $retired . ".png\" alt=\"$alt\" />",
+            '6' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/peer_review' . $retired . ".png\" alt=\"$alt\" />",
+            'objectives' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/feedback_release_icon.png" alt="Objectives Feedback" />',
+            'questions' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/question_release_icon.png" alt="Questions Feedback" />',
+            default => $html,
+        };
         return $html;
     }
 

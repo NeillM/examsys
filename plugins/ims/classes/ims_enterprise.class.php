@@ -533,40 +533,20 @@ class ims_enterprise
         // Process tag contents.
         $group = new \stdClass();
 
-        switch ($this->mapmoduleid) {
-            case 'long':
-                $group->modulecode = (string) $node->description->long;
-                break;
-            case 'short':
-                $group->modulecode = (string) $node->description->short;
-                break;
-            case 'full':
-                $group->modulecode = (string) $node->description->full;
-                break;
-            case 'coursecode':
-                $group->modulecode = (string) $node->extension->course->code;
-                break;
-            case 'sourcedid':
-            default:
-                $group->modulecode = (string) $node->sourcedid->id;
-                break;
-        }
+        $group->modulecode = match ($this->mapmoduleid) {
+            'long' => (string) $node->description->long,
+            'short' => (string) $node->description->short,
+            'full' => (string) $node->description->full,
+            'coursecode' => (string) $node->extension->course->code,
+            default => (string) $node->sourcedid->id,
+        };
 
-        switch ($this->mapfullname) {
-            case 'long':
-                $group->full = (string) $node->description->long;
-                break;
-            case 'short':
-                $group->full = (string) $node->description->short;
-                break;
-            case 'coursecode':
-                $group->full = (string) $node->extension->course->code;
-                break;
-            case 'sourcedid':
-            default:
-                $group->full = (string) $node->sourcedid->id;
-                break;
-        }
+        $group->full = match ($this->mapfullname) {
+            'long' => (string) $node->description->long,
+            'short' => (string) $node->description->short,
+            'coursecode' => (string) $node->extension->course->code,
+            default => (string) $node->sourcedid->id,
+        };
 
         $group->startdate = mb_substr((string) $node->timeframe->begin, -5, 5);
 
@@ -842,16 +822,11 @@ class ims_enterprise
      */
     protected function get_person_gender($value)
     {
-        switch ($value) {
-            case 1:
-                $gender = 'Female';
-                break;
-            case 2:
-                $gender = 'Male';
-                break;
-            default:
-                $gender = 'Unknown';
-        }
+        $gender = match ($value) {
+            1 => 'Female',
+            2 => 'Male',
+            default => 'Unknown',
+        };
         return $gender;
     }
 
@@ -1064,24 +1039,13 @@ class ims_enterprise
                     continue;
                 }
 
-                switch ($this->mapmoduleid) {
-                    case 'long':
-                        $modulecode = (string) $node->description->long;
-                        break;
-                    case 'short':
-                        $modulecode = (string) $node->description->short;
-                        break;
-                    case 'full':
-                        $modulecode = (string) $node->description->full;
-                        break;
-                    case 'coursecode':
-                        $modulecode = (string) $node->extension->course->code;
-                        break;
-                    case 'sourcedid':
-                    default:
-                        $modulecode = (string) $node->sourcedid->id;
-                        break;
-                }
+                $modulecode = match ($this->mapmoduleid) {
+                    'long' => (string) $node->description->long,
+                    'short' => (string) $node->description->short,
+                    'full' => (string) $node->description->full,
+                    'coursecode' => (string) $node->extension->course->code,
+                    default => (string) $node->sourcedid->id,
+                };
 
                 foreach ($node->member as $member) {
                     $this->process_member($member, $modulecode);

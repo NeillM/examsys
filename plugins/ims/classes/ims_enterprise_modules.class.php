@@ -64,16 +64,11 @@ class ims_enterprise_modules
      */
     public function determine_default_modulemapping($moduleattr)
     {
-        switch ($moduleattr) {
-            case 'fullname':
-                $imsname = 'short';
-                break;
-            case 'shortname':
-                $imsname = 'modulecode';
-                break;
-            default:
-                $imsname = 'ignore';
-        }
+        $imsname = match ($moduleattr) {
+            'fullname' => 'short',
+            'shortname' => 'modulecode',
+            default => 'ignore',
+        };
         return $imsname;
     }
 }

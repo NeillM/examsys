@@ -69,15 +69,10 @@ class Audit
     private static function getObjectType(string $action): string
     {
         $langpack = new langpack();
-        switch ($action) {
-            case self::ADDROLE:
-            case self::REMOVEROLE:
-                $type = 'role';
-                break;
-            default:
-                $type = 'module';
-                break;
-        }
+        $type = match ($action) {
+            self::ADDROLE, self::REMOVEROLE => 'role',
+            default => 'module',
+        };
         return $langpack->get_string(self::LANGCOMPONENT, $type);
     }
 

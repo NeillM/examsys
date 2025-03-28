@@ -58,24 +58,13 @@ class csv_handler extends \file_handler
             throw new csv_load_exception($string['csvonly']);
         }
         if (!move_uploaded_file($from['tmp_name'], $to)) {
-            switch ($from['error']) {
-                case 2:
-                case 3:
-                    $err = $string['maxfilesize'];
-                    break;
-                case 4:
-                    $err = $string['partialupload'];
-                    break;
-                case 5:
-                    $err = $string['nofileuploaded'];
-                    break;
-                case 6:
-                    $err = $string['notempdir'];
-                    break;
-                default:
-                    $err = $string['unknownissue'];
-                    break;
-            }
+            $err = match ($from['error']) {
+                2, 3 => $string['maxfilesize'],
+                4 => $string['partialupload'],
+                5 => $string['nofileuploaded'],
+                6 => $string['notempdir'],
+                default => $string['unknownissue'],
+            };
             throw new csv_load_exception($err);
         }
         return $to;

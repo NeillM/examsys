@@ -3321,14 +3321,11 @@ class PaperProperties
     {
         $log_late = false;
 
-        switch ($this->get_paper_type()) {
-            case assessment::TYPE_PROGRESS:
-                $log_late = $this->shouldProgressLogLate();
-                break;
-            case assessment::TYPE_SUMMATIVE:
-                $log_late = $this->shouldSummativeLogLate($lab_id, $log);
-                break;
-        }
+        $log_late = match ($this->get_paper_type()) {
+            assessment::TYPE_PROGRESS => $this->shouldProgressLogLate(),
+            assessment::TYPE_SUMMATIVE => $this->shouldSummativeLogLate($lab_id, $log),
+            default => $log_late,
+        };
 
         return $log_late;
     }

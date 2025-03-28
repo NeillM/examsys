@@ -36,35 +36,17 @@ class Url
      */
     public static function userProfile(int $userid, string $tab = ''): string
     {
-        switch ($tab) {
-            case 'Accessibility':
-                $sectionparam = '&tab=accessibility';
-                break;
-            case 'Admin':
-                $sectionparam = '&tab=admin';
-                break;
-            case 'Metadata':
-                $sectionparam = '&tab=metadata';
-                break;
-            case 'Modules':
-                $sectionparam = '&tab=moduless';
-                break;
-            case 'Notes':
-                $sectionparam = '&tab=notes';
-                break;
-            case 'Roles':
-                $sectionparam = '&tab=roles';
-                break;
-            case 'Teams':
-                $sectionparam = '&tab=teams';
-                break;
-            case 'Profile Audit':
-                $sectionparam = '&tab="profileaudit';
-                break;
-            default:
-                $sectionparam = '';
-                break;
-        }
+        $sectionparam = match ($tab) {
+            'Accessibility' => '&tab=accessibility',
+            'Admin' => '&tab=admin',
+            'Metadata' => '&tab=metadata',
+            'Modules' => '&tab=moduless',
+            'Notes' => '&tab=notes',
+            'Roles' => '&tab=roles',
+            'Teams' => '&tab=teams',
+            'Profile Audit' => '&tab="profileaudit',
+            default => '',
+        };
         return "/users/details.php?userID={$userid}{$sectionparam}";
     }
 

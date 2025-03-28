@@ -268,27 +268,14 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context = [])
         return false;
     }
 
-    switch ($errno) {
-        case E_NOTICE:
-        case E_USER_NOTICE:
-            $error_type = 'Notice';
-            break;
-        case E_WARNING:
-            $error_type = 'Warning';
-            break;
-        case E_USER_WARNING:
-            $error_type = 'Application Warning';
-            break;
-        case E_ERROR:
-            $error_type = 'Fatal Error';
-            break;
-        case E_USER_ERROR:
-            $error_type = 'Application Error';
-            break;
-        default:
-            $error_type = 'Unknown';
-            break;
-    }
+    $error_type = match ($errno) {
+        E_NOTICE, E_USER_NOTICE => 'Notice',
+        E_WARNING => 'Warning',
+        E_USER_WARNING => 'Application Warning',
+        E_ERROR => 'Fatal Error',
+        E_USER_ERROR => 'Application Error',
+        default => 'Unknown',
+    };
 
     // Errors we do not want to log.
     if ($error_type == 'Warning' and $dispallerrors !== true) {

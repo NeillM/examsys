@@ -192,16 +192,12 @@ class QuestionENHANCEDCALC extends QuestionEdit
             $value = $engine->getDefaultRoundingMode();
         }
 
-        switch ($value) {
-            case PHP_ROUND_HALF_UP:
-                return $string['roundhalfup'];
-            case PHP_ROUND_HALF_DOWN:
-                return $string['roundhalfdown'];
-            case PHP_ROUND_HALF_EVEN:
-                return $string['roundhalfeven'];
-            default:
-                return $string['roundunsupported'];
-        }
+        return match ($value) {
+            PHP_ROUND_HALF_UP => $string['roundhalfup'],
+            PHP_ROUND_HALF_DOWN => $string['roundhalfdown'],
+            PHP_ROUND_HALF_EVEN => $string['roundhalfeven'],
+            default => $string['roundunsupported'],
+        };
     }
 
     /**

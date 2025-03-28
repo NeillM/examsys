@@ -297,20 +297,12 @@ HTML;
 
         $i = 0;
         foreach ($comments as $id => $comment) {
-            switch ($comment['category']) {
-                case 1:
-                    $status = ['ok', $string['ok']];
-                    break;
-                case 2:
-                    $status = ['minor', $string['minor']];
-                    break;
-                case 3:
-                    $status = ['major', $string['major']];
-                    break;
-                default:
-                    $status = ['cannot', $string['cannot']];
-                    break;
-            }
+            $status = match ($comment['category']) {
+                1 => ['ok', $string['ok']],
+                2 => ['minor', $string['minor']],
+                3 => ['major', $string['major']],
+                default => ['cannot', $string['cannot']],
+            };
             $img_status = $status[0];
 
             $alt = ($i % 2 == 0) ? ' class="alt"' : '';

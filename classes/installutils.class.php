@@ -264,14 +264,10 @@ class InstallUtils
             if ($required) {
                 throw new MissingParameter(sprintf($string['invalidsetting'], $setting));
             } else {
-                switch ($type) {
-                    case param::BOOLEAN:
-                        $clean = false;
-                        break;
-                    default:
-                        $clean = null;
-                        break;
-                }
+                $clean = match ($type) {
+                    param::BOOLEAN => false,
+                    default => null,
+                };
             }
         }
         return $clean;

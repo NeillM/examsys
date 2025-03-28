@@ -156,15 +156,12 @@ class Engine
      */
     protected function getNumFormatterRoundingMode(): int
     {
-        switch ($this->getRoundingMode()) {
-            case PHP_ROUND_HALF_UP:
-                return NumberFormatter::ROUND_HALFUP;
-            case PHP_ROUND_HALF_DOWN:
-                return NumberFormatter::ROUND_HALFDOWN;
-            case PHP_ROUND_HALF_EVEN:
-                return NumberFormatter::ROUND_HALFEVEN;
-        }
-        return NumberFormatter::ROUND_HALFUP;
+        return match ($this->getRoundingMode()) {
+            PHP_ROUND_HALF_UP => NumberFormatter::ROUND_HALFUP,
+            PHP_ROUND_HALF_DOWN => NumberFormatter::ROUND_HALFDOWN,
+            PHP_ROUND_HALF_EVEN => NumberFormatter::ROUND_HALFEVEN,
+            default => NumberFormatter::ROUND_HALFUP,
+        };
     }
 
     /**

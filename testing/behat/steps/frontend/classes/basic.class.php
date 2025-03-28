@@ -563,17 +563,11 @@ JS;
         string $shape,
         array $coordinates
     ): void {
-        switch ($shape) {
-            case 'ellipse':
-                $shape_element = $this->find('id', 'question1-ellipse');
-                break;
-            case 'polygon':
-                $shape_element = $this->find('id', 'question1-polygon');
-                break;
-            default:
-                $shape_element = $this->find('id', 'question1-rectangle');
-                break;
-        }
+        $shape_element = match ($shape) {
+            'ellipse' => $this->find('id', 'question1-ellipse'),
+            'polygon' => $this->find('id', 'question1-polygon'),
+            default => $this->find('id', 'question1-rectangle'),
+        };
         $shape_element->click();
         // Positions of everthing below is related to the shape button clicked.
         // Start position.

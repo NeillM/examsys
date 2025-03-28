@@ -43,16 +43,11 @@ trait Paper
     public function iNavigatePaper(string $type): void
     {
         $selector = 'button';
-        switch ($type) {
-            case 'Previous':
-                $content = 'previous';
-                break;
-            case 'Finish':
-                $content = 'finish';
-                break;
-            default:
-                $content = 'next';
-        }
+        $content = match ($type) {
+            'Previous' => 'previous',
+            'Finish' => 'finish',
+            default => 'next',
+        };
         $screen = $this->find('id_or_name', 'current_screen');
         $screennumber = $screen->getValue();
         $this->iWaitForElement($selector, $content);
@@ -194,31 +189,16 @@ trait Paper
     {
         $this->i_click('New Paper', 'link');
         $this->i_focus_popup('ExamSys: Create new Paper');
-        switch ($type) {
-            case 'formative':
-                $this->createFormative($data);
-                break;
-            case 'offline':
-                $this->createOffline($data);
-                break;
-            case 'osce':
-                $this->createOsce($data);
-                break;
-            case 'peer review':
-                $this->createPeerReview($data);
-                break;
-            case 'progress':
-                $this->createProgress($data);
-                break;
-            case 'summative':
-                $this->createSummative($data);
-                break;
-            case 'survey':
-                $this->createSurvey($data);
-                break;
-            default:
-                throw new PendingException("No handler for creating $type papers");
-        }
+        match ($type) {
+            'formative' => $this->createFormative($data),
+            'offline' => $this->createOffline($data),
+            'osce' => $this->createOsce($data),
+            'peer review' => $this->createPeerReview($data),
+            'progress' => $this->createProgress($data),
+            'summative' => $this->createSummative($data),
+            'survey' => $this->createSurvey($data),
+            default => throw new PendingException("No handler for creating $type papers"),
+        };
         $this->i_click('Finish', 'button');
         $this->only_main_window();
         $this->i_focus_main_window();
