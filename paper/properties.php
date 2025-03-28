@@ -199,7 +199,7 @@ function format_marking($marking, $string)
 
     $marking_type = $marking[0];
 
-    $marking_string = match ($marking_type) {
+    $marking_string = match ((string) $marking_type) {
         MARK_NO_ADJUSTMENT => $string['noadjustment'],
         MARK_RANDOM => $string['calculatrrandommark'],
         MARK_STD_SET => $string['stdset'],

@@ -586,7 +586,7 @@ class Rserve_Parser {
 		return $a;
 	}
 
-	public static function xtName($xt)
+	public static function xtName(int $xt)
     {
         return match ($xt) {
             self::XT_NULL => 'null',

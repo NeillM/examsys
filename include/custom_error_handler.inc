@@ -228,7 +228,7 @@ function error_handling($context = null)
  * @param array $context This parameter is no longer used in PHP 8.0 and above.
  * @return bool
  */
-function customErrorHandler($errno, $errstr, $errfile, $errline, $context = [])
+function customErrorHandler(int $errno, $errstr, $errfile, $errline, $context = [])
 {
     global $debug_pagestart, $mysqli;
 

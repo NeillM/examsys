@@ -104,7 +104,7 @@ class CM_UoNCM implements iCMAPI
         if (!in_array($level, $this->getMappingLevels())) {
             throw new UnsupportedMappingLevelException();
         }
-        $this->_mapping_level = $level;
+        $this->_mapping_level = (int) $level;
     }
 
     /**

@@ -247,7 +247,7 @@ class InstallUtils
      * @param string $setting xml path of setting
      * @return mixed cleaned settings
      */
-    private static function check_setting($value, $type, $required, $setting)
+    private static function check_setting($value, int $type, $required, $setting)
     {
         global $string;
         if (is_object($value)) {

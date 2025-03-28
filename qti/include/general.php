@@ -392,7 +392,7 @@ function RemoveLoneP($in)
     return $in . $append;
 }
 
-function OrderToStr($no)
+function OrderToStr(int $no)
 {
     return match ($no) {
         0 => '-',

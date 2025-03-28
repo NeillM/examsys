@@ -602,7 +602,7 @@ SQL;
         return $assessment->db_update_assessment($paperID, $update_params);
     }
 
-    public function type_to_name($type, $string)
+    public function type_to_name(string $type, $string)
     {
         $name = match ($type) {
             '0' => $string['formative self-assessments'],
@@ -628,7 +628,7 @@ SQL;
      * @param string $retired the retired paper icon identifier
      * @return string
      */
-    public function displayIcon($paper_type, $title, $initials, $surname, $locked, $retired)
+    public function displayIcon(string $paper_type, $title, $initials, $surname, $locked, $retired)
     {
         $configObj = Config::get_instance();
 

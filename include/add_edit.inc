@@ -297,7 +297,7 @@ HTML;
 
         $i = 0;
         foreach ($comments as $id => $comment) {
-            $status = match ($comment['category']) {
+            $status = match ((int) $comment['category']) {
                 1 => ['ok', $string['ok']],
                 2 => ['minor', $string['minor']],
                 3 => ['major', $string['major']],

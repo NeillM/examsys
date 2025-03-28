@@ -1225,7 +1225,7 @@ class PaperProperties
     /**
      * @return string $marking
      */
-    public function get_marking()
+    public function get_marking(): string
     {
         return $this->marking;
     }
@@ -3321,7 +3321,7 @@ class PaperProperties
     {
         $log_late = false;
 
-        $log_late = match ($this->get_paper_type()) {
+        $log_late = match ((int) $this->get_paper_type()) {
             assessment::TYPE_PROGRESS => $this->shouldProgressLogLate(),
             assessment::TYPE_SUMMATIVE => $this->shouldSummativeLogLate($lab_id, $log),
             default => $log_late,

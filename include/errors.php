@@ -65,7 +65,7 @@ function display_error($error_title, $error_description, $headers = true, $stop_
     }
 }
 
-function uploadError($errCode)
+function uploadError(int $errCode)
 {
     global $string;
     $engDescription = $string['uploaderrormsg0'];

@@ -325,7 +325,7 @@ abstract class log
      * @param string $papertype paper type
      * @return \log class
      */
-    public static function get_paperlog($papertype)
+    public static function get_paperlog(string $papertype)
     {
         $papertype = match ($papertype) {
             '0' => 'formative',

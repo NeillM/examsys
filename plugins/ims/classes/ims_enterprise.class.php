@@ -820,7 +820,7 @@ class ims_enterprise
      * @param int $value
      * @return string Gender
      */
-    protected function get_person_gender($value)
+    protected function get_person_gender(int $value)
     {
         $gender = match ($value) {
             1 => 'Female',
