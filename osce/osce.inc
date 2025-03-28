@@ -526,7 +526,7 @@ function rating_num_text(&$user_results, $user_no, $propertyObj, $string)
 
 /**
  * Creates an appropriate array for the marking method.
- * @param object $propertyObj   - Paper properties object.
+ * @param PaperProperties $propertyObj   - Paper properties object.
  * @return array - Lookup array of numbers to textual labels.
  */
 function get_labels($propertyObj)
