@@ -612,7 +612,7 @@ SQL;
             '4' => $string['osce stations'],
             '5' => $string['offline papers'],
             '6' => $string['peer review'],
-            default => $name,
+            default => '',
         };
 
         return $name;
@@ -655,7 +655,7 @@ SQL;
             '6' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/peer_review' . $retired . ".png\" alt=\"$alt\" />",
             'objectives' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/feedback_release_icon.png" alt="Objectives Feedback" />',
             'questions' => '<img src="' . $configObj->get('cfg_root_path') . '/artwork/question_release_icon.png" alt="Questions Feedback" />',
-            default => $html,
+            default => '',
         };
         return $html;
     }

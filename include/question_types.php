@@ -47,7 +47,7 @@ function fullQuestionType($abreviation, $string)
         'textbox' => $string['textbox'],
         'true_false' => $string['true_false'],
         '%' => $string['alltypes'],
-        default => $fullname,
+        default => '',
     };
     return $fullname;
 }
