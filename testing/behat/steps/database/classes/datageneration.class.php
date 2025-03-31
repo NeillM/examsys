@@ -768,21 +768,14 @@ trait datageneration
     protected function getScaleStringOSCE(array $row): string
     {
         $scale = $row['scale'] ?? '0, 1, 2, 3';
-
-        switch ($scale) {
-            case '0, 1':
-                return '0|1';
-            case '0, 1, 2':
-                return '0|1|2';
-            case '0, 1, 2, 3':
-                return '0|1|2|3';
-            case '0, 1, 2, 3, 4':
-                return '0|1|2|3|4';
-            case '0, 1, 2, 3, 4, 5':
-                return '0|1|2|3|4|5';
-        }
-
-        throw new data_error("An unsupported OSCE scale was specified: $scale");
+        return match ($scale) {
+            '0, 1' => '0|1',
+            '0, 1, 2' => '0|1|2',
+            '0, 1, 2, 3' => '0|1|2|3',
+            '0, 1, 2, 3, 4' => '0|1|2|3|4',
+            '0, 1, 2, 3, 4, 5' => '0|1|2|3|4|5',
+            default => throw new data_error("An unsupported OSCE scale was specified: $scale"),
+        };
     }
 
     /**
@@ -795,16 +788,12 @@ trait datageneration
     protected function getScaleString3Point(array $row): string
     {
         $scale = $row['scale'] ?? 'Low to High';
-        switch ($scale) {
-            case 'Low to High':
-                return 'Low|Medium|High';
-            case 'Never to Always':
-                return 'Never|Sometimes|Always';
-            case 'Disagree, Neutral, Agree':
-                return 'Disagree|Neutral|Agree';
-        }
-
-        throw new data_error("An unsupported 3 Point scale was specified: $scale");
+        return match ($scale) {
+            'Low to High' => 'Low|Medium|High',
+            'Never to Always' => 'Never|Sometimes|Always',
+            'Disagree, Neutral, Agree' => 'Disagree|Neutral|Agree',
+            default => throw new data_error("An unsupported 3 Point scale was specified: $scale"),
+        };
     }
 
 
@@ -818,16 +807,12 @@ trait datageneration
     protected function getScaleString4Point(array $row): string
     {
         $scale = $row['scale'] ?? 'Low to High';
-        switch ($scale) {
-            case 'Low to High':
-                return 'Low|Tending Low|Tending High|High';
-            case 'Never to Always':
-                return 'Never|Hardly|Sometimes|Always';
-            case 'Strongly Disagree, Disagree, Agree, Strongly Agree':
-                return 'Strongly Disagree|Disagree|Agree|Strongly Agree';
-        }
-
-        throw new data_error("An unsupported 4 Point scale was specified: $scale");
+        return match ($scale) {
+            'Low to High' => 'Low|Tending Low|Tending High|High',
+            'Never to Always' => 'Never|Hardly|Sometimes|Always',
+            'Strongly Disagree, Disagree, Agree, Strongly Agree' => 'Strongly Disagree|Disagree|Agree|Strongly Agree',
+            default => throw new data_error("An unsupported 4 Point scale was specified: $scale"),
+        };
     }
 
     /**
@@ -840,20 +825,14 @@ trait datageneration
     protected function getScaleString5Point(array $row): string
     {
         $scale = $row['scale'] ?? 'Low to High';
-        switch ($scale) {
-            case 'Low to High':
-                return 'Low|Tending Low|Medium|Tending High|High';
-            case 'Never to Always':
-                return 'Never|Hardly|Occasionally|Sometimes|Always';
-            case 'Strongly Disagree, Disagree, Neither Disagree nor Agree, Agree, Strongly Agree':
-                return 'Strongly Disagree|Disagree|Neither Disagree nor Agree|Agree|Strongly Agree';
-            case 'Strongly Disagree, Disagree, Uncertain, Agree, Strongly Agree':
-                return 'Strongly Disagree|Disagree|Uncertain|Agree|Strongly Agree';
-            case 'Strongly Disagree, Disagree, Neutral, Agree, Strongly Agree':
-                return 'Strongly Disagree|Disagree|Neutral|Agree|Strongly Agree';
-        }
-
-        throw new data_error("An unsupported 5 Point scale was specified: $scale");
+        return match ($scale) {
+            'Low to High' => 'Low|Tending Low|Medium|Tending High|High',
+            'Never to Always' => 'Never|Hardly|Occasionally|Sometimes|Always',
+            'Strongly Disagree, Disagree, Neither Disagree nor Agree, Agree, Strongly Agree' => 'Strongly Disagree|Disagree|Neither Disagree nor Agree|Agree|Strongly Agree',
+            'Strongly Disagree, Disagree, Uncertain, Agree, Strongly Agree' => 'Strongly Disagree|Disagree|Uncertain|Agree|Strongly Agree',
+            'Strongly Disagree, Disagree, Neutral, Agree, Strongly Agree' => 'Strongly Disagree|Disagree|Neutral|Agree|Strongly Agree',
+            default => throw new data_error("An unsupported 5 Point scale was specified: $scale"),
+        };
     }
 
     /**
@@ -906,26 +885,14 @@ trait datageneration
             $row['marking'] ??= 'N/A';
 
             // Generate settings json.
-            switch ($row['marking']) {
-                case 'Pass | Fail':
-                    $marking = 7;
-                    break;
-                case 'Clear FAIL | BORDERLINE | Clear PASS | Honours PASS':
-                    $marking = 6;
-                    break;
-                case 'N/A':
-                    $marking = 5;
-                    break;
-                case 'Fail | Borderline fail | Borderline pass | Pass | Good pass':
-                    $marking = 4;
-                    break;
-                case 'Clear Fail | Borderline | Clear Pass':
-                    $marking = 3;
-                    break;
-                default:
-                    $marking = 5;
-                    break;
-            }
+            $marking = match ($row['marking']) {
+                'Pass | Fail' => 7,
+                'Clear FAIL | BORDERLINE | Clear PASS | Honours PASS' => 6,
+                'N/A' => 5,
+                'Fail | Borderline fail | Borderline pass | Pass | Good pass' => 4,
+                'Clear Fail | Borderline | Clear Pass' => 3,
+                default => 5,
+            };
             $row['settings'] = '{"marking":"' . $marking . '"}';
         } else {
             $settings = [];

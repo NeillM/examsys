@@ -66,14 +66,10 @@ class CM_UoNCM implements iCMAPI
         if ($req->get_last_http_code() == 0) {
             $objectives = 'error';
         } else {
-            switch ($this->_mapping_level) {
-                case self::LEVEL_MODULE:
-                    $objectives = $this->transformCMResponseModule($res, $session, $originalmodid);
-                    break;
-                default:
-                    $objectives = $this->transformCMResponse($res, $session, $originalmodid);
-                    break;
-            }
+            $objectives = match ($this->_mapping_level) {
+                self::LEVEL_MODULE => $this->transformCMResponseModule($res, $session, $originalmodid),
+                default => $this->transformCMResponse($res, $session, $originalmodid),
+            };
         }
 
         return $objectives;
@@ -108,7 +104,7 @@ class CM_UoNCM implements iCMAPI
         if (!in_array($level, $this->getMappingLevels())) {
             throw new UnsupportedMappingLevelException();
         }
-        $this->_mapping_level = $level;
+        $this->_mapping_level = (int) $level;
     }
 
     /**

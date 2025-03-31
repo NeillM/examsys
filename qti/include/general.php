@@ -392,22 +392,16 @@ function RemoveLoneP($in)
     return $in . $append;
 }
 
-function OrderToStr($no)
+function OrderToStr(int $no)
 {
-    switch ($no) {
-        case 0:
-            return '-';
-        case 9990:
-            return 'N/A';
-        case 1:
-            return '1st';
-        case 2:
-            return '2nd';
-        case 3:
-            return '3rd';
-        default:
-            return $no . 'th';
-    }
+    return match ($no) {
+        0 => '-',
+        9990 => 'N/A',
+        1 => '1st',
+        2 => '2nd',
+        3 => '3rd',
+        default => $no . 'th',
+    };
 }
 
 function RemoveStNdRd($in)

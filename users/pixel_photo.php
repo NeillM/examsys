@@ -38,22 +38,13 @@ if ($photoname) {
     $fullpath = $photodirectory->fullpath($photoname);
     $fileinfo = new finfo(FILEINFO_MIME_TYPE);
     // Should be able to handle several filetypes.
-    switch ($fileinfo->file($fullpath)) {
-        case 'image/jpeg':
-        case 'image/pjpeg':
-            $im = imagecreatefromjpeg($fullpath);
-            break;
-        case 'image/png':
-            $im = imagecreatefrompng($fullpath);
-            break;
-        case 'image/gif':
-            $im = imagecreatefromgif($fullpath);
-            break;
-        default:
-            // Just create a 1 pixel image if everything else fails.
-            $im = imagecreate(1, 1);
-            break;
-    }
+    $im = match ($fileinfo->file($fullpath)) {
+        'image/jpeg', 'image/pjpeg' => imagecreatefromjpeg($fullpath),
+        'image/png' => imagecreatefrompng($fullpath),
+        'image/gif' => imagecreatefromgif($fullpath),
+        // Just create a 1 pixel image if everything else fails.
+        default => imagecreate(1, 1),
+    };
 } else {
     $im = imagecreate(1, 1);
 }

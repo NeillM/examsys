@@ -586,37 +586,38 @@ class Rserve_Parser {
 		return $a;
 	}
 
-	public static function  xtName($xt) {
-		switch($xt) {
-			case self::XT_NULL:  return 'null';
-			case self::XT_INT:  return 'int';
-			case self::XT_STR:  return 'string';
-			case self::XT_DOUBLE:  return 'real';
-			case self::XT_BOOL:  return 'logical';
-			case self::XT_ARRAY_INT:  return 'int*';
-			case self::XT_ARRAY_STR:  return 'string*';
-			case self::XT_ARRAY_DOUBLE:  return 'real*';
-			case self::XT_ARRAY_BOOL:  return 'logical*';
-			case self::XT_ARRAY_CPLX:  return 'complex*';
-			case self::XT_SYM:  return 'symbol';
-			case self::XT_SYMNAME:  return 'symname';
-			case self::XT_LANG:  return 'lang';
-			case self::XT_LIST:  return 'list';
-			case self::XT_LIST_TAG:  return 'list+T';
-			case self::XT_LIST_NOTAG:  return 'list/T';
-			case self::XT_LANG_TAG:  return 'lang+T';
-			case self::XT_LANG_NOTAG:  return 'lang/T';
-			case self::XT_CLOS:  return 'clos';
-			case self::XT_RAW:  return 'raw';
-			case self::XT_S4:  return 'S4';
-			case self::XT_VECTOR:  return 'vector';
-			case self::XT_VECTOR_STR:  return 'string[]';
-			case self::XT_VECTOR_EXP:  return 'expr[]';
-			case self::XT_FACTOR:  return 'factor';
-			case self::XT_UNKNOWN:  return 'unknown';
-		}
-		return '<? '.$xt.'>';
-	}
+	public static function xtName(int $xt)
+    {
+        return match ($xt) {
+            self::XT_NULL => 'null',
+            self::XT_INT => 'int',
+            self::XT_STR => 'string',
+            self::XT_DOUBLE => 'real',
+            self::XT_BOOL => 'logical',
+            self::XT_ARRAY_INT => 'int*',
+            self::XT_ARRAY_STR => 'string*',
+            self::XT_ARRAY_DOUBLE => 'real*',
+            self::XT_ARRAY_BOOL => 'logical*',
+            self::XT_ARRAY_CPLX => 'complex*',
+            self::XT_SYM => 'symbol',
+            self::XT_SYMNAME => 'symname',
+            self::XT_LANG => 'lang',
+            self::XT_LIST => 'list',
+            self::XT_LIST_TAG => 'list+T',
+            self::XT_LIST_NOTAG => 'list/T',
+            self::XT_LANG_TAG => 'lang+T',
+            self::XT_LANG_NOTAG => 'lang/T',
+            self::XT_CLOS => 'clos',
+            self::XT_RAW => 'raw',
+            self::XT_S4 => 'S4',
+            self::XT_VECTOR => 'vector',
+            self::XT_VECTOR_STR => 'string[]',
+            self::XT_VECTOR_EXP => 'expr[]',
+            self::XT_FACTOR => 'factor',
+            self::XT_UNKNOWN => 'unknown',
+            default => '<? '.$xt.'>',
+        };
+    }
 
 	/**
 	 *

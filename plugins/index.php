@@ -62,25 +62,14 @@ if (isset($_POST['Uninstall']) or isset($_POST['Update'])) {
             $p = new $pluginslist[$plugin]($mysqli);
             $installed = $p->install($dbuser, $dbpasswd);
             if ($installed != 'OK') {
-                switch ($installed) {
-                    case 'INCORRECT_VERSION':
-                        $error[$plugin] = sprintf($string['versionincorrect'], $p->get_file_version());
-                        break;
-                    case 'CURRENT_VERSION_HIGHER':
-                        $error[$plugin] = sprintf($string['versionhigher'], $p->get_plugin_version());
-                        break;
-                    case 'ALREADY_INSTALLED':
-                        $error[$plugin] = sprintf($string['alreadyinstalled'], $p->get_plugin_version());
-                        break;
-                    case 'UPDATE_FAIL':
-                        $error[$plugin] = sprintf($string['updatefail'], $plugin);
-                        break;
-                    case 'SCHEMA_FAIL':
-                        $error[$plugin] = sprintf($string['schemafail'], $plugin);
-                        break;
-                    default:
-                        $error[$plugin] = sprintf($string['rogorequired'], $p->get_file_requires());
-                }
+                $error[$plugin] = match ($installed) {
+                    'INCORRECT_VERSION' => sprintf($string['versionincorrect'], $p->get_file_version()),
+                    'CURRENT_VERSION_HIGHER' => sprintf($string['versionhigher'], $p->get_plugin_version()),
+                    'ALREADY_INSTALLED' => sprintf($string['alreadyinstalled'], $p->get_plugin_version()),
+                    'UPDATE_FAIL' => sprintf($string['updatefail'], $plugin),
+                    'SCHEMA_FAIL' => sprintf($string['schemafail'], $plugin),
+                    default => sprintf($string['rogorequired'], $p->get_file_requires()),
+                };
             }
         }
     }

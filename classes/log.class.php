@@ -325,33 +325,18 @@ abstract class log
      * @param string $papertype paper type
      * @return \log class
      */
-    public static function get_paperlog($papertype)
+    public static function get_paperlog(string $papertype)
     {
-        switch ($papertype) {
-            case '0':
-                $papertype = 'formative';
-                break;
-            case '1':
-                $papertype = 'progressive';
-                break;
-            case '2':
-                $papertype = 'summative';
-                break;
-            case '3':
-                $papertype = 'survey';
-                break;
-            case '4':
-                $papertype = 'osce';
-                break;
-            case '5':
-                $papertype = 'offline';
-                break;
-            case '6':
-                $papertype = 'peer_review';
-                break;
-            default:
-                throw new \Exception('Unsupported paper type.');
-        }
+        $papertype = match ($papertype) {
+            '0' => 'formative',
+            '1' => 'progressive',
+            '2' => 'summative',
+            '3' => 'survey',
+            '4' => 'osce',
+            '5' => 'offline',
+            '6' => 'peer_review',
+            default => throw new \Exception('Unsupported paper type.'),
+        };
         $paperpluginns = 'plugins\\papers\\' . $papertype . '\\log';
         return new $paperpluginns();
     }

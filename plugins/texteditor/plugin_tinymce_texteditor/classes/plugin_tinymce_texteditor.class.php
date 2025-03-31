@@ -104,20 +104,12 @@ class plugin_tinymce_texteditor extends plugins_texteditor
      */
     public function get_type($type)
     {
-        switch ($type) {
-            case \plugins\plugins_texteditor::TYPE_SIMPLE:
-                $type = 'editorSimple';
-                break;
-            case \plugins\plugins_texteditor::TYPE_BASIC:
-                $type = 'editorBasic';
-                break;
-            case \plugins\plugins_texteditor::TYPE_STANDARD_UANS:
-                $type = 'editorStandardUans';
-                break;
-            default:
-                $type = 'editorStandard';
-                break;
-        }
+        $type = match ($type) {
+            \plugins\plugins_texteditor::TYPE_SIMPLE => 'editorSimple',
+            \plugins\plugins_texteditor::TYPE_BASIC => 'editorBasic',
+            \plugins\plugins_texteditor::TYPE_STANDARD_UANS => 'editorStandardUans',
+            default => 'editorStandard',
+        };
         return $type;
     }
 }

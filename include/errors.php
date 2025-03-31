@@ -65,34 +65,20 @@ function display_error($error_title, $error_description, $headers = true, $stop_
     }
 }
 
-function uploadError($errCode)
+function uploadError(int $errCode)
 {
     global $string;
     $engDescription = $string['uploaderrormsg0'];
 
-    switch ($errCode) {
-        case 0:
-            $engDescription = $string['uploaderrormsg1'];
-            break;
-        case 1:
-            $engDescription = $string['uploaderrormsg2'];
-            break;
-        case 2:
-            $engDescription = $string['uploaderrormsg3'];
-            break;
-        case 3:
-            $engDescription = $string['uploaderrormsg4'];
-            break;
-        case 4:
-            $engDescription = $string['uploaderrormsg5'];
-            break;
-        case 6:
-            $engDescription = $string['uploaderrormsg6'];
-            break;
-        default:
-            $engDescription = $string['uploaderrormsg7'];
-            break;
-    }
+    $engDescription = match ($errCode) {
+        0 => $string['uploaderrormsg1'],
+        1 => $string['uploaderrormsg2'],
+        2 => $string['uploaderrormsg3'],
+        3 => $string['uploaderrormsg4'],
+        4 => $string['uploaderrormsg5'],
+        6 => $string['uploaderrormsg6'],
+        default => $string['uploaderrormsg7'],
+    };
 
     return $engDescription;
 }
@@ -132,32 +118,22 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
         }
     }
 
-    switch ($method) {
-        case 'GET':
-            $from = param::FETCH_GET;
-            break;
-        case 'POST':
-            $from = param::FETCH_POST;
-            break;
-        default:
-            $from = param::FETCH_REQUEST;
-    }
+    $from = match ($method) {
+        'GET' => param::FETCH_GET,
+        'POST' => param::FETCH_POST,
+        default => param::FETCH_REQUEST,
+    };
 
     if ($mandatory) {
         try {
             $output = param::required($var_name, $type, $from);
         } catch (MissingParameter $e) {
             // Only catch exceptions for missing parameters.
-            switch ($method) {
-                case 'GET':
-                    display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
-                    break;
-                case 'POST':
-                    display_error($string['fatalerrormsg0'], $var_name, $headers);
-                    break;
-                default:
-                    display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers);
-            }
+            match ($method) {
+                'GET' => display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers),
+                'POST' => display_error($string['fatalerrormsg0'], $var_name, $headers),
+                default => display_error($string['fatalerrormsg0'], $string['fatalerrormsg3'], $headers),
+            };
         }
     } else {
         // The parameter is not required, we may need to return null.

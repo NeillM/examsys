@@ -55,64 +55,27 @@ trait Question
      */
     public function iCreateANewQuestion($type, TableNode $data): void
     {
-        switch ($type) {
-            case 'area':
-                $this->createArea($data);
-                break;
-            case 'enhancedcalc':
-                $this->createEnhancedcalc($data);
-                break;
-            case 'dichotomous':
-                $this->createDichotomous($data);
-                break;
-            case 'extmatch':
-                $this->createExtmatch($data);
-                break;
-            case 'blank':
-                $this->createBlank($data);
-                break;
-            case 'info':
-                $this->createInfo($data);
-                break;
-            case 'matrix':
-                $this->createMatrix($data);
-                break;
-            case 'hotspot':
-                $this->createHotspot($data);
-                break;
-            case 'labelling':
-                $this->createLabelling($data);
-                break;
-            case 'likert':
-                $this->createLikert($data);
-                break;
-            case 'mcq':
-                $this->createMcq($data);
-                break;
-            case 'mrq':
-                $this->createMrq($data);
-                break;
-            case 'keyword_based':
-                $this->createKeywordBased($data);
-                break;
-            case 'random':
-                $this->createRandom($data);
-                break;
-            case 'rank':
-                $this->createRank($data);
-                break;
-            case 'sct':
-                $this->createSct($data);
-                break;
-            case 'textbox':
-                $this->createTextbox($data);
-                break;
-            case 'true_false':
-                $this->createTrueFalse($data);
-                break;
-            default:
-                throw new PendingException('No handler for creating ' . $type . 'questions');
-        }
+        match ($type) {
+            'area' => $this->createArea($data),
+            'enhancedcalc' => $this->createEnhancedcalc($data),
+            'dichotomous' => $this->createDichotomous($data),
+            'extmatch' => $this->createExtmatch($data),
+            'blank' => $this->createBlank($data),
+            'info' => $this->createInfo($data),
+            'matrix' => $this->createMatrix($data),
+            'hotspot' => $this->createHotspot($data),
+            'labelling' => $this->createLabelling($data),
+            'likert' => $this->createLikert($data),
+            'mcq' => $this->createMcq($data),
+            'mrq' => $this->createMrq($data),
+            'keyword_based' => $this->createKeywordBased($data),
+            'random' => $this->createRandom($data),
+            'rank' => $this->createRank($data),
+            'sct' => $this->createSct($data),
+            'textbox' => $this->createTextbox($data),
+            'true_false' => $this->createTrueFalse($data),
+            default => throw new PendingException('No handler for creating ' . $type . 'questions'),
+        };
     }
 
     /**
@@ -229,19 +192,12 @@ trait Question
 
         // Set the rounding method if the user specified it, otherwise we can leave it as the default.
         if (!empty($fields['rounding'])) {
-            switch ($fields['rounding']) {
-                case 'Half down':
-                    $rounding = PHP_ROUND_HALF_DOWN;
-                    break;
-                case 'Half even':
-                    $rounding = PHP_ROUND_HALF_EVEN;
-                    break;
-                case 'Half up':
-                    $rounding = PHP_ROUND_HALF_UP;
-                    break;
-                default:
-                    throw new \Exception('Unknown rounding method');
-            }
+            $rounding = match ($fields['rounding']) {
+                'Half down' => PHP_ROUND_HALF_DOWN,
+                'Half even' => PHP_ROUND_HALF_EVEN,
+                'Half up' => PHP_ROUND_HALF_UP,
+                default => throw new \Exception('Unknown rounding method'),
+            };
             $this->fillField('rounding', $rounding);
         }
 

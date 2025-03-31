@@ -101,26 +101,17 @@ class assessmentmanagement extends \api\abstractmanagement
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, ['paper_calendar_year_invalid', 'paper_owner_role_invalid',
             'paper_owner_does_not_exist', 'paper_title_inuse', 'paper_startdate_invalid', 'paper_general_error','paper_type_invalid', 'paper_externalid_inuse', 'paper_no_modules']);
-        switch ($exception) {
-            case 'NON_UNIQUE_TITLE':
-                return ['statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null];
-            case 'INVALID_PAPER_TYPE':
-                return ['statuscode' => $this->statuscodes['PAPER_INVALID_TYPE'], 'status' => $strings['paper_type_invalid'], 'id' => null];
-            case 'INVALID_USER':
-                return ['statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null];
-            case 'INVALID_ROLE':
-                return ['statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null];
-            case 'INVALID_SESSION':
-                return ['statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null];
-            case 'INVALID_DATES':
-                return ['statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null];
-            case 'NON_UNIQUE_EXTID':
-                return ['statuscode' => $this->statuscodes['PAPER_EXTERNALID_INUSE'], 'status' => $strings['paper_externalid_inuse'], 'id' => null];
-            case 'INVALID_NO_MODULES':
-                return ['statuscode' => $this->statuscodes['PAPER_INVALID_NO_MODULES'], 'status' => $strings['paper_no_modules'], 'id' => null];
-            default:
-                return ['statuscode' => $this->statuscodes['PAPER_GENERAL_ERROR'], 'status' => $strings['paper_general_error'], 'id' => null];
-        }
+        return match ($exception) {
+            'NON_UNIQUE_TITLE' => ['statuscode' => $this->statuscodes['PAPER_INVALID_TITLE'], 'status' => $strings['paper_title_inuse'], 'id' => null],
+            'INVALID_PAPER_TYPE' => ['statuscode' => $this->statuscodes['PAPER_INVALID_TYPE'], 'status' => $strings['paper_type_invalid'], 'id' => null],
+            'INVALID_USER' => ['statuscode' => $this->statuscodes['PAPER_INVALID_OWNER'], 'status' => $strings['paper_owner_does_not_exist'], 'id' => null],
+            'INVALID_ROLE' => ['statuscode' => $this->statuscodes['PAPER_INVALID_ROLE'], 'status' => $strings['paper_owner_role_invalid'], 'id' => null],
+            'INVALID_SESSION' => ['statuscode' => $this->statuscodes['PAPER_INVALID_YEAR'], 'status' => $strings['paper_calendar_year_invalid'], 'id' => null],
+            'INVALID_DATES' => ['statuscode' => $this->statuscodes['PAPER_INVALID_START'], 'status' => $strings['paper_startdate_invalid'], 'id' => null],
+            'NON_UNIQUE_EXTID' => ['statuscode' => $this->statuscodes['PAPER_EXTERNALID_INUSE'], 'status' => $strings['paper_externalid_inuse'], 'id' => null],
+            'INVALID_NO_MODULES' => ['statuscode' => $this->statuscodes['PAPER_INVALID_NO_MODULES'], 'status' => $strings['paper_no_modules'], 'id' => null],
+            default => ['statuscode' => $this->statuscodes['PAPER_GENERAL_ERROR'], 'status' => $strings['paper_general_error'], 'id' => null],
+        };
     }
     /**
      * Create assessment

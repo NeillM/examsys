@@ -283,17 +283,13 @@ class hotspot_helper extends RogoStaticSingleton
      */
     protected function in_shape(array $answer, $shape, $coordinates)
     {
-        switch ($shape) {
-            case 'ellipse':
-                return $this->in_ellipse($answer, $coordinates);
-            case 'rectangle':
-                return $this->in_rectangle($answer, $coordinates);
-            case 'polygon':
-                return $this->in_polygon($answer, $coordinates);
-            default:
-                // Not a shape we can test so assume it is incorrect.
-                return false;
-        }
+        return match ($shape) {
+            'ellipse' => $this->in_ellipse($answer, $coordinates),
+            'rectangle' => $this->in_rectangle($answer, $coordinates),
+            'polygon' => $this->in_polygon($answer, $coordinates),
+            // Not a shape we can test so assume it is incorrect.
+            default => false,
+        };
     }
 
     /**

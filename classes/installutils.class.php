@@ -247,7 +247,7 @@ class InstallUtils
      * @param string $setting xml path of setting
      * @return mixed cleaned settings
      */
-    private static function check_setting($value, $type, $required, $setting)
+    private static function check_setting($value, int $type, $required, $setting)
     {
         global $string;
         if (is_object($value)) {
@@ -264,14 +264,10 @@ class InstallUtils
             if ($required) {
                 throw new MissingParameter(sprintf($string['invalidsetting'], $setting));
             } else {
-                switch ($type) {
-                    case param::BOOLEAN:
-                        $clean = false;
-                        break;
-                    default:
-                        $clean = null;
-                        break;
-                }
+                $clean = match ($type) {
+                    param::BOOLEAN => false,
+                    default => null,
+                };
             }
         }
         return $clean;

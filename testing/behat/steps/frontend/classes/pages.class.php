@@ -239,14 +239,10 @@ trait pages
      */
     protected function visitInvigilation(string $section)
     {
-        switch ($section) {
-            case 'remote':
-                $remote = true;
-                break;
-            default:
-                $remote = false;
-                break;
-        }
+        $remote = match ($section) {
+            'remote' => true,
+            default => false,
+        };
         $this->visit(Url::invigilation($remote));
     }
 
