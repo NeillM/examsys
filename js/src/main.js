@@ -122,6 +122,7 @@ requirejs.config({
         menu: "js/modules/menu.min",
         stdsetreview: "js/modules/stdsetreview.min",
         paperproperties: "js/modules/paperproperties.min",
+        copypaper: "js/modules/copypaper.min",
         freqdisc: "js/modules/freqdisc.min",
         review: "js/modules/review.min",
         reviewcomment: "js/modules/reviewcomment.min",

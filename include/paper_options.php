@@ -147,7 +147,7 @@ if ($properties->get_paper_type() != \assessment::TYPE_PEERREVIEW && mb_strpos($
 }
 
 // Copy Paper
-$copyPaperItem = $menuItemData->getCopyPaperItem();
+$copyPaperItem = $menuItemData->getCopyPaperItem($paperID, $module, $folder);
 $render->render($copyPaperItem, $string, 'sidebar/menuitem.html');
 
 // Copy from Paper
@@ -546,7 +546,6 @@ if ($properties->get_question_no() > 0) {
     $string['Page-break per question - hide notes'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1&hidenotes=1']);
 
   require_once $cfg_web_root . 'include/reports_submenu.inc';
-  require_once $cfg_web_root . 'include/paper_copy_submenu.inc';
   $render = new render($configObject);
   $lang['papers'] = $string['copyfrompaper'];
   $lang['cancel'] = $string['cancel'];

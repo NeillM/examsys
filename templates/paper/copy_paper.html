@@ -1,0 +1,228 @@
+{# This file is part of ExamSys
+
+    ExamSys is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    ExamSys is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with ExamSys.  If not, see <http://www.gnu.org/licenses/>. 
+    #}
+    
+    {#
+    This template renders the copy paper page.
+    
+    @author Iyud Dissanayake
+    @copyright 2025 The University of Nottingham
+
+    Required variables:
+    data - Object containing copy paper properties:
+        paperID - ID of the paper being copied
+        module - Module ID
+        folder - Folder ID
+        summative_mgmt - Summative management setting
+        max_duration - Maximum paper duration
+        paper_title - Title of the paper being copied
+        paper_types - Array of paper type options
+        calendar_year_options - Array of calendar year options
+        stdset_copy_std_setting - Standard setting copy setting
+        campuses - Array of campus options
+        months - Array of month options
+        cohort_sizes - Array of cohort size options
+        sittings - Array of sitting options
+
+    lang - Object containing localized strings:
+        copypaper - Copy paper page title
+        copyname - Copy name label
+        type - Paper type label
+        academicsession - Calendar year label
+        summativedetails - Summative details heading
+        campus - Campus label
+        cohortsize - Cohort size label
+        sittings - Sitting label
+        duration - Duration label
+        hrs - Hours label
+        mins - Minutes label
+        daterequired - Date required label
+        copystdsetting - Copy standard setting label
+        barriersneeded - Barriers needed label
+        notes - Notes label
+        back - Back button text
+        next - Next button text
+        submit - Submit button text
+        cancel - Cancel button text
+        paperonly - Paper only label
+        paperandquestions - Paper and questions label
+    #}
+    
+    <div id="content">
+        <h1>{{ lang.copypaper }}</h1>
+        
+        {% if data.summative_mgmt %}
+        <form method="post" action="copy.php" 
+              id="checkcopy" 
+              class="copy-form" autocomplete="off">
+        {% else %}
+        <form method="post" action="copy.php" 
+              class="copy-form" autocomplete="off">
+        {% endif %}
+        
+        <div class="form-info">
+            <p class="required-fields-note" aria-hidden="true"><span class="required-indicator">*</span> {{ lang.requiredfields }}</p>
+        </div>
+        
+        <div id="step1" class="form-step active">
+            <div class="form-row">
+                <label for="new_paper"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.copyname }}</label>
+                <div class="field-container">
+                    <input type="text" 
+                           id="new_paper" 
+                           name="new_paper" 
+                           maxlength="255" 
+                           value="{{ data.paper_title }}" 
+                           aria-required="true" />
+                    <span id="new_paper-error" class="error-message"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="paper_type">{{ lang.type }}</label>
+                <select name="paper_type" id="paper_type" class="changepapertype">
+                    {% for type in data.paper_types %}
+                        <option value="{{ type.value }}" {% if type.selected %}selected{% endif %}>
+                            {{ type.text }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="session">{{ lang.academicsession }}</label>
+                <select name="session" id="session">
+                    {{ data.calendar_year_options|raw }}
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label></label>
+                <input type="checkbox" name="copy_std_setting" id="copy_std_setting" 
+                       {% if data.stdset_copy_std_setting %}checked{% endif %} />
+                <label for="copy_std_setting" class="checkbox-label">{{ lang.copystdsetting }}</label>
+            </div>
+
+            <div class="form-row" id="copytype_selector">
+                <label>{{ lang.copytype }}</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" name="copytype" id="copytype_paperonly" value="paperonly" />
+                        <label for="copytype_paperonly">
+                            <span>{{ lang.paperonly }}</span>
+                            <img src="../artwork/copy_paper_only.png" width="120" height="130" alt="" />
+                        </label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="copytype" id="copytype_paperquestions" value="paperquestions" checked />
+                        <label for="copytype_paperquestions">
+                            <span>{{ lang.paperandquestions }}</span>
+                            <img src="../artwork/copy_paper_questions.png" width="120" height="130" alt="" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="step2" class="form-step">
+            <div class="step-header">
+                <h2>{{ lang.summativedetails }}</h2>
+            </div>
+            
+            <!-- Summative exam fields -->
+            <div id="summative_fields">
+                <div class="form-row">
+                    <label for="campus">{{ lang.campus }}</label>
+                    <select name="campus" id="campus">
+                        {% for campus in data.campuses %}
+                            <option value="{{ campus.campusname }}" {% if campus.isdefault %}selected{% endif %}>
+                                {{ campus.campusname }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label></label>
+                    <input type="checkbox" name="barriers_needed" id="barriers_needed" />
+                    <label for="barriers_needed" class="checkbox-label">{{ lang.barriersneeded }}</label>
+                </div>
+
+                <div class="form-row">
+                    <label for="duration"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.duration }}</label>
+                    <div class="field-container">
+                        <div class="duration-inputs">
+                            <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" aria-required="true" />
+                            <label class="inline-label">{{ lang.hrs }}</label>
+                            <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" aria-required="true" />
+                            <label class="inline-label">{{ lang.mins }}</label>
+                        </div>
+                        <span id="duration-error" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="period"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.daterequired }}</label>
+                    <div class="field-container">
+                        <select name="date_required" id="period" aria-required="true">
+                            <option value=""></option>
+                            {% for month in data.months %}
+                                <option value="{{ month.value }}">{{ month.text }}</option>
+                            {% endfor %}
+                        </select>
+                        <span id="period-error" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="cohort_size"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.cohortsize }}</label>
+                    <div class="field-container">
+                        <select name="cohort_size" id="cohort_size" aria-required="true">
+                            <option value=""></option>
+                            {% for size in data.cohort_sizes %}
+                                <option value="{{ size.value }}">{{ size.text }}</option>
+                            {% endfor %}
+                        </select>
+                        <span id="cohort_size-error" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="sittings"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.sittings }}</label>
+                    <div class="field-container">
+                        <input type="number" name="sittings" id="sittings" min="1" max="{{ data.sittings }}" aria-required="true" />
+                        <span id="sittings-error" class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="notes">{{ lang.notes }}</label>
+                    <textarea name="notes" id="notes" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="paperID" value="{{ data.paperID }}" />
+        <input type="hidden" name="module" value="{{ data.module }}" />
+        <input type="hidden" name="folder" value="{{ data.folder }}" />
+        
+        <div class="form-buttons">
+            <input type="button" id="next_button" value="{{ lang.next }}" />
+            <input type="submit" id="submit_button" value="{{ lang.copypaper }}" />
+            <input type="button" id="cancel" value="{{ lang.cancel }}" />
+            <input type="button" id="back_button" class="back-button" value="{{ lang.back }}" />
+        </div>
+        </form>
+    </div>
