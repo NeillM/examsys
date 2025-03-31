@@ -419,7 +419,7 @@ class users extends generator
             try {
                 \Role::validateRole($role);
                 $validroles[] = $role;
-            } catch (\InvalidRole $e) {
+            } catch (\InvalidRole) {
                 // Ignore the role.
             }
         }

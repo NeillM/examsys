@@ -102,7 +102,7 @@ if (isset($_POST['submit'])) {
 } else {
     try {
         $account = GuestAccountManager::reserve();
-    } catch (NoFreeGuestAccounts $e) {
+    } catch (NoFreeGuestAccounts) {
         $notice->display_notice_and_exit(null, $string['nofreeaccounts'], $string['nofreeaccountsmessage'], $string['nofreeaccounts'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
     }
     ?>

@@ -238,7 +238,7 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id)
                     foreach ($relationships as $rel) {
                         try {
                             $rel->save();
-                        } catch (DatabaseException $ex) {
+                        } catch (DatabaseException) {
                             echo $string['mappingerror2'];
                         }
                     }
@@ -311,7 +311,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
                     if ($resp != '') {
                         $objsBySession_cache[$thisModuleid][$session] = $resp;
                     }
-                } catch (ClassNotFoundException $e) {
+                } catch (ClassNotFoundException) {
                     // CMAP class not found. Probably the old NLE.
                 }
             }

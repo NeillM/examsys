@@ -33,7 +33,7 @@ try {
     $exam_duration += $exam_duration_mins;
     $properties = PaperProperties::get_paper_properties_by_id($paperid, $mysqli, $string);
     $minavailability = $properties->getMinAvailability($exam_duration);
-} catch (Exception $e) {
+} catch (Exception) {
     echo json_encode('ERROR');
     exit();
 }

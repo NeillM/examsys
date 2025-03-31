@@ -191,7 +191,7 @@ trait param
         }
         try {
             \param::required($name, constant("\param::$type"), $from);
-        } catch (\MissingParameter $e) {
+        } catch (\MissingParameter) {
             // Validate the type of exception.
             return;
         }

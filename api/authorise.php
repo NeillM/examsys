@@ -45,7 +45,7 @@ try {
 }
 try {
     $state = param::required('state', param::ALPHANUM, param::FETCH_REQUEST);
-} catch (MissingParameter $e) {
+} catch (MissingParameter) {
     error($string['statenotsupplied'], $string, $mysqli, $configObject, $notice);
 }
 // Proccess auth.

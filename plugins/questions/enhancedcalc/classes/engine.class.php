@@ -227,10 +227,10 @@ class Engine
 
         try {
             $correctanswer = eval('return (' . $formula_vars_subed . ');');
-        } catch (\DivisionByZeroError $e) {
+        } catch (\DivisionByZeroError) {
             // Return the same answer we would get from RServe when a division by 0 happens.
             $correctanswer = 'Inf';
-        } catch (\Error $e) {
+        } catch (\Error) {
             // Catch any parsing errors.
             $correctanswer = 'ERROR';
         }

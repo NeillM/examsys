@@ -201,7 +201,7 @@ while ($result->fetch()) {
                     } else {
                         $rating .= ',' . $qstd;
                     }
-                } catch (\MissingParameter $e) {
+                } catch (\MissingParameter) {
                     // Nothing to do.
                 }
                 if ($qstd != '') {
@@ -289,7 +289,7 @@ while ($result->fetch()) {
                                     $total_rating += $qstd;
                                 }
                             }
-                        } catch (\MissingParameter $e) {
+                        } catch (\MissingParameter) {
                             // Nothing to do.
                         }
                         $total_parts++;
@@ -407,7 +407,7 @@ while ($result->fetch()) {
                                 $total_rating += $qstd;
                             }
                         }
-                    } catch (\MissingParameter $e) {
+                    } catch (\MissingParameter) {
                         // Nothing to do.
                     }
                     $total_parts++;
@@ -433,7 +433,7 @@ while ($result->fetch()) {
                                     $total_rating += $qstd;
                                 }
                             }
-                        } catch (\MissingParameter $e) {
+                        } catch (\MissingParameter) {
                             // Nothing to do.
                         }
                         $total_parts++;

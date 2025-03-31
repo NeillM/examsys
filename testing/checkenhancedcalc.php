@@ -98,7 +98,7 @@ foreach ($data as $individual) {
     $cans = $individual[2];
     try {
         $ans = $enhancedcalcObj1->calculate_correct_ans($vars, $formula);
-    } catch (Exception $e) {
+    } catch (Exception) {
         $ans = false;
     }
     $check = false;

@@ -45,7 +45,7 @@ if (!LangUtils::langPackInstalled($language)) {
     try {
         InstallUtils::download_langpacks();
         $langpackfound = 1;
-    } catch (Exception $e) {
+    } catch (Exception) {
         $langpackfound = 2;
     }
 }

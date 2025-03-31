@@ -643,7 +643,7 @@ class webServiceRestAPI extends restAPI
         try {
             $rolearray = explode(',', $roles);
             Role::validateCombination($rolearray);
-        } catch (InvalidRole $e) {
+        } catch (InvalidRole) {
             return 'Incorrect value for roles: ' . $roles;
         }
 

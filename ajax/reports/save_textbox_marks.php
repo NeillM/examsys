@@ -59,7 +59,7 @@ QUERY;
             }
             $result->close();
         }
-    } catch (exception $ex) {
+    } catch (exception) {
         // No need to do anything
     }
 } else {

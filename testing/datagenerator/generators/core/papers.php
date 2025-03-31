@@ -166,7 +166,7 @@ class papers extends generator
         if (!empty($settings['startdate'])) {
             try {
                 $settings['start_date'] = \date_utils::getUTCDateTime($settings['startdate'], $settings['timezone'])->getTimestamp() ;
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // If user's date is not valid
                 throw new data_error("Paper's startdate is wrong");
             }
@@ -180,7 +180,7 @@ class papers extends generator
         if (!empty($settings['enddate'])) {
             try {
                 $settings['end_date'] = \date_utils::getUTCDateTime($settings['enddate'], $settings['timezone'])->getTimestamp() ;
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // If user's date is not valid
                 throw new data_error("Paper's enddate is wrong");
             }

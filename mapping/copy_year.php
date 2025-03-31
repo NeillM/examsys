@@ -41,7 +41,7 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
     $objectives = getObjectives($modules_array, $_POST['source_y'], '', '', $mysqli);
     try {
         copyObjectives($objectives, $_POST['moduleID'], $module_code, $_POST['dest_y'], $mysqli);
-    } catch (Exception $ex) {
+    } catch (Exception) {
         $errors[] = 'An error occured when copying the objectives. Please try again.';
     }
 }

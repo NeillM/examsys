@@ -100,7 +100,7 @@ if ($updater_utils->check_version('7.2.0')) {
         while ($users->fetch()) {
             try {
                 Role::updateRoles($id, explode(',', $roles));
-            } catch (InvalidRole $e) {
+            } catch (InvalidRole) {
                 // The user has invalid roles so lock them.
                 Role::updateRoles($id, ['Locked']);
             }

@@ -194,7 +194,7 @@ if (!isset($_POST['update'])) {
         try {
             InstallUtils::download_langpacks();
             $lang['langsuccess'] = $string['langsuccess'];
-        } catch (Exception $e) {
+        } catch (Exception) {
             $data['langerror'] = true;
         }
     }

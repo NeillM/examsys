@@ -63,7 +63,7 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
                     $timeoutarray = ['seconds' => $this->config['timeout'], 'milliseconds' => 1];
                 }
                 self::$cnx = @new Rserve_Connection($this->config['host'], $this->config['port'], $timeoutarray);
-            } catch (Exception $except) {
+            } catch (Exception) {
                 self::$cnx = null;
                 $this->set_error('Can Not Connect');
                 return false;

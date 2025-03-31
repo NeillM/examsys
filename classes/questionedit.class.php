@@ -758,7 +758,7 @@ QUERY;
                 $classname = $class['name'];
                 $correction_object = new $classname($this->_mysqli, $this->_lang_strings, $this);
                 $this->add_corrector($correction_object);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 throw new ClassNotFoundException(sprintf($this->lang_strings['noclasserror'], $classname));
             }
         }
@@ -1820,7 +1820,7 @@ QUERY;
                 try {
                     include $classfile;
                     $object = new $classname($mysqli, $user_id, $lang_strings, $data);
-                } catch (Exception $ex) {
+                } catch (Exception) {
                     throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
                 }
             } else {
@@ -1833,7 +1833,7 @@ QUERY;
             try {
                 include $classfile;
                 $object = new $classname($mysqli, $user_id, $lang_strings);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
             }
         }

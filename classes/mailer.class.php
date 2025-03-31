@@ -101,7 +101,7 @@ class Mailer
             $mail->Body    = $message;
             // Send.
             $mail->send();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $log = new Logger($configObject->db);
             $userObj = \UserObject::get_instance();
             if (!is_null($userObj)) {

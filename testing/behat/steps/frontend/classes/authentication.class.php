@@ -48,7 +48,7 @@ trait authentication
         $this->i_wait_for_page_to_load();
         try {
             $this->i_should_not_see('rogo-login-form-std', 'button');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // We are still on the login page, so lets give a reasonable message.
             throw new \Exception("Login failed for $username");
         }
@@ -91,7 +91,7 @@ trait authentication
         $this->i_wait_for_page_to_load();
         try {
             $this->i_should_not_see('rogo-login-form-std', 'button');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // We are still on the login page, so lets give a reasonable message.
             throw new \Exception("Re-login failed for $username");
         }

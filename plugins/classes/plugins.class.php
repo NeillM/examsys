@@ -174,7 +174,7 @@ abstract class plugins
                     if (!$this->type_install()) {
                         throw new \Exception('type_install failed.');
                     }
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     return 'SCHEMA_FAIL';
                 }
             } else {
@@ -235,7 +235,7 @@ abstract class plugins
                             }
                         }
                     }
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     return 'UPDATE_FAIL';
                 }
             }
@@ -272,7 +272,7 @@ abstract class plugins
                 if (!$this->type_uninstall()) {
                     throw new \Exception('type_uninstall failed.');
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 return 'DROP_SCHEMA_FAIL';
             }
             // Disable plugin.
