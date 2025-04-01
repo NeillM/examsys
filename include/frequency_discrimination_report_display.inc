@@ -316,7 +316,7 @@ function format_xStats(array $values)
  */
 function excludeButton($buttonID, $question_id, $status, $parts, $marks, $question_no)
 {
-    $string = LangUtils::loadlangfile('frequency_discrimination_analysis.php', []);
+    $string = LangUtils::loadlangfile('reports/frequency_discrimination_analysis.php', []);
     $isExcluded = mb_strpos($status, '1') !== false;
     $status_number = $isExcluded ? '1' : '0';
     $status_value = str_repeat($status_number, $marks);
