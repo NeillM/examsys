@@ -324,7 +324,7 @@ class PaperMenuItemData
      * @param int $paperID The ID of the paper
      * @return array Menu item data structure with UI properties
      */
-    public function getCopyPaperItem(int $paperID, $module=null, $folder=null): array
+    public function getCopyPaperItem(int $paperID, $module = null, $folder = null): array
     {
         $href = $this->rootPath . "/paper/copy_paper.php?paperID=$paperID";
         if ($module) {
