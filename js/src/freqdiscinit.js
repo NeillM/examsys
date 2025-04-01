@@ -52,4 +52,11 @@ requirejs(['media', 'html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery']
     $('.in-exclusion').change(function() {
         freqdisc.toggle($(this).attr('data-id'), $(this).attr('data-parts'), $(this).attr('data-marks'));
     });
+
+    $('.in-exclusion').keydown(function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            $(this).trigger('click');
+        }
+    });
 });
