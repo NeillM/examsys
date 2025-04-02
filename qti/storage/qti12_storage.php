@@ -399,7 +399,7 @@ class ST_QTI12_Question // <item
 // object to store question parts
 class ST_QTI12_Response implements \Stringable // <response_
 {
-    public $id;
+    public $id; // <response_lid ident=
 
     public $material; // <material>
     public $ismulti = 0; // <response_lid rcardinality= // "Multiple" for 1
@@ -428,6 +428,10 @@ class ST_QTI12_Response implements \Stringable // <response_
     // key by <response_label ident=
     public $labels = [];
 
+    /**
+     * @param string $type type of the response_ object
+     * @param SimpleXMLElement $xml
+     */
     public function __construct(public $type, $xml)
     {
 

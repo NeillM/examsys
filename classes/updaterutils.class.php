@@ -43,10 +43,10 @@ class UpdaterUtils
     }
 
     /**
-     * @param \mysqli $mysqli
+     * @param mysqli $mysqli The database connection object.
+     * @param string $db_name The name of the ExamSys schema
      */
-    public function __construct(/** @var mysqli The database connection object. */
-    private $mysqli, private $db_name)
+    public function __construct(private $mysqli, private $db_name)
     {
         $langpack = new \langpack();
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);

@@ -35,14 +35,11 @@ class render
 
     /**
      * Constructor
-     * @param object $config - ExamSys configuration object
+     * @param Config $config - ExamSys configuration object
      * @param string|array $templatedir - path to templates or list of paths to search for template
      * @return void
      */
-    public function __construct(/**
-     * Config object
-     */
-    protected $config, $templatedir = null)
+    public function __construct(protected $config, $templatedir = null)
     {
         if (is_null($templatedir)) {
             $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');

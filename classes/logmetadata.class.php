@@ -53,9 +53,9 @@ class LogMetadata
 
     /**
      * Create new object to represent the Log Metadata table
-     * @param integer $userid ID of the user we're dealing with
-     * @param integer    $paper_id   ID of the current paper
-     * @param mysqli     $db         Database connection
+     * @param int $userid ID of the user we're dealing with
+     * @param int $paper_id ID of the current paper
+     * @param mysqli $db Database connection
      */
     public function __construct(private $userid, private $paper_id, private $db)
     {

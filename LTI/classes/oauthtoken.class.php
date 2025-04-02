@@ -25,8 +25,8 @@ namespace LTI;
 
 class OAuthToken implements \Stringable {
   /**
-   * key = the token
-   * secret = the token secret
+   * @param string $key the token
+   * @param string $secret the token secret
    */
   function __construct(public $key, public $secret)
   {

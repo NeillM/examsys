@@ -59,7 +59,7 @@ class PaperSettings
 
     /**
      * Constructor.
-     * @param integer $paper the paper
+     * @param int $paper the paper id
      * @param string $papertype the paper type
      */
     public function __construct(private int $paper, private string $papertype)

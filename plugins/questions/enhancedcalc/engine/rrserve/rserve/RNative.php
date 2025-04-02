@@ -1,7 +1,7 @@
 <?php
 /**
  * Rserve native array wrapper
- * @author Clément Turbelin
+ * @author Clï¿½ment Turbelin
  * From Rserve java Client & php Client
  */
  
@@ -14,16 +14,7 @@ class Rserve_RNative implements ArrayAccess {
      * @param mixed[] $data
      * @param mixed[] $attributes
      */
-    public function __construct(
-        /**
-         * @var array Data
-         */
-        private $data,
-        /**
-         * @var array Attributes
-         */
-        private $attr = NULL
-    )
+    public function __construct(private $data, private $attr = NULL)
     {
     }
     

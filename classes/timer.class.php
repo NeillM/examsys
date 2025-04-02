@@ -30,9 +30,9 @@ class Timer
     /**
      * Constructor for the timer.
      *
-     * @param LogMetadata $log_start_time
-     * @param int $exam_duration
-     * @param int|null $special_needs_percentage
+     * @param LogMetadata $log_start_time The user log metadata for the exam
+     * @param int $exam_duration The duration of the exam in seconds
+     * @param int|null $special_needs_percentage The percentage extra time the user gets on an exam
      */
     public function __construct(protected $log_start_time, protected $exam_duration, protected $special_needs_percentage)
     {

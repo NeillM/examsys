@@ -159,6 +159,9 @@ class QuestionEdit extends RogoObject
     /**
      * Create a new question object by either loading an existing question from the database or populating
      * properties from an associative array
+     * @param mysqli $_mysqli
+     * @param UserObject $userObj
+     * @param string[] $_lang_strings Array of localised language strings
      * @param mixed $data
      */
     public function __construct(protected $_mysqli, $userObj, protected $_lang_strings, $data = null)

@@ -113,7 +113,7 @@ class ims_enterprise
     protected $restricttarget;
     /**
      * Constructor
-     * @param \stdClass $db
+     * @param \stdClass $db The ExamSys database connection object
      */
     public function __construct(protected $db)
     {

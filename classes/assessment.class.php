@@ -94,8 +94,8 @@ class assessment
 
     /**
      * @brief Constuctor
-     * @param mysqli $db
-     * @param object $configObject
+     * @param mysqli $db The ExamSys database connection
+     * @param Config $configObject
      */
     public function __construct(private $db, $configObject)
     {

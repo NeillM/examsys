@@ -66,7 +66,7 @@ class Anomaly
     /**
      * Anomaly constructor.
      *
-     * @param array $data The data.
+     * @param array $data The data of the anomaly.
      */
     public function __construct(protected array $data)
     {

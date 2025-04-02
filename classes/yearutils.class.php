@@ -66,7 +66,7 @@ class yearutils
 
     /**
      * Constructor
-     * @param mysqli $mysqli
+     * @param mysqli $mysqli The ExamSys database connection object
      */
     public function __construct(private $mysqli)
     {

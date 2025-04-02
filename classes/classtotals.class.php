@@ -86,13 +86,35 @@ class ClassTotals
     }
 
     /**
-     * @param string $ordering
-     * @param string $sortby
+     * @param bool $studentsonly
+     * @param int $percent
+     * @param string $ordering The direction of the search results, i.e. asc or desc
+     * @param bool $absent
+     * @param string $sortby The order user results should be returned in, should be the name of one of the user_result array keys.
+     * @param userobject $userObject
+     * @param PaperProperties $propertyObj
+     * @param string $startdate
+     * @param string $enddate
+     * @param string $repcourse The course to filter the results to
+     * @param string $repmodule The module to filter the results to
+     * @param mysqli $db The ExamSys database connection
+     * @param string[] $string The language strings for the class totals report.
      */
-    public function __construct(private $studentsonly, $percent, /** @var string The direction of the search results, i.e. asc or desc */
-    private $ordering, private $absent, /** @var string The order user results should be returned in, should be the name of one of the user_result array keys. */
-    private $sortby, $userObject, $propertyObj, private $startdate, private $enddate, private $repcourse, private $repmodule, private $db, private $string)
-    {
+    public function __construct(
+        private $studentsonly,
+        $percent,
+        private $ordering,
+        private $absent,
+        private $sortby,
+        $userObject,
+        $propertyObj,
+        private $startdate,
+        private $enddate,
+        private $repcourse,
+        private $repmodule,
+        private $db,
+        private $string
+    ) {
         $this->demo               = \demo::is_demo($userObject);
         $this->paperID            = $propertyObj->get_property_id();
         $this->paper_type         = $propertyObj->get_paper_type();

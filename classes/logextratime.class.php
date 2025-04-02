@@ -44,8 +44,10 @@ class LogExtraTime
     /**
      * Constructs the lab object.
      *
-     * @return void
-     * @param \UserObject $student_object
+     * @param LogLabEndTime $log_lab_end_time
+     * @param UserObject $student_object
+     * @param mysqli $db
+     * @param bool $cached
      */
     public function __construct(private LogLabEndTime $log_lab_end_time, private $student_object, private mysqli $db, $cached = false)
     {

@@ -41,7 +41,7 @@ class AnomalySearch extends Search
     /**
      * Constructor for the anomaly search.
      *
-     * @param int $papertype
+     * @param int $papertype The paper type that is being searched for.
      */
     public function __construct(protected int $papertype)
     {

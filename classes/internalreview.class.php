@@ -45,7 +45,7 @@ class internalreview
 
     /**
      * Constuctor
-     * @param mysqli $db
+     * @param mysqli $db The ExamSys database connection object
      */
     public function __construct(private $db)
     {

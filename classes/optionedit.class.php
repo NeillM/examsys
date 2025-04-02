@@ -81,6 +81,11 @@ class OptionEdit extends RogoObject
     /**
      * Create a new option object by either loading an existing option from the database or populating
      * properties from an associative array
+     * @param mysqli $_mysqli
+     * @param int $_user_id
+     * @param QuestionEdit $_question
+     * @param int $_number
+     * @param string[] $_lang_strings Array of localised language strings
      * @param mixed $data
      */
     public function __construct(protected $_mysqli, protected $_user_id, protected $_question, protected $_number, protected $_lang_strings, $data = null)

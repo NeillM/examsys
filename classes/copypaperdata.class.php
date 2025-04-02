@@ -33,7 +33,7 @@ class CopyPaperData
     /**
      * Constructor for CopyPaperData
      *
-     * @param array $string Array of language strings
+     * @param array $string Array of language strings used for the page
      */
     public function __construct(private array $string)
     {

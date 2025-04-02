@@ -37,10 +37,9 @@ abstract class Data_Loader
     protected $help_base;
 
     /**
-     * @param bool $load_help
+     * @param bool $load_help Defines if the ExamSys help files should be loaded.
      */
-    public function __construct(/** @var boolean Defines if the ExamSys help files should be loaded. */
-    protected $load_help = false)
+    public function __construct(protected $load_help = false)
     {
         $this->fixture_base = __DIR__ . '/../../../../fixtures/base/';
         $this->help_base = __DIR__ . '/../../../../../install/';

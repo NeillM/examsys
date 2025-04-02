@@ -126,10 +126,9 @@ class PaperProperties
     }
 
     /**
-     * @param \mysqli $db
+     * @param mysqli $db The ExamSys database connection.
      */
-    public function __construct(/** @var mysqli The ExamSys database connection. */
-    private $db)
+    public function __construct(private $db)
     {
         $this->configObject = Config::get_instance();
     }

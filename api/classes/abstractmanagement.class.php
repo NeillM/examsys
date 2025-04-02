@@ -59,7 +59,7 @@ abstract class abstractmanagement
     /**
      * Constructor
      * @param \mysqli $db the database connection
-     * @param string $client_id the oauth client connecting
+     * @param string $client_id the id of the oauth client connecting
      */
     public function __construct(protected $db, protected $client_id = null)
     {

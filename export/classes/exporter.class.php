@@ -39,12 +39,9 @@ abstract class exporter
 
     /**
      * The constructor
-     * @param \file_handler $handler
+     * @param \file_handler $handler The handler for the file
      */
-    public function __construct(/**
-     * The handler for the file
-     */
-    protected $handler)
+    public function __construct(protected $handler)
     {
         $this->config = \Config::get_instance();
     }
