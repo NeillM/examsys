@@ -40,7 +40,7 @@ if (!$configObject->get_setting('core', 'cfg_api_enabled')) {
 // Check for required parameters and record in denied log if missing.
 try {
     $client_id = param::required('client_id', param::ALPHANUM, param::FETCH_REQUEST);
-} catch (MissingParameter $e) {
+} catch (MissingParameter) {
     error($string['clientnotsupplied'], $string, $mysqli, $configObject, $notice);
 }
 try {
