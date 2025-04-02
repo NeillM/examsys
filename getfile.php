@@ -37,7 +37,7 @@ $forcedownload = !empty($forcedownload);
 
 try {
     $directory = rogo_directory::get_directory($type);
-} catch (directory_not_found $e) {
+} catch (directory_not_found) {
     send_404();
 }
 
