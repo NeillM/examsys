@@ -228,7 +228,7 @@ trait frontend_hooks
             try {
                 // Screenshot the failure.
                 $this->saveScreenshot("$filename.png", $faildir);
-            } catch (DriverException $e) {
+            } catch (DriverException) {
                 // Screenshots are not supported for this step.
             }
         }
@@ -254,7 +254,7 @@ trait frontend_hooks
             }
             // Set focus to the main window.
             $session->switchToWindow($this->mainwindow);
-        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException) {
             // The current driver does not support window switching.
         }
         $session->stop();

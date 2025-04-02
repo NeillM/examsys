@@ -137,7 +137,7 @@ if ($submit_type === 'userSubmit') {
 
 try {
     $ret = record_marks($propertyObj->get_property_id(), $mysqli, $propertyObj->get_paper_type(), $metadataid, $preview_q_id);
-} catch (RandomQuestionNotFound $ex) {
+} catch (RandomQuestionNotFound) {
     $ret = false;
 }
 

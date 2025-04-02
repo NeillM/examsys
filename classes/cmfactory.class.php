@@ -42,7 +42,7 @@ class CMFactory
         try {
             include_once $configObject->get('cfg_web_root') . '/plugins/CM/' . $classfile;
             $object = new $classname();
-        } catch (Exception $ex) {
+        } catch (Exception) {
             throw new ClassNotFoundException($classname);
         }
 

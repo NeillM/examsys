@@ -441,7 +441,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
         try {
             Role::validateCombination($roles);
             Role::updateRoles($userID, $roles);
-        } catch (InvalidRole $e) {
+        } catch (InvalidRole) {
             // Something went wrong.
             $role_save_error = true;
         }

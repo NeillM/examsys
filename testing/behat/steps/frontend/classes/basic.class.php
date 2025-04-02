@@ -416,7 +416,7 @@ JS;
                     // The status code indicates the page is fully loaded.
                     return true;
                 }
-            } catch (UnsupportedDriverActionException $ex) {
+            } catch (UnsupportedDriverActionException) {
                 // Javascript evaluation is not supported so try looking at the last http status code.
                 try {
                     // Try testing for a response code of 200 (Any other code is not loaded)
@@ -424,7 +424,7 @@ JS;
                         // The status code indicates the page returned content successfully.
                         return true;
                     }
-                } catch (UnsupportedDriverActionException $ex) {
+                } catch (UnsupportedDriverActionException) {
                     // All methods of determining if the page is fully loaded are not supported,
                     //  so we must assume it is and hope for the best.
                     return true;
@@ -684,7 +684,7 @@ JS;
                             $this->lookForErrors();
                             return true;
                         }
-                    } catch (StaleElementReference $e) {
+                    } catch (StaleElementReference) {
                         // We changed page in the middle of the check, so we will ignore and try again.
                     }
                     return false;

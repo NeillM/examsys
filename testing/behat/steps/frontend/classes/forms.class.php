@@ -141,7 +141,7 @@ trait forms
     {
         try {
             $this->isDisabledInForm($field, $form);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // All is good.
             return;
         }
@@ -199,7 +199,7 @@ trait forms
     {
         try {
             $this->isCheckInForm($field, $form);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // All is good.
             return;
         }

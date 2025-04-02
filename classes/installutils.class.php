@@ -1664,7 +1664,7 @@ class InstallUtils
         //FLUSH PRIVILEGES
         try {
             self::$db->query('FLUSH PRIVILEGES');
-        } catch (mysqli_sql_exception $e) {
+        } catch (mysqli_sql_exception) {
             self::logWarning(['014' => $string['logwarning20']]);
         }
         self::$db->commit();

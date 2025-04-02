@@ -144,7 +144,7 @@ class database
             if (InstallUtils::does_user_exist($test_username)) {
                 try {
                     InstallUtils::$db->query("REVOKE ALL PRIVILEGES ON $dbname.* FROM '$test_username'@'$dbaccesspoint'");
-                } catch (\mysqli_sql_exception $e) {
+                } catch (\mysqli_sql_exception) {
                     // The privilege was already revoked.
                 }
             }

@@ -695,19 +695,19 @@ QUERY;
         if (is_array($data)) {
             try {
                 $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings, $data);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
             }
         } elseif ($data != -1 and ctype_digit($data)) {
             try {
                 $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings, $data);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
             }
         } else {
             try {
                 $object = new $classname($mysqli, $user_id, $question, $number, $lang_strings);
-            } catch (Exception $ex) {
+            } catch (Exception) {
                 throw new ClassNotFoundException(sprintf($lang_strings['noclasserror'], $classname));
             }
         }

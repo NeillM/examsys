@@ -227,11 +227,11 @@ class rogo_test extends MinkContext
             if ($this->getSession()->getDriver()->find($deprecation)) {
                 $message .= "Deprecation found on page.\n";
             }
-        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+        } catch (\Behat\Mink\Exception\UnsupportedDriverActionException) {
             // Nothing we can do about this.
-        } catch (\WebDriver\Exception\NoSuchWindow $e) {
+        } catch (\WebDriver\Exception\NoSuchWindow) {
             // The action caused the window to close, so we cannot see any errors.
-        } catch (\Behat\Mink\Exception\DriverException $e) {
+        } catch (\Behat\Mink\Exception\DriverException) {
             // The driver could not do a search for some reason, a browser may not be open right now.
         }
 
@@ -262,7 +262,7 @@ class rogo_test extends MinkContext
                 if ($lambda($this)) {
                     return true;
                 }
-            } catch (Exception $e) {
+            } catch (Exception) {
                 // do nothing
             }
 
@@ -348,7 +348,7 @@ class rogo_test extends MinkContext
                         return "";
                     })()'));
                 $pending = self::evaluateScriptInSession($session, $jscode);
-            } catch (Exception $e) {
+            } catch (Exception) {
                 // We catch an exception here, in case we just closed the window we were interacting with.
                 // No javascript is running if there is no window right?
                 $pending = '';

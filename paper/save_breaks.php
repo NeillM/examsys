@@ -45,7 +45,7 @@ try {
         // Record break.
         LogBreakTime::setBreak($userObject->get_user_ID(), $paperid, $time);
     }
-} catch (Exception $e) {
+} catch (Exception) {
     echo json_encode('ERROR');
     exit();
 }

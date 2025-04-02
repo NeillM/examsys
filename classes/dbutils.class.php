@@ -280,7 +280,7 @@ class DBUtils
                 $link->next_result();
             }
             $link->close();
-        } catch (mysqli_sql_exception $e) {
+        } catch (mysqli_sql_exception) {
             $link->close();
             return false;
         }

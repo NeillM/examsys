@@ -114,7 +114,7 @@ QUERY;
                     $result->close();
                 }
             }
-        } catch (exception $ex) {
+        } catch (exception) {
             $status = 'ERROR';
         }
 

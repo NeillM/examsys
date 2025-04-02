@@ -127,7 +127,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
     if ($mandatory) {
         try {
             $output = param::required($var_name, $type, $from);
-        } catch (MissingParameter $e) {
+        } catch (MissingParameter) {
             // Only catch exceptions for missing parameters.
             match ($method) {
                 'GET' => display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers),

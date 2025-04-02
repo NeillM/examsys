@@ -1011,7 +1011,7 @@ class ims_enterprise
             try {
                 \UserUtils::delete_userID($userid, $this->db);
                 $this->log_line("Deleted user '$person->username' (ID number $person->idnumber).");
-            } catch (\Exception $ex) {
+            } catch (\Exception) {
                 $this->log_line("Error deleting '$person->username' (ID number $person->idnumber).");
             }
         } else {

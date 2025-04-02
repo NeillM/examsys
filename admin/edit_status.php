@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
             header('location: list_statuses.php');
             exit();
         }
-    } catch (ItemExistsException $ex) {
+    } catch (ItemExistsException) {
         $error = 'duplicate';
     }
 }

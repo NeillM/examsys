@@ -38,7 +38,7 @@ if ($vle_api != '') {
         $objsBySession = $vle->getObjectives($module_code, $session, $mysqli);
         $vle_name = $vle->getFriendlyName();
         $vle_name_a = $vle->getFriendlyName(true);
-    } catch (ClassNotFoundException $e) {
+    } catch (ClassNotFoundException) {
         // CMAP class not found. Probably the old NLE.
     }
 } else {
