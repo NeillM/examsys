@@ -27,12 +27,6 @@
 class internalreview
 {
     /*
-    * Db connection
-    * @var $db
-    */
-    private $db;
-
-    /*
     * Config object
     * @var $config
     */
@@ -53,9 +47,8 @@ class internalreview
      * Constuctor
      * @param mysqli $db
      */
-    public function __construct($db)
+    public function __construct(private $db)
     {
-        $this->db = $db;
         $this->config = Config::get_instance();
     }
 

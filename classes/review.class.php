@@ -24,10 +24,6 @@
  */
 class Review
 {
-    private $db;
-    private $paperID;
-    private $reviewerID;
-    private $review_type;
     private $metadataID;
 
     /**
@@ -41,13 +37,8 @@ class Review
         $this->db = null;
     }
 
-    public function __construct($paperID, $reviewerID, $review_type, $db)
+    public function __construct(private $paperID, private $reviewerID, private $review_type, private $db)
     {
-        $this->db               = $db;
-        $this->paperID          = $paperID;
-        $this->reviewerID       = $reviewerID;
-        $this->review_type  = $review_type;
-
         $this->get_metadataID();
     }
 

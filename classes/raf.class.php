@@ -26,16 +26,13 @@
  */
 class RAF
 {
-    private $db;
     private $properties;
-    private $configObj;
     private $userID;
     private $media = [];
     private $data = [];
     private $zip_filename;
     private $json_filename;
     private $logger;
-    private $string;
     private $status_array;
     private $keywords_lookup = null;
     private $raf_company;
@@ -51,12 +48,9 @@ class RAF
         $this->db = null;
     }
 
-    public function __construct($userObject, $configObject, $db, $string)
+    public function __construct($userObject, private $configObj, private $db, private $string)
     {
-        $this->db           = $db;
-        $this->configObj    = $configObject;
         $this->userID           = $userObject->get_user_ID();
-        $this->string           = $string;
         $this->notice           = new user_notices();
     }
 

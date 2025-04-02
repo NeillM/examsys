@@ -26,10 +26,6 @@
  */
 class UpdaterUtils
 {
-    /** @var mysqli The database connection object. */
-    private $mysqli;
-    private $db_name;
-
     /** @var string Language component name. */
     protected $langcomponent = 'classes/updaterutils';
     /** @var array language strings */
@@ -46,10 +42,12 @@ class UpdaterUtils
         $this->mysqli = null;
     }
 
-    public function __construct($mysqli, $db_name)
+    /**
+     * @param \mysqli $mysqli
+     */
+    public function __construct(/** @var mysqli The database connection object. */
+    private $mysqli, private $db_name)
     {
-        $this->mysqli  = $mysqli;
-        $this->db_name = $db_name;
         $langpack = new \langpack();
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);
     }

@@ -26,10 +26,6 @@
  */
 class ExamAnnouncements
 {
-    private $db;
-    private $paperID;
-    private $string;
-
     /**
      * Called when the object is unserialised.
      */
@@ -46,11 +42,8 @@ class ExamAnnouncements
      * @param object $db      - Link to mysqli
      * @param string $string  - Language translations
      */
-    public function __construct($paperID, $db, $string)
+    public function __construct(private $paperID, private $db, private $string)
     {
-        $this->db = $db;
-        $this->paperID = $paperID;
-        $this->string = $string;
     }
 
     /**

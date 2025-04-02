@@ -25,9 +25,6 @@
  */
 class PaperProperties
 {
-    /** @var mysqli The ExamSys database connection. */
-    private $db;
-
     /** @var null @var ConfigObject The ExamSys configuration. */
     private $configObject;
 
@@ -128,9 +125,12 @@ class PaperProperties
         $this->lab_end_cache = [];
     }
 
-    public function __construct($db)
+    /**
+     * @param \mysqli $db
+     */
+    public function __construct(/** @var mysqli The ExamSys database connection. */
+    private $db)
     {
-        $this->db = $db;
         $this->configObject = Config::get_instance();
     }
 

@@ -20,7 +20,6 @@ require_once '../include/load_config.php';
 // main question object
 class ST_QTI12_Question // <item
 {
-    public $raw_xml;
     public $title; // <item title=
     public $load_id; // <item ident=
 
@@ -89,19 +88,18 @@ class ST_QTI12_Question // <item
     public $comments = [];
     public $params = [];
 
-    public function __construct($xml)
+    public function __construct(public $raw_xml)
     {
         $this->params['KEYWORD'] = [];
         $this->params['VARIABLE'] = [];
-        $this->raw_xml = $xml;
 
-        $this->title = (string) $xml->attributes()->title;
-        $this->load_id = (string) $xml->attributes()->ident;
+        $this->title = (string) $this->raw_xml->attributes()->title;
+        $this->load_id = (string) $this->raw_xml->attributes()->ident;
         $this->material = new ST_QTI12_Material();
 
         // load item meta data
-        if ($xml->itemmetadata) {
-            foreach ($xml->itemmetadata as $th) {
+        if ($this->raw_xml->itemmetadata) {
+            foreach ($this->raw_xml->itemmetadata as $th) {
                 foreach ($th as $rg) {
                     foreach ($rg as $ef) {
                         if ($ef->fieldlabel == 'wct_questiontype') {
@@ -111,28 +109,28 @@ class ST_QTI12_Question // <item
                 }
             }
 
-            if ($xml->itemmetadata->qmd_itemtype) {
-                $this->qmd_itemtype = (string) $xml->itemmetadata->qmd_itemtype;
+            if ($this->raw_xml->itemmetadata->qmd_itemtype) {
+                $this->qmd_itemtype = (string) $this->raw_xml->itemmetadata->qmd_itemtype;
             }
 
-            if ($xml->itemmetadata->qmd_status) {
-                $this->qmd_status = (string) $xml->itemmetadata->qmd_status;
+            if ($this->raw_xml->itemmetadata->qmd_status) {
+                $this->qmd_status = (string) $this->raw_xml->itemmetadata->qmd_status;
             }
 
-            if ($xml->itemmetadata->qmd_toolvendor) {
-                $this->qmd_toolvendor = (string) $xml->itemmetadata->qmd_toolvendor;
+            if ($this->raw_xml->itemmetadata->qmd_toolvendor) {
+                $this->qmd_toolvendor = (string) $this->raw_xml->itemmetadata->qmd_toolvendor;
             }
 
             $t = 0;
         }
 
-        $this->LoadComments($xml);
+        $this->LoadComments($this->raw_xml);
         if ($this->wct_questiontype == 'WCT_JumbledSentence') {
-            $ttt = $xml->presentation->flow->response_lid->render_extension->ims_render_object;
+            $ttt = $this->raw_xml->presentation->flow->response_lid->render_extension->ims_render_object;
 
             $itemid = 1;
 
-            foreach ($xml->presentation->flow->response_lid->render_extension->ims_render_object->children() as $child1) {
+            foreach ($this->raw_xml->presentation->flow->response_lid->render_extension->ims_render_object->children() as $child1) {
                 $name = $child1->getName();
                 if ($name == 'material') {
                     $mat = new ST_QTI12_Material();
@@ -158,8 +156,8 @@ class ST_QTI12_Question // <item
                 }
             }
 
-            if ($xml->resprocessing->respcondition->conditionvar->and) {
-                foreach ($xml->resprocessing->respcondition->conditionvar->and->children() as $child2) {
+            if ($this->raw_xml->resprocessing->respcondition->conditionvar->and) {
+                foreach ($this->raw_xml->resprocessing->respcondition->conditionvar->and->children() as $child2) {
                     $ident2 = (string) $child2->attributes()->index;
                     $nm = (string) $child2;
                     $optionslk3[$ident2] = $nm;
@@ -188,13 +186,13 @@ class ST_QTI12_Question // <item
             $this->question2 = $question;
             $debpoint = 1;
 
-            $this->LoadPresentation($xml->presentation->flow);
+            $this->LoadPresentation($this->raw_xml->presentation->flow);
         } else {
-            $this->LoadPresentation($xml->presentation);
+            $this->LoadPresentation($this->raw_xml->presentation);
         }
 
-        if ($xml->resprocessing->respcondition) {
-            foreach ($xml->resprocessing as $respch) {
+        if ($this->raw_xml->resprocessing->respcondition) {
+            foreach ($this->raw_xml->resprocessing as $respch) {
                 foreach ($respch->respcondition as $respcondition) {
                     $this->respconditions[] = new ST_QTI12_RespCondition($respcondition);
                 }
@@ -202,7 +200,7 @@ class ST_QTI12_Question // <item
         }
 
         // load all the feedback options
-        foreach ($xml->itemfeedback as $itemfeedback) {
+        foreach ($this->raw_xml->itemfeedback as $itemfeedback) {
             $fb = new ST_QTI12_Itemfeedback($itemfeedback);
             $this->itemfeedback[$fb->id] = $fb;
         }
@@ -401,10 +399,7 @@ class ST_QTI12_Question // <item
 // object to store question parts
 class ST_QTI12_Response implements \Stringable // <response_
 {
-    public $id; // <response_lid ident=
-
-    // type of the response_ object
-    public $type = 'lid';
+    public $id;
 
     public $material; // <material>
     public $ismulti = 0; // <response_lid rcardinality= // "Multiple" for 1
@@ -433,11 +428,10 @@ class ST_QTI12_Response implements \Stringable // <response_
     // key by <response_label ident=
     public $labels = [];
 
-    public function __construct($type, $xml)
+    public function __construct(public $type, $xml)
     {
 
         $this->id = (string) $xml->attributes()->ident;
-        $this->type = $type;
         // should we allow multiple answers, ie check instead of radio.
         $cardinality = $xml->attributes()->rcardinality ?? '';
         $this->ismulti = mb_strtolower($cardinality) == 'multiple' ? 1 : 0;

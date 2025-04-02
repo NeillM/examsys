@@ -29,11 +29,6 @@ namespace api;
 class api
 {
     /**
-     * The slim application.
-     */
-    private $app;
-
-    /**
      * The media type.
      */
     private $mediatype;
@@ -71,9 +66,8 @@ class api
      * @param \mysqli $db db connection
      * @param object $configObject configurations
      */
-    public function __construct($app, $db, $configObject)
+    public function __construct(private $app, $db, $configObject)
     {
-        $this->app = $app;
         // Get configs.
         $configObject->set_db_object($db);
         $configObject->load_settings('core');

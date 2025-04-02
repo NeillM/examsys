@@ -24,11 +24,6 @@
  */
 class SummativeTimer
 {
-    /*
-    * @var LogExtraTime $log_extra_time
-    */
-
-    private $log_extra_time;
     private $exam_duration;
     private $start_time;
 
@@ -36,9 +31,8 @@ class SummativeTimer
     * @param LogExtraTime $log_extra_time
     */
 
-    public function __construct(LogExtraTime $log_extra_time)
+    public function __construct(private LogExtraTime $log_extra_time)
     {
-        $this->log_extra_time = $log_extra_time;
     }
 
     /*

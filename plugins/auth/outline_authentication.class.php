@@ -29,8 +29,6 @@ $configObject = Config::get_instance();
 
 class outline_authentication
 {
-    protected $name;
-    protected $number;
     protected $returndata;
     protected $retdata;
     protected $form;
@@ -43,7 +41,6 @@ class outline_authentication
     public $debugpointer = 0;
     protected $error = null;
     public $rogoid = false;
-    protected $authapiversion;
     protected $callbackarray;
     protected $impliments_api_auth_version = 0;
 
@@ -56,11 +53,8 @@ class outline_authentication
      * @param object $returndata where data is stored
      * @param object $form a class with form data in
      */
-    public function __construct($number, $name, $authapiversion)
+    public function __construct(protected $number, protected $name, protected $authapiversion)
     {
-        $this->authapiversion = $authapiversion;
-        $this->name = $name;
-        $this->number = $number;
     }
 
     /*

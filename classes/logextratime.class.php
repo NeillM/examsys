@@ -25,20 +25,6 @@
  */
 class LogExtraTime
 {
-    /**
-     * @var LogLabEndTime $log_lab_end_time
-     */
-    private $log_lab_end_time;
-
-    /**
-     * @var UserObject $student_object
-     */
-    private $student_object;
-
-    /**
-     * @var mysqli $db
-     */
-    private $db;
     private $msg;
 
     private $log_extra_time_cache;
@@ -59,13 +45,10 @@ class LogExtraTime
      * Constructs the lab object.
      *
      * @return void
+     * @param \UserObject $student_object
      */
-    public function __construct(LogLabEndTime $log_lab_end_time, $student_object, mysqli $db, $cached = false)
+    public function __construct(private LogLabEndTime $log_lab_end_time, private $student_object, private mysqli $db, $cached = false)
     {
-        $this->log_lab_end_time = $log_lab_end_time;
-        $this->student_object = $student_object;
-        $this->db = $db;
-
         if ($cached) {
             $this->populate_cache();
             $this->use_cache = true;

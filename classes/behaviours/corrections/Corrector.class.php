@@ -26,15 +26,8 @@
  */
 abstract class Corrector
 {
-    protected $_mysqli;
-    protected $_lang_strings;
-    protected $_question;
-
-    public function __construct($mysqli, $lang_strings, $question)
+    public function __construct(protected $_mysqli, protected $_lang_strings, protected $_question)
     {
-        $this->_mysqli = $mysqli;
-        $this->_lang_strings = $lang_strings;
-        $this->_question = $question;
     }
 
     /**

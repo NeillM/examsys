@@ -62,7 +62,6 @@ require './restAPI.class.php';
 
 class webServiceRestAPI extends restAPI
 {
-    public $db;
     private $qtypes = [
         '0' => 'Formative Quiz',
         '1' => 'Progress Test',
@@ -73,9 +72,8 @@ class webServiceRestAPI extends restAPI
         '6' => 'Peer Review'
     ];
 
-    public function __construct($mysqli)
+    public function __construct(public $db)
     {
-        $this->db = $mysqli;
         parent::__construct();
     }
 

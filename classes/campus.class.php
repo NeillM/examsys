@@ -26,9 +26,6 @@
  */
 class campus
 {
-    // DB connection
-    private $db;
-
     /**
      * Called when the object is unserialised.
      */
@@ -44,9 +41,8 @@ class campus
      * @brief Constuctor
      * @param mysqli $db
      */
-    public function __construct($db)
+    public function __construct(private $db)
     {
-        $this->db = $db;
     }
 
     /**

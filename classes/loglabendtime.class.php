@@ -25,22 +25,7 @@
  */
 class LogLabEndTime
 {
-    /**
-     * @var int $lab_id
-     */
-    private $lab_id;
-
     private $msg;
-
-    /**
-     * @var PaperProperties $property_object Object holding the properties for the paper
-     */
-    private $property_object;
-
-    /**
-     * @var mysqli $db
-     */
-    private $db;
 
     private $end_datetime_cached = false;
     private $start_timestamp = false;
@@ -61,12 +46,8 @@ class LogLabEndTime
      * @param PaperProperties $property_object Object holding the properties for the paper
      * @param mysqli $db
      */
-    public function __construct($lab_id, $property_object, $db)
+    public function __construct(private $lab_id, private $property_object, private $db)
     {
-
-        $this->lab_id = $lab_id;
-        $this->property_object = $property_object;
-        $this->db = $db;
     }
 
     /**

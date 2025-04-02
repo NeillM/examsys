@@ -35,9 +35,6 @@ class AnomalySearch extends Search
     /** @var int A paper to search. */
     protected int $paperid;
 
-    /** @var int The paper type that is being searched for. */
-    protected int $papertype;
-
     /** @var bool Filter by students only. */
     protected bool $studentonly;
 
@@ -46,9 +43,8 @@ class AnomalySearch extends Search
      *
      * @param int $papertype
      */
-    public function __construct(int $papertype)
+    public function __construct(protected int $papertype)
     {
-        $this->papertype = $papertype;
     }
 
     /**

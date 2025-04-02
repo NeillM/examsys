@@ -63,11 +63,6 @@ class OptionEdit extends RogoObject
 
     /** @var array metadata fields required for this option type */
     protected $_metafields_required = [];
-
-    protected $_question = null;
-    protected $_number = -1;
-    protected $_mysqli = null;
-    protected $_user_id;
     protected $_data = [];
     protected $_metadata = [];
     protected $_mdata = [];
@@ -76,9 +71,6 @@ class OptionEdit extends RogoObject
     // Map our 'nice' property names to the database fields
     protected $_field_map = ['question_id' => 'o_id', 'text' => 'option_text', 'media_source' => 'source', 'media_width' => 'width', 'media_height' => 'media_height', 'media_alt' => 'alt', 'media_owner' => 'ownerid', 'correct_fback' => 'feedback_right', 'incorrect_fback' => 'feedback_wrong'];
     protected $_pretty_names = ['question_id' => 'Question ID', 'text' => '', 'correct_fback' => 'Correct Feedback', 'incorrect_fback' => 'Incorrect Feedback', 'correct' => 'Correct Value', 'marks_correct' => 'Marks (correct)', 'marks_incorrect' => 'Marks (incorrect)', 'marks_partial' => 'Marks (partial)'];
-
-    // Refrence to array of localised language strings
-    protected $_lang_strings = null;
 
     /**
      * Text editor
@@ -91,15 +83,9 @@ class OptionEdit extends RogoObject
      * properties from an associative array
      * @param mixed $data
      */
-    public function __construct($mysqli, $user_id, $question, $number, $lang_strings, $data = null)
+    public function __construct(protected $_mysqli, protected $_user_id, protected $_question, protected $_number, protected $_lang_strings, $data = null)
     {
-        // Store the database connection reference
-        $this->_mysqli = $mysqli;
-        $this->_user_id = $user_id;
-        $this->_question = $question;
-        $this->question_id = $question->id;
-        $this->_number = $number;
-        $this->_lang_strings = $lang_strings;
+        $this->question_id = $this->_question->id;
 
         // Array of references to the fields.  Allows succinct use of call_user_func_array
         foreach (self::$_fields as $field) {

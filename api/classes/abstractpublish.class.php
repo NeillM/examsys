@@ -43,16 +43,10 @@ abstract class abstractpublish
     abstract public function get($filtername, $filterid, $externalsys = null);
 
     /**
-     * The database connection.
-     */
-    protected $db;
-
-    /**
      * Constructor
-     * @param \mysqli $mysqli the database connection
+     * @param \mysqli $db the database connection
      */
-    public function __construct($mysqli)
+    public function __construct(protected $db)
     {
-        $this->db = $mysqli;
     }
 }

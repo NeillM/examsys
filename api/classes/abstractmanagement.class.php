@@ -51,15 +51,6 @@ abstract class abstractmanagement
      * @return array response to operation, id of construct or error message.
      */
     abstract public function delete($params, $userid);
-
-    /**
-     * The database connection.
-     */
-    protected $db;
-    /**
-     * The oauth client id.
-     */
-    protected $client_id;
     /**
      * The config object.
      */
@@ -67,13 +58,11 @@ abstract class abstractmanagement
 
     /**
      * Constructor
-     * @param \mysqli $mysqli the database connection
+     * @param \mysqli $db the database connection
      * @param string $client_id the oauth client connecting
      */
-    public function __construct($mysqli, $client_id = null)
+    public function __construct(protected $db, protected $client_id = null)
     {
-        $this->db = $mysqli;
-        $this->client_id = $client_id;
         $this->config = \Config::get_instance();
     }
 

@@ -33,10 +33,6 @@ class apixml extends \api\apiabstract
      */
     private $langcomponent = 'api/apixml';
     /**
-     * XML data string
-     */
-    private $xml;
-    /**
      * Status codes
      */
     private $statuscodes = [
@@ -44,11 +40,10 @@ class apixml extends \api\apiabstract
     ];
     /**
      * Constructor
-     * @param string $request - the xml request
+     * @param string $xml - the xml request
      */
-    public function __construct($request)
+    public function __construct(private $xml)
     {
-        $this->xml = $request;
     }
 
     /**

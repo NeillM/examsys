@@ -27,11 +27,6 @@
 class gradebook
 {
     /**
-     * The db connection
-     */
-    private $db;
-
-    /**
      * External paper - externalid used to referece paper
      * @var string
      */
@@ -71,9 +66,8 @@ class gradebook
      * @param object $db
      * @return void
      */
-    public function __construct($db)
+    public function __construct(private $db)
     {
-        $this->db = $db;
     }
 
     /**

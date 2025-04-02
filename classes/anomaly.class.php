@@ -42,9 +42,6 @@ class Anomaly
     /** @var int The type of the anomaly. */
     public int $type;
 
-    /** @var array The data of the anomaly. */
-    protected array $data;
-
     /** @var int The clock type anomaly. */
     public const CLOCK = 1;
 
@@ -71,9 +68,8 @@ class Anomaly
      *
      * @param array $data The data.
      */
-    public function __construct(array $data)
+    public function __construct(protected array $data)
     {
-        $this->data = $data;
     }
 
     /**

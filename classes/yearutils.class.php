@@ -24,11 +24,6 @@
 class yearutils
 {
     /**
-     * A mysqli object.
-     */
-    private $mysqli;
-
-    /**
      * A string mm/dd that states the start of the academic year.
      */
     private $academic_year_start;
@@ -73,11 +68,9 @@ class yearutils
      * Constructor
      * @param mysqli $mysqli
      */
-    public function __construct($mysqli)
+    public function __construct(private $mysqli)
     {
         $configObject = Config::get_instance();
-
-        $this->mysqli = $mysqli;
         // Start of academic year (mm/dd)
         $year_start = $configObject->get_setting('core', 'system_academic_year_start');
         if ($this->check_year_start_format($year_start)) {

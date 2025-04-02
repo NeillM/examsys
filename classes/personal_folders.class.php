@@ -28,7 +28,6 @@ class personal_folders
 {
     private $folderlst;
     private $folderlst2;
-    private $mysqli;
 
     /**
      * Called when the object is unserialised.
@@ -41,9 +40,8 @@ class personal_folders
         $this->mysqli = null;
     }
 
-    public function __construct($mysqli)
+    public function __construct(private $mysqli)
     {
-        $this->mysqli = $mysqli;
     }
 
     public function loadpersonalfolders($userID)

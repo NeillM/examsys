@@ -25,8 +25,6 @@
  */
 class StandardSetting
 {
-    private $db;
-
     /**
      * Called when the object is unserialised.
      */
@@ -38,9 +36,8 @@ class StandardSetting
         $this->db = null;
     }
 
-    public function __construct($db)
+    public function __construct(private $db)
     {
-        $this->db = $db;
     }
 
     public function get_ratings_by_question($std_setID)

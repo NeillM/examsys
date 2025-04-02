@@ -24,9 +24,6 @@
  */
 class CopyPaperData
 {
-    /** @var array Language strings used for the page */
-    private $string;
-
     /** @var Config The configuration object */
     private $config;
 
@@ -38,9 +35,8 @@ class CopyPaperData
      *
      * @param array $string Array of language strings
      */
-    public function __construct(array $string)
+    public function __construct(private array $string)
     {
-        $this->string = $string;
         $this->config = Config::get_instance();
         $this->db = $this->config->db;
     }

@@ -28,7 +28,6 @@
  */
 class Anonymise
 {
-    private $db;
     private $male_names;
     private $female_names;
     private $unknown_names;
@@ -49,9 +48,8 @@ class Anonymise
         $this->db = null;
     }
 
-    public function __construct($db)
+    public function __construct(private $db)
     {
-        $this->db             = $db;
         $this->male_names     = [];
         $this->female_names   = [];
         $this->unknown_names  = [];

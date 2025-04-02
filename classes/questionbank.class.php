@@ -26,11 +26,6 @@
  */
 class QuestionBank
 {
-    private $db;
-    private $idMod;
-    private $module_id;
-    private $string;
-    private $notice;
     private $bank_types = null;
     private $stats = null;
 
@@ -45,13 +40,8 @@ class QuestionBank
         $this->db = null;
     }
 
-    public function __construct($idMod, $moduleID, $string, $notice, $db)
+    public function __construct(private $idMod, private $module_id, private $string, private $notice, private $db)
     {
-        $this->db     = $db;
-        $this->string = $string;
-        $this->idMod  = $idMod;
-        $this->module_id = $moduleID;
-        $this->notice = $notice;
         $this->yearutils = new yearutils($this->db);
     }
 

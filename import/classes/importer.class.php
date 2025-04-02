@@ -32,12 +32,6 @@ namespace import;
 abstract class importer
 {
     /**
-     * The handler for the file
-     * @var object
-     */
-    protected $handler;
-
-    /**
      * The config object
      * @var object
      */
@@ -47,10 +41,12 @@ abstract class importer
      * The constructor
      * @param \file_handler $handler
      */
-    public function __construct($handler)
+    public function __construct(/**
+     * The handler for the file
+     */
+    protected $handler)
     {
         $this->config = \Config::get_instance();
-        $this->handler = $handler;
     }
 
     /**
