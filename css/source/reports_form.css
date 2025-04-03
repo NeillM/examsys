@@ -1,0 +1,27 @@
+/* Reports form page styles */
+.reports-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.reports-form {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    padding: 0;
+    margin: 0;
+}
+
+.form-bar {
+    background-color: #F2B100;
+    height: 6px;
+    width: 100%;
+}
+
+.form-content {
+    padding: 20px;
+}
