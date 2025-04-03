@@ -36,6 +36,9 @@ define(['jquery'], function ($) {
             isExcluded = !isExcluded;
             $checkbox.prop('checked', isExcluded);
 
+            // marks is at least 1 to handle questions with no question options
+            marks = Math.max(1, marks);
+
             // Update the hidden input containing marks
             var new_value = isExcluded ? '1'.repeat(marks) : '0'.repeat(marks);
             $statusInput.val(new_value);

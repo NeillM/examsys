@@ -41,6 +41,10 @@ requirejs(['media', 'html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery']
         }
     });
 
+    var toggleHandler = function() {
+        freqdisc.toggle($(this).attr('data-id'), $(this).attr('data-parts'), $(this).attr('data-marks'));
+    };
+
     $('.calccorrect').click(function() {
         freqdisc.calcCorrect($(this).attr('data-qid'));
     });
@@ -49,7 +53,12 @@ requirejs(['media', 'html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery']
         freqdisc.blankCorrect($(this).attr('data-qid'), $(this).attr('data-i'));
     });
 
-    $('.in-exclusion').change(function() {
-        freqdisc.toggle($(this).attr('data-id'), $(this).attr('data-parts'), $(this).attr('data-marks'));
+    $('.in-exclusion').change(toggleHandler);
+
+    $('.in-exclusion').keydown(function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            toggleHandler.call(this);
+        }
     });
 });
