@@ -27,11 +27,6 @@
 class restful
 {
     /**
-     * @var mysqli connection
-     */
-    private $db;
-
-    /**
      * @var int The last received http code
      */
     private $http_code;
@@ -49,11 +44,10 @@ class restful
 
     /**
      * Constuctor
-     * @param mysqli $db
+     * @param mysqli $db The ExamSys database connection object
      */
-    public function __construct($db)
+    public function __construct(private $db)
     {
-        $this->db = $db;
     }
     /**
      * Perform a restful get request

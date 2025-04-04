@@ -25,8 +25,6 @@
 class LogMetadata
 {
     private $id;
-    private $paper_id;
-    private $userid;
     private $session_id; //started
     private $start_datetime; //date time object derived from started
     private $ipaddress;
@@ -36,11 +34,6 @@ class LogMetadata
     private $completed;
     private $lab_name;
     private $highest_screen;
-
-    /**
-     * @var mysqli $db
-     */
-    private $db;
 
     /**
      * @var userObject $userObject
@@ -60,11 +53,11 @@ class LogMetadata
 
     /**
      * Create new object to represent the Log Metadata table
-     * @param integer    $userID     ID of the user we're dealing with
-     * @param integer    $paper_id   ID of the current paper
-     * @param mysqli     $db         Database connection
+     * @param int $userid ID of the user we're dealing with
+     * @param int $paper_id ID of the current paper
+     * @param mysqli $db Database connection
      */
-    public function __construct($userID, $paper_id, $db)
+    public function __construct(private $userid, private $paper_id, private $db)
     {
         $this->id              = null;
         $this->session_id      = null;
@@ -77,9 +70,6 @@ class LogMetadata
         $this->completed       = null;
         $this->lab_name        = null;
         $this->highest_screen  = 0;
-        $this->userid          = $userID;
-        $this->paper_id        = $paper_id;
-        $this->db              = $db;
     }
 
     /**

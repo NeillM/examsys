@@ -55,9 +55,6 @@ class assessment
      */
     public const TYPE_PEERREVIEW = 6;
 
-    // DB connection
-    private $db;
-
     // Cenrtalised summative management?
     private $summative_mgmt;
 
@@ -97,15 +94,14 @@ class assessment
 
     /**
      * @brief Constuctor
-     * @param mysqli $db
-     * @param object $configObject
+     * @param mysqli $db The ExamSys database connection
+     * @param Config $configObject
      */
-    public function __construct($db, $configObject)
+    public function __construct(private $db, $configObject)
     {
-        $this->db = $db;
         $this->server_timezone = $configObject->get('cfg_timezone');
         $this->type = PaperUtils::getTypeList();
-        $configObject->set_db_object($db);
+        $configObject->set_db_object($this->db);
         $configObject->load_settings('core');
         $settings = (object) $configObject->get_setting('core');
         $this->timezones = $settings->paper_timezones;

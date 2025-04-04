@@ -34,16 +34,6 @@ class PaperSettings
     private $config;
 
     /**
-     * @var integer the paper id
-     */
-    private $paper;
-
-    /**
-     * @var string the paper type
-     */
-    private $papertype;
-
-    /**
      * @var array Assessment types
      */
     private $types;
@@ -69,16 +59,14 @@ class PaperSettings
 
     /**
      * Constructor.
-     * @param integer $paper the paper
-     * @param string $type the paper type
+     * @param int $paper the paper id
+     * @param string $papertype the paper type
      */
-    public function __construct(int $paper, string $type)
+    public function __construct(private int $paper, private string $papertype)
     {
         $configObject = Config::get_instance();
         $this->db = $configObject->db;
         $this->config = $configObject;
-        $this->paper = $paper;
-        $this->papertype = $type;
         $this->types = PaperUtils::getTypeList();
         $this->get();
     }

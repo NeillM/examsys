@@ -40,12 +40,10 @@ Czech Republic
 
 class cosign
 {
-    private $cosign_cfg;
     private $cosign_log;
 
-    public function __construct($cosign_cfg, &$parent)
+    public function __construct(private $cosign_cfg, &$parent)
     {
-        $this->cosign_cfg = $cosign_cfg;
         if (!is_null($parent)) {
             $this->parent = $parent;
         }

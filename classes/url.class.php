@@ -42,11 +42,6 @@ class Url implements \Stringable
     public const ROGOPATH = 'rogo';
 
     /**
-     * @var string
-     */
-    private $url;
-
-    /**
      * @var array
      */
     private $parts;
@@ -57,14 +52,13 @@ class Url implements \Stringable
      * @param string $url
      * @throws \InvalidArgumentException
      */
-    public function __construct($url)
+    public function __construct(private $url)
     {
-        $this->url = $url;
         $this->parse();
 
         if ($this->parts === false) {
             // The url was too corrupted to be parsed.
-            throw new \InvalidArgumentException('Invalid URL: ' . $url);
+            throw new \InvalidArgumentException('Invalid URL: ' . $this->url);
         }
 
         // Now validate the non-query parts of the url.
@@ -76,7 +70,7 @@ class Url implements \Stringable
 
         if (is_null($cleanurl) or $plainurl !== $cleanurl) {
             // Something was invalid in the url.
-            throw new \InvalidArgumentException('Invalid URL: ' . $url);
+            throw new \InvalidArgumentException('Invalid URL: ' . $this->url);
         }
     }
 

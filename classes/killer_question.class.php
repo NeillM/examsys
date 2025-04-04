@@ -25,8 +25,6 @@
  */
 class Killer_Question
 {
-    private $db;
-    private $paperID;
     private $questions;
 
     /**
@@ -44,10 +42,8 @@ class Killer_Question
      * @param int $paperID  - ID of the current paper.
      * @param object $db    - Link to mysqli
      */
-    public function __construct($paperID, $db)
+    public function __construct(private $paperID, private $db)
     {
-        $this->db = $db;
-        $this->paperID = $paperID;
     }
 
     /**

@@ -34,22 +34,17 @@ require_once dirname(__DIR__) . '/include/calculate_marks.inc';
 
 class ClassTotals
 {
-    private $db;
     private $demo;
     private $user_results;
     private $paper_buffer;
     private $stats;
     private $cohort_size;
-    private $absent;
-    private $studentsonly;
     private $paperID;
     private $paper_type;
     private $calendar_year;
     private $ss_pass;
     private $ss_hon;
     private $student_cohort;
-    private $startdate;
-    private $enddate;
     private $exclusions;
     private $moduleID_in;
     private $user_modules;
@@ -61,8 +56,6 @@ class ClassTotals
     private $distinction_mark;
     private $question_no;
     private $log_late;
-    private $repcourse;
-    private $repmodule;
     private $total_marks;
     private $orig_total_marks;
     private $total_random_mark = 0;
@@ -76,17 +69,10 @@ class ClassTotals
     private $recache;
     private $question_statuses;
     private $marking_overrides;
-    private $string;
     private $percent_decimals;
     private $unmarked_enhancedcalc = false;
     private $unmarked_textbox = false;
     private $gradebook_enabled;
-
-    /** @var string The direction of the search results, i.e. asc or desc */
-    private $ordering;
-
-    /** @var string The order user results should be returned in, should be the name of one of the user_result array keys. */
-    private $sortby;
 
     /**
      * Called when the object is unserialised.
@@ -99,23 +85,42 @@ class ClassTotals
         $this->db = null;
     }
 
-    public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db, $string)
-    {
-        $this->db                 = $db;
+    /**
+     * @param bool $studentsonly
+     * @param int $percent
+     * @param string $ordering The direction of the search results, i.e. asc or desc
+     * @param bool $absent
+     * @param string $sortby The order user results should be returned in, should be the name of one of the user_result array keys.
+     * @param userobject $userObject
+     * @param PaperProperties $propertyObj
+     * @param string $startdate
+     * @param string $enddate
+     * @param string $repcourse The course to filter the results to
+     * @param string $repmodule The module to filter the results to
+     * @param mysqli $db The ExamSys database connection
+     * @param string[] $string The language strings for the class totals report.
+     */
+    public function __construct(
+        private $studentsonly,
+        $percent,
+        private $ordering,
+        private $absent,
+        private $sortby,
+        $userObject,
+        $propertyObj,
+        private $startdate,
+        private $enddate,
+        private $repcourse,
+        private $repmodule,
+        private $db,
+        private $string
+    ) {
         $this->demo               = \demo::is_demo($userObject);
         $this->paperID            = $propertyObj->get_property_id();
         $this->paper_type         = $propertyObj->get_paper_type();
         $this->calendar_year      = $propertyObj->get_calendar_year();
-        $this->startdate          = $startdate;
-        $this->enddate            = $enddate;
-        $this->absent             = $absent;
-        $this->studentsonly       = $studentsonly;
         $this->marking            = $propertyObj->get_marking();
         $this->percent            = $percent;
-        $this->ordering           = $ordering;
-        $this->sortby             = $sortby;
-        $this->repcourse          = $repcourse;
-        $this->repmodule          = $repmodule;
         $this->pass_mark          = $propertyObj->get_pass_mark();
         $this->distinction_mark   = $propertyObj->get_distinction_mark();
         $this->log_late           = [];
@@ -127,10 +132,9 @@ class ClassTotals
         $this->display_excluded   = '';
         $this->user_no            = 0;
         $this->marking_overrides  = [];
-        $this->string             = $string;
         $this->percent_decimals   = $this->config->get_setting('core', 'rpt_percent_decimals');
         $this->gradebook_enabled  = $this->config->get_setting('core', 'cfg_gradebook_enabled');
-        $this->question_statuses = QuestionStatus::get_all_statuses($db, [], true);
+        $this->question_statuses = QuestionStatus::get_all_statuses($this->db, [], true);
     }
 
     public function error_handling($context = null)

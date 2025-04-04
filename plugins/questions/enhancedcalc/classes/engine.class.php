@@ -38,8 +38,6 @@ class Engine
 
     protected $impliments_api_calc_version = 1;
     protected static $cnx = false;
-
-    protected $config;
     protected $toStrDefined;
     protected $powDefined;
 
@@ -52,9 +50,8 @@ class Engine
     public $error = false;
     public $error_msg = '';
 
-    public function __construct($config)
+    public function __construct(protected $config)
     {
-        $this->config = $config;
         $this->toStrDefined = false;
         $this->powDefined = false;
     }

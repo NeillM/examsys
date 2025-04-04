@@ -32,12 +32,6 @@ namespace export;
 abstract class exporter
 {
     /**
-     * The handler for the file
-     * @var object
-     */
-    protected $handler;
-
-    /**
      * The config object
      * @var object
      */
@@ -45,12 +39,11 @@ abstract class exporter
 
     /**
      * The constructor
-     * @param \file_handler $handler
+     * @param \file_handler $handler The handler for the file
      */
-    public function __construct($handler)
+    public function __construct(protected $handler)
     {
         $this->config = \Config::get_instance();
-        $this->handler = $handler;
     }
 
     /**

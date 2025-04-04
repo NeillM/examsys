@@ -104,7 +104,6 @@ class QuestionEdit extends RogoObject
     protected $_score_methods;
     protected $_display_methods = [];
     protected $_option_orders;
-    protected $_mysqli = null;
     protected $_logger = null;
     protected $_data = [];
     protected $_metadata = [];
@@ -140,9 +139,6 @@ class QuestionEdit extends RogoObject
     // Always store English values in the database so need to look up score method against English version
     protected $_score_methods_db;
 
-    // Refrence to array of localised language strings
-    protected $_lang_strings = null;
-
     // A list of correction behaviours that will be called sequentially for the Correct operation
     protected $_correctors = [];
 
@@ -163,15 +159,15 @@ class QuestionEdit extends RogoObject
     /**
      * Create a new question object by either loading an existing question from the database or populating
      * properties from an associative array
+     * @param mysqli $_mysqli
+     * @param UserObject $userObj
+     * @param string[] $_lang_strings Array of localised language strings
      * @param mixed $data
      */
-    public function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    public function __construct(protected $_mysqli, $userObj, protected $_lang_strings, $data = null)
     {
-        // Store the database connection reference and current user
-        $this->_mysqli = $mysqli;
         $this->_user_id = $userObj->get_user_ID();
         $this->_userObj = $userObj;
-        $this->_lang_strings = $lang_strings;
 
         // Initialise language specific elements
         $this->_score_methods = [$this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption']];

@@ -34,18 +34,12 @@ class render
     protected $twig;
 
     /**
-     * Config object
-     * @var Config
-     */
-    protected $config;
-
-    /**
      * Constructor
-     * @param object $configObject - ExamSys configuration object
+     * @param Config $config - ExamSys configuration object
      * @param string|array $templatedir - path to templates or list of paths to search for template
      * @return void
      */
-    public function __construct($configObject, $templatedir = null)
+    public function __construct(protected $config, $templatedir = null)
     {
         if (is_null($templatedir)) {
             $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');
@@ -55,7 +49,6 @@ class render
         $this->twig = new \Twig\Environment($loader, [
             'cache' => false
         ]);
-        $this->config = $configObject;
     }
 
     /**

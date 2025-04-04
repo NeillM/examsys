@@ -24,30 +24,18 @@
  */
 class Timer
 {
-    /** @var LogMetadata The user log metadata for the exam. */
-    protected $log_start_time;
-
-    /** @var int The duration of the exam. */
-    protected $exam_duration;
-
     /** @var \DateTime The start time of the exam. */
     protected $start_datetime;
-
-    /** @var int|null The percentage extra time the user gets on an exam. */
-    protected $special_needs_percentage;
 
     /**
      * Constructor for the timer.
      *
-     * @param LogMetadata $log_metadata
-     * @param int $exam_duration
-     * @param int|null $special_needs_percentage
+     * @param LogMetadata $log_start_time The user log metadata for the exam
+     * @param int $exam_duration The duration of the exam in seconds
+     * @param int|null $special_needs_percentage The percentage extra time the user gets on an exam
      */
-    public function __construct($log_metadata, $exam_duration, $special_needs_percentage)
+    public function __construct(protected $log_start_time, protected $exam_duration, protected $special_needs_percentage)
     {
-        $this->log_start_time = $log_metadata;
-        $this->exam_duration  = $exam_duration;
-        $this->special_needs_percentage  = $special_needs_percentage;
     }
 
     /**

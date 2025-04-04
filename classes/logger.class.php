@@ -26,16 +26,14 @@
  */
 class Logger
 {
-    private $_mysqli;
     public $lastChangeId;
 
     /**
      * Create a new logger object
-     * @param \mysqli $mysqli Reference to database connection
+     * @param \mysqli $_mysqli Reference to database connection
      */
-    public function __construct($mysqli)
+    public function __construct(private $_mysqli)
     {
-        $this->_mysqli = $mysqli;
     }
 
     /**

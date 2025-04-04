@@ -13,11 +13,9 @@
 */
 class Rserve_REXP_Unknown extends Rserve_REXP {
 	
-	protected $unknowntype;
-	
-	public function __construct($type) {
-		$this->unknowntype = $type;
-	}
+	public function __construct(protected $unknowntype)
+    {
+    }
 	
 	public function getUnknownType() {
 		return $this->unknowntype;

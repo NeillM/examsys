@@ -28,10 +28,8 @@ class OAuthServer {
   protected $version = 1.0;             // hi blaine
   protected $signature_methods = [];
 
-  protected $data_store;
-
-  function __construct($data_store) {
-    $this->data_store = $data_store;
+  function __construct(protected $data_store)
+  {
   }
 
   public function add_signature_method($signature_method) {

@@ -25,9 +25,6 @@
  */
 class PaperMenuItemData
 {
-    /** @var array Language strings used for menu item text */
-    private $string;
-
     /** @var string The root path of the ExamSys installation */
     private $rootPath;
 
@@ -36,10 +33,9 @@ class PaperMenuItemData
      *
      * @param array $string Array of language strings for menu items
      */
-    public function __construct(array $string)
+    public function __construct(private array $string)
     {
         $this->rootPath = Config::get_instance()->get('cfg_root_path');
-        $this->string = $string;
     }
 
     // Paper Tasks

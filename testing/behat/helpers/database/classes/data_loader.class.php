@@ -36,14 +36,13 @@ abstract class Data_Loader
     /** @var string The location that the help sql files are located in. */
     protected $help_base;
 
-    /** @var boolean Defines if the ExamSys help files should be loaded. */
-    protected $load_help;
-
-    public function __construct($load_help = false)
+    /**
+     * @param bool $load_help Defines if the ExamSys help files should be loaded.
+     */
+    public function __construct(protected $load_help = false)
     {
         $this->fixture_base = __DIR__ . '/../../../../fixtures/base/';
         $this->help_base = __DIR__ . '/../../../../../install/';
-        $this->load_help = $load_help;
     }
 
     /**

@@ -25,8 +25,6 @@
  */
 class ResultsCache
 {
-    private $db;
-
     /**
      * Called when the object is unserialised.
      */
@@ -38,9 +36,8 @@ class ResultsCache
         $this->db = null;
     }
 
-    public function __construct($db)
+    public function __construct(private $db)
     {
-        $this->db = $db;
     }
 
     /**

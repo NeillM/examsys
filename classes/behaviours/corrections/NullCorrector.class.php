@@ -27,15 +27,8 @@
 
 class NullCorrector
 {
-    private $_mysqli;
-    private $_lang_strings;
-    private $_question;
-
-    public function __construct($mysqli, $lang_strings, $question)
+    public function __construct(private $_mysqli, private $_lang_strings, private $_question)
     {
-        $this->_mysqli = $mysqli;
-        $this->_lang_strings = $lang_strings;
-        $this->_question = $question;
     }
 
     /**

@@ -24,17 +24,12 @@
 namespace LTI;
 
 class OAuthToken implements \Stringable {
-  // access tokens and request tokens
-  public $key;
-  public $secret;
-
   /**
-   * key = the token
-   * secret = the token secret
+   * @param string $key the token
+   * @param string $secret the token secret
    */
-  function __construct($key, $secret) {
-    $this->key = $key;
-    $this->secret = $secret;
+  function __construct(public $key, public $secret)
+  {
   }
 
   /**

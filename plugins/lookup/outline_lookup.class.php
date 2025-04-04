@@ -29,8 +29,6 @@ $configObject = Config::get_instance();
 
 class outline_lookup
 {
-    protected $name;
-    protected $number;
     protected $form;
     protected $settings;
     protected $db;
@@ -39,7 +37,6 @@ class outline_lookup
     public $debugpointer = 0;
     protected $error = null;
     public $rogoid = false;
-    protected $lookupapiversion;
     protected $callbackarray;
     protected $impliments_api_lookup_version = 0;
 
@@ -63,11 +60,8 @@ class outline_lookup
      * @param $returndata object where data is stored
      * @param $form object a class with form data in
      */
-    public function __construct($number, $name, $lookupapiversion)
+    public function __construct(protected $number, protected $name, protected $lookupapiversion)
     {
-        $this->lookupapiversion = $lookupapiversion;
-        $this->name = $name;
-        $this->number = $number;
     }
 
     public function apicheck()

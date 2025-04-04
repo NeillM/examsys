@@ -26,11 +26,6 @@
 class LabFactory
 {
     /**
-     * @var mysqli $db
-     */
-    private $db;
-
-    /**
      * Called when the object is unserialised.
      */
     public function __wakeup()
@@ -41,9 +36,11 @@ class LabFactory
         $this->db = null;
     }
 
-    public function __construct($db)
+    /**
+     * @param \mysqli $db
+     */
+    public function __construct(private $db)
     {
-        $this->db = $db;
     }
 
     /**

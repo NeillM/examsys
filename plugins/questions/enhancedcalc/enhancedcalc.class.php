@@ -27,7 +27,6 @@ use plugins\questions\enhancedcalc\Engine;
  */
 class EnhancedCalc extends Question implements questionInterface
 {
-    protected $configObj;
     protected $db;
     public $alluseranswers;
     /**
@@ -41,9 +40,8 @@ class EnhancedCalc extends Question implements questionInterface
      */
     private $link_parent = false;
 
-    public function __construct($configObj)
+    public function __construct(protected $configObj)
     {
-        $this->configObj = $configObj;
         $this->enhancedcalcObj = Engine::getEngine();
     }
 

@@ -34,14 +34,10 @@ class Relationship
     private $calendar_year;
     private $vle_api;
     private $map_level;
-
-    private $_db;
     private $_db_error;
 
-    public function __construct($mysqli, $data = null)
+    public function __construct(private $_db, $data = null)
     {
-        $this->_db = $mysqli;
-
         // Check the type of $data
         if (is_array($data)) {
             // If it is an array, assume an associative array of fields for creating a new object (but not

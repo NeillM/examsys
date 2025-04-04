@@ -97,8 +97,6 @@ class ims_enterprise
     protected $continueprocessing;
     /** @var $validatexml bool Validate XML against local DTD. */
     protected $validatexml;
-    /** @var \mysqli DB Object */
-    protected $db;
     /** @var $modulemappings array of mappings between IMS data fields and ExamSys module fields. */
     protected $modulemappings;
     /** @var $rolemappings array of mappings between IMS roles and ExamSys roles. */
@@ -115,11 +113,10 @@ class ims_enterprise
     protected $restricttarget;
     /**
      * Constructor
-     * @param \stdClass $mysqli
+     * @param \stdClass $db The ExamSys database connection object
      */
-    public function __construct($mysqli)
+    public function __construct(protected $db)
     {
-        $this->db = $mysqli;
         $settings = new ims_enterprise_settings();
         $this->ims_settings = $settings->get_ims_settings($this->db);
         // Get configs.

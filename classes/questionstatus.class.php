@@ -38,14 +38,8 @@ class QuestionStatus
 
     private $was_default = false;
 
-    private $_db;
-    private $_lang_strings;
-
-    public function __construct($db, $lang_strings, $data)
+    public function __construct(private $_db, private $_lang_strings, $data)
     {
-        $this->_db = $db;
-        $this->_lang_strings = $lang_strings;
-
         // Check the type of $data
         if (is_array($data)) {
             // If it is an array, assume an associative array of fields for creating a new object (but not

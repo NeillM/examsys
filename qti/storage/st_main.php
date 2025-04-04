@@ -38,18 +38,7 @@ class ST_Main
 // class to store exported files
 class ST_File
 {
-    public $filename;
-    public $title;
-    public $path;
-    public $type;
-    public $id;
-
-    public function __construct($filename, $title, $path, $type = 'xml', $id = 0)
+    public function __construct(public $filename, public $title, public $path, public $type = 'xml', public $id = 0)
     {
-        $this->filename = $filename;
-        $this->title = $title;
-        $this->path = $path;
-        $this->type = $type;
-        $this->id = $id;
     }
 }

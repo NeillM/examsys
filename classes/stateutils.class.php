@@ -28,9 +28,6 @@
  */
 class StateUtils
 {
-    private $db;
-    private $userID;
-
     /**
      * Called when the object is unserialised.
      */
@@ -42,10 +39,8 @@ class StateUtils
         $this->db = null;
     }
 
-    public function __construct($userID, $db)
+    public function __construct(private $userID, private $db)
     {
-        $this->db = $db;
-        $this->userID = $userID;
     }
 
     /**

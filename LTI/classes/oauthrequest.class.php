@@ -25,18 +25,14 @@ namespace LTI;
 
 class OAuthRequest implements \Stringable {
   private $parameters;
-  private $http_method;
-  private $http_url;
   // for debug purposes
   public $base_string;
   public static $version = '1.0';
   public static $POST_INPUT = 'php://input';
 
-  function __construct($http_method, $http_url, $parameters=NULL) {
+  function __construct(private $http_method, private $http_url, $parameters=NULL) {
     @$parameters or $parameters = [];
     $this->parameters = $parameters;
-    $this->http_method = $http_method;
-    $this->http_url = $http_url;
   }
 
   /**

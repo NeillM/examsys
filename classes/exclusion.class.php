@@ -25,9 +25,6 @@
  */
 class Exclusion
 {
-    private $db;
-    private $paper_id;
-
     /**
      * Called when the object is unserialised.
      */
@@ -40,13 +37,11 @@ class Exclusion
     }
 
     /**
-     * @param int $paperID  - ID of the current paper.
+     * @param int $paper_id - ID of the current paper.
      * @param object $db    - Link to mysqli
      */
-    public function __construct($paperID, $db)
+    public function __construct(private $paper_id, private $db)
     {
-        $this->db = $db;
-        $this->paper_id = $paperID;
     }
 
     /**
