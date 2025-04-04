@@ -172,7 +172,7 @@ class BLTI
     function addSession($location)
     {
         if (ini_get('session.use_cookies') == 0) {
-            if (strpos($location, '?') > 0) {
+            if (strpos((string) $location, '?') > 0) {
                 $location = $location . '&';
             } else {
                 $location = $location . '?';
@@ -185,7 +185,7 @@ class BLTI
     function isInstructor()
     {
         $roles = $this->info['roles'];
-        $roles = strtolower($roles);
+        $roles = strtolower((string) $roles);
         if (! ( !str_contains($roles, 'instructor') )) {
             return true;
         }
@@ -198,12 +198,12 @@ class BLTI
     function getUserEmail()
     {
         $email = $this->info['lis_person_contact_email_primary'];
-        if (strlen($email) > 0) {
+        if (strlen((string) $email) > 0) {
             return $email;
         }
         // Sakai Hack
         $email = $this->info['lis_person_contact_emailprimary'];
-        if (strlen($email) > 0) {
+        if (strlen((string) $email) > 0) {
             return $email;
         }
         return false;
@@ -215,13 +215,13 @@ class BLTI
         $givenname = $this->info['lis_person_name_given'];
         $familyname = $this->info['lis_person_name_family'];
         $fullname = $this->info['lis_person_name_full'];
-        if (strlen($email) > 0) {
+        if (strlen((string) $email) > 0) {
             return $email;
         }
-        if (strlen($givenname) > 0) {
+        if (strlen((string) $givenname) > 0) {
             return $givenname;
         }
-        if (strlen($familyname) > 0) {
+        if (strlen((string) $familyname) > 0) {
             return $familyname;
         }
         return $this->getUserName();
@@ -232,16 +232,16 @@ class BLTI
         $givenname = $this->info['lis_person_name_given'];
         $familyname = $this->info['lis_person_name_family'];
         $fullname = $this->info['lis_person_name_full'];
-        if (strlen($fullname) > 0) {
+        if (strlen((string) $fullname) > 0) {
             return $fullname;
         }
-        if (strlen($familyname) > 0 and strlen($givenname) > 0) {
+        if (strlen((string) $familyname) > 0 and strlen((string) $givenname) > 0) {
             return $givenname + $familyname;
         }
-        if (strlen($givenname) > 0) {
+        if (strlen((string) $givenname) > 0) {
             return $givenname;
         }
-        if (strlen($familyname) > 0) {
+        if (strlen((string) $familyname) > 0) {
             return $familyname;
         }
         return $this->getUserEmail();
@@ -252,7 +252,7 @@ class BLTI
     {
         $oauth = $this->info['oauth_consumer_key'];
         $id = $this->info['user_id'];
-        if (strlen($id) > 0 and strlen($oauth) > 0) {
+        if (strlen((string) $id) > 0 and strlen((string) $oauth) > 0) {
             return $oauth . ':' . $id;
         }
         return false;
@@ -262,7 +262,7 @@ class BLTI
     function getUserLKey()
     {
         $id = $this->info['user_id'];
-        if (strlen($id) > 0) {
+        if (strlen((string) $id) > 0) {
             return $id;
         }
         return false;
@@ -281,7 +281,7 @@ class BLTI
     function getUserImage()
     {
         $image = $this->info['user_image'];
-        if (strlen($image) > 0) {
+        if (strlen((string) $image) > 0) {
             return $image;
         }
         $email = $this->getUserEmail();
@@ -290,7 +290,7 @@ class BLTI
         }
         $size = 40;
         $grav_url = $_SERVER['HTTPS'] ? 'https://' : 'http://';
-        $grav_url = $grav_url . 'www.gravatar.com/avatar.php?gravatar_id=' . md5(strtolower($email)) . '&size=' . $size;
+        $grav_url = $grav_url . 'www.gravatar.com/avatar.php?gravatar_id=' . md5(strtolower((string) $email)) . '&size=' . $size;
         return $grav_url;
     }
 
@@ -301,7 +301,7 @@ class BLTI
         }
         $oauth = $this->info['oauth_consumer_key'];
         $id = $this->info['resource_link_id'];
-        if (strlen($id) > 0 and strlen($oauth) > 0) {
+        if (strlen((string) $id) > 0 and strlen($oauth) > 0) {
             return $oauth . ':' . $id;
         }
         return false;
@@ -310,7 +310,7 @@ class BLTI
     function getResourceLKey()
     {
         $id = $this->info['resource_link_id'];
-        if (strlen($id) > 0) {
+        if (strlen((string) $id) > 0) {
             return $id;
         }
         return false;
@@ -329,7 +329,7 @@ class BLTI
     function getResourceTitle()
     {
         $title = $this->info['resource_link_title'];
-        if (strlen($title) > 0) {
+        if (strlen((string) $title) > 0) {
             return $title;
         }
         return false;
@@ -357,7 +357,7 @@ class BLTI
             return $this->context_id;
         }
         $id = $this->info['context_id'];
-        if (strlen($id) > 0) {
+        if (strlen((string) $id) > 0) {
             return $id;
         }
         return false;
@@ -370,7 +370,7 @@ class BLTI
         }
         $oauth = $this->info['oauth_consumer_key'];
         $id = $this->info['context_id'];
-        if (strlen($id) > 0 and strlen($oauth) > 0) {
+        if (strlen((string) $id) > 0 and strlen((string) $oauth) > 0) {
             return $oauth . ':' . $id;
         }
         return false;
@@ -404,13 +404,13 @@ class BLTI
         $label = $this->info['context_label'];
         $title = $this->info['context_title'];
         $id = $this->info['context_id'];
-        if (strlen($label) > 0) {
+        if (strlen((string) $label) > 0) {
             return $label;
         }
-        if (strlen($title) > 0) {
+        if (strlen((string) $title) > 0) {
             return $title;
         }
-        if (strlen($id) > 0) {
+        if (strlen((string) $id) > 0) {
             return $id;
         }
         return false;
@@ -419,16 +419,16 @@ class BLTI
     function getCSS()
     {
         $list = $this->info['launch_presentation_css_url'];
-        if (strlen($list) < 1) {
+        if (strlen((string) $list) < 1) {
             return [];
         }
-        return explode(',', $list);
+        return explode(',', (string) $list);
     }
 
     function getOutcomeService()
     {
         $retval = $this->info['lis_outcome_service_url'];
-        if (strlen($retval) > 1) {
+        if (strlen((string) $retval) > 1) {
             return $retval;
         }
         return false;
@@ -437,7 +437,7 @@ class BLTI
     function getOutcomeSourceDID()
     {
         $retval = $this->info['lis_result_sourcedid'];
-        if (strlen($retval) > 1) {
+        if (strlen((string) $retval) > 1) {
             return $retval;
         }
         return false;
@@ -455,9 +455,9 @@ class BLTI
         }
 
         if (headers_sent()) {
-            echo '<a href="' . htmlentities($location) . '">Continue</a>' . "\n";
+            echo '<a href="' . htmlentities((string) $location) . '">Continue</a>' . "\n";
         } else {
-            $location = htmlentities($this->addSession($location));
+            $location = htmlentities((string) $this->addSession($location));
             header("Location: $location");
             exit();
         }
@@ -501,7 +501,7 @@ class BLTI
 
 function sendOAuthBodyPOST($method, $endpoint, $oauth_consumer_key, $oauth_consumer_secret, $content_type, $body)
 {
-    $hash = base64_encode(sha1($body, true));
+    $hash = base64_encode(sha1((string) $body, true));
 
     $parms = ['oauth_body_hash' => $hash];
 

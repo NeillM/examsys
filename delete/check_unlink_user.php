@@ -30,7 +30,7 @@ require_once dirname(__DIR__) . '/LTI/ims-lti/UoN_LTI.php';
 // Required parameters for the page.
 $lti_key = check_var('LTIkeysid', '_GET', true, true, true);
 $selected = check_var('id', '_GET', true, true, true);
-$selected_array = explode('-', $selected);
+$selected_array = explode('-', (string) $selected);
 
 // Check a valid LTi link had been specified.
 $lti = new UoN_LTI();

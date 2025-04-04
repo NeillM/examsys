@@ -148,9 +148,9 @@ class renderdata extends \questiondata
         // other textbox not currently supported by non survey papers.
         if ($this->displaymethod === 'vertical_other') {
             if ($this->papertype == 3) {
-                if (mb_substr($useranswer, 0, 5) === 'other') {
+                if (mb_substr((string) $useranswer, 0, 5) === 'other') {
                     $this->otherselected = true;
-                    $this->other = mb_substr($useranswer, 6);
+                    $this->other = mb_substr((string) $useranswer, 6);
                 }
             }
         }

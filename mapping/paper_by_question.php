@@ -79,7 +79,7 @@ if (!isset($_GET['ordering'])) {
 if ($folderID != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
 } elseif ($moduleID != '') {
-    $modules = explode(',', $moduleID);
+    $modules = explode(',', (string) $moduleID);
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
 }
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
@@ -125,7 +125,7 @@ if ($folderID != '') {
         $row_no++;
         $temp_array[$row_no]['screen'] = $screen;
         $temp_array[$row_no]['q_type'] = $q_type;
-        $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags($leadin))));
+        $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags((string) $leadin))));
         if (mb_strlen($temp_array[$row_no]['leadin']) > 160) {
             $temp_array[$row_no]['leadin'] = mb_substr($temp_array[$row_no]['leadin'], 0, 160) . '...';
         }
@@ -233,7 +233,7 @@ if ($folderID != '') {
             echo $temp_array[$x]['leadin'] . '&nbsp;&nbsp;';
             if ($temp_array[$x]['q_type'] != 'info') {
                 echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
-            } elseif (mb_strpos($temp_array[$x]['q_media'], '.swf') !== false) {
+            } elseif (mb_strpos((string) $temp_array[$x]['q_media'], '.swf') !== false) {
                 echo '<td><img src="../artwork/flash_icon.png" width="48" height="48" alt="Embedded Flash object" border="0" /></td>';
                 if ($temp_array[$x]['q_type'] != 'info') {
                     echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
@@ -267,7 +267,7 @@ if ($folderID != '') {
                             if (count($objByModule) > 1) {
                                 echo "$module: ";
                             }
-                            echo strip_tags($mappingData['content'], '<b><i><strong><em><sub><sup>');
+                            echo strip_tags((string) $mappingData['content'], '<b><i><strong><em><sub><sup>');
                             echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . '" rel="external" target="_blank"><img src="../artwork/small_link.png" width="11" height="11" /></a>&nbsp;<a href="' . $mappingData['session']['source_url'] . '" rel="external" target="_blank">' . $sessiondata . '</a></span>';
                             echo '</li>';
                         }

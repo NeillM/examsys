@@ -95,8 +95,8 @@ if (!$userObject->has_role(['SysAdmin', 'Admin'])) {
   $result->store_result();
   $result->bind_result($tmp_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title);
 while ($result->fetch()) {
-    if ($old_letter != mb_strtoupper(mb_substr($tmp_surname, 0, 1))) {
-        echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . mb_strtoupper(mb_substr($tmp_surname, 0, 1)) . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
+    if ($old_letter != mb_strtoupper(mb_substr((string) $tmp_surname, 0, 1))) {
+        echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . mb_strtoupper(mb_substr((string) $tmp_surname, 0, 1)) . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
     }
 
     $match = false;
@@ -118,7 +118,7 @@ while ($result->fetch()) {
         $display_text = $tmp_initials;
     }
     echo $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></label></div>\n";
-    $old_letter = mb_strtoupper(mb_substr($tmp_surname, 0, 1));
+    $old_letter = mb_strtoupper(mb_substr((string) $tmp_surname, 0, 1));
     $staff_no++;
 }
   $result->close();

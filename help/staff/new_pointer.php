@@ -102,13 +102,13 @@ if (isset($_POST['submit'])) {
 
     for ($i = 0; $i < $help_section; $i++) {
         $id = $help_toc[$i]['id'];
-        $slash_pos = mb_strpos($help_toc[$i]['title'], '/');
+        $slash_pos = mb_strpos((string) $help_toc[$i]['title'], '/');
         if ($slash_pos !== false) {
-            $parent = mb_substr($help_toc[$i]['title'], 0, $slash_pos);
+            $parent = mb_substr((string) $help_toc[$i]['title'], 0, $slash_pos);
             if ($old_parent != '' and $parent != $old_parent) {
                 echo "</div>\n";
             }
-            $tmp_title = mb_substr($help_toc[$i]['title'], ($slash_pos + 1));
+            $tmp_title = mb_substr((string) $help_toc[$i]['title'], ($slash_pos + 1));
 
             if ($parent != $old_parent) {
                 $icon = 'closed_book.png';

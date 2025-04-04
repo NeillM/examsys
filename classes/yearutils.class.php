@@ -152,13 +152,13 @@ class yearutils
     public function check_year_start_format($specific_year_start)
     {
         // Fisrt check correct format xx/xx
-        if (!preg_match('/([0-9]{2})\/([0-9]{2})/', $specific_year_start)) {
+        if (!preg_match('/([0-9]{2})\/([0-9]{2})/', (string) $specific_year_start)) {
             return false;
         }
 
         // Second check date
         $year = date('Y');
-        [$month, $day] = explode('/', $specific_year_start);
+        [$month, $day] = explode('/', (string) $specific_year_start);
         return checkdate($month, $day, $year);
     }
 

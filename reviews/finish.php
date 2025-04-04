@@ -37,10 +37,10 @@ $start_date = $propertyObj->get_start_date();
 
 if ($userObject->has_role('External Examiner')) {
     $review_type = 'External';
-    $review_deadline = strtotime($propertyObj->get_external_review_deadline());
+    $review_deadline = strtotime((string) $propertyObj->get_external_review_deadline());
 } else {
     $review_type = 'Internal';
-    $review_deadline = strtotime($propertyObj->get_internal_review_deadline());
+    $review_deadline = strtotime((string) $propertyObj->get_internal_review_deadline());
 }
 
 $userid = $userObject->get_user_ID();

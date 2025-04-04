@@ -166,7 +166,7 @@ trait Question
         // Bottom Bar obscures page elements so need to scroll so we can draw.
         $this->scrollToElement('#canvas1');
         // Get coordinates and validate them.
-        $coords = explode(',', $fields['coordinates']);
+        $coords = explode(',', (string) $fields['coordinates']);
         if (!empty($coords) and count($coords) % 2 == 0) {
             $coordinates = [];
             $count = 0;
@@ -249,8 +249,8 @@ trait Question
         $this->fillField('option_text1', $fields['option_1']);
         $this->fillField('option_text2', $fields['option_2']);
         $this->fillField('option_text3', $fields['option_3']);
-        $this->fillDropDown('option_correct1', json_decode($fields['stem_select_1']));
-        $this->fillDropDown('option_correct2', json_decode($fields['stem_select_2']));
+        $this->fillDropDown('option_correct1', json_decode((string) $fields['stem_select_1']));
+        $this->fillDropDown('option_correct2', json_decode((string) $fields['stem_select_2']));
     }
 
     /**
@@ -319,7 +319,7 @@ trait Question
             // Add label.
             $key = $this->find('xpath', '//*[@id="question1-layer-' . $layer . '"]//*[@class="mainarea"]//*[@class="textarea"]');
             // Split array
-            $hotspot = explode(',', $h);
+            $hotspot = explode(',', (string) $h);
             $label = $hotspot[0];
             $shape = $hotspot[1];
             $coords = array_slice($hotspot, 2);
@@ -361,7 +361,7 @@ trait Question
         // Bottom Bar obscures page elements so need to scroll so we can draw.
         $this->scrollToElement('#qscenario');
         // Get coordinates and validate them.
-        $coords = explode(',', $fields['coordinates']);
+        $coords = explode(',', (string) $fields['coordinates']);
         if (!empty($coords) and count($coords) % 2 == 0) {
             $coordinates = [];
             $count = 0;
@@ -418,7 +418,7 @@ trait Question
         $this->fillTinyMCE('option_text3', $fields['option_3']);
         // Bottom Bar obscures page elements so need to scroll so we can click.
         $this->scrollToElement('#option_correct_fback1');
-        $this->selectCheckPoints('option_correct', json_decode($fields['correct']));
+        $this->selectCheckPoints('option_correct', json_decode((string) $fields['correct']));
     }
 
     /**
@@ -443,7 +443,7 @@ trait Question
         $fields = $data->getRowsHash();
         $this->fillField('leadin', $fields['description']);
         $this->i_click('Add Question(s)', 'button');
-        $questions = json_decode($fields['questions']);
+        $questions = json_decode((string) $fields['questions']);
         $questionarray = [];
         foreach ($questions as $q) {
             $questionarray[] = [$q];

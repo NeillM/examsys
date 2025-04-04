@@ -79,7 +79,7 @@ abstract class rogo_directory
                 throw new directory_not_found('rogo_data');
             }
             // Ensure the directory has a trailing slash.
-            if (mb_substr($rogodata, -1) != DIRECTORY_SEPARATOR) {
+            if (mb_substr((string) $rogodata, -1) != DIRECTORY_SEPARATOR) {
                 $rogodata .= DIRECTORY_SEPARATOR;
             }
             $path = $rogodata;

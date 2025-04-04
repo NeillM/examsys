@@ -97,7 +97,7 @@ while ($result->fetch()) {
             $q_no++;
         } while ($q_id != $paper_structure[$q_no - 1] and $q_no < 6000);
         echo '<w:p><w:r><w:rPr><w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial"/><wx:font wx:val="Arial"/><w:b/><w:b-cs/><w:color w:val="000000"/><w:sz w:val="22"/><w:sz-cs w:val="22"/></w:rPr><w:t>';
-        echo $q_no . '. ' . StringUtils::wordToUtf8(strip_tags($leadin));
+        echo $q_no . '. ' . StringUtils::wordToUtf8(strip_tags((string) $leadin));
         echo '</w:t></w:r></w:p>';
     }
     $user_answer = str_replace('<', '&lt;', $user_answer);

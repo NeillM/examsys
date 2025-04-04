@@ -64,7 +64,7 @@ class Anonymise
     public function check_security()
     {
         // Only allow to run the script if the server has test, local, alpha or beta in its name.
-        if (mb_strstr(mb_strtolower($_SERVER['HTTP_HOST']), 'test') === false and mb_strstr(strtolower($_SERVER['HTTP_HOST']), 'local') === false and mb_strstr(strtolower($_SERVER['HTTP_HOST']), 'alpha') === false and mb_strstr(strtolower($_SERVER['HTTP_HOST']), 'beta') === false) {
+        if (mb_strstr(mb_strtolower((string) $_SERVER['HTTP_HOST']), 'test') === false and mb_strstr(strtolower((string) $_SERVER['HTTP_HOST']), 'local') === false and mb_strstr(strtolower((string) $_SERVER['HTTP_HOST']), 'alpha') === false and mb_strstr(strtolower((string) $_SERVER['HTTP_HOST']), 'beta') === false) {
             exit();
         }
     }
@@ -226,7 +226,7 @@ class Anonymise
      */
     private function get_initials($fornames)
     {
-        $initial = explode(' ', $fornames);
+        $initial = explode(' ', (string) $fornames);
         $initials = '';
         foreach ($initial as $name) {
             if ($name != '') {

@@ -28,7 +28,7 @@
 require '../include/staff_auth.inc';
 require '../include/errors.php';
 check_var('item_id', 'GET', true, false, false);
-$items = explode(',', $_GET['item_id']);
+$items = explode(',', (string) $_GET['item_id']);
 
 for (
     $i = 0; $i < count($items); $i++
@@ -45,7 +45,7 @@ for (
         $result->fetch();
         $result->close();
         // Check to see if the original paper name has been reused by any active papers.
-          $split_title = explode('[deleted', $deleted_paper_title);
+          $split_title = explode('[deleted', (string) $deleted_paper_title);
         $tmp_title = trim($split_title[0]);
         $result = $mysqli->prepare('SELECT paper_title FROM properties WHERE paper_title = ? and property_id != ?');
         $result->bind_param('si', $tmp_title, $item_id);
@@ -89,7 +89,7 @@ for (
         $result->fetch();
         $result->close();
         // Check to see if the original folder name has been reused.
-          $split_title = explode('[deleted', $deleted_folder_title);
+          $split_title = explode('[deleted', (string) $deleted_folder_title);
         $tmp_title = trim($split_title[0]);
         $result = $mysqli->prepare('SELECT name FROM folders WHERE name = ? and id != ?');
         $result->bind_param('si', $tmp_title, $item_id);

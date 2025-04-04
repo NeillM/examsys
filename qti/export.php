@@ -71,7 +71,7 @@ if ($ids != '') {
 $load_params = new stdClass();
 $load_params->source = 'rogo';
 $load_params->type = $type;
-$load_params->ids = explode(',', $ids);
+$load_params->ids = explode(',', (string) $ids);
 $paperID = $load_params->ids[0];
 $import = new IE_Local_Load();
 $import->setStatuses($statuses);

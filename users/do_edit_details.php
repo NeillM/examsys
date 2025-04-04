@@ -66,7 +66,7 @@ if (!$errors) {
         }
         // Add the file.
         $filename = $_FILES['photofile']['name'];
-        $explode = explode('.', $filename);
+        $explode = explode('.', (string) $filename);
         $count = count($explode) - 1;
         // Ensure the file extenstion is lower case or it will not load on some Operating systems.
         $file_ext = mb_strtolower($explode[$count]);
@@ -78,7 +78,7 @@ if (!$errors) {
 
     $initials = '';
     $first_names = param::optional('first_names', null, param::TEXT, param::FETCH_POST);
-    $first_names_array = explode(' ', $first_names);
+    $first_names_array = explode(' ', (string) $first_names);
     foreach ($first_names_array as $individual_name) {
         $initials .= trim(mb_substr($individual_name, 0, 1));
     }

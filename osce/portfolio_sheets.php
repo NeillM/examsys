@@ -145,7 +145,7 @@ while ($result->fetch()) {
         $table_open = 1;
     }
 
-    $leadin = StringUtils::wordToUtf8(StringUtils::clean_and_trim(strip_tags($leadin)));
+    $leadin = StringUtils::wordToUtf8(StringUtils::clean_and_trim(strip_tags((string) $leadin)));
 
     $leadin = parse_leadin_word_2003($leadin, $q_parts);
     // Lead-in

@@ -141,7 +141,7 @@ QUERY;
             $stmt->store_result();
             while ($stmt->fetch()) {
                 // Check if the user is able to access the paper from their current location
-                $lab_arr = (empty($labs)) ? [] : explode(',', $labs);
+                $lab_arr = (empty($labs)) ? [] : explode(',', (string) $labs);
                 if (empty($lab_arr) or ($lab != -1 and in_array($lab, $lab_arr))) {
                     $screens = (empty($screens)) ? 0 : $screens;
 
@@ -357,10 +357,10 @@ if (!$userObject->has_role('Student')) {
                 <table cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td style="width:60px" align="center">
-                                <a href="<?php echo $script_name; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank"><?php echo($paper_utils->displayIcon($paper['type'], $paper['title'], '', '', '', '')); ?></a>
+                                <a href="<?php echo $script_name; ?>" title="<?php echo htmlentities((string) $paper['title']) ?>" target="_blank"><?php echo($paper_utils->displayIcon($paper['type'], $paper['title'], '', '', '', '')); ?></a>
                             </td>
                         <td>
-                            <a href="<?php echo $script_name; ?>" title="<?php echo htmlentities($paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities($paper['title'])); ?></a>
+                            <a href="<?php echo $script_name; ?>" title="<?php echo htmlentities((string) $paper['title']) ?>" target="_blank" class="blacklink"><?php echo(htmlentities((string) $paper['title'])); ?></a>
                     <?php
                     if (isset($paper['password']) and $paper['password'] != '') {
                         ?>
@@ -373,9 +373,9 @@ if (!$userObject->has_role('Student')) {
                                 <?php
 
                                 if ($paper['type'] == 'objectives') {
-                                        echo $string['objectivesbased'] . ' ' . date($configObject->get('cfg_long_full_datetime_php'), strtotime($paper['start']));
+                                        echo $string['objectivesbased'] . ' ' . date($configObject->get('cfg_long_full_datetime_php'), strtotime((string) $paper['start']));
                                 } elseif ($paper['type'] == 'questions') {
-                                    echo $string['questionsbased'] . ' ' . date($configObject->get('cfg_long_full_datetime_php'), strtotime($paper['start']));
+                                    echo $string['questionsbased'] . ' ' . date($configObject->get('cfg_long_full_datetime_php'), strtotime((string) $paper['start']));
                                 } else {
                                         echo $paper['screens'] . ' ';
                                     if ($paper['screens'] == 1) {

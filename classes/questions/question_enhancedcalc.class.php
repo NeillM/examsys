@@ -486,7 +486,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
      */
     protected function unserialize_settings()
     {
-        $extra = json_decode($this->settings, true);
+        $extra = json_decode((string) $this->settings, true);
 
         if (is_array($extra)) {
             foreach ($extra as $field => $value) {

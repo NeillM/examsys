@@ -253,8 +253,8 @@ class lti_uon_integration_extended extends lti_integration
                 $data[$k][1] = $data[$k][1] . '_UNNC';
             }
         }
-        if (count($data) == 1 and mb_substr($data[0][5], 0, 8) == 'MISSING:' and mb_strlen($data[0][5]) > 9) {
-            $data[0][5] = mb_substr($data[0][5], 8);
+        if (count($data) == 1 and mb_substr((string) $data[0][5], 0, 8) == 'MISSING:' and mb_strlen((string) $data[0][5]) > 9) {
+            $data[0][5] = mb_substr((string) $data[0][5], 8);
         }
         return $data;
     }

@@ -40,7 +40,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     if ($q_type != 'textbox') {
         if ($theme != '') {
-            $cols = mb_substr_count($old_likert_scale, '|');
+            $cols = mb_substr_count((string) $old_likert_scale, '|');
             if ($cols > 0) {
                 $cols += 5;
             } else {
@@ -82,7 +82,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             case 'blank':
                 echo '<p>';
                 $blank_details = [];
-                $blank_details = explode('[blank', $options[0]);
+                $blank_details = explode('[blank', (string) $options[0]);
                 $array_size = count($blank_details);
                 $blank_count = 0;
                 while ($blank_count < $array_size) {
@@ -153,7 +153,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                     echo '<tr><td colspan="3">Placeholder ' . chr($i + 64) . ".</td></tr>\n";
                     $option_no = 1;
                     foreach ($options as $individual_option) {
-                        $individual_option = trim($individual_option);
+                        $individual_option = trim((string) $individual_option);
                         if ($option_no == $i) {
                             if ($log[$screen][$q_id][$individual_coord][$individual_option] == '') {
                                 echo "<tr><td style=\"width: 20px\">&nbsp;</td><td><strong>$individual_option</strong></td><td><strong>0</strong></td></tr>\n";
@@ -174,9 +174,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 }
                 break;
             case 'likert':
-                $old_size = mb_substr_count($old_likert_scale, '|');
-                $current_properties = explode('|', $old_display_method);
-                $new_size = mb_substr_count($old_display_method, '|');
+                $old_size = mb_substr_count((string) $old_likert_scale, '|');
+                $current_properties = explode('|', (string) $old_display_method);
+                $new_size = mb_substr_count((string) $old_display_method, '|');
                 if ($current_properties[$new_size] == 'true') {
                     $na = true;
                 } else {
@@ -340,11 +340,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "</table>\n";
         }
     } elseif ($q_type == 'matrix') {
-        $matching_source = explode('|', $q_media);
-        $matching_width = explode('|', $q_media_width);
-        $matching_height = explode('|', $q_media_height);
-        $matching_alt = explode('|', $q_media_alt);
-        $matching_num = explode('|', $q_media_num);
+        $matching_source = explode('|', (string) $q_media);
+        $matching_width = explode('|', (string) $q_media_width);
+        $matching_height = explode('|', (string) $q_media_height);
+        $matching_alt = explode('|', (string) $q_media_alt);
+        $matching_num = explode('|', (string) $q_media_num);
         $tmp_media_array = [];
         for ($i = 0; $i < count($matching_source); $i++) {
             $tmp_media_array[$matching_num[$i]] = [
@@ -354,8 +354,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 'alt' => $matching_alt[$i],
             ];
         }
-        $tmp_ext_scenarios = explode('|', $scenario);
-        $tmp_answers_array = explode('|', $correct_buf[0]);
+        $tmp_ext_scenarios = explode('|', (string) $scenario);
+        $tmp_answers_array = explode('|', (string) $correct_buf[0]);
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>";
         echo "<p>\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"1\">\n";
         echo '<tr><td>&nbsp;</td>';
@@ -363,7 +363,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             echo "<td>$individual_option</td>";
         }
         echo '<td style="color:#808080">' . $string['unanswered'] . "</td></tr>\n";
-        for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
+        for ($i = 1; $i <= (mb_substr_count((string) $scenario, '|') + 1); $i++) {
             echo "<tr>\n";
             echo '<td>' . $tmp_ext_scenarios[$i - 1] . '</td>';
             $option_no = 1;
@@ -384,11 +384,11 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         echo "</table>\n</td></tr>\n";
     } elseif ($q_type == 'extmatch') {
-        $matching_source = explode('|', $q_media);
-        $matching_width = explode('|', $q_media_width);
-        $matching_height = explode('|', $q_media_height);
-        $matching_alt = explode('|', $q_media_alt);
-        $matching_num = explode('|', $q_media_num);
+        $matching_source = explode('|', (string) $q_media);
+        $matching_width = explode('|', (string) $q_media_width);
+        $matching_height = explode('|', (string) $q_media_height);
+        $matching_alt = explode('|', (string) $q_media_alt);
+        $matching_num = explode('|', (string) $q_media_num);
         $tmp_media_array = [];
         for ($i = 0; $i < count($matching_source); $i++) {
             $tmp_media_array[$matching_num[$i]] = [
@@ -398,8 +398,8 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 'alt' => $matching_alt[$i],
             ];
         }
-        $tmp_ext_scenarios = explode('|', $scenario);
-        $tmp_answers_array = explode('|', $correct_buf[0]);
+        $tmp_ext_scenarios = explode('|', (string) $scenario);
+        $tmp_answers_array = explode('|', (string) $correct_buf[0]);
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n<ol type=\"i\">";
         if (!empty($tmp_media_array[0]['source'])) {
             echo '<div class="mediadiv">';
@@ -413,7 +413,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
         }
-        for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
+        for ($i = 1; $i <= (mb_substr_count((string) $scenario, '|') + 1); $i++) {
             echo "<li>\n";
             if (!empty($tmp_media_array[$i]['source'])) {
                 echo '<p>';
@@ -585,8 +585,8 @@ while ($result->fetch()) {
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
         if ($old_q_type == 'likert') {
             $options_buffer['n/a'] = 'n/a';
-            $likert_properties = explode('|', $old_display_method);
-            for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
+            $likert_properties = explode('|', (string) $old_display_method);
+            for ($i = 1; $i <= mb_substr_count((string) $old_display_method, '|'); $i++) {
                 $options_buffer[$i] = $i;
             }
         }
@@ -628,7 +628,7 @@ while ($result->fetch()) {
             }
         }
         if ($old_q_type != 'info') {
-            displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags($old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
+            displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags((string) $old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
             $question_no++;
         }
         if ($old_screen < $screen) {
@@ -645,7 +645,7 @@ while ($result->fetch()) {
         $correct_buffer = [];
     }
     if ($q_type == 'labelling') {
-        $tmp_first_split = explode(';', $correct);
+        $tmp_first_split = explode(';', (string) $correct);
         $tmp_second_split = explode('|', $tmp_first_split[8]);
         for ($label_no = 4; $label_no <= 43; $label_no += 4) {
             if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
@@ -681,8 +681,8 @@ while ($result->fetch()) {
 
 if ($old_q_type == 'likert') {
     $options_buffer['n/a'] = 'n/a';
-    $likert_properties = explode('|', $old_display_method);
-    for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
+    $likert_properties = explode('|', (string) $old_display_method);
+    for ($i = 1; $i <= mb_substr_count((string) $old_display_method, '|'); $i++) {
         $options_buffer[$i] = $i;
     }
 }
@@ -718,7 +718,7 @@ if ($question_no == 1 or $display_respondents == 1) { // Calculate how many cand
     echo "<tr><td colspan=\"2\">($respondents Respondents)</td></tr>\n";
 }
 if ($old_q_type != 'info') {
-    displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags($old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
+    displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, strip_tags((string) $old_leadin), $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $log_array, $correct_buffer, $old_screen, $respondents);
 }
 
 if ($table_on == 1) {

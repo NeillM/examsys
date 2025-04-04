@@ -56,7 +56,7 @@ class OptionMATRIX extends OptionEdit
 
     public function get_correct()
     {
-        $this->all_corrects = ($this->correct != '') ? explode('|', $this->correct) : [];
+        $this->all_corrects = ($this->correct != '') ? explode('|', (string) $this->correct) : [];
         return $this->correct;
     }
 

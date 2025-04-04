@@ -213,7 +213,7 @@ while ($result->fetch()) {
                 $total_parts++;
                 break;
             case 'hotspot':
-                $subparts = explode('|', $correct);
+                $subparts = explode('|', (string) $correct);
                 $no_parts = count($subparts);
                 for ($i = 1; $i <= $no_parts; $i++) {
                     $qid = 'std' . $question_no . '_' . $i;
@@ -266,7 +266,7 @@ while ($result->fetch()) {
                 // Individual scenarios are separated by '|' characters.
                 if ($question_part == 1) {
                     $scenarios = 0;
-                    $matching_scenarios = explode('|', $scenario);
+                    $matching_scenarios = explode('|', (string) $scenario);
                     for ($part_id = 0; $part_id < 10; $part_id++) {
                         if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
                             $scenarios++;
@@ -304,8 +304,8 @@ while ($result->fetch()) {
                         $qid = 'std' . $question_no . '_1';
                         $rating = param::optional($qid, '', param::ALPHANUM, param::FETCH_POST);
                     } else {
-                        $correct_options = explode('|', $correct);
-                        $matching_scenarios = explode('|', $scenario);
+                        $correct_options = explode('|', (string) $correct);
+                        $matching_scenarios = explode('|', (string) $scenario);
                         $text_scenarios = 0;
                         for ($part_id = 0; $part_id < 10; $part_id++) {
                             if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
@@ -313,7 +313,7 @@ while ($result->fetch()) {
                             }
                         }
 
-                        $matching_media = explode('|', $q_media);
+                        $matching_media = explode('|', (string) $q_media);
                         $media_scenarios = 0;
                         for ($part_id = 1; $part_id < 10; $part_id++) {
                             if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
@@ -388,7 +388,7 @@ while ($result->fetch()) {
                 }
                 break;
             case 'blank':
-                $blank_details = explode('[blank', $option_text);
+                $blank_details = explode('[blank', (string) $option_text);
                 $no_answers = count($blank_details) - 1;
                 $rating = '';
                 for ($i = 1; $i <= $no_answers; $i++) {
@@ -414,7 +414,7 @@ while ($result->fetch()) {
                 }
                 break;
             case 'labelling':
-                $tmp_first_split = explode(';', $correct);
+                $tmp_first_split = explode(';', (string) $correct);
                 $tmp_second_split = explode('$', $tmp_first_split[11]);
                 for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
                     if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 200) {

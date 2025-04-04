@@ -110,7 +110,7 @@ class renderdata extends \questiondata
         $tmp_labels = 0;
         $max_col1 = 0;
         $max_col2 = 0;
-        $tmp_first_split = explode(';', $option['correct']);
+        $tmp_first_split = explode(';', (string) $option['correct']);
         $tmp_second_split = explode('|', $tmp_first_split[11]);
         $label_width = $tmp_first_split[5];
         $label_height = $tmp_first_split[6];
@@ -177,7 +177,7 @@ class renderdata extends \questiondata
         } else {
             $this->unanswered = false;
         }
-        $tmp_correct = trim($option['correct']);
+        $tmp_correct = trim((string) $option['correct']);
         $tmp_correct = str_replace("'", '&#039;', $tmp_correct);
 
         $this->mediaheight = $tmp_height;

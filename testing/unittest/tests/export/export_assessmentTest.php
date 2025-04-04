@@ -192,7 +192,7 @@ class export_assessmentTest extends unittestdatabase
                 'marks_partial' => 0
             ]
         );
-        $correct = explode('|', $this->question1['question']['options1']['correct']);
+        $correct = explode('|', (string) $this->question1['question']['options1']['correct']);
         $this->question1['question']['expected1'] = $correct[0];
         $this->question1['question']['expected2'] = $correct[1];
         $this->question1['question']['expected3'] = $correct[2];

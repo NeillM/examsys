@@ -65,13 +65,13 @@ function get_correct_labels($question, $tmp_exclude)
 {
     $correct_labels = [];
 
-    $tmp_first_split = explode(';', $question['correct'][0]);
+    $tmp_first_split = explode(';', (string) $question['correct'][0]);
     $tmp_second_split = explode('$', $tmp_first_split[11]);
     $i = 0;
     $excluded_no = 0;
     for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
         if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
-            if (mb_substr($tmp_exclude, $i, 1) == '0') {
+            if (mb_substr((string) $tmp_exclude, $i, 1) == '0') {
                 $x = $tmp_second_split[$label_no - 2];
                 $y = $tmp_second_split[$label_no - 1] - 25;
                 $correct_labels[$x . 'x' . $y] = mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'));
@@ -123,21 +123,21 @@ foreach ($user_results as $individual) {
             if (!$skip_random) {
                 if ($question['q_type'] == 'extmatch' and $question['score_method'] == 'Mark per Option') {
                     $sub_parts = 0;
-                    $paper_answers = explode('|', $question['correct'][0]);
+                    $paper_answers = explode('|', (string) $question['correct'][0]);
                     for ($a = 0; $a < count($paper_answers); $a++) {
                         $sub_parts += mb_substr_count($paper_answers[$a], '$');
 
-                        if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
+                        if ($paper_answers[$a] != '' and mb_substr((string) $tmp_exclude, $a + $sub_parts, 1) == '0') {
                             $csv .= ',Q' . $q_no . $numerals[$a];
                         }
                     }
                 } elseif ($question['q_type'] == 'matrix' and $question['score_method'] == 'Mark per Option') {
                     $sub_parts = 0;
-                    $paper_answers = explode('|', $question['correct'][0]);
+                    $paper_answers = explode('|', (string) $question['correct'][0]);
                     for ($a = 0; $a < count($paper_answers); $a++) {
                         $sub_parts += mb_substr_count($paper_answers[$a], '$');
 
-                        if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
+                        if ($paper_answers[$a] != '' and mb_substr((string) $tmp_exclude, $a + $sub_parts, 1) == '0') {
                             $csv .= ',Q' . $q_no . chr($a + 65);
                         }
                     }
@@ -148,13 +148,13 @@ foreach ($user_results as $individual) {
                         }
                     }
                 } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
-                    for ($a = 0; $a < (count($question['correct_labels']) + mb_substr_count($tmp_exclude, '1')); $a++) {
+                    for ($a = 0; $a < (count($question['correct_labels']) + mb_substr_count((string) $tmp_exclude, '1')); $a++) {
                         if ($tmp_exclude[$a] == '0') {
                             $csv .= ',Q' . $q_no . chr($a + 65);
                         }
                     }
                 } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
-                    $paper_answers = explode('|', $question['correct'][0]);
+                    $paper_answers = explode('|', (string) $question['correct'][0]);
                     for ($a = 0; $a < count($paper_answers); $a++) {
                         if ($tmp_exclude[$a] == '0') {
                             $csv .= ',Q' . $q_no . chr($a + 65);
@@ -216,11 +216,11 @@ foreach ($user_results as $individual) {
                 } else {
                     if (($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') and $question['score_method'] == 'Mark per Option') {
                           $sub_parts = 0;
-                          $paper_answers = explode('|', $question['correct'][0]);
+                          $paper_answers = explode('|', (string) $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
                             $sub_parts += mb_substr_count($paper_answers[$a], '$');
 
-                            if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
+                            if ($paper_answers[$a] != '' and mb_substr((string) $tmp_exclude, $a + $sub_parts, 1) == '0') {
                                 $csv .= ',0';
                             }
                         }
@@ -237,7 +237,7 @@ foreach ($user_results as $individual) {
                             }
                         }
                     } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
-                        $paper_answers = explode('|', $question['correct'][0]);
+                        $paper_answers = explode('|', (string) $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
                             if ($tmp_exclude[$a] == '0') {
                                 $csv .= ',0';

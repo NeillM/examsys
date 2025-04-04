@@ -66,7 +66,7 @@ if (!isset($module_details) && $module != '0') {
 
 <?php
 
-if ($module != 0 and mb_strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+if ($module != 0 and mb_strpos((string) $module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
     // Trying to access learning objectives when not selected at the module level.
 } else {
     switch ($_GET['type']) {

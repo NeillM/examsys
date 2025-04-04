@@ -274,7 +274,7 @@ class labs extends generator
     {
         $campuses = $this->get_campuses();
         foreach ($campuses as $id => $campus) {
-            if (trim($campus['campusname']) === trim($name)) {
+            if (trim((string) $campus['campusname']) === trim($name)) {
                 return $id;
             }
         }

@@ -84,7 +84,7 @@ class import_modules extends importer
      */
     private function returnTrueFalse($value)
     {
-        $value = mb_strtolower(trim($value));
+        $value = mb_strtolower(trim((string) $value));
         if ($value == 'yes' or $value == 'y' or $value == 'true') {
             return true;
         } else {
@@ -106,11 +106,11 @@ class import_modules extends importer
         $this->handler->required_header(self::REQUIRED);
         $default_academic_year_start = $this->config->get_setting('core', 'system_academic_year_start');
         while ($line = $this->handler->get_line()) {
-            $line['moduleid'] = trim($line['moduleid']);
-            $line['fullname'] = trim($line['fullname']);
+            $line['moduleid'] = trim((string) $line['moduleid']);
+            $line['fullname'] = trim((string) $line['fullname']);
             // Check if school exists.
             if (!isset($line['schoolcode'])) {
-                $schools = \schoolutils::school_name_exists(trim($line['school']), $this->config->db);
+                $schools = \schoolutils::school_name_exists(trim((string) $line['school']), $this->config->db);
             } else {
                 $schools = \schoolutils::get_schoolid_by_code(trim($line['schoolcode']), $this->config->db);
             }

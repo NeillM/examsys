@@ -57,10 +57,10 @@ $no_screens = $propertyObj->get_max_screen();
 // Determine which review deadline to use.
 if ($userObject->has_role('External Examiner')) {
     $review_type = 'External';
-    $review_deadline = strtotime($propertyObj->get_external_review_deadline());
+    $review_deadline = strtotime((string) $propertyObj->get_external_review_deadline());
 } else {
     $review_type = 'Internal';
-    $review_deadline = strtotime($propertyObj->get_internal_review_deadline());
+    $review_deadline = strtotime((string) $propertyObj->get_internal_review_deadline());
 }
 
 // Create a new review object.
@@ -69,7 +69,7 @@ $review = new Review($paperID, $userObject->get_user_ID(), $review_type, $mysqli
 // Get standards setting data
 if ($marking[0] == '2') {
     $standards_setting = [];
-    $tmp_parts = explode(',', $marking);
+    $tmp_parts = explode(',', (string) $marking);
 
     $standard_setting = new StandardSetting($mysqli);
     $standards_setting = $standard_setting->get_ratings_by_question($tmp_parts[1]);

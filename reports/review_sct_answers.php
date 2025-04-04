@@ -50,7 +50,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db)
         echo '<tr><td class="q_no">' . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">{$string['clinicalvignette']}</td></tr>\n";
         echo '<tr><td style="vertical-align:top; text-align:right"></td><td>';
         if ($question['notes'] != '') {
-            echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+            echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . ucwords((string) $string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
         }
         echo $question['scenario'] . "<br />\n<br />";
         $li_set = 1;
@@ -66,7 +66,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db)
         $li_set = 1;
     }
 
-    $sct_parts = explode('~', $question['leadin']);
+    $sct_parts = explode('~', (string) $question['leadin']);
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
     $sct_titles = [1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']];
     echo '<tr><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">{$string['newinformation']}</td></tr>\n";
@@ -74,7 +74,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db)
     echo "</table>\n";
     echo '<p><strong>';
     echo $string['thenthis'] . ' ';
-    echo mb_strtolower($sct_titles[$question['display_method']], 'UTF-8');
+    echo mb_strtolower((string) $sct_titles[$question['display_method']], 'UTF-8');
     echo ' ' . $string['becomes'] . ':';
     echo '</strong></p>';
     echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -110,7 +110,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db)
     echo "<span style=\"color:#808080\">{$string['briefreasonwhy']}</span><br /><ul>";
     if (isset($reviews[$question['q_id']]) and count($reviews[$question['q_id']]['reason']) > 0) {
         foreach ($reviews[$question['q_id']]['reason'] as $comment) {
-            if (trim($comment) != '') {
+            if (trim((string) $comment) != '') {
                 echo "<li>$comment</li>\n";
             }
         }
@@ -200,7 +200,7 @@ while ($stmt->fetch()) {
         $q_no++;
         $questions_array[$q_no]['theme'] = trim($theme ?? '');
         $questions_array[$q_no]['scenario'] = trim($scenario ?? '');
-        $questions_array[$q_no]['leadin'] = trim($leadin);
+        $questions_array[$q_no]['leadin'] = trim((string) $leadin);
         $questions_array[$q_no]['notes'] = trim($notes ?? '');
         $questions_array[$q_no]['q_id'] = $q_id;
         $questions_array[$q_no]['display_method'] = $display_method;

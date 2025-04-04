@@ -93,8 +93,8 @@ for (
     }
 }
 
-if (mb_substr($startdate, 0, 4) < date('Y')) {
-    $start_year = mb_substr($startdate, 0, 4);
+if (mb_substr((string) $startdate, 0, 4) < date('Y')) {
+    $start_year = mb_substr((string) $startdate, 0, 4);
 } else {
     $start_year = date('Y');
 }

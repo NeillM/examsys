@@ -98,7 +98,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
                         }
                         break;
                     case 'labelling':
-                        $tmp_first_split = explode(';', $questions[$questionID]['options'][0]['correct']);
+                        $tmp_first_split = explode(';', (string) $questions[$questionID]['options'][0]['correct']);
                         $tmp_second_split = explode('$', $tmp_first_split[11]);
 
                         $placeholders = 0;
@@ -227,7 +227,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             } elseif ($question['q_option_order'] == 'alphabetic') {
                 $tmp_order_array = [];
                 for ($i = 0; $i < $option_no; $i++) {
-                    $tmp_order_array[$i] = mb_strtolower($question['options'][$i]['option_text']);
+                    $tmp_order_array[$i] = mb_strtolower((string) $question['options'][$i]['option_text']);
                 }
                 asort($tmp_order_array);
                 foreach ($tmp_order_array as $key => $value) {
@@ -241,7 +241,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             }
         } else {
             // Set the order array to what is stored in the users log record
-            $question['option_order'] = explode(',', $user_order[$current_screen][$q_id]);
+            $question['option_order'] = explode(',', (string) $user_order[$current_screen][$q_id]);
         }
 
         // Re-arrange the options array
@@ -350,12 +350,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             break;
         case 'dichotomous':
             echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-            if (mb_substr($question['display_method'], 0, 2) == 'TF') {
+            if (mb_substr((string) $question['display_method'], 0, 2) == 'TF') {
                 echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['false'] . '</td>';
             } else {
                 echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['no'] . '</td>';
             }
-            if (mb_strpos($question['display_method'], 'Abstain') !== false) {
+            if (mb_strpos((string) $question['display_method'], 'Abstain') !== false) {
                 echo "<td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . '</td><td>&nbsp;</td>';
             }
             echo "</tr>\n";
@@ -408,9 +408,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             break;
         case 'likert':
             $na = false;
-            $likert_display = explode('|', $question['display_method']);
-            $likert_col_no = mb_substr_count($question['display_method'], '|');
-            if (mb_strtolower($old_likert_label) != mb_strtolower($question['display_method']) or $question['theme'] != '') {
+            $likert_display = explode('|', (string) $question['display_method']);
+            $likert_col_no = mb_substr_count((string) $question['display_method'], '|');
+            if (mb_strtolower((string) $old_likert_label) != mb_strtolower((string) $question['display_method']) or $question['theme'] != '') {
                 if ($likert_col_no != $old_likert_cols) {
                     echo '</table><table cellpadding="4" cellspacing="0" border="0"><col width="40"><col>';
                 }
@@ -429,7 +429,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     echo "<td style=\"vertical-align:bottom; text-align:center; color:$labelcolor; font-size:80%\">" . $string['na'] . '</td>';
                 }
                 echo "<td style=\"vertical-align:bottom; text-align:center; color:$labelcolor; font-size:80%\">$likert_display[0]</td>";
-                $temp_end = mb_substr_count($question['display_method'], '|') - 1;
+                $temp_end = mb_substr_count((string) $question['display_method'], '|') - 1;
                 for ($i = 1; $i <= $temp_end; $i++) {
                     echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[$i]</td>\n";
                 }
@@ -444,12 +444,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             break;
         case 'extmatch':
         case 'matrix':
-            $matching_scenarios = explode('|', $question['scenario']);
-            $matching_source = explode('|', $question['q_media']);
-            $matching_width = explode('|', $question['q_media_width']);
-            $matching_height = explode('|', $question['q_media_height']);
-            $matching_alt = explode('|', $question['q_media_alt']);
-            $matching_num = explode('|', $question['q_media_num']);
+            $matching_scenarios = explode('|', (string) $question['scenario']);
+            $matching_source = explode('|', (string) $question['q_media']);
+            $matching_width = explode('|', (string) $question['q_media_width']);
+            $matching_height = explode('|', (string) $question['q_media_height']);
+            $matching_alt = explode('|', (string) $question['q_media_alt']);
+            $matching_num = explode('|', (string) $question['q_media_num']);
             $matching_media = [];
             for ($i = 0; $i < count($matching_source); $i++) {
                 $matching_media[$matching_num[$i]] = [
@@ -465,7 +465,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             } else {
                 $matching_users_answers = [];
             }
-            $matching_answers = explode('|', $question['options'][0]['correct']);
+            $matching_answers = explode('|', (string) $question['options'][0]['correct']);
             break;
         case 'sct':
             if ($question['scenario'] != '') {
@@ -496,7 +496,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 $li_set = 1;
             }
 
-            $sct_parts = explode('~', $question['leadin']);
+            $sct_parts = explode('~', (string) $question['leadin']);
             echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
             $sct_titles = [1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']];
             echo '<tr><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $sct_titles[$question['display_method']] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">' . $string['newinformation'] . "</td></tr>\n";
@@ -504,7 +504,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             echo "</table>\n";
 
             echo '<p><strong>';
-            echo $string['thenthis'] . ' ' . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . ' ' . $string['is'] . ':';
+            echo $string['thenthis'] . ' ' . mb_strtolower((string) $sct_titles[$question['display_method']], 'UTF-8') . ' ' . $string['is'] . ':';
             echo '</strong></p>';
 
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
@@ -638,7 +638,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     echo '<tr>';
                 }
                 echo '<td class="q_no">' . $question['assigned_number'] . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
-                $scale_size = mb_substr_count($question['display_method'], '|');
+                $scale_size = mb_substr_count((string) $question['display_method'], '|');
                 if ($likert_display[$scale_size] == 'true') {
                     echo '<td style="text-align:center; width:40px; vertical-align:top"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="n/a"';
                     if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') {
@@ -958,7 +958,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                             if (isset($blank_user_answers[$blank_count - 1])) {
                                 $ans = $blank_user_answers[$blank_count - 1];
                             }
-                            $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, Config::get_instance()->get('cfg_page_charset'), false);
+                            $encoded_ans = htmlentities((string) $ans, ENT_COMPAT | ENT_HTML5, Config::get_instance()->get('cfg_page_charset'), false);
                             $screen_output[$blank_count] = preg_replace('|\[blank.*\].*\[/blank\]|', '<input type="text" name="q' . $question_no . '_' . $blank_count . '" value="' . $encoded_ans . "\" size=\"$blank_size[$blank_count]\" />", $blank_details[$blank_count]);
                         }
                         $blank_count++;
@@ -996,10 +996,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         echo "<option value=\"u\"></option>\n";
                         shuffle($answer_list);            // Shuffle the answers up.
                         for ($i = 1; $i <= count($answer_list); $i++) {
-                            if (isset($answer_list[$i - 1]) and isset($blank_user_answers[$blank_count - 1]) and html_entity_decode(trim($answer_list[$i - 1])) == html_entity_decode(trim($blank_user_answers[$blank_count - 1]))) {
+                            if (isset($answer_list[$i - 1]) and isset($blank_user_answers[$blank_count - 1]) and html_entity_decode(trim($answer_list[$i - 1])) == html_entity_decode(trim((string) $blank_user_answers[$blank_count - 1]))) {
                                 echo '<option value="' . htmlentities(trim($answer_list[$i - 1]), ENT_COMPAT, 'UTF-8') . '" selected>' . trim($answer_list[$i - 1]) . "</option>\n";
                             } else {
-                                echo '<option value="' . htmlentities(trim($answer_list[$i - 1]), ENT_COMPAT, 'UTF-8') . '">' . trim($answer_list[$i - 1]) . "</option>\n";
+                                echo '<option value="' . htmlentities(trim((string) $answer_list[$i - 1]), ENT_COMPAT, 'UTF-8') . '">' . trim((string) $answer_list[$i - 1]) . "</option>\n";
                             }
                         }
                         echo '</select>';
@@ -1020,12 +1020,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 break;
             case 'textbox':
-                if (mb_stripos($question['leadin'], '<p>') === false and mb_stripos($question['leadin'], '<div>') == false) {
+                if (mb_stripos((string) $question['leadin'], '<p>') === false and mb_stripos((string) $question['leadin'], '<div>') == false) {
                     echo '<br />';
                 }
                 if (!in_array($question_no, $textboxes_seen)) {
                     $textboxes_seen[] = $question_no;
-                    $settings = json_decode($question['settings'], true);
+                    $settings = json_decode((string) $question['settings'], true);
                     if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
                         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
                               echo '<textarea class="unans" name="q' . $question_no . '" cols="' . $settings['columns'] . '" rows="' . $settings['rows'] . '">' . $user_answers[$current_screen][$q_id] . "</textarea>\n";
@@ -1091,7 +1091,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     $unanswered = true;
                     $class_mod = ' unans';
                 }
-                $hotspot_no = mb_substr_count($question['options'][0]['correct'], '|') + 1;
+                $hotspot_no = mb_substr_count((string) $question['options'][0]['correct'], '|') + 1;
                 $tmp_height = $question['q_media_height'] + 30;
                 if ($tmp_height < (($hotspot_no * 36) + 25)) {
                     $tmp_height = (($hotspot_no * 36) + 25);
@@ -1119,8 +1119,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
               data-image="<?php echo $tmp_image; ?>"
               data-image-width="<?php echo $question['q_media_width']; ?>"
               data-image-height="<?php echo $question['q_media_height']; ?>"
-              data-setup="<?php echo htmlentities($tmp_correct); ?>"
-              data-answer="<?php echo htmlentities($tmp_answer); ?>"
+              data-setup="<?php echo htmlentities((string) $tmp_correct); ?>"
+              data-answer="<?php echo htmlentities((string) $tmp_answer); ?>"
               ></div>
         </div>
                 <?php
@@ -1132,12 +1132,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if ($question['score_method'] == 'Mark per Question') {
                     $marks = $display_option['marks_correct'];
                 } else {
-                    $marks = (mb_substr_count($question['options'][0]['correct'], '|') + 1) * $display_option['marks_correct'];
+                    $marks = (mb_substr_count((string) $question['options'][0]['correct'], '|') + 1) * $display_option['marks_correct'];
                 }
                 break;
             case 'labelling':
                 $tmp_labels = 0;
-                $tmp_first_split = explode(';', $question['options'][0]['correct']);
+                $tmp_first_split = explode(';', (string) $question['options'][0]['correct']);
                 $tmp_second_split = explode('|', $tmp_first_split[11]);
                 $label_width = $tmp_first_split[5];
                 $label_height = $tmp_first_split[6];
@@ -1169,7 +1169,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
                     $unanswered = true;
                 }
-                $tmp_correct = trim($question['options'][0]['correct']);
+                $tmp_correct = trim((string) $question['options'][0]['correct']);
                 $tmp_correct = str_replace("'", '&#039;', $tmp_correct);
                 ?>
             <div align="left">
@@ -1178,7 +1178,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 				  data-qno='" . $question_no . "'
 				  data-qmedia='" . $question['q_media'] . "'
 				  data-qcorrect='" . $tmp_correct  . "'
-				  data-user='" . trim($user_answers[$current_screen][$q_id]) . "'
+				  data-user='" . trim((string) $user_answers[$current_screen][$q_id]) . "'
 				  data-marking='" . $display_option['marks_correct'] . '~' . $display_option['marks_incorrect'] . '~' . $question['score_method'] . "'
 				 width=\"" . ($question['q_media_width'] + 220) . '" height="' . $tmp_height . "\"></canvas>\n";
                 echo "<br /><div id=\"canvasbox\"></div>\n";
@@ -1245,7 +1245,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         $answer = $user_answers[$current_screen][$q_id] ?? '';
         if ($question['display_method'] == 'other') {
             $part_id++;
-            if ($answer != '' and mb_substr($answer, ($part_id - 1), 1) == 'y') {
+            if ($answer != '' and mb_substr((string) $answer, ($part_id - 1), 1) == 'y') {
                 echo '<tr><td><input type="checkbox" name="q' . $question_no . '_' . $part_id . '" value="y" checked="checked" /></td>';
             } else {
                 echo '<tr><td><input type="checkbox" name="q' . $question_no . '_' . $part_id . '" value="y" /></td>';
@@ -1264,7 +1264,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             $marks = $display_option['marks_correct'];
         }
     } elseif ($question['q_type'] == 'extmatch') {
-        $matching_answers = explode('|', $question['options'][0]['correct']);
+        $matching_answers = explode('|', (string) $question['options'][0]['correct']);
 
         if (!empty($matching_media[0])) {
             echo '<div class="mediadiv">';

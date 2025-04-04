@@ -98,7 +98,7 @@ class OAuthRequest implements \Stringable {
     $parameters = array_merge($defaults, $parameters);
 
     // Parse the query-string to find and add GET parameters
-    $parts = parse_url($http_url);
+    $parts = parse_url((string) $http_url);
     if ( isset($parts['query']) and $parts['query'] ) {
       $qparms = OAuthUtil::parse_parameters($parts['query']);
       $parameters = array_merge($qparms, $parameters);
@@ -174,7 +174,7 @@ class OAuthRequest implements \Stringable {
    * just uppercases the http method
    */
   public function get_normalized_http_method() {
-    return strtoupper($this->http_method);
+    return strtoupper((string) $this->http_method);
   }
 
   /**
@@ -182,7 +182,7 @@ class OAuthRequest implements \Stringable {
    * scheme://host/path
    */
   public function get_normalized_http_url() {
-    $parts = parse_url($this->http_url);
+    $parts = parse_url((string) $this->http_url);
 
     if (isset($parts['port'])) {
       $port = @$parts['port'];
@@ -228,7 +228,7 @@ class OAuthRequest implements \Stringable {
     $out ='Authorization: OAuth realm=""';
     $total = [];
     foreach ($this->parameters as $k => $v) {
-      if (!str_starts_with($k, "oauth")) continue;
+      if (!str_starts_with((string) $k, "oauth")) continue;
       if (is_array($v)) {
         throw new OAuthException('Arrays not supported in headers');
       }

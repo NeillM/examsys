@@ -339,7 +339,7 @@ class QuestionEXTMATCH extends QuestionEdit
     public function get_scenario()
     {
         if ($this->scenario != '') {
-            $this->stems = explode('|', $this->scenario);
+            $this->stems = explode('|', (string) $this->scenario);
         }
         return $this->scenario;
     }
@@ -360,7 +360,7 @@ class QuestionEXTMATCH extends QuestionEdit
     public function get_correct_fback()
     {
         if ($this->correct_fback != '') {
-            $this->all_feedback = explode('|', $this->correct_fback);
+            $this->all_feedback = explode('|', (string) $this->correct_fback);
         }
         return $this->correct_fback;
     }
@@ -392,7 +392,7 @@ class QuestionEXTMATCH extends QuestionEdit
             // Test if the stem is active.
             $inuse = !empty($stem) or !empty($this->all_media_names[$key]) or !empty($this->all_feedback[$key])
             or !empty($this->correct_fback[$key]);
-            $no_text = (trim(param::clean($stem, param::TEXT)) === '');
+            $no_text = (trim((string) param::clean($stem, param::TEXT)) === '');
             $no_media = false;
             if (!isset($this->all_media_names[$key]) or $this->all_media_names[$key] === '') {
                 $no_media = true;

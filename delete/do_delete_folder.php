@@ -43,7 +43,7 @@ $result->bind_result($name);
 $result->fetch();
 $result->close();
 
-$directories = explode(';', $name);
+$directories = explode(';', (string) $name);
 $parent = '';
 if (count($directories) > 1) {
     for ($i = 1; $i < count($directories); $i++) {

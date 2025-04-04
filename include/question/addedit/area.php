@@ -72,7 +72,7 @@ require_once 'detail_parts/details_leadin.php';
               <td>
 <?php
 if ($media['filename'] != '' and !$show_correction_intermediate) :
-    $tmp_correct = str_replace("'", "\'", trim($correct));
+    $tmp_correct = str_replace("'", "\'", trim((string) $correct));
     $tmp_correct = str_replace('&nbsp;', ' ', $tmp_correct);
     $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
@@ -121,7 +121,7 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
           <tr>
             <th class="align-left">&nbsp;</th>
             <td class="align-left heavy"><?php echo $string['answercorrect'] ?></td>
-            <td class="align-left heavy"><?php echo ucfirst($string['error']) ?></td>
+            <td class="align-left heavy"><?php echo ucfirst((string) $string['error']) ?></td>
             <td class="align-left heavy"><?php echo $string['marks'] ?></td>
           </tr>
           <tr>

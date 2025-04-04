@@ -75,7 +75,7 @@ function get_list($list, $db)
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
-  <div class="page_title"><?php echo $string['smsimportson'] ?> <?php echo mb_substr($_GET['day'], 6, 2) . '/' . mb_substr($_GET['day'], 4, 2) . '/' . mb_substr($_GET['day'], 0, 4) ?></div>
+  <div class="page_title"><?php echo $string['smsimportson'] ?> <?php echo mb_substr((string) $_GET['day'], 6, 2) . '/' . mb_substr((string) $_GET['day'], 4, 2) . '/' . mb_substr((string) $_GET['day'], 0, 4) ?></div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0">

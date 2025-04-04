@@ -134,9 +134,9 @@ if ($temp_student_id != '') {
 }
 if ($target_userID == '') {
     // If no student number try the other details.
-    $first_names = trim($temp_first_names) . '%';
-    $temp_surname = trim($temp_surname);
-    $temp_title = trim($temp_title);
+    $first_names = trim((string) $temp_first_names) . '%';
+    $temp_surname = trim((string) $temp_surname);
+    $temp_title = trim((string) $temp_title);
     $sql = "
     SELECT DISTINCT
         u.id, u.surname, u.first_names, u.title, u.gender, sid.student_id 

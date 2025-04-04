@@ -53,7 +53,7 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
                     echo ':' . $paper['start_minute'];
                 }
                 echo '&nbsp;' . $paper['am_pm'] . '</td>';
-                echo '<td class="p pe" id="p' . $cellID . '" data-cellid="' . $cellID . '" data-message="' . htmlspecialchars($paper['message']) . '" >' . $paper['title'] . ' (' . ($paper['duration'] / 60) . ' hrs)</td></tr>';
+                echo '<td class="p pe" id="p' . $cellID . '" data-cellid="' . $cellID . '" data-message="' . htmlspecialchars((string) $paper['message']) . '" >' . $paper['title'] . ' (' . ($paper['duration'] / 60) . ' hrs)</td></tr>';
                 $cellID++;
             }
         } else {
@@ -398,7 +398,7 @@ $stmt->close();
             $paper_details[$property_id]['am_pm']         = date('A', $start_date);
             $paper_details[$property_id]['end_date']      = date('j', $end_date);
             $paper_details[$property_id]['paper_title']   = $paper_title;
-            if (mb_strlen($paper_details[$property_id]['paper_title']) > 30) {
+            if (mb_strlen((string) $paper_details[$property_id]['paper_title']) > 30) {
                 $paper_details[$property_id]['paper_title'] = str_replace('_', ' ', $paper_details[$property_id]['paper_title']);
             }
             $paper_details[$property_id]['property_id']   = $property_id;
@@ -488,7 +488,7 @@ $stmt->close();
         echo "<tr><td class=\"month\"><a name=\"$i\"></a>" . $string[$tmp_month] . "</td></tr>\n";
         echo '<tr><td>';
         echo "<table style=\"width:100%; font-size:85%; margin-left:auto; margin-right:auto\">\n";
-        echo '<tr><td class="dtext">' . mb_substr($string['monday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['tuesday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['wednesday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['thursday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['friday'], 0, 3, 'UTF-8') . '</td></tr>';
+        echo '<tr><td class="dtext">' . mb_substr((string) $string['monday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr((string) $string['tuesday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr((string) $string['wednesday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr((string) $string['thursday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr((string) $string['friday'], 0, 3, 'UTF-8') . '</td></tr>';
 
         $day_no = 1;
         $cell_no = 1;

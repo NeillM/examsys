@@ -128,7 +128,7 @@ $paper_types = ['Formative Self-Assessment', 'Progress Test', 'Summative Exam', 
 $paper_icons = ['formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_16.gif'];
 $list_size = count($recycle_bin);
 for ($item = 0; $item < $list_size; $item++) {
-    $split_name = explode('[deleted', $recycle_bin[$item]['name']);
+    $split_name = explode('[deleted', (string) $recycle_bin[$item]['name']);
     if ($recycle_bin[$item]['type'] == 'paper') {
         $temp_type = $recycle_bin[$item]['subtype'];
         echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"p" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/' . $paper_icons[$temp_type] . '" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date(Config::get_instance()->get('cfg_short_datetime_php'), $recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($paper_types[$temp_type])] . "</nobr></td></tr>\n";
@@ -145,7 +145,7 @@ for ($item = 0; $item < $list_size; $item++) {
     } elseif ($recycle_bin[$item]['type'] == 'faculty') {
         echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"u" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/faculty_16.png" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string['faculty'] . "</nobr></td></tr>\n";
     } else {
-        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"q" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/question_item_icon.gif" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower($recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"link_$item\" data-lineid=\"$item\" data-itemid=\"q" . $recycle_bin[$item]['id'] . '"><td class="icon"><img src="../artwork/question_item_icon.gif" width="16" height="16" /></td><td>' . $split_name[0] . '</td><td>' . date_utils::rogoToDisplay($recycle_bin[$item]['deleted']) . '</td><td><nobr>' . $string[mb_strtolower((string) $recycle_bin[$item]['subtype'])] . "</nobr></td></tr>\n";
     }
 }
 ?>

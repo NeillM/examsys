@@ -62,7 +62,7 @@ class ValidBooleanOperatorsSniff implements Sniff
             '||'  => 'or',
         ];
 
-        $operator = mb_strtolower($tokens[$stackPtr]['content']);
+        $operator = mb_strtolower((string) $tokens[$stackPtr]['content']);
         if (isset($replacements[$operator]) === false) {
             return;
         }

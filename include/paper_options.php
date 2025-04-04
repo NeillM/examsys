@@ -63,7 +63,7 @@ if (count($moduleIDs) > 0) {
     $check = [];
     while ($stmt->fetch()) {
         if ($tmp_checklist != '') {
-            $tmp = explode(',', $tmp_checklist);
+            $tmp = explode(',', (string) $tmp_checklist);
             foreach ($tmp as $c => $type) {
                 $check[] = $type;
             }

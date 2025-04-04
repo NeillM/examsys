@@ -500,7 +500,7 @@ trait Paper
                     break;
                 case 'matrix':
                     foreach (json_decode($answer, true) as $idx => $ans) {
-                        $opt = substr($ans, 6);
+                        $opt = substr((string) $ans, 6);
                         $select = $this->find('xpath', '//th[contains(text(),"' . $idx . '")]/following::td[' . $opt . ']/div/input[contains(@name, "q' . $position . '")]');
                         $select->click();
                     }

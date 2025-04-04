@@ -133,7 +133,7 @@ class renderdata extends \questiondata
                             $ans = $blank_user_answers[$itemcount - 1];
                         }
                         // Encoded user answer for display.
-                        $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, \Config::get_instance()->get('cfg_page_charset'), false);
+                        $encoded_ans = htmlentities((string) $ans, ENT_COMPAT | ENT_HTML5, \Config::get_instance()->get('cfg_page_charset'), false);
                         $blankoption[$count]['encoded_ans'] = $encoded_ans;
                     }
                     // Drop Down display.
@@ -146,10 +146,10 @@ class renderdata extends \questiondata
                     shuffle($answer_list);
                     // If question previsouly answered auto select option.
                     for ($i = 0; $i < count($answer_list); $i++) {
-                        if (isset($answer_list[$i]) and isset($blank_user_answers[$itemcount - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim($blank_user_answers[$itemcount - 1]))) {
+                        if (isset($answer_list[$i]) and isset($blank_user_answers[$itemcount - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim((string) $blank_user_answers[$itemcount - 1]))) {
                             $blankoption[$count]['itemvalue'][] = ['answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => true];
                         } else {
-                            $blankoption[$count]['itemvalue'][] = ['answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => false];
+                            $blankoption[$count]['itemvalue'][] = ['answer' => htmlentities(trim((string) $answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => false];
                         }
                     }
                     // Set question as unanswered if not attempted.

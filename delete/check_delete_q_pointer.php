@@ -66,7 +66,7 @@ if ($properties->get_summative_lock()) {
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 
     <?php
-    if (mb_substr_count($_GET['pID'], ',')  > 1) {
+    if (mb_substr_count((string) $_GET['pID'], ',')  > 1) {
         echo '<input class="delete" type="submit" name="submit" value="' . $string['deletes'] . '" />';
     } else {
         echo '<input class="delete" type="submit" name="submit" value="' . $string['delete'] . '" />';

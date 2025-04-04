@@ -110,7 +110,7 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
             if (is_callable([$elem, '__toString'])) {
                 //if (get_class($elem) == "ST_QTI12_Material")
                 //{
-                $title .= ' (' . trim(mb_substr($elem->__toString(), 0, 125)) . ')';
+                $title .= ' (' . trim(mb_substr((string) $elem->__toString(), 0, 125)) . ')';
                 //}
             }
         }
@@ -168,7 +168,7 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
         echo '<font color=green>EMPTY STRING</font>';
     } else {
         $out = '';
-        $elem = htmlentities($elem);
+        $elem = htmlentities((string) $elem);
         if (mb_strlen($elem) > $trim) {
             while ($elem != '') {
                 $out .= mb_substr($elem, 0, $trim) . '<strong><font color=blue>*</font></strong><br />';

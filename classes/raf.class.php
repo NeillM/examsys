@@ -279,7 +279,7 @@ class RAF
         $regexp = str_replace('&', '&amp;', $regexp);
         $regexp = str_replace('?', '\?', $regexp);
 
-        $parts = explode('<img', $html);
+        $parts = explode('<img', (string) $html);
         if (count($parts) > 0) {
             unset($parts[0]);
             foreach ($parts as $image_line) {
@@ -407,7 +407,7 @@ class RAF
      */
     private function load_raf_data()
     {
-        $data_array = json_decode($this->data, true);
+        $data_array = json_decode((string) $this->data, true);
         $display_pos = 1;
         $this->raf_company = $data_array['metadata']['company'];
         foreach ($data_array['items'] as $item) {
@@ -489,14 +489,14 @@ class RAF
         // The substitution will replace the old src tag with a new one that.
         $webroot = $configObject->get('cfg_root_path');
         // Ensure there is a trailing slash.
-        if (mb_substr($webroot, -1) !== '/') {
+        if (mb_substr((string) $webroot, -1) !== '/') {
             $webroot .= '/';
         }
         $substitution = 'src="' . $webroot . 'getfile.php?type=media&amp;filename=$1"';
         // Fix the leadin and scenario.
-        $q['leadin'] = preg_replace($regexp, $substitution, $q['leadin']);
+        $q['leadin'] = preg_replace($regexp, $substitution, (string) $q['leadin']);
         if (!empty($q['scenario'])) {
-            $q['scenario'] = preg_replace($regexp, $substitution, $q['scenario']);
+            $q['scenario'] = preg_replace($regexp, $substitution, (string) $q['scenario']);
         }
 
         $server_ipaddress = str_replace('.', '', NetworkUtils::get_server_address());

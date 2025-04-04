@@ -132,7 +132,7 @@ $exclusions->load();
 
 // Get the standards setting
 if ($marking[0] == '2') {
-    $tmp_parts = explode(',', $marking);
+    $tmp_parts = explode(',', (string) $marking);
 
     $standard_setting = new StandardSetting($mysqli);
     $std_set_array = $standard_setting->get_ratings_by_question($tmp_parts[1]);
@@ -188,8 +188,8 @@ $old_screen = 1;
 
 $qids = param::optional('q_ids', false, param::TEXT, param::FETCH_GET);
 if ($qids) {
-    if (preg_match('/^[0-9,]+$/', $qids) !== false) { // question ID list validation
-        $qids = explode(',', $qids);
+    if (preg_match('/^[0-9,]+$/', (string) $qids) !== false) { // question ID list validation
+        $qids = explode(',', (string) $qids);
         $qids = array_map('intval', $qids);
     } else {
         throw new \Exception('Unrecognised value for question IDs submitted - ' . $qids);

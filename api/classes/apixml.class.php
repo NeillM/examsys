@@ -101,7 +101,7 @@ class apixml extends \api\apiabstract
                                 $childarray = [];
                                 foreach ($item0->childNodes as $childnode) {
                                     if ($childnode->nodeType != XML_TEXT_NODE) {
-                                        $nodevalue = trim($childnode->nodeValue);
+                                        $nodevalue = trim((string) $childnode->nodeValue);
                                         if ($childnode->hasAttribute('id')) {
                                             $childarray[] = ['id' => $childnode->getAttribute('id'),
                                                 'name' => $childnode->nodeName, 'value' => $nodevalue];

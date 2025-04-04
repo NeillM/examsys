@@ -33,7 +33,7 @@ check_var('q_id', 'GET', true, false, false);
 // Replace $mysqli object with one from configObject to ensure autocommit below works in function context
 $mysqli = $configObject->db;
 
-if (!QuestionUtils::question_exists(mb_substr($_GET['q_id'], 1), $mysqli)) {
+if (!QuestionUtils::question_exists(mb_substr((string) $_GET['q_id'], 1), $mysqli)) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -125,7 +125,7 @@ if (!isset($_POST['submit'])) {
     }
 
     //- Copy the question(s) ------------------------------------------------------------------------------------------------------------------------------------------
-    $q_IDs = explode(',', $_GET['q_id']);
+    $q_IDs = explode(',', (string) $_GET['q_id']);
 
     for ($i = 1; $i < count($q_IDs); $i++) {
         $map_guid = [];
@@ -245,12 +245,12 @@ if (!isset($_POST['submit'])) {
                 $newmedia = [];
                 $media = QuestionUtils::getMediaAsString($q_id);
                 if ($media['id'] != '') {
-                    $media_array = explode('|', $media['source']);
-                    $mediawidth_array = explode('|', $media['width']);
-                    $mediaheight_array = explode('|', $media['height']);
-                    $mediaalt_array = explode('|', $media['alt']);
-                    $mediaowner_array = explode('|', $media['owner']);
-                    $medianum_array = explode('|', $media['num']);
+                    $media_array = explode('|', (string) $media['source']);
+                    $mediawidth_array = explode('|', (string) $media['width']);
+                    $mediaheight_array = explode('|', (string) $media['height']);
+                    $mediaalt_array = explode('|', (string) $media['alt']);
+                    $mediaowner_array = explode('|', (string) $media['owner']);
+                    $medianum_array = explode('|', (string) $media['num']);
                     $image_part = 0;
                     foreach ($media_array as $individual_media) {
                         $new_media_name = '';
@@ -378,7 +378,7 @@ if (!isset($_POST['submit'])) {
 
                     if (in_array($_GET['module'], array_keys($paper_modules))) {
                         if (isset($_POST['outcomes']) and $_POST['outcomes'] != '') {
-                            $outcomes = json_decode($_POST['outcomes'], true);
+                            $outcomes = json_decode((string) $_POST['outcomes'], true);
 
                             $mappings = $mysqli->prepare('SELECT question_id, obj_id FROM relationships WHERE question_id = ? AND idMod = ?');
 

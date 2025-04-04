@@ -121,7 +121,7 @@ class renderdata extends \questiondata
         $matching_users_answers = $this->usersanswers;
         $option_order = explode(',', $this->optionorder);
         foreach ($this->scenarios as $single_scenario) {
-            if (trim($single_scenario) != '') {
+            if (trim((string) $single_scenario) != '') {
                 if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
                     $matchscenario[$part_id - 1]['unanswered'] = true;
                     $this->unanswered = true;

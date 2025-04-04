@@ -32,7 +32,7 @@ if (!isset($_POST['statuses'])) {
     $success = true;
     $mysqli->autocommit(false);
 
-    parse_str($_POST['statuses'], $statuses);
+    parse_str((string) $_POST['statuses'], $statuses);
 
     foreach ($statuses['status'] as $index => $id) {
         $sql = 'UPDATE question_statuses SET display_order = ? WHERE id = ?';

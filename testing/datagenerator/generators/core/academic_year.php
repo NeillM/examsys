@@ -53,7 +53,7 @@ class academic_year extends generator
         $academicyearpattern = '/[1-9]\d{3,}\/\d{2,}/'; //2016/17
         $calendaryearpattern = '/[1-9]\d{3,}/'; //2016
 
-        if (!(preg_match($academicyearpattern, $parameters['academic_year'])) or !(preg_match($calendaryearpattern, $parameters['calendar_year']))) {
+        if (!(preg_match($academicyearpattern, (string) $parameters['academic_year'])) or !(preg_match($calendaryearpattern, (string) $parameters['calendar_year']))) {
             throw new data_error('year number format is worng, should be like | 2016 | 2016/17 |');
         } else {
             $academic_year = $parameters['academic_year'];

@@ -124,7 +124,7 @@ class internaldb_auth extends outline_authentication
             return $authobj;
         }
         $result->fetch();
-        if (mb_substr($pass, 0, 3) == '$1$') {
+        if (mb_substr((string) $pass, 0, 3) == '$1$') {
             $old_encrypt_type = 'MD5';
             $this->savetodebug('Using old encryption');
         } else {

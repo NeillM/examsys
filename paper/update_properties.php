@@ -361,7 +361,7 @@ if (!$title_unique) {
     }
 
     if (!$locked) {
-        $password = trim($_POST['password']);
+        $password = trim((string) $_POST['password']);
         if ($password != $properties->get_decrypted_password()) {
             $properties->set_password($password);
         }
@@ -417,7 +417,7 @@ if (!$title_unique) {
             $seb_metadata = Paper_utils::get_metadata($mysqli, $paperID, 'seb_hash');
             $old_seb_key_array = $seb_metadata['seb_hash'] ?? [];
 
-            if (empty(trim($seb_keys))) {
+            if (empty(trim((string) $seb_keys))) {
                 if (!empty($old_seb_key_array)) {
                     Paper_utils::delete_metadata(
                         $mysqli,
@@ -434,7 +434,7 @@ if (!$title_unique) {
                     );
                 }
             } else {
-                $seb_key_array = explode("\n", $seb_keys);
+                $seb_key_array = explode("\n", (string) $seb_keys);
                 $seb_key_array = array_map('trim', $seb_key_array);
 
                 // Sort and compare key arrays
@@ -544,7 +544,7 @@ if (!$title_unique) {
         // Get new settings
         $textual_feedback = [];
         for ($i = 1; $i < 10; $i++) {
-            if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
+            if (isset($_POST["feedback_msg$i"]) and trim((string) $_POST["feedback_msg$i"]) != '') {
                 $textual_feedback[$i]['msg'] = $_POST["feedback_msg$i"];
                 $textual_feedback[$i]['boundary'] = $_POST["feedback_value$i"];
             } else {
@@ -560,7 +560,7 @@ if (!$title_unique) {
 
         for ($i = 1; $i < 10; $i++) {
             $editProperties = $mysqli->prepare('INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)');
-            if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
+            if (isset($_POST["feedback_msg$i"]) and trim((string) $_POST["feedback_msg$i"]) != '') {
                 $editProperties->bind_param('iis', $paperID, $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
                 $editProperties->execute();
             }

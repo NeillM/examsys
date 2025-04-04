@@ -159,7 +159,7 @@ class personal_folders
                     foreach ($lst2 as $v2) {
                         [$property_id, $paper_title, $start_date, $end_date, $paper_type, $paper_ownerID, $deleted, $crypt_name] = $v2;
                         echo '<div style="padding-left:24px"><a href="?paperlinkID=' . $plk . '"><img src="../artwork/' . $icons[$paper_type] . '_16.gif" width="16" height="16" border="0" alt="' . $paper_type . '" /></a>&nbsp;<a class="recent"';
-                        if (mb_strpos($paper_title, '[deleted') !== false) {
+                        if (mb_strpos((string) $paper_title, '[deleted') !== false) {
                                 echo ' style="color:#808080"';
                         }
                         echo 'href="?paperlinkID=' . $plk . '">' . $paper_title . "</a></div>\n";

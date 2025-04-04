@@ -25,8 +25,8 @@
 
 require_once $cfg_web_root . 'classes/options/option_enhancedcalc.class.php';
 
-$str_decimals = mb_strtolower($string['decimals']);
-$str_sigs = mb_strtolower($string['sigfigures']);
+$str_decimals = mb_strtolower((string) $string['decimals']);
+$str_sigs = mb_strtolower((string) $string['sigfigures']);
 $vars = $question->get_variables();
 $num_vars = count($vars);
 $answers = $question->get_answers();

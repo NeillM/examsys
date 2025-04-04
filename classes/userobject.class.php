@@ -312,7 +312,7 @@ class UserObject extends RogoStaticSingleton
     public function is_temporary_account()
     {
         // Look for 'user' followed by one or more digits.
-        return preg_match('/^user[0-9]+/', $this->username);
+        return preg_match('/^user[0-9]+/', (string) $this->username);
     }
 
     public function is_demo()
@@ -604,7 +604,7 @@ class UserObject extends RogoStaticSingleton
 
     public function get_first_first_name()
     {
-        $parts = explode(' ', $this->first_names);
+        $parts = explode(' ', (string) $this->first_names);
 
         return $parts[0];
     }
@@ -998,7 +998,7 @@ class UserObject extends RogoStaticSingleton
             $stmt->close();
         }
 
-        $temp = explode(',', $this->userroles);
+        $temp = explode(',', (string) $this->userroles);
 
         foreach ($temp as $value) {
             $this->roles[$value] = 1;

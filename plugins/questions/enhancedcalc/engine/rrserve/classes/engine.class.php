@@ -142,12 +142,12 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
     private function extract_value($R_rreturn)
     {
         if (!is_array($R_rreturn)) {
-            $R_rreturn = explode("\n", $R_rreturn);
+            $R_rreturn = explode("\n", (string) $R_rreturn);
         }
 
         $ret = [];
         foreach ($R_rreturn as $key => $val) {
-            $val = trim($val);
+            $val = trim((string) $val);
             if ($val == '') {
                 continue;
             }

@@ -104,7 +104,7 @@ $result->execute();
 $result->bind_result($type, $id, $user_answer);
 while ($result->fetch()) {
     // Decode user answers into an array of lowercase strings.
-    $tmp_answer = json_decode($user_answer);
+    $tmp_answer = json_decode((string) $user_answer);
     foreach ($tmp_answer as &$answer) {
         $answer = mb_strtolower(StringUtils::clean_and_trim($answer));
     }
@@ -126,7 +126,7 @@ for ($i = 0; $i < $wordcount; $i++) {
 }
 $option_list = implode(',', $option_list_array);
 
-$blank_details = explode('[blank', $option_text);
+$blank_details = explode('[blank', (string) $option_text);
 for ($i = 1; $i < count($blank_details); $i++) {
     $end_start_tag = mb_strpos($blank_details[$i], ']');
     $start_end_tag = mb_strpos($blank_details[$i], '[/blank]');

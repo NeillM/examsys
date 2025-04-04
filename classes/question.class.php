@@ -81,7 +81,7 @@ class Question
     public function set_settings($settings)
     {
         if (!is_array($settings)) {
-            $this->settings = json_decode($settings, true);
+            $this->settings = json_decode((string) $settings, true);
         } else {
             $this->settings = $settings;
         }
@@ -90,7 +90,7 @@ class Question
     public function set_useranswer($useranswer)
     {
         if (!is_array($useranswer)) {
-            $this->useranswer = json_decode($useranswer, true);
+            $this->useranswer = json_decode((string) $useranswer, true);
         } else {
             $this->useranswer = $useranswer;
         }

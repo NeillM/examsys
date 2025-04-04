@@ -29,10 +29,10 @@ $lti = new UoN_LTI();
 $lti->init_lti0($mysqli);
 $submit = param::optional('submit', null, param::TEXT, param::FETCH_POST);
 if (!is_null($submit)) {
-    $ltiname = trim(param::optional('ltiname', null, param::TEXT, param::FETCH_POST));
-    $ltikey = trim(param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
-    $ltisec = trim(param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
-    $lticontext = trim(param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
+    $ltiname = trim((string) param::optional('ltiname', null, param::TEXT, param::FETCH_POST));
+    $ltikey = trim((string) param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
+    $ltisec = trim((string) param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
+    $lticontext = trim((string) param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
     $insert_id = $lti->add_lti_key($ltiname, $ltikey, $ltisec, $lticontext);
     header('location: lti_keys_list.php');
     exit();

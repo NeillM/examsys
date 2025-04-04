@@ -97,7 +97,7 @@ class BoilerplateSniff implements Sniff
                 ];
                 $phpcsFile->addError($message, $next_comment, 'MissingLicense', $data);
                 break;
-            } elseif (trim($tokens[$next_comment]['content']) !== trim($value)) {
+            } elseif (trim((string) $tokens[$next_comment]['content']) !== trim($value)) {
                 $message = 'Expected "%s" found "%s"';
                 $data = [
                     $value,

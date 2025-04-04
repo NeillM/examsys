@@ -77,7 +77,7 @@ if (!isset($_GET['ordering'])) {
 if ($folderID != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
 } elseif ($moduleID != '') {
-    $modules = explode(',', $moduleID);
+    $modules = explode(',', (string) $moduleID);
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
 }
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
@@ -102,7 +102,7 @@ while ($result->fetch()) {
     $row_no++;
     $temp_array[$q_id]['screen'] = $screen;
     $temp_array[$q_id]['q_type'] = $q_type;
-    $temp_array[$q_id]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags($leadin))));
+    $temp_array[$q_id]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags((string) $leadin))));
     $temp_array[$q_id]['p_id'] = $p_id;
     $temp_array[$q_id]['q_id'] = $q_id;
     $temp_array[$q_id]['display_last_edited'] = $display_last_edited;
@@ -191,7 +191,7 @@ while ($result->fetch()) {
                     echo '<tr><td colspan="2"><ul>';
                     foreach ($sessionData['objectives'] as $id => $objectives) {
                         if (is_array($objectives['mapped'])) {
-                              echo '<li class="mapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . ' <span class="mapping">';
+                              echo '<li class="mapped">' . strip_tags((string) $objectives['content'], '<b><i><strong><em><sub><sup>') . ' <span class="mapping">';
                               $i = 0;
                             foreach ($objectives['mapped'] as $q_id) {
                                 if ($exclusions->get_exclusions_by_qid($q_id) != '0000000000000000000000000000000000000000') {
@@ -208,7 +208,7 @@ while ($result->fetch()) {
                             echo'</span></li>';
                         } else {
                             // Could display unmapped objective here!
-                            echo '<li class="unmapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . '</li>';
+                            echo '<li class="unmapped">' . strip_tags((string) $objectives['content'], '<b><i><strong><em><sub><sup>') . '</li>';
                         }
                     }
                     echo '</ul></td></tr>';

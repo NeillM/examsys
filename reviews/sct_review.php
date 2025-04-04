@@ -75,7 +75,7 @@ function display_question($question, &$question_no, $answers, $string)
         $li_set = 1;
     }
 
-    $sct_parts = explode('~', $question['leadin']);
+    $sct_parts = explode('~', (string) $question['leadin']);
     $sct_titles = [1 => 'hypothesis', 2 => 'investigation', 3 => 'prescription', 4 => 'intervention', 5 => 'treatment'];
 
     echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
@@ -199,7 +199,7 @@ while ($stmt->fetch()) {
         $q_no++;
         $questions_array[$q_no]['theme'] = trim($theme ?? '');
         $questions_array[$q_no]['scenario'] = trim($scenario ?? '');
-        $questions_array[$q_no]['leadin'] = trim($leadin);
+        $questions_array[$q_no]['leadin'] = trim((string) $leadin);
         $questions_array[$q_no]['notes'] = trim($notes ?? '');
         $questions_array[$q_no]['q_id'] = $q_id;
         $questions_array[$q_no]['display_method'] = $display_method;

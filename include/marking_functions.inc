@@ -35,9 +35,9 @@
  */
 function time_to_seconds($seconds)
 {
-    $hr = intval(mb_substr($seconds, 8, 2));
-    $min = intval(mb_substr($seconds, 10, 2));
-    $sec = intval(mb_substr($seconds, 12, 2));
+    $hr = intval(mb_substr((string) $seconds, 8, 2));
+    $min = intval(mb_substr((string) $seconds, 10, 2));
+    $sec = intval(mb_substr((string) $seconds, 12, 2));
 
     return ($hr * 3600) + ($min * 60) + $sec;
 }
@@ -115,7 +115,7 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
         $ipaddress = NetworkUtils::get_client_address();
         $save_failed = param::optional('save_failed', '', param::RAW, param::FETCH_POST);
         if ($save_failed != '') {
-            $failures = explode('<br />', nl2br($save_failed));
+            $failures = explode('<br />', nl2br((string) $save_failed));
             foreach ($failures as $failure) {
                 $parts = explode('-', $failure);
                 $stmt = $db->prepare('INSERT INTO save_fail_log VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)');
@@ -215,7 +215,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                       );
                     if ($q_type == 'enhancedcalc') {
                         if (!is_array($settings)) {
-                            $settings = json_decode($settings, true);
+                            $settings = json_decode((string) $settings, true);
                         }
                         $marks_correct = $settings['marks_correct'];
                         $marks_incorrect = $settings['marks_incorrect'];
@@ -378,7 +378,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $log_id = $q_id;
         $option_order = param::optional("order$question_no", '', param::TEXT, param::FETCH_POST);
         if ($option_order !== '') {
-            $option_order = explode(',', $option_order);
+            $option_order = explode(',', (string) $option_order);
         }
         $question_part++;
 
@@ -388,10 +388,10 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $qid = 'q' . $question_no;
                 $saved_response = param::optional($qid, '', param::TEXT, param::FETCH_POST);
                 if ($saved_response !== '') {
-                    $subparts = explode(';', $saved_response);
+                    $subparts = explode(';', (string) $saved_response);
 
-                    $parts = explode(',', $saved_response);
-                    $tolerances = json_decode($old_settings, true);
+                    $parts = explode(',', (string) $saved_response);
+                    $tolerances = json_decode((string) $old_settings, true);
                     if ($parts[1] >= $tolerances['correct_full'] and $parts[2] <= $tolerances['error_full']) {
                         $mark = $marks_correct;
                     } elseif ($parts[1] >= $tolerances['correct_partial'] and $parts[2] <= $tolerances['error_partial']) {
@@ -409,7 +409,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $mark = null;
 
                 if (!is_array($settings)) {
-                    $settings = json_decode($settings, true);
+                    $settings = json_decode((string) $settings, true);
                 }
 
                 if (isset($settings['marks_correct'])) {
@@ -513,12 +513,12 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 if ($question_part == 1) {
                     $part_no = 0;
                     if ($paper_type == 3) {
-                        $correct_options = explode('|', $scenario);
+                        $correct_options = explode('|', (string) $scenario);
                     } else {
-                        $correct_options = explode('|', $correct);
+                        $correct_options = explode('|', (string) $correct);
                     }
 
-                    $matching_scenarios = explode('|', $scenario);
+                    $matching_scenarios = explode('|', (string) $scenario);
                     $text_scenarios = 0;
                     for ($part_id = 0; $part_id < 10; $part_id++) {
                         if (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id])) != '') {
@@ -527,8 +527,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     }
 
                     $matching_media = [];
-                    $matching_source = explode('|', $q_media);
-                    $matching_num = explode('|', $q_media_num);
+                    $matching_source = explode('|', (string) $q_media);
+                    $matching_num = explode('|', (string) $q_media_num);
                     for ($i = 0; $i < count($matching_source); $i++) {
                         $matching_media[$matching_num[$i]] = $matching_source[$i];
                     }
@@ -615,8 +615,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             case 'matrix':
                 // Individual scenarios are separated by '|' characters.
                 if ($question_part == 1) {
-                    $correct_options = explode('|', $correct);
-                    $matching_scenarios = explode('|', $scenario);
+                    $correct_options = explode('|', (string) $correct);
+                    $matching_scenarios = explode('|', (string) $scenario);
                     $option_no = 1;
                     $no_correct = 0;
                     $no_incorrect = 0;
@@ -754,7 +754,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
                 break;
             case 'blank':
-                $blank_details = explode('[blank', $option_text);
+                $blank_details = explode('[blank', (string) $option_text);
                 $no_answers = count($blank_details) - 1;
                 $have_answer = false;
 
@@ -763,7 +763,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     $qid = 'q' . $question_no . '_' . $i;
                     // If the parameter is not sent for some reason assume the part is unanswered.
                     $blank_answer = param::optional($qid, 'u', param::TEXT, param::FETCH_POST);
-                    if (trim($blank_answer) === '') {
+                    if (trim((string) $blank_answer) === '') {
                           // Assume an answer composed only of spaces is unanswered.
                           $temp_response[] = 'u';
                     } else {
@@ -823,11 +823,11 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             case 'textbox':
                 $qid = 'q' . $question_no;
                 if (!is_array($settings)) {
-                    $settings = json_decode($settings, true);
+                    $settings = json_decode((string) $settings, true);
                 }
                 $plain_editors = ['plain', 'mathjax'];
                 if (!isset($settings['editor']) or in_array($settings['editor'], $plain_editors)) {
-                    $saved_response = htmlspecialchars(param::optional($qid, '', param::RAW, param::FETCH_POST));
+                    $saved_response = htmlspecialchars((string) param::optional($qid, '', param::RAW, param::FETCH_POST));
                 } else {
                     $saved_response = param::optional($qid, '', param::HTML, param::FETCH_POST);
                 }
@@ -868,7 +868,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     }
                     $totalpos = $marks_correct;
                 } else {
-                    $totalpos = (mb_substr_count($correct, '|') + 1) * $marks_correct;
+                    $totalpos = (mb_substr_count((string) $correct, '|') + 1) * $marks_correct;
                 }
                 break;
             case 'labelling':
@@ -876,7 +876,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 // We cannot clean it fully in one go.
                 $saved_response = param::optional($qid, '', param::RAW, param::FETCH_POST);
                 if ($saved_response != '') {
-                    $tmp_first_split = explode(';', $saved_response);
+                    $tmp_first_split = explode(';', (string) $saved_response);
                     // Clean the mark and total number of items.
                     $tmp_second_split = param::clean_array(explode('$', $tmp_first_split[0]), param::FLOAT);
                     if ($tmp_first_split[1] != '') {
@@ -910,7 +910,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             case 'flash':
                 $qid = 'q' . $question_no;
                 $saved_response = param::optional($qid, '', param::TEXT, param::FETCH_POST);
-                $flash_args = explode(',', $saved_response);
+                $flash_args = explode(',', (string) $saved_response);
                 $mark = $flash_args[0]; // Get student marks from Flash.
                 $totalpos += $marks_correct;
                 break;
@@ -981,7 +981,7 @@ function finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $ol
     } elseif ($old_score_method == 'Mark per Question') {
         $totalpos = $old_marks_correct;
         // If question is unanswered, $saved_response will be a comma separated list of 'u' so check for other characters
-        $answered = preg_match('/[^u,]/', $saved_response);
+        $answered = preg_match('/[^u,]/', (string) $saved_response);
         if ($correct_rank) {
             $mark = ($answered > 0) ? $old_marks_correct : 0;
         } else {
@@ -1025,7 +1025,7 @@ function finalise_dichotomous($old_score_method, $old_marks_correct, $old_marks_
         $totalpos = $old_marks_correct;
         if ($no_correct == 0 and $no_incorrect == 0) { // Abstained to all options
             $mark = 0;
-        } elseif ($no_correct == mb_strlen($saved_response)) {
+        } elseif ($no_correct == mb_strlen((string) $saved_response)) {
             $mark = $old_marks_correct;
         } else {
             $mark = $old_marks_incorrect;

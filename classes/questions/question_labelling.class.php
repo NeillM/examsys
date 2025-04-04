@@ -71,7 +71,7 @@ class QuestionLABELLING extends QuestionEdit
     public function set_points1($value)
     {
         // Correct label locations if too far over.
-        $first_split = explode(';', $value);
+        $first_split = explode(';', (string) $value);
         $second_split = explode('$', $first_split[8]);
         $tmp_coords = '';
         $a = 0;

@@ -67,7 +67,7 @@ class Engine
         $enhancedcalcType = $config->get_setting('core', 'cfg_calc_type');
         $enhancedcalcSettings = $config->get_setting('core', 'cfg_calc_settings');
 
-        $name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($enhancedcalcType) . '\\Engine';
+        $name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower((string) $enhancedcalcType) . '\\Engine';
         if (empty($enhancedcalcType) or !class_exists($name)) {
             $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
         }
@@ -450,16 +450,16 @@ class Engine
 
     public function calc_dp($num)
     {
-        $dotpos = mb_strpos($num, '.');
+        $dotpos = mb_strpos((string) $num, '.');
         if ($dotpos === false) {
             return 0;
         }
 
-        $epos = mb_strpos($num, 'e');
+        $epos = mb_strpos((string) $num, 'e');
         if ($epos !== false) {
             $end = $epos;
         } else {
-            $end = mb_strlen($num);
+            $end = mb_strlen((string) $num);
         }
 
         return $end - ($dotpos + 1);
@@ -500,7 +500,7 @@ class Engine
 
     public function is_engineering_format($num)
     {
-        $epos = mb_stripos($num, 'e');
+        $epos = mb_stripos((string) $num, 'e');
         if ($epos !== false) {
             return true;
         }

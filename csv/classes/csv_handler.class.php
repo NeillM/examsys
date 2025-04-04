@@ -54,7 +54,7 @@ class csv_handler extends \file_handler
         if ($from['name'] == '') {
             throw new csv_load_exception($string['nofilename']);
         }
-        if (pathinfo($from['name'], PATHINFO_EXTENSION) != 'csv') {
+        if (pathinfo((string) $from['name'], PATHINFO_EXTENSION) != 'csv') {
             throw new csv_load_exception($string['csvonly']);
         }
         if (!move_uploaded_file($from['tmp_name'], $to)) {

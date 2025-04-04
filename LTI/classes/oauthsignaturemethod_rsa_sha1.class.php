@@ -62,11 +62,11 @@ class OAuthSignatureMethod_RSA_SHA1 extends OAuthSignatureMethod {
     // Release the key resource
     openssl_free_key($privatekeyid);
 
-    return base64_encode($signature);
+    return base64_encode((string) $signature);
   }
 
   public function check_signature(&$request, $consumer, $token, $signature) {
-    $decoded_sig = base64_decode($signature);
+    $decoded_sig = base64_decode((string) $signature);
 
     $base_string = $request->get_signature_base_string();
 

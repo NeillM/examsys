@@ -152,7 +152,7 @@ $questions[$old_questionID]['options'] = $old_options;
 $result->close();
 
 // Work out the scale.
-$parts = explode('|', $display_method);
+$parts = explode('|', (string) $display_method);
 $columns = count($parts) - 1;
 
 // Get the group of the current user.
@@ -347,7 +347,7 @@ if (isset($_POST['submit'])) {
 
     echo "<br />\n<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"margin-left:auto; margin-right:auto\">\n";
 
-    if (trim($paper_prologue) != '') {
+    if (trim((string) $paper_prologue) != '') {
         echo '<tr><td colspan="' . (count($questions) + 2) . '">' . $paper_prologue . "</td></tr>\n";
         echo '<tr><td colspan="' . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
     }
@@ -367,7 +367,7 @@ if (isset($_POST['submit'])) {
                 if ($photoname and $display_photos == '1') {
                     echo '<img class="photo" src="' . $photodirectory->url($photoname) . '" width="90" height="135" border="0" />';
                 }
-                $first_names = explode(' ', $member_first_names);
+                $first_names = explode(' ', (string) $member_first_names);
                 echo '</td><td class="title" colspan="' . ($columns + 1) . "\">$member_title " . \demo::demo_replace($first_names[0], $demo) . ' ' . \demo::demo_replace($member_surname, $demo) . "</td></tr>\n";
 
                 echo '<tr><td></td>';

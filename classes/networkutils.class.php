@@ -40,14 +40,14 @@ class NetworkUtils
         if (!isset($_SESSION['current_ip'])) {
             if ($configObject->get_setting('core', 'system_hostname_lookup')) {
                 if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $tmp_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                    $tmp_parts = explode(',', (string) $_SERVER['HTTP_X_FORWARDED_FOR']);
                     $tmp_client_ipaddress = gethostbyaddr(trim($tmp_parts[0]));
                 } else {
                     $tmp_client_ipaddress = gethostbyaddr($_SERVER['REMOTE_ADDR']);
                 }
             } else {
                 if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                    $tmp_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+                    $tmp_parts = explode(',', (string) $_SERVER['HTTP_X_FORWARDED_FOR']);
                     $tmp_client_ipaddress = trim($tmp_parts[0]);
                 } else {
                     $tmp_client_ipaddress = $_SERVER['REMOTE_ADDR'];
@@ -78,7 +78,7 @@ class NetworkUtils
         global $email;
 
         if ($output !== true) {
-            $output = (mb_substr($email, (mb_strlen($domain) * -1)) == $domain);
+            $output = (mb_substr((string) $email, (mb_strlen((string) $domain) * -1)) == $domain);
         }
         return $output;
     }

@@ -85,7 +85,7 @@ class version
         $sorted = [];
         // Filter the relase, major and minor numbers.
         foreach ($fileversion as $version) {
-            preg_match(self::VERSION_FORMAT, $version, $filtered);
+            preg_match(self::VERSION_FORMAT, (string) $version, $filtered);
             $unsorted[] = $filtered;
             $release[] = $filtered['release'];
             $major[] = $filtered['major'];

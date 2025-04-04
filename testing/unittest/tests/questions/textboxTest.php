@@ -102,7 +102,7 @@ class textboxtest extends unittestdatabase
         $this->assertEquals(40, $data->editorcolumns);
         $this->assertEquals(10, $data->editorrows);
         $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-        $te = explode('_', $texteditorplugin->get_name());
+        $te = explode('_', (string) $texteditorplugin->get_name());
         $editor = $te[1];
         $this->assertEquals($editor, $data->editor);
         $this->assertTrue($data->unanswered);

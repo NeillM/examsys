@@ -50,15 +50,15 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color, 
 
     $tab_array = ['Log'];
 
-    if (stripos($user_roles, 'Staff') !== false) {
+    if (stripos((string) $user_roles, 'Staff') !== false) {
         $tab_array[] = 'Teams';
     }
 
-    if (stripos($user_roles, 'Admin') !== false and stripos($user_roles, 'SysAdmin') === false) {
+    if (stripos((string) $user_roles, 'Admin') !== false and stripos((string) $user_roles, 'SysAdmin') === false) {
         $tab_array[] = 'Admin';
     }
 
-    if (stripos($user_roles, 'Student') !== false or stripos($user_roles, 'Graduate') !== false) {
+    if (stripos((string) $user_roles, 'Student') !== false or stripos((string) $user_roles, 'Graduate') !== false) {
         $tab_array[] = 'Modules';
         $tab_array[] = 'Notes';
         $tab_array[] = 'Accessibility';
@@ -215,8 +215,8 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
         $highlightcolour = UserObject::HIGHLIGHTCOLOUR;
     }
 
-    $medical = trim(param::optional('medical', '', param::TEXT, param::FETCH_POST));
-    $breaks = trim(param::optional('breaks', '', param::TEXT, param::FETCH_POST));
+    $medical = trim((string) param::optional('medical', '', param::TEXT, param::FETCH_POST));
+    $breaks = trim((string) param::optional('breaks', '', param::TEXT, param::FETCH_POST));
 
     $details = UserUtils::getUserProfile($userID, $mysqli);
 
@@ -525,7 +525,7 @@ if ($user_details['gender'] == 'Male') {
 } else {
     $generic_icon = '../artwork/user_mx_64.png';
 }
-if (stripos($user_details['roles'], 'Student') !== false) {
+if (stripos((string) $user_details['roles'], 'Student') !== false) {
     $student_photo = UserUtils::student_photo_exist($user_details['username']);
     $photodirectory = rogo_directory::get_directory('user_photo');
     if ($student_photo) {
@@ -546,7 +546,7 @@ if ($userObject->has_role('SysAdmin')) {
     echo '<input type="button" id="edit" value="' . $string['edit'] . '" style="float:right; width:100px" class="ok" />';
 }
   echo "</td></tr>\n";
-if (stripos($user_details['roles'], 'Student') !== false) {
+if (stripos((string) $user_details['roles'], 'Student') !== false) {
     if ($user_details['student_id'] == '') {
         $user_details['student_id'] = $string['unknown'];
     }
@@ -559,13 +559,13 @@ if (stripos($user_details['roles'], 'Student') !== false) {
   echo '<td class="field">' . $string['studentid'] . '</td><td>' . $sid . "</td></tr>\n";
 
   echo '<tr><td class="field">' . $string['email'] . '</td><td><a href="mailto:' . $user_details['email'] . '">' . $user_details['email'] . '</a></td>';
-if (stripos($user_details['roles'], 'Student') !== false) {
+if (stripos((string) $user_details['roles'], 'Student') !== false) {
     echo '<td class="field">' . $string['yearofstudy'] . '</td><td>' . $user_details['yearofstudy'] . '</td>';
 } else {
     echo '<td class="field"></td><td></td>';
 }
   echo "</tr>\n";
-if (stripos($user_details['roles'], 'Student') !== false) {
+if (stripos((string) $user_details['roles'], 'Student') !== false) {
     echo '<tr><td class="field">' . $string['course'] . '</td><td>' . $user_details['grade'] . ' - ' . $course_details['description'] . '</td>';
     echo '<td class="field"></td>';
     echo "</tr>\n";
@@ -582,7 +582,7 @@ if ($demo) {
 if ($userObject->has_role('SysAdmin')) {
     echo '<td class="field">' . $string['password'] . '</td><td>';
     $authinfo = $authentication->version_info(true, false);
-    if (stripos($authinfo, 'LDAP') === false) {    // Don't show if LDAP is on.
+    if (stripos((string) $authinfo, 'LDAP') === false) {    // Don't show if LDAP is on.
         echo "<input id=\"emailpasswordreset\" type=\"button\" value=\"{$string['reset']}\" />&nbsp;";
     }
     echo "<input id=\"forcepasswordreset\" type=\"button\" value=\"{$string['forcereset']}\" /></td></tr>\n";
@@ -645,7 +645,7 @@ if ($userObject->has_role(['Admin', 'SysAdmin']) or $userObject->get_user_ID() =
 
 if ($log_viewable) {
     // Get the papers the External/Internal is down to review.
-    if (stripos($user_details['roles'], 'External Examiner') !== false or stripos($user_details['roles'], 'Internal Reviewer') !== false) {
+    if (stripos((string) $user_details['roles'], 'External Examiner') !== false or stripos((string) $user_details['roles'], 'Internal Reviewer') !== false) {
         $external_array = [];
 
         // The expectation is that $started is used for ordering, while $display_started is used for display.
@@ -758,7 +758,7 @@ if ($log_viewable) {
     }
 
     for ($i = 0; $i < $results_no; $i++) {
-        if (mb_strpos($paper[$i]['q_paper'], '[deleted') !== false) {
+        if (mb_strpos((string) $paper[$i]['q_paper'], '[deleted') !== false) {
             $paper[$i]['q_paper'] = '<span style="color:#808080; text-decoration:line-through">' . $paper[$i]['q_paper'] . '</span>';
         }
         switch ($paper[$i]['type']) {
@@ -769,7 +769,7 @@ if ($log_viewable) {
                 echo '<tr><td><a class="paperreview" href="#" data-papername="' . $paper[$i]['crypt_name'] . '" data-papertype="' . $paper[$i]['type'] . '" data-metadataid="' . $paper[$i]['metadataID'] . '"><img src="../artwork/progress_16.gif" width="16" height="16" alt="Display marked paper for ' . $user_details['surname'] . '" /></a></td><td><a href="../paper/details.php?paperID=' . $paper[$i]['id'] . '">' . $paper[$i]['q_paper'] . '</a></td><td>' . $paper[$i]['paper_type'] . '</td><td>' . $paper[$i]['display_started'] . '</td><td>' . $paper[$i]['ipaddress'] . "</td></tr>\n";
                 break;
             case '2':
-                if (stripos($user_details['roles'], 'External Examiner') !== false or stripos($user_details['roles'], 'Internal Reviewer') !== false) {
+                if (stripos((string) $user_details['roles'], 'External Examiner') !== false or stripos((string) $user_details['roles'], 'Internal Reviewer') !== false) {
                     echo '<tr><td><img src="../artwork/summative_16.gif" width="16" height="16" /></td><td>&nbsp;<a href="../paper/details.php?paperID=' . $paper[$i]['id'] . '"';
                 } else {
                     echo '<tr><td><a class="paperreview" href="#" data-papername="' . $paper[$i]['crypt_name'] . '" data-papertype="' . $paper[$i]['type'] . '" data-metadataid="' . $paper[$i]['metadataID'] . '"><img src="../artwork/summative_16.gif" width="16" height="16" alt="Display marked paper for ' . $user_details['surname'] . '" /></a></td><td><a href="../paper/details.php?paperID=' . $paper[$i]['id'] . '"';
@@ -1327,7 +1327,7 @@ $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $dataset['attributes']['userid'] = $userID;
 $dataset['attributes']['surname'] = str_replace("'", '&#8217;', $user_details['surname']);
-$dataset['attributes']['email'] = urlencode($user_details['email']);
+$dataset['attributes']['email'] = urlencode((string) $user_details['email']);
 $dataset['attributes']['sid'] = $student_id;
 $dataset['attributes']['searchusername'] = $search_username;
 $dataset['attributes']['searchsurname'] = $search_surname;

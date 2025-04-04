@@ -60,18 +60,18 @@ function displayReviewCsv($review, $string)
     if ($review['group_review'] != 'No') {
         $output .= 'Group review,';
     } else {
-        $output .= addslashes($review['name']) . ',';
+        $output .= addslashes((string) $review['name']) . ',';
     }
     if ($review['distinction_score'] == '0.000000%') {
         $review['distinction_score'] = 'top 20%';
     }
 
-    $output .= addslashes($review['display_date']) . ',';
-    $output .= addslashes($review['pass_score']) . ',';
-    $output .= addslashes($review['distinction_score']) . ',';
-    $output .= addslashes($review['review_total']) . ',';
-    $output .= addslashes($review['total_marks']) . ',';
-    $output .= addslashes($review['method']) . ',';
+    $output .= addslashes((string) $review['display_date']) . ',';
+    $output .= addslashes((string) $review['pass_score']) . ',';
+    $output .= addslashes((string) $review['distinction_score']) . ',';
+    $output .= addslashes((string) $review['review_total']) . ',';
+    $output .= addslashes((string) $review['total_marks']) . ',';
+    $output .= addslashes((string) $review['method']) . ',';
 
     $output .= "\n";
 
@@ -96,14 +96,14 @@ header('Content-Disposition: attachment; filename="' . \file_handler::make_filen
 $percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
 
 if (is_array($reviews)) {
-    $csv .= addslashes($string['validate']) . ',';
-    $csv .= addslashes($string['standardsetter']) . ',';
-    $csv .= addslashes($string['date']) . ',';
-    $csv .= addslashes($string['passscore']) . ',';
-    $csv .= addslashes($string['distinction']) . ',';
-    $csv .= addslashes($string['reviewmarks']) . ',';
-    $csv .= addslashes($string['papertotal']) . ',';
-    $csv .= addslashes($string['method']) . ',';
+    $csv .= addslashes((string) $string['validate']) . ',';
+    $csv .= addslashes((string) $string['standardsetter']) . ',';
+    $csv .= addslashes((string) $string['date']) . ',';
+    $csv .= addslashes((string) $string['passscore']) . ',';
+    $csv .= addslashes((string) $string['distinction']) . ',';
+    $csv .= addslashes((string) $string['reviewmarks']) . ',';
+    $csv .= addslashes((string) $string['papertotal']) . ',';
+    $csv .= addslashes((string) $string['method']) . ',';
     $csv .= "\n";
 
     $csv .= ",,,,,,,\n";
@@ -112,7 +112,7 @@ if (is_array($reviews)) {
         $csv .= displayReviewCsv($review, $string);
     }
 } else {
-    $csv .= strip_tags($string['nostandardsset']);
+    $csv .= strip_tags((string) $string['nostandardsset']);
 }
 
 echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');

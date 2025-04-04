@@ -34,14 +34,14 @@ class LangUtils
             $langs[] = $_SESSION['ROGO_language'];
         } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // Check this is set as some webservices do not have this data.
-            $langs = explode(',', mb_strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+            $langs = explode(',', mb_strtolower((string) $_SERVER['HTTP_ACCEPT_LANGUAGE']));
         }
 
         if (isset($langs) and is_array($langs)) {
             $i = 0;
             // Use first supported language found.
             while ($i < count($langs) and $language == '') {
-                $parts = explode(';', $langs[$i]);
+                $parts = explode(';', (string) $langs[$i]);
                 $test_lang = $parts[0];
                 $lang = mb_substr($test_lang, 0, 2);
                 if (LangUtils::supportedLang($lang)) {

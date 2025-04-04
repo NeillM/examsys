@@ -113,15 +113,15 @@ if ($mode == 0) {
   <br />
 <?php
 if (isset($_POST['submit'])) {
-    $to_list = explode(';', $_POST['toaddress']);
+    $to_list = explode(';', (string) $_POST['toaddress']);
 
     foreach ($to_list as $individual_to) {
         $to = trim($individual_to);
-        $subject = trim($_POST['subject']);
+        $subject = trim((string) $_POST['subject']);
         $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; font-size:90%}\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
         $from = $userObject->get_email();
-        $cc = trim($_POST['ccaddress']);
-        $bcc = trim($_POST['bccaddress']);
+        $cc = trim((string) $_POST['ccaddress']);
+        $bcc = trim((string) $_POST['bccaddress']);
 
         Mailer::send($to, $subject, $message, $from, $from, $cc, $bcc, true);
     }

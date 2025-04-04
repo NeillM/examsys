@@ -134,7 +134,7 @@ if (isset($_POST['submit'])) {
 
 
     $breadcrumb[$string['home']] = '../index.php';
-    if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+    if (isset($_GET['folder']) and trim((string) $_GET['folder']) != '') {
         $link = '../folder/index.php?folder=' . $_GET['folder'];
         $name = folder_utils::get_folder_name($_GET['folder'], $mysqli);
         $breadcrumb[$name] = $link;
@@ -222,8 +222,8 @@ SQL;
             $secondary_checked = '';
             $override = true;
         }
-        if (trim($user_answer) != '') {
-            echo "<tr class=\"l\"><td class=\"studentno\">$student_no</td><td class=\"ans\">" . nl2br($user_answer) . '<br />&nbsp;</td>';
+        if (trim((string) $user_answer) != '') {
+            echo "<tr class=\"l\"><td class=\"studentno\">$student_no</td><td class=\"ans\">" . nl2br((string) $user_answer) . '<br />&nbsp;</td>';
 
             if (isset($secondary_marks[$log_id]['mark']) and isset($primary_marks[$log_id]['mark']) and abs($primary_marks[$log_id]['mark'] - $secondary_marks[$log_id]['mark']) > 1) {
                 echo '<td class="primary noans">' . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id]['mark'] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
@@ -231,7 +231,7 @@ SQL;
                 if (isset($primary_marks[$log_id]['mark'])) {
                     echo '<td class="primary">' . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked />";
                     if (isset($secondary_marks[$log_id]['mark'])) {
-                        echo '<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . htmlspecialchars($primary_marks[$log_id]['comment']) . '" />';
+                        echo '<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . htmlspecialchars((string) $primary_marks[$log_id]['comment']) . '" />';
                     }
                     echo '</td>';
                 } else {
@@ -240,7 +240,7 @@ SQL;
                 if (isset($secondary_marks[$log_id]['mark'])) {
                     echo '<td class="secondary">' . $secondary_marks[$log_id]['mark'] . "<input class=\"secondarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked />";
                     if (isset($primary_marks[$log_id]['mark'])) {
-                        echo '<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . htmlspecialchars($secondary_marks[$log_id]['comment']) . '" />';
+                        echo '<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . htmlspecialchars((string) $secondary_marks[$log_id]['comment']) . '" />';
                     }
                     echo '</td>';
                 } else {

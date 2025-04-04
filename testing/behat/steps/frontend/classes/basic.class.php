@@ -179,7 +179,7 @@ trait basic
         foreach ($windows as $window) {
             $session->switchToWindow($window);
             $title = $session->getDriver()->getWebDriverSession()->title();
-            if (trim($title) === trim($name)) {
+            if (trim((string) $title) === trim($name)) {
                 $this->lookForErrors();
                 return;
             }
@@ -291,7 +291,7 @@ trait basic
         for ($i = 1; $i < count($windows); $i++) {
             $this->getSession()->switchToWindow($windows[$i]);
             $name = $session->getDriver()->getWebDriverSession()->title();
-            if (trim($name) === trim($title)) {
+            if (trim((string) $name) === trim((string) $title)) {
                 $this->getSession()->executeScript('window.close()');
                 $closed = true;
             }
@@ -313,7 +313,7 @@ trait basic
     public function i_see_page_title($title)
     {
         $pagetitle = $this->find('xpath', "//div[@class='page_title']")->getText();
-        if (mb_strpos($pagetitle, $title) === false) {
+        if (mb_strpos((string) $pagetitle, $title) === false) {
             throw new Exception('The page could not be found');
         }
     }

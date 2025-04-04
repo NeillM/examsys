@@ -33,7 +33,7 @@ reset($_FILES);
 $temp = current($_FILES);
 if (is_uploaded_file($temp['tmp_name'])) {
     // Sanitize input
-    if (preg_match('/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/', $temp['name'])) {
+    if (preg_match('/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/', (string) $temp['name'])) {
         header('HTTP/1.1 400 Invalid file name.');
         return;
     }
@@ -45,16 +45,16 @@ if (is_uploaded_file($temp['tmp_name'])) {
             $supportedimages[] = $ext;
         }
     }
-    if (!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), $supportedimages)) {
+    if (!in_array(strtolower(pathinfo((string) $temp['name'], PATHINFO_EXTENSION)), $supportedimages)) {
         header('HTTP/1.1 400 Invalid extension.');
         return;
     }
 
     // Determine the base URL
     $headers = getallheaders();
-    if (mb_strpos($headers['Referer'], '/help/staff/') !== false) {
+    if (mb_strpos((string) $headers['Referer'], '/help/staff/') !== false) {
         $mediatype = 'help_staff';
-    } elseif (mb_strpos($headers['Referer'], '/help/student/') !== false) {
+    } elseif (mb_strpos((string) $headers['Referer'], '/help/student/') !== false) {
         $mediatype = 'help_student';
     } else {
         $mediatype = 'media';
@@ -62,7 +62,7 @@ if (is_uploaded_file($temp['tmp_name'])) {
 
     // Accept upload
     $mediadirectory = rogo_directory::get_directory($mediatype);
-    $filename = mb_strtolower($temp['name']);
+    $filename = mb_strtolower((string) $temp['name']);
     if ($uploadtype === 'help') {
         // Help files keep the image name.
         $unique_name = $filename;

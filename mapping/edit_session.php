@@ -187,7 +187,7 @@ if (isset($_POST['Edit'])) {
     $validfrom .= "</select></td></tr>\n";
     echo $validfrom;
 
-    [$date, $time] = explode(' ', $sess['occurrence']);
+    [$date, $time] = explode(' ', (string) $sess['occurrence']);
     [$y, $m, $d] = explode('-', $date);
 
     echo '<tr><td class="field">' . $string['date'] . '</td><td>';
@@ -224,7 +224,7 @@ if (isset($_POST['Edit'])) {
         if ($month_value < 10) {
             $month_value = '0' . $month_value;
         }
-        $validfrom .= "<option value=\"$month_value\" $selected>" . mb_substr($string[$month_names[$month]], 0, 3, 'UTF-8') . "</option>\n";
+        $validfrom .= "<option value=\"$month_value\" $selected>" . mb_substr((string) $string[$month_names[$month]], 0, 3, 'UTF-8') . "</option>\n";
     }
     $validfrom .= '</select>&nbsp;';
     echo $validfrom;
@@ -269,7 +269,7 @@ if (isset($_POST['Edit'])) {
         foreach ($sess['objectives'] as $id => $obj) {
             echo "\t<li class=\"ui-state-default\" id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
             echo '<span class="ui-icon ui-icon-arrowthick-2-n-s"></span>';
-            echo "<input class='editBox' id=\"obj_" . $id . '" name="obj_' . $id . '" type="text" value="' . htmlentities($obj, ENT_QUOTES, 'UTF-8') .  '" placeholder="' . $string['msg1'] . '" />';
+            echo "<input class='editBox' id=\"obj_" . $id . '" name="obj_' . $id . '" type="text" value="' . htmlentities((string) $obj, ENT_QUOTES, 'UTF-8') .  '" placeholder="' . $string['msg1'] . '" />';
             echo "</li>\n";
         }
     }

@@ -33,8 +33,8 @@ function makeMenu($options)
     // Work out the width of the menu
     $longest_string = 0;
     foreach ($options as $title => $url) {
-        if (mb_strlen($title) > $longest_string) {
-            $longest_string = mb_strlen($title);
+        if (mb_strlen((string) $title) > $longest_string) {
+            $longest_string = mb_strlen((string) $title);
         }
     }
     $width = ($longest_string * 7) + 35;
@@ -47,7 +47,7 @@ function makeMenu($options)
     $myoptions = [];
     $myurls = [];
     foreach ($options as $title => $url) {
-        $tmp_parts = explode('[BR]', $title);
+        $tmp_parts = explode('[BR]', (string) $title);
         if (count($tmp_parts) > 1) {
             $title = $tmp_parts[1];
         } else {
@@ -71,12 +71,12 @@ function makeMenu($options)
     }
     foreach ($options as $title => $url) {
         $itemID = $menuNo . '_' . $line;
-        if (mb_substr($url, 0, 1) == '-') {
+        if (mb_substr((string) $url, 0, 1) == '-') {
             echo "<div class=\"popupitemline\" id=\"$itemID\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0\" /></div>\n";
-        } elseif (mb_substr($url, 0, 1) == '#') {
-            echo "<div class=\"popupitembold\" id=\"$itemID\">" . mb_substr($url, 1) . "</div>\n";
+        } elseif (mb_substr((string) $url, 0, 1) == '#') {
+            echo "<div class=\"popupitembold\" id=\"$itemID\">" . mb_substr((string) $url, 1) . "</div>\n";
         } else {
-            if (mb_stripos($url, 'JavaScript:') === false) {
+            if (mb_stripos((string) $url, 'JavaScript:') === false) {
                 echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"window.location='$url'\">/$title</div>\n";
             } else {
                 echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"$url\">/$title</div>\n";

@@ -12,7 +12,7 @@ function testBinary($values, $type, $options = [], $msg = '') {
 	$cn = 'Rserve_REXP_'.$type;
 	$r = new $cn();
 
-	$tt  = strtolower($type);
+	$tt  = strtolower((string) $type);
 
 	if(is_subclass_of($r, 'Rserve_REXP_Vector')) {
 		if( is_subclass_of($r,'Rserve_REXP_List') AND @$options['named']) {

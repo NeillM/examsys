@@ -34,7 +34,7 @@ class UserUtils
             return false;
         }
 
-        $roles = explode(',', $role);
+        $roles = explode(',', (string) $role);
         foreach ($roles as $rolename) {
             try {
                 Role::validateRole($rolename);
@@ -946,7 +946,7 @@ class UserUtils
     public static function fixcase_callback($word)
     {
         $word = $word[1];
-        $word = mb_strtolower($word);
+        $word = mb_strtolower((string) $word);
 
         if ($word == 'de') {
             return $word;
@@ -971,7 +971,7 @@ class UserUtils
         if (mb_check_encoding($s, 'UTF-8')) {
             //do nothing
         } else {
-            $s = preg_replace_callback("/(\b[\w|']+\b)/s", ['UserUtils', 'fixcase_callback'], $s);
+            $s = preg_replace_callback("/(\b[\w|']+\b)/s", ['UserUtils', 'fixcase_callback'], (string) $s);
         }
         return $s;
     }

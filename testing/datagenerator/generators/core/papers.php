@@ -262,7 +262,7 @@ class papers extends generator
         $settings['id'] = $pid;
         // Post creation settings may be provided as a json array.
         if (!empty($settings['settings'])) {
-            $settings = array_merge($settings, $this->set_post_creation_settings($settings['id'], json_decode($settings['settings'], true)));
+            $settings = array_merge($settings, $this->set_post_creation_settings($settings['id'], json_decode((string) $settings['settings'], true)));
         } else {
             // Set defaults.
             $settings = array_merge($settings, $this->default_paper_properties);

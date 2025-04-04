@@ -51,7 +51,7 @@ class demo
     public static function demo_replace($text, $demo_on = true, $capitalise = true, $start_on = 'a')
     {
         if ($demo_on) {
-            $start_on = ord(strtolower($start_on));
+            $start_on = ord(strtolower((string) $start_on));
 
             $new_text = '';
             if ($capitalise) {

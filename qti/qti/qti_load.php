@@ -47,10 +47,10 @@ class IE_qti_Load extends IE_Main
 
         $filename = $params->sourcefile;
 
-        $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $ext = mb_strtolower(pathinfo((string) $filename, PATHINFO_EXTENSION));
 
         if ($ext == 'xml') {
-            $xml_files[basename($filename)] = $filename;
+            $xml_files[basename((string) $filename)] = $filename;
         } elseif ($ext == 'zip') {
             echo 'Extracting zip<br />';
             $zip = new ZipArchive();
@@ -150,7 +150,7 @@ class IE_qti_Load extends IE_Main
         $xml = simplexml_load_string($xmlStr);
 
         if (!$xml) {
-            $this->AddError(sprintf($string['invalidxml'], basename($filename)));
+            $this->AddError(sprintf($string['invalidxml'], basename((string) $filename)));
             return '';
         }
 

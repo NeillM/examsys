@@ -191,7 +191,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
     if (!isset($_GET['type'])) {
         $critical_error = $string['typeundefined'];
     } elseif (!in_array($_GET['type'], QuestionEdit::$types)) {
-        $critical_error = sprintf($string['typeinvalid'], htmlentities($_GET['type']));
+        $critical_error = sprintf($string['typeinvalid'], htmlentities((string) $_GET['type']));
     } else {
         try {
             $question = QuestionEdit::question_factory($mysqli, $userObject, $string, $_GET['type']);

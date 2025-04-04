@@ -315,7 +315,7 @@ class Statistics
     {
         $lab_count = [];
         foreach ($labsarray as $labs) {
-            $lab_list = explode(',', $labs);
+            $lab_list = explode(',', (string) $labs);
             foreach ($lab_list as $labID) {
                 if ($labID != '') {
                     if (isset($lab_count[$labID])) {

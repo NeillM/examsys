@@ -41,7 +41,7 @@ function explode_no_empty($delimiter, $string)
 {
     $result = [];
 
-    $items = explode($delimiter, $string);
+    $items = explode($delimiter, (string) $string);
     foreach ($items as $item) {
         $item = trim($item);
 
@@ -76,7 +76,7 @@ function StripForTitle($in)
 
 function RemoveEmptyHTMLTags($in)
 {
-    return preg_replace('#<(\w+)[^>]*>\s*</\1>#im', '', $in);
+    return preg_replace('#<(\w+)[^>]*>\s*</\1>#im', '', (string) $in);
 }
 
 // will compare $array1 and $array2, and remove any items with a common key and put it in $common. Value that goes in $common will come from $array1
@@ -105,7 +105,7 @@ function RemoveCommonInArray(&$array1, &$array2, &$common)
 // splits a string into parts and adds the array of its results to $array[]
 function ExplodeToArray(&$array, $string, $delim = '|')
 {
-    if (stripos($string, '<br') > 0) {
+    if (stripos((string) $string, '<br') > 0) {
         $str2 = str_replace('<br>', ' ', $string);
         $str2 = str_replace('<br />', ' ', $str2);
         ExplodeToArray($array, $str2, $delim);
@@ -115,7 +115,7 @@ function ExplodeToArray(&$array, $string, $delim = '|')
         ExplodeToArray($array, $str2, $delim);
     }
     $output = [];
-    $arr = explode($delim, $string);
+    $arr = explode($delim, (string) $string);
     foreach ($arr as $value) {
         $value = mb_strtolower($value);
         $output[] = $value;
@@ -229,7 +229,7 @@ function LogForQuestion($id)
 
 function CleanFileName($Raw)
 {
-    $Raw = trim($Raw);
+    $Raw = trim((string) $Raw);
     $RemoveChars = ["([\40])", '([^a-zA-Z0-9-])', '(-{2,})'];
     $ReplaceWith = ['-', '_', '-'];
     return preg_replace($RemoveChars, $ReplaceWith, $Raw);
@@ -243,7 +243,7 @@ function DetectQTIVersion($filename)
 
 function FindQuestion(&$questions, $id)
 {
-    $id = trim($id);
+    $id = trim((string) $id);
     foreach ($questions as & $question) {
         if ($question->load_id == $id) {
             return $question;
@@ -304,14 +304,14 @@ function ConvertType($type)
 
 function GenerateMediaType($filename)
 {
-    $ext = mb_strtolower(mb_substr($filename, mb_strrpos($filename, '.') + 1));
+    $ext = mb_strtolower(mb_substr((string) $filename, mb_strrpos((string) $filename, '.') + 1));
 
     return 'image/' . $ext;
 }
 
 function for_id($in)
 {
-    $in = strip_tags($in);
+    $in = strip_tags((string) $in);
     $in = str_replace(' ', '_', $in);
     $in = str_replace('"', '_', $in);
     $in = str_replace("'", '_', $in);
@@ -324,10 +324,10 @@ function MakeValidHTML($in, $trim = 0)
 {
     // remove any closing tags at start just in case
     if ($trim == 0) {
-        $in = trim($in);
+        $in = trim((string) $in);
     }
-    if (mb_substr($in, 0, 2) == '</') {
-        $in = mb_substr($in, mb_strpos($in, '>') + 1);
+    if (mb_substr((string) $in, 0, 2) == '</') {
+        $in = mb_substr((string) $in, mb_strpos((string) $in, '>') + 1);
     }
 
     $in = '<div>XXX-START-XXX' . $in . 'XXX-END-XXX</div>';
@@ -358,13 +358,13 @@ function RemoveLoneP($in)
 {
     // some qti files have a lone . at end of <p> or <span> tags, remove it
     $append = '';
-    if (mb_substr($in, mb_strlen($in) - 2, 2) == '>.') {
-        $in = mb_substr($in, 0, mb_strlen($in) - 1);
+    if (mb_substr((string) $in, mb_strlen((string) $in) - 2, 2) == '>.') {
+        $in = mb_substr((string) $in, 0, mb_strlen((string) $in) - 1);
         $append = '.';
     }
 
     //echo htmlentities("IN :!$in!")."<br>";
-    $in = trim($in);
+    $in = trim((string) $in);
     if (mb_substr($in, 0, 1) == '<' && mb_substr($in, mb_strlen($in) - 1, 1) == '>' && mb_strlen($in) > 10) {
         $opentag = mb_strtolower(mb_substr($in, 1, mb_strpos($in, '>') - 1));
         $opentag = trim(mb_substr($opentag, 0, mb_strpos($opentag, ' ')));
@@ -406,7 +406,7 @@ function OrderToStr(int $no)
 
 function RemoveStNdRd($in)
 {
-    $in = mb_strtolower(trim($in));
+    $in = mb_strtolower(trim((string) $in));
 
     if ($in == 'na' || $in == 'n/a') {
         return 9990;
@@ -426,7 +426,7 @@ function RemoveStNdRd($in)
 
 function MonthToNumeric($month)
 {
-    $month = mb_strtolower(mb_substr($month, 0, 3));
+    $month = mb_strtolower(mb_substr((string) $month, 0, 3));
     if ($month == 'jan') {
         return 1;
     }

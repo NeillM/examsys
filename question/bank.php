@@ -46,7 +46,7 @@ if ($module == 0) {
     $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 }
 
-if ($module != 0 and mb_strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+if ($module != 0 and mb_strpos((string) $module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -197,7 +197,7 @@ function number_of_questions($question_no, $string)
 
 function display_folder($url, $type_name, $grey_text, $class)
 {
-    $type_name = strip_tags($type_name);
+    $type_name = strip_tags((string) $type_name);
     return "<div class=\"$class\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</div></div>\n";
 }
 

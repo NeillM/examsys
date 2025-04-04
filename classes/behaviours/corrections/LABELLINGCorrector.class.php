@@ -53,7 +53,7 @@ class LABELLINGCorrector extends Corrector
 
                     // Calculate how many correct labels - are they on the canvas (x > 219px)
                     $correct_labels = [];
-                    $tmp_first_split = explode(';', $label_details);
+                    $tmp_first_split = explode(';', (string) $label_details);
                     $tmp_second_split = explode('|', $tmp_first_split[11]);
                     $label_count = 0;
                     foreach ($tmp_second_split as $label) {

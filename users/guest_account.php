@@ -69,9 +69,9 @@ if (!$lab) {
 <?php
 if (isset($_POST['submit'])) {
     // Update the temp_user table with the completed student details.
-    $tmp_first_names = trim(param::optional('first_names', '', param::TEXT));
-    $tmp_surname = trim(param::optional('surname', '', param::TEXT));
-    $tmp_student_id = trim(param::optional('student_id', '', param::ALPHANUM));
+    $tmp_first_names = trim((string) param::optional('first_names', '', param::TEXT));
+    $tmp_surname = trim((string) param::optional('surname', '', param::TEXT));
+    $tmp_student_id = trim((string) param::optional('student_id', '', param::ALPHANUM));
     $recordID = param::optional('recordID', 0, param::INT);
     $username = param::optional('username', '', param::TEXT);
     $password = param::optional('password', '', param::TEXT);

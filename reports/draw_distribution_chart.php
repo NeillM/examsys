@@ -211,12 +211,12 @@ if (!is_null($plotuser)) {
     ImageString($Image, 3, 345, 278, 'Performance', $black);
 } else {
     if (!$adjust) {
-        imagettftext($Image, 12, 0, 375 + (abs($scale_start) * 5), 296, $black, $bold_font, $string['percent']);
+        imagettftext($Image, 12, 0, 375 + (abs($scale_start) * 5), 296, $black, $bold_font, (string) $string['percent']);
     } else {
-        imagettftext($Image, 12, 0, 342 + (abs($scale_start) * 5), 296, $black, $bold_font, $string['adjustedpercent']);
+        imagettftext($Image, 12, 0, 342 + (abs($scale_start) * 5), 296, $black, $bold_font, (string) $string['adjustedpercent']);
     }
 }
-imagettftext($Image, 12, 90, 12, 182, $black, $bold_font, $string['occurrance']);
+imagettftext($Image, 12, 90, 12, 182, $black, $bold_font, (string) $string['occurrance']);
 
 if (!is_null($plotuser)) {
     if ($label < 100) {

@@ -37,7 +37,7 @@ class Rserve_REXP_Raw extends Rserve_REXP {
 	}
 	
 	public function toHTML() {
-		$s = strlen($this->value) > 60 ? substr($this->value,0,60).' (truncated)': $this->value;
+		$s = strlen((string) $this->value) > 60 ? substr((string) $this->value,0,60).' (truncated)': $this->value;
 		return '<div class="rexp xt_'.$this->getType().'"> <span class="typename">raw</span><div class="value">'.$s.'</div>'.$this->attrToHTML().'</div>';	
 	}
 	

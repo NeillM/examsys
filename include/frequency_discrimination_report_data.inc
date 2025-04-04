@@ -262,7 +262,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             $tmp_answer_parts = json_decode($answer);
             $i = 0;
             foreach ($tmp_answer_parts as $tmp_individual_answer) {
-                $tmp_individual_answer = mb_strtolower(trim($tmp_individual_answer));
+                $tmp_individual_answer = mb_strtolower(trim((string) $tmp_individual_answer));
                 $i++;
                 if ($tmp_individual_answer == 'u') {
                     if (isset($log_array[$qID][$i]['u'])) {
@@ -826,9 +826,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 }
 
                 // Strip mark/size strings
-                $options[0]['option_text'] = preg_replace('/ (mark|size)="([0-9]{1,3})"/u', '', $options[0]['option_text']);
+                $options[0]['option_text'] = preg_replace('/ (mark|size)="([0-9]{1,3})"/u', '', (string) $options[0]['option_text']);
 
-                preg_match_all('|\[blank\](.*?)\[/blank\]|mu', $options[0]['option_text'], $blanks);
+                preg_match_all('|\[blank\](.*?)\[/blank\]|mu', (string) $options[0]['option_text'], $blanks);
                 $blanks = $blanks[1];
                 // Below is to prepare a string ready to output with sprintf. May need str_replace changing for multibyte custom function, depending on charset
                 $question_data['formatted_string'] = preg_replace('|\[blank\](.*?)\[/blank\]|su', '%s', str_replace('%', '%%', $options[0]['option_text']));
@@ -855,7 +855,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                                 $log[$q_id][$i][$blank] = 0;
                             }
                         }
-                        $blank_word = mb_strtolower(trim($blank_options[0]));
+                        $blank_word = mb_strtolower(trim((string) $blank_options[0]));
 
                         if (isset($freq_log[$q_id][$i][$blank_word])) {
                             $tmp_correct_no += $freq_log[$q_id][$i][$blank_word];
@@ -1102,7 +1102,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 $max_col2 = 0;
                 $correct_buf = [];
                 $options_buffer = []; // Looks like this replaces $options, but check before changing variable names. Might be worth leaving as-is for clarity.
-                $tmp_first_split = explode(';', $options[0]['correct']);
+                $tmp_first_split = explode(';', (string) $options[0]['correct']);
                 $tmp_second_split = explode('$', $tmp_first_split[11]);
                 for ($label_no = 4; $label_no <= 200; $label_no += 4) {
                     if (isset($tmp_second_split[$label_no])) {
@@ -1200,7 +1200,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
                 break;
             case 'hotspot':
-                $layers = explode('|', $options[0]['correct']);
+                $layers = explode('|', (string) $options[0]['correct']);
                 $std_parts = explode(',', $std);
 
                 if ($score_method == 'Mark per Question') {
@@ -1218,9 +1218,9 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
                 }
                 $question_data['coords'] = rtrim($question_data['coords'], '|');
 
-                $question_data['tmp_correct'] = str_replace("'", "\'", trim($options[0]['correct']));
+                $question_data['tmp_correct'] = str_replace("'", "\'", trim((string) $options[0]['correct']));
                 $question_data['tmp_correct'] = str_replace('&nbsp;', ' ', $question_data['tmp_correct']);
-                $question_data['tmp_correct'] = htmlentities(preg_replace('/\r\n/', '', $question_data['tmp_correct']));
+                $question_data['tmp_correct'] = htmlentities((string) preg_replace('/\r\n/', '', $question_data['tmp_correct']));
 
                 $question_data['media'] = [$q_media, $q_media_width, $q_media_height, $q_media_alt, '', true];
 
@@ -1638,7 +1638,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
             ];
         }
         $tmp_ext_scenarios = explode('|', $scenario);
-        $tmp_answers_array = explode('|', $options[0]['correct']);
+        $tmp_answers_array = explode('|', (string) $options[0]['correct']);
 
         if ($question_data['score_method'] == 'Mark per Question') {
             $ex_no++;
@@ -1716,7 +1716,7 @@ function compile_question_data($screen_no, $exclusions, $q_no, $q_id, $theme, $s
         $matching_alt = explode('|', $q_media_alt);
         $matching_num = explode('|', $q_media_num);
         $tmp_ext_scenarios = explode('|', $scenario);
-        $tmp_answers_array = explode('|', $options[0]['correct']); // Seems to be duplicated on each array entry
+        $tmp_answers_array = explode('|', (string) $options[0]['correct']); // Seems to be duplicated on each array entry
         $tmp_media_array = [];
         for ($i = 0; $i < count($matching_source); $i++) {
             $tmp_media_array[$matching_num[$i]] = [

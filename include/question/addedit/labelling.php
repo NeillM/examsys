@@ -59,7 +59,7 @@ require_once 'detail_parts/details_leadin.php';
 
 if ($media['filename'] != '') :
     $img_str = '';
-    if (mb_strtolower($mode) != mb_strtolower($string['edit'])) {
+    if (mb_strtolower((string) $mode) != mb_strtolower((string) $string['edit'])) {
         foreach ($label_images as $lab_img) {
             if (isset($lab_img['filename']) and $lab_img['filename'] != '') {
                 $img_str .= implode(',', $lab_img) . ';';

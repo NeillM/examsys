@@ -78,7 +78,7 @@ if ($handle = opendir($pubs)) {
 $result = '';
 
 foreach ($help_toc as $help_item) {
-    $test = explode('?id=', $help_item['body']);
+    $test = explode('?id=', (string) $help_item['body']);
     if (count($test) > 1) {
         for ($i = 1; $i < count($test); $i++) {
             $pos1 = mb_strpos($test[$i], '"');
@@ -117,7 +117,7 @@ $helpimage_regexp = '#src="' // Image tags all have a src attribute.
 
 foreach ($help_toc as $help_item) {
     $test = [];
-    $imagecount = preg_match_all($helpimage_regexp, $help_item['body'], $test);
+    $imagecount = preg_match_all($helpimage_regexp, (string) $help_item['body'], $test);
     if ($imagecount > 0) {
         for ($i = 0; $i < $imagecount; $i++) {
             $code = $test['filename'][$i];
@@ -135,7 +135,7 @@ foreach ($help_toc as $help_item) {
         }
     } else {
         //search for background-image: url
-        $test = explode(' url(', $help_item['body']);
+        $test = explode(' url(', (string) $help_item['body']);
         if (count($test) > 1) {
             for ($i = 1; $i < count($test); $i++) {
                 $code = preg_split("/\'|\"/", $test[$i]);

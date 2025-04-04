@@ -158,7 +158,7 @@ if (
                     }
                 }
             } else {
-                $users[$ur] = $string[mb_strtolower($ur)];
+                $users[$ur] = $string[mb_strtolower((string) $ur)];
                 if ($key < count($userRolesArray) - 1) {
                     $users[$ur] .= ',';
                 }
@@ -270,7 +270,7 @@ if (
                         $data['future'][$moduleID][$paper['crypt_name']] = [
                             'fullscreen' => $paper['fullscreen'],
                             'title' => $paper['title'],
-                            'screens' => $paper['screens'] . ' ' . ucfirst($string[$screen_plural]),
+                            'screens' => $paper['screens'] . ' ' . ucfirst((string) $string[$screen_plural]),
                             'date' => $paper['start_date'],
                             'duration' => $duration,
                             'warnings' => $warnings,

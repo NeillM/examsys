@@ -81,11 +81,11 @@ require_once 'detail_parts/details_scenario.php';
                     data-image="<?php echo $imageurl; ?>"
                     data-image-width="<?php echo $media['width']; ?>"
                     data-image-height="<?php echo $media['height']; ?>"
-                    data-setup="<?php echo htmlentities($points1); ?>"
+                    data-setup="<?php echo htmlentities((string) $points1); ?>"
                  ></div>
                   <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
-                  <input type="hidden" id="option_correct" name="option_correct" value="<?php echo htmlentities($correct) ?>" />
-                  <input type="hidden" id="option_incorrect" name="option_incorrect" value="<?php echo htmlentities($incorrect) ?>" />
+                  <input type="hidden" id="option_correct" name="option_correct" value="<?php echo htmlentities((string) $correct) ?>" />
+                  <input type="hidden" id="option_incorrect" name="option_incorrect" value="<?php echo htmlentities((string) $incorrect) ?>" />
                   <?php if (!isset($_POST['submit']) or $_POST['submit'] != 'Replace Media') { ?>
                     <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
                     <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />

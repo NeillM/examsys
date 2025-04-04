@@ -158,7 +158,7 @@ if ($userObject->has_role('SysAdmin')) {
     // Can the user acsess the module?
     if (isset($_GET['module']) and $_GET['module'] != '' and $_GET['module'] != '0' and !isset($_GET['paperID'])) {
         $staff_module_match = false;
-        $module_list = explode(',', $_GET['module']);
+        $module_list = explode(',', (string) $_GET['module']);
         foreach ($module_list as $module) {
             if ($userObject->is_staff_user_on_module((int)$module)) {
                 $staff_module_match = true;
@@ -174,7 +174,7 @@ if ($userObject->has_role('SysAdmin')) {
     // Can the user acsess the paper?
     if ((isset($_REQUEST['paperID']) and !($_REQUEST['paperID'] == '' or  $_REQUEST['paperID'] == '-1') )) {
         $tmp_paperID = $_REQUEST['paperID'];
-        if (mb_substr($tmp_paperID, 0, 5) != 'find:' and mb_substr($tmp_paperID, 0, 5) != 'list:') {
+        if (mb_substr((string) $tmp_paperID, 0, 5) != 'find:' and mb_substr((string) $tmp_paperID, 0, 5) != 'list:') {
             $paper_ownerID = Paper_utils::get_ownerID($tmp_paperID, $mysqli);
 
             if ($paper_ownerID == $userObject->get_user_ID()) {
@@ -198,7 +198,7 @@ if ($userObject->has_role('SysAdmin')) {
 
     // Can the user access the question?
     if (isset($_REQUEST['q_id'])) {
-        $tmp_q_id = ltrim($_REQUEST['q_id'], ',');
+        $tmp_q_id = ltrim((string) $_REQUEST['q_id'], ',');
         $q_id_list = explode(',', $tmp_q_id);
         foreach ($q_id_list as $tmp_q_id) {
             if ($tmp_q_id != -1) {

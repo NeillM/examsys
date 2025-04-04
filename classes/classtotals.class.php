@@ -407,7 +407,7 @@ class ClassTotals
             $result->bind_result($q_id, $leadin, $scenario, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status, $settings);
             while ($result->fetch()) {
                 if ($old_q_id != $q_id and $old_q_id != 0) {
-                    $old_leadin = trim(str_replace('&nbsp;', ' ', (strip_tags($old_leadin))));
+                    $old_leadin = trim(str_replace('&nbsp;', ' ', (strip_tags((string) $old_leadin))));
                     $random_questions[$old_q_id]['q_id']            = $old_q_id;
                     $random_questions[$old_q_id]['q_type']          = $old_q_type;
                     $random_questions[$old_q_id]['leadin']          = $old_leadin;
@@ -440,12 +440,12 @@ class ClassTotals
                 $media = QuestionUtils::getMediaAsString($q_id);
                 $old_q_media_height = $media['height'];
                 $old_q_media_width = $media['width'];
-                $old_q_media_height = rtrim($old_q_media_height, '|');
-                $old_q_media_width = rtrim($old_q_media_width, '|');
+                $old_q_media_height = rtrim((string) $old_q_media_height, '|');
+                $old_q_media_width = rtrim((string) $old_q_media_width, '|');
             }
 
             // Write out the last question.
-            $old_leadin = trim(str_replace('&nbsp;', ' ', (strip_tags($old_leadin))));
+            $old_leadin = trim(str_replace('&nbsp;', ' ', (strip_tags((string) $old_leadin))));
             $random_questions[$old_q_id]['q_id']            = $old_q_id;
             $random_questions[$old_q_id]['q_type']          = $old_q_type;
             $random_questions[$old_q_id]['leadin']          = $old_leadin;
@@ -637,7 +637,7 @@ class ClassTotals
         // Check metadata exclusions
         $i = 1;
         while (isset($_GET["meta$i"])) {
-            $meta_parts = explode('=', $_GET["meta$i"]);
+            $meta_parts = explode('=', (string) $_GET["meta$i"]);
             if ($meta_parts[1] != '%') {
                 if ($this->user_results[$user_number]['meta_' . $meta_parts[0]] != $meta_parts[1]) {
                     $this->user_results[$user_number]['visible'] = false;
@@ -677,9 +677,9 @@ class ClassTotals
         $blank_details = explode('[blank', $option_text);
         $no_answers = count($blank_details) - 1;
         for ($i = 1; $i <= $no_answers; $i++) {
-            $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', $blank_details[$i]);
-            $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', $blank_details[$i]);
-            $blank_details[$i] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
+            $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', (string) $blank_details[$i]);
+            $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', (string) $blank_details[$i]);
+            $blank_details[$i] = mb_substr((string) $blank_details[$i], (mb_strpos((string) $blank_details[$i], ']') + 1));
             $blank_details[$i] = mb_substr($blank_details[$i], 0, mb_strpos($blank_details[$i], '[/blank]'));
 
             $answer_list = explode(',', $blank_details[$i]);
@@ -740,7 +740,7 @@ class ClassTotals
                 if (!isset($tmp_user_mark_array[$q_id])) {
                     $tmp_user_mark_array[$q_id] = [];
                 }
-                $paper_answers = explode('|', $question['correct'][0]);
+                $paper_answers = explode('|', (string) $question['correct'][0]);
                 $user_answers = explode('|', $tmp_user_answer);
                 $section = 0;
                 $count_paper_answers = count($paper_answers);
@@ -815,7 +815,7 @@ class ClassTotals
                             $match = false;
                             if (isset($question['correct'][$a])) {
                                 foreach ($question['correct'][$a] as $correct_alternative) {
-                                    if (mb_strtolower($student_answer) == mb_strtolower($correct_alternative)) {
+                                    if (mb_strtolower($student_answer) == mb_strtolower((string) $correct_alternative)) {
                                         $match = true;
                                     }
                                 }
@@ -852,7 +852,7 @@ class ClassTotals
                 }
             } elseif ($question['q_type'] == 'enhancedcalc') {
                 if ($tmp_exclude[0] == '0') {
-                    $settings = json_decode($question['settings'], true);
+                    $settings = json_decode((string) $question['settings'], true);
 
                     if (isset($this->marking_overrides[$q_id][$userID])) {
                         $new_mark_type = $this->marking_overrides[$q_id][$userID];
@@ -874,7 +874,7 @@ class ClassTotals
                     }
                 }
             } elseif ($question['q_type'] == 'hotspot') {
-                $question_parts = explode('|', $question['correct'][0]);
+                $question_parts = explode('|', (string) $question['correct'][0]);
                 $user_answers = explode('|', $tmp_user_answer);
                 $count_question_parts = count($question_parts);
                 for ($i = 0; $i < $count_question_parts; $i++) {
@@ -893,7 +893,7 @@ class ClassTotals
             } elseif ($question['q_type'] == 'labelling') {
                 $correct_labels = [];
 
-                $tmp_first_split = explode(';', $question['correct'][0]);
+                $tmp_first_split = explode(';', (string) $question['correct'][0]);
                 $tmp_second_split = explode('$', $tmp_first_split[11]);
 
                 $label_count = 0;
@@ -1120,8 +1120,8 @@ class ClassTotals
             $media = QuestionUtils::getMediaAsString($q_id);
             $old_q_media_height = $media['height'];
             $old_q_media_width = $media['width'];
-            $old_q_media_height = rtrim($old_q_media_height, '|');
-            $old_q_media_width = rtrim($old_q_media_width, '|');
+            $old_q_media_height = rtrim((string) $old_q_media_height, '|');
+            $old_q_media_width = rtrim((string) $old_q_media_width, '|');
             $old_option_text[]    = $option_text;
             $old_marks_correct    = $this->get_marks_correct($q_type, $marks_correct, $settings);
             $old_marks_incorrect  = $marks_incorrect;
@@ -2032,7 +2032,7 @@ class ClassTotals
         $temp_user_no = 0;
         $user_no = count($this->user_results);
         for ($i = 0; $i < $user_no; $i++) {
-            if (mb_strpos($this->user_results[$i]['username'], 'user') === 0) {
+            if (mb_strpos((string) $this->user_results[$i]['username'], 'user') === 0) {
                 $temp_user_no++;
             }
         }

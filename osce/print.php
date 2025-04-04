@@ -71,8 +71,8 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 while ($result->fetch()) {
     if ($question_no == 1) {
         // Header row
-        $cols = mb_substr_count($display_method, '|');
-        $headings = explode('|', $display_method);
+        $cols = mb_substr_count((string) $display_method, '|');
+        $headings = explode('|', (string) $display_method);
         echo '<tr><td></td>';
         for ($i = 0; $i < $cols; $i++) {
             echo '<td style="width:80px; font-weight:bold">' . $headings[$i] . '</td>';

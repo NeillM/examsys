@@ -37,7 +37,7 @@ $result->bind_result($id, $user_answer);
 while ($result->fetch()) {
     if ($user_answer != 'u') {
         $tmp_user_answer = '';
-        $layers = explode('|', $user_answer);
+        $layers = explode('|', (string) $user_answer);
         foreach ($layers as $layer) {
             if ($tmp_user_answer != '') {
                 $tmp_user_answer .= '|';
@@ -88,8 +88,8 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
                     data-answers="<?php echo $current_data; ?>"
                 ></div>
                 <input type="hidden" name="option_correct1" id="option_correct1" value="<?php echo $fix_data; ?>" />
-                <input type="hidden" id="option_correct" name="option_correct" value="<?php echo htmlentities($option_correct) ?>" />
-                <input type="hidden" id="option_incorrect" name="option_incorrect" value="<?php echo htmlentities($option_incorrect) ?>" />
+                <input type="hidden" id="option_correct" name="option_correct" value="<?php echo htmlentities((string) $option_correct) ?>" />
+                <input type="hidden" id="option_incorrect" name="option_incorrect" value="<?php echo htmlentities((string) $option_incorrect) ?>" />
                 <input type="hidden" name="option_marks_correct" id="option_marks_correct" value="<?php echo $_POST['option_marks_correct']; ?>" />
                 <input type="hidden" name="option_marks_incorrect" id="option_marks_incorrect" value="<?php echo $_POST['option_marks_incorrect']; ?>" />
                 <input type="hidden" name="corrected" value="OK" />

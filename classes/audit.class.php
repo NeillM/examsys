@@ -231,7 +231,7 @@ class Audit
             } else {
                 $sourceuser = $langpack->get_string(self::LANGCOMPONENT, 'system');
             }
-            $objects = json_decode($details);
+            $objects = json_decode((string) $details);
             if (is_array($objects)) {
                 $objects = implode(',', $objects);
             } else {

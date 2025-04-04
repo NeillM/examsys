@@ -97,7 +97,7 @@ function displayComments($questionID, $comments_data, $qno, $reviewer_data, $typ
         $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
         $comment = $comments_data[$reviewerID]->get_comment($questionID) ?? '';
         if ($comment !== '') {
-            $comment = nl2br($comment);
+            $comment = nl2br((string) $comment);
         }
         if ($comments_data[$reviewerID]->get_category($questionID) === null) {
             $image = '';
@@ -133,7 +133,7 @@ function displayComments($questionID, $comments_data, $qno, $reviewer_data, $typ
             $response = '<span style="color:#808080">' . $string['na'] . '</span>';
         } else {
             $action = $comments_data[$reviewerID]->get_action($questionID);
-            $response = nl2br($comments_data[$reviewerID]->get_response($questionID));
+            $response = nl2br((string) $comments_data[$reviewerID]->get_response($questionID));
         }
         $extra = '';
         if ($image != '') {
@@ -243,9 +243,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 <?php
                 break;
             case 'blank':
-                $options[0] = preg_replace('| mark="([0-9]{1,3})"|', '', $options[0]);
-                $options[0] = preg_replace('| size="([0-9]{1,3})"|', '', $options[0]);
-                $blank_details = explode('[blank', $options[0]);
+                $options[0] = preg_replace('| mark="([0-9]{1,3})"|', '', (string) $options[0]);
+                $options[0] = preg_replace('| size="([0-9]{1,3})"|', '', (string) $options[0]);
+                $blank_details = explode('[blank', (string) $options[0]);
                 $array_size = count($blank_details);
                 $blank_count = 0;
                 while ($blank_count < $array_size) {
@@ -265,7 +265,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                             $options_array = \param::clean_array($options_array, \param::TEXT);
                             $i = 0;
                             foreach ($options_array as $individual_blank_option) {
-                                $individual_blank_option = trim($individual_blank_option);
+                                $individual_blank_option = trim((string) $individual_blank_option);
                                 if ($i == 0) {
                                     echo '<option value="" selected="selected">' . $individual_blank_option . '</option>';
                                 } else {
@@ -420,7 +420,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
             case 'textbox':
                 $settings = json_decode($settings, true);
                 if (isset($settings['terms'])) {
-                    $correct_answers = explode(';', $settings['terms']);
+                    $correct_answers = explode(';', (string) $settings['terms']);
                     foreach ($correct_answers as $single_answer) {
                           $answer_count[$single_answer] = 0;
                     }
@@ -472,7 +472,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $matching_height = explode('|', $q_media_height);
         $matching_alt = explode('|', $q_media_alt);
         $matching_num = explode('|', $q_media_num);
-        $tmp_answers_array = explode('|', $correct_buf[0]);
+        $tmp_answers_array = explode('|', (string) $correct_buf[0]);
         $matching_media = [];
         for ($i = 0; $i < count($matching_source); $i++) {
             $matching_media[$matching_num[$i]] = [
@@ -595,7 +595,7 @@ $result->close();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>ExamSys: <?php echo ucfirst($type); ?> Comments Report</title>
+  <title>ExamSys: <?php echo ucfirst((string) $type); ?> Comments Report</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -745,7 +745,7 @@ while ($result->fetch()) {
         }
     }
     if ($q_type == 'labelling') {
-        $tmp_first_split = explode(';', $correct);
+        $tmp_first_split = explode(';', (string) $correct);
         $tmp_second_split = explode('$', $tmp_first_split[11]);
         for ($label_no = 4; $label_no <= 43; $label_no += 4) {
             if (array_key_exists($label_no, $tmp_second_split) and mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
@@ -756,13 +756,13 @@ while ($result->fetch()) {
             }
         }
     } elseif ($q_type == 'blank') {
-        $blank_details = explode('[blank', $option_text);
+        $blank_details = explode('[blank', (string) $option_text);
         $no_answers = count($blank_details) - 1;
         for ($i = 1; $i <= $no_answers; $i++) {
-            $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', $blank_details[$i]);
-            $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', $blank_details[$i]);
+            $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', (string) $blank_details[$i]);
+            $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', (string) $blank_details[$i]);
 
-            $blank_details[$i] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
+            $blank_details[$i] = mb_substr((string) $blank_details[$i], (mb_strpos((string) $blank_details[$i], ']') + 1));
             $blank_details[$i] = mb_substr($blank_details[$i], 0, mb_strpos($blank_details[$i], '[/blank]'));
             $answer_list = explode(',', $blank_details[$i]);
             $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);

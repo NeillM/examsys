@@ -30,10 +30,10 @@ require '../include/errors.php';
 
 $qIDs = check_var('q_id', 'POST', true, false, true);
 if ($qIDs[0] == ',') {
-    $qIDs = mb_substr($qIDs, 1);
+    $qIDs = mb_substr((string) $qIDs, 1);
 }
 
-$tmp_q_ids = explode(',', $_POST['q_id']);
+$tmp_q_ids = explode(',', (string) $_POST['q_id']);
 
 $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper, paper_type FROM (papers, properties) WHERE papers.paper = properties.property_id AND properties.deleted IS NULL AND question IN ($qIDs)");
 $result->execute();

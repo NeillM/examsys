@@ -187,7 +187,7 @@ class CM_UoNCM implements iCMAPI
             'ttGUID' => $session['ttguid'],
             'class_code' => $session['code'],
             'title' => $session['title'],
-            'occurrance' => date('d/m/y H:i', strtotime($session['start'])),
+            'occurrance' => date('d/m/y H:i', strtotime((string) $session['start'])),
             'calendar_year' => $calendar_year,
             'VLE' => 'UoNCM',
             'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $session['@attributes']['id']) . '&ses=' . $session['code'],

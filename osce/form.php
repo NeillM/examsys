@@ -102,7 +102,7 @@ if (isset($_POST) and count($_POST) > 0) {
 <html>
   <head>
     <?php
-    if (mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    if (mb_strstr((string) $_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr((string) $_SERVER['HTTP_USER_AGENT'], 'iPad')) {
         echo "  <meta name=\"viewport\" content=\"user-scalable=no\">\n";
     } else {
         echo "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n";
@@ -116,7 +116,7 @@ if (isset($_POST) and count($_POST) > 0) {
   <link rel="stylesheet" type="text/css" href="../css/osce.css" />
   <style type="text/css">
     <?php
-    if (mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr($_SERVER['HTTP_USER_AGENT'], 'iPad')) {
+    if (mb_strstr((string) $_SERVER['HTTP_USER_AGENT'], 'iPhone') or mb_strstr((string) $_SERVER['HTTP_USER_AGENT'], 'iPad')) {
         echo 'body {background-color:' . $propertyObj->get_bgcolor() . '; margin-bottom:15px; color:' . $propertyObj->get_fgcolor() . "; font-size:100%}\n";
     } else {
         echo 'body {background-color:' . $propertyObj->get_bgcolor() . '; margin-bottom:15px; color:' . $propertyObj->get_fgcolor() . "; font-size:90%}\n";
@@ -203,14 +203,14 @@ if (isset($_POST) and count($_POST) > 0) {
     $max_cols_result->execute();
     $max_cols_result->bind_result($display_method);
     while ($max_cols_result->fetch()) {
-        $max_cols = mb_substr_count($display_method, '|');
+        $max_cols = mb_substr_count((string) $display_method, '|');
     }
     $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
     while ($result->fetch()) {
-        $cols = mb_substr_count($display_method, '|');
+        $cols = mb_substr_count((string) $display_method, '|');
 
         if (trim($theme ?? '') != '') {
             echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
@@ -226,7 +226,7 @@ if (isset($_POST) and count($_POST) > 0) {
         if (trim($notes ?? '') != '') {
             echo '<span style="color:' . $propertyObj->get_labelcolor() . "\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" alt=\"note\" />&nbsp;$notes</span><br />\n";
         }
-        echo strip_tags($leadin, '<b><i><strong><em><br><br />');
+        echo strip_tags((string) $leadin, '<b><i><strong><em><br><br />');
         if (isset($stored_results[$q_id])) {
             echo '<input type="hidden" name="q' . $question_no . '_val" id="q' . $question_no . '_val" value="' . ($stored_results[$q_id] + 1) . '">';
         } else {

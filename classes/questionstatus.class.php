@@ -47,7 +47,7 @@ class QuestionStatus
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
-        } elseif (ctype_digit($data)) {
+        } elseif (ctype_digit((string) $data)) {
             // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_question_status()) {

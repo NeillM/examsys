@@ -159,18 +159,18 @@ class search_utils
 
         $old_letter = '';
         foreach ($owners as $ownerID => $details) {
-            if ($old_letter != mb_strtoupper(mb_substr($details['surname'], 0, 1))) {
+            if ($old_letter != mb_strtoupper(mb_substr((string) $details['surname'], 0, 1))) {
                 if ($old_letter != '') {
                     echo "</optgroup>\n";
                 }
-                echo '<optgroup label="' . mb_strtoupper(mb_substr($details['surname'], 0, 1)) . "\">\n";
+                echo '<optgroup label="' . mb_strtoupper(mb_substr((string) $details['surname'], 0, 1)) . "\">\n";
             }
             if ((isset($state['owner']) and $state['owner'] == $ownerID) or (isset($_REQUEST['owner']) and $_REQUEST['owner'] == $ownerID)) {
                 echo "<option value=\"$ownerID\" selected>" . $details['surname'] . ', ' . $details['initials'] . '. ' . $details['title'] . "</option>\n";
             } else {
                 echo "<option value=\"$ownerID\">" . $details['surname'] . ', ' . $details['initials'] . '. ' . $details['title'] . "</option>\n";
             }
-            $old_letter = mb_strtoupper(mb_substr($details['surname'], 0, 1));
+            $old_letter = mb_strtoupper(mb_substr((string) $details['surname'], 0, 1));
         }
         echo "</optgroup>\n</select>\n";
     }

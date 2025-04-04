@@ -23,7 +23,7 @@ require('header.php');
 <?php $respid = 1; ?>
 <?php foreach ($question->question as & $q) : ?>
     <?php // do we have a blank to output? ?>
-    <?php if (mb_substr($q, 0, 1) == '%') : ?>
+    <?php if (mb_substr((string) $q, 0, 1) == '%') : ?>
             <response_lid ident="<?php echo $respid++ ?>">
                 <render_choice shuffle="Yes">
         <?php // get the options set for this blank ?>

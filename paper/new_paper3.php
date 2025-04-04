@@ -90,7 +90,7 @@ if ($central_mgmt and $papertype == $assessment::TYPE_SUMMATIVE) {
     $tday = check_var('tday', 'POST', true, false, true);
     $thour = check_var('thour', 'POST', true, false, true);
     $tminute = check_var('tminute', 'POST', true, false, true);
-    if ((bool) date('L', strtotime($fyear))) {
+    if ((bool) date('L', strtotime((string) $fyear))) {
         $leap = true;
     } else {
         $leap = false;

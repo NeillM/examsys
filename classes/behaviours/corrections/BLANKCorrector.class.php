@@ -56,7 +56,7 @@ class BLANKCorrector extends Corrector
 
                     $totalpos = 0;
 
-                    $blank_details = explode('[blank', $option_text);
+                    $blank_details = explode('[blank', (string) $option_text);
                     $no_answers = count($blank_details) - 1;
                     $have_answer = false;
 

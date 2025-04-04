@@ -205,7 +205,7 @@ class QuestionEdit extends RogoObject
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
-        } elseif (!is_null($data) and ctype_digit($data)) {
+        } elseif (!is_null($data) and ctype_digit((string) $data)) {
             // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_question()) {
@@ -888,7 +888,7 @@ QUERY;
     {
         $number = '';
 
-        if (is_int($paper_id) or ctype_digit($paper_id)) {
+        if (is_int($paper_id) or ctype_digit((string) $paper_id)) {
             $pos = 0;
 
             $pos_query = <<< QUERY
@@ -1040,7 +1040,7 @@ QUERY;
      */
     public function set_scenario($value)
     {
-        $scenario = trim($this->texteditor->prepare_text_for_save($value));
+        $scenario = trim((string) $this->texteditor->prepare_text_for_save($value));
         if ($this->scenario != $scenario) {
             $this->set_modified_field('scenario_plain', $this->get_scenario_plain());
             $this->scenario = $scenario;
@@ -1085,7 +1085,7 @@ QUERY;
      */
     public function get_leadin_plain()
     {
-        $this->leadin_plain = trim(strip_tags($this->leadin));
+        $this->leadin_plain = trim(strip_tags((string) $this->leadin));
         return $this->leadin_plain;
     }
 
@@ -1792,7 +1792,7 @@ QUERY;
     public static function question_factory($mysqli, $user_id, &$lang_strings, $data)
     {
         $object = null;
-        if (ctype_digit($data)) {
+        if (ctype_digit((string) $data)) {
             // In some versions of PHP, bind_param may change the type of $data to int, so use a copy and
             // keep original for future use in ctype_digit() in question constructor
             $tmp_data = $data;
@@ -1824,8 +1824,8 @@ QUERY;
                 throw new RecordNotFoundException(sprintf($lang_strings['norecorderror'], $data));
             }
         } else {
-            $classname = 'Question' . mb_strtoupper($data);
-            $classfile = 'questions/question_' . mb_strtolower($data) . '.class.php';
+            $classname = 'Question' . mb_strtoupper((string) $data);
+            $classfile = 'questions/question_' . mb_strtolower((string) $data) . '.class.php';
             try {
                 include $classfile;
                 $object = new $classname($mysqli, $user_id, $lang_strings);
@@ -1927,10 +1927,10 @@ QUERY;
             $i = 1;
             if ($result->num_rows > 0) {
                 // Include question option class if it exists. Can't do a relative file_exists without __DIR__
-                $classfile = __DIR__ . '/options/option_' . mb_strtolower($this->type) . '.class.php';
+                $classfile = __DIR__ . '/options/option_' . mb_strtolower((string) $this->type) . '.class.php';
                 if (file_exists($classfile)) {
                     include_once $classfile;
-                    $classname = 'Option' . mb_strtoupper($this->type);
+                    $classname = 'Option' . mb_strtoupper((string) $this->type);
                     $option_metafield_list = $classname::$_metafields;
                 } else {
                     $option_metafield_list = OptionEdit::$_metafields;
@@ -2047,7 +2047,7 @@ QUERY;
             return;
         }
 
-        $extra = json_decode($this->settings, true);
+        $extra = json_decode((string) $this->settings, true);
 
         if (is_array($extra)) {
             foreach ($extra as $field => $value) {

@@ -252,19 +252,19 @@ class IE_Local_Load extends IE_Main
 
         // parse question into some more meaningful format
         $blankno = 1;
-        while (mb_stripos($q, '[blank]') > 0) {
+        while (mb_stripos((string) $q, '[blank]') > 0) {
             // create new indentifier for the blank option
             $blankid = '%BLANK_' . $blankno . '%';
 
             // locate [blank][/blank] segment
-            $offset = mb_stripos($q, '[blank]');
-            $endoffset = mb_stripos($q, '[/blank]');
+            $offset = mb_stripos((string) $q, '[blank]');
+            $endoffset = mb_stripos((string) $q, '[/blank]');
 
             // pull out list of options and replace segment with blankid created arlier
-            $midpart = mb_substr($q, $offset + 7, $endoffset - $offset - 7);
-            $question[] = mb_substr($q, 0, $offset);
+            $midpart = mb_substr((string) $q, $offset + 7, $endoffset - $offset - 7);
+            $question[] = mb_substr((string) $q, 0, $offset);
             $question[] = $blankid;
-            $q = mb_substr($q, $endoffset + 8);
+            $q = mb_substr((string) $q, $endoffset + 8);
 
             // process the options
             $optlist = explode(',', $midpart);
@@ -319,7 +319,7 @@ class IE_Local_Load extends IE_Main
         $store->feedback = $q_row['correct_fback'] ?? '';
         $store->q_type = 'enhancedcalc';
 
-        $settingsdecoded = json_decode($q_row['settings'], true);
+        $settingsdecoded = json_decode((string) $q_row['settings'], true);
 
         $store->marks_correct = $settingsdecoded['marks_correct'];
         $store->marks_incorrect = $settingsdecoded['marks_incorrect'];
@@ -334,13 +334,13 @@ class IE_Local_Load extends IE_Main
         $store->feedback = $q_row['correct_fback'] ?? '';
         $store->formula = $o_rows[0]['correct'];
 
-        [$store->decimals, $store->tolerance, $store->units] = explode(',', $q_row['display_method']);
+        [$store->decimals, $store->tolerance, $store->units] = explode(',', (string) $q_row['display_method']);
 
         $calcvar = 0;
         foreach ($o_rows as $o_row) {
             $calcvarletter = chr(ord('A') + $calcvar);
             $var = new STQ_Calc_Vars();
-            [$var->min, $var->max, $var->inc, $var->dec] = explode(',', $o_row['option_text']);
+            [$var->min, $var->max, $var->inc, $var->dec] = explode(',', (string) $o_row['option_text']);
             $store->variables[$calcvarletter] = $var;
 
             $store->marks_correct = $o_row['marks_correct'];
@@ -365,7 +365,7 @@ class IE_Local_Load extends IE_Main
         foreach ($o_rows as $o_row) {
             $options = new STQ_Dic_Options();
             $options->text = $o_row['option_text'];
-            $options->iscorrect = mb_strtolower($o_row['correct']) == 't' ? 1 : 0;
+            $options->iscorrect = mb_strtolower((string) $o_row['correct']) == 't' ? 1 : 0;
             $options->fb_correct = $o_row['feedback_right'];
             $options->fb_incorrect = $o_row['feedback_wrong'];
             if (!$options->fb_incorrect) {
@@ -403,13 +403,13 @@ class IE_Local_Load extends IE_Main
         }
 
         // split all stuff from q_row into arrays for processing
-        $feedbacks = explode('|', $q_row['correct_fback']);
+        $feedbacks = explode('|', (string) $q_row['correct_fback']);
         $medias = [];
         $media_widths = [];
         $medias_heights = [];
         $medias_alts = [];
         $medias_nums = [];
-        $tmp_scenarios = explode('|', $q_row['scenario']);
+        $tmp_scenarios = explode('|', (string) $q_row['scenario']);
 
         // Get media for question
         $db = new Database();
@@ -439,7 +439,7 @@ class IE_Local_Load extends IE_Main
             $i++;
         }
 
-        $correct = explode('|', $o_rows[0]['correct']);
+        $correct = explode('|', (string) $o_rows[0]['correct']);
 
         // for all the arrays made, create scenarios
         $scenariono = 1;
@@ -473,7 +473,7 @@ class IE_Local_Load extends IE_Main
         $hotspots = $o_rows[0]['correct'];
 
         $store->raw_option = $hotspots;
-        $hotspots = explode('|', $hotspots);
+        $hotspots = explode('|', (string) $hotspots);
         $spotcount = 0;
         foreach ($hotspots as $hotspot) {
             $parts = explode('~', $hotspot);
@@ -538,7 +538,7 @@ class IE_Local_Load extends IE_Main
         $data = $o_rows[0]['correct'];
         $store->raw_option = $data;
 
-        $data = explode(';', $data);
+        $data = explode(';', (string) $data);
 
         $store->line_color = $data[0];
         $store->line_thickness = $line_thicknesses[$data[1]];
@@ -607,10 +607,10 @@ class IE_Local_Load extends IE_Main
         $sm = $q_row['display_method'];
 
         // extract the last part of the score method and if true has n/a
-        $store->hasna = mb_strtolower(mb_substr($sm, mb_strrpos($sm, '|') + 1)) == 'true' ? 1 : 0;
+        $store->hasna = mb_strtolower(mb_substr((string) $sm, mb_strrpos((string) $sm, '|') + 1)) == 'true' ? 1 : 0;
 
         // trim off the last scoremethod as this stored has n/a
-        $sm = mb_substr($sm, 0, mb_strrpos($sm, '|'));
+        $sm = mb_substr((string) $sm, 0, mb_strrpos((string) $sm, '|'));
 
         // store rest of the options in scale
         $opts = explode('|', $sm);
@@ -624,7 +624,7 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionMatrix($store, $q_row, $o_rows)
     {
         // get list of correct values for each of the questions
-        $correctvalues = explode('|', $o_rows[0]['correct']);
+        $correctvalues = explode('|', (string) $o_rows[0]['correct']);
 
         // build a list of the top row options
         $topvalueno = 1;
@@ -640,7 +640,7 @@ class IE_Local_Load extends IE_Main
 
         // for all questions down left, create a STQ_Matrix_Scenario
         $scenno = 1;
-        $leftvalue = explode('|', $q_row['scenario']);
+        $leftvalue = explode('|', (string) $q_row['scenario']);
         foreach ($leftvalue as $left) {
             if ($left != '') {
                 $scenario = new STQ_Matrix_Scenario();
@@ -747,7 +747,7 @@ class IE_Local_Load extends IE_Main
             $option = new STQ_Mrq_Option();
             $option->stem = $o_row['option_text'];
             // check correct and map to 1/0
-            $option->is_correct = mb_strtolower($o_row['correct']) == 'y' ? 1 : 0;
+            $option->is_correct = mb_strtolower((string) $o_row['correct']) == 'y' ? 1 : 0;
             $option->fb_correct = $o_row['feedback_right'];
             $option->fb_incorrect = $o_row['feedback_wrong'];
             if ($option->fb_incorrect == '') {
@@ -806,7 +806,7 @@ class IE_Local_Load extends IE_Main
         $store->scenario = $q_row['scenario'] ?? '';
 
         // size of text box stored as 100x30 in sm
-        $settings = json_decode($q_row['settings']);
+        $settings = json_decode((string) $q_row['settings']);
         $store->columns = $settings->columns;
         $store->rows = $settings->rows;
 

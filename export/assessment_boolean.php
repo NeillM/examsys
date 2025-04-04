@@ -69,13 +69,13 @@ function get_correct_labels($question, $tmp_exclude)
 {
     $correct_labels = [];
 
-    $tmp_first_split = explode(';', $question['correct'][0]);
+    $tmp_first_split = explode(';', (string) $question['correct'][0]);
     $tmp_second_split = explode('$', $tmp_first_split[11]);
     $i = 0;
     $excluded_no = 0;
     for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
         if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
-            if (mb_substr($tmp_exclude, $i, 1) == '0') {
+            if (mb_substr((string) $tmp_exclude, $i, 1) == '0') {
                 $x = $tmp_second_split[$label_no - 2];
                 $y = $tmp_second_split[$label_no - 1] - 25;
                 $correct_labels[$x . 'x' . $y] = mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'));
@@ -262,7 +262,7 @@ if ($student_no > 0) {
         $log_array[$rowID]['first_names'] = \demo::demo_replace($first_names, $demo);
         $log_array[$rowID]['name'] = str_replace("'", '', $surname) . ',' . $first_names;
         $log_array[$rowID]['gender'] = $gender;
-        $log_array[$rowID]['$questionID'] = json_decode($settings, true);
+        $log_array[$rowID]['$questionID'] = json_decode((string) $settings, true);
 
         $user_no++;
         $old_username = $username;
@@ -334,7 +334,7 @@ if ($student_no > 0) {
                 if (!$skip_random) {
                     if ($question['q_type'] == 'extmatch' and $question['score_method'] == 'Mark per Option') {
                         $sub_parts = 0;
-                        $paper_answers = explode('|', $question['correct'][0]);
+                        $paper_answers = explode('|', (string) $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
                             $sub_parts += mb_substr_count($paper_answers[$a], '$');
                             if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
@@ -348,7 +348,7 @@ if ($student_no > 0) {
                         }
                     } elseif ($question['q_type'] == 'matrix' and $question['score_method'] == 'Mark per Option') {
                         $sub_parts = 0;
-                        $paper_answers = explode('|', $question['correct'][0]);
+                        $paper_answers = explode('|', (string) $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
                             $sub_parts += mb_substr_count($paper_answers[$a], '$');
 
@@ -382,7 +382,7 @@ if ($student_no > 0) {
                             }
                         }
                     } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
-                        $paper_answers = explode('|', $question['correct'][0]);
+                        $paper_answers = explode('|', (string) $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
                             if ($tmp_exclude[$a] == '0') {
                                 $csv .= ',Q' . $q_no . chr($a + 65);
@@ -439,7 +439,7 @@ if ($student_no > 0) {
                                 // ----- parts (extmatch)-----
                                 $parts_test_fail = true;
                                 if ($question['q_type'] == 'extmatch' and isset($log_array[$row_written])) {
-                                    $extmatch_parts = explode('|', $question['correct'][0]);
+                                    $extmatch_parts = explode('|', (string) $question['correct'][0]);
                                     if (mb_strpos($extmatch_parts[$mi], '$') !== false) {
                                         $parts_test_fail = false;
 
@@ -448,12 +448,12 @@ if ($student_no > 0) {
                                             if (is_array($vb)) {
                                                 foreach ($vb as $kc => $vc) {
                                                     if ($q_id == $kc) {
-                                                        $answer = preg_replace('/,/', '', $vc);
+                                                        $answer = preg_replace('/,/', '', (string) $vc);
                                                     }
                                                 }
                                             }
                                         }
-                                        $answer_parts = explode('|', $answer);
+                                        $answer_parts = explode('|', (string) $answer);
 
                                         $extmatch_parts_correct = explode('$', $extmatch_parts[$mi]);
                                         $answer_subparts = explode('$', $answer_parts[$mi]);
@@ -488,7 +488,7 @@ if ($student_no > 0) {
                                     if (is_array($vb)) {
                                         foreach ($vb as $kc => $vc) {
                                             if ($q_id == $kc) {
-                                                $answer = preg_replace('/,/', '', $vc);
+                                                $answer = preg_replace('/,/', '', (string) $vc);
                                             }
                                         }
                                     }
@@ -523,7 +523,7 @@ if ($student_no > 0) {
                         if (($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') and $question['score_method'] == 'Mark per Option') {
                               $sub_parts = 0;
 
-                              $paper_answers = explode('|', $question['correct'][0]);
+                              $paper_answers = explode('|', (string) $question['correct'][0]);
                             for ($a = 0; $a < count($paper_answers); $a++) {
                                 if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
                                     $csv .= '0';
@@ -542,7 +542,7 @@ if ($student_no > 0) {
                                 }
                             }
                         } elseif ($question['q_type'] == 'hotspot' and $question['score_method'] == 'Mark per Option') {
-                            $paper_answers = explode('|', $question['correct'][0]);
+                            $paper_answers = explode('|', (string) $question['correct'][0]);
                             for ($a = 0; $a < count($paper_answers); $a++) {
                                 if ($tmp_exclude[$a] == '0') {
                                     $csv .= ',0';

@@ -173,8 +173,8 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
             $bkt_mismatch = false;
             $formula = $settings['answers'];
             foreach ($formula as $form) {
-                $opening_bkt = mb_substr_count($form['formula'], '(');
-                $closing_bkt = mb_substr_count($form['formula'], ')');
+                $opening_bkt = mb_substr_count((string) $form['formula'], '(');
+                $closing_bkt = mb_substr_count((string) $form['formula'], ')');
                 if ($opening_bkt !== $closing_bkt) {
                     $bkt_mismatch = true;
                 }
@@ -187,16 +187,16 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
         } elseif ($q_type == 'textbox' and $question_marks == 0) {
             $temp_array[$row_no]['warnings'][] = $string['zeromarks'];
         } elseif ($q_type == 'blank') {
-            $open_blank = mb_substr_count($option_text[0], '[blank');
-            $close_blank = mb_substr_count($option_text[0], '[/blank');
+            $open_blank = mb_substr_count((string) $option_text[0], '[blank');
+            $close_blank = mb_substr_count((string) $option_text[0], '[/blank');
             if ($open_blank != $close_blank) {
                 $temp_array[$row_no]['warnings'][] = $string['mismatchblanktags'];
             }
         } elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
-            $matching_scenarios = explode('|', $temp_array[$row_no]['scenario']);
-            $matching_media     = explode('|', $temp_array[$row_no]['q_media']);
+            $matching_scenarios = explode('|', (string) $temp_array[$row_no]['scenario']);
+            $matching_media     = explode('|', (string) $temp_array[$row_no]['q_media']);
             array_shift($matching_media);
-            $matching_correct   = explode('|', $correct_array[0]);
+            $matching_correct   = explode('|', (string) $correct_array[0]);
 
             $missing_answer = false;
             $display_error = false;
@@ -204,7 +204,7 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
             $media = -1;
 
             for ($part_id = 0; $part_id < 10; $part_id++) {
-                $has_stem = (isset($matching_scenarios[$part_id]) and (trim(param::clean($matching_scenarios[$part_id], param::TEXT)) !== ''));
+                $has_stem = (isset($matching_scenarios[$part_id]) and (trim((string) param::clean($matching_scenarios[$part_id], param::TEXT)) !== ''));
                 $has_media = (isset($matching_media[$part_id]) and ($matching_media[$part_id] !== ''));
                 if ($has_stem) {
                     $stems++;
@@ -465,7 +465,7 @@ if ($properties->get_deleted() != '') {
     <?php
     echo "<div style=\"position:absolute;left:230px;top:10px\"><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo '<h1 style="color:#C00000; margin-left:70px;font-size:160%">' . $string['paperdeleted'] . "</h1>\n";
-    $deleted_parts = explode('[deleted', $properties->get_paper_title());
+    $deleted_parts = explode('[deleted', (string) $properties->get_paper_title());
     echo "<hr size=\"1\" align=\"left\" width=\"500\" style=\"height:1px;border:none;margin-left:70px;color:#C0C0C0;background-color:#C0C0C0\" />\n<p style=\"margin-top:10px; margin-left:70px\">" . sprintf($string['deleted_msg1'], $deleted_parts[0]) . "</p>\n\n<br />\n<ul style=\"margin-left:80px\">\n";
     if ($properties->get_paper_ownerid() == $userObject->get_user_ID()) {
         echo '<li>' . $string['deleted_msg2'] . "</li>\n";
@@ -529,12 +529,12 @@ if ($properties->get_deleted() != '') {
       $q_media_width = $media['width'];
       $q_media_height = $media['height'];
       if ($q_type == 'sct') {
-          $parts = explode('~', $leadin);
+          $parts = explode('~', (string) $leadin);
           $leadin = $parts[0];
       }
 
       if (!is_null($settings) and !is_array($settings)) {
-          $settings = json_decode($settings, true);
+          $settings = json_decode((string) $settings, true);
       }
       if (isset($settings['marks_correct'])) {
           $marks_correct = $settings['marks_correct'];
@@ -1002,7 +1002,7 @@ if ($properties->get_retired() == '') {
         }
 
         echo '<td class="l';
-        if (mb_strlen($temp_array[$x]['fulltext']) > $leadinlength) {
+        if (mb_strlen((string) $temp_array[$x]['fulltext']) > $leadinlength) {
             $fullText = QuestionUtils::clean_leadin($temp_array[$x]['fulltext'], 0);
             echo ' extended-leadin" data-extended-leadin="' . htmlspecialchars($fullText);
         }
@@ -1024,9 +1024,9 @@ if ($properties->get_retired() == '') {
             foreach ($temp_array[$x]['warnings'] as $warning) {
                 echo '<div class="q_warning">' . $warning . '</div>';
             }
-        } elseif (mb_strpos($temp_array[$x]['q_media'], '.swf') !== false) {
+        } elseif (mb_strpos((string) $temp_array[$x]['q_media'], '.swf') !== false) {
             echo '<img src="../artwork/flash_icon.png" width="48" height="48" alt="Embedded Flash object" border="0" />';
-        } elseif (mb_strpos($temp_array[$x]['q_media'], '.flv') !== false) {
+        } elseif (mb_strpos((string) $temp_array[$x]['q_media'], '.flv') !== false) {
             echo '<img src="../artwork/flash_icon.png" width="48" height="48" alt="Embedded Flash object" border="0" />';
         } else {
             echo '<img src="' . $mediadirectory->url($temp_array[$x]['q_media']) . '" width="' . ($temp_array[$x]['q_media_width'] / 3) . '" height="' . ($temp_array[$x]['q_media_height'] / 3) . '" alt="Media file" border="1" />';

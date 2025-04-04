@@ -304,7 +304,7 @@ while ($stmt->fetch()) {
         }
 
         if ($notes != '' and $q_type != 'likert') {
-            echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="16" height="16" alt="' . ucwords($string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $notes . '</td></tr>';
+            echo '<tr><td></td><td class="notes"><img src="notes_icon.gif" width="16" height="16" alt="' . ucwords((string) $string['note']) . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $notes . '</td></tr>';
         }
 
         if ($scenario != '' and $q_type != 'extmatch' and $q_type != 'matrix' and $q_type != 'likert') {
@@ -312,7 +312,7 @@ while ($stmt->fetch()) {
             $li_set = 1;
         }
         if (!empty($q_media) and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
-            if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
+            if (mb_substr((string) $q_media, -4) == '.gif' or mb_substr((string) $q_media, -4) == '.jpg' or mb_substr((string) $q_media, -4) == 'jpeg' or mb_substr((string) $q_media, -4) == '.png') {
                 if ($li_set == 0) {
                     echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
                 }

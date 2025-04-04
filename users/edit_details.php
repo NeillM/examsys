@@ -74,7 +74,7 @@ if ($user_details['gender'] == 'Male') {
   <table cellspacing="0" cellpadding="2" border="0" style="width:100%; border:12px solid #EEF4FF">
 <?php
   echo '<tr><td>' . $string['name'] . '</td><td>';
-  $title_array = explode(',', $string['title_types']);
+  $title_array = explode(',', (string) $string['title_types']);
   echo '<select name="title">';
 foreach ($title_array as $individual_title) {
     if ($individual_title == $user_details['title']) {

@@ -108,7 +108,7 @@ function add_users_from_file($fileName)
         } else {
             $forname = UserUtils::my_ucwords(trim($fields[$header['forenames']]));
         }
-        $initial = explode(' ', $forname);
+        $initial = explode(' ', (string) $forname);
         $initials = '';
         foreach ($initial as $name) {
             $initials .= mb_substr($name, 0, 1);

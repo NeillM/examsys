@@ -62,7 +62,7 @@ if ($unique_moduleid == true) {
         $map_level = 0;
         $vle_api = '';
     } else {
-        $vle_parts = explode('~', $postvleapi);
+        $vle_parts = explode('~', (string) $postvleapi);
         $vle_api = $vle_parts[0];
         $map_level = $vle_parts[1];
     }

@@ -1298,9 +1298,9 @@ SQL;
                                         foreach ($newsession['objectives'] as $new_obj) {
                                             if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
                                                 // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
-                                                $new_content_check = mb_strtolower($new_obj['content']);
+                                                $new_content_check = mb_strtolower((string) $new_obj['content']);
                                                 $new_content_check = preg_replace('/[^a-z0-9]/', '', $new_content_check);
-                                                $old_content_check = mb_strtolower($obj['content']);
+                                                $old_content_check = mb_strtolower((string) $obj['content']);
                                                 $old_content_check = preg_replace('/[^a-z0-9]/', '', $old_content_check);
                                                 if ($new_content_check == $old_content_check) {
                                                     // Build a list of objectives that are still in both sessions
@@ -1508,7 +1508,7 @@ SQL;
         $linked = [];
         foreach ($questions as &$question) {
             if ($question['q_type'] === 'enhancedcalc') {
-                $settings = json_decode($question['settings'], true);
+                $settings = json_decode((string) $question['settings'], true);
                 foreach ($settings['vars'] as $var_name => $var_data) {
                     if ($question['object']->is_linked_ans($var_data['min'])) {
                         $linked[] = $question['object']->parse_linked_ans($var_data['min']);

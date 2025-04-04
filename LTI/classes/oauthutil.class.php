@@ -42,7 +42,7 @@ class OAuthUtil {
   // modifications to the encoding process. However, this method doesn't
   // seem to be used anywhere so leaving it as is.
   public static function urldecode_rfc3986($string) {
-    return urldecode($string);
+    return urldecode((string) $string);
   }
 
   // Utility function for turning the Authorization: header into
@@ -52,7 +52,7 @@ class OAuthUtil {
     $pattern = '/(([-_a-z]*)=("([^"]*)"|([^,]*)),?)/';
     $offset = 0;
     $params = [];
-    while (preg_match($pattern, $header, $matches, PREG_OFFSET_CAPTURE, $offset) > 0) {
+    while (preg_match($pattern, (string) $header, $matches, PREG_OFFSET_CAPTURE, $offset) > 0) {
       $match = $matches[0];
       $header_name = $matches[2][0];
       $header_content = (isset($matches[5])) ? $matches[5][0] : $matches[4][0];
@@ -101,7 +101,7 @@ class OAuthUtil {
   public static function parse_parameters( $input ) {
     if (!isset($input) || !$input) return [];
 
-    $pairs = explode('&', $input);
+    $pairs = explode('&', (string) $input);
 
     $parsed_parameters = [];
     foreach ($pairs as $pair) {

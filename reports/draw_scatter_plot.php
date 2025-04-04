@@ -103,11 +103,11 @@ for ($i = 0; $i < $count_mydata; $i = $i + 2) {
 }
 
 if ($_GET['adjust'] == '0') {
-    imagettftext($Image, 12, 0, 375 + (abs($scale_start) * 5), 286, $black, $bold_font, $string['percent']);
+    imagettftext($Image, 12, 0, 375 + (abs($scale_start) * 5), 286, $black, $bold_font, (string) $string['percent']);
 } else {
-    imagettftext($Image, 12, 0, 342 + (abs($scale_start) * 5), 286, $black, $bold_font, $string['adjustedpercent']);
+    imagettftext($Image, 12, 0, 342 + (abs($scale_start) * 5), 286, $black, $bold_font, (string) $string['adjustedpercent']);
 }
-imagettftext($Image, 12, 90, 13, 162, $black, $bold_font, $string['time']);
+imagettftext($Image, 12, 90, 13, 162, $black, $bold_font, (string) $string['time']);
 
 header('Content-Type: image/png');
 ImagePNG($Image);

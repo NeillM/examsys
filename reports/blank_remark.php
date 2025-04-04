@@ -90,14 +90,14 @@ $result->execute();
 $result->bind_result($type, $id, $user_answer);
 while ($result->fetch()) {
     // Decode user answers into an array of lowercase strings.
-    $tmp_answer = json_decode($user_answer);
+    $tmp_answer = json_decode((string) $user_answer);
     foreach ($tmp_answer as &$answer) {
         $answer = mb_strtolower(StringUtils::clean_and_trim($answer));
     }
     $log_answers[$type][$id] = $tmp_answer;
 }
 $result->close();
-$blank_details = explode('[blank', $option_text);
+$blank_details = explode('[blank', (string) $option_text);
 for (
     $i = 1; $i < count($blank_details); $i++
 ) {
@@ -112,7 +112,7 @@ for (
 // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
 $new_blanks = [];
 foreach ($blanks as $blank) {
-    $new_blanks[] = mb_strtolower(trim($blank));
+    $new_blanks[] = mb_strtolower(trim((string) $blank));
 }
 $blanks = array_unique($new_blanks);
 ?>

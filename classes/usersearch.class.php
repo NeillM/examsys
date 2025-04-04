@@ -426,7 +426,7 @@ class UserSearch extends Search
     protected function getTitles(): array
     {
         $string = LangUtils::loadlangfile('include/titles.php', []);
-        $titles = explode(',', $string['title_types']);
+        $titles = explode(',', (string) $string['title_types']);
         return $titles;
     }
 

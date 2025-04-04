@@ -168,7 +168,7 @@ class Anomaly
             $anomaly->sid = $sid;
             $anomaly->type = self::getType($type);
             $anomaly->timestamp = date(\Config::get_instance()->get('cfg_very_short_datetime_php'), $timestamp);
-            $anomaly->details = json_decode($details, true);
+            $anomaly->details = json_decode((string) $details, true);
             $anomaly->screen = $screen;
             $anomalies['items'][] = $anomaly;
         }

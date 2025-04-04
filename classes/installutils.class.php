@@ -169,7 +169,7 @@ class InstallUtils
         if (LangUtils::langPackInstalled($language)) {
             $data['loadlangpacks'] = false;
         }
-        $data['titles'] = explode(',', $string['title_types']);
+        $data['titles'] = explode(',', (string) $string['title_types']);
         $string['translationsurl'] = $configObject->getxml('translations', 'url');
         $render->render($data, $string, '/install/form.html');
     }
@@ -219,7 +219,7 @@ class InstallUtils
     public static function getSettings($type, $required, $parent, $child = '', $grandchild = '')
     {
         $setting = $parent . '//' . $child . '//' . $grandchild;
-        $xmldata = json_decode(self::$settings);
+        $xmldata = json_decode((string) self::$settings);
         if (is_string($parent)) {
             if (isset($xmldata->$parent)) {
                 if ($child == '' and $grandchild == '') {
@@ -2155,7 +2155,7 @@ class InstallUtils
         require_once dirname(__DIR__) . '/include/path_functions.inc.php';
         $cfg_web_root = get_root_path();
         // Ensure there is a trailing slash.
-        if (mb_substr($cfg_web_root, -1) !== '/') {
+        if (mb_substr((string) $cfg_web_root, -1) !== '/') {
             $cfg_web_root .= '/';
         }
         self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
@@ -2301,7 +2301,7 @@ CONFIG;
 
         $cfg_web_root = get_root_path();
         // Ensure there is a trailing slash.
-        if (mb_substr($cfg_web_root, -1) !== '/') {
+        if (mb_substr((string) $cfg_web_root, -1) !== '/') {
             $cfg_web_root .= '/';
         }
         $config = str_replace('{cfg_web_root}', $cfg_web_root, $config);

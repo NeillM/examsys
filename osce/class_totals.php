@@ -169,7 +169,7 @@ if ($borderline_method) {
   $metadata_cols = [];
 if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
-        if (strrpos($key, 'meta_') !== false) {
+        if (strrpos((string) $key, 'meta_') !== false) {
             $key_display = ucfirst(str_replace('meta_', '', $key));
             $table_order[$key_display] = 150;
             $metadata_cols[$key] = $key;

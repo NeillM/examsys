@@ -44,7 +44,7 @@ $language = 'en';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'path_functions.inc.php';
 $cfg_web_root = get_root_path();
 // Ensure there is a trailing slash.
-if (mb_substr($cfg_web_root, -1) !== '/') {
+if (mb_substr((string) $cfg_web_root, -1) !== '/') {
     $cfg_web_root .= '/';
 }
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'install.php';

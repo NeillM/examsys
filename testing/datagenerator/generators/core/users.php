@@ -411,7 +411,7 @@ class users extends generator
         }
         // Ensure there is no white space before or after the role.
         foreach ($roles as $rolekey => $role) {
-            $roles[$rolekey] = trim($role);
+            $roles[$rolekey] = trim((string) $role);
         }
         // Get only the valid roles.
         $validroles = [];

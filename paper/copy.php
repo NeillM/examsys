@@ -331,12 +331,12 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $media = QuestionUtils::getMediaAsString($q_id);
                 $newmedia = [];
                 if ($media['id'] != '') {
-                    $media_array = explode('|', $media['source']);
-                    $mediawidth_array = explode('|', $media['width']);
-                    $mediaheight_array = explode('|', $media['height']);
-                    $mediaalt_array = explode('|', $media['alt']);
-                    $mediaowner_array = explode('|', $media['owner']);
-                    $medianum_array = explode('|', $media['num']);
+                    $media_array = explode('|', (string) $media['source']);
+                    $mediawidth_array = explode('|', (string) $media['width']);
+                    $mediaheight_array = explode('|', (string) $media['height']);
+                    $mediaalt_array = explode('|', (string) $media['alt']);
+                    $mediaowner_array = explode('|', (string) $media['owner']);
+                    $medianum_array = explode('|', (string) $media['num']);
                     $image_part = 0;
                     foreach ($media_array as $individual_media) {
                         $new_media_name = '';
@@ -406,7 +406,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 
                 $tmp_questions_array['theme']       = trim($theme ?? '');
                 $tmp_questions_array['scenario']    = trim($scenario ?? '');
-                $tmp_questions_array['leadin']      = trim($leadin);
+                $tmp_questions_array['leadin']      = trim((string) $leadin);
                 $tmp_questions_array['notes']       = trim($notes ?? '');
                 $tmp_questions_array['q_type']      = $q_type;
                 $tmp_questions_array['q_id']        = $question_id; //the newly inserted question ID!
@@ -416,7 +416,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $tmp_questions_array['settings']    = $settings;
                 $tmp_questions_array['q_option_order']  = $q_option_order;
                 $tmp_questions_array['dismiss']     = '';
-                $tmp_questions_array['leadin_plain']     = trim($leadin_plain);
+                $tmp_questions_array['leadin_plain']     = trim((string) $leadin_plain);
                 $tmp_questions_array['standards_setting'] = $std;
 
                 $q = new EnhancedCalc($configObj);

@@ -152,7 +152,7 @@ while ($result->fetch()) {
     if ($folderID != '') {
         echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
     } elseif ($moduleID != '') {
-        $modules = explode(',', $moduleID);
+        $modules = explode(',', (string) $moduleID);
         echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
     }
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
@@ -230,11 +230,11 @@ foreach ($objsBySession as $p_id => $module) {
                     }
 
                     foreach ($objbuffer as $obj) {
-                        if (isset($obs_canonical[md5($obj['content'])])) {
-                            $tmp_obj_id = $obs_canonical[md5($obj['content'])];
+                        if (isset($obs_canonical[md5((string) $obj['content'])])) {
+                            $tmp_obj_id = $obs_canonical[md5((string) $obj['content'])];
                         } else {
                             $tmp_obj_id = $obj['id'];
-                            $obs_canonical[md5($obj['content'])] = $tmp_obj_id;
+                            $obs_canonical[md5((string) $obj['content'])] = $tmp_obj_id;
                         }
                         if (isset($allsession[$moduleID][$guid]['objectives'][$tmp_obj_id])) {
                             $allsession[$moduleID][$guid]['objectives'][$tmp_obj_id]['id_by_paper'][$p_id] = $obj['id'];
@@ -272,7 +272,7 @@ foreach ($allsession as $moduleID => $module) {
         echo $session['title'] . '&nbsp;<a target="_blank" href="' . $session['source_url'] . '"><img src="../artwork/small_link.png" width="11" height="11" /></a></td></tr>';
 
         foreach ($session['objectives'] as $objID => $obj) {
-            echo "<tr>\n\t<td style=\"width:2%\">&nbsp;</td><td style=\"width:48%\" class=\"obj\"><li>" . strip_tags($obj['content'], '<b><i><strong><em><sub><sup>') . "</li></td>\n";
+            echo "<tr>\n\t<td style=\"width:2%\">&nbsp;</td><td style=\"width:48%\" class=\"obj\"><li>" . strip_tags((string) $obj['content'], '<b><i><strong><em><sub><sup>') . "</li></td>\n";
             foreach ($objsBySession as $p_id => $s) {
                 $identifier = $guid_id_map[$guid][$p_id] ?? -1;
 

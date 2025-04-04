@@ -134,7 +134,7 @@ class renderdata extends \questiondata
     public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
-        $matching_answers = explode('|', $option['correct']);
+        $matching_answers = explode('|', (string) $option['correct']);
         $matching_source = explode('|', $this->qmedia);
         $matching_width = explode('|', $this->qmediawidth);
         $matching_height = explode('|', $this->qmediaheight);

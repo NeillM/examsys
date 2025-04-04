@@ -46,7 +46,7 @@ class encryptest extends unittestdatabase
         // Random password.
         $pass = $enc->gen_password(false);
         $this->assertEquals($pass['password'], $pass['display_password']);
-        $this->assertEquals(8, mb_strlen($pass['password']));
+        $this->assertEquals(8, mb_strlen((string) $pass['password']));
         $this->assertTrue($enc->is_readable());
     }
 
@@ -60,7 +60,7 @@ class encryptest extends unittestdatabase
         $enc = new \encryp();
         $pass = $enc->gen_password(false, 10);
         $this->assertEquals($pass['password'], $pass['display_password']);
-        $this->assertEquals(10, mb_strlen($pass['password']));
+        $this->assertEquals(10, mb_strlen((string) $pass['password']));
         $this->assertTrue($enc->is_readable());
     }
 
@@ -100,7 +100,7 @@ class encryptest extends unittestdatabase
         // Readable password asked for but default to non-readable.
         $pass = $enc->gen_password(true, 12);
         $this->assertEquals($pass['password'], $pass['display_password']);
-        $this->assertEquals(12, mb_strlen($pass['password']));
+        $this->assertEquals(12, mb_strlen((string) $pass['password']));
     }
 
     /**
@@ -114,6 +114,6 @@ class encryptest extends unittestdatabase
         // Readable password asked for but default to non-readable.
         $pass = $enc->gen_password(true, 12);
         $this->assertEquals($pass['password'], $pass['display_password']);
-        $this->assertEquals(12, mb_strlen($pass['password']));
+        $this->assertEquals(12, mb_strlen((string) $pass['password']));
     }
 }
