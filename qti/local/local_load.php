@@ -832,6 +832,11 @@ class IE_Local_Load extends IE_Main
         return "Error: Keyword-based questions can't be exported.";
     }
 
+    public function LoadQuestionArea($store, $q_row, $o_rows)
+    {
+        return "Error: Area questions can't be exported.";
+    }
+
     public function LoadQuestionSct($store, $q_row, $o_rows)
     {
         return "Error: SCT questions can't be exported.";

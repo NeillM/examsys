@@ -408,6 +408,11 @@ class ST_Question_Textbox extends ST_Question
     public $marks_incorrect;
 }
 
+class ST_Question_Area extends ST_Question
+{
+    // NO EXTENSIONS
+}
+
 class ST_Question_Sct extends ST_Question
 {
     // NO EXTENSIONS
