@@ -30,6 +30,7 @@ use Rector\Config\RectorConfig;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnNeverTypeRector;
 
 return RectorConfig::configure()
@@ -77,7 +78,7 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withFileExtensions(['php', 'inc'])
-    ->withPhpSets(php82: true)
+    ->withPhpSets(php83: true)
     ->withSkip([
         // We cannot run this rule because it breaks ExamSys.
         // We have several functions with the same name, but using different numbers of parameters.
@@ -95,4 +96,6 @@ return RectorConfig::configure()
         // We cannot use this rule as it detects properties that we modify more than one time as readonly.
         // The rule completely breaks the paper details page for example.
         ReadOnlyPropertyRector::class,
+        // Ignoring this rule temporarily to make a commit that is easier to review.
+        AddOverrideAttributeToOverriddenMethodsRector::class,
     ]);
