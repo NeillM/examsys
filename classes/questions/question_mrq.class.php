@@ -29,6 +29,7 @@ require_once 'question_mcq.class.php';
 
 class QuestionMRQ extends QuestionEdit
 {
+    public $_userObj;
     protected $min_options = 3;
     protected $_fields_force = ['display_method'];
 

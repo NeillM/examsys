@@ -27,6 +27,10 @@ namespace plugins\questions\mrq;
  */
 class renderdata extends \questiondata
 {
+    /**
+     * @var string
+     */
+    public $other;
     use \mpqgetmarks;
 
     /**

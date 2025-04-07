@@ -32,6 +32,7 @@ use random_utils;
  */
 class questions extends generator
 {
+    public $_mysqli;
     /**
      * Create a new question
      *  Since _fields_required had not been used in question creating process, required fields are hard coded in HTML in webpage....

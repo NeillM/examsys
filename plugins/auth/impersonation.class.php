@@ -29,6 +29,10 @@ require_once 'outline_authentication.class.php';
 
 class impersonation_auth extends outline_authentication
 {
+    /**
+     * @var bool
+     */
+    public $staff_mode;
     private $active = false;
     private $demo = false;
     private $newuserid;

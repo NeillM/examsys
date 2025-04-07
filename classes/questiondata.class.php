@@ -28,6 +28,10 @@
 abstract class questiondata
 {
     /**
+     * @var string
+     */
+    public $questiontemplate;
+    /**
      * Media type - file
      */
     public const FILE = 1;

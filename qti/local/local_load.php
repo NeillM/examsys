@@ -37,6 +37,7 @@ require_once '../include/load_config.php';
 
 class IE_Local_Load extends IE_Main
 {
+    public $ids;
     public $type = '';
     public $q_ids = [];
     public $p_ids = [];

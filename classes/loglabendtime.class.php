@@ -25,6 +25,7 @@
  */
 class LogLabEndTime
 {
+    public $labID;
     private $msg;
 
     private $end_datetime_cached = false;

@@ -203,6 +203,7 @@ class ST_Question_Info extends ST_Question
 
 class STQ_Labelling_Label implements \Stringable
 {
+    public $matches;
     public $tag;
     public $left;
     public $top;

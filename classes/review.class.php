@@ -24,6 +24,7 @@
  */
 class Review
 {
+    public $reviews_array;
     private $metadataID;
 
     /**

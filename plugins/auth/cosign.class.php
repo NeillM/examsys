@@ -30,6 +30,10 @@ require_once dirname(__DIR__, 2) . '/cosign/cosign.class.php';
 
 class cosign_auth extends outline_authentication
 {
+    /**
+     * @var bool
+     */
+    public $createnewuserassociation;
     private $lookupuserobj;
 
     public $impliments_api_auth_version = 1;

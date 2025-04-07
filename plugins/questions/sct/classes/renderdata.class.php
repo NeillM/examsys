@@ -27,6 +27,10 @@ namespace plugins\questions\sct;
  */
 class renderdata extends \questiondata
 {
+    /**
+     * @var (\literal-string & \lowercase-string & \uppercase-string)|string
+     */
+    public $dismiss;
     use \defaultgetmarks;
 
     /**

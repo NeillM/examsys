@@ -30,6 +30,7 @@ require_once 'outline_authentication.class.php';
 
 class ltilogin_auth extends outline_authentication
 {
+    public $lti_i;
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
     protected $lti;

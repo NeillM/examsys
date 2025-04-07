@@ -24,8 +24,8 @@
 namespace LTI;
 
 class OAuthConsumer implements \Stringable {
-  function __construct(public $key, public $secret, $callback_url=NULL) {
-    $this->callback_url = $callback_url;
+  function __construct(public $key, public $secret, public $callback_url=NULL)
+  {
   }
 
   function __toString(): string {

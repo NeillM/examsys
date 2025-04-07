@@ -25,6 +25,14 @@
  */
 class authtypereturn
 {
+    /**
+     * @var never[]
+     */
+    public $debug;
+    /**
+     * @var int
+     */
+    public $debugpointer;
     public $success;
     public $rogoid;
     public $url;

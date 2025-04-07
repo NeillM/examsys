@@ -27,6 +27,7 @@
  */
 class Lookup extends RogoStaticSingleton
 {
+    public $settings;
     public static $inst = null;
     public static $class_name = 'Lookup';
 

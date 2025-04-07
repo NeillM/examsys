@@ -27,6 +27,14 @@ namespace plugins\questions\likert;
  */
 class renderdata extends \questiondata
 {
+    /**
+     * @var bool
+     */
+    public $displaylikertnotes;
+    /**
+     * @var bool
+     */
+    public $displaylikertscenario;
     use \defaultgetmarks;
 
     /**

@@ -25,6 +25,11 @@
 
 class IE_qti12_Load extends IE_Main
 {
+    /**
+     * @var never[]|string[]
+     */
+    public $ll;
+    public $params;
     public $likert_values = [];
     public $dich_values = [];
     public $abstainvalues = [];

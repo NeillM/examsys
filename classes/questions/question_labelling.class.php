@@ -26,6 +26,7 @@
  */
 class QuestionLABELLING extends QuestionEdit
 {
+    public $correct;
     protected $_fields_required = ['type', 'leadin', 'option_order', 'owner_id', 'status'];
 
     protected $points1 = '';

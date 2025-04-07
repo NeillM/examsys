@@ -26,6 +26,11 @@
  */
 class QuestionEdit extends RogoObject
 {
+    public $_userObj;
+    public $_blooms_db;
+    public $_qdata;
+    public $_qmdata;
+    public $lang_strings;
     public $id = -1;
     protected $type = null;
     protected $theme = '';

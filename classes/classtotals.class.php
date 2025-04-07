@@ -34,6 +34,7 @@ require_once dirname(__DIR__) . '/include/calculate_marks.inc';
 
 class ClassTotals
 {
+    public $special_needs;
     private $demo;
     private $user_results;
     private $paper_buffer;
@@ -102,7 +103,7 @@ class ClassTotals
      */
     public function __construct(
         private $studentsonly,
-        $percent,
+        public $percent,
         private $ordering,
         private $absent,
         private $sortby,
@@ -120,7 +121,6 @@ class ClassTotals
         $this->paper_type         = $propertyObj->get_paper_type();
         $this->calendar_year      = $propertyObj->get_calendar_year();
         $this->marking            = $propertyObj->get_marking();
-        $this->percent            = $percent;
         $this->pass_mark          = $propertyObj->get_pass_mark();
         $this->distinction_mark   = $propertyObj->get_distinction_mark();
         $this->log_late           = [];

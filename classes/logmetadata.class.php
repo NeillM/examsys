@@ -24,6 +24,7 @@
  */
 class LogMetadata
 {
+    public $finish_datetime;
     private $id;
     private $session_id; //started
     private $start_datetime; //date time object derived from started

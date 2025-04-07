@@ -20,6 +20,30 @@ require_once '../include/load_config.php';
 // main question object
 class ST_QTI12_Question // <item
 {
+    /**
+     * @var non-empty-array<int<1, max>, string>
+     */
+    public $optionslk1;
+    /**
+     * @var non-empty-array<string, mixed>
+     */
+    public $optionslk2;
+    /**
+     * @var non-empty-array<string, string>
+     */
+    public $optionslk3;
+    /**
+     * @var non-empty-array<string, string>
+     */
+    public $optionslk4;
+    /**
+     * @var non-empty-array<\non-falsy-string, \non-empty-list>
+     */
+    public $options2;
+    /**
+     * @var non-empty-list
+     */
+    public $question2;
     public $title; // <item title=
     public $load_id; // <item ident=
 
@@ -532,6 +556,10 @@ class ST_QTI12_Response implements \Stringable // <response_
 // object to store labels
 class ST_QTI12_Label implements \Stringable // <response_label
 {
+    /**
+     * @var int
+     */
+    public $shuffle;
     public $id; // <response_label ident=
     public $material; // <material>
     public $flow = 0;
@@ -753,6 +781,11 @@ class ST_QTI12_Material_Inner
 
 class ST_QTI12_Material implements \Stringable // <material>
 {
+    /**
+     * @var string
+     */
+    public $media;
+    public $data;
     public $count = 0;
     public $chunks = []; // array of ST_QTI12_Material_Inner
     public $image = '';
