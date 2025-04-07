@@ -31,6 +31,7 @@ class OptionEdit extends RogoObject
 {
     public $langstrings;
     public $id = -1;
+    public $marks;
     protected $question_id = null;
     protected $text = '';
     /** @var int media file id. */
