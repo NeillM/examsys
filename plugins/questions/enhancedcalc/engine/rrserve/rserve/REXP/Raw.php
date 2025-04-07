@@ -3,7 +3,7 @@
 * Rserve client for PHP
 * Supports Rserve protocol 0103 only (used by Rserve 0.5 and higher)
 * $Revision$
-* @author Clément TURBELIN
+* @author Clï¿½ment TURBELIN
 * Developped using code from Simple Rserve client for PHP by Simon Urbanek Licensed under GPL v2 or at your option v3
 * This code is inspired from Java client for Rserve (Rserve package v0.6.2) developped by Simon Urbanek(c)
 */
@@ -31,15 +31,15 @@ class Rserve_REXP_Raw extends Rserve_REXP {
 	}
 	
 	#[\Override]
-    public function  isRaw() { return TRUE; }
+	public function  isRaw() { return TRUE; }
 	
 	#[\Override]
-    public function getType() {
+	public function getType() {
 		return Rserve_Parser::XT_RAW;
 	}
 	
 	#[\Override]
-    public function toHTML() {
+	public function toHTML() {
 		$s = strlen((string) $this->value) > 60 ? substr((string) $this->value,0,60).' (truncated)': $this->value;
 		return '<div class="rexp xt_'.$this->getType().'"> <span class="typename">raw</span><div class="value">'.$s.'</div>'.$this->attrToHTML().'</div>';	
 	}

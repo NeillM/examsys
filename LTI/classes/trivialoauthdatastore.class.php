@@ -34,7 +34,7 @@ class TrivialOAuthDataStore extends OAuthDataStore {
 	}
 
 	#[\Override]
-    function lookup_consumer($consumer_key) {
+	function lookup_consumer($consumer_key) {
 		if (str_starts_with((string) $consumer_key, "http://")) {
 			$consumer = new OAuthConsumer($consumer_key,"secret", NULL);
 			return $consumer;
@@ -47,14 +47,14 @@ class TrivialOAuthDataStore extends OAuthDataStore {
 	}
 
 	#[\Override]
-    function lookup_token($consumer, $token_type, $token) {
+	function lookup_token($consumer, $token_type, $token) {
 		return new OAuthToken($consumer, "");
 	}
 
 	// Return NULL if the nonce has not been used
 	// Return $nonce if the nonce was previously used
 	#[\Override]
-    function lookup_nonce($consumer, $token, $nonce, $timestamp) {
+	function lookup_nonce($consumer, $token, $nonce, $timestamp) {
 		// Should add some clever logic to keep nonces from
 		// being reused - for no we are really trusting
 		// that the timestamp will save us
@@ -62,12 +62,12 @@ class TrivialOAuthDataStore extends OAuthDataStore {
 	}
 
 	#[\Override]
-    function new_request_token($consumer) {
+	function new_request_token($consumer) {
 			return NULL;
 	}
 
 	#[\Override]
-    function new_access_token($token, $consumer) {
+	function new_access_token($token, $consumer) {
 			return NULL;
 	}
 }

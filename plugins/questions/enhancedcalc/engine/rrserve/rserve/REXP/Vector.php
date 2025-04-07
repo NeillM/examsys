@@ -27,7 +27,7 @@ class Rserve_REXP_Vector extends Rserve_REXP {
 	}
 
 	#[\Override]
-    public function isVector() {
+	public function isVector() {
 		return true;
 	}
 
@@ -48,12 +48,12 @@ class Rserve_REXP_Vector extends Rserve_REXP {
 	}
 
 	#[\Override]
-    public function getType() {
+	public function getType() {
 		return Rserve_Parser::XT_VECTOR;
 	}
 
 	#[\Override]
-    public function toHTML() {
+	public function toHTML() {
 		$s = '<div class="rexp vector xt_'.$this->getType().'">';
 		$n = $this->length();
 		$s .= '<span class="typename">'.Rserve_Parser::xtName($this->getType()).'</span> <span class="length">'.$n.'</span>';
