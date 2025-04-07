@@ -27,6 +27,8 @@ namespace plugins\questions\likert;
  */
 class renderdata extends \questiondata
 {
+    use \defaultgetmarks;
+
     /**
      * @var bool
      */
@@ -35,7 +37,6 @@ class renderdata extends \questiondata
      * @var bool
      */
     public $displaylikertscenario;
-    use \defaultgetmarks;
 
     /**
      * Na option state

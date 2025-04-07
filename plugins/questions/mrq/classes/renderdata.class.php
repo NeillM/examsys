@@ -27,11 +27,12 @@ namespace plugins\questions\mrq;
  */
 class renderdata extends \questiondata
 {
+    use \mpqgetmarks;
+
     /**
      * @var string
      */
     public $other;
-    use \mpqgetmarks;
 
     /**
      * Question 'other' option selected state
