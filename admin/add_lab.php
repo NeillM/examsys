@@ -38,7 +38,7 @@ $low_bandwidth = param::optional('low_bandwidth', 0, param::INT, param::FETCH_PO
 $timetabling = param::optional('timetabling', null, param::TEXT, param::FETCH_POST);
 $it_support = param::optional('it_support', null, param::TEXT, param::FETCH_POST);
 $plagarism = param::optional('plagarism', null, param::TEXT, param::FETCH_POST);
-$addresses = explode(PHP_EOL, trim(param::optional('addresses', '', param::TEXT, param::FETCH_POST)));
+$addresses = explode(PHP_EOL, trim((string) param::optional('addresses', '', param::TEXT, param::FETCH_POST)));
 
 $campusobj = new campus($mysqli);
 $campuses = $campusobj->get_all_campus_details();

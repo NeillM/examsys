@@ -92,7 +92,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
     } elseif ($options[0]['q_type'] == 'mrq') {
         echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
     } elseif ($options[0]['q_type'] == 'rank') {
-        if (mb_strpos($tmp_exclude, '1') !== false) {    // If any option is excluded, exclude the whole question.
+        if (mb_strpos((string) $tmp_exclude, '1') !== false) {    // If any option is excluded, exclude the whole question.
             $tmp_exclude = '1111111111111111111111111111111111111111';
         }
         echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -106,12 +106,12 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             }
         }
     } elseif ($options[0]['q_type'] == 'extmatch' or $options[0]['q_type'] == 'matrix') {
-        $matching_scenarios = explode('|', $options[0]['scenario']);
-        $matching_source = explode('|', $options[0]['q_media']);
-        $matching_width = explode('|', $options[0]['q_media_width']);
-        $matching_height = explode('|', $options[0]['q_media_height']);
-        $matching_alt = explode('|', $options[0]['q_media_alt']);
-        $matching_num = explode('|', $options[0]['q_media_num']);
+        $matching_scenarios = explode('|', (string) $options[0]['scenario']);
+        $matching_source = explode('|', (string) $options[0]['q_media']);
+        $matching_width = explode('|', (string) $options[0]['q_media_width']);
+        $matching_height = explode('|', (string) $options[0]['q_media_height']);
+        $matching_alt = explode('|', (string) $options[0]['q_media_alt']);
+        $matching_num = explode('|', (string) $options[0]['q_media_num']);
         $matching_media = [];
         for ($i = 0; $i < count($matching_source); $i++) {
             $matching_media[$matching_num[$i]] = [
@@ -122,7 +122,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             ];
         }
         $matching_options = [];
-        $matching_users_answers = explode('|', $options[0]['correct']);
+        $matching_users_answers = explode('|', (string) $options[0]['correct']);
     }
 
     if (!in_array($options[0]['q_type'], ['info', 'keyword_based', 'random'])) {
@@ -133,8 +133,8 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
 
             $exclude_this = match ($options[0]['q_type']) {
                 'blank' => $tmp_exclude,
-                'mcq', 'mrq' => mb_substr($tmp_exclude, 0, 1),
-                default => mb_substr($tmp_exclude, ($part_id - 1), 1),
+                'mcq', 'mrq' => mb_substr((string) $tmp_exclude, 0, 1),
+                default => mb_substr((string) $tmp_exclude, ($part_id - 1), 1),
             };
             $feedback = ($options[0]['q_type'] == 'textbox') ? $old_correct_fback : '';
             display_option($options[0], $q_id, $question_no, $part_id, $display_option, $std_method, $is_group, $marks, $exclude_this, $review_val, $matching_options, 0, $tmp_reviews, $option_no, $stdID, $std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback);
@@ -152,13 +152,13 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         case 'area':
             $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
             echo '<div>';
-            echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+            echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
             echo "</div>\n";
             $marks = $options[0]['marks_correct'];
             break;
         case 'mcq':
             $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-            $scale_html = reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+            $scale_html = reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
             if ($options[0]['display_method'] == 'vertical' or $options[0]['display_method'] == 'vertical_other') {
                 if ($options[0]['display_method'] == 'vertical_other') {
                     echo '<tr><td><input type="radio" name="q' . $question_no . '" value="other" /></td><td>' . $string['other'] . ' <input type="text" onkeypress="document.questions.q' . $question_no . '[' . $part_id . '].checked=true" name="q' . $question_no . "_other\" /></td></tr>\n";
@@ -181,7 +181,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         case 'blank':
             if ($options[0]['score_method'] == 'Mark per Question') {
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-                echo '<br />' . reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo '<br />' . reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
                 $marks = $options[0]['marks_correct'];
             }
             break;
@@ -200,7 +200,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             $question['object']->load($question);
             $question['object']->load_all_user_answers($allanswers);
             $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-            $stdset = reviewScale($question_no, '', $marks, $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+            $stdset = reviewScale($question_no, '', $marks, $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
             $extra = ['num_on_screen' => $question_no, 'reviewers' => true, 'stdset' => $stdset];
 
             echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
@@ -218,7 +218,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             echo '</blockquote></table>';
             if ($options[0]['score_method'] == 'Mark per Question') {
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-                echo '<br />' . reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo '<br />' . reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
             }
             break;
         case 'true_false':
@@ -242,7 +242,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                     echo '<option value="f">' . $string['false'] . "</option>\n";
                 }
                 echo "</select>\n";
-                echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
                 echo '</blockquote>';
             } else {
                 if ($options[0]['correct'] == 't') {
@@ -260,7 +260,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                 }
                 echo '<input type="radio" name="q' . $question_no . "\" value=\"f\"$false_checked />&nbsp;False<br />\n";
                 echo '</blockquote>';
-                echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo reviewScale($question_no, '', $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
             }
 
             $marks = $options[0]['marks_correct'];
@@ -277,13 +277,13 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             if ($options[0]['score_method'] == 'Bonus Mark') {
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, ($part_id + 1), $tmp_reviews, $is_group);
                 echo "<br />\n<div>" . $string['allitemscorrect'] . ': ';
-                echo reviewScale($question_no, ($part_id + 1), $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo reviewScale($question_no, ($part_id + 1), $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
                 echo "</div>\n";
                 echo '<input type="hidden" id="rank' . $question_no . '_correct_no" name="rank' . $question_no . '_correct_no" value="' . ($marks - 1) . "\" />\n";
             } elseif ($options[0]['score_method'] == 'Mark per Question') {
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
                 echo "<br />\n<div>";
-                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
                 echo "</div>\n";
                 echo '<input type="hidden" id="rank' . $question_no . '_correct_no" name="rank' . $question_no . "_correct_no\" value=\"$part_id\" />\n";
             } else {
@@ -291,7 +291,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             }
             break;
         case 'extmatch':
-            $matching_answers = explode('|', $options[0]['correct']);
+            $matching_answers = explode('|', (string) $options[0]['correct']);
 
             if (!empty($matching_media[0]['source'])) {
                 echo '<div class="mediadiv">';
@@ -328,7 +328,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                 echo '<li>';
                 if ($matching_scenarios[$part_id - 1] != '') {
                     echo '<div';
-                    if (mb_substr($tmp_exclude, $part_id - 1, 1) == '1') {
+                    if (mb_substr((string) $tmp_exclude, $part_id - 1, 1) == '1') {
                         echo ' style="color:red; text-decoration:line-through"';
                     }
                     echo '>' . $matching_scenarios[$part_id - 1] . '</div>';
@@ -381,7 +381,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                     echo '&nbsp;';
                     $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $rating_part + 1, $tmp_reviews, $is_group);
                     if ($options[0]['score_method'] == 'Mark per Option') {
-                        echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, ($part_id - 1), 1), $review_val, $stdID, $std_excluded, $is_group);
+                        echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, ($part_id - 1), 1), $review_val, $stdID, $std_excluded, $is_group);
                     }
                     echo '</div></li>';
                     $rating_part++;
@@ -392,7 +392,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                               $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $rating_part + 1, $tmp_reviews, $is_group);
                               echo '<div>';
                         if ($options[0]['score_method'] == 'Mark per Option') {
-                            echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, ($part_id - 1), 1), $review_val, $stdID, $std_excluded, $is_group);
+                            echo reviewScale($question_no, $rating_part + 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, ($part_id - 1), 1), $review_val, $stdID, $std_excluded, $is_group);
                         }
                               echo '</div>';
                               $rating_part++;
@@ -404,7 +404,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             if ($options[0]['score_method'] == 'Mark per Question') {
                 //$stdID = 1;
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
                 $marks += $options[0]['marks_correct'];
             }
             echo '<input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" /><input type="hidden" name="multimatching' . $question_no . '_correct_no" value="' . $marks . '" />';
@@ -423,7 +423,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                         echo $single_option;
                     }
                     echo '</td><td>&nbsp;</td><td>';
-                    echo reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
+                    echo reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
                     echo "</td></tr>\n";
                     $part_id++;
                     $marks += $options[0]['marks_correct'];
@@ -431,7 +431,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                 echo "</table>\n</blockquote>\n";
             } else {
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
                 $marks += $options[0]['marks_correct'];
             }
             break;
@@ -441,13 +441,13 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             $excl_string = '';
 
             foreach ($matching_options as $single_option) {
-                if (mb_substr($tmp_exclude, $part_id - 1, 1) == '1') {
+                if (mb_substr((string) $tmp_exclude, $part_id - 1, 1) == '1') {
                     $excl_string = ' ;color:red; text-decoration:line-through';
                 }
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $part_id, $tmp_reviews, $is_group);
                 echo "<tbody><tr><td style=\"padding-right: 12px$excl_string\">" .  chr($part_id + 64) . ')&nbsp;' . $single_option . '</td><td>&nbsp;</td><td>';
                 if ($options[0]['score_method'] == 'Mark per Option') {
-                    echo reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
+                    echo reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
                     $marks += $options[0]['marks_correct'];
                 }
                 echo "</td></tr></tbody>\n";
@@ -456,7 +456,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             echo '</table>';
             if ($options[0]['score_method'] == 'Mark per Question') {
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
                 $marks = $options[0]['marks_correct'];
             }
             break;
@@ -488,7 +488,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                 if (trim($single_scenario) != '') {
                     echo '<tr>';
                     echo '<td align="right">' . chr(64 + $part_id) . '.</td><td';
-                    if (mb_substr($tmp_exclude, $part_id - 1, 1) == '1') {
+                    if (mb_substr((string) $tmp_exclude, $part_id - 1, 1) == '1') {
                         echo ' style="color:red; text-decoration:line-through"';
                     }
                     echo '>' . $single_scenario . '</td>';
@@ -502,7 +502,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
                         $answer_no++;
                     }
                     if ($options[0]['score_method'] == 'Mark per Option') {
-                        echo '<td>' . reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group) . '</td>';
+                        echo '<td>' . reviewScale($question_no, $part_id, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, $part_id - 1, 1), $review_val, $stdID, $std_excluded, $is_group) . '</td>';
                         $marks += $options[0]['marks_correct'];
                     }
                     echo "</tr>\n";
@@ -513,7 +513,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             if ($options[0]['score_method'] == 'Mark per Question') {
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
                 $marks = $options[0]['marks_correct'];
-                echo '<br />' . reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
+                echo '<br />' . reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, mb_substr((string) $tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
             }
             break;
     }

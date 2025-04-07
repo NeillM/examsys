@@ -233,7 +233,7 @@ $phase_description .= ': <span style="font-weight: normal">' . number_format($ou
 echo "<div class=\"head_title\">\n";
 echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
 echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+if (isset($_GET['folder']) and trim((string) $_GET['folder']) != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
 } elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
@@ -322,7 +322,7 @@ while ($question_data->fetch()) {
             echo '<tr><td colspan="2"><p class="theme">' . $theme . '</p></td></tr><tr><td colspan="2">&nbsp;</td></tr>';
         }
         if (isset($notes) && trim($notes) !== '') {
-            echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . mb_strtoupper($string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
+            echo '<tr><td></td><td class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . mb_strtoupper((string) $string['note']) . ':</strong>&nbsp;' . $notes . '</td></tr>';
         }
 
         if ($scenario != '') {
@@ -353,10 +353,10 @@ while ($question_data->fetch()) {
         $q_media_width = $media['width'];
         $q_media_alt = $media['alt'];
         if ($q_media != '' and $q_media != null) {
-            $media_list = explode('|', $q_media);
-            $media_list_width = explode('|', $q_media_width);
-            $media_list_height = explode('|', $q_media_height);
-            $media_list_alt = explode('|', $q_media_alt);
+            $media_list = explode('|', (string) $q_media);
+            $media_list_width = explode('|', (string) $q_media_width);
+            $media_list_height = explode('|', (string) $q_media_height);
+            $media_list_alt = explode('|', (string) $q_media_alt);
             $questiondata = new plugins\questions\textbox\renderdata();
             $render = new render($configObject);
             for ($i = 0; $i < count($media_list); $i++) {
@@ -419,13 +419,13 @@ while ($result->fetch()) {
 
         $out_of = $result->num_rows;
         echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
-        echo '<div id="ans_' . $answer_no . '"><div class="student_ans">' . nl2br(render_user_answer($user_answer, $questionsettings[$textbox_q_id], $string)) . '</div><div class="student_marks">' . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
+        echo '<div id="ans_' . $answer_no . '"><div class="student_ans">' . nl2br((string) render_user_answer($user_answer, $questionsettings[$textbox_q_id], $string)) . '</div><div class="student_marks">' . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
 
         if (count($reminders) > 0) {
             $reminders_selected = explode('|', $reminders_selected ?? '');
             echo '<ul class="reminders">';
             foreach ($reminders as $reminder) {
-                $remindertext = trim($reminder['text']);
+                $remindertext = trim((string) $reminder['text']);
                 if (empty($remindertext)) {
                     continue;
                 }

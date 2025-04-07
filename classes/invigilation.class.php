@@ -176,11 +176,11 @@ class Invigilation
         }
         $data['medical'] = '';
         if ($student_object['medical'] != '') {
-            $data['medical'] = addslashes($student_object['medical']);
+            $data['medical'] = addslashes((string) $student_object['medical']);
         }
         $data['breaks'] = '';
         if ($student_object['breaks'] != '') {
-            $data['breaks'] = addslashes($student_object['breaks']);
+            $data['breaks'] = addslashes((string) $student_object['breaks']);
         }
         return $data;
     }
@@ -405,7 +405,7 @@ class Invigilation
         $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title, $username);
         while ($results->fetch()) {
             if ($first_names == 'Temporary Account') {
-                $username = strtolower($surname);
+                $username = strtolower((string) $surname);
 
                 $student_object[$userID]['user_ID'] = $userID;
                 $student_object[$userID]['username'] = $username;

@@ -140,15 +140,15 @@ class UON_SATURN extends SmsUtils
     {
         $xml = $this->get_module($moduleID, $mysqli);
         foreach ($xml->Module->Membership->Student as $sms) {
-            $sms->Title = trim($sms->Title);
-            $sms->Surname = trim($sms->Surname);
-            $sms->Forename = trim($sms->Forename);
-            $sms->CourseCode = trim($sms->CourseCode);
-            $sms->Username = trim($sms->Username);
-            $sms->Email = trim($sms->Email);
-            $sms->Gender = trim($sms->Gender);
-            $sms->YearofStudy = trim($sms->YearofStudy);
-            $sms->StudentID = trim($sms->StudentID);
+            $sms->Title = trim((string) $sms->Title);
+            $sms->Surname = trim((string) $sms->Surname);
+            $sms->Forename = trim((string) $sms->Forename);
+            $sms->CourseCode = trim((string) $sms->CourseCode);
+            $sms->Username = trim((string) $sms->Username);
+            $sms->Email = trim((string) $sms->Email);
+            $sms->Gender = trim((string) $sms->Gender);
+            $sms->YearofStudy = trim((string) $sms->YearofStudy);
+            $sms->StudentID = trim((string) $sms->StudentID);
 
             $lookup_username = trim($sms->Username);
 
@@ -383,7 +383,7 @@ class UON_SATURN extends SmsUtils
                     } else {
                         $new_roles = $current_users[$lookup_username]['roles'];             // Keep the roles same as they were.
 
-                        if ($new_roles != 'left' and $new_roles != 'graduate' and mb_strpos($new_roles, 'Student') === false) {
+                        if ($new_roles != 'left' and $new_roles != 'graduate' and mb_strpos((string) $new_roles, 'Student') === false) {
                             $new_roles .= ',Student';           // Add in 'student' role if missing.
                         }
                     }
@@ -410,7 +410,7 @@ class UON_SATURN extends SmsUtils
                         $result->bind_param('issssssss', $sms->YearofStudy, $sms->CourseCode, $sms->Title, $sms->Surname, $sms->Forename, $tmp_initials, $sms->Email, $lookup_username);
                         if (!$demomode) {
                             $result->execute();
-                            Role::updateRoles($current_users[$lookup_username]['userID'], explode(',', $new_roles));
+                            Role::updateRoles($current_users[$lookup_username]['userID'], explode(',', (string) $new_roles));
                         }
                         $result->close();
                     }

@@ -56,7 +56,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
-  <div class="page_title"><?php echo $string['papersbyschool']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (mb_substr($_GET['calyear'], 2, 2) + 1); ?></span></div>
+  <div class="page_title"><?php echo $string['papersbyschool']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (mb_substr((string) $_GET['calyear'], 2, 2) + 1); ?></span></div>
 </div>
 
 <table class="header" style="font-size:90%">

@@ -217,8 +217,8 @@ $xmean2_total = 0;
 for ($i = 0; $i < $user_no; $i++) {
     echo '<Row>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname']) . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names']) . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities((string) $user_results[$i]['surname']) . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities((string) $user_results[$i]['first_names']) . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
     echo '<Cell><Data ss:Type="String">' . $user_results[$i]['grade'] . '</Data></Cell>';
     if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{

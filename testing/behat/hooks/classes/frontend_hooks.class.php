@@ -217,7 +217,7 @@ trait frontend_hooks
             if (!is_dir($faildir)) {
                 mkdir($faildir);
             }
-            $feature = basename($event->getFeature()->getFile(), '.feature');
+            $feature = basename((string) $event->getFeature()->getFile(), '.feature');
             $line = $event->getStep()->getLine();
             $filename = "$feature-$line";
 

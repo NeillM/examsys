@@ -147,9 +147,9 @@ class QuestionLIKERT extends QuestionEdit
     public function get_display_method()
     {
         if ($this->display_method != '') {
-            $pos = mb_strrpos($this->display_method, '|');
-            $this->scale_type = mb_substr($this->display_method, 0, $pos);
-            $this->not_applicable = mb_substr($this->display_method, $pos + 1);
+            $pos = mb_strrpos((string) $this->display_method, '|');
+            $this->scale_type = mb_substr((string) $this->display_method, 0, $pos);
+            $this->not_applicable = mb_substr((string) $this->display_method, $pos + 1);
         }
         return $this->display_method;
     }

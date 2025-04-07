@@ -80,7 +80,7 @@ $sub_result->close();
 // Get the MySQL stats.
 $mysql_stats = [];
 
-$status = explode('  ', $mysqli->stat());
+$status = explode('  ', (string) $mysqli->stat());
 for ($i = 0; $i <= 7; $i++) {
     $parts = explode(': ', $status[$i]);
     if ($i == 0) {

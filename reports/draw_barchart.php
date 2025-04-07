@@ -76,7 +76,7 @@ for ($label = 0; $label <= $step; $label++) {
     if ($this_label > 9) {
         $align = 6;
     }
-    imagettftext($Image, 10, 0, $this_x - $align, $g_y1 - 6, $black, $font, $this_label);
+    imagettftext($Image, 10, 0, $this_x - $align, $g_y1 - 6, $black, $font, (string) $this_label);
     ImageLine($Image, $this_x, $g_y1, $this_x, $g_y1 - 4, $dkgrey);
     ImageLine($Image, $this_x, $g_y1 + 1, $this_x, $g_y2, $ltgrey);
 }

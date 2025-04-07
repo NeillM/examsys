@@ -28,7 +28,7 @@ require '../include/sysadmin_auth.inc';
 function stripTrainModule($module_string)
 {
     $new_modules = [];
-    $old_modules = explode(',', $module_string);
+    $old_modules = explode(',', (string) $module_string);
     foreach ($old_modules as $old_module) {
         if ($old_module != 'TRAIN') {
             $new_modules[] = $old_module;

@@ -82,7 +82,7 @@ if ($moduleid_in_use == false) {
         $module['map_level'] = 0;
         $module['vle_api'] = '';
     } else {
-        $vle_parts = explode('~', $vle_data);
+        $vle_parts = explode('~', (string) $vle_data);
         $module['vle_api'] = $vle_parts[0];
         $module['map_level'] = $vle_parts[1];
     }

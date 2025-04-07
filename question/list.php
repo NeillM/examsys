@@ -155,7 +155,7 @@ if (isset($_GET['module'])) {
 }
   echo '</div><div class="page_title">' . $string['questionbank'] . "&nbsp;<span id=\"q_count\"></span><span style=\"font-weight:normal\">$bank_type</span></div>";
   echo "</div>\n";
-if ($module != 0 and mb_strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+if ($module != 0 and mb_strpos((string) $module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
     echo $notice->info_strip($string['modulenomappings'], 100) . "\n</div>\n</body>\n</html>";
     exit;
 }
@@ -296,7 +296,7 @@ foreach ($table_order as $display => $col_width) {
         } elseif ($_GET['type'] == 'keyword') {
             echo ' ' . $p;
         } elseif ($_GET['type'] == 'bloom' and $bloom != '') {
-            echo ' ' . mb_strtolower($bloom);
+            echo ' ' . mb_strtolower((string) $bloom);
         } elseif ($_GET['type'] == 'performance') {
             if ($p >= 80 and $p <= 100) {
                 echo ' veryeasy';     // Very Easy
@@ -334,7 +334,7 @@ foreach ($table_order as $display => $col_width) {
         echo ' data-selftype="' . (($locked != '') ? 'Q' : 'L') . '">';
 
         if ($q_type == 'sct') {
-            $parts = explode('~', $leadin);
+            $parts = explode('~', (string) $leadin);
             $leadin = $parts[0];
         }
         $leadin = str_replace('&nbsp;', ' ', $leadin);

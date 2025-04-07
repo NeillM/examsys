@@ -61,7 +61,7 @@ class export_assessment extends exporter
      */
     public static function hex_to_dec($data)
     {
-        $items = explode(',', $data);
+        $items = explode(',', (string) $data);
         $response = '';
 
         foreach ($items as $item) {
@@ -115,7 +115,7 @@ class export_assessment extends exporter
     {
         $safe = [];
         foreach ($row as $r) {
-            $safe[] = strip_tags($r);
+            $safe[] = strip_tags((string) $r);
         }
         return $safe;
     }
@@ -226,7 +226,7 @@ class export_assessment extends exporter
             if (!$skip_random) {
                 switch ($question['type']) {
                     case 'blank':
-                        for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
+                        for ($sec = 1; $sec <= mb_substr_count((string) $question['correct'], ','); $sec++) {
                             if (mb_substr($tmp_exclude, $sec - 1, 1) == '0') {
                                 $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                 self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
@@ -234,7 +234,7 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'extmatch':
-                        $correct_parts = explode(',', $question['correct']);
+                        $correct_parts = explode(',', (string) $question['correct']);
                         $partID = 0;
                         for ($sec = 1; $sec < count($correct_parts); $sec++) {
                             if ($correct_parts[$sec] != '' and mb_substr($tmp_exclude, $partID, 1) == '0') {
@@ -255,7 +255,7 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'hotspot':
-                        $correct_parts = explode('|', $question['correct']);
+                        $correct_parts = explode('|', (string) $question['correct']);
                         for ($sec = 0; $sec < count($correct_parts); $sec++) {
                             if (mb_substr($tmp_exclude, $sec, 1) == '0') {
                                   $col1 = 'Q' . ($i + 1) . chr($sec + 65) . $externalref;
@@ -265,7 +265,7 @@ class export_assessment extends exporter
                         break;
                     case 'labelling':
                         $sec = 1;
-                        $tmp_first_split = explode(';', $question['correct']);
+                        $tmp_first_split = explode(';', (string) $question['correct']);
                         $tmp_second_split = explode('$', $tmp_first_split[11]);
                         for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
                             if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
@@ -278,7 +278,7 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'matrix':
-                        $correct_parts = explode(',', $question['correct']);
+                        $correct_parts = explode(',', (string) $question['correct']);
                         for ($sec = 1; $sec < count($correct_parts); $sec++) {
                             if (mb_substr($tmp_exclude, $sec - 1, 1) == '0' and $correct_parts[$sec] != '') {
                                   $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
@@ -288,7 +288,7 @@ class export_assessment extends exporter
                         break;
                     case 'rank':
                         if ($tmp_exclude[0] == '0') {
-                            for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
+                            for ($sec = 1; $sec <= mb_substr_count((string) $question['correct'], ','); $sec++) {
                                   $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                             }
@@ -296,7 +296,7 @@ class export_assessment extends exporter
                         break;
                     case 'true_false':
                     case 'dichotomous':
-                        for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
+                        for ($sec = 1; $sec <= mb_substr_count((string) $question['correct'], ','); $sec++) {
                             if (mb_substr($tmp_exclude, $sec - 1, 1) == '0') {
                                   $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
@@ -304,7 +304,7 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'mrq':
-                        for ($sec = 1; $sec <= mb_substr_count($question['correct'], ','); $sec++) {
+                        for ($sec = 1; $sec <= mb_substr_count((string) $question['correct'], ','); $sec++) {
                             if (!$exclusions->is_question_excluded($tmp_question_ID)) {
                                   $col1 = 'Q' . ($i + 1) . chr($sec + 64) . $externalref;
                                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
@@ -384,12 +384,12 @@ class export_assessment extends exporter
                                 $csvdata[0][] = '';
                                 $csvdata[0][] = '';
                             } else {
-                                $csvdata[0][] = self::hex_to_dec(ltrim($question['correct'], ','));
+                                $csvdata[0][] = self::hex_to_dec(ltrim((string) $question['correct'], ','));
                             }
                         }
                         break;
                     case 'blank':
-                        $correct_parts = explode(',', $question['correct']);
+                        $correct_parts = explode(',', (string) $question['correct']);
                         for ($partID = 1; $partID < count($correct_parts); $partID++) {
                             if (mb_substr($tmp_exclude, $partID - 1, 1) == '0') {
                                 if ($is_random) {
@@ -410,8 +410,8 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'extmatch':
-                        $correct_parts = explode(',', $question['correct']);
-                        $correct_text_parts = explode("\t", $question['correct_text']);
+                        $correct_parts = explode(',', (string) $question['correct']);
+                        $correct_text_parts = explode("\t", (string) $question['correct_text']);
                         $partID = 1;
                         for ($outer = 1; $outer < count($correct_parts); $outer++) {
                             if ($correct_parts[$outer] != '' and mb_substr($tmp_exclude, $partID - 1, 1) == '0') {
@@ -444,8 +444,8 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'matrix':
-                        $correct_parts = explode(',', $question['correct']);
-                        $correct_text_parts = explode("\t", $question['correct_text']);
+                        $correct_parts = explode(',', (string) $question['correct']);
+                        $correct_text_parts = explode("\t", (string) $question['correct_text']);
                         for ($partID = 1; $partID < count($correct_parts); $partID++) {
                             if (mb_substr($tmp_exclude, $partID - 1, 1) == '0' and $correct_parts[$partID] != '') {
                                 if ($is_random) {
@@ -474,8 +474,8 @@ class export_assessment extends exporter
                                 if ($mode == 'numeric') {
                                     $csvdata[0][] = $question['correct'];
                                 } else {
-                                    $correct_parts = explode(',', $question['correct']);
-                                    $correct_text_parts = explode("\t", $question['correct_text']);
+                                    $correct_parts = explode(',', (string) $question['correct']);
+                                    $correct_text_parts = explode("\t", (string) $question['correct_text']);
                                     for ($j = 1; $j < count($correct_parts); $j++) {
                                         if ($question['type'] == 'mrq' and $correct_parts[$j] == 'y') {
                                             $csvdata[0][] =  $correct_text_parts[$j];
@@ -490,7 +490,7 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'hotspot':
-                        $correct_parts = explode('|', $question['correct']);
+                        $correct_parts = explode('|', (string) $question['correct']);
                         for ($partID = 0; $partID < count($correct_parts); $partID++) {
                             if ($is_random) {
                                 $csvdata[0][] = '';
@@ -508,7 +508,7 @@ class export_assessment extends exporter
                         break;
                     case 'labelling':
                         $sec = 1;
-                        $tmp_first_split = explode(';', $question['correct']);
+                        $tmp_first_split = explode(';', (string) $question['correct']);
                         $tmp_second_split = explode('$', $tmp_first_split[11]);
                         for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
                             if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
@@ -535,7 +535,7 @@ class export_assessment extends exporter
                         break;
                     case 'true_false':
                     case 'dichotomous':
-                        $correct_parts = explode(',', $question['correct']);
+                        $correct_parts = explode(',', (string) $question['correct']);
                         for ($partID = 1; $partID < count($correct_parts); $partID++) {
                             if (mb_substr($tmp_exclude, $partID - 1, 1) == '0') {
                                 if ($is_random) {
@@ -559,7 +559,7 @@ class export_assessment extends exporter
                         break;
                     case 'enhancedcalc':
                         if (!$exclusions->is_question_excluded($tmp_question_ID)) {
-                            $settings = json_decode($question['settings'], true);
+                            $settings = json_decode((string) $question['settings'], true);
                             if ($is_random) {
                                     $csvdata[0][] = '';
                                     $csvdata[0][] = '';
@@ -571,10 +571,10 @@ class export_assessment extends exporter
                         }
                         break;
                     case 'sct':
-                        $correct_text_parts = explode("\t", $question['correct_text']);
+                        $correct_text_parts = explode("\t", (string) $question['correct_text']);
                         if (!$exclusions->is_question_excluded($tmp_question_ID)) {
                             $correct = '';
-                            $parts = explode(',', $question['correct']);
+                            $parts = explode(',', (string) $question['correct']);
                             $max_correct = 0;
                             for ($partID = 1; $partID < count($parts); $partID++) {
                                 if ($parts[$partID] > $max_correct) {
@@ -607,10 +607,10 @@ class export_assessment extends exporter
                                     $csvdata[0][] = '';
                             } else {
                                 if ($mode == 'numeric') {
-                                    $csvdata[0][] = ltrim($question['correct'], ',');
+                                    $csvdata[0][] = ltrim((string) $question['correct'], ',');
                                 } else {
-                                    $corr_index = ltrim($question['correct'], ',');
-                                    $correct_text_parts = explode("\t", $question['correct_text']);
+                                    $corr_index = ltrim((string) $question['correct'], ',');
+                                    $correct_text_parts = explode("\t", (string) $question['correct_text']);
                                     if (isset($correct_text_parts[$corr_index])) {
                                         $csvdata[0][] = $correct_text_parts[$corr_index];
                                     } else {
@@ -725,7 +725,7 @@ class export_assessment extends exporter
                         case 'area':
                             if (!$exclusions->is_question_excluded($tmp_question_ID)) {
                                 if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != '') {
-                                        $answer_parts = explode(';', $individual[$tmp_screen][$tmp_question_ID]);
+                                        $answer_parts = explode(';', (string) $individual[$tmp_screen][$tmp_question_ID]);
                                     if (count($answer_parts) > 1) {
                                         $csvdata[$j][] =  self::hex_to_dec($answer_parts[1]);
                                     } else {
@@ -735,12 +735,12 @@ class export_assessment extends exporter
                                     $csvdata[$j][] = '';
                                 }
                                 if ($is_random) {
-                                    $csvdata[$j][] =  self::hex_to_dec(ltrim($question['correct'], ','));
+                                    $csvdata[$j][] =  self::hex_to_dec(ltrim((string) $question['correct'], ','));
                                 }
                             }
                             break;
                         case 'blank':
-                            $correct_parts = explode(',', $question['correct']);
+                            $correct_parts = explode(',', (string) $question['correct']);
                             $tmp_answers = (isset($individual[$tmp_screen][$tmp_question_ID])) ? json_decode($individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), null);
                             for ($partID = 0; $partID < count($correct_parts) - 1; $partID++) {
                                 if (mb_substr($tmp_exclude, $partID, 1) == '0') {
@@ -790,7 +790,7 @@ class export_assessment extends exporter
                             break;
                         case 'true_false':
                         case 'dichotomous':
-                            $correct_parts = explode(',', $question['correct']);
+                            $correct_parts = explode(',', (string) $question['correct']);
                             for ($partID = 0; $partID < count($correct_parts) - 1; $partID++) {
                                 if (mb_substr($tmp_exclude, $partID, 1) == '0') {
                                       $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? mb_substr($individual[$tmp_screen][$tmp_question_ID], $partID, 1) : 'u';
@@ -806,7 +806,7 @@ class export_assessment extends exporter
                             }
                             break;
                         case 'extmatch':
-                            $correct_parts = explode(',', $question['correct']);
+                            $correct_parts = explode(',', (string) $question['correct']);
                             if (isset($individual[$tmp_screen][$tmp_question_ID])) {
                                 $answer_parts = explode('|', $individual[$tmp_screen][$tmp_question_ID]);
                             } else {
@@ -817,7 +817,7 @@ class export_assessment extends exporter
                             for ($outer = 1; $outer < count($correct_parts); $outer++) {
                                 if ($correct_parts[$outer] != '' and mb_substr($tmp_exclude, $partID, 1) == '0') {
                                     $correct_subparts = explode('$', $correct_parts[$outer]);
-                                    $correct_text_parts = explode("\t", $question['correct_text']);
+                                    $correct_text_parts = explode("\t", (string) $question['correct_text']);
                                     if (isset($answer_parts[$outer - 1])) {
                                         $answer_subparts = explode('$', $answer_parts[$outer - 1]);
                                         for ($k = 0; $k < count($correct_subparts); $k++) {
@@ -875,8 +875,8 @@ class export_assessment extends exporter
                             }
                             break;
                         case 'matrix':
-                            $correct_parts = explode(',', $question['correct']);
-                            $correct_text_parts = explode("\t", $question['correct_text']);
+                            $correct_parts = explode(',', (string) $question['correct']);
+                            $correct_text_parts = explode("\t", (string) $question['correct_text']);
                             $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
 
                             for ($partID = 0; $partID < count($correct_parts) - 1; $partID++) {
@@ -904,7 +904,7 @@ class export_assessment extends exporter
                         case 'rank':
                             $individual[$tmp_screen][$tmp_question_ID] = (isset($individual[$tmp_screen][$tmp_question_ID])) ? str_replace('0', 'N/A', $individual[$tmp_screen][$tmp_question_ID]) : '';
                             if (!$exclusions->is_question_excluded($tmp_question_ID)) {
-                                $correct_parts = explode(',', $question['correct']);
+                                $correct_parts = explode(',', (string) $question['correct']);
                                 $answer_parts = ($individual[$tmp_screen][$tmp_question_ID] != '') ? explode(',', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
 
                                 for ($partID = 0; $partID < count($correct_parts) - 1; $partID++) {
@@ -920,7 +920,7 @@ class export_assessment extends exporter
                             }
                             break;
                         case 'hotspot':
-                            $correct_parts = explode(\hotspot_helper::LAYER_SEPARATOR, $question['correct']);
+                            $correct_parts = explode(\hotspot_helper::LAYER_SEPARATOR, (string) $question['correct']);
                             if ($mode != 'numeric' && $this->mark_with_letters_hotspots) {
                                 // Letter-marking code
                                 if (empty($individual[$tmp_screen][$tmp_question_ID])) {
@@ -930,7 +930,7 @@ class export_assessment extends exporter
                                 } else {
                                     $answer_parts = explode(
                                         \hotspot_helper::LAYER_SEPARATOR,
-                                        \hotspot_helper::get_instance()->markWithLetters(
+                                        (string) \hotspot_helper::get_instance()->markWithLetters(
                                             $individual[$tmp_screen][$tmp_question_ID],
                                             $question['correct'],
                                             $this->_hotspotIncorrect[$tmp_question_ID] ?? ''
@@ -968,7 +968,7 @@ class export_assessment extends exporter
 
                             $sec = 1;
                             $cix = 0;
-                            $tmp_first_split = explode(';', $question['correct']);
+                            $tmp_first_split = explode(';', (string) $question['correct']);
                             $tmp_second_split = explode('$', $tmp_first_split[11]);
                             $label_indexes = [];
                             $answers = [];
@@ -1020,8 +1020,8 @@ class export_assessment extends exporter
                         case 'mrq':
                             if (!$exclusions->is_question_excluded($tmp_question_ID)) {
                                 $correct_clean = str_replace(',', '', $question['correct']);
-                                $correct_text_parts = explode("\t", $question['correct_text']);
-                                for ($char_pos = 0; $char_pos < mb_substr_count($question['correct'], ','); $char_pos++) {
+                                $correct_text_parts = explode("\t", (string) $question['correct_text']);
+                                for ($char_pos = 0; $char_pos < mb_substr_count((string) $question['correct'], ','); $char_pos++) {
                                       $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? mb_substr($individual[$tmp_screen][$tmp_question_ID], $char_pos, 1) : '';
                                     if ($mode == 'numeric') {
                                         $csvdata[$j][] = $part_ans;
@@ -1044,7 +1044,7 @@ class export_assessment extends exporter
                                         }
                                     }
                                 }
-                                $char_pos = mb_substr_count($question['correct'], ',') + 1;
+                                $char_pos = mb_substr_count((string) $question['correct'], ',') + 1;
                                 if ($question['score_method'] == 'other') {
                                     $part_ans = (isset($individual[$tmp_screen][$tmp_question_ID])) ? mb_substr($individual[$tmp_screen][$tmp_question_ID], $char_pos + 1) : '';
                                     $csvdata[$j][] =  $part_ans;
@@ -1059,7 +1059,7 @@ class export_assessment extends exporter
                                 if (isset($individual[$tmp_screen][$tmp_question_ID])) {
                                     $tmp_data = trim($individual[$tmp_screen][$tmp_question_ID]);
                                     // Strip leading hyphens (including after HTML tags) and newlines, swap double for single quotes
-                                    $tmp_data = trim(preg_replace([
+                                    $tmp_data = trim((string) preg_replace([
                                         "/(\r\n|\n|\r)/",
                                         '/^-/',
                                         '/^\s*<(.+?)>\s*-\s*/',
@@ -1081,7 +1081,7 @@ class export_assessment extends exporter
                             break;
                         case 'sct':
                             if (!$exclusions->is_question_excluded($tmp_question_ID)) {
-                                $correct_text_parts = explode("\t", $question['correct_text']);
+                                $correct_text_parts = explode("\t", (string) $question['correct_text']);
                                 if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != 'u') {
                                     if ($mode == 'numeric') {
                                         $csvdata[$j][] = $individual[$tmp_screen][$tmp_question_ID];
@@ -1091,7 +1091,7 @@ class export_assessment extends exporter
                                 }
                                 if ($is_random) {
                                     $correct = '';
-                                    $parts = explode(',', $question['correct']);
+                                    $parts = explode(',', (string) $question['correct']);
                                     $max_correct = 0;
                                     for ($partID = 1; $partID < count($parts); $partID++) {
                                         if ($parts[$partID] > $max_correct) {
@@ -1116,7 +1116,7 @@ class export_assessment extends exporter
                             break;
                         default:
                             if (!$exclusions->is_question_excluded($tmp_question_ID)) {
-                                $correct_text_parts = explode("\t", $question['correct_text']);
+                                $correct_text_parts = explode("\t", (string) $question['correct_text']);
                                 if (isset($individual[$tmp_screen][$tmp_question_ID]) and $individual[$tmp_screen][$tmp_question_ID] != 'u') {
                                     if ($mode == 'numeric') {
                                         $csvdata[$j][] = $individual[$tmp_screen][$tmp_question_ID];
@@ -1132,9 +1132,9 @@ class export_assessment extends exporter
                                 }
                                 if ($is_random) {
                                     if ($mode == 'numeric') {
-                                        $csvdata[$j][] = ltrim($question['correct'], ',');
+                                        $csvdata[$j][] = ltrim((string) $question['correct'], ',');
                                     } else {
-                                        $csvdata[$j][] = $correct_text_parts[ltrim($question['correct'], ',')];
+                                        $csvdata[$j][] = $correct_text_parts[ltrim((string) $question['correct'], ',')];
                                     }
                                 }
                             }

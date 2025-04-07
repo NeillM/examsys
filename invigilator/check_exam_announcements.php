@@ -34,7 +34,7 @@ if (count($exam_announcements) == 0) {
 echo '<table><tbody>';
 foreach ($exam_announcements as $exam_announcement) {
     $msg = $exam_announcement['msg'];
-    if (mb_substr_count($msg, '<p>')) {
+    if (mb_substr_count((string) $msg, '<p>')) {
         $msg = str_replace('<p>', '', $msg);
         $msg = str_replace('</p>', '', $msg);
     }

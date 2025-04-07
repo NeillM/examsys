@@ -2456,7 +2456,7 @@ class PaperProperties
             $tmp_questions_array[$q_id]['screen'] = $screen;
             $tmp_questions_array[$q_id]['theme'] = trim($theme ?? '');
             $tmp_questions_array[$q_id]['scenario'] = trim($scenario ?? '');
-            $tmp_questions_array[$q_id]['leadin'] = trim($leadin);
+            $tmp_questions_array[$q_id]['leadin'] = trim((string) $leadin);
             $tmp_questions_array[$q_id]['notes'] = $hide_notes ? '' : trim($notes ?? '');
             $tmp_questions_array[$q_id]['q_type'] = $q_type;
             $tmp_questions_array[$q_id]['q_id'] = $q_id;
@@ -2620,7 +2620,7 @@ class PaperProperties
             $question['screen'] = $screen;
             $question['theme'] = trim($theme ?? '');
             $question['scenario'] = trim($scenario ?? '');
-            $question['leadin'] = trim($leadin);
+            $question['leadin'] = trim((string) $leadin);
             $question['notes'] = $hide_notes ? '' : trim($notes ?? '');
             $question['q_type'] = $q_type;
             $question['q_id'] = $qid;

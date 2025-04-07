@@ -46,7 +46,7 @@ if (isset($_POST['Save'])) {
 
     $obj_id = mappingutils::get_objectives_start();
     if (isset($_POST['objectives']) and $_POST['objectives'] != '') {
-        parse_str($_POST['objectives'], $sortarray);
+        parse_str((string) $_POST['objectives'], $sortarray);
         $list = $sortarray['li'];
         $j = 0;
         foreach ($list as $i) {
@@ -172,7 +172,7 @@ if (isset($_POST['Save'])) {
     $month_names = [1 => 'january', 2 => 'february', 3 => 'march', 4 => 'april', 5 => 'may', 6 => 'june', 7 => 'july', 8 => 'august', 9 => 'september', 10 => 'october', 11 => 'november', 12 => 'december'];
     for ($month = 1; $month <= 12; $month++) {
         $selected = ($month == $currentmonth ) ? ' selected="selected"' : '';
-        $validfrom .= '<option value="' . $month . '"' . $selected . '>' . mb_substr($string[$month_names[$month]], 0, 3, 'UTF-8') . '</option>' . "\n";
+        $validfrom .= '<option value="' . $month . '"' . $selected . '>' . mb_substr((string) $string[$month_names[$month]], 0, 3, 'UTF-8') . '</option>' . "\n";
     }
     $validfrom .= '</select>&nbsp;';
     echo $validfrom;

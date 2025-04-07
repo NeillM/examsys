@@ -43,7 +43,7 @@ $breadcrumb = [
     $string['summativeexamstats'] => 'summative_stats.php?calyear=' . $current_year,
 ];
 $stats = new Statistics();
-$lang['title'] .= ': ' . $stats->getDisplayMonth($current_month) . ' ' . $current_year . '/' . (mb_substr($current_year, 2, 2) + 1);
+$lang['title'] .= ': ' . $stats->getDisplayMonth($current_month) . ' ' . $current_year . '/' . (mb_substr((string) $current_year, 2, 2) + 1);
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/no_sidebar.html');
 $render->render_admin_content($breadcrumb, $lang);

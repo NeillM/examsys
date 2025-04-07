@@ -65,7 +65,7 @@ require '../include/sidebar_menu.inc';
   $deleted_files = 0;
   $saved_space = 0;
 if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
-    $deletefiles = unserialize(base64_decode(($_POST['deletefiles'])));
+    $deletefiles = unserialize(base64_decode(((string) $_POST['deletefiles'])));
 
     foreach ($deletefiles as $filename) {
         $fullpath = $mediadirectory->fullpath($filename);
@@ -96,7 +96,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
 
         $image_array = [];
 
-        $parts = explode('<img', $html);
+        $parts = explode('<img', (string) $html);
         if (count($parts) > 0) {
             // Got some images
             unset($parts[0]);
@@ -195,7 +195,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
     $result->store_result();
     $result->bind_result($correct);
     while ($result->fetch()) {
-        $parts = explode(';', $correct);
+        $parts = explode(';', (string) $correct);
         if (isset($parts[11])) {
             $sub_parts = explode('|', $parts[11]);
             foreach ($sub_parts as $sub_part) {

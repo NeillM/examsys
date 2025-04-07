@@ -49,7 +49,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
         $rt = $results2->num_rows();
         echo '<div>';
         while ($results2->fetch()) {
-            if (mb_strtolower($_SESSION['_lti_context']['resource_link_title']) == mb_strtolower($paper_title)) {
+            if (mb_strtolower((string) $_SESSION['_lti_context']['resource_link_title']) == mb_strtolower($paper_title)) {
                 $checked = ' checked';
             } else {
                 $checked = '';

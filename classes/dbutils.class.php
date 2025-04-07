@@ -70,7 +70,7 @@ class DBUtils
      */
     public static function check_sqlparams($bindtype, $bindvalue, $sql)
     {
-        if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (mb_substr_count($sql, '?') === count($bindvalue)) && (count($bindvalue) === count($bindtype))) {
+        if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (mb_substr_count((string) $sql, '?') === count($bindvalue)) && (count($bindvalue) === count($bindtype))) {
             $error = false;
             while (!empty($bindtype)) {
                 if ($error === true) {
@@ -78,7 +78,7 @@ class DBUtils
                 }
                 $type = array_pop($bindtype);
                 $param = array_pop($bindvalue);
-                if (!preg_match('/^(i|d|s|b)$/', $type)) {
+                if (!preg_match('/^(i|d|s|b)$/', (string) $type)) {
                     return false;
                 }
                 switch ($type) {
@@ -171,7 +171,7 @@ class DBUtils
         $bind_values = [];
         foreach ($values as $idx => $val) {
             // Check valid bind_param type.
-            if (preg_match('/^(i|d|s|b)$/', $val[0])) {
+            if (preg_match('/^(i|d|s|b)$/', (string) $val[0])) {
                 $bind_types[] = $val[0];
             } else {
                 return false;
@@ -221,7 +221,7 @@ class DBUtils
         $bind_values = [];
         foreach ($values as $idx => $val) {
             // Check valid bind_param type.
-            if (preg_match('/^(i|d|s|b)$/', $val[0])) {
+            if (preg_match('/^(i|d|s|b)$/', (string) $val[0])) {
                 $bind_types[] = $val[0];
             } else {
                 return false;

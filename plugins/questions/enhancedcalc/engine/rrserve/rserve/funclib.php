@@ -86,13 +86,13 @@ function mkfloat64($v) {
  * @param $o
  */
 function flt64($buf, $o = 0) {
-	$ss = substr($buf, $o, 8);
+	$ss = substr((string) $buf, $o, 8);
 	if (Rserve_Connection::$machine_is_bigendian) {
 		for ($k = 0; $k < 7; $k++) {
 			$ss[7 - $k] = $buf[$o + $k];
 		}
 	}
-	$r = unpack('d', substr($buf, $o, 8));
+	$r = unpack('d', substr((string) $buf, $o, 8));
 	return $r[1];
 }
 

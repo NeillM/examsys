@@ -83,7 +83,7 @@ class AutoloadFilenameSniff implements Sniff
 
         $classnametoken =  $phpcsFile->findNext(T_STRING, $stackPtr);
         $classname = $tokens[$classnametoken]['content'];
-        $expectedname = mb_strtolower($classname) . '.class.php';
+        $expectedname = mb_strtolower((string) $classname) . '.class.php';
         if ($filename === $expectedname) {
             // The file is named correctly for auto loading.
             return;

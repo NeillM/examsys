@@ -116,7 +116,7 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     }
     $months = ['', 'january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
     for ($i = 1; $i <= 12; $i++) {
-        $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
+        $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
         if ($i < 10) {
             if ($i == $current_month) {
                 echo "<option value=\"0$i\" selected>$trans_month</option>\n";
@@ -172,7 +172,7 @@ if (!$central_mgmt or $papertype != $assessment::TYPE_SUMMATIVE) {
     }
     echo "</select><select id=\"tmonth\" name=\"tmonth\" class=\"datecopy\">\n";
     for ($i = 1; $i <= 12; $i++) {
-        $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
+        $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
         if ($i < 10) {
             if ($i == $current_month) {
                 echo "<option value=\"0$i\" selected>$trans_month</option>\n";
@@ -303,9 +303,9 @@ foreach ($module_array as $module) {
         }
     }
     if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
-        echo "<div class=\"r2\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r2\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
     } else {
-        echo "<div class=\"r1\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\"  name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r1\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\"  name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
     }
     $module_no++;
     $old_schoolcode = $module['schoolcode'];

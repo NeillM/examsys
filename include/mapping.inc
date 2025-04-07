@@ -107,7 +107,7 @@ HTML;
                     } else {
                         $checked = '';
                     }
-                    $obj_text = strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>');
+                    $obj_text = strip_tags((string) $objectives['content'], '<b><i><strong><em><sub><sup>');
                     $html .= <<< HTML
         				<li><input id="objective{$objcount}" name="{$idmod}_objectives[]" value="{$objectives['id']}" type="checkbox"{$checked} /><label for="objective{$objcount}">{$obj_text}</label></li>
 
@@ -459,7 +459,7 @@ function copyObjectives($objectives, $idMod, $module, $dest_session, $db)
 
     // Loop through the sessions for the source year
     foreach ($objectives[$module] as $session) {
-        $occurrence_parts = explode('/', $session['occurrance']);
+        $occurrence_parts = explode('/', (string) $session['occurrance']);
         $occurrence_new = date('Y-m-d H:i:s', mktime(9, 0, 0, $occurrence_parts[1], $occurrence_parts[0], $occurrence_parts[2] + 1));
 
         // Save it

@@ -460,7 +460,7 @@ class hotspot_helper extends RogoStaticSingleton
     protected function decode_coordinates(array $coordinates)
     {
         foreach ($coordinates as $key => $value) {
-            $coordinates[$key] = hexdec($value);
+            $coordinates[$key] = hexdec((string) $value);
         }
         return $coordinates;
     }

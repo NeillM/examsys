@@ -89,7 +89,7 @@ if ($cohort_size > 0) {
     $metadata_cols = [];
     if (isset($user_results[0])) {
         foreach ($user_results[0] as $key => $val) {
-            if (strrpos($key, 'meta_') !== false) {
+            if (strrpos((string) $key, 'meta_') !== false) {
                 $key_display = ucfirst(str_replace('meta_', '', $key));
                 $table_order[$key_display] = $key;
                 $metadata_cols[$key] = $key;
@@ -115,7 +115,7 @@ if ($cohort_size > 0) {
                 $csv .= $user_results[$i]['student_grade'] . ',' . $user_results[$i]['module'] . ",,,,No Attendance,,,,\n";
             } else {
                 // If room is unknown then it will contain HTML that we want to discard
-                $user_results[$i]['room'] = (str_contains($user_results[$i]['room'], 'unknown')) ? 'unknown' : $user_results[$i]['room'];
+                $user_results[$i]['room'] = (str_contains((string) $user_results[$i]['room'], 'unknown')) ? 'unknown' : $user_results[$i]['room'];
 
                 $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . '%,';
 
@@ -164,7 +164,7 @@ if ($cohort_size > 0) {
     $csv .= $string['passmark'] . ",$pass_mark%,,,,,,,,,,\n";
     if ($marking == '1') {
         $csv .= $string['randommark'] . ',' . number_format($report->get_total_random_mark(), 2, '.', ',') . ",,,,,,,,,,\n";
-    } elseif (mb_substr($marking, 0, 1) == '2') {
+    } elseif (mb_substr((string) $marking, 0, 1) == '2') {
         $csv .= $string['ss'] . ',' . round($report->get_ss_pass(), 2) . ",,,,,,,,,,\n";
         $csv .= $string['ssdistinction'] . ',' . MathsUtils::formatNumber($report->get_ss_hon(), 2) . ",,,,,,,,,,\n";
     }

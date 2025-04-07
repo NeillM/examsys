@@ -110,13 +110,13 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
                     $delete->execute();
                     $delete->close();
                     $redirect_url = $configObject->get('cfg_root_path') . '/';
-                    if (mb_strpos($userroles, 'External Examiner') !== false or mb_strpos($userroles, 'Internal Reviewer') !== false) {
+                    if (mb_strpos((string) $userroles, 'External Examiner') !== false or mb_strpos((string) $userroles, 'Internal Reviewer') !== false) {
                         $redirect_url .= 'reviews/';
-                    } elseif (mb_strpos($userroles, 'Invigilator') !== false) {
+                    } elseif (mb_strpos((string) $userroles, 'Invigilator') !== false) {
                         $redirect_url .= 'invigilator/';
-                    } elseif (mb_strpos($userroles, 'Student') !== false) {
+                    } elseif (mb_strpos((string) $userroles, 'Student') !== false) {
                         $redirect_url .= 'students/';
-                    } elseif (mb_strpos($userroles, 'Staff') !== false) {
+                    } elseif (mb_strpos((string) $userroles, 'Staff') !== false) {
                         $redirect_url .= 'staff/';
                     }
 

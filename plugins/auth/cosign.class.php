@@ -97,7 +97,7 @@ class cosign_auth extends outline_authentication
 
         // Run cosing auth if button is enabled and pressed or button always if that mode is enabled or if it receives a query string containing cosign
 
-        if ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === true and isset($this->request['cosignlogin'])) or ( ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === false   ) or (!isset($this->settings['cosign_button'])) )     ) or (mb_strpos($_SERVER['QUERY_STRING'], 'cosign') !== false )) {
+        if ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === true and isset($this->request['cosignlogin'])) or ( ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === false   ) or (!isset($this->settings['cosign_button'])) )     ) or (mb_strpos((string) $_SERVER['QUERY_STRING'], 'cosign') !== false )) {
             // Button is enabled
             $this->savetodebug('starting cosign auth process');
 

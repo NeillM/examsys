@@ -58,7 +58,7 @@ class HOTSPOTCorrector extends Corrector
                 $errors[] = $this->_lang_strings['datasaveerror'];
             } elseif ($paper_id !== -1) {
                 // Marking MUST not be client side.
-                $student_records = explode(';', $new_correct['option_correct1']);
+                $student_records = explode(';', (string) $new_correct['option_correct1']);
                 foreach ($student_records as $student_record) {
                     if (mb_strlen($student_record) > 0) {
                         $database_id = mb_substr($student_record, 0, mb_strpos($student_record, ','));
@@ -68,7 +68,7 @@ class HOTSPOTCorrector extends Corrector
                         $all_correct = true;
                         $hotspot_answer = hotspot_helper::get_instance()->mark($answers, $new_correct['option_correct']);
                         $saved_response = $hotspot_answer;
-                        $sub_parts = explode('|', $saved_response);
+                        $sub_parts = explode('|', (string) $saved_response);
                         foreach ($sub_parts as $sub_part) {
                             if ($sub_part[0] == 1) {
                                 $mark += $marks_correct;
@@ -86,7 +86,7 @@ class HOTSPOTCorrector extends Corrector
                             }
                             $totalpos = $marks_correct;
                         } else {
-                            $totalpos = (mb_substr_count($new_correct['option_correct'], '|') + 1) * $marks_correct;
+                            $totalpos = (mb_substr_count((string) $new_correct['option_correct'], '|') + 1) * $marks_correct;
                         }
 
                         $result = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ?, user_answer = ? WHERE id = ?");

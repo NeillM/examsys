@@ -185,7 +185,7 @@ class renderdata extends \questiondata
             if (!is_null($useranswer) and mb_substr($useranswer, ($part_id - 1), 1) == 'y') {
                 $this->otherselected = true;
             }
-            $this->other = mb_substr($useranswer, $part_id);
+            $this->other = mb_substr((string) $useranswer, $part_id);
         }
         if ($option['marksincorrect'] < 0) {
             $this->negativemarking = true;

@@ -88,7 +88,7 @@ class encryp
     public static function openssl_encrypt_decrypt($action, $password, $encryption_method = 'AES-256-CBC')
     {
         $output = false;
-        $key = base64_encode(UserUtils::get_salt());
+        $key = base64_encode((string) UserUtils::get_salt());
         if ($action == 'encrypt') {
             // Generate a random string for $iv
             $str = bin2hex(openssl_random_pseudo_bytes(10));
@@ -167,7 +167,7 @@ class encryp
         $disppass = '';
         $max = count($this->dictionary) - 1;
         for ($i = 0; $i < 3; $i++) {
-            $word = rtrim($this->dictionary[random_int(0, $max)]);
+            $word = rtrim((string) $this->dictionary[random_int(0, $max)]);
             $pass .= $word;
             $disppass .= $word . ' ';
         }

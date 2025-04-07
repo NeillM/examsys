@@ -34,7 +34,7 @@ $folder = check_var('folder', 'GET', true, false, true);
 
 function getLastFolder($path)
 {
-    $parts = explode(';', $path);
+    $parts = explode(';', (string) $path);
     $part_no = count($parts);
 
     if ($part_no > 0) {

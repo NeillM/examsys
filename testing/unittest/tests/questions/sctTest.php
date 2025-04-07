@@ -45,7 +45,7 @@ class scttest extends unittest
         $this->assertEquals('hyp', $data->scthyp);
         $this->assertEquals('info', $data->sctinfo);
         $this->assertEquals($strings['hypothesis'], $data->scttitle);
-        $lowertitle = sprintf($strings['scttitle'], mb_strtolower($strings['hypothesis'], 'UTF-8'));
+        $lowertitle = sprintf($strings['scttitle'], mb_strtolower((string) $strings['hypothesis'], 'UTF-8'));
         $this->assertEquals($lowertitle, $data->scttitlelower);
         $this->assertTrue($data->unanswered);
         $data->notes = 'test';

@@ -221,7 +221,7 @@ class ST_QTI12_Question // <item
 
                 if (!array_key_exists($value, $response->labels)) {
                     foreach ($response->labels as $label) {
-                        if (mb_strtolower($label->material->GetText()) == mb_strtolower($value)) {
+                        if (mb_strtolower((string) $label->material->GetText()) == mb_strtolower((string) $value)) {
                             $condition->value = $label->id;
                         }
                     }
@@ -832,20 +832,20 @@ class ST_QTI12_Material implements \Stringable // <material>
 
         echo "Adding image $image<br>";
         // download any http images etc here and put location in $imagefile as a LOCAL file
-        $basename = basename($image);
+        $basename = basename((string) $image);
         $imagefile = FindFile($import_directory, $basename);
         echo "Converted \"$image\" to base name \"$imagefile\"<br>";
         if ($imagefile == '' and $wct == 1) {
-            [$discard, $split] = explode('=', $image);
+            [$discard, $split] = explode('=', (string) $image);
             $pathinfo = pathinfo((string)$load_params->sourcefile);
 
-            $imagefile = FindFileSub2($pathinfo['dirname'], '', '*' . $split . '*.' . pathinfo($imgnam, PATHINFO_EXTENSION));
+            $imagefile = FindFileSub2($pathinfo['dirname'], '', '*' . $split . '*.' . pathinfo((string) $imgnam, PATHINFO_EXTENSION));
             $imagefile = $pathinfo['dirname'] . '/' . $imagefile;
         } else {
             $imagefile = $import_directory . $imagefile;
         }
 
-        if (mb_strlen($imagefile) > mb_strlen($import_directory) and file_exists($imagefile)) {
+        if (mb_strlen($imagefile) > mb_strlen((string) $import_directory) and file_exists($imagefile)) {
             $identifier_size = GetImageSize($imagefile);
             $this->media_width = $identifier_size[0];
             $this->media_height = $identifier_size[1];
@@ -891,10 +891,10 @@ class ST_QTI12_Material implements \Stringable // <material>
             $output = '';
             while ($text) {
                 if (mb_stripos(' ' . $text, '<img') > 0) {
-                    $pre = mb_substr($text, 0, mb_stripos($text, '<img'));
-                    $imgtag = mb_substr($text, mb_stripos($text, '<img'));
+                    $pre = mb_substr((string) $text, 0, mb_stripos((string) $text, '<img'));
+                    $imgtag = mb_substr((string) $text, mb_stripos((string) $text, '<img'));
                     $imgtag = mb_substr($imgtag, 0, mb_stripos($imgtag, '>') + 1);
-                    $rest = mb_substr($text, mb_stripos($text, '<img'));
+                    $rest = mb_substr((string) $text, mb_stripos((string) $text, '<img'));
                     $rest = mb_substr($rest, mb_stripos($rest, '>') + 1);
 
                     $output .= $pre;
@@ -903,11 +903,11 @@ class ST_QTI12_Material implements \Stringable // <material>
                     if (mb_stripos($imgtag, 'src') > 0) {
                         $data = parseHtml($imgtag);
                         $src = $data['IMG'][0]['src'];
-                        $basename = basename($src);
+                        $basename = basename((string) $src);
                         $filename = FindFile($import_directory, $basename);
 
                         if ($filename) {
-                            $basename = basename($filename);
+                            $basename = basename((string) $filename);
                             $uniqueFilename = media_handler::unique_filename($basename);
                             $fullpath = $mediadirectory->fullpath($uniqueFilename);
 
@@ -1006,7 +1006,7 @@ class ST_QTI12_Material implements \Stringable // <material>
     public function __toString(): string
     {
         $text = $this->GetText();
-        if (trim($text)) {
+        if (trim((string) $text)) {
             return (string) $text;
         }
 
@@ -1038,7 +1038,7 @@ function FindFileSub2($basedir, $dir, $filename)
             if ($res != '') {
                 return $res;
             }
-        } elseif (fnmatch(mb_strtolower($filename), mb_strtolower($entry))) {
+        } elseif (fnmatch(mb_strtolower((string) $filename), mb_strtolower($entry))) {
             if ($dir) {
                 return $dir . '/' . $entry;
             } else {
@@ -1068,7 +1068,7 @@ function FindFileSub($basedir, $dir, $filename)
             if ($res != '') {
                 return $res;
             }
-        } elseif (mb_strtolower($entry) == mb_strtolower($filename)) {
+        } elseif (mb_strtolower($entry) == mb_strtolower((string) $filename)) {
             if ($dir) {
                 return $dir . '/' . $entry;
             } else {

@@ -28,7 +28,7 @@ define('AJAX_REQUEST', true);
 require '../include/staff_auth.inc';
 require '../include/errors.php';
 
-$new_keyword = html_entity_decode(param::required('new_keyword', param::TEXT, param::FETCH_POST));
+$new_keyword = html_entity_decode((string) param::required('new_keyword', param::TEXT, param::FETCH_POST));
 $keywordID = param::required('keywordID', param::INT, param::FETCH_POST);
 $module = param::optional('module', '', param::INT, param::FETCH_REQUEST);
 

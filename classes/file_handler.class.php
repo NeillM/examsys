@@ -124,7 +124,7 @@ abstract class file_handler
         if ($directory === '.') {
             $directory = $configObject->get('cfg_tmpdir');
         }
-        $this->filename = basename($file);
+        $this->filename = basename((string) $file);
         $fullpath = realpath($directory);
         $langpack = new \langpack();
         $this->string = $langpack->get_all_strings(self::LANGCOMPONENT);

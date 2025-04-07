@@ -97,7 +97,7 @@ $userObject = UserObject::get_instance();
 $userObject->db_user_change();
 if (!$userObject->has_role('SysAdmin')) {
     if (version::is_version_higher($configObject->getxml('version'), $configObject->get_setting('core', 'rogo_version')) or $configObject->get_setting('core', 'system_maintenance_mode')) {
-        header('location: ' . $configObject->get('cfg_root_path') . '/maintenance/index.php?from=' . urlencode($_SERVER['REQUEST_URI']), true, 303);
+        header('location: ' . $configObject->get('cfg_root_path') . '/maintenance/index.php?from=' . urlencode((string) $_SERVER['REQUEST_URI']), true, 303);
         exit();
     }
 }

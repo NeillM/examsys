@@ -41,7 +41,7 @@ $passmark     = check_var('passmark', 'GET', true, false, true);
 function find_break($text)
 {
     $break = 0;
-    $txt_len = strlen($text);
+    $txt_len = strlen((string) $text);
     for ($i = 25; $i < $txt_len; $i++) {
         if ($text[$i] == ' ' or $text[$i] == '_' or $text[$i] == '-' or $text[$i] == ':' or $text[$i] == ',') {
             if ($break == 0) {
@@ -84,7 +84,7 @@ if ($scale == '1') {   // Scale mode
     ImageLine($Image, 45, 250, 50, 250, $dkgrey);
 
     ImageLine($Image, 50, 10, 50, 257, $dkgrey);
-    imagettftext($Image, 12, 90, 12, 132, $black, $bold_font, $string['percent']);
+    imagettftext($Image, 12, 90, 12, 132, $black, $bold_font, (string) $string['percent']);
 
     for ($label = 0; $label <= 10; $label++) {
         ImageLine($Image, 51, 250 - ($label * $gap), 70, 250 - ($label * $gap), $ltgrey);
@@ -98,10 +98,10 @@ if ($scale == '1') {   // Scale mode
 
 $trans2 = 20;
 
-if (strlen($exam) > 35) {
+if (strlen((string) $exam) > 35) {
     $break = find_break($exam);
-    $line1 = trim(substr($exam, 0, $break));
-    $line2 = trim(substr($exam, $break));
+    $line1 = trim(substr((string) $exam, 0, $break));
+    $line2 = trim(substr((string) $exam, $break));
 } else {
     $line1 = '';
     $line2 = $exam;
@@ -115,7 +115,7 @@ for ($label = 0; $label <= 10; $label++) {
 // x axis
 ImageLine($Image, $margin + 0, 250, $margin + 114, 250, $dkgrey);
 imagettftext($Image, 10, 90, $margin + 21, 240, $black, $font, $line1);
-imagettftext($Image, 10, 90, $margin + 35, 240, $black, $font, $line2);
+imagettftext($Image, 10, 90, $margin + 35, 240, $black, $font, (string) $line2);
 ImageLine($Image, $margin + 114, 250, $margin + 114, 256, $dkgrey);
 
 //box-and-whiskers

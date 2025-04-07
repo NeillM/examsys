@@ -73,7 +73,7 @@ class impersonation_auth extends outline_authentication
         $this->savetodebug('Starting up impersination checking');
         $continue = false;
         if (isset($this->form['std']->username)) {
-            if (mb_strpos($this->form['std']->username, $this->settings['separator']) !== false) {
+            if (mb_strpos($this->form['std']->username, (string) $this->settings['separator']) !== false) {
                 $usernameparts = explode($this->settings['separator'], $this->form['std']->username);
                 if (isset($usernameparts[1])) {
                     $continue = true;

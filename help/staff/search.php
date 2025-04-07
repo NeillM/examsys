@@ -29,7 +29,7 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'sta
 
 function getPath($path, $pageID, $tmp_highlight)
 {
-    $parts = explode('/', $path);
+    $parts = explode('/', (string) $path);
     $path = '<a class="searchpath" href="index.php?id=1">Help</a>';
     for ($i = 0; $i < count($parts); $i++) {
         if ($i == (count($parts) - 1)) {
@@ -44,7 +44,7 @@ function getPath($path, $pageID, $tmp_highlight)
 
 function displayTitle($title)
 {
-    $parts = explode('/', $title);
+    $parts = explode('/', (string) $title);
     $end_no = count($parts) - 1;
     return $parts[$end_no];
 }

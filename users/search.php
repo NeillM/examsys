@@ -310,17 +310,17 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                                             <?php endif; ?>
                                         </td>
                                         <td>
-                                            <?php if (array_key_exists(mb_strtolower($tmp_title), $string)) : ?>
-                                                <?= $string[mb_strtolower($tmp_title)] ?>
+                                            <?php if (array_key_exists(mb_strtolower((string) $tmp_title), $string)) : ?>
+                                                <?= $string[mb_strtolower((string) $tmp_title)] ?>
                                             <?php endif; ?>
                                         </td>
                                         <td><?= $tmp_surname == '' ? \demo::demo_replace($tmp_surname, $demo, true, ' ') : \demo::demo_replace($tmp_surname, $demo, true, $tmp_surname[0]) ?></td>
                                         <td><?= $tmp_first_names == '' ? \demo::demo_replace($tmp_first_names, $demo, true, ' ') : \demo::demo_replace($tmp_first_names, $demo, true, $tmp_first_names[0]) ?></td>
                                         <td><?= \demo::demo_replace($tmp_username, $demo, false) ?></td>
                                         <td class="fn">
-                                            <?php if (false !== mb_strpos($tmp_roles, 'Student')) : ?>
+                                            <?php if (false !== mb_strpos((string) $tmp_roles, 'Student')) : ?>
                                                 <?= is_null($tmp_student_id) ? $string['unknown'] : \demo::demo_replace_number($tmp_student_id, $demo) ?>
-                                            <?php elseif (false !== mb_strpos($tmp_roles, 'Staff')) : ?>
+                                            <?php elseif (false !== mb_strpos((string) $tmp_roles, 'Staff')) : ?>
                                                 Staff
                                             <?php else : ?>
                                                 <?= $string['na'] ?>

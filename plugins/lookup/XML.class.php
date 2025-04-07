@@ -76,7 +76,7 @@ class XML_lookup extends outline_lookup
                     $this->savetodebug("Restriction stopped debug key: $key not found");
                     $restrictstop = true;
                 } else {
-                    if (mb_strpos($value, '|') === false) {
+                    if (mb_strpos((string) $value, '|') === false) {
                         //condition
                         if (!isset($lookupobj->lookupdata->$key) or (isset($lookupobj->lookupdata->$key) and $lookupobj->lookupdata->$key !== $value)) {
                             $this->savetodebug("Restriction stopped debug key: $key !== $value");
@@ -85,7 +85,7 @@ class XML_lookup extends outline_lookup
                     } else {
                         // OR condition
                           $restrictstop1 = 0;
-                        $exp = explode('|', $value);
+                        $exp = explode('|', (string) $value);
                         foreach ($exp as $value1) {
                             if ($lookupobj->lookupdata->$key === $value1) {
                                         $restrictstop1++;
@@ -450,7 +450,7 @@ class XML_lookup extends outline_lookup
         if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == true)) {
             $this->savetodebug('Setting attributes to lowercase');
             foreach ($attributes as $key => $value) {
-                $attributes[mb_strtolower($key)] = $value;
+                $attributes[mb_strtolower((string) $key)] = $value;
             }
         }
         if (isset($this->settings['storeprepend'])) {
@@ -464,7 +464,7 @@ class XML_lookup extends outline_lookup
         foreach ($attributes as $key => $value) {
             $keyorig = $key;
             if ((isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) or (isset($this->settings[$section]['lowercasecompare']) and $this->settings[$section]['lowercasecompare'] == true)) {
-                    $key = mb_strtolower($key);
+                    $key = mb_strtolower((string) $key);
                     //think this actually needs to change the datablock without changing the original datablock
             }
             $reverse_attribute = $value;
@@ -490,7 +490,7 @@ class XML_lookup extends outline_lookup
         foreach ($datablock as $key => $value) {
             if (!is_int($key)) {
                 if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
-                    $key = mb_strtolower($key);
+                    $key = mb_strtolower((string) $key);
                 }
 
                 if ((isset($attributes[$key]))) {

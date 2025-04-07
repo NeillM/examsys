@@ -159,12 +159,12 @@ class questions extends generator
             // Keywords may be provided as a json array.
             if (!empty($qdata['keywords'])) {
                 $keywordparams['questionid'] = $qdata['id'];
-                $keywordparams['keywords'] = json_decode($qdata['keywords']);
+                $keywordparams['keywords'] = json_decode((string) $qdata['keywords']);
                 $this->addKeywordsToQuestion($keywordparams);
             }
             // Options may be passed as a json array.
             if (!empty($qdata['options'])) {
-                $decode = json_decode($qdata['options'], false);
+                $decode = json_decode((string) $qdata['options'], false);
                 if (is_array($decode)) {
                     foreach ($decode as $opt) {
                         $opt->question = $qdata['id'];
@@ -177,14 +177,14 @@ class questions extends generator
             }
             // Paper details may be provided as a json array.
             if (!empty($qdata['paper'])) {
-                $paperparams = json_decode($qdata['paper'], true);
+                $paperparams = json_decode((string) $qdata['paper'], true);
                 $paperparams['question'] = $qdata['id'];
                 $paperparams['paper'] = \PaperUtils::getPaperId($paperparams['paper']);
                 $this->add_question_to_paper($paperparams);
             }
             // Module details may be provided as a json array.
             if (!empty($qdata['modules'])) {
-                $moduleids = json_decode($qdata['modules'], false);
+                $moduleids = json_decode((string) $qdata['modules'], false);
                 foreach ($moduleids as $modid) {
                     $idmod = \module_utils::get_idMod($modid, $this->db);
                     $moduleparams['module'][$idmod] = $modid;
@@ -225,9 +225,9 @@ class questions extends generator
         } else {
             $parameters['q_type'] = $parameters['type'];
             unset($parameters['type']);
-            $parameters['leadin_plain'] = strip_tags($parameters['leadin']);
+            $parameters['leadin_plain'] = strip_tags((string) $parameters['leadin']);
             if (!empty($parameters['scenario'])) {
-                $parameters['scenario_plain'] = strip_tags($parameters['scenario']);
+                $parameters['scenario_plain'] = strip_tags((string) $parameters['scenario']);
             }
             $question = $this->insert_question($parameters);
             if (is_null($parentID)) {

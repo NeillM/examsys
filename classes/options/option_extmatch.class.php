@@ -51,7 +51,7 @@ class OptionEXTMATCH extends OptionEdit
 
     public function get_correct()
     {
-        $stems = explode('|', $this->correct);
+        $stems = explode('|', (string) $this->correct);
         $this->all_corrects = [];
         foreach ($stems as $stem) {
             $this->all_corrects[] = ($stem != '') ? explode('$', $stem) : [];

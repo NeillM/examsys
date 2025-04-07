@@ -82,8 +82,8 @@ if ($_POST['button_pressed'] == 'Accept') {
     $stmt->close();
 }
 
-if (trim($_POST['reason']) != '') {
-    $reason = trim($_POST['reason']);
+if (trim((string) $_POST['reason']) != '') {
+    $reason = trim((string) $_POST['reason']);
     $result = $mysqli->prepare('INSERT INTO student_notes VALUES (NULL, ?, ?, NOW(), ?, ?)');
     $result->bind_param('isis', $userID, $reason, $paperID, $userObject->get_user_ID());
     $result->execute();

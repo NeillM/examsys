@@ -72,7 +72,7 @@ class QuestionMATRIX extends QuestionEdit
     public function get_scenario()
     {
         if ($this->scenario != '') {
-            $this->stems = explode('|', $this->scenario);
+            $this->stems = explode('|', (string) $this->scenario);
         }
         return $this->scenario;
     }

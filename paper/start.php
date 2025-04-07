@@ -506,7 +506,7 @@ foreach ($questions_array as &$question) {
     $q_displayed++;
     // If a WYSIWIG editor is on the scereen load the config file.
     if ($question['q_type'] === 'textbox' and $textconfigfile === '' and $textconfigfiletemplate === '') {
-        $settings = json_decode($question['settings'], true);
+        $settings = json_decode((string) $question['settings'], true);
         if ($settings['editor'] === 'WYSIWYG') {
             $textconfigfile = $questionrender->questiondata->file;
             $textconfigfiletemplate = $questionrender->questiondata->editorconfig;

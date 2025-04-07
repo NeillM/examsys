@@ -182,7 +182,7 @@ class param
         // Do any additional cleaning that may be needed.
         switch ($type) {
             case self::ALPHA:
-                $cleaned = preg_replace('#[^\p{L}\p{M}\p{Zs}]#u', '', $return);
+                $cleaned = preg_replace('#[^\p{L}\p{M}\p{Zs}]#u', '', (string) $return);
                 if ($cleaned === '' and $cleaned !== $return) {
                     $return = null;
                 } else {
@@ -190,7 +190,7 @@ class param
                 }
                 break;
             case self::ALPHANUM:
-                $cleaned = preg_replace('#[^\p{L}\p{M}\p{Zs}0-9]#u', '', $return);
+                $cleaned = preg_replace('#[^\p{L}\p{M}\p{Zs}0-9]#u', '', (string) $return);
                 if ($cleaned === '' and $cleaned !== $return) {
                     $return = null;
                 } else {
@@ -205,7 +205,7 @@ class param
                 break;
             case self::FILENAME:
                 // Remove anything which isn't a word, number or fullstop.
-                $cleaned = preg_replace('#[^\w\d\.]#u', '', $return);
+                $cleaned = preg_replace('#[^\w\d\.]#u', '', (string) $return);
                 if ($cleaned === '' and $cleaned !== $return) {
                     $return = null;
                 } else {
@@ -308,7 +308,7 @@ class param
         // We want to configure the directories that html purifier writes its cache files to.
         $temp_dir = Config::get_instance()->get('cfg_tmpdir');
         // We need to have no trailing slashes on the path.
-        $temp_dir = rtrim($temp_dir, '\\/');
+        $temp_dir = rtrim((string) $temp_dir, '\\/');
         $config->set('Cache.SerializerPath', $temp_dir);
 
         $purifier = new HTMLPurifier($config);

@@ -74,7 +74,7 @@ ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
 
 <?php
 if (isset($_GET['module'])) {
-    $modules = explode(',', $_GET['module']);
+    $modules = explode(',', (string) $_GET['module']);
     $module = $modules[0];
 } else {
     $module = '';

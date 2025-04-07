@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
+use Rector\Php81\Rector\Array_\FirstClassCallableRector;
+use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\TypeDeclaration\Rector\ClassMethod\ReturnNeverTypeRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -74,11 +77,22 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withFileExtensions(['php', 'inc'])
-    ->withPhpSets(php80: true)
+    ->withPhpSets(php81: true)
     ->withSkip([
         // We cannot run this rule because it breaks ExamSys.
         // We have several functions with the same name, but using different numbers of parameters.
         // When this runs it only seems to count the numbers of parameters in one of these methods,
         // this means that it deleted parameters from some function calls that need them.
         RemoveExtraParametersRector::class,
+        // This rule causes the login page to break because it makes changes that are totally incompatible
+        // with the way the authentication system in ExamSys works.
+        FirstClassCallableRector::class,
+        // This rule tries to add never to methods that are in base classes intentionally throw an exception
+        // to require them to be overridden by classes finally implementing them.
+        // Before we can use this rule it would require that in such cases the base class and all the
+        // overriding methods are modified to have a compatible return type defined.
+        ReturnNeverTypeRector::class,
+        // We cannot use this rule as it detects properties that we modify more than one time as readonly.
+        // The rule completely breaks the paper details page for example.
+        ReadOnlyPropertyRector::class,
     ]);

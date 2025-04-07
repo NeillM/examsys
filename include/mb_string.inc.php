@@ -26,8 +26,8 @@
 if (!function_exists('mb_ucasefirst')) {
     function mb_ucasefirst($str, $enc = 'UTF-8')
     {
-        $first = mb_substr($str, 0, 1, $enc);
-        $rest = mb_substr($str, 1, mb_strlen($str, $enc) - 1, $enc);
+        $first = mb_substr((string) $str, 0, 1, $enc);
+        $rest = mb_substr((string) $str, 1, mb_strlen((string) $str, $enc) - 1, $enc);
 
         return mb_strtoupper($first, $enc) . $rest;
     }
@@ -43,15 +43,15 @@ if (!function_exists('mb_substr_replace')) {
     {
         if ($encoding == null) {
             if ($length == null) {
-                return mb_substr($string, 0, $start) . $replacement;
+                return mb_substr((string) $string, 0, $start) . $replacement;
             } else {
-                return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length);
+                return mb_substr((string) $string, 0, $start) . $replacement . mb_substr((string) $string, $start + $length);
             }
         } else {
             if ($length == null) {
-                return mb_substr($string, 0, $start, $encoding) . $replacement;
+                return mb_substr((string) $string, 0, $start, $encoding) . $replacement;
             } else {
-                return mb_substr($string, 0, $start, $encoding) . $replacement . mb_substr($string, $start + $length, mb_strlen($string, $encoding), $encoding);
+                return mb_substr((string) $string, 0, $start, $encoding) . $replacement . mb_substr((string) $string, $start + $length, mb_strlen((string) $string, $encoding), $encoding);
             }
         }
     }

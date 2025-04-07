@@ -51,11 +51,11 @@ if ($configObject->get_setting('core', 'system_install_type') !== 'demo') {
 function adduser($course, $tmp_roles, $new_username, $mysqli)
 {
 
-    $new_password = trim($_POST['new_password']);
-    $new_surname = StringUtils::my_ucwords(trim($_POST['new_surname']));
+    $new_password = trim((string) $_POST['new_password']);
+    $new_surname = StringUtils::my_ucwords(trim((string) $_POST['new_surname']));
     $new_title = $_POST['new_users_title'];
-    $new_email = trim($_POST['new_email']);
-    $new_first_names = StringUtils::my_ucwords(trim($_POST['new_first_names']));
+    $new_email = trim((string) $_POST['new_email']);
+    $new_first_names = StringUtils::my_ucwords(trim((string) $_POST['new_first_names']));
     $new_year = $_POST['new_year'];
     $new_gender = $_POST['new_gender'];
 
@@ -75,9 +75,9 @@ if (isset($_POST['submit'])) {
     $result->close();
 
     for (
-        $a = 0; $a < mb_strlen($_POST['new_grade2']); $a++
+        $a = 0; $a < mb_strlen((string) $_POST['new_grade2']); $a++
     ) {
-        $b = mb_substr($_POST['new_grade2'], $a, 1);
+        $b = mb_substr((string) $_POST['new_grade2'], $a, 1);
         if (ctype_upper($b) or ctype_digit($b)) {
             $new_moduleid = $new_moduleid . $b;
         }
@@ -103,7 +103,7 @@ if (isset($_POST['submit'])) {
         $session = $yearutils->get_current_session();
 
           // Add staff account
-        $new_username = trim($_POST['new_username']);
+        $new_username = trim((string) $_POST['new_username']);
         $useridstf = adduser('Staff', 'Staff', $new_username, $mysqli);
         UserUtils::add_staff_to_module_by_modulecode($useridstf, $new_moduleid, $mysqli);
         // Add staff to the new module
@@ -133,9 +133,9 @@ if (isset($_POST['submit'])) {
     // Send out email welcome.
     $mailerror = false;
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
-        $tmp_email = trim($_POST['new_email']);
+        $tmp_email = trim((string) $_POST['new_email']);
         $subject = "{$string['newrogoaccount']}";
-        $sname = ucwords($_POST['new_surname']);
+        $sname = ucwords((string) $_POST['new_surname']);
         $message = <<< MESSAGE
 <!DOCTYPE html>
 <html>
@@ -240,7 +240,7 @@ MESSAGE;
                                     if ($language != 'en') {
                                         echo "<option value=\"\"></option>\n";
                                     }
-                                    $titles = explode(',', $string['title_types']);
+                                    $titles = explode(',', (string) $string['title_types']);
                                     foreach ($titles as $tmp_title) {
                                         echo "<option value=\"$tmp_title\">$tmp_title</option>";
                                     }

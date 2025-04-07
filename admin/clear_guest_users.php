@@ -158,7 +158,7 @@ echo draw_toprightmenu(243);
                         }
 
                         // Check if account allocated in last 15 minutes.
-                        $diff = ($now - strtotime($used[$i]['reservedtime'])) / 60;
+                        $diff = ($now - strtotime((string) $used[$i]['reservedtime'])) / 60;
                         $reservedwarning = false;
                         if ($diff <= 15) {
                             $reservedwarning = true;

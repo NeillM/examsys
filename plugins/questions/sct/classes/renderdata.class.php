@@ -119,7 +119,7 @@ class renderdata extends \questiondata
         $this->scttitle = $sct_titles[$this->displaymethod];
         $this->scthyp = $sct_parts[0];
         $this->sctinfo = $sct_parts[1];
-        $this->scttitlelower = sprintf($this->strings['scttitle'], mb_strtolower($this->scttitle, 'UTF-8'));
+        $this->scttitlelower = sprintf($this->strings['scttitle'], mb_strtolower((string) $this->scttitle, 'UTF-8'));
 
         if ($useranswer == '0' and $screen_pre_submitted == 1) {
             $this->unanswered = true;

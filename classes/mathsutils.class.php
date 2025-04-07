@@ -62,7 +62,7 @@ class MathsUtils
             $increment = $increment * (10 * $decimals);
         }
         if ($increment == 1 or $increment == 0 or $increment == '') {
-            if (mb_strpos($min, 'var') !== false or mb_strpos($min, 'ans') !== false or mb_strpos($max, 'var') !== false or mb_strpos($max, 'ans') !== false) {
+            if (mb_strpos((string) $min, 'var') !== false or mb_strpos((string) $min, 'ans') !== false or mb_strpos((string) $max, 'var') !== false or mb_strpos((string) $max, 'ans') !== false) {
                 $gen_no = 0;
             } else {
                 $gen_no = random_int(intval($min), intval($max));

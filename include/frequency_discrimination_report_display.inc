@@ -1000,7 +1000,7 @@ function display_question(render $render, array $question_data, array $string, s
             if ($part['mark'] == 'unmarked') {
                 echo $string['unmarked'] . "\n" . '</td></tr>' . "\n"; // For localisation
             } else {
-                $mark = preg_replace('/^([0-9]+)\.0/', '\1', $part['mark']); // Strip hanging .0s
+                $mark = preg_replace('/^([0-9]+)\.0/', '\1', (string) $part['mark']); // Strip hanging .0s
                 echo $mark . ' ' . (($mark == '1') ? $string['mark'] : $string['marks']) . "\n" . '</td></tr>' . "\n";
             }
         }

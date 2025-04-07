@@ -59,7 +59,7 @@ class rogo_test extends MinkContext
     public function locatePath($path)
     {
         // Get the base url for the site, ensure it has a trailing slash.
-        $baseurl = rtrim($this->getMinkParameter('base_url'), '/') . '/';
+        $baseurl = rtrim((string) $this->getMinkParameter('base_url'), '/') . '/';
         if (mb_strpos($path, 'http') !== 0) {
             // The path is not a fully qualified url.
             $path = $baseurl . ltrim($path, '/');
@@ -340,7 +340,7 @@ class rogo_test extends MinkContext
         // if the page & JSs don't finish loading properly.
         for ($i = 0; $i < self::getExtendedTimeout() * 10; $i++) {
             try {
-                $jscode = trim(preg_replace('/\s+/', ' ', '
+                $jscode = trim((string) preg_replace('/\s+/', ' ', '
                     return (function() {
                         if (document.readyState !== "complete") {
                             return "incomplete";

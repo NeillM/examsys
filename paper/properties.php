@@ -160,7 +160,7 @@ function format_user($text, $user_list)
     }
 
     $formatted_string = '';
-    $parts = explode(',', $text);
+    $parts = explode(',', (string) $text);
     foreach ($parts as $part) {
         if ($formatted_string == '') {
             $formatted_string = $user_list[$part];
@@ -176,7 +176,7 @@ function format_lab($lab_id, $lab_list)
 {
     $formatted_string = '';
 
-    $parts = explode(',', $lab_id);
+    $parts = explode(',', (string) $lab_id);
     foreach ($parts as $part) {
         if (isset($lab_list[$part])) {
             $lab_name = $lab_list[$part];
@@ -299,7 +299,7 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
         $html = '<div id="labs_list" style="height:278px; overflow-y:scroll;border:1px solid #828790; font-size:90%">';
     }
 
-    $current_labs = explode(',', $labs);
+    $current_labs = explode(',', (string) $labs);
 
     $result = $db->prepare('SELECT labs.id, labs.name, campus.name, COUNT(client_identifiers.id) FROM labs, client_identifiers, campus
     WHERE labs.id = client_identifiers.lab AND labs.campus = campus.id GROUP BY client_identifiers.lab ORDER BY campus.name, labs.name');
@@ -536,10 +536,10 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
             echo $string['na'];
             break;
         case '6':
-            echo '<a href="' . $configObject->get('cfg_root_path') . '/peer_review/form.php?id=' . urlencode($properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/peer_review/form.php?id=' . urlencode($properties->get_crypt_name()) . '</a>';
+            echo '<a href="' . $configObject->get('cfg_root_path') . '/peer_review/form.php?id=' . urlencode((string) $properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/peer_review/form.php?id=' . urlencode((string) $properties->get_crypt_name()) . '</a>';
             break;
         default:
-            echo '<a href="' . $configObject->get('cfg_root_path') . '/paper/user_index.php?id=' . urlencode($properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/user_index.php?id=' . urlencode($properties->get_crypt_name()) . '</a>';
+            echo '<a href="' . $configObject->get('cfg_root_path') . '/paper/user_index.php?id=' . urlencode((string) $properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/user_index.php?id=' . urlencode((string) $properties->get_crypt_name()) . '</a>';
     }
      echo "</td></tr>\n";
      echo '<tr><td align="right" valign="top">' . $string['name'] . '&nbsp;</td><td colspan="3">';
@@ -581,8 +581,8 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     $folder_details->execute();
     $folder_details->bind_result($folder_id, $folder_name);
     while ($folder_details->fetch()) {
-        $path_parts = mb_substr_count($folder_name, ';');
-        $folder_array = explode(';', $folder_name);
+        $path_parts = mb_substr_count((string) $folder_name, ';');
+        $folder_array = explode(';', (string) $folder_name);
         $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
         if ($properties->get_folder() == $folder_id) {
             echo '<option value="' . $folder_id . '" selected>' . $display_name . '</option>';
@@ -751,7 +751,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
         echo '<tr><td colspan="4">' . $string['markingguidance'] . "</td></tr>\n";
         echo '<tr><td colspan="4" style="padding: 0">';
-        $texteditorplugin->get_textarea('osce_marking_guidance', 'osce_marking_guidance', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_postscript()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:230px;');
+        $texteditorplugin->get_textarea('osce_marking_guidance', 'osce_marking_guidance', $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_paper_postscript()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:230px;');
         echo '</td></tr>';
     } elseif ($properties->get_paper_type() == '6') {  // Peer Review
         $review = $properties->get_display_question_mark();
@@ -838,7 +838,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
         if (count($std_set_array) > 0) {
             echo '<input type="radio" id="marking3" name="marking" value="' . MARK_STD_SET . '"';
-            if (mb_substr($properties->get_marking(), 0, 1) == MARK_STD_SET) {
+            if (mb_substr((string) $properties->get_marking(), 0, 1) == MARK_STD_SET) {
                 echo ' checked';
             }
             echo " $published/>";
@@ -1022,7 +1022,7 @@ if ($start_date == '') {
     echo '<option value=""></option>';
 }
 for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
+    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
     if (($split_month - 1) == $i) {
         if ($i < 9) {
             echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
@@ -1146,7 +1146,7 @@ if ($end_date == '') {
     echo '<option value=""></option>';
 }
 for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
+    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
     if (($split_month - 1) == $i) {
         if ($i < 9) {
             echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
@@ -1272,12 +1272,12 @@ if ($module_sql != '') {
         }
         if ($match == true) {
             if (in_array($module['id'], $staff_modules) or $userObject->has_role('SysAdmin')) {
-                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
+                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
             } else {
-                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
+                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
             }
         } else {
-            echo "<div class=\"r1 mod\" id=\"divmod$module_no\"><input type=\"checkbox\"  class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
+            echo "<div class=\"r1 mod\" id=\"divmod$module_no\"><input type=\"checkbox\"  class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
         }
         $module_no++;
         $old_school = $module['school'];
@@ -1314,7 +1314,7 @@ if ($module_sql != '') {
 
 <table id="rubric" class="tabsection" style="display: none">
   <tr><td class="tabtitle"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
-  <tr><td><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_rubric()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
+  <tr><td><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_rubric()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
 <?php
 $properties->renderSettings('rubric');
 ?>
@@ -1479,7 +1479,7 @@ $properties->renderSettings('feedback');
   $result->fetch();
   $result->close();
 if ($sct_no > 0) {
-    echo '<a href="' . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode($properties->get_crypt_name()) . '</a>';
+    echo '<a href="' . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode((string) $properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode((string) $properties->get_crypt_name()) . '</a>';
 }
 
 ?></td></tr>
@@ -1525,7 +1525,7 @@ echo "</select>\n";
 // Available to Month
 echo "<select id=\"int_tmonth\" name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
+    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
     if (($split_month - 1) == $i) {
         if ($i < 9) {
             echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
@@ -1598,7 +1598,7 @@ echo "</select>\n";
 // Available to Month
 echo "<select id=\"ext_tmonth\" name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
 for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
+    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
     if (($split_month - 1) == $i) {
         if ($i < 9) {
             echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
@@ -1705,9 +1705,9 @@ while ($internal_details->fetch()) {
         }
     }
     if ($match) {
-        echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+        echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(mb_strtolower((string) $internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
     } else {
-        echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(mb_strtolower($internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+        echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(mb_strtolower((string) $internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
     }
     $internal_no++;
 }
@@ -1741,9 +1741,9 @@ while ($external_details->fetch()) {
         }
     }
     if ($match) {
-        echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+        echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower((string) $external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
     } else {
-        echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower($external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+        echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower((string) $external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
     }
     $examiner_no++;
 }
@@ -1876,7 +1876,7 @@ for ($i = 0; $i < $rows; $i++) {
     if (isset($string[$part])) {
         $part = $string[$part];
     }
-    echo '<tr><td>' . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_very_short_datetime_php'), $changes[$i]['date']) . '</td><td>' . $changes[$i]['title'] . ' ' . $changes[$i]['surname'] . "</td><tr>\n";
+    echo '<tr><td>' . ucfirst((string) $part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_very_short_datetime_php'), $changes[$i]['date']) . '</td><td>' . $changes[$i]['title'] . ' ' . $changes[$i]['surname'] . "</td><tr>\n";
 }
 ?>
 </table>

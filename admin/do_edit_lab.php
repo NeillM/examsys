@@ -47,7 +47,7 @@ $plagarism = param::optional('plagarism', null, param::TEXT, param::FETCH_POST);
 // We need to process the text list of addresses into an array.
 $raw_addresses = param::optional('addresses', null, param::RAW, param::FETCH_POST);
 // Split up the addresses based on any of the major OS line ending types.
-$split_addresses = preg_split('#\r\n|\r|\n#', trim($raw_addresses));
+$split_addresses = preg_split('#\r\n|\r|\n#', trim((string) $raw_addresses));
 // Make sure we only have unique addresses.
 $addresses = array_unique($split_addresses);
 
@@ -63,7 +63,7 @@ $ipInvalid = [];
 $ipInUse = [];
 
 foreach ($addresses as $address) {
-    $address = trim($address);
+    $address = trim((string) $address);
     if (0 === preg_match($test_re, $address)) {
         $bad_addresses++;
         $ipInvalid[] = $address;
@@ -96,7 +96,7 @@ if ($bad_addresses > 0) {
 
     // Re-insert addresses
     foreach ($addresses as $address) {
-        $address = trim($address);
+        $address = trim((string) $address);
         if ($hostname_lookup) {
             $hostname = $address;
         } else {

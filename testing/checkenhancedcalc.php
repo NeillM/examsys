@@ -38,7 +38,7 @@ echo 'Starting<br><br>';
 $enhancedcalcType = $configObject->get_setting('core', 'cfg_calc_type');
 $enhancedcalcSettings = $configObject->get_setting('core', 'cfg_calc_settings');
 
-$name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower($enhancedcalcType) . '\\Engine';
+$name = '\\plugins\\questions\\enhancedcalc\\engine\\' . mb_strtolower((string) $enhancedcalcType) . '\\Engine';
 if (empty($enhancedcalcType) or !class_exists($name)) {
     $name = '\\plugins\\questions\\enhancedcalc\\engine\\phpeval\\Engine';
     $enhancedcalcType = 'BLANK, MISSING or invalid setting that means it defaults to phpEval';

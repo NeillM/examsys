@@ -53,11 +53,11 @@ $problem = false;
 $username_problem = false;
 
 if ($submit) {
-    $new_password = trim(check_var('new_password', 'POST', true, false, true, param::TEXT));
-    $new_surname = UserUtils::my_ucwords(trim(check_var('new_surname', 'POST', true, false, true, param::TEXT)));
-    $new_username = trim(check_var('new_username', 'POST', true, false, true, param::TEXT));
-    $new_email = trim(check_var('new_email', 'POST', true, false, true, param::EMAIL));
-    $new_first_names = UserUtils::my_ucwords(trim(check_var('new_first_names', 'POST', true, false, true, param::TEXT)));
+    $new_password = trim((string) check_var('new_password', 'POST', true, false, true, param::TEXT));
+    $new_surname = UserUtils::my_ucwords(trim((string) check_var('new_surname', 'POST', true, false, true, param::TEXT)));
+    $new_username = trim((string) check_var('new_username', 'POST', true, false, true, param::TEXT));
+    $new_email = trim((string) check_var('new_email', 'POST', true, false, true, param::EMAIL));
+    $new_first_names = UserUtils::my_ucwords(trim((string) check_var('new_first_names', 'POST', true, false, true, param::TEXT)));
     $new_grade = check_var('new_grade', 'POST', false, false, true, param::TEXT);
     $new_year = check_var('new_year', 'POST', true, false, true, param::INT);
     $new_roles = check_var('new_roles', 'POST', false, false, true, param::TEXT);
@@ -80,7 +80,7 @@ if ($submit and $unique_username) {
         // Send out email welcome.
         if (isset($new_welcome) and $new_welcome != '') {
             $subject = "{$string['newrogoaccount']}";
-            $sname = ucwords($new_surname);
+            $sname = ucwords((string) $new_surname);
             $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
             $message = <<< MESSAGE
 <!DOCTYPE html>
@@ -100,9 +100,9 @@ h2 {font-size:120%}
 {$string['password']}: {$new_password}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>
 MESSAGE;
 
-            if (mb_strpos($new_roles, 'Staff') !== false) {
+            if (mb_strpos((string) $new_roles, 'Staff') !== false) {
                 $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/staff/\">https://{$host}/students/</a></p>";
-            } elseif (mb_strpos($new_roles, 'Student') !== false) {
+            } elseif (mb_strpos((string) $new_roles, 'Student') !== false) {
                 $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/students/\">https://{$host}/students/</a></p>";
             } else {
                 $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/\"></a>https://{$host}/students/</p>";
@@ -145,7 +145,7 @@ if (!$submit or !$unique_username or $problem) {
     if ($language != 'en') {
         echo "<option label=\"\"></option>\n";
     }
-    $titles = explode(',', $string['title_types']);
+    $titles = explode(',', (string) $string['title_types']);
     foreach ($titles as $tmp_title) {
         echo "<option value=\"$tmp_title\">$tmp_title</option>";
     }
@@ -184,7 +184,7 @@ if (!$submit or !$unique_username or $problem) {
         <?php
     }
     ?>
-<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or mb_strpos($new_username, '_') !== false or !$unique_username)) {
+<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or mb_strpos((string) $new_username, '_') !== false or !$unique_username)) {
     echo ' class="required errfield"';
                       } ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) {
                       echo $new_username;
@@ -307,7 +307,7 @@ if (isset($new_password)) {
 </optgroup>
 <optgroup data-role="Staff" label="<?php echo $string['externalstaff'] ?>">
     <?php
-    if (mb_strpos($_SERVER['HTTP_HOST'], '.uk') !== false) {
+    if (mb_strpos((string) $_SERVER['HTTP_HOST'], '.uk') !== false) {
         $nhslectturerdefault = (isset($new_grade) && $new_grade == 'NHS Lecturer') ? 'selected="selected"' : '';
         echo "<option value=\"NHS Lecturer\" $nhslectturerdefault>" . $string['nhslecturer'] . "</option>\n";
         $nhsadmindefault = (isset($new_grade) && $new_grade == 'NHS Admin') ? 'selected="selected"' : '';

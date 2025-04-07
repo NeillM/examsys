@@ -85,7 +85,7 @@ if ($stmt) {
     $ratingColumnCount = [];
 
     while ($stmt->fetch()) {
-        $ratingColumns = explode(',', $rating);
+        $ratingColumns = explode(',', (string) $rating);
         $notNullRatingColumns = array_filter($ratingColumns);
 
         // MRQ and RANK questions have valid ratings with null column values so need a special case
@@ -109,7 +109,7 @@ if ($stmt) {
             $rating = $string['noncompatible'] . '[COLUMNS-q_id' . $q_id . ']';
         } else {
             // Clearly mark incomplete ratings
-            if (($rating == '') || (mb_substr($rating, -1) == ',') || (mb_substr($rating, 0, 1) == ',') || (preg_match('/,,/', $rating))) {
+            if (($rating == '') || (mb_substr((string) $rating, -1) == ',') || (mb_substr((string) $rating, 0, 1) == ',') || (preg_match('/,,/', (string) $rating))) {
                 $rating = $string['incomplete'] . '[COLUMNS-q_id' . $q_id . ']';
             }
         }
@@ -134,20 +134,20 @@ if ($stmt) {
             // Remove last comma
             $csv = rtrim($csv, ',');
             $csv .= "\n";
-            $csv .= $date . ',' . preg_replace('/,/', ' ', addslashes($standard_setter)) . ',';
+            $csv .= $date . ',' . preg_replace('/,/', ' ', addslashes((string) $standard_setter)) . ',';
         }
 
         // Add to CSV header
         if (!in_array($display_pos, $questions)) {
             $question_number++;
 
-            $csvHeader .= ',' . $question_number . ' (' . preg_replace('/,/', ' ', addslashes($method)) . ';';
+            $csvHeader .= ',' . $question_number . ' (' . preg_replace('/,/', ' ', addslashes((string) $method)) . ';';
 
             if ($theme) {
-                $csvHeader .= preg_replace('/,/', ' ', addslashes($theme)) . ';';
+                $csvHeader .= preg_replace('/,/', ' ', addslashes((string) $theme)) . ';';
             }
 
-            $csvHeader .= preg_replace('/,/', ' ', addslashes($string[$q_type])) . ')[COLUMNS-q_id' . $q_id . ']';
+            $csvHeader .= preg_replace('/,/', ' ', addslashes((string) $string[$q_type])) . ')[COLUMNS-q_id' . $q_id . ']';
         }
 
         // Add ratings markers
@@ -173,14 +173,14 @@ if ($stmt) {
         }
         $additionalCommas[$key] = $additionalCommasCurrent;
 
-        $csv = preg_replace('/\[COLUMNS-q_id' . $key . '\]/', $additionalCommas[$key], $csv);
+        $csv = preg_replace('/\[COLUMNS-q_id' . $key . '\]/', $additionalCommas[$key], (string) $csv);
     }
 
     // Final check that rating columns match maximum column count
     foreach ($q_id_ssq_id_array as $q_id => $ssq_ids) {
         foreach ($ssq_ids as $ssq_id) {
             $pattern = '/(?<=\[COLSTART_' . $q_id . '_' . $ssq_id . '\])(.*?)(?=\[COLEND_' . $q_id . '_' . $ssq_id . '\])/';
-            preg_match($pattern, $csv, $ratingColumn);
+            preg_match($pattern, (string) $csv, $ratingColumn);
 
             if (!empty($ratingColumn)) {
                 if (!isset($ratingColumnCount[$q_id])) {
@@ -188,7 +188,7 @@ if ($stmt) {
                 }
                 if ($ratingColumnCount[$q_id] !== (count(explode(',', $ratingColumn[0])))) {
                     // Something has gone wrong (eg marks available have been changed) so mark column as incomplete
-                    $csv = preg_replace($pattern, $string['incomplete'] . $additionalCommas[$q_id], $csv);
+                    $csv = preg_replace($pattern, $string['incomplete'] . $additionalCommas[$q_id], (string) $csv);
                 }
             }
         }
@@ -196,14 +196,14 @@ if ($stmt) {
 
     // Remove ratings markers
     $removeStart = '/(\[COLSTART_)(\d+)_(\d+)(\])/';
-    $csv = preg_replace($removeStart, '', $csv);
+    $csv = preg_replace($removeStart, '', (string) $csv);
 
     $removeEnd = '/(\[COLEND_)(\d+)_(\d+)(\])/';
-    $csv = preg_replace($removeEnd, '', $csv);
+    $csv = preg_replace($removeEnd, '', (string) $csv);
 
     $stmt->close();
 } else {
-    $csv .= strip_tags($string['nostandardsset']);
+    $csv .= strip_tags((string) $string['nostandardsset']);
 }
 
 echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');

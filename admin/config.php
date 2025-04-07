@@ -55,13 +55,13 @@ if (isset($_POST['submit'])) {
             if ($setting == 'paper_timezones') {
                 $arrayvalue = [];
                 foreach ($new_value as $v) {
-                    $parts = explode('|', $v);
+                    $parts = explode('|', (string) $v);
                     $arrayvalue[$parts[0]] = $parts[1];
                 }
                 $new_value = $arrayvalue;
             }
             if ($type === Config::CSV or $type === Config::EMAIL) {
-                $new_value = explode(',', $new_value);
+                $new_value = explode(',', (string) $new_value);
             }
         }
         // Check value is of expected type. No change if not expected type.
@@ -87,7 +87,7 @@ $displayconfigs = [];
 $configs = $configObject->get_setting('core');
 foreach (Config::$config_area as $area) {
     foreach ($configs as $setting => $value) {
-        if (mb_strpos($setting, $area) !== false) {
+        if (mb_strpos((string) $setting, (string) $area) !== false) {
             $displayconfigs[$area][$setting] = $value;
         }
     }
@@ -120,7 +120,7 @@ foreach ($displayconfigs as $area => $conf) {
 
             $render->render($data, $string, 'admin/config/config_chk.html');
         } elseif ($type === Config::PASSWORD) {
-            $data['value'] = htmlspecialchars($value);
+            $data['value'] = htmlspecialchars((string) $value);
             $render->render($data, $string, 'admin/config/config_pass.html');
         } elseif ($type === Config::TIMEZONES) {
             // Compare config setting against list of possible timezones.
@@ -131,8 +131,8 @@ foreach ($displayconfigs as $area => $conf) {
                 if (isset($value[$individual_zone])) {
                     $selected = 'selected';
                 }
-                $data['zone'][$i]['iz'] =  htmlspecialchars($individual_zone);
-                $data['zone'][$i]['dz'] =  htmlspecialchars($display_zone);
+                $data['zone'][$i]['iz'] =  htmlspecialchars((string) $individual_zone);
+                $data['zone'][$i]['dz'] =  htmlspecialchars((string) $display_zone);
                 $data['zone'][$i]['selected'] = $selected;
                 $i++;
             }
@@ -152,8 +152,8 @@ foreach ($displayconfigs as $area => $conf) {
         } elseif ($type === Config::ASSOC) {
             $idx = 0;
             foreach ($value as $i => $v) {
-                $data['item'][$idx]['i'] = htmlspecialchars($i);
-                $data['item'][$idx]['v'] = htmlspecialchars($v);
+                $data['item'][$idx]['i'] = htmlspecialchars((string) $i);
+                $data['item'][$idx]['v'] = htmlspecialchars((string) $v);
 
                 $idx++;
             }
@@ -167,7 +167,7 @@ foreach ($displayconfigs as $area => $conf) {
             } else {
                 $data['size'] = 100;
             }
-            $data['value'] = htmlspecialchars($value);
+            $data['value'] = htmlspecialchars((string) $value);
             $render->render($data, $string, 'admin/config/config.html');
         }
     }

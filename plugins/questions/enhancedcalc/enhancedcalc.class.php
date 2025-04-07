@@ -133,7 +133,7 @@ class EnhancedCalc extends Question implements questionInterface
     {
         $formula_by_units = [];
         foreach ($ans as $key => $value) {
-            $units = explode(',', $value['units']);
+            $units = explode(',', (string) $value['units']);
             foreach ($units as $value1) {
                 $value1 = trim($value1);
                 $formula_by_units[$value1] = $value['formula'];
@@ -830,7 +830,7 @@ class EnhancedCalc extends Question implements questionInterface
                 $marked = false;
             }
             if ($marked) {
-                echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . htmlspecialchars($this->useranswer['uansnumb']) . ' ' . $this->useranswer['uansunit'] . '" />';
+                echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . htmlspecialchars((string) $this->useranswer['uansnumb']) . ' ' . $this->useranswer['uansunit'] . '" />';
             }
         }
 
@@ -877,7 +877,7 @@ class EnhancedCalc extends Question implements questionInterface
                 $replacement_value = $this->useranswer['vars'][$individual_varname] ?? '';
                 $tmp_fback = str_replace($individual_varname, $replacement_value, $tmp_fback);
             }
-            echo '<br /><div class="fback">' . nl2br($tmp_fback) . "</div>\n";
+            echo '<br /><div class="fback">' . nl2br((string) $tmp_fback) . "</div>\n";
         }
     }
 
@@ -915,7 +915,7 @@ class EnhancedCalc extends Question implements questionInterface
                     try {
                         // Decode if not already an array.
                         if (!is_array($answers[$find_qid])) {
-                            $uansarray = json_decode($answers[$find_qid], true);
+                            $uansarray = json_decode((string) $answers[$find_qid], true);
                         } else {
                             $uansarray = $answers[$find_qid];
                         }
@@ -949,7 +949,7 @@ class EnhancedCalc extends Question implements questionInterface
                 if (isset($answers[$find_qid])) {
                     // Decode if not already an array.
                     if (!is_array($answers[$find_qid])) {
-                        $variables = json_decode($answers[$find_qid], true);
+                        $variables = json_decode((string) $answers[$find_qid], true);
                     } else {
                         $variables = $answers[$find_qid];
                     }
@@ -989,7 +989,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_linked_ans($varval)
     {
-        if (mb_substr($varval, 0, 3) == 'ans') {
+        if (mb_substr((string) $varval, 0, 3) == 'ans') {
             return true;
         }
         return false;
@@ -1012,7 +1012,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_linked_question_var($varval)
     {
-        if (mb_substr($varval, 0, 3) == 'var') {
+        if (mb_substr((string) $varval, 0, 3) == 'var') {
             return true;
         }
         return false;
@@ -1025,7 +1025,7 @@ class EnhancedCalc extends Question implements questionInterface
      */
     public function is_compound_question_var($varval)
     {
-        if (stripos($varval, '$') !== false) {
+        if (stripos((string) $varval, '$') !== false) {
             return true;
         }
         return false;
@@ -1123,7 +1123,7 @@ class EnhancedCalc extends Question implements questionInterface
     public function decode_settings()
     {
         if (!is_array($this->settings)) {
-            $this->settings = json_decode($this->settings, true);
+            $this->settings = json_decode((string) $this->settings, true);
         }
     }
 
@@ -1150,7 +1150,7 @@ class EnhancedCalc extends Question implements questionInterface
         // Create array of units and functions
         if ((isset($this->settings['answersexp']) and !is_array($this->settings['answersexp'])) or (!isset($this->settings['answersexp']))) {
             foreach ($this->settings['answers'] as $key => $value) {
-                $units = explode(',', $value['units']);
+                $units = explode(',', (string) $value['units']);
                 foreach ($units as $value1) {
                     $value1 = trim($value1);
                     $this->settings['answersexp'][$value1] = $value['formula'];
@@ -1205,14 +1205,14 @@ class EnhancedCalc extends Question implements questionInterface
                 echo '<tr><td>' . $string['formula'] . " $formula_no</td><td colspan=\"2\">" . $answer['formula'] . '</td><td>units: ' . $answer['units'] . "</td></tr>\n";
                 $formula_no++;
             }
-            if (mb_strlen($this->settings['tolerance_full']) > 0) {
+            if (mb_strlen((string) $this->settings['tolerance_full']) > 0) {
                 echo "<tr><td colspan=\"3\">{$string['tolerancefull']}</td><td>" . $this->settings['tolerance_full'];
                 if ($this->settings['fulltoltyp'] == '%') {
                     echo '%';
                 }
                 echo "</td></tr>\n";
             }
-            if (mb_strlen($this->settings['tolerance_partial']) > 0) {
+            if (mb_strlen((string) $this->settings['tolerance_partial']) > 0) {
                 echo "<tr><td colspan=\"3\">{$string['tolerancepartial']}</td><td>" . $this->settings['tolerance_partial'];
                 if ($this->settings['parttoltyp'] == '%') {
                     echo '%';

@@ -146,7 +146,7 @@ if (isset($_POST['submit'])) {
                         for (
                             $i = 1; $i < $col_no; $i++
                         ) {
-                            $type = trim($heading[$i]);
+                            $type = trim((string) $heading[$i]);
                             $value = trim($cols[$i]);
                             echo "<td>$value</td>";
                             if ($type != '') {

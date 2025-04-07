@@ -78,7 +78,7 @@ class outline_lookup
 
     public function set_error($msg)
     {
-        if (mb_strlen($this->error) > 0) {
+        if (mb_strlen((string) $this->error) > 0) {
             $this->error .= '<br>';
         }
         $this->error .= $msg;

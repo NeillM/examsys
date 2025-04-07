@@ -91,7 +91,7 @@ class cosign
                 !isset($this->cosign_cfg['CosignValidationErrorRedirect']) ||
                 !isset($this->cosign_cfg['CosignValidReference']) ||
                 $_SERVER['QUERY_STRING'] == '' ||
-                ($p = strpos($_SERVER['QUERY_STRING'], '&')) === false
+                ($p = strpos((string) $_SERVER['QUERY_STRING'], '&')) === false
             ) {
                 $this->cosign_debug('CosignValid: Invalid validation request');
                 ob_end_flush();
@@ -99,7 +99,7 @@ class cosign
                 echo 'Invalid validation request';
                 exit();
             }
-            $service_cookie_val = substr($_SERVER['QUERY_STRING'], 0, $p);
+            $service_cookie_val = substr((string) $_SERVER['QUERY_STRING'], 0, $p);
             if (strncmp($service_cookie, $service_cookie_val, strlen($service_cookie)) != 0) {
                 $this->cosign_debug("CosignValid: Invalid service $service_cookie_val");
                 ob_end_flush();
@@ -107,7 +107,7 @@ class cosign
                 exit();
             }
             $service_cookie_val = substr($service_cookie_val, strlen($service_cookie) + 1);
-            $dest = substr($_SERVER['QUERY_STRING'], $p + 1);
+            $dest = substr((string) $_SERVER['QUERY_STRING'], $p + 1);
             if (preg_match($this->cosign_cfg['CosignValidReference'], $dest) !== 1) {
                 $this->cosign_debug("CosignValid: Invalid validation destination $dest");
                 ob_end_flush();
@@ -132,7 +132,7 @@ class cosign
             $ts = intval(substr($service_cookie_val, $p + 1));
             // if post, don't redirect, wait for next request
             if (
-                strcasecmp($_SERVER['REQUEST_METHOD'], 'post') != 0 &&
+                strcasecmp((string) $_SERVER['REQUEST_METHOD'], 'post') != 0 &&
                 $ts + $this->cosign_cfg['CosignCookieExpireTime'] < time()
             ) {
                 $this->cosign_debug("$service: Service cookie expired, redirecting to login");
@@ -201,11 +201,11 @@ class cosign
                 // check client IP address and factors
                 if (
                         $this->cosign_cfg['CosignCheckIP'] == 'always' &&
-                    !(str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+                    !(str_contains((string) $_SERVER['REMOTE_ADDR'], ':') &&
                     !str_contains($cf['i'], ':') ||
-                    !str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+                    !str_contains((string) $_SERVER['REMOTE_ADDR'], ':') &&
                     str_contains($cf['i'], ':') ||
-                    strcasecmp($cf['i'], $_SERVER['REMOTE_ADDR']) == 0)
+                    strcasecmp($cf['i'], (string) $_SERVER['REMOTE_ADDR']) == 0)
                 ) {
                     $this->cosign_debug("$service: IP address changed from {$cf['i']} to {$_SERVER['REMOTE_ADDR']}, user {$cf['p']}");
                     // falout to cosign netcheck
@@ -474,11 +474,11 @@ class cosign
         if (
             ($this->cosign_cfg['CosignCheckIP'] == 'always' ||
             $newfile && $this->cosign_cfg['CosignCheckIP'] == 'initial') &&
-            !(str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+            !(str_contains((string) $_SERVER['REMOTE_ADDR'], ':') &&
             !str_contains($cf['i'], ':') ||
-            !str_contains($_SERVER['REMOTE_ADDR'], ':') &&
+            !str_contains((string) $_SERVER['REMOTE_ADDR'], ':') &&
             str_contains($cf['i'], ':') ||
-            strcasecmp($cf['i'], $_SERVER['REMOTE_ADDR']) == 0)
+            strcasecmp($cf['i'], (string) $_SERVER['REMOTE_ADDR']) == 0)
         ) {
             $this->cosign_debug("$service: IP address changed from {$cf['i']} to {$_SERVER['REMOTE_ADDR']}, user {$cf['p']}");
             fclose($sock);
@@ -555,7 +555,7 @@ class cosign
             }
             if (!empty($this->cosign_cfg['CosignFilterHashLength'])) {
                 if ($this->cosign_cfg['CosignFilterHashLength'] != 1) {
-                    $dir2 = basename($dir);
+                    $dir2 = basename((string) $dir);
                     if (!is_dir($dir2)) {
                         mkdir($dir2);
                     }
@@ -621,7 +621,7 @@ class cosign
             $this->cosign_debug("CosignFilter: REKEY failed, retry $url");
             // check POST request expiration
         } elseif (
-            strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0 &&
+            strcasecmp((string) $_SERVER['REQUEST_METHOD'], 'post') == 0 &&
             isset($this->cosign_cfg['CosignPostErrorRedirect']) and !isset($_POST['cosignlogin'])
         ) {
             $this->cosign_debug('CosignFilter: Cookie not valid and POST request');
@@ -653,7 +653,7 @@ class cosign
                 $service_cookie = 'cosign-' . $this->cosign_cfg['CosignService'];
                 $service_cookie_file = $service_cookie . '=' . $service_cookie_val;
                 $this->cosign_debug("CosignFilter: New cookie $service_cookie_file");
-                setrawcookie($service_cookie, $service_cookie_val . '/' . time(), ['path' => '/', 'secure' => str_starts_with($back, 'https://') ? true : false, 'httponly' => true]);
+                setrawcookie($service_cookie, $service_cookie_val . '/' . time(), ['path' => '/', 'secure' => str_starts_with((string) $back, 'https://') ? true : false, 'httponly' => true]);
             } else {
                 $this->cosign_debug('CosignFilter: Redirect to login');
                 $service_cookie_file = 'cosign-' . $this->cosign_cfg['CosignService'];
@@ -679,8 +679,8 @@ class cosign
 
     public function cosign_check_factors($fa, $suffix = false)
     {
-        $req_fac = explode(' ', $this->cosign_cfg['CosignRequireFactor']);
-        $sc_fac = explode(' ', $fa);
+        $req_fac = explode(' ', (string) $this->cosign_cfg['CosignRequireFactor']);
+        $sc_fac = explode(' ', (string) $fa);
         foreach ($req_fac as $rf) {
             if (in_array($rf, $sc_fac)) {
                 continue;

@@ -116,7 +116,7 @@ class OnlineHelp
 
 
                     for ($i = 0; $i < $help_section; $i++) {
-                        if (mb_strpos($help_toc[$i]['title'], $target_parent) === 0 and $expand_id == 0) {
+                        if (mb_strpos((string) $help_toc[$i]['title'], $target_parent) === 0 and $expand_id == 0) {
                               $expand_id = $help_toc[$i]['id'];
                         }
                     }
@@ -126,13 +126,13 @@ class OnlineHelp
 
         for ($i = 0; $i < $help_section; $i++) {
             $id = $help_toc[$i]['id'];
-            $slash_pos = mb_strpos($help_toc[$i]['title'], '/');
+            $slash_pos = mb_strpos((string) $help_toc[$i]['title'], '/');
             if ($slash_pos !== false) {
-                $parent = mb_substr($help_toc[$i]['title'], 0, $slash_pos);
+                $parent = mb_substr((string) $help_toc[$i]['title'], 0, $slash_pos);
                 if ($old_parent != '' and $parent != $old_parent) {
                     echo "</div>\n";
                 }
-                $tmp_title = mb_substr($help_toc[$i]['title'], ($slash_pos + 1));
+                $tmp_title = mb_substr((string) $help_toc[$i]['title'], ($slash_pos + 1));
 
                 if ($parent != $old_parent) {
                     if ($expand_id == $id) {
@@ -705,7 +705,7 @@ class OnlineHelp
             $webroot .= '/';
         }
         // Strip out double forward slash.
-        $webroot = preg_replace('#/+#', '/', $webroot);
+        $webroot = preg_replace('#/+#', '/', (string) $webroot);
         // The substitution will replace the old src tag with a new one that.
         $regexp = '#src="\/getfile\.php\?type\=help_staff&amp;filename\=(.*?)"#';
         $substitution = 'src="' . $webroot . 'getfile.php?type=help_staff&amp;filename=$1"';
@@ -740,7 +740,7 @@ class OnlineHelp
             $webroot .= '/';
         }
         // Strip out double forward slash.
-        $webroot = preg_replace('#/+#', '/', $webroot);
+        $webroot = preg_replace('#/+#', '/', (string) $webroot);
         // The substitution will replace the old src tag with a new one that.
         $regexp = '#src="\/getfile\.php\?type\=help_student&amp;filename\=(.*?)"#';
         $substitution = 'src="' . $webroot . 'getfile.php?type=help_student&amp;filename=$1"';

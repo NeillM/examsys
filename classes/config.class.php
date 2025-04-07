@@ -293,18 +293,18 @@ class Config extends RogoStaticSingleton implements \Stringable
     private function checkurl($parsedurl)
     {
         $parsedurl['port'] ??= 80;
-        $parsedurl['path'] = rtrim($parsedurl['path'], '/');
+        $parsedurl['path'] = rtrim((string) $parsedurl['path'], '/');
 
         $requestedhost = $_SERVER['HTTP_HOST'] ?? '';
-        $pos = mb_strpos($requestedhost, ':');
+        $pos = mb_strpos((string) $requestedhost, ':');
         if ($pos !== false) {
-            $requestedhost = mb_substr($_SERVER['HTTP_HOST'], 0, $pos);
+            $requestedhost = mb_substr((string) $_SERVER['HTTP_HOST'], 0, $pos);
         }
 
         // The path should also match.
         if (empty($parsedurl['path'])) {
             $matchespath = true;
-        } elseif (mb_strpos($_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
+        } elseif (mb_strpos((string) $_SERVER['SCRIPT_NAME'], $parsedurl['path']) === 0) {
             $matchespath = true;
         }
 
@@ -380,7 +380,7 @@ class Config extends RogoStaticSingleton implements \Stringable
         $this->set('file_config_override', false);
         $this->behatsetup = true;
         // Set cfg_root_path to behat site.
-        $url = parse_url($this->get('cfg_behat_website'));
+        $url = parse_url((string) $this->get('cfg_behat_website'));
         if (!isset($url['path'])) {
             $url['path'] =  null;
         }
@@ -686,11 +686,11 @@ class Config extends RogoStaticSingleton implements \Stringable
             }
             // Decode json.
             if ($type == self::JSON or $type == self::CSV or $type == self::EMAIL) {
-                $value = json_decode($value);
+                $value = json_decode((string) $value);
             }
             // Set timzone to associative array.
             if ($type == self::TIMEZONES or $type == self::ASSOC) {
-                $value = json_decode($value, true);
+                $value = json_decode((string) $value, true);
             }
             $this->cache_setting($setting, $value, $component);
             $this->cache_setting_type($setting, $type, $component);
@@ -731,7 +731,7 @@ class Config extends RogoStaticSingleton implements \Stringable
      */
     public function getxml($parent, $child = '', $grandchild = '')
     {
-        $xmldata = json_decode($this->xmldata);
+        $xmldata = json_decode((string) $this->xmldata);
         if (is_string($parent)) {
             if (isset($xmldata->$parent)) {
                 if ($child == '' and $grandchild == '') {
@@ -760,7 +760,7 @@ class Config extends RogoStaticSingleton implements \Stringable
      */
     public function override_xml($value, $parent, $child = '', $grandchild = '')
     {
-        $xmldata = json_decode($this->xmldata);
+        $xmldata = json_decode((string) $this->xmldata);
         if (is_string($parent)) {
             if ($child == '' and $grandchild == '') {
                 $xmldata->$parent = $value;

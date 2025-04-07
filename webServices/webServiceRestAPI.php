@@ -34,8 +34,8 @@ if (!isset($_GET['url'])) {
     $action = '';
     $parms = '';
 } else {
-    if (mb_substr_count($_GET['url'], '/') > 0) {
-        [$action, $parms] = explode('/', $_GET['url'], 2);
+    if (mb_substr_count((string) $_GET['url'], '/') > 0) {
+        [$action, $parms] = explode('/', (string) $_GET['url'], 2);
     } else {
         $action = $_GET['url'];
     }
@@ -157,8 +157,8 @@ class webServiceRestAPI extends restAPI
             $action = '';
             $parms = '';
         } else {
-            if (mb_substr_count($_GET['url'], '/') > 0) {
-                [$action, $parms] = explode('/', $_GET['url'], 2);
+            if (mb_substr_count((string) $_GET['url'], '/') > 0) {
+                [$action, $parms] = explode('/', (string) $_GET['url'], 2);
             } else {
                 $action = $_GET['url'];
             }

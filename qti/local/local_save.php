@@ -212,13 +212,13 @@ class IE_Local_Save extends IE_Main
                 $this->q_row['q_option_order'] = 'display order';
                 print 'correcting q_option_order';
             }
-            if (!empty($this->q_row['scenario']) && strcasecmp('<p>&nbsp;</p>', $this->q_row['scenario']) == 0) {
+            if (!empty($this->q_row['scenario']) && strcasecmp('<p>&nbsp;</p>', (string) $this->q_row['scenario']) == 0) {
                 $this->q_row['scenario'] = '';
             }
 
             // create plain version of scenario and leadin
-            $this->q_row['scenario_plain'] = (empty($this->q_row['scenario'])) ? '' : trim(strip_tags($this->q_row['scenario']));
-            $this->q_row['leadin_plain'] = (empty($this->q_row['leadin'])) ? '' : trim(strip_tags($this->q_row['leadin']));
+            $this->q_row['scenario_plain'] = (empty($this->q_row['scenario'])) ? '' : trim(strip_tags((string) $this->q_row['scenario']));
+            $this->q_row['leadin_plain'] = (empty($this->q_row['leadin'])) ? '' : trim(strip_tags((string) $this->q_row['leadin']));
 
             if (!empty($this->q_row['correct_fback']) && !empty($this->q_row['incorrect_fback']) && $this->q_row['correct_fback'] == $this->q_row['incorrect_fback']) {
                 $this->q_row['incorrect_fback'] = '';
@@ -370,7 +370,7 @@ class IE_Local_Save extends IE_Main
 
         $q_text = '';
         foreach ($question->question as $part) {
-            if (mb_substr($part, 0, 1) == '%') {
+            if (mb_substr((string) $part, 0, 1) == '%') {
                 $q_text .= '[blank]';
 
                 $blankbit = $question->options[$part];

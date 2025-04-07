@@ -59,7 +59,7 @@ while ($result->fetch()) {
     $questions[$questionID]['leadin'] = $leadin;
     if ($q_type == 'likert') {
         $questions[$questionID]['scale'] = $display_method;
-        $questions[$questionID]['scale_size'] = mb_substr_count($display_method, '|');
+        $questions[$questionID]['scale_size'] = mb_substr_count((string) $display_method, '|');
     } elseif ($q_type == 'mcq') {
         if (isset($questions[$questionID]['scale'])) {
             $questions[$questionID]['scale_size']++;
@@ -75,7 +75,7 @@ $group = '%';
 $type = $propertyObj->get_rubric();
 foreach ($_GET as $key => $value) {
     if (mb_substr($key, 0, 4) == 'meta') {
-        $md_parts = explode('=', $value);
+        $md_parts = explode('=', (string) $value);
         if ($md_parts[0] == $type) {
             $group = $md_parts[1];
         }

@@ -113,7 +113,7 @@ class OptionEdit extends RogoObject
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
-        } elseif (!is_null($data) and ctype_digit($data)) {
+        } elseif (!is_null($data) and ctype_digit((string) $data)) {
             // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_option()) {

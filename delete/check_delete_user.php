@@ -31,7 +31,7 @@ require_once '../include/errors.php';
 $userID = check_var('id', 'GET', true, false, true);
 
 // Check that all the past user IDs actually exist.
-$id_list = explode(',', $userID);
+$id_list = explode(',', (string) $userID);
 foreach ($id_list as $id) {
     if ($id != '') {
         if (!UserUtils::userid_exists($id, $mysqli)) {

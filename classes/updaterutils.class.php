@@ -309,14 +309,14 @@ class UpdaterUtils
             return false;
         }
         while ($existing_grant = $result->fetch_array()) {
-            if (stripos($existing_grant[0], ".`$table` TO") !== false) {
+            if (stripos((string) $existing_grant[0], ".`$table` TO") !== false) {
                 $found_grant = $existing_grant[0];
             }
         }
         $result->close();
 
         if ($found_grant != '') {
-            $parts = explode(' ON ', $found_grant);
+            $parts = explode(' ON ', (string) $found_grant);
             $found_grant = $parts[0];
             $found_grant = str_replace('GRANT ', '', $found_grant);
         }

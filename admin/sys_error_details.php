@@ -51,7 +51,7 @@ $result->store_result();
 $result->bind_result($id);
 $similar_errors = $result->num_rows();
 $result->close();
-$variables = unserialize(base64_decode($variables));
+$variables = unserialize(base64_decode((string) $variables));
 
 ?>
 <!DOCTYPE html>

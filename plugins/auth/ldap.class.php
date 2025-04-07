@@ -194,7 +194,7 @@ class ldap_auth extends outline_authentication
             }
 
             $configObject = Config::get_instance();
-            if (@ldap_bind($ldap, $dn, iconv($configObject->get('cfg_page_charset'), 'UTF-8', $this->form['std']->password))) {
+            if (@ldap_bind($ldap, $dn, iconv((string) $configObject->get('cfg_page_charset'), 'UTF-8', $this->form['std']->password))) {
                 $this->savetodebug('Successfully bound to ldap as the user with their password');
                 ldap_unbind($ldap);
                 $this->savetodebug('Now looking up userid in table from username');

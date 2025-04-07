@@ -34,7 +34,7 @@ class restAPI
     {
         $this->request_vars      = [];
         $this->data              = '';
-        if (mb_strpos($_SERVER['HTTP_ACCEPT'], 'json') !== false) {
+        if (mb_strpos((string) $_SERVER['HTTP_ACCEPT'], 'json') !== false) {
             $this->http_accept = 'json';
         } else {
             $this->http_accept = 'xml';

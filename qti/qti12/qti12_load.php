@@ -48,7 +48,7 @@ class IE_qti12_Load extends IE_Main
         global $string;
 
         // some values for abstaining and not applicable
-        $this->abstainvalues = explode('|', mb_strtolower($string['na_abstain']));
+        $this->abstainvalues = explode('|', mb_strtolower((string) $string['na_abstain']));
 
         // values for likert scales
 
@@ -144,7 +144,7 @@ class IE_qti12_Load extends IE_Main
             foreach ($xml->qtimetadata as $each1) {
                 if (isset($each1->qtimetadatafield)) {
                     foreach ($each1->qtimetadatafield as $each2) {
-                        if (mb_substr($each2->fieldlabel, 0, 3) == 'wct') {
+                        if (mb_substr((string) $each2->fieldlabel, 0, 3) == 'wct') {
                             $wct = 1;
                         }
                     }
@@ -279,7 +279,7 @@ class IE_qti12_Load extends IE_Main
             }
             $question->q_option_order = 'display order';
 
-            if (mb_strlen($question->leadin) < 1) {
+            if (mb_strlen((string) $question->leadin) < 1) {
                 $question->leadin = $item->attributes()->title;
             }
         }
@@ -590,9 +590,9 @@ class IE_qti12_Load extends IE_Main
         $notes = '';
         foreach ($material->chunks as & $chunk) {
             if ($chunk->label == 'theme') {
-                $question->theme .= strip_tags($chunk->GetHTML());
+                $question->theme .= strip_tags((string) $chunk->GetHTML());
             } elseif ($chunk->label == 'notes') {
-                $notes .= strip_tags($chunk->GetHTML());
+                $notes .= strip_tags((string) $chunk->GetHTML());
                 $question->notes .= trim(str_ireplace('note:', '', $notes));
             } elseif ($chunk->label == 'scenario') {
                 $question->scenario .= $chunk->GetHTML();
@@ -613,7 +613,7 @@ class IE_qti12_Load extends IE_Main
         $scn = NX_ChangePreSetCharsToRaw($scn);
 
         // parse scenario into xml chunks
-        $bits = explode('<', $scn);
+        $bits = explode('<', (string) $scn);
 
         $to_remove = [];
         // for each chunk
@@ -660,8 +660,8 @@ class IE_qti12_Load extends IE_Main
             $scn = str_ireplace($remove, '', $scn);
         }
 
-        $scn = trim(RemoveEmptyHTMLTags($scn));
-        $scn = trim(MakeValidHTML($scn));
+        $scn = trim((string) RemoveEmptyHTMLTags($scn));
+        $scn = trim((string) MakeValidHTML($scn));
 
         if (mb_strtolower($scn) == '<br>') {
             $scn = '';
@@ -722,7 +722,7 @@ class IE_qti12_Load extends IE_Main
         $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
 
         foreach ($dest->question as & $chunk) {
-            if (mb_substr($chunk, 0, 1) != '%') {
+            if (mb_substr((string) $chunk, 0, 1) != '%') {
                 $chunk = ' ' . $chunk . ' ';
             }
         }
@@ -808,7 +808,7 @@ class IE_qti12_Load extends IE_Main
                         foreach ($conds as $cond) {
                             foreach ($cond->conditions as $opt) {
                                   $blank = new STQ_Blank_Option();
-                                  $blank->display = strip_tags($opt->value);
+                                  $blank->display = strip_tags((string) $opt->value);
                                   $blank->correct = 1;
                                   $blankoptions[] = $blank;
                             }
@@ -855,7 +855,7 @@ class IE_qti12_Load extends IE_Main
                                         }
 
                                         $blank = new STQ_Blank_Option();
-                                        $blank->display = strip_tags($condition->value);
+                                        $blank->display = strip_tags((string) $condition->value);
                                         $blank->correct = 1;
                                         $blankoptions[] = $blank;
                                     }
@@ -1007,7 +1007,7 @@ class IE_qti12_Load extends IE_Main
             echo 'Calculation importing variables<br>';
             foreach ($source->params['VARIABLE'] as $var) {
                 $varc = new STQ_Calc_Vars();
-                [$var_id, $varc->min, $varc->max, $varc->dec, $varc->inc] = explode('|', $var);
+                [$var_id, $varc->min, $varc->max, $varc->dec, $varc->inc] = explode('|', (string) $var);
                 $dest->variables[$var_id] = $varc;
                 $datatemp = [];
                 $datatemp['min'] = $varc->min;
@@ -1034,11 +1034,11 @@ class IE_qti12_Load extends IE_Main
             }
             if (array_key_exists('TOLERANCE', $source->params)) {
                 $dest->tolerance = $source->params['TOLERANCE'];
-                if (stripos($dest->tolerance, '%') === false) {
+                if (stripos((string) $dest->tolerance, '%') === false) {
                     $dest->settings['tolerance_full'] = $dest->tolerance;
                     $dest->settings['fulltoltyp'] = '#';
                 } else {
-                    $dest->settings['tolerance_full'] = mb_substr($dest->tolerance, 0, mb_stripos($dest->tolerance, '%'));
+                    $dest->settings['tolerance_full'] = mb_substr((string) $dest->tolerance, 0, mb_stripos((string) $dest->tolerance, '%'));
                     $dest->settings['fulltoltyp'] = '%';
                 }
             }
@@ -1146,7 +1146,7 @@ class IE_qti12_Load extends IE_Main
         $optionid = 1;
         foreach ($source->responses as $response) {
             $option = new STQ_Dic_Options();
-            $option->text = strip_tags($response->material->GetHTML(), '<div><span>');
+            $option->text = strip_tags((string) $response->material->GetHTML(), '<div><span>');
             $option->response_id = $response->id;
             $option->iscorrect = 0;
 
@@ -1154,7 +1154,7 @@ class IE_qti12_Load extends IE_Main
             $option->marks_incorrect = $marks_incorrect;
 
             foreach ($response->labels as $id => $label) {
-                $text = mb_strtolower($label->material->GetText());
+                $text = mb_strtolower((string) $label->material->GetText());
                 if ($text == 'yes' || $text == 'true') {
                     $option->value_true = $id;
                 }
@@ -1373,7 +1373,7 @@ class IE_qti12_Load extends IE_Main
                     continue;
                 }
                 $coords = str_replace(' ', ',', $condition->value);
-                $type = mb_strtolower($condition->areatype);
+                $type = mb_strtolower((string) $condition->areatype);
                 if ($type == 'rectangle' || $type == 'ellipse') {
                     $hs = new STQ_Hotspot_Spot();
                     $hs->type = $type;
@@ -1482,7 +1482,7 @@ class IE_qti12_Load extends IE_Main
                     }
                 }
 
-                if (trim($mylabel->text) == '') {
+                if (trim((string) $mylabel->text) == '') {
                     $mylabel->text = $mylabel->media;
                 }
                 $labels[] = $mylabel;
@@ -1509,7 +1509,7 @@ class IE_qti12_Load extends IE_Main
                 $label->left = -1;
                 $label->top = -1;
             } else {
-                $coords = explode(',', $label->coords);
+                $coords = explode(',', (string) $label->coords);
                 $left = (($coords[0] + $coords[2]) / 2 - $left_offset) * $response->material->x_scale;
                 $top = (($coords[1] + $coords[3]) / 2 - $top_offset) * $response->material->y_scale;
                 $label->left = round($left);
@@ -1723,7 +1723,7 @@ class IE_qti12_Load extends IE_Main
         // SW amendment 16/11/2010
         foreach ($dest->options as & $option) {
             $correctfb = $this->GetFeedbacks($source, 1, $option->base_id, 1);
-            $incorrectfb = explode('<br />', $this->GetFeedbackFromArray($source, $correctfb));
+            $incorrectfb = explode('<br />', (string) $this->GetFeedbackFromArray($source, $correctfb));
 
             // get list of feedbacks common to both outcomes and add to general feedback array
             // remove common ones from the list
@@ -1809,7 +1809,7 @@ class IE_qti12_Load extends IE_Main
                 $answer = $condition->conditions[0]->value;
             }
         }
-        $dest->answer = mb_strtolower($answer);
+        $dest->answer = mb_strtolower((string) $answer);
 
         $choiceno = 1;
         foreach ($response->labels as $label) {
@@ -1862,7 +1862,7 @@ class IE_qti12_Load extends IE_Main
         // SW amendment 16/11/2010
         foreach ($dest->options as & $option) {
             $correctfb = $this->GetFeedbacks($source, 1, $option->base_id, 1);
-            $incorrectfb = explode('<br />', $this->GetFeedbackFromArray($source, $correctfb));
+            $incorrectfb = explode('<br />', (string) $this->GetFeedbackFromArray($source, $correctfb));
 
             // get list of feedbacks common to both outcomes and add to general feedback array
             // remove common ones from the list
@@ -1897,7 +1897,7 @@ class IE_qti12_Load extends IE_Main
             if ($opts->base_id == $dest->answer) {
                 $choice = new STQ_Mcq_Option();
                 $choice = $opts;
-                $as = mb_strtolower(mb_substr($opts->stem, 0, 1));
+                $as = mb_strtolower(mb_substr((string) $opts->stem, 0, 1));
                 $dest->options[$as] = $choice;
                 $dest->correct = $as;
             }
@@ -2203,7 +2203,7 @@ class IE_qti12_Load extends IE_Main
         $dest->marks = 0;
         foreach ($conditions as $condition) {
             foreach ($condition->conditions as $value) {
-                $dest->terms[] = strip_tags($value->value);
+                $dest->terms[] = strip_tags((string) $value->value);
             }
             $dest->marks += $condition->mark;
         }
@@ -2265,7 +2265,7 @@ class IE_qti12_Load extends IE_Main
         foreach ($question->responses as $rid => $response) {
             foreach ($response->labels as $label) {
                 if ($clean) {
-                    $value = mb_strtolower($label->material->GetText());
+                    $value = mb_strtolower((string) $label->material->GetText());
                 } else {
                     $value = $label->material->GetHTML();
                 }
@@ -2301,7 +2301,7 @@ class IE_qti12_Load extends IE_Main
 
             foreach ($response->labels as $label) {
                 if ($clean) {
-                    $value = mb_strtolower($label->material->GetText());
+                    $value = mb_strtolower((string) $label->material->GetText());
                 } else {
                     $value = $label->material->GetHTML();
                 }
@@ -2580,7 +2580,7 @@ class IE_qti12_Load extends IE_Main
         $output = [];
         foreach ($feedbacks as $feedback) {
             if (array_key_exists($feedback, $source->itemfeedback)) {
-                $fbtext = trim($source->itemfeedback[$feedback]->material->GetHTML());
+                $fbtext = trim((string) $source->itemfeedback[$feedback]->material->GetHTML());
                 if ($fbtext) {
                     $output[] = $fbtext;
                 }

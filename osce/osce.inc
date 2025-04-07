@@ -191,7 +191,7 @@ function parse_leadin($text, $parts)
     $count = 0;
     $calss = 'part';
 
-    $starts = explode('[', $text);
+    $starts = explode('[', (string) $text);
     $count = count($starts);
     if ($parts == '') {
         $value = str_pad('', $count - 1, '0');

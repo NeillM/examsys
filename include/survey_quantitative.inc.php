@@ -117,7 +117,7 @@ SQL;
                 break;
             case 'enhancedcalc':
                 $tmp_score_method = [];
-                $tmp_score_method = explode(',', $score_method);
+                $tmp_score_method = explode(',', (string) $score_method);
                 $tolerance = $tmp_score_method[1];
                 $tmp_first_split = explode('|', $tmp_answer);
                 if ($tmp_first_split[0] == $tmp_first_split[1]) {

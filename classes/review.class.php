@@ -44,9 +44,9 @@ class Review
 
     private function time_to_seconds($seconds)
     {
-        $hr = intval(mb_substr($seconds, 8, 2));
-        $min = intval(mb_substr($seconds, 10, 2));
-        $sec = intval(mb_substr($seconds, 12, 2));
+        $hr = intval(mb_substr((string) $seconds, 8, 2));
+        $min = intval(mb_substr((string) $seconds, 10, 2));
+        $sec = intval(mb_substr((string) $seconds, 12, 2));
 
         return ($hr * 3600) + ($min * 60) + $sec;
     }

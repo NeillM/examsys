@@ -151,10 +151,10 @@ HTML;
             $change_old_more = '';
             $change_new = $change['new'];
             $change_new_more = '';
-            if (mb_strlen($change['old']) > $cutoff) {
-                $split_pos = mb_strrpos(mb_substr($change['old'], 0, $cutoff), ' ');
-                $change_old = mb_substr($change['old'], 0, $split_pos);
-                $change_old_more = mb_substr($change['old'], $split_pos);
+            if (mb_strlen((string) $change['old']) > $cutoff) {
+                $split_pos = mb_strrpos(mb_substr((string) $change['old'], 0, $cutoff), ' ');
+                $change_old = mb_substr((string) $change['old'], 0, $split_pos);
+                $change_old_more = mb_substr((string) $change['old'], $split_pos);
                 $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
             }
             if (mb_strlen($change['new']) > $cutoff) {
@@ -226,10 +226,10 @@ HTML;
             $change_old_more = '';
             $change_new = $change['new'];
             $change_new_more = '';
-            if (mb_strlen($change['old']) > $cutoff) {
-                $split_pos = mb_strrpos(mb_substr($change['old'], 0, $cutoff), ' ');
-                $change_old = mb_substr($change['old'], 0, $split_pos);
-                $change_old_more = mb_substr($change['old'], $split_pos);
+            if (mb_strlen((string) $change['old']) > $cutoff) {
+                $split_pos = mb_strrpos(mb_substr((string) $change['old'], 0, $cutoff), ' ');
+                $change_old = mb_substr((string) $change['old'], 0, $split_pos);
+                $change_old_more = mb_substr((string) $change['old'], $split_pos);
                 $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
             }
             if (mb_strlen($change['new']) > $cutoff) {
@@ -306,8 +306,8 @@ HTML;
             $img_status = $status[0];
 
             $alt = ($i % 2 == 0) ? ' class="alt"' : '';
-            $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br($comment['comment']);
-            $type_translated = $string[mb_strtolower($comment['type'])];
+            $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br((string) $comment['comment']);
+            $type_translated = $string[mb_strtolower((string) $comment['type'])];
 
             $html .= <<< HTML
   					<tr{$alt}>

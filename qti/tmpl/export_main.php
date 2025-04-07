@@ -123,7 +123,7 @@ if (!isset($qtiexportdirectory)) {
             <?php foreach ($files as $file) : ?>
                 <?php $path = $file->path; ?>
                 <div style="margin-left:25px; line-height:150%"><img src="../artwork/download_16.gif" width="16" height="16" alt="bullet" />&nbsp;
-                    <strong><a href="download.php?file=<?php echo(urlencode($file->filename)) ?>&path=<?php echo(urlencode($file->path)) ?>&title=<?php echo(urlencode($file->title)) ?>"><?php echo $string['download'] . ' ' . $file->title ?>.xml</a></strong>
+                    <strong><a href="download.php?file=<?php echo(urlencode((string) $file->filename)) ?>&path=<?php echo(urlencode((string) $file->path)) ?>&title=<?php echo(urlencode((string) $file->title)) ?>"><?php echo $string['download'] . ' ' . $file->title ?>.xml</a></strong>
                 </div>
             <?php endforeach; ?>
             <div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation']; ?></div>

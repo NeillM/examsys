@@ -117,7 +117,7 @@ if ($student_no == 0) {
 }
   echo '</div>';
 
-  $qid_list = mb_substr($qid_list, 0, -1);
+  $qid_list = mb_substr((string) $qid_list, 0, -1);
   $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
   unset($objByModule['none_of_the_above']);
 

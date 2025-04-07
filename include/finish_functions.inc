@@ -51,9 +51,9 @@ function echo_content($html)
 {
     echo $html;
 
-    if (stripos($html, '<div>') === false and stripos($html, '<p>') === false and stripos($html, '<br') === false) {
+    if (stripos((string) $html, '<div>') === false and stripos((string) $html, '<p>') === false and stripos((string) $html, '<br') === false) {
         echo "<br />\n<br />\n";
-    } elseif (stripos($html, '<div>') !== false and stripos($html, '<p>') === false and stripos($html, '<br') === false) {
+    } elseif (stripos((string) $html, '<div>') !== false and stripos((string) $html, '<p>') === false and stripos((string) $html, '<br') === false) {
         echo "<br />\n";
     }
 }
@@ -228,7 +228,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
     // Get standards setting data
     if ($marking[0] == '2') {
         $standards_setting = [];
-        $tmp_parts = explode(',', $marking);
+        $tmp_parts = explode(',', (string) $marking);
         $std_data = $mysqlidb->prepare('SELECT questionID, rating FROM std_set_questions WHERE std_setID = ?');
         $std_data->bind_param('i', $tmp_parts[1]);
         $std_data->execute();
@@ -377,7 +377,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
             if ($q_type == 'enhancedcalc') {
                 if (!is_array($settings)) {
-                    $settings = json_decode($settings, true);
+                    $settings = json_decode((string) $settings, true);
                 }
                 $marks_correct = $settings['marks_correct'];
                 $marks_incorrect = $settings['marks_incorrect'];
@@ -580,7 +580,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
                         if ($q_type == 'enhancedcalc') {
                             if (!is_array($settings)) {
-                                $settings = json_decode($settings, true);
+                                $settings = json_decode((string) $settings, true);
                             }
                             $marks_correct = $settings['marks_correct'];
                             $marks_incorrect = $settings['marks_incorrect'];
@@ -803,7 +803,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             }
         }
 
-        $option_order = explode(',', $paper[$question]['option_order']);
+        $option_order = explode(',', (string) $paper[$question]['option_order']);
         $question_no = $display_no;
 
         $questiondata = \questiondata::get_datastore($q_type);
@@ -847,7 +847,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         <br />
                 <?php
                 if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-                    echo '<div class="fback">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                    echo '<div class="fback">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                 }
                 if ($tmp_user_answer == '') {
                     echo "<div style=\"color:#808080\">{$string['unanswered']}</div>\n";
@@ -904,12 +904,12 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 $no_incorrect = 0;
                 if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf' or $paper[$question]['display_method'] == 'TF_Positive') {
                     echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['false'] . '</td>';
-                    $true_label = mb_substr($string['true'], 0, 1);
-                    $false_label = mb_substr($string['false'], 0, 1);
+                    $true_label = mb_substr((string) $string['true'], 0, 1);
+                    $false_label = mb_substr((string) $string['false'], 0, 1);
                 } else {
                     echo "<tr><td></td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['no'] . '</td>';
-                    $true_label = mb_substr($string['yes'], 0, 1);
-                    $false_label = mb_substr($string['no'], 0, 1);
+                    $true_label = mb_substr((string) $string['yes'], 0, 1);
+                    $false_label = mb_substr((string) $string['no'], 0, 1);
                 }
                 if ($paper[$question]['display_method'] == 'TF_NegativeAbstain' or $paper[$question]['display_method'] == 'YN_NegativeAbstain' or $paper[$question]['display_method'] == 'TF_NegativeAbstainHalf') {
                     echo "<td align=\"center\" width=\"50\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . '</td>';
@@ -989,7 +989,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                                             echo ' class="exclude"';
                         }
                         echo '>';
-                        if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                        if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                             echo $paper[$question]['option_text'][$tmp_part_id] . '<br />';
                         }
                         $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], $paper[$question]['o_media_alt'][$tmp_part_id], '', true);
@@ -1039,7 +1039,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
                 echo "</table>\n";
                 if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-                    echo '<div class="fback" style="margin-left:17px">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                    echo '<div class="fback" style="margin-left:17px">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                 }
                 break;
             case 'info':
@@ -1084,7 +1084,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             }
                             echo '<td>' . display_response($tmp_display_students_response, 'tick') . '</td>';
                             echo '<td><input type="radio" name="q' . $question . '" value="" checked /></td><td style="width:99%">';
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 if ($tmp_exclude[0] == '1') {
                                     echo '<span class="exclude">';
                                 }
@@ -1097,7 +1097,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if (!empty($paper[$question]['o_media'][$tmp_part_id])) {
                                 $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], $paper[$question]['o_media_alt'][$tmp_part_id], '', true);
                                 $render->render($questiondata, $string, 'paper/media.html');
-                                if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') {
+                                if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') {
                                     echo ' ' . $strong_on . $string['iscorrect'] . $strong_off;
                                 }
                             }
@@ -1113,7 +1113,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                                 echo '<td></td>';
                             }
                             echo '<td></td><td><input type="radio" name="q' . $question . '" value="" /></td><td style="width:99%">';
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 if ($tmp_exclude[0] == '1') {
                                     echo '<span class="exclude">';
                                 }
@@ -1125,7 +1125,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if (!empty($paper[$question]['o_media'][$tmp_part_id])) {
                                         $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], $paper[$question]['o_media_alt'][$tmp_part_id], '', true);
                                         $render->render($questiondata, $string, 'paper/media.html');
-                                if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') {
+                                if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') {
                                     echo ' <strong>' . $string['iscorrect'] . '</strong>';
                                 }
                             }
@@ -1136,7 +1136,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                         if (isset($paper[$question]['user_answer']) and $tmp_part_id + 1 == $paper[$question]['user_answer']) {
                             echo '<td>' . display_response($tmp_display_students_response, 'cross') . '</td>';
                             echo '<td><input type="radio" name="q' . $question . '" value="" checked /></td><td style="width:99%">';
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 if ($tmp_exclude[0] == '1') {
                                     echo '<span class="exclude">';
                                 }
@@ -1153,7 +1153,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             echo '</td></tr>';
                         } else {
                             echo '<td></td><td><input type="radio" name="q' . $question . '" value="" /></td><td>';
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 if ($tmp_exclude[0] == '1') {
                                     echo '<span class="exclude">';
                                 }
@@ -1190,15 +1190,15 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                     if (isset($paper[$question]['user_answer']) and $paper[$question]['user_answer'] == $paper[$question]['correct'][0]) {
                         if ($paper[$question]['correct_fback'] != '') {
                                 echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-                                echo '<tr><td class="fback" colspan="4">' . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
+                                echo '<tr><td class="fback" colspan="4">' . nl2br((string) $paper[$question]['correct_fback']) . "</td></tr>\n";
                         }
                     } else {
                         if ($paper[$question]['incorrect_fback'] != '') {
                             echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-                            echo '<tr><td class="fback" colspan="4">' . nl2br($paper[$question]['incorrect_fback']) . "</td></tr>\n";
+                            echo '<tr><td class="fback" colspan="4">' . nl2br((string) $paper[$question]['incorrect_fback']) . "</td></tr>\n";
                         } elseif ($paper[$question]['correct_fback'] != '') {
                             echo "<tr><td class=\"fback\" colspan=\"4\">&nbsp;</td></tr>\n";
-                            echo '<tr><td class="fback" colspan="4">' . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
+                            echo '<tr><td class="fback" colspan="4">' . nl2br((string) $paper[$question]['correct_fback']) . "</td></tr>\n";
                         }
                     }
                 }
@@ -1253,7 +1253,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if ($tmp_exclude[0] == '1') {
                                 echo '<span class="exclude">';
                             }
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 echo $strong_on;
                                 echo $paper[$question]['option_text'][$tmp_part_id];
                                 echo "$strong_off<br />\n";
@@ -1264,7 +1264,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if (!empty($paper[$question]['o_media'][$tmp_part_id])) {
                                 $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], $paper[$question]['o_media_alt'][$tmp_part_id], '', true);
                                 $render->render($questiondata, $string, 'paper/media.html');
-                                if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and mb_substr($tmp_exclude, 0, 1) == '1') {
+                                if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) == '' and mb_substr($tmp_exclude, 0, 1) == '1') {
                                     echo '<span style="color:red">' . $string['isexcluded'] . '</span>';
                                 }
                             }
@@ -1278,7 +1278,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if ($tmp_exclude[0] == '1') {
                                 echo '<span class="exclude">';
                             }
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 echo $paper[$question]['option_text'][$tmp_part_id] . "<br />\n";
                             }
                             if ($tmp_exclude[0] == '1') {
@@ -1287,7 +1287,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if (!empty($paper[$question]['o_media'][$tmp_part_id])) {
                                 $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], $paper[$question]['o_media_alt'][$tmp_part_id], '', true);
                                 $render->render($questiondata, $string, 'paper/media.html');
-                                if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_exclude[0] == '1') {
+                                if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_exclude[0] == '1') {
                                     echo '<span style="color:red">' . $string['isexcluded'] . '</span>';
                                 }
                             }
@@ -1318,7 +1318,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if ($tmp_exclude[0] == '1') {
                                 echo '<span class="exclude">';
                             }
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 echo "$strong_on";
                                 echo $paper[$question]['option_text'][$tmp_part_id];
                                 echo "$strong_off</div><br />\n";
@@ -1329,7 +1329,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if (!empty($paper[$question]['o_media'][$tmp_part_id])) {
                                 $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], $paper[$question]['o_media_alt'][$tmp_part_id], '', true);
                                 $render->render($questiondata, $string, 'paper/media.html');
-                                if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_exclude[0] == '1') {
+                                if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_exclude[0] == '1') {
                                     echo '<span style="color:red">' . $string['isexcluded'] . '</span>';
                                 }
                             }
@@ -1346,7 +1346,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if ($tmp_exclude[0] == '1') {
                                 echo '<span class="exclude">';
                             }
-                            if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') {
+                            if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) != '') {
                                 echo $paper[$question]['option_text'][$tmp_part_id] . "<br />\n";
                             }
                             if ($tmp_exclude[0] == '1') {
@@ -1355,7 +1355,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                             if (!empty($paper[$question]['o_media'][$tmp_part_id])) {
                                   $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id], $paper[$question]['o_media_height'][$tmp_part_id], $paper[$question]['o_media_alt'][$tmp_part_id], '', true);
                                   $render->render($questiondata, $string, 'paper/media.html');
-                                if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_exclude[0] == '1') {
+                                if (trim((string) $paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_exclude[0] == '1') {
                                     echo '<span style="color:red">' . $string['isexcluded'] . '</span>';
                                 }
                             }
@@ -1381,7 +1381,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                     echo "<br />\n<div style=\"color:#808080\">" . $string['unanswered'] . "</div>\n";
                 }
                 if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-                    echo '<br /><div class="fback" style="margin-left:17px">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                    echo '<br /><div class="fback" style="margin-left:17px">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                 }
                 break;
             case 'sct':
@@ -1396,7 +1396,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                     echo "</div></td></tr>\n";
                 }
 
-                $sct_parts = explode('~', $paper[$question]['leadin']);
+                $sct_parts = explode('~', (string) $paper[$question]['leadin']);
                 echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
                 $sct_titles = [1 => $string['hypothesis'], 2 => $string['investigation'], 3 => $string['prescription'], 4 => $string['intervention'], 5 => $string['treatment']];
                 $sct_intros = [1 => $string['tdiagnosis'], 2 => $string['tinvestigation'], 3 => $string['tprescription'], 4 => $string['tintervention'], 5 => $string['ttreatment']];
@@ -1404,7 +1404,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<tr><td style="width:49%;">' . $sct_parts[0] . '</td><td style="width:2%">&nbsp;</td><td style="width:49%;">' . $sct_parts[1] . "</td></tr>\n";
                 echo '</table>';
 
-                echo "\n<br /><p><strong>" . $string['thenthis'] . ' ' . mb_strtolower($sct_titles[$paper[$question]['display_method']], 'UTF-8') . ' ' . $string['is'] . ":</strong></p>\n";
+                echo "\n<br /><p><strong>" . $string['thenthis'] . ' ' . mb_strtolower((string) $sct_titles[$paper[$question]['display_method']], 'UTF-8') . ' ' . $string['is'] . ":</strong></p>\n";
 
                 $max = -1;
                 $reviewers_total = 0;
@@ -1530,7 +1530,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 if ($tmp_display_feedback == '1') {
                     if ($paper[$question]['correct_fback'] != '') {
                         echo "<tr><td class=\"fback\" colspan=\"5\">&nbsp;</td></tr>\n";
-                        echo '<tr><td class="fback" colspan="5">' . nl2br($paper[$question]['correct_fback']) . "</td></tr>\n";
+                        echo '<tr><td class="fback" colspan="5">' . nl2br((string) $paper[$question]['correct_fback']) . "</td></tr>\n";
                     }
                 }
                 echo "</table>\n";
@@ -1693,13 +1693,13 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 if ($tmp_display_feedback == '1') {
                     if ($paper[$question]['mark'] > 0) {
                         if ($paper[$question]['correct_fback'] != '') {
-                                echo '<br /><div class="fback" style="margin-left:17px">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                                echo '<br /><div class="fback" style="margin-left:17px">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                         }
                     } else {
                         if ($paper[$question]['incorrect_fback'] != '') {
-                            echo '<br /><div class="fback" style="margin-left:17px">' . nl2br($paper[$question]['incorrect_fback']) . "</div>\n";
+                            echo '<br /><div class="fback" style="margin-left:17px">' . nl2br((string) $paper[$question]['incorrect_fback']) . "</div>\n";
                         } elseif ($paper[$question]['correct_fback'] != '') {
-                            echo '<br /><div class="fback" style="margin-left:17px">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                            echo '<br /><div class="fback" style="margin-left:17px">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                         }
                     }
                 }
@@ -1916,10 +1916,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
                 if ($tmp_display_feedback == '1') {
                     if (isset($paper[$question]['mark']) and $paper[$question]['mark'] != $paper[$question]['totalpos'] and $paper[$question]['incorrect_fback'] != '') {
-                        echo '<br /><div class="fback" style="margin-left:17px">' . nl2br($paper[$question]['incorrect_fback']) . "</div>\n";
+                        echo '<br /><div class="fback" style="margin-left:17px">' . nl2br((string) $paper[$question]['incorrect_fback']) . "</div>\n";
                     } else {
                         if ($paper[$question]['correct_fback'] != '') {
-                            echo '<br /><div class="fback" style="margin-left:17px">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                            echo '<br /><div class="fback" style="margin-left:17px">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                         }
                     }
                 }
@@ -1933,18 +1933,18 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo_content($paper[$question]['leadin']);
                 echo '<ol class="extmatch">';
                 $matching_scenarios = [];
-                $matching_scenarios = explode('|', $paper[$question]['scenario']);
+                $matching_scenarios = explode('|', (string) $paper[$question]['scenario']);
                 if (isset($paper[$question]['user_answer'])) {
                     $user_answers = explode('|', $paper[$question]['user_answer']);
                 } else {
                     $user_answers = ['','','','','','','','','','',''];
                 }
-                $correct_answers = explode('|', $paper[$question]['correct'][0]);
-                $matching_source = explode('|', $paper[$question]['q_media']);
-                $matching_width = explode('|', $paper[$question]['q_media_width']);
-                $matching_height = explode('|', $paper[$question]['q_media_height']);
-                $matching_alt = explode('|', $paper[$question]['q_media_alt']);
-                $matching_num = explode('|', $paper[$question]['q_media_num']);
+                $correct_answers = explode('|', (string) $paper[$question]['correct'][0]);
+                $matching_source = explode('|', (string) $paper[$question]['q_media']);
+                $matching_width = explode('|', (string) $paper[$question]['q_media_width']);
+                $matching_height = explode('|', (string) $paper[$question]['q_media_height']);
+                $matching_alt = explode('|', (string) $paper[$question]['q_media_alt']);
+                $matching_num = explode('|', (string) $paper[$question]['q_media_num']);
                 $matching_media_correct_fback = explode('|', $paper[$question]['correct_fback'] ?? '');
                 $matching_media_incorrect_fback = explode('|', $paper[$question]['incorrect_fback'] ?? '');
 
@@ -2174,11 +2174,11 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 break;
             case 'matrix':
                 $paper[$question]['mark'] = 0;
-                $matching_scenarios = explode('|', $paper[$question]['scenario']);
-                $matching_media = explode('|', $paper[$question]['q_media']);
-                $matching_media_width = explode('|', $paper[$question]['q_media_width']);
-                $matching_media_height = explode('|', $paper[$question]['q_media_height']);
-                $matching_media_alt = explode('|', $paper[$question]['q_media_alt']);
+                $matching_scenarios = explode('|', (string) $paper[$question]['scenario']);
+                $matching_media = explode('|', (string) $paper[$question]['q_media']);
+                $matching_media_width = explode('|', (string) $paper[$question]['q_media_width']);
+                $matching_media_height = explode('|', (string) $paper[$question]['q_media_height']);
+                $matching_media_alt = explode('|', (string) $paper[$question]['q_media_alt']);
                 $matching_media_correct_fback = explode('|', $paper[$question]['correct_fback'] ?? '');
                 $matching_media_incorrect_fback = explode('|', $paper[$question]['incorrect_fback'] ?? '');
                 if (isset($paper[$question]['user_answer'])) {
@@ -2186,7 +2186,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 } else {
                     $user_answers = [];
                 }
-                $correct_answers = explode('|', $paper[$question]['correct'][0]);
+                $correct_answers = explode('|', (string) $paper[$question]['correct'][0]);
                 echo_content($paper[$question]['leadin']);
                 if (!empty($matching_media[0])) {
                     echo '<div class="mediadiv">';
@@ -2269,7 +2269,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
 
                 if ($tmp_display_feedback == '1' and trim($paper[$question]['correct_fback'] ?? '') != '') {
-                    echo '<p class="fback">' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
+                    echo '<p class="fback">' . nl2br((string) $paper[$question]['correct_fback']) . "</p>\n";
                 }
 
                 if ($paper[$question]['score_method'] == 'Mark per Question') {
@@ -2285,7 +2285,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
                 break;
             case 'textbox':
-                $settings = json_decode($paper[$question]['settings'], true);
+                $settings = json_decode((string) $paper[$question]['settings'], true);
                 if ($paper[$question]['scenario'] != '') {
                     echo_scenario($paper[$question]['scenario'], $last_scenario);
                     if (!empty($paper[$question]['q_media'])) {
@@ -2331,7 +2331,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
 
                 if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
-                    echo '<p class="fback">' . nl2br($paper[$question]['correct_fback']) . "</p>\n";
+                    echo '<p class="fback">' . nl2br((string) $paper[$question]['correct_fback']) . "</p>\n";
                 }
 
                 if ($userObj->has_role(['Staff', 'Admin', 'SysAdmin'])) {
@@ -2370,7 +2370,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
 
                 $blank_details = [];
-                $blank_details = explode('[blank', $paper[$question]['option_text'][0]);
+                $blank_details = explode('[blank', (string) $paper[$question]['option_text'][0]);
                 $no_blanks = count($blank_details) - 1;
                 echo '<p>' . $blank_details[0];
                 $blank_count = 0;
@@ -2486,7 +2486,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
 
                 if ($tmp_display_feedback == '1' and $paper[$question]['correct_fback'] != '') {
-                    echo '<div class="fback">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                    echo '<div class="fback">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                 }
 
                 if ($paper[$question]['score_method'] == 'Mark per Question' and $have_answer) {
@@ -2503,7 +2503,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 $paper[$question]['mark'] = 0;
                 $paper[$question]['totalpos'] = 0;
                 $all_correct = true;
-                $parts = explode('|', $paper[$question]['correct'][0]);
+                $parts = explode('|', (string) $paper[$question]['correct'][0]);
                 if (isset($paper[$question]['user_answer'])) {
                     $ua_parts = explode('|', $paper[$question]['user_answer']);
                 }
@@ -2551,7 +2551,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
       data-image="<?php echo $tmp_image; ?>"
       data-image-width="<?php echo $paper[$question]['q_media_width']; ?>"
       data-image-height="<?php echo $paper[$question]['q_media_height']; ?>"
-      data-setup="<?php echo htmlentities(trim($paper[$question]['correct'][0])); ?>"
+      data-setup="<?php echo htmlentities(trim((string) $paper[$question]['correct'][0])); ?>"
       data-answer="<?php echo htmlentities(trim($paper[$question]['user_answer'] ?? '')); ?>"
       data-exclusions="<?php echo $tmp_exclude; ?>"
       ></div>
@@ -2575,13 +2575,13 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
 
                 if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-                    echo '<div class="fback">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                    echo '<div class="fback">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                 }
                 break;
             case 'labelling':
                 $correct_labels = [];
 
-                $tmp_first_split = explode(';', $paper[$question]['correct'][0]);
+                $tmp_first_split = explode(';', (string) $paper[$question]['correct'][0]);
                 $tmp_second_split = explode('$', $tmp_first_split[11]);
                 $label_count = 0;
                 $placeholders = 0;
@@ -2615,7 +2615,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 $tmp_labels = 0;
                 $max_col1 = 0;
                 $max_col2 = 0;
-                $tmp_first_split = explode(';', $paper[$question]['correct'][0]);
+                $tmp_first_split = explode(';', (string) $paper[$question]['correct'][0]);
                 $tmp_second_split = explode('|', $tmp_first_split[11]);
                 foreach ($tmp_second_split as $ind_label) {
                     $label_parts = explode('$', $ind_label);
@@ -2753,7 +2753,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
 
                 if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') {
-                    echo '<br /><div class="fback">' . nl2br($paper[$question]['correct_fback']) . "</div>\n";
+                    echo '<br /><div class="fback">' . nl2br((string) $paper[$question]['correct_fback']) . "</div>\n";
                 }
                 break;
             case 'flash':
@@ -2858,7 +2858,7 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
     // Check if module has ojbective mapping enabled.
     $display_objectives = 0;
     $module_details = module_utils::get_full_details_by_name($moduleID, $db);
-    if (mb_strpos($module_details['checklist'], 'mapping') !== false) {
+    if (mb_strpos((string) $module_details['checklist'], 'mapping') !== false) {
         $display_objectives = 1;
     }
 
@@ -2887,7 +2887,7 @@ function display_mapped_objectives($moduleID, $calendar_year, $paperID, $q_id, $
 function display_override($override, $string)
 {
     $configObject = Config::get_instance();
-    $date = date($configObject->get('cfg_long_date_php'), strtotime($override['date_marked']));
+    $date = date($configObject->get('cfg_long_date_php'), strtotime((string) $override['date_marked']));
     $html = " {$string['overriddenby']} {$override['title']} {$override['surname']} ({$date})";
 
     return $html;
@@ -3070,7 +3070,7 @@ function render_marking_data($string, $totalpos, $paperID, $question, $userID, $
         if ($reminder_html != '') {
             $html .= $reminder_html;
         }
-        if (trim($phase['comments']) != '') {
+        if (trim((string) $phase['comments']) != '') {
             $html .= '<div>' . $phase['comments'] . '</div>';
         }
         $html .= '<p class="mkpad"><span class="textmks">' . $phase['mark'] . ' ' . $string['outof'] .  ' ' . $totalpos . '</span></p>';

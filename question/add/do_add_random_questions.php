@@ -28,7 +28,7 @@ define('AJAX_REQUEST', true);
 require '../../include/staff_auth.inc';
 $questionsarray = [];
 $questions_to_add = param::required('questions_to_add', param::TEXT, param::FETCH_POST);
-$questions = explode(',', $questions_to_add);
+$questions = explode(',', (string) $questions_to_add);
 foreach ($questions as $item) {
     if ($item != '') {
         $stmt = $mysqli->prepare('SELECT leadin FROM questions WHERE q_id=?');
@@ -38,12 +38,12 @@ foreach ($questions as $item) {
         $stmt->fetch();
         $stmt->close();
 
-        $leadin = trim(strip_tags($leadin));
+        $leadin = trim(strip_tags((string) $leadin));
         $leadin = preg_replace('/\r\n/', ' ', $leadin);
-        if (mb_strlen($leadin) > 160) {
-            $leadin = mb_substr($leadin, 0, 160) . '...';
+        if (mb_strlen((string) $leadin) > 160) {
+            $leadin = mb_substr((string) $leadin, 0, 160) . '...';
         }
-        $questionsarray[$item] = addslashes($leadin);
+        $questionsarray[$item] = addslashes((string) $leadin);
     }
 }
 $mysqli->close();

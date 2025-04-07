@@ -126,8 +126,8 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
             case 'likert':
                 $unanswered = 0;
                 $old_size = mb_substr_count($old_likert_scale, '|');
-                $current_properties = explode('|', $old_display_method);
-                $new_size = mb_substr_count($old_display_method, '|');
+                $current_properties = explode('|', (string) $old_display_method);
+                $new_size = mb_substr_count((string) $old_display_method, '|');
                 $na = $current_properties[$new_size];
                 if ($old_likert_scale != $old_display_method or $table_on == 0) {
                     if ($table_on == 1) {
@@ -278,7 +278,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
         }
     } else {
         $tmp_ext_scenarios = explode('|', $scenario);
-        $tmp_answers_array = explode('|', $correct_buf[0]);
+        $tmp_answers_array = explode('|', (string) $correct_buf[0]);
         echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
         for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
             if ($tmp_ext_scenarios[$i - 1]) {
@@ -373,8 +373,8 @@ if ($hits > 0) {
             }
             if ($old_q_type == 'likert') {
                 $options_buffer['n/a'] = 'n/a';
-                $likert_properties = explode('|', $old_display_method);
-                for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
+                $likert_properties = explode('|', (string) $old_display_method);
+                for ($i = 1; $i <= mb_substr_count((string) $old_display_method, '|'); $i++) {
                     $options_buffer[$i] = $i;
                 }
             }
@@ -422,7 +422,7 @@ if ($hits > 0) {
             $correct_buffer = [];
         }
         if ($q_type == 'labelling') {
-            $tmp_first_split = explode(';', $correct);
+            $tmp_first_split = explode(';', (string) $correct);
             $tmp_second_split = explode('$', $tmp_first_split[8]);
             for ($label_no = 4; $label_no <= 43; $label_no += 4) {
                 if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
@@ -450,8 +450,8 @@ if ($hits > 0) {
 
     if ($old_q_type == 'likert') {
         $options_buffer['n/a'] = 'n/a';
-        $likert_properties = explode('|', $old_display_method);
-        for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
+        $likert_properties = explode('|', (string) $old_display_method);
+        for ($i = 1; $i <= mb_substr_count((string) $old_display_method, '|'); $i++) {
             $options_buffer[$i] = $i;
         }
     }

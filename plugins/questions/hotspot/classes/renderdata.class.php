@@ -108,19 +108,19 @@ class renderdata extends \questiondata
         if ($useranswer == 'u' and  $screen_pre_submitted == 1) {
             $this->unanswered = true;
             $this->cssclasses = ' unans';
-            $useranswer = mb_substr(str_repeat('u|', count(explode(\hotspot_helper::LAYER_SEPARATOR, $option['correct']))), 0, -1);
+            $useranswer = mb_substr(str_repeat('u|', count(explode(\hotspot_helper::LAYER_SEPARATOR, (string) $option['correct']))), 0, -1);
         } else {
             $this->unanswered = false;
         }
         // Adjust the height of the hotspot canvas based on the number of options available.
-        $hotspot_no = mb_substr_count($option['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1;
+        $hotspot_no = mb_substr_count((string) $option['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1;
         $tmp_height = $this->mediaheight + 30;
         if ($tmp_height < (($hotspot_no * 36) + 25)) {
             $tmp_height = (($hotspot_no * 36) + 25);
         }
-        $this->tmpcorrect = \hotspot_helper::get_instance()->correct_to_answer_mode(trim($option['correct']), $this->print);
+        $this->tmpcorrect = \hotspot_helper::get_instance()->correct_to_answer_mode(trim((string) $option['correct']), $this->print);
         if ($this->print) {
-            $this->labels = explode(\hotspot_helper::LAYER_SEPARATOR, $this->tmpcorrect);
+            $this->labels = explode(\hotspot_helper::LAYER_SEPARATOR, (string) $this->tmpcorrect);
         }
         $this->mediaheight = $tmp_height - 29;
         $mediadirectory = \rogo_directory::get_directory('media');
@@ -130,7 +130,7 @@ class renderdata extends \questiondata
             $this->useranswer = \hotspot_helper::get_instance()->answer_strip_correct_information(trim($useranswer));
             $this->screensubmitted = $screen_pre_submitted;
         }
-        if ($useranswer == '' or in_array('u', explode(\hotspot_helper::LAYER_SEPARATOR, $useranswer)) !== false) {
+        if ($useranswer == '' or in_array('u', explode(\hotspot_helper::LAYER_SEPARATOR, (string) $useranswer)) !== false) {
             $this->unanswered = true;
         } else {
             $this->unanswered = false;
@@ -139,7 +139,7 @@ class renderdata extends \questiondata
         if ($this->scoremethod == 'Mark per Question') {
             $marks = $option['markscorrect'];
         } else {
-            $marks = (mb_substr_count($option['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1) * $option['markscorrect'];
+            $marks = (mb_substr_count((string) $option['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1) * $option['markscorrect'];
         }
         $this->marks = $marks;
     }

@@ -235,7 +235,7 @@ function NX_ValidateXML(&$xml)
 
 function NX_StripBadTags($string)
 {
-    return strip_tags($string, '<pre><h1><h2><h3><h4><h5><h6><p><dl><ol><hr><ul><table><div><dd><dt><li><caption><col><colgroup><thead><tfoot><tr><td><th>');
+    return strip_tags((string) $string, '<pre><h1><h2><h3><h4><h5><h6><p><dl><ol><hr><ul><table><div><dd><dt><li><caption><col><colgroup><thead><tfoot><tr><td><th>');
 }
 
 function NX_ChangePreSetChars($string)

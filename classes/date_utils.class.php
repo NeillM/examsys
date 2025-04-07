@@ -63,11 +63,11 @@ class date_utils
      */
     public static function timedate_select($prefix, $imput_date, $split_time, $start_year, $end_year, $string)
     {
-        $split_year = mb_substr($imput_date, 0, 4);
-        $split_month = mb_substr($imput_date, 4, 2);
-        $split_day = mb_substr($imput_date, 6, 2);
-        $split_hour = mb_substr($imput_date, 8, 2);
-        $split_minute = mb_substr($imput_date, 10, 2);
+        $split_year = mb_substr((string) $imput_date, 0, 4);
+        $split_month = mb_substr((string) $imput_date, 4, 2);
+        $split_day = mb_substr((string) $imput_date, 6, 2);
+        $split_hour = mb_substr((string) $imput_date, 8, 2);
+        $split_minute = mb_substr((string) $imput_date, 10, 2);
 
         $html = '';
 
@@ -98,7 +98,7 @@ class date_utils
         $html .= '<select name="' . $prefix . 'month" id="' . $prefix . "month\">\n";
         $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
         for ($i = 0; $i < 12; $i++) {
-            $trans_month = mb_substr($string[$months[$i]], 0, 3, 'UTF-8');
+            $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
             if (($split_month - 1) == $i) {
                 if ($i < 9) {
                     $html .= '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";

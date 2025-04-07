@@ -70,7 +70,7 @@ function redirect($userObj, $q_id, $configObj, $db)
         header('Location: ' . $url, 303);
     } elseif (isset($_SESSION['nav_page'])) {
         // Replace scrOfY with POST param if set, otherwise remove cleanly
-        parse_str($_SESSION['nav_query'], $param_array);
+        parse_str((string) $_SESSION['nav_query'], $param_array);
         if (!is_null($scrOfY)) {
             $param_array['scrOfY'] = $scrOfY;
         } elseif (isset($param_array['scrOfY'])) {
@@ -256,7 +256,7 @@ HTML;
     } else {
         $html .= '<input type="submit" id="addbank" name="addbank" value="' . $string['addtobank'] . '" class="ok">';
 
-        if ($paper_id != -1 and mb_substr($paper_id, 0, 5) != 'list:') {
+        if ($paper_id != -1 and mb_substr((string) $paper_id, 0, 5) != 'list:') {
             $html .= '<input type="submit" id="addpaper" name="addpaper" value="' . $string['addtobankandpaper'] . '" class="ok">';
         }
     }

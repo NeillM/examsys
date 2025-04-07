@@ -98,11 +98,11 @@ class Rserve_Connection {
 	}
 
 	public static function autoload($name) {
-		$s = strtolower(substr($name, 0, 6));
+		$s = strtolower(substr((string) $name, 0, 6));
 		if ($s != 'rserve') {
 			return FALSE;
 		}
-		$s = substr($name, 7);
+		$s = substr((string) $name, 7);
 		$s = str_replace('_', '/', $s);
 		$s .= '.php';
 		require $s;
@@ -138,15 +138,15 @@ class Rserve_Connection {
 		}
 		$buf = '';
 		$n = socket_recv($socket, $buf, 32, 0);
-		if ($n < 32 || !str_starts_with($buf, 'Rsrv')) {
+		if ($n < 32 || !str_starts_with((string) $buf, 'Rsrv')) {
 			throw new Rserve_Exception('Invalid response from server.');
 		}
-		$rv = substr($buf, 4, 4);
+		$rv = substr((string) $buf, 4, 4);
 		if (strcmp($rv, '0103') != 0) {
 			throw new Rserve_Exception('Unsupported protocol version.');
 		}
 		for($i = 12; $i < 32; $i += 4) {
-			$attr = substr($buf, $i, $i + 4);
+			$attr = substr((string) $buf, $i, $i + 4);
 			if($attr == 'ARpt') {
 				$this->auth_request = TRUE;
 				$this->auth_method = 'plain';
@@ -215,7 +215,7 @@ class Rserve_Connection {
 	 */
 	private function command($command, $v) {
 		$pkt = _rserve_make_packet($command, $v);
-		socket_send($this->socket, $pkt, strlen($pkt), 0);
+		socket_send($this->socket, (string) $pkt, strlen((string) $pkt), 0);
 
 		// get response
 		$n = socket_recv($this->socket, $buf, 16, 0);

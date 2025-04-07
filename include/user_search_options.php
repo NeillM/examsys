@@ -35,7 +35,7 @@ $userID = check_var('userID', 'GET', false, false, true);
 
 <?php
 if (isset($_GET['search_surname'])) {
-    $search_surname = stripslashes($_GET['search_surname']);
+    $search_surname = stripslashes((string) $_GET['search_surname']);
 } else {
     $search_surname = '';
 }
@@ -181,13 +181,13 @@ if (isset($state['chkbox9']) and $state['chkbox9'] == 'true') {
 <br />
 
 <div style="text-align:center">
-    <?= ucfirst($string['show']) ?>
+    <?= ucfirst((string) $string['show']) ?>
     <select name="limit">
         <option>100</option>
         <option selected>1000</option>
         <option>10000</option>
     </select>
-    <?= mb_strtolower($string['results']) ?>
+    <?= mb_strtolower((string) $string['results']) ?>
 </div>
 
 <br />

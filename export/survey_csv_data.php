@@ -190,7 +190,7 @@ foreach ($log_array as $individual) {
             }
             switch ($paper_buffer[$i]['type']) {
                 case 'blank':
-                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|');
+                    $sections = mb_substr_count((string) $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|');
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';
@@ -199,7 +199,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'extmatch':
-                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
+                    $sections = mb_substr_count((string) $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                                 echo ',';
@@ -208,7 +208,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'matrix':
-                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
+                    $sections = mb_substr_count((string) $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';
@@ -217,7 +217,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'rank':
-                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], ',') + 1;
+                    $sections = mb_substr_count((string) $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], ',') + 1;
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';
@@ -226,7 +226,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'dichotomous':
-                    $sections = mb_strlen($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
+                    $sections = mb_strlen((string) $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';

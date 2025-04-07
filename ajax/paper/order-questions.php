@@ -185,7 +185,7 @@ function process_new($raw)
     $new_pos = 1;
 
     foreach ($raw as $item) {
-        if (mb_strpos($item, 'break') !== false) {
+        if (mb_strpos((string) $item, 'break') !== false) {
             $screen++;
         } else {
             $new_order[$item] = ['screen' => $screen, 'new_pos' => $new_pos];

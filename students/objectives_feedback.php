@@ -123,8 +123,8 @@ if ($result->num_rows == 0) {
 }
 $result->close();
 
-$start_seconds  = (mb_substr($started, 0, 2) * 60 * 60) + (mb_substr($started, 3, 2) * 60) + mb_substr($started, 6, 2);
-$updated        = (mb_substr($updated, 0, 2) * 60 * 60) + (mb_substr($updated, 3, 2) * 60) + mb_substr($updated, 6, 2);
+$start_seconds  = (mb_substr((string) $started, 0, 2) * 60 * 60) + (mb_substr((string) $started, 3, 2) * 60) + mb_substr((string) $started, 6, 2);
+$updated        = (mb_substr((string) $updated, 0, 2) * 60 * 60) + (mb_substr((string) $updated, 3, 2) * 60) + mb_substr((string) $updated, 6, 2);
 $time_spent     = $updated - $start_seconds;
 
 $result = $mysqli->prepare('SELECT username, title, initials, surname FROM users WHERE id = ?');

@@ -481,7 +481,7 @@ class Rserve_Parser {
 				while ($i < $eoa && ord($r[$i]) != 0) {
 					$i++;
 				}
-				$v =  substr($buf, $oi, $i - $oi);
+				$v =  substr((string) $buf, $oi, $i - $oi);
 				$a = new Rserve_REXP_Symbol();
 				$a->setValue($v);
 				break;
@@ -534,7 +534,7 @@ class Rserve_Parser {
 				$oi = $i;
 				while ($i < $eoa) {
 					if (ord($r[$i]) == 0) {
-						$v[] = substr($r, $oi, $i - $oi);
+						$v[] = substr((string) $r, $oi, $i - $oi);
 						$oi = $i + 1;
 					}
 					$i++;
@@ -560,7 +560,7 @@ class Rserve_Parser {
 			case self::XT_RAW: // raw vector
 				$len = int32($r, $i);
 				$i += 4;
-				$v = substr($r, $i, $len);
+				$v = substr((string) $r, $i, $len);
 				$a = new Rserve_REXP_Raw();
 				$a->setValue($v);
 				break;
@@ -705,7 +705,7 @@ class Rserve_Parser {
 							++$o;
 						}
 						$contents .= $v;
-						$o += strlen($v);
+						$o += strlen((string) $v);
 					} else {
 						$contents .= chr(255).chr(0);
 						$o += 2;

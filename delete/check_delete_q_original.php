@@ -47,7 +47,7 @@ $icons = ['formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'pe
 <body>
 
 <?php
-  $qIDs = mb_substr($_GET['q_id'], 1);
+  $qIDs = mb_substr((string) $_GET['q_id'], 1);
 
   // We need to check if the question is in a random block or a keyword block.
   // If so we should add those ids to qIDs to be search un the query below.

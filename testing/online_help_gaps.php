@@ -114,7 +114,7 @@ function create_page($language, $articleid, $page_details, $help_table, $db)
 
     $title = $page_details['title'];
     $body = $page_details['body'];
-    $body_plain = strip_tags($page_details['body']);
+    $body_plain = strip_tags((string) $page_details['body']);
     $type = $page_details['type'];
     $roles = $page_details['roles'];
     if ($help_table == 'staff_help') {

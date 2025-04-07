@@ -96,7 +96,7 @@ class RecycleBin
             $this->recycle_bin[$counter]['id'] = $id;
             $this->recycle_bin[$counter]['type'] = 'question';
             if ($q_type == 'sct') {
-                $parts = explode('~', $leadin_plain);
+                $parts = explode('~', (string) $leadin_plain);
                 $this->recycle_bin[$counter]['name'] = $parts[0];
             } else {
                 $this->recycle_bin[$counter]['name'] = $leadin_plain;

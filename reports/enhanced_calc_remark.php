@@ -231,7 +231,7 @@ foreach ($log_answers2 as $innerans) {
         $or_class = '';
         if (isset($overrides[$answer['id']])) {
             $new_type = $overrides[$answer['id']]['type'];
-            $reason = htmlentities($overrides[$answer['id']]['reason']);
+            $reason = htmlentities((string) $overrides[$answer['id']]['reason']);
             $or_class = ' class="overridden"';
         } else {
             // Populate with existing mark type

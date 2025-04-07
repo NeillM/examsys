@@ -65,7 +65,7 @@ if ($oldprefix != '') {
     $new_folder = $oldprefix . ';' . $new_folder;
 }
 
-if (mb_strtolower($new_folder) != mb_strtolower($oldfolder)) {
+if (mb_strtolower((string) $new_folder) != mb_strtolower((string) $oldfolder)) {
     $result = $mysqli->prepare('SELECT name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1');
     $result->bind_param('si', $new_folder, $userObject->get_user_ID());
     $result->execute();

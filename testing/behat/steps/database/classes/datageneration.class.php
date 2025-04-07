@@ -238,7 +238,7 @@ trait datageneration
         for ($i = 0; $i < $row['num_options']; $i++) {
             $needle = $i + 1;
 
-            if (array_search($needle, explode(',', $row['correct_options'])) !== false) {
+            if (array_search($needle, explode(',', (string) $row['correct_options'])) !== false) {
                 $correct = ($dichotomous) ? 't' : 'y';
             } else {
                 $correct = ($dichotomous) ? 'f' : 'n';
@@ -276,7 +276,7 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        $correct = explode(',', $row['correct_order']);
+        $correct = explode(',', (string) $row['correct_order']);
 
         for ($i = 0; $i < $row['num_options']; $i++) {
             $needle = $i + 1;
@@ -310,7 +310,7 @@ trait datageneration
         ];
         $row = $this->set_defaults_and_clean($defaults, $row);
 
-        $correct = explode(',', $row['experts']);
+        $correct = explode(',', (string) $row['experts']);
 
         $text = [
             'very unlikely',
@@ -427,7 +427,7 @@ trait datageneration
     private function decodeOptions($row): array
     {
         if (!empty($row['options'])) {
-            $values = json_decode($row['options'], true);
+            $values = json_decode((string) $row['options'], true);
         } else {
             $values = [];
         }
@@ -454,7 +454,7 @@ trait datageneration
     private function getCalcSettings(array $row): string
     {
         if (!empty($row['settings'])) {
-            $values = json_decode($row['settings'], true);
+            $values = json_decode((string) $row['settings'], true);
         } else {
             $values = [];
         }
@@ -487,7 +487,7 @@ trait datageneration
             'tolerance_full' => $row['tolerance_full'],
             'tolerance_partial' => $row['tolerance_partial'],
             // We need to decode any value sent to that it is not double encoded.
-            'vars' => json_decode($row['variables']) ?? $row['variables'],
+            'vars' => json_decode((string) $row['variables']) ?? $row['variables'],
             'marks_correct' => floatval($row['marks_correct']),
             'marks_incorrect' => floatval($row['marks_incorrect']),
             'marks_partial' => floatval($row['marks_partial']),
@@ -523,7 +523,7 @@ trait datageneration
     private function getTextBoxSettings(array $row): string
     {
         if (!empty($row['settings'])) {
-            $values = json_decode($row['settings'], true);
+            $values = json_decode((string) $row['settings'], true);
         } else {
             $values = [];
         }
@@ -631,7 +631,7 @@ trait datageneration
 
             // The SCT leadin is special. and contains multiple pices of information separated by a ~
             // The second part is for new information.
-            if (!str_contains($row['leadin'], '~')) {
+            if (!str_contains((string) $row['leadin'], '~')) {
                 $row['leadin'] .= '~';
             }
         }
@@ -693,7 +693,7 @@ trait datageneration
 
         if (!empty($row['options'])) {
             // Options should be json encoded.
-            $options = json_decode($row['options'], false);
+            $options = json_decode((string) $row['options'], false);
             if (is_array($options)) {
                 foreach ($options as $key => $option) {
                     $options[$key] = (object)$this->processOptionMedia((array)$option);

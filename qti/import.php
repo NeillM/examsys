@@ -119,7 +119,7 @@ $load_params->dir = $dir;
 $load_params->base_dir = $base_dir;
 
 // upload file
-$ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+$ext = pathinfo((string) $_FILES['file']['name'], PATHINFO_EXTENSION);
 $file = $base_dir . $dir . '/import.' . $ext;
 move_uploaded_file($_FILES['file']['tmp_name'], $file);
 

@@ -620,7 +620,7 @@ abstract class questiondata
                 } elseif ($question['q_option_order'] == 'alphabetic') {
                     $tmp_order_array = [];
                     for ($i = 0; $i < $option_no; $i++) {
-                        $tmp_order_array[$i] = mb_strtolower($question['options'][$i]['option_text']);
+                        $tmp_order_array[$i] = mb_strtolower((string) $question['options'][$i]['option_text']);
                     }
                     asort($tmp_order_array);
                     foreach ($tmp_order_array as $key => $value) {
@@ -634,7 +634,7 @@ abstract class questiondata
                 }
             } else {
                 // Set the order array to what is stored in the users log record
-                $question['option_order'] = explode(',', $user_order[$current_screen][$q_id]);
+                $question['option_order'] = explode(',', (string) $user_order[$current_screen][$q_id]);
             }
 
             // Re-arrange the options array

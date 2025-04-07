@@ -24,7 +24,7 @@
  */
 
 $mydata = [];
-$mydata = unserialize(urldecode($_GET['disdata']));
+$mydata = unserialize(urldecode((string) $_GET['disdata']));
 $max_frequency = 0;
 $TotalMarks = 0;
 $TotalStudents = 0;

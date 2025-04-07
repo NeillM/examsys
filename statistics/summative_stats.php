@@ -39,7 +39,7 @@ $breadcrumb = [
     $string['administrativetools'] => '../admin/index.php',
     $string['statistics'] => 'index.php',
 ];
-$lang['title'] .= ': ' . $current_year . '/' . (mb_substr($current_year, 2, 2) + 1);
+$lang['title'] .= ': ' . $current_year . '/' . (mb_substr((string) $current_year, 2, 2) + 1);
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/no_sidebar.html');
 $render->render_admin_content($breadcrumb, $lang);

@@ -194,7 +194,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db)
     $attempt = 1;
     $usern = $userObj->get_username();
     $contactemail = support::get_email();
-    if (stripos($usern, 'user') !== 0) {  // Do not check modules for guest accounts (e.g. user1...user100).
+    if (stripos((string) $usern, 'user') !== 0) {  // Do not check modules for guest accounts (e.g. user1...user100).
         if (count($moduleIDs) > 0) {
             $cal_year_sql = '';
             if ($calendar_year != '') {

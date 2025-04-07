@@ -137,7 +137,7 @@ while ($result->fetch()) {
   $max_cols_result->execute();
   $max_cols_result->bind_result($display_method);
 while ($max_cols_result->fetch()) {
-    $max_cols = mb_substr_count($display_method, '|');
+    $max_cols = mb_substr_count((string) $display_method, '|');
 }
 
   // Get the questions.
@@ -150,7 +150,7 @@ while ($max_cols_result->fetch()) {
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
 while ($result->fetch()) {
-    $cols = mb_substr_count($display_method, '|');
+    $cols = mb_substr_count((string) $display_method, '|');
     if (trim($theme ?? '') != '') {
         echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
     }
@@ -231,7 +231,7 @@ for ($i = 0; $i < count($labels); $i++) {
   <br />
   <blockquote>
   <div><strong><?php echo $string['feedback']; ?></strong></div>
-  <textarea name="feedback" id="feedback" style="border:1px solid #C0C0C0; width:100%" cols="60" rows="4"><?php echo stripslashes($feedback); ?></textarea>
+  <textarea name="feedback" id="feedback" style="border:1px solid #C0C0C0; width:100%" cols="60" rows="4"><?php echo stripslashes((string) $feedback); ?></textarea>
   </blockquote>
 <?php
   $mysqli->close();

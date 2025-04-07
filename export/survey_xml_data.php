@@ -177,7 +177,7 @@ foreach ($log_array as $individual) {
             case 'matching':
                 $sub_part = 1;
                 $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_question_ID];
-                $tmp_answers = explode('$', $log_array[$tmp_user_ID][$tmp_question_ID]);
+                $tmp_answers = explode('$', (string) $log_array[$tmp_user_ID][$tmp_question_ID]);
                 foreach ($tmp_answers as $individual_answer) {
                     echo "<question no=\"$Qno.$sub_part\">$individual_answer</question>\n";
                     $sub_part++;
@@ -217,10 +217,10 @@ foreach ($log_array as $individual) {
             case 'dichotomous':
             case 'mrq':
                 $sub_part = 1;
-                $chars = mb_strlen($log_array[$tmp_user_ID][$tmp_question_ID]);
+                $chars = mb_strlen((string) $log_array[$tmp_user_ID][$tmp_question_ID]);
                 for ($char_pos = 0; $char_pos < $chars; $char_pos++) {
                     echo "<question no=\"$Qno.$sub_part\">";
-                    echo mb_substr($log_array[$tmp_user_ID][$tmp_question_ID], $char_pos, 1);
+                    echo mb_substr((string) $log_array[$tmp_user_ID][$tmp_question_ID], $char_pos, 1);
                     echo "</question>\n";
                     $sub_part++;
                 }

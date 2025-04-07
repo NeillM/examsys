@@ -112,7 +112,7 @@ if (isset($_POST['save_changes'])) {
     }
 
     echo "</select>\n</td></tr></table>\n<br />\n";
-    echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD);
+    echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars((string) $page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD);
 
     // Check for lockout.
     $current_time = date('YmdHis');

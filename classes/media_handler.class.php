@@ -187,7 +187,7 @@ class media_handler
 
         $bad_file = true;   // Default safe.
         $mediadirectory = rogo_directory::get_directory('media');
-        $filename = mb_strtolower($_FILES[$fileID]['name']);
+        $filename = mb_strtolower((string) $_FILES[$fileID]['name']);
         $unique_name = self::unique_filename($filename);
         $fullpath = $mediadirectory->fullpath($unique_name);
 

@@ -99,7 +99,7 @@ $testresult->bind_result($user_id, $paper_id, $errors);
 // Log and email errors to support.
 $message = '';
 while ($testresult->fetch()) {
-    $errors = strip_tags($errors);
+    $errors = strip_tags((string) $errors);
     $message .= 'Failure: user - ' . $user_id . ', paper - ' . $paper_id . ', error - ' . $errors . "\n";
 }
 $testresult->close();

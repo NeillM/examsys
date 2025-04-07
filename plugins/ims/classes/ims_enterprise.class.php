@@ -643,7 +643,7 @@ class ims_enterprise
             $schoolid = $group->school;
         }
         $fullname = $group->full;
-        $academic_year_start = mb_substr($group->startdate, 0, 2) . '/' . mb_substr($group->startdate, -2, 2);
+        $academic_year_start = mb_substr((string) $group->startdate, 0, 2) . '/' . mb_substr((string) $group->startdate, -2, 2);
         $ebel_grid_template = 0;
         $modulecode = $group->modulecode;
 

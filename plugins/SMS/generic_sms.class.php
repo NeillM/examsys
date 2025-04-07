@@ -110,22 +110,22 @@ class GENERIC_SMS extends SmsUtils
     {
         $lookupdata = $this->get_module($moduleID, $mysqli);
         foreach ($lookupdata->students as $sms) {
-            $sms->Title = trim($sms->title);
-            $sms->Surname = trim($sms->surname);
-            $sms->Forename = trim($sms->firstname);
-            $sms->CourseCode = trim($sms->coursecode);
-            $sms->Username = trim($sms->username);
-            $sms->Email = trim($sms->email);
-            $sms->Gender = trim($sms->gender);
-            $sms->YearofStudy = trim($sms->yearofstudy);
-            $sms->StudentID = trim($sms->studentID);
+            $sms->Title = trim((string) $sms->title);
+            $sms->Surname = trim((string) $sms->surname);
+            $sms->Forename = trim((string) $sms->firstname);
+            $sms->CourseCode = trim((string) $sms->coursecode);
+            $sms->Username = trim((string) $sms->username);
+            $sms->Email = trim((string) $sms->email);
+            $sms->Gender = trim((string) $sms->gender);
+            $sms->YearofStudy = trim((string) $sms->yearofstudy);
+            $sms->StudentID = trim((string) $sms->studentID);
 
-            $lookup_username = trim($sms->username);
+            $lookup_username = trim((string) $sms->username);
 
             // Make sure we have a proper username - it can sometimes be blank in SATURN data
             if ($sms->email != '') {
                 // Try to extract from email address
-                $un_parts = explode('@', $sms->email);
+                $un_parts = explode('@', (string) $sms->email);
                 $lookup_username = $un_parts[0];
             }
             $users[$lookup_username] = [$sms->Title, $sms->Surname, $sms->Forename, $sms->CourseCode, $sms->Email, $sms->Gender, $sms->YearofStudy, $sms->StudentID];
@@ -256,17 +256,17 @@ class GENERIC_SMS extends SmsUtils
             }
         } else {
             foreach ($lookupdata->students as $sms) {
-                $sms->Title = trim($sms->title);
-                $sms->Surname = trim($sms->surname);
-                $sms->Forename = trim($sms->firstname);
-                $sms->CourseCode = trim($sms->coursecode);
-                $sms->Username = trim($sms->username);
-                $sms->Email = trim($sms->email);
-                $sms->Gender = trim($sms->gender);
-                $sms->YearofStudy = trim($sms->yearofstudy);
-                $sms->StudentID = trim($sms->studentID);
+                $sms->Title = trim((string) $sms->title);
+                $sms->Surname = trim((string) $sms->surname);
+                $sms->Forename = trim((string) $sms->firstname);
+                $sms->CourseCode = trim((string) $sms->coursecode);
+                $sms->Username = trim((string) $sms->username);
+                $sms->Email = trim((string) $sms->email);
+                $sms->Gender = trim((string) $sms->gender);
+                $sms->YearofStudy = trim((string) $sms->yearofstudy);
+                $sms->StudentID = trim((string) $sms->studentID);
 
-                $lookup_username = trim($sms->username);
+                $lookup_username = trim((string) $sms->username);
 
                 if ($lookup_username != '') {
                     if (isset($current_users[$lookup_username]['delete'])) {
@@ -296,7 +296,7 @@ class GENERIC_SMS extends SmsUtils
 
                         if ($student_data->num_rows == 0) {
                             // Going to have to create a whole new account for the user
-                            $names = explode(' ', $sms->firstname);
+                            $names = explode(' ', (string) $sms->firstname);
                             $initials = '';
                             foreach ($names as $tmp_name) {
                                 $initials .= $tmp_name[0];
@@ -346,9 +346,9 @@ class GENERIC_SMS extends SmsUtils
 
                     // Check to see if any details of the user account need updating.
 
-                    $new_roles = trim($sms->role);
+                    $new_roles = trim((string) $sms->role);
 
-                    $names = explode(' ', $sms->firstname);
+                    $names = explode(' ', (string) $sms->firstname);
                     $tmp_initials = '';
                     foreach ($names as $tmp_name) {
                         if (isset($tmp_name[0])) {

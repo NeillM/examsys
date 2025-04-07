@@ -70,7 +70,7 @@ class ParamSniff implements Sniff
             if ($tokens[$i]['code'] === T_CLASS) {
                 $className = $phpcsFile->findNext(T_STRING, $i);
                 $className = $tokens[$className]['content'];
-                if (mb_strtolower($className) === 'Param') {
+                if (mb_strtolower((string) $className) === 'Param') {
                     $inClass = true;
                 } else {
                     // We don't have nested classes.
@@ -79,7 +79,7 @@ class ParamSniff implements Sniff
             } elseif ($inClass === true and $tokens[$i]['code'] === T_FUNCTION) {
                 $funcName = $phpcsFile->findNext(T_STRING, $i);
                 $funcName = $tokens[$funcName]['content'];
-                if (mb_strtolower($funcName) === 'fetch') {
+                if (mb_strtolower((string) $funcName) === 'fetch') {
                     // This is valid.
                     return;
                 } else {

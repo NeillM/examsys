@@ -140,8 +140,8 @@ $result->bind_result($q_id, $theme, $leadin, $q_type);
 while ($result->fetch()) {
     echo "<li>$leadin";
 
-    if (mb_substr(mb_strtolower($leadin), -4) == '</p>') {
-    } elseif (mb_substr(mb_strtolower($leadin), -6) == '</div>') {
+    if (mb_substr(mb_strtolower((string) $leadin), -4) == '</p>') {
+    } elseif (mb_substr(mb_strtolower((string) $leadin), -6) == '</div>') {
         echo '<br />';
     } else {
         echo '<br /><br />';

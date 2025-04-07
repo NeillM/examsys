@@ -113,8 +113,8 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
         }
         $renderdata['orig_dis_readonly'] = $orig_dis_readonly;
         $renderdata['termscount'] = 0;
-        if (json_decode($terms) > 0) {
-            $renderdata['terms'] = array_filter(json_decode($terms), 'strlen');
+        if (json_decode((string) $terms) > 0) {
+            $renderdata['terms'] = array_filter(json_decode((string) $terms), 'strlen');
             $renderdata['termscount'] = count($renderdata['terms']);
         }
         $termsrender->render($renderdata, $string, 'edit.html');

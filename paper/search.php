@@ -75,7 +75,7 @@ if (isset($_POST['owner']) and $_POST['owner'] != '') {
     $owner = 'AND paper_ownerID = ?';
     $variables[] = $_POST['owner'];
     $params .= 'i';
-    setcookie('papersearch[2]', $_POST['owner'], ['expires' => time() + 60 * 60 * 24 * 365]);
+    setcookie('papersearch[2]', (string) $_POST['owner'], ['expires' => time() + 60 * 60 * 24 * 365]);
 } else {
     $owner = '';
     setcookie('papersearch[2]', '', ['expires' => time() + 60 * 60 * 24 * 365]);

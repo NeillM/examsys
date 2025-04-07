@@ -67,7 +67,7 @@ while ($result->fetch()) {
 $result->close();
 // Work out the scale.
 if ($q_type == 'likert') {
-    $parts = explode('|', $display_method);
+    $parts = explode('|', (string) $display_method);
     $columns = count($parts) - 1;
 } elseif ($q_type == 'mcq') {
     $parts = [];
@@ -152,7 +152,7 @@ $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_
 echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['student'] . '</strong> ' . $student_title . ' ' . \demo::demo_replace($student_surname, $demo) . ', ' . \demo::demo_replace($student_first_names, $demo) . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['group'] . '</strong> ' . $group . '</div></td><td width="160"><img src="' . $logo_path . '" width="160" height="67" alt="Logo" /></td></tr>';
 echo '</table>';
 echo "<br />\n<table border=\"0\" cellpadding=\"3\" cellspacing=\"0\" style=\"margin-left:auto; margin-right:auto\">\n";
-if (trim($paper_prologue) != '') {
+if (trim((string) $paper_prologue) != '') {
     echo '<tr><td colspan="' . (count($questions) + 2) . '">' . $paper_prologue . "</td></tr>\n";
     echo '<tr><td colspan="' . (count($questions) + 2) . "\">&nbsp;</td></tr>\n";
 }
@@ -194,7 +194,7 @@ function display_user($review_type, $q_type, $questions, $saved_results, $cfg_we
     if ($photoname and $display_photos == '1') {
         echo '<img class="photo" src="' . $photodirectory->url($photoname) . '" width="90" height="135" />';
     }
-    $first_names = explode(' ', $member_first_names);
+    $first_names = explode(' ', (string) $member_first_names);
     echo '</td><td class="title" colspan="' . ($columns + 1) . "\">$member_title " . \demo::demo_replace($first_names[0], $demo) . ' ' . \demo::demo_replace($member_surname, $demo) . "</td></tr>\n";
     echo '<tr><td></td>';
     if ($q_type == 'likert') {

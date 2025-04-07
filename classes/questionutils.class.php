@@ -117,7 +117,7 @@ class QuestionUtils
         $texteditorplugin = \plugins\plugins_texteditor::get_editor();
         // Check if editor has clean rule i.e. for equations.
         if ($texteditorplugin->clean_leadin($leadin)) {
-            $leadin = strip_tags($leadin);
+            $leadin = strip_tags((string) $leadin);
             if (mb_strlen($leadin) > $limit and $limit != 0) {
                 $leadin = mb_substr($leadin, 0, $limit) . '...';
             }
@@ -1067,7 +1067,7 @@ SQL;
                 if ($value === 'u' || $value === '') { // unanswered
                     $letters[] = 'u';
                 } else {
-                    if (!is_int($value) && ctype_digit($value)) {
+                    if (!is_int($value) && ctype_digit((string) $value)) {
                         $value = (int)$value;
                     } elseif (!is_int($value)) {
                         throw new coding_exception('Input datatype incorrect');
@@ -1083,7 +1083,7 @@ SQL;
             if ($data === 'u' || $data === '') { // unanswered
                 return 'u';
             }
-            if (!is_int($data) && ctype_digit($data)) {
+            if (!is_int($data) && ctype_digit((string) $data)) {
                 $data = (int)$data;
             } elseif (!is_int($data)) {
                 throw new coding_exception('Input datatype incorrect');

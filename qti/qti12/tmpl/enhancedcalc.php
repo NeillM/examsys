@@ -17,7 +17,7 @@
 
 require('header.php');
 
-$settingsdecoded = json_decode($question->settings, true);
+$settingsdecoded = json_decode((string) $question->settings, true);
 
 
 ?>

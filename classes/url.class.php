@@ -95,7 +95,7 @@ class Url implements \Stringable
             }
         }
 
-        $url = (isset($server['HTTPS']) && $server['HTTPS'] && !in_array(mb_strtolower($server['HTTPS']), ['off', 'no'])) ? 'https' : 'http';
+        $url = (isset($server['HTTPS']) && $server['HTTPS'] && !in_array(mb_strtolower((string) $server['HTTPS']), ['off', 'no'])) ? 'https' : 'http';
         $url .= '://' . $server['HTTP_HOST'];
         $url .= $server['REQUEST_URI'];
 
@@ -317,7 +317,7 @@ class Url implements \Stringable
         $query = [];
 
         foreach ($values as $name => $value) {
-            $query[] = sprintf('%s=%s', $name, urlencode($value));
+            $query[] = sprintf('%s=%s', $name, urlencode((string) $value));
         }
 
         $this->parts[static::QUERY] = implode('&', $query);

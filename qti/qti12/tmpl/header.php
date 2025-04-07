@@ -42,7 +42,7 @@ $cfg_web_root = $configObject->get('cfg_web_root');
 <?php endif; ?>
 <?php if (count($question->keywords) > 0) : ?>
     <?php foreach ($question->keywords as $keyword) : ?>
-        <?php if (trim($keyword) != '') : ?>
+        <?php if (trim((string) $keyword) != '') : ?>
             <qticomment><![CDATA[Keyword:<?php echo $keyword ?>]]></qticomment>
         <?php endif; ?>
     <?php endforeach; ?>

@@ -246,6 +246,6 @@ $mysqli->close();
 cli_utils::prompt('Ended at ' . date('H:i:s'));
 cli_utils::prompt($string['finished']);
 cli_utils::prompt($string['actionrequired']);
-cli_utils::prompt(htmlspecialchars_decode($string['readonly']));
+cli_utils::prompt(htmlspecialchars_decode((string) $string['readonly']));
 
 exit(0);

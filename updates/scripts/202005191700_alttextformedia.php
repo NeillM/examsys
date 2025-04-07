@@ -151,9 +151,9 @@ if ($updater_utils->check_version('7.2.0')) {
         $sqlmigrateselect->bind_result($qid, $qmedia, $qwidth, $qheight, $qowner);
         $sqlmigrateselect->store_result();
         while ($sqlmigrateselect->fetch()) {
-            $mediaarray = explode('|', $qmedia);
-            $widtharray  = explode('|', $qwidth);
-            $heightarray  = explode('|', $qheight);
+            $mediaarray = explode('|', (string) $qmedia);
+            $widtharray  = explode('|', (string) $qwidth);
+            $heightarray  = explode('|', (string) $qheight);
             $count = 0;
             foreach ($mediaarray as $media) {
                 if ($media != '') {

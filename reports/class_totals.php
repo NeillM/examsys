@@ -264,7 +264,7 @@ if ($paper_type == '2') {
 $metadata_cols = [];
 if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
-        if (mb_strrpos($key, 'meta_') !== false) {
+        if (mb_strrpos((string) $key, 'meta_') !== false) {
             $table_order[] = ucfirst(str_replace('meta_', '', $key));
             $metadata_cols[$key] = $key;
         }
@@ -331,13 +331,13 @@ for ($i = 0; $i < $user_no; $i++) {
     extract($user_results[$i]);
 
     if ($user_results[$i]['visible'] == 1) {
-        if (mb_strpos($user_results[$i]['username'], 'user') !== 0) {
+        if (mb_strpos((string) $user_results[$i]['username'], 'user') !== 0) {
             $reassign = 'n';
         } else {
             $reassign = 'y';
         }
 
-        if (mb_strpos($user_results[$i]['roles'], 'Staff') !== false) {
+        if (mb_strpos((string) $user_results[$i]['roles'], 'Staff') !== false) {
             $role_css = 'staff';
         } else {
             $role_css = '';
@@ -368,7 +368,7 @@ for ($i = 0; $i < $user_no; $i++) {
                 $scatter_data .= "0\n0\n";
                 $class = 'redln';
             } else {
-                if (mb_strpos($user_results[$i]['username'], 'user') === 0) {
+                if (mb_strpos((string) $user_results[$i]['username'], 'user') === 0) {
                     $class = 'guestln';
                 } else {
                     $class = 'greyln';
@@ -414,7 +414,7 @@ for ($i = 0; $i < $user_no; $i++) {
         }
 
         // Display the student names and any relevant note and icons.
-        if (mb_strpos($user_results[$i]['username'], 'user') === 0) {
+        if (mb_strpos((string) $user_results[$i]['username'], 'user') === 0) {
             echo "<td class=\"$class tmpacc $role_css\">Mr</td>";
             echo "<td class=\"$class tmpacc $role_css\">Guest</td>";
             echo "<td class=\"$class tmpacc $role_css\">" . str_replace('User', 'Account #', $user_results[$i]['surname']);
@@ -450,7 +450,7 @@ for ($i = 0; $i < $user_no; $i++) {
         echo '</td>';
 
         if ($user_results[$i]['student_id'] == '') {
-            if (mb_strpos($user_results[$i]['roles'], 'Staff') !== false) {
+            if (mb_strpos((string) $user_results[$i]['roles'], 'Staff') !== false) {
                 echo "<td class=\"grey $class $role_css\">&nbsp;</td>";
             } else {
                 echo "<td class=\"grey $class $role_css\">" . $string['unknown'] . '</td>';
@@ -569,7 +569,7 @@ if ($user_no > 0) {
     echo '<tr><td colspan="' . $cols . "\" height=\"9\"><table cellspacing=\"0\" cellpadding=\"2\">\n";
     foreach ($exam_announcements as $exam_announcement) {
         $msg = $exam_announcement['msg'];
-        if (mb_substr_count($msg, '<p>')) {
+        if (mb_substr_count((string) $msg, '<p>')) {
             $msg = str_replace('<p>', '', $msg);
             $msg = str_replace('</p>', '', $msg);
         }
@@ -580,10 +580,10 @@ if ($user_no > 0) {
 
     echo '<table border="0" class="subheading"><tr><td><nobr>' . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
-    echo '<div class="graph"><img src="draw_distribution_chart.php?adjust=' . mb_substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . '&q2=' . $stats['q2'] . '&q3=' . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></div>\n";
+    echo '<div class="graph"><img src="draw_distribution_chart.php?adjust=' . mb_substr((string) $marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . '&q2=' . $stats['q2'] . '&q3=' . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></div>\n";
 
     echo '<table border="0" class="subheading"><tr><td><nobr>' . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    echo '<div class="graph"><img src="draw_scatter_plot.php?adjust=' . mb_substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></div>\n";
+    echo '<div class="graph"><img src="draw_scatter_plot.php?adjust=' . mb_substr((string) $marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></div>\n";
 
 
     // Display summary -------------------------------------------------------------------------------------

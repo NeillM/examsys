@@ -112,7 +112,7 @@ if (!isset($_POST['submit'])) {
     }
     $display_pos++;                     // Add one to put new question right at the end.
 
-    $q_IDs = explode(',', $q_id);
+    $q_IDs = explode(',', (string) $q_id);
     for ($i = 1; $i < count($q_IDs); $i++) {
         $map_guid = [];
 
@@ -126,7 +126,7 @@ if (!isset($_POST['submit'])) {
 
             if (in_array($_GET['module'], array_keys($paper_modules))) {
                 if (isset($_POST['outcomes']) and $_POST['outcomes'] != '') {
-                    $outcomes = json_decode($_POST['outcomes'], true);
+                    $outcomes = json_decode((string) $_POST['outcomes'], true);
 
                     $mappings = $mysqli->prepare('SELECT question_id, obj_id FROM relationships WHERE question_id = ? AND idMod = ?');
                     $mappings->bind_param('ii', $q_IDs[$i], $_GET['module']);

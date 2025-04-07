@@ -25,7 +25,7 @@ require('header.php');
 <?php $respid = 1; ?>
 <?php foreach ($question->question as & $q) : ?>
     <?php // do we have a blank to output? ?>
-    <?php if (mb_substr($q, 0, 1) == '%') : ?>
+    <?php if (mb_substr((string) $q, 0, 1) == '%') : ?>
                     <response_label ident="rl<?php echo $respid ?>"/>
         <?php $respid++; ?>
         <?php // otherwise output the material ?>

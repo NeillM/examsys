@@ -157,7 +157,7 @@ class renderdata extends \questiondata
             $this->editorcolumns = $settings['columns'];
             $this->editorrows = $settings['rows'];
             $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-            $te = explode('_', $texteditorplugin->get_name());
+            $te = explode('_', (string) $texteditorplugin->get_name());
             $this->editor = $te[1];
             // We can override the enabled texteditor with plain/mathjax at the question level.
             if (isset($settings['editor'])) {

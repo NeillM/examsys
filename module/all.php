@@ -142,15 +142,15 @@ if ($userObject->has_role('SysAdmin')) {
   $results->execute();
   $results->bind_result($modID, $moduleid, $fullname);
 while ($results->fetch()) {
-    if ($old_letter !== mb_substr($moduleid, 0, 1)) {
+    if ($old_letter !== mb_substr((string) $moduleid, 0, 1)) {
         if ($module_block == true) {
             echo "</div>\n";
             $module_block = false;
         }
     }
-    if ($old_letter !== mb_substr($moduleid, 0, 1)) {
+    if ($old_letter !== mb_substr((string) $moduleid, 0, 1)) {
         if ($moduleid !== '') {
-            echo "<div class=\"sch\" id=\"$block_id\">" . mb_substr($moduleid, 0, 1) . "</div>\n";
+            echo "<div class=\"sch\" id=\"$block_id\">" . mb_substr((string) $moduleid, 0, 1) . "</div>\n";
         }
         if ($module_block == false) {
             echo "<div id=\"block$block_id\" style=\"display:none\">";
@@ -161,7 +161,7 @@ while ($results->fetch()) {
     if ($moduleid !== '') {
         echo "<div class=\"mod\" id=\"$modID\">$moduleid: $fullname</div>\n";
     }
-    $old_letter = mb_substr($moduleid, 0, 1);
+    $old_letter = mb_substr((string) $moduleid, 0, 1);
 }
   $results->close();
 
