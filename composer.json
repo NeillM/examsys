@@ -2,7 +2,7 @@
     "name": "uon/rogo",
     "config": {
         "platform": {
-            "php": "8.1"
+            "php": "8.3"
         }
     },
     "description": "ExamSys e-assessment",
@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.3",
         "slim/slim": "^4.0",
         "bshaffer/oauth2-server-php": "^1.10",
         "twig/twig": "^2.0",
