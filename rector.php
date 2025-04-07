@@ -30,7 +30,6 @@ use Rector\Config\RectorConfig;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
-use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnNeverTypeRector;
 
 return RectorConfig::configure()
@@ -96,6 +95,4 @@ return RectorConfig::configure()
         // We cannot use this rule as it detects properties that we modify more than one time as readonly.
         // The rule completely breaks the paper details page for example.
         ReadOnlyPropertyRector::class,
-        // Ignoring this rule temporarily to make a commit that is easier to review.
-        AddOverrideAttributeToOverriddenMethodsRector::class,
     ]);
