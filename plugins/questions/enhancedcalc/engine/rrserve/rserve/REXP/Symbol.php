@@ -23,13 +23,16 @@ class Rserve_REXP_Symbol extends Rserve_REXP implements \Stringable {
 		return $this->name;
 	}
 	
-	public function isSymbol() { return TRUE; }
+	#[\Override]
+    public function isSymbol() { return TRUE; }
 	
-	public function getType() {
+	#[\Override]
+    public function getType() {
 		return Rserve_Parser::XT_SYM;
 	}
 
-	public function toHTML() {
+	#[\Override]
+    public function toHTML() {
 	 return '<div class="rexp xt_'.$this->getType().'"><span class="typename">'.Rserve_Parser::xtName($this->getType()).'</span>'.$this->name.$this->attrToHTML().'</div>';	
 	}
 

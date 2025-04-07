@@ -80,6 +80,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
      * @return boolean Success or failure of the save operation
      * @throws ValidationException
      */
+    #[\Override]
     public function save($clear_checkout = true)
     {
         // Extract options into arrays for JSON encoding
@@ -457,6 +458,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
      * Get the source of marks data for this question, usually the first option
      * @return mixed The source of marks or false if none has yet been defined
      */
+    #[\Override]
     public function get_marks_source()
     {
         // For this question type this object will provide the marks data
@@ -484,6 +486,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
     /**
      * Unpack JSON string containing extra data into local fields
      */
+    #[\Override]
     protected function unserialize_settings()
     {
         $extra = json_decode((string) $this->settings, true);
@@ -634,6 +637,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
      * Validate the question object before saving
      * @return Mixed <boolean, string>
      */
+    #[\Override]
     protected function validate()
     {
         $rval = true;

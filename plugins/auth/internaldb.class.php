@@ -33,6 +33,7 @@ class internaldb_auth extends outline_authentication
     public $version = 1.0;
     private $updatable = false;
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];

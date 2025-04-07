@@ -15,7 +15,8 @@ class Rserve_REXP_Factor extends Rserve_REXP_Integer {
 	
 	protected $levels;
 	
-	public function isFactor() { return TRUE; }
+	#[\Override]
+    public function isFactor() { return TRUE; }
 	
 	public function getLevels() {
 		return $this->levels;
@@ -34,7 +35,8 @@ class Rserve_REXP_Factor extends Rserve_REXP_Integer {
 		return $r;
 	}
 	
-	public function getType() {
+	#[\Override]
+    public function getType() {
 		return Rserve_Parser::XT_FACTOR;
 	}
 	

@@ -151,6 +151,7 @@ class webServiceRestAPI extends restAPI
         return $tmp_userID;
     }
 
+    #[\Override]
     public function processRequest()
     {
         if (!isset($_GET['url'])) {

@@ -81,6 +81,7 @@ class log extends \log
      * @param boolean $studentonly flag to set student only filter
      * @return array
      */
+    #[\Override]
     public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false)
     {
         $user_list = [];
@@ -154,6 +155,7 @@ class log extends \log
      * @param boolean $studentonly flag to set student only filter
      * @return array
      */
+    #[\Override]
     public function get_assessment_data($paperid, $startdate, $enddate, $userlist, $course = '%', $studentonly = false)
     {
         $data = [];
@@ -259,6 +261,7 @@ class log extends \log
      * @param float $total_random_mark the total monkey mark for the paper
      * @return PaperList
      */
+    #[\Override]
     public function loadAttempts($paperID, $userID, $marking_style, $total_marks, $total_random_mark): PaperList
     {
         $prev_attempts = parent::loadAttempts($paperID, $userID, $marking_style, $total_marks, $total_random_mark);

@@ -48,6 +48,7 @@ class QuestionLABELLING extends QuestionEdit
      * @return boolean Success or failure of the save operation
      * @throws ValidationException
      */
+    #[\Override]
     public function save($clear_checkout = true)
     {
         // Make sure 'correct' value is set for option

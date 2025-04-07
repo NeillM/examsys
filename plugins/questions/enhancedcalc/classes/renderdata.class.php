@@ -104,6 +104,7 @@ class renderdata extends \questiondata
      * @param array $string language strings
      * @return void
      */
+    #[\Override]
     public function render_question($render, $string)
     {
         $question = $this->question;

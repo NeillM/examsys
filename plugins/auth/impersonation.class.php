@@ -36,6 +36,7 @@ class impersonation_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'checkwhattodo'], 'preauth', $this->number, $this->name];

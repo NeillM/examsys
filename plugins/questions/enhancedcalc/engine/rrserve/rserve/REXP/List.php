@@ -16,7 +16,8 @@ class Rserve_REXP_List extends Rserve_REXP_Vector implements ArrayAccess {
 	protected $names = [];
 	protected $is_named = FALSE;
 
-	public function setValues($values, $getNames = FALSE) {
+	#[\Override]
+    public function setValues($values, $getNames = FALSE) {
 		$names = NULL;
 		if( $getNames ) {
 			$names = array_keys($values);
@@ -58,7 +59,8 @@ class Rserve_REXP_List extends Rserve_REXP_Vector implements ArrayAccess {
 	 * Get the value for a given name entry, if list is not named, get the indexed element
 	 * @param string $name
 	 */
-	public function at($name) {
+	#[\Override]
+    public function at($name) {
 		if( $this->is_named ) {
 			$i = array_search($name, $this->names);
 			if($i < 0) {
@@ -82,7 +84,8 @@ class Rserve_REXP_List extends Rserve_REXP_Vector implements ArrayAccess {
 		return $this->values[$i];
 	}
 
-	public function isList() { return TRUE; }
+	#[\Override]
+    public function isList() { return TRUE; }
 
 
 	public function offsetExists($offset) {
@@ -105,7 +108,8 @@ class Rserve_REXP_List extends Rserve_REXP_Vector implements ArrayAccess {
 		throw new Exception('unset not implemented');
 	}
 
-	public function getType() {
+	#[\Override]
+    public function getType() {
 		if( $this->isNamed() ) {
 			return Rserve_Parser::XT_LIST_TAG;
 		} else {
@@ -113,7 +117,8 @@ class Rserve_REXP_List extends Rserve_REXP_Vector implements ArrayAccess {
 		}
 	}
 
-	public function toHTML() {
+	#[\Override]
+    public function toHTML() {
 		$is_named = $this->is_named;
 		$s = '<div class="rexp xt_'.$this->getType().'">';
 		$n = $this->length();

@@ -37,6 +37,7 @@ class RServeEngineTest extends EngineTest
      *
      * @return \plugins\questions\enhancedcalc\Engine
      */
+    #[\Override]
     protected function getEngine(): BaseEngine
     {
         // We failed to connect previously.
@@ -92,6 +93,7 @@ class RServeEngineTest extends EngineTest
      * @return void
      * @dataProvider dataCalculationCorrectAnsError
      */
+    #[\Override]
     public function testCalculationCorrectAnsError(array $variables, string $formula)
     {
         $engine = $this->getEngine();

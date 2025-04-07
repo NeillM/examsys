@@ -30,13 +30,16 @@ class Rserve_REXP_Raw extends Rserve_REXP {
 		return $this->value;
 	}
 	
-	public function  isRaw() { return TRUE; }
+	#[\Override]
+    public function  isRaw() { return TRUE; }
 	
-	public function getType() {
+	#[\Override]
+    public function getType() {
 		return Rserve_Parser::XT_RAW;
 	}
 	
-	public function toHTML() {
+	#[\Override]
+    public function toHTML() {
 		$s = strlen((string) $this->value) > 60 ? substr((string) $this->value,0,60).' (truncated)': $this->value;
 		return '<div class="rexp xt_'.$this->getType().'"> <span class="typename">raw</span><div class="value">'.$s.'</div>'.$this->attrToHTML().'</div>';	
 	}

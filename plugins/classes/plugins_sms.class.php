@@ -39,6 +39,7 @@ abstract class plugins_sms extends \plugins\plugins
      * Install steps for sms plugin.
      * @return bool true on success
      */
+    #[\Override]
     protected function type_install()
     {
         // Add external system to external systems table
@@ -49,6 +50,7 @@ abstract class plugins_sms extends \plugins\plugins
      * Uninstall steps for sms plugin.
      * @return bool true on success
      */
+    #[\Override]
     protected function type_uninstall()
     {
         $success = true;

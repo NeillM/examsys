@@ -30,6 +30,7 @@ class IE_qti_Load extends IE_Main
     /** @var string Debugging information. */
     public $debug;
 
+    #[\Override]
     public function Load($params)
     {
         global $string;

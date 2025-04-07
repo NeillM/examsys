@@ -78,6 +78,7 @@ class log extends \log
      * @param boolean $studentonly flag to set student only filter
      * @return array
      */
+    #[\Override]
     public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false)
     {
         // Intentionally blank.
@@ -95,6 +96,7 @@ class log extends \log
      * @param boolean $studentonly flag to set student only filter
      * @return array
      */
+    #[\Override]
     public function get_assessment_data($paperid, $startdate, $enddate, $user_list, $course = '%', $studentonly = false)
     {
         // Intentionally blank.

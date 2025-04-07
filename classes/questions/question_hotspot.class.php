@@ -49,6 +49,7 @@ class QuestionHOTSPOT extends QuestionEdit
      * Set the question leadin, stripping any carriage returns
      * @param string $value
      */
+    #[\Override]
     public function set_leadin($value)
     {
         $value = str_replace("\r\n", ' ', $value);

@@ -34,6 +34,7 @@ class OptionTEXTBOX extends OptionEdit
      * @param integer $index option number
      * @return boolean
      */
+    #[\Override]
     public function minimum_fields_exist($data, $files, $index)
     {
         $exist = ((isset($data["option_text$index"]) and $data["option_text$index"] != '') or (isset($data["option_correct$index"]) and $data["option_correct$index"] != ''));
@@ -45,6 +46,7 @@ class OptionTEXTBOX extends OptionEdit
      * Is this option blank?
      * @return boolean
      */
+    #[\Override]
     public function is_blank()
     {
         return ($this->text == '' and $this->correct == '');

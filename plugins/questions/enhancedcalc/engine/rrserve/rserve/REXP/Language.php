@@ -13,9 +13,11 @@
 */
 class Rserve_REXP_Language extends Rserve_REXP_List {
 	
-	public function isLanguage() { return TRUE; }
+	#[\Override]
+    public function isLanguage() { return TRUE; }
 	
-	public function getType() {
+	#[\Override]
+    public function getType() {
 		return Rserve_Parser::XT_LANG;
 	}
 	

@@ -44,6 +44,7 @@ class RemoteSummativeTimer extends Timer
      *
      * @return int
      */
+    #[\Override]
     protected function calculateExamDuration(): int
     {
         $exam_duration = parent::calculateExamDuration();

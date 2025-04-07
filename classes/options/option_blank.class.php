@@ -34,6 +34,7 @@ class OptionBLANK extends OptionEdit
      * @param integer $index option number
      * @return boolean
      */
+    #[\Override]
     public function minimum_fields_exist($data, $files, $index)
     {
         return (isset($data['option_text']) and $data['option_text'] != '');

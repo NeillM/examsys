@@ -292,6 +292,7 @@ class QuestionEXTMATCH extends QuestionEdit
      * Get the question media as an array containing filename, width and height
      * @return array
      */
+    #[\Override]
     public function get_media()
     {
         if ($this->media_source != '') {
@@ -322,6 +323,7 @@ class QuestionEXTMATCH extends QuestionEdit
      * Set the question scenario
      * @param string $value
      */
+    #[\Override]
     public function set_media($value)
     {
         $this->media_source = implode('|', $this->all_media_names);
@@ -336,6 +338,7 @@ class QuestionEXTMATCH extends QuestionEdit
      * Get the question scenario
      * @return string
      */
+    #[\Override]
     public function get_scenario()
     {
         if ($this->scenario != '') {
@@ -348,6 +351,7 @@ class QuestionEXTMATCH extends QuestionEdit
      * Set the question scenario
      * @param string $value
      */
+    #[\Override]
     public function set_scenario($value)
     {
         $this->scenario = implode('|', $this->stems);
@@ -357,6 +361,7 @@ class QuestionEXTMATCH extends QuestionEdit
      * Get the question correct feedback
      * @return string
      */
+    #[\Override]
     public function get_correct_fback()
     {
         if ($this->correct_fback != '') {
@@ -369,6 +374,7 @@ class QuestionEXTMATCH extends QuestionEdit
      * Set the question correct feedback
      * @param string $value
      */
+    #[\Override]
     public function set_correct_fback($value)
     {
         $this->correct_fback = implode('|', $this->all_feedback);
@@ -379,6 +385,7 @@ class QuestionEXTMATCH extends QuestionEdit
      *
      * @return string|bool
      */
+    #[\Override]
     protected function validate()
     {
         $return = parent::validate();

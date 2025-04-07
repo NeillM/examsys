@@ -43,6 +43,7 @@ class IE_Local_Load extends IE_Main
     public $params;
     public $statuses = [];
 
+    #[\Override]
     public function Load($params)
     {
         global $string;

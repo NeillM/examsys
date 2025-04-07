@@ -56,6 +56,7 @@ class rogo_test extends MinkContext
     /**
      * {@inheritdoc}
      */
+    #[\Override]
     public function locatePath($path)
     {
         // Get the base url for the site, ensure it has a trailing slash.

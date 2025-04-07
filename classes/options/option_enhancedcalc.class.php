@@ -46,6 +46,7 @@ class OptionENHANCEDCALC extends OptionEdit
      * @param int $option_number Index of this option
      * @return boolean
      */
+    #[\Override]
     public function save($option_number = 0)
     {
         $logger = new Logger($this->_mysqli);
@@ -80,6 +81,7 @@ class OptionENHANCEDCALC extends OptionEdit
      * Is this option blank?
      * @return boolean
      */
+    #[\Override]
     public function is_blank()
     {
         $this->get_text();
@@ -93,6 +95,7 @@ class OptionENHANCEDCALC extends OptionEdit
      * @param integer $index option number
      * @return boolean
      */
+    #[\Override]
     public function minimum_fields_exist($data, $files, $index)
     {
         return ((isset($data["option_min$index"]) and $data["option_min$index"] != '') or $data["option_formula$index"] != '');
@@ -330,6 +333,7 @@ class OptionENHANCEDCALC extends OptionEdit
      * @param mixed $new
      * @param string $field
      */
+    #[\Override]
     protected function track_change($logger, $option_number, $old, $new, $field)
     {
         $logger->track_change($this->_lang_strings['edit'] . ' ' . ucwords($field), $this->question_id, $this->_user_id, $old, $new, $this->_lang_strings['variable'] . chr(64 + $option_number));

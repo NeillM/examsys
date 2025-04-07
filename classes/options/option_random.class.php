@@ -29,6 +29,7 @@ class OptionRANDOM extends OptionEdit
      * Persist the object to the database
      * @return boolean Success or failure of the save operation
      */
+    #[\Override]
     public function save($option_number = 0)
     {
         $success = false;

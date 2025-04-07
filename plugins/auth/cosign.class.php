@@ -36,12 +36,14 @@ class cosign_auth extends outline_authentication
     public $version = 0.9;
     protected $cosign;
 
+    #[\Override]
     public function init($object)
     {
         parent::init($object);
         $this->cosign = new cosign($this->settings['cosign_cfg'], $this);
     }
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];

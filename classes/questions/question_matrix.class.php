@@ -69,6 +69,7 @@ class QuestionMATRIX extends QuestionEdit
      * Get the question scenario
      * @return string
      */
+    #[\Override]
     public function get_scenario()
     {
         if ($this->scenario != '') {
@@ -81,6 +82,7 @@ class QuestionMATRIX extends QuestionEdit
      * Set the question scenario
      * @param string $value
      */
+    #[\Override]
     public function set_scenario($value)
     {
         $this->scenario = implode('|', $this->stems);

@@ -51,6 +51,7 @@ class EnhancedCalc extends Question implements questionInterface
      * @param $array
      * @return void
      */
+    #[\Override]
     public function load($array)
     {
         parent::load($array);
@@ -77,6 +78,7 @@ class EnhancedCalc extends Question implements questionInterface
      * @param string|array $data An array of settings or json encoded settings.
      * @return void
      */
+    #[\Override]
     public function set_settings($data)
     {
         $this->settings = $data;

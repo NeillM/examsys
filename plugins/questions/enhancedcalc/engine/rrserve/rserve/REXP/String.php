@@ -13,9 +13,11 @@
 */
 class Rserve_REXP_String extends Rserve_REXP_Vector {
 
-	public function isString() { return true; }
+	#[\Override]
+    public function isString() { return true; }
 	
-	public function getType() {
+	#[\Override]
+    public function getType() {
 		return Rserve_Parser::XT_STR;
 	}
 	

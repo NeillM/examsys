@@ -64,6 +64,7 @@ class QuestionMRQ extends QuestionEdit
      * Get the question display method
      * @return string
      */
+    #[\Override]
     public function get_display_method()
     {
         return $this->display_method;
@@ -73,6 +74,7 @@ class QuestionMRQ extends QuestionEdit
      * Set the question display method
      * @param string $value
      */
+    #[\Override]
     public function set_display_method($value)
     {
         if ($value == $this->_answer_negative) {

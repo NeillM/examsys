@@ -34,6 +34,7 @@ class ltilogin_auth extends outline_authentication
     public $version = 0.9;
     protected $lti;
 
+    #[\Override]
     public function init($object)
     {
         parent::init($object);
@@ -46,6 +47,7 @@ class ltilogin_auth extends outline_authentication
         }
     }
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];

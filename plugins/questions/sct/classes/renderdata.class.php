@@ -79,6 +79,7 @@ class renderdata extends \questiondata
      * Return the base mark for the question type
      * @return int
      */
+    #[\Override]
     public function get_base_marks()
     {
         return 1;

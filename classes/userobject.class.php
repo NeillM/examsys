@@ -151,6 +151,7 @@ class UserObject extends RogoStaticSingleton
         self::$inst = null;
     }
 
+    #[\Override]
     public function error_handling($context = null)
     {
         return error_handling($this);

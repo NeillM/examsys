@@ -49,6 +49,7 @@ class OptionEXTMATCH extends OptionEdit
         $this->set_correct('dummy');
     }
 
+    #[\Override]
     public function get_correct()
     {
         $stems = explode('|', (string) $this->correct);
@@ -59,6 +60,7 @@ class OptionEXTMATCH extends OptionEdit
         return $this->correct;
     }
 
+    #[\Override]
     public function set_correct($value)
     {
         $stems = $this->_question->get_all_stems();

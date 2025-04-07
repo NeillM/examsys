@@ -33,6 +33,7 @@ class fixedlist_auth extends outline_authentication
     public $version = 0.9;
     private $updatable = false;
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];

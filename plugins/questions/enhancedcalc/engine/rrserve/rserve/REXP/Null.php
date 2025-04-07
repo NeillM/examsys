@@ -13,10 +13,13 @@
 */
 class Rserve_REXP_Null extends Rserve_REXP {
 	
-	public function isList() { return TRUE; }
-	public function isNull() { return TRUE; }
+	#[\Override]
+    public function isList() { return TRUE; }
+	#[\Override]
+    public function isNull() { return TRUE; }
 	
-	public function getType() {
+	#[\Override]
+    public function getType() {
 		return Rserve_Parser::XT_NULL;
 	}
 	

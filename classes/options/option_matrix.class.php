@@ -54,12 +54,14 @@ class OptionMATRIX extends OptionEdit
         $this->set_correct('dummy');
     }
 
+    #[\Override]
     public function get_correct()
     {
         $this->all_corrects = ($this->correct != '') ? explode('|', (string) $this->correct) : [];
         return $this->correct;
     }
 
+    #[\Override]
     public function set_correct($value)
     {
         $this->correct = implode('|', $this->all_corrects);

@@ -44,6 +44,7 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
         parent::__construct($config);
     }
 
+    #[\Override]
     public function connect()
     {
         $this->reset_error();
@@ -98,6 +99,7 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
         self::$cnx->evalString('excel_round <- function(x, digits) round(x*(1+1e-15), digits)');
     }
 
+    #[\Override]
     public function calculate_correct_ans($vars, $formula)
     {
         if (!$this->connect()) {
@@ -169,6 +171,7 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
         }
     }
 
+    #[\Override]
     public function get_error()
     {
         return $this->error_msg;
@@ -179,6 +182,7 @@ class Engine extends \plugins\questions\enhancedcalc\Engine
      *
      * @return string
      */
+    #[\Override]
     protected function piFormula(): string
     {
         return 'pi';

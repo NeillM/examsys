@@ -84,6 +84,7 @@ class IE_qti12_Load extends IE_Main
         ExplodeToArray($this->dich_values, $string['qmpyn']);
     }
 
+    #[\Override]
     public function Load($params)
     {
         global $string;

@@ -27,6 +27,7 @@ class ClockAnomaly extends Anomaly
     /**
      * inheritDoc
      */
+    #[\Override]
     public function getData(): array
     {
         return ['previous' => $this->data['previous'], 'current' => $this->data['current']];
