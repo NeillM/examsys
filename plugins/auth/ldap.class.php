@@ -141,7 +141,7 @@ class ldap_auth extends outline_authentication
         }
 
         if (isset($ldap_port)) {
-            $ldap = ldap_connect($ldap_server, $ldap_port);
+            $ldap = ldap_connect("{$ldap_server}:{$ldap_port}");
         } else {
             $ldap = ldap_connect($ldap_server);
         }

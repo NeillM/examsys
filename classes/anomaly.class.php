@@ -29,12 +29,12 @@ class Anomaly
     /**
     * Mail type
     */
-    private const MAILTYPE = 'anomaly';
+    private const string MAILTYPE = 'anomaly';
 
     /**
      * Language pack component
      */
-    private const LANGCOMPONENT = 'classes/anomaly';
+    private const string LANGCOMPONENT = 'classes/anomaly';
 
     /** @var int The database id of the anomaly. */
     public int $id;
