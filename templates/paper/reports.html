@@ -46,6 +46,15 @@ This template renders the reports page.
                         </div>
                     </div>
                     
+                    <div class="form-row">
+                        <label for="repcourse">{{ lang.course }}</label>
+                        <select name="repcourse" id="repcourse">
+                            {% for option in data.course_options %}
+                                <option value="{{ option.value }}">{{ option.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
                     <div class="form-actions">
                         <button type="submit" class="btn-primary">{{ lang.applyfilter }}</button>
                         <button type="reset" class="btn-secondary">{{ lang.resetfilter }}</button>
