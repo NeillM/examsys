@@ -23,8 +23,9 @@ This template renders the reports page.
 
 <div id="content">
     <h1>{{ lang.reports }}</h1>
-    <div class="reports-container">
-        <form id="reports-form" class="reports-form" autocomplete="off">
+    
+    <div id="stats_menu" class="stats_menu">
+        <form name="stats_menu" autocomplete="off">
             <div class="form-header">
                 <div class="form-bar"></div>
             </div>
@@ -32,6 +33,24 @@ This template renders the reports page.
                 <p>{{ lang.paperid }}: {{ data.paperID }}</p>
                 <p>{{ lang.papertitle }}: {{ data.paper_title }}</p>
                 <p>{{ lang.papertype }}: {{ data.paper_type }}</p>
+                
+                <div class="form-section">
+                    <h2>{{ lang.datefilter }}</h2>
+                    <div class="form-row">
+                        <label for="start_date">{{ lang.dates }}</label>
+                        <div class="date-range-container">
+                            {{ data.start_date_selector|raw }}
+                            <span class="date-separator">{{ lang.to }}</span>
+                            {{ data.end_date_selector|raw }}
+                            <span class="tooltip-icon" title="{{ lang.tooltip_daterange }}">tooltip</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">{{ lang.applyfilter }}</button>
+                        <button type="reset" class="btn-secondary">{{ lang.resetfilter }}</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
