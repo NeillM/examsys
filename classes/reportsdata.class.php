@@ -111,7 +111,8 @@ class ReportsData
             'paper_type' => $paperType,
             'start_date_selector' => $startDateSelector,
             'end_date_selector' => $endDateSelector,
-            'month_options' => $this->getMonthOptions()
+            'month_options' => $this->getMonthOptions(),
+            'course_options' => $this->getCourseOptions($paperID)
         ];
     }
 
@@ -134,6 +135,44 @@ class ReportsData
         }
 
         return $months;
+    }
+
+    /**
+     * Get course options for the report
+     *
+     * @param int $paperID Paper ID
+     * @return array Array of course options
+     */
+    public function getCourseOptions(int $paperID): array
+    {
+        $courses = [];
+        
+        // Add "Any Course" option
+        $courses[] = [
+            'value' => '%',
+            'text' => $this->string['anycourse']
+        ];
+        
+        // Get courses from database
+        $stmt = $this->db->prepare('SELECT DISTINCT student_grade, description 
+                                FROM log_metadata, courses 
+                                WHERE log_metadata.student_grade = courses.name 
+                                AND paperID = ? 
+                                ORDER BY student_grade');
+        $stmt->bind_param('i', $paperID);
+        $stmt->execute();
+        $stmt->bind_result($student_grade, $description);
+        
+        while ($stmt->fetch()) {
+            $courses[] = [
+                'value' => $student_grade,
+                'text' => "$student_grade: $description"
+            ];
+        }
+        
+        $stmt->close();
+        
+        return $courses;
     }
 
     /**
