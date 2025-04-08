@@ -84,28 +84,6 @@ class ReportsData
         // Calculate date ranges for the report
         $dateRanges = $this->calculateDateRanges($properties);
         
-        // Make sure we have the month language strings loaded
-        $month_keys = ['january', 'february', 'march', 'april', 'may', 'june',
-                      'july', 'august', 'september', 'october', 'november', 'december'];
-        
-        // Check if month strings are available in the language file
-        foreach ($month_keys as $month) {
-            if (!isset($this->string[$month])) {
-                // If not available, include the months language file
-                global $string;
-                if (file_exists(dirname(__DIR__) . '/lang/en/include/months.php')) {
-                    include_once(dirname(__DIR__) . '/lang/en/include/months.php');
-                    // Copy the global strings to our local string array
-                    foreach ($month_keys as $key) {
-                        if (isset($string[$key])) {
-                            $this->string[$key] = $string[$key];
-                        }
-                    }
-                }
-                break;
-            }
-        }
-        
         // Generate date selectors HTML
         $startDateSelector = date_utils::timedate_select(
             'start_', 
@@ -132,7 +110,8 @@ class ReportsData
             'paper_title' => $properties->get_paper_title(),
             'paper_type' => $paperType,
             'start_date_selector' => $startDateSelector,
-            'end_date_selector' => $endDateSelector
+            'end_date_selector' => $endDateSelector,
+            'month_options' => $this->getMonthOptions()
         ];
     }
 
