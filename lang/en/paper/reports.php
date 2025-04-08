@@ -33,3 +33,7 @@ $string['tooltip_daterange'] = 'Select a date range for your report';
 $string['datefilter'] = 'Date Filter';
 $string['applyfilter'] = 'Apply Filter';
 $string['resetfilter'] = 'Reset Filter';
+
+// Course and module filters
+$string['course'] = 'Course';
+$string['anycourse'] = 'Any Course';
