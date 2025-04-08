@@ -80,13 +80,174 @@ class ReportsData
     ): array {
         // Get paper type name
         $paperType = $properties->get_paper_type();
-
+        
+        // Calculate date ranges for the report
+        $dateRanges = $this->calculateDateRanges($properties);
+        
+        // Make sure we have the month language strings loaded
+        $month_keys = ['january', 'february', 'march', 'april', 'may', 'june',
+                      'july', 'august', 'september', 'october', 'november', 'december'];
+        
+        // Check if month strings are available in the language file
+        foreach ($month_keys as $month) {
+            if (!isset($this->string[$month])) {
+                // If not available, include the months language file
+                global $string;
+                if (file_exists(dirname(__DIR__) . '/lang/en/include/months.php')) {
+                    include_once(dirname(__DIR__) . '/lang/en/include/months.php');
+                    // Copy the global strings to our local string array
+                    foreach ($month_keys as $key) {
+                        if (isset($string[$key])) {
+                            $this->string[$key] = $string[$key];
+                        }
+                    }
+                }
+                break;
+            }
+        }
+        
+        // Generate date selectors HTML
+        $startDateSelector = date_utils::timedate_select(
+            'start_', 
+            date($dateRanges['default_start']), 
+            true, 
+            $dateRanges['start_year'], 
+            $dateRanges['end_year'], 
+            $this->string
+        );
+        
+        $endDateSelector = date_utils::timedate_select(
+            'end_', 
+            date($dateRanges['default_end']), 
+            true, 
+            $dateRanges['start_year'], 
+            $dateRanges['end_year'], 
+            $this->string
+        );
+        
         return [
             'paperID' => $paperID,
             'module' => $module,
             'folder' => $folder,
             'paper_title' => $properties->get_paper_title(),
-            'paper_type' => $paperType
+            'paper_type' => $paperType,
+            'start_date_selector' => $startDateSelector,
+            'end_date_selector' => $endDateSelector
+        ];
+    }
+
+    /**
+     * Get month options for date selectors
+     *
+     * @return array Array of month options
+     */
+    public function getMonthOptions(): array
+    {
+        $months = [];
+        $month_keys = ['january', 'february', 'march', 'april', 'may', 'june',
+                      'july', 'august', 'september', 'october', 'november', 'december'];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $months[] = [
+                'value' => $i,
+                'text' => $this->string[$month_keys[$i - 1]]
+            ];
+        }
+
+        return $months;
+    }
+
+    /**
+     * Calculate date ranges for the report based on paper properties
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array Date range information
+     */
+    private function calculateDateRanges(PaperProperties $properties): array
+    {
+        $date_array = getdate();
+        $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
+        $now_time = date('U', strtotime($now_data));
+        
+        // Calculate target start date
+        $target_start_date = $properties->get_start_date();
+        if (!is_null($target_start_date) && $target_start_date > $now_time) {
+            $target_start_date = $properties->get_created();
+        }
+        
+        // Calculate target end date
+        $target_end_date = $properties->get_end_date();
+        if (!is_null($target_end_date) && $target_end_date > $now_time) {
+            $target_end_date = $now_time;
+        }
+        
+        // Extract date components
+        $start_year = date('Y', $target_start_date);
+        $start_month = date('m', $target_start_date);
+        $start_day = date('d', $target_start_date);
+        $start_hour = date('H', $target_start_date);
+        $start_minute = date('i', $target_start_date);
+        
+        $end_year = date('Y', $target_end_date);
+        $end_month = date('m', $target_end_date);
+        $end_day = date('d', $target_end_date);
+        $end_hour = date('H', $target_end_date);
+        $end_minute = date('i', $target_end_date);
+        
+        // Adjust end date if it's in the future
+        if ($end_year > date('Y') || ($end_year == date('Y') && $end_month > date('m'))) {
+            $end_day = date('d');
+            $end_month = date('m');
+        }
+        
+        // Adjust start date if it's in the future
+        if ($start_year > $date_array['year']) {
+            $start_year = $date_array['year'];
+            $start_month = $date_array['mon'];
+            $start_day = $date_array['mday'];
+            $start_hour = $date_array['hours'];
+            $start_minute = $date_array['minutes'];
+        } elseif ($start_year == $date_array['year'] && intval($start_month) > $date_array['mon']) {
+            $start_month = $date_array['mon'];
+            $start_day = $date_array['mday'];
+            $start_hour = $date_array['hours'];
+            $start_minute = $date_array['minutes'];
+        } elseif ($start_year == $date_array['year'] && intval($start_month) == $date_array['mon'] && intval($start_day) > $date_array['mday']) {
+            $start_day = $date_array['mday'];
+            $start_hour = $date_array['hours'];
+            $start_minute = $date_array['minutes'];
+        }
+        
+        // Format default start and end dates
+        $default_start = $start_year . $start_month . $start_day . $start_hour . $start_minute . '00';
+        
+        // Adjust end date if it's in the future
+        if ($end_year > $date_array['year']) {
+            $end_year = $date_array['year'];
+            $end_month = $date_array['mon'];
+            $end_day = $date_array['mday'];
+        } elseif ($end_month > $date_array['mon'] && $end_year == $date_array['year']) {
+            $end_month = $date_array['mon'];
+            $end_day = $date_array['mday'];
+        } elseif ($end_day > $date_array['mday'] && $end_month == $date_array['mon'] && $end_year == $date_array['year']) {
+            $end_day = $date_array['mday'];
+        }
+        
+        // Ensure proper formatting for month and day
+        if ($end_month < 10 && strlen($end_month) == 1) {
+            $end_month = '0' . $end_month;
+        }
+        if ($end_day < 10 && strlen($end_day) == 1) {
+            $end_day = '0' . $end_day;
+        }
+        
+        $default_end = $end_year . $end_month . $end_day . $end_hour . $end_minute . '00';
+        
+        return [
+            'default_start' => $default_start,
+            'default_end' => $default_end,
+            'start_year' => 2001,
+            'end_year' => ($date_array['year'] + 1)
         ];
     }
 }
