@@ -37,3 +37,5 @@ $string['resetfilter'] = 'Reset Filter';
 // Course and module filters
 $string['course'] = 'Course';
 $string['anycourse'] = 'Any Course';
+$string['module'] = 'Module';
+$string['anymodule'] = 'Any Module';
