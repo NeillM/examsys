@@ -15,13 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Language strings for the reports page
- *
- * @author Iyud Dissanayake
- * @copyright Copyright (c) 2025 The University of Nottingham
- * @package
- */
+require_once $cfg_web_root . 'lang/' . $language . '/include/months.php';
 
 // Page title and headings
 $string['reports'] = 'Reports';
@@ -31,3 +25,11 @@ $string['reportspage'] = 'Reports Page';
 $string['paperid'] = 'Paper ID';
 $string['papertitle'] = 'Paper Title';
 $string['papertype'] = 'Paper Type';
+
+// Date functionality
+$string['dates'] = 'Dates';
+$string['to'] = 'to';
+$string['tooltip_daterange'] = 'Select a date range for your report';
+$string['datefilter'] = 'Date Filter';
+$string['applyfilter'] = 'Apply Filter';
+$string['resetfilter'] = 'Reset Filter';
