@@ -55,6 +55,17 @@ This template renders the reports page.
                         </select>
                     </div>
                     
+                    {% if data.paper_type != '3' %}
+                    <div class="form-row">
+                        <label for="repmodule">{{ lang.module }}</label>
+                        <select name="repmodule" id="repmodule">
+                            {% for option in data.module_options %}
+                                <option value="{{ option.value }}">{{ option.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    
                     <div class="form-actions">
                         <button type="submit" class="btn-primary">{{ lang.applyfilter }}</button>
                         <button type="reset" class="btn-secondary">{{ lang.resetfilter }}</button>

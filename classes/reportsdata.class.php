@@ -112,7 +112,8 @@ class ReportsData
             'start_date_selector' => $startDateSelector,
             'end_date_selector' => $endDateSelector,
             'month_options' => $this->getMonthOptions(),
-            'course_options' => $this->getCourseOptions($paperID)
+            'course_options' => $this->getCourseOptions($paperID),
+            'module_options' => $this->getModuleOptions($paperID, $paperType)
         ];
     }
 
@@ -173,6 +174,39 @@ class ReportsData
         $stmt->close();
         
         return $courses;
+    }
+
+    /**
+     * Get module options for the report
+     *
+     * @param int $paperID Paper ID
+     * @param string $paperType Paper type
+     * @return array Array of module options
+     */
+    public function getModuleOptions(int $paperID, string $paperType): array
+    {
+        if ($paperType == '3') {
+            return [];
+        }
+        
+        $modules = [];
+        
+        $modules[] = [
+            'value' => '',
+            'text' => $this->string['anymodule']
+        ];
+        
+        // Get modules from database using Paper_utils
+        $moduleIDs = Paper_utils::get_modules($paperID, $this->db);
+        
+        foreach ($moduleIDs as $modID => $modCode) {
+            $modules[] = [
+                'value' => $modID,
+                'text' => $modCode
+            ];
+        }
+        
+        return $modules;
     }
 
     /**
