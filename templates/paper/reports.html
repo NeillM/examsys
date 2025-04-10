@@ -45,7 +45,7 @@ This template renders the reports page.
                             <span class="tooltip-icon" title="{{ lang.tooltip_daterange }}">tooltip</span>
                         </div>
                     </div>
-                    
+                    <!-- course dropdown -->
                     <div class="form-row">
                         <label for="repcourse">{{ lang.course }}</label>
                         <select name="repcourse" id="repcourse">
@@ -54,7 +54,7 @@ This template renders the reports page.
                             {% endfor %}
                         </select>
                     </div>
-                    
+                    <!-- modle dropdown -->
                     {% if data.paper_type != '3' %}
                     <div class="form-row">
                         <label for="repmodule">{{ lang.module }}</label>
@@ -63,6 +63,22 @@ This template renders the reports page.
                                 <option value="{{ option.value }}">{{ option.text }}</option>
                             {% endfor %}
                         </select>
+                    </div>
+                    <!-- cohort dropdown -->
+                    <div class="form-row">
+                        <label for="direction">{{ lang.cohort }}</label>
+                        <div class="cohort-container">
+                            <select name="direction" id="direction">
+                                {% for option in data.direction_options %}
+                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="percent" id="percent">
+                                {% for option in data.percentage_options %}
+                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     {% endif %}
                     
