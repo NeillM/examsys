@@ -39,3 +39,9 @@ $string['course'] = 'Course';
 $string['anycourse'] = 'Any Course';
 $string['module'] = 'Module';
 $string['anymodule'] = 'Any Module';
+
+// Cohort filters
+$string['cohort'] = 'Cohort';
+$string['allcandidates'] = 'All candidates';
+$string['top'] = 'Top';
+$string['bottom'] = 'Bottom';
