@@ -45,6 +45,7 @@ This template renders the reports page.
                             <span class="tooltip-icon" title="{{ lang.tooltip_daterange }}">tooltip</span>
                         </div>
                     </div>
+                    
                     <!-- course dropdown -->
                     <div class="form-row">
                         <label for="repcourse">{{ lang.course }}</label>
@@ -54,6 +55,7 @@ This template renders the reports page.
                             {% endfor %}
                         </select>
                     </div>
+
                     <!-- modle dropdown -->
                     {% if data.paper_type != '3' %}
                     <div class="form-row">
@@ -64,6 +66,7 @@ This template renders the reports page.
                             {% endfor %}
                         </select>
                     </div>
+
                     <!-- cohort dropdown -->
                     <div class="form-row">
                         <label for="direction">{{ lang.cohort }}</label>
@@ -81,6 +84,28 @@ This template renders the reports page.
                         </div>
                     </div>
                     {% endif %}
+                    
+                    <!-- Checkbox options -->
+                    <div class="form-row checkbox-row">
+                        <div class="checkbox-container">
+                            <input type="checkbox" 
+                                   id="{{ data.absent_checkbox.id }}" 
+                                   name="{{ data.absent_checkbox.name }}" 
+                                   value="{{ data.absent_checkbox.value }}"
+                                   {% if data.absent_checkbox.checked %}checked{% endif %}>
+                            <label for="{{ data.absent_checkbox.id }}">{{ lang.incabsentcandidates }}</label>
+                        </div>
+                        
+                        <div class="checkbox-container">
+                            <input type="checkbox" 
+                                   id="{{ data.students_only_checkbox.id }}" 
+                                   name="{{ data.students_only_checkbox.name }}" 
+                                   value="{{ data.students_only_checkbox.value }}"
+                                   {% if data.students_only_checkbox.checked %}checked{% endif %}>
+                            <label for="{{ data.students_only_checkbox.id }}">{{ lang.studentsonly }}</label>
+                            <span class="tooltip-icon" title="{{ lang.tooltip_studentattempts }}">tooltip</span>
+                        </div>
+                    </div>
                     
                     <div class="form-actions">
                         <button type="submit" class="btn-primary">{{ lang.applyfilter }}</button>
