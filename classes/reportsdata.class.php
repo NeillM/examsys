@@ -115,7 +115,9 @@ class ReportsData
             'course_options' => $this->getCourseOptions($paperID),
             'module_options' => $this->getModuleOptions($paperID, $paperType),
             'direction_options' => $this->getCohortDirectionOptions(),
-            'percentage_options' => $this->getPercentageOptions()
+            'percentage_options' => $this->getPercentageOptions(),
+            'absent_checkbox' => $this->getAbsentCheckboxData(),
+            'students_only_checkbox' => $this->getStudentsOnlyCheckboxData()
         ];
     }
 
@@ -256,6 +258,39 @@ class ReportsData
         }
         
         return $options;
+    }
+
+    /**
+     * Get absent candidates checkbox data
+     *
+     * @return array Data for the absent candidates checkbox
+     */
+    public function getAbsentCheckboxData(): array
+    {
+        return [
+            'id' => 'absent',
+            'name' => 'absent',
+            'value' => '1',
+            'label' => $this->string['incabsentcandidates'],
+            'checked' => false
+        ];
+    }
+
+    /**
+     * Get students only checkbox data
+     *
+     * @return array Data for the students only checkbox
+     */
+    public function getStudentsOnlyCheckboxData(): array
+    {
+        return [
+            'id' => 'studentsonly',
+            'name' => 'studentsonly',
+            'value' => '1',
+            'label' => $this->string['studentsonly'],
+            'checked' => true, 
+            'tooltip' => $this->string['tooltip_studentattempts']
+        ];
     }
 
     /**
