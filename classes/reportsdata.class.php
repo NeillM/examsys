@@ -113,7 +113,9 @@ class ReportsData
             'end_date_selector' => $endDateSelector,
             'month_options' => $this->getMonthOptions(),
             'course_options' => $this->getCourseOptions($paperID),
-            'module_options' => $this->getModuleOptions($paperID, $paperType)
+            'module_options' => $this->getModuleOptions($paperID, $paperType),
+            'direction_options' => $this->getCohortDirectionOptions(),
+            'percentage_options' => $this->getPercentageOptions()
         ];
     }
 
@@ -207,6 +209,53 @@ class ReportsData
         }
         
         return $modules;
+    }
+
+    /**
+     * Get cohort direction options for the report
+     *
+     * @return array Array of direction options
+     */
+    public function getCohortDirectionOptions(): array
+    {
+        return [
+            [
+                'value' => 'asc',
+                'text' => $this->string['allcandidates'],
+                'selected' => true
+            ],
+            [
+                'value' => 'desc',
+                'text' => $this->string['top'],
+                'selected' => false
+            ],
+            [
+                'value' => 'asc',
+                'text' => $this->string['bottom'],
+                'selected' => false
+            ]
+        ];
+    }
+
+    /**
+     * Get percentage options for the report
+     *
+     * @return array Array of percentage options
+     */
+    public function getPercentageOptions(): array
+    {
+        $percentages = [1, 5, 10, 15, 25, 27, 33.3, 50, 100];
+        $options = [];
+        
+        foreach ($percentages as $percent) {
+            $options[] = [
+                'value' => $percent,
+                'text' => $percent . '%',
+                'selected' => ($percent == 100) 
+            ];
+        }
+        
+        return $options;
     }
 
     /**
