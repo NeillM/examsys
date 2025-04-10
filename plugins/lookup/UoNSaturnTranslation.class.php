@@ -34,6 +34,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup
     public $impliments_api_lookup_version = 1;
     public $version = 0.9;
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'usertranslatelookup'], 'usertranslatelookup', $this->number, $this->name];

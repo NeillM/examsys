@@ -33,6 +33,7 @@ class OptionAREA extends OptionEdit
      * Is this option blank?
      * @return boolean
      */
+    #[\Override]
     public function is_blank()
     {
         return ($this->correct == '');
@@ -45,6 +46,7 @@ class OptionAREA extends OptionEdit
      * @param integer $index option number
      * @return boolean
      */
+    #[\Override]
     public function minimum_fields_exist($data, $files, $index)
     {
         return true;
@@ -53,6 +55,7 @@ class OptionAREA extends OptionEdit
     /**
      * @param string $value
      */
+    #[\Override]
     public function set_correct($value)
     {
         if (mb_strpos($value, ';') !== false) {

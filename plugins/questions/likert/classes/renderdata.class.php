@@ -30,6 +30,15 @@ class renderdata extends \questiondata
     use \defaultgetmarks;
 
     /**
+     * @var bool
+     */
+    public $displaylikertnotes;
+    /**
+     * @var bool
+     */
+    public $displaylikertscenario;
+
+    /**
      * Na option state
      * @var integer
      */

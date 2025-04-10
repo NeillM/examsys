@@ -36,6 +36,7 @@ class ldap_auth extends outline_authentication
     public $version = 0.9;
     private $createnewuserassociation = false;
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];
@@ -141,7 +142,7 @@ class ldap_auth extends outline_authentication
         }
 
         if (isset($ldap_port)) {
-            $ldap = ldap_connect($ldap_server, $ldap_port);
+            $ldap = ldap_connect("{$ldap_server}:{$ldap_port}");
         } else {
             $ldap = ldap_connect($ldap_server);
         }

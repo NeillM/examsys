@@ -29,7 +29,9 @@ require_once dirname(__DIR__) . '/include/path_functions.inc.php';
 
 class OptionEdit extends RogoObject
 {
+    public $langstrings;
     public $id = -1;
+    public $marks;
     protected $question_id = null;
     protected $text = '';
     /** @var int media file id. */

@@ -27,6 +27,7 @@
  */
 class Lookup extends RogoStaticSingleton
 {
+    public $settings;
     public static $inst = null;
     public static $class_name = 'Lookup';
 
@@ -70,6 +71,7 @@ class Lookup extends RogoStaticSingleton
         $this->db = null;
     }
 
+    #[\Override]
     public static function get_instance($config = null, $db = null)
     {
         //some objects are global and need parameters these are constructed using
@@ -160,6 +162,7 @@ class Lookup extends RogoStaticSingleton
     /**
      * error handling function
      */
+    #[\Override]
     public function error_handling($context = null)
     {
         $context1 = [];

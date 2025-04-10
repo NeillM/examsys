@@ -144,6 +144,7 @@ class QuestionLIKERT extends QuestionEdit
      * Get the question display method, populating pseudo-properties as we go
      * @return string
      */
+    #[\Override]
     public function get_display_method()
     {
         if ($this->display_method != '') {
@@ -158,6 +159,7 @@ class QuestionLIKERT extends QuestionEdit
      * Set the display method for the question - this is a composite of decimals, tolerance and units
      * @param unknown_type $value This value is unused.
      */
+    #[\Override]
     public function set_display_method($value)
     {
         $this->display_method = $this->scale_type . '|' . $this->not_applicable;

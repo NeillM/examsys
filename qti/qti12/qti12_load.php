@@ -25,6 +25,11 @@
 
 class IE_qti12_Load extends IE_Main
 {
+    /**
+     * @var never[]|string[]
+     */
+    public $ll;
+    public $params;
     public $likert_values = [];
     public $dich_values = [];
     public $abstainvalues = [];
@@ -84,6 +89,7 @@ class IE_qti12_Load extends IE_Main
         ExplodeToArray($this->dich_values, $string['qmpyn']);
     }
 
+    #[\Override]
     public function Load($params)
     {
         global $string;

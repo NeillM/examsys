@@ -54,3 +54,5 @@ $string['hour'] = 'hour';
 $string['hours'] = 'hours';
 $string['minute'] = 'minute';
 $string['minutes'] = 'minutes';
+
+$string['na'] = 'N/A';

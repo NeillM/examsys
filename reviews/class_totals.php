@@ -359,7 +359,7 @@ for ($i = 0; $i < $user_no; $i++) {
   fclose($scatter_file);
 
   $distribution_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');   // Distribution data
-  fwrite($distribution_file, serialize($distribution) . "\n");
+  fwrite($distribution_file, serialize($distribution));
   fclose($distribution_file);
 
 if ($user_no > 0) {

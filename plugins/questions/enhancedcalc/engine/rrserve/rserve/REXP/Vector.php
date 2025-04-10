@@ -26,6 +26,7 @@ class Rserve_REXP_Vector extends Rserve_REXP {
 		return( count($this->values) );
 	}
 
+	#[\Override]
 	public function isVector() {
 		return true;
 	}
@@ -46,10 +47,12 @@ class Rserve_REXP_Vector extends Rserve_REXP {
 		return $this->values[$index];
 	}
 
+	#[\Override]
 	public function getType() {
 		return Rserve_Parser::XT_VECTOR;
 	}
 
+	#[\Override]
 	public function toHTML() {
 		$s = '<div class="rexp vector xt_'.$this->getType().'">';
 		$n = $this->length();

@@ -98,6 +98,11 @@ class ST_Question_Calculation extends ST_Question
     public $tolerance = 0;
     public $feedback;
     public $settings = [];
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
+    public $q_type;
+    public $origleadin;
 }
 
 class ST_Question_enhancedcalc extends ST_Question_Calculation
@@ -180,6 +185,9 @@ class STQ_Hotspot_Spot implements \Stringable
 {
     public $type;
     public $coords = [];
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
 
     public function __toString(): string
     {
@@ -203,6 +211,7 @@ class ST_Question_Info extends ST_Question
 
 class STQ_Labelling_Label implements \Stringable
 {
+    public $matches;
     public $tag;
     public $left;
     public $top;
@@ -250,6 +259,9 @@ class ST_Question_Labelling extends ST_Question
 
     public $arrows = []; // array of STQ_Labelling_Arrow
     public $labels = [];
+    public $marks_correct;
+    public $marks_incorrect;
+    public $marks_partial;
 
     // raw labeling option text for rogo->qti->rogo
     public $raw_option = '';
@@ -380,6 +392,7 @@ class ST_Question_Rank extends ST_Question
     public $options = []; // array of STQ_Rank_Options, key as option no
     public $fb_correct;
     public $fb_incorrect;
+    public $optlist;
 }
 
 class ST_Question_Textbox extends ST_Question
@@ -391,6 +404,13 @@ class ST_Question_Textbox extends ST_Question
     public $marks = 1;
     public $feedback = '';
     public $terms = []; // array of strings
+    public $marks_correct;
+    public $marks_incorrect;
+}
+
+class ST_Question_Area extends ST_Question
+{
+    // NO EXTENSIONS
 }
 
 class ST_Question_Sct extends ST_Question

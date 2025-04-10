@@ -27,6 +27,11 @@ require_once dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_S
 
 class Database
 {
+    /**
+     * @var array{field: mixed, value: mixed, type: mixed}[]
+     */
+    public $sets;
+    public $limit_offset;
     public $type = 'SELECT';
     public $table = '';
     public $table_alias = '';

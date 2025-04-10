@@ -28,10 +28,15 @@
 
 class IE_qti12_Save extends IE_Main
 {
+    /**
+     * @var never[]|string[]
+     */
+    public $ll;
     public $data;
     public $params;
 
     // main save function
+    #[\Override]
     public function Save($params, &$data)
     {
         global $string;

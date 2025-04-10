@@ -26,6 +26,7 @@
  */
 class RAF
 {
+    public $notice;
     private $properties;
     private $userID;
     private $media = [];

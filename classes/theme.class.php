@@ -35,6 +35,7 @@ class theme extends rogo_directory
         return \date_utils::DAYSECS;
     }
 
+    #[\Override]
     public function authentication_required()
     {
         return false;

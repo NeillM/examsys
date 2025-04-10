@@ -61,7 +61,7 @@ function explode_no_empty($delimiter, $string)
  */
 function StripForTitle($in)
 {
-    $in = trim($in);
+    $in = trim((string) $in);
     $in = strip_tags($in);
     $in = str_ireplace("\n", ' ', $in);
     $in = str_ireplace("\r", ' ', $in);

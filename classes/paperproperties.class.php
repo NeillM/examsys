@@ -25,6 +25,8 @@
  */
 class PaperProperties
 {
+    public $rogo_format_start_date;
+    public $rogo_format_end_date;
     /** @var null @var ConfigObject The ExamSys configuration. */
     private $configObject;
 

@@ -43,6 +43,18 @@ use plugins\ims\ims_enterprise_roles;
  */
 class ims_enterprise
 {
+    public $schoolsource;
+    public $facultysource;
+    public $programmesource;
+    public $prevtime;
+    public $prevmd5;
+    public $prevpath;
+    public $sourcedidfailback;
+    public $fixcaseusernames;
+    public $fixcasenames;
+    public $deleteusers;
+    public $createusers;
+    public $capitafix;
     /**
      * @var string Language pack component.
      */

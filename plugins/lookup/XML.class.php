@@ -33,6 +33,7 @@ class XML_lookup extends outline_lookup
     public $impliments_api_lookup_version = 1;
     public $version = 0.9;
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'userlookup'], 'userlookup', $this->number, $this->name];
@@ -41,6 +42,7 @@ class XML_lookup extends outline_lookup
     }
 
     //need function to register the extracallback
+    #[\Override]
     public function register_callback_sections()
     {
         //this is blank so that classes that dont register anything dont break

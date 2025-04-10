@@ -29,6 +29,8 @@ $configObject = Config::get_instance();
 
 class outline_lookup
 {
+    public $session;
+    public $request;
     protected $form;
     protected $settings;
     protected $db;

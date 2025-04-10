@@ -41,6 +41,7 @@ class updaterutilstest extends unittestdatabase
     /**
      * Do some setup for the tests.
      */
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
@@ -51,6 +52,7 @@ class updaterutilstest extends unittestdatabase
     /**
      * Clean up.
      */
+    #[\Override]
     public function tearDown(): void
     {
         $this->updateutil = null;

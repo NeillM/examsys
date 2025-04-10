@@ -25,6 +25,7 @@
  */
 class Exclusion
 {
+    public $excluded;
     /**
      * Called when the object is unserialised.
      */

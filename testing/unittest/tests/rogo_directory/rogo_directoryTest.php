@@ -43,6 +43,7 @@ class rogo_directorytest extends unittestdatabase
     /** @var string The url we will use for ExamSys for these tests. */
     protected $webroot = 'htttp://www.example.com/';
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
@@ -51,6 +52,7 @@ class rogo_directorytest extends unittestdatabase
         $this->config->set('cfg_root_path', $this->webroot);
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         $this->rogodirectory = null;

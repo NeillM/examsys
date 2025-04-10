@@ -32,6 +32,7 @@ class loginformfields_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
+    #[\Override]
     public function register_callback_routines()
     {
         // maybe need to think of some function that will fail the auth if not received the data in the field?

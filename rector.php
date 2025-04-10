@@ -26,6 +26,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodeQuality\Rector\Class_\CompleteDynamicPropertiesRector;
 use Rector\Config\RectorConfig;
 use Rector\Php71\Rector\FuncCall\RemoveExtraParametersRector;
 use Rector\Php81\Rector\Array_\FirstClassCallableRector;
@@ -77,7 +78,10 @@ return RectorConfig::configure()
     ])
     ->withRootFiles()
     ->withFileExtensions(['php', 'inc'])
-    ->withPhpSets(php81: true)
+    ->withPhpSets(php83: true)
+    ->withRules([
+        CompleteDynamicPropertiesRector::class,
+    ])
     ->withSkip([
         // We cannot run this rule because it breaks ExamSys.
         // We have several functions with the same name, but using different numbers of parameters.

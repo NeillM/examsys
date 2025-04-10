@@ -40,6 +40,8 @@ Czech Republic
 
 class cosign
 {
+    public $parent;
+    public $settings;
     private $cosign_log;
 
     public function __construct(private $cosign_cfg, &$parent)

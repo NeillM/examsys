@@ -30,6 +30,11 @@ class renderdata extends \questiondata
     use \defaultgetmarks;
 
     /**
+     * @var (\literal-string & \lowercase-string & \uppercase-string)|string
+     */
+    public $dismiss;
+
+    /**
      * SCT title
      * @var string
      */
@@ -79,6 +84,7 @@ class renderdata extends \questiondata
      * Return the base mark for the question type
      * @return int
      */
+    #[\Override]
     public function get_base_marks()
     {
         return 1;

@@ -26,6 +26,7 @@
  */
 class QuestionStatus
 {
+    public $display_order;
     public $id = -1;
     protected $name = '';
     protected $exclude_marking = false;

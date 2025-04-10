@@ -402,7 +402,7 @@ function display_question(render $render, array $question_data, array $string, s
                 if ($question_data['excluded']) {
                     echo excludeButton($question_data['ex_no'], $question_data['id'], '1', 1, 1, $question_data['no']);
                 } else {
-                    echo excludeButton($question_data['ex_no'], $question_data['id'], '0', 1, 1), $question_data['no'];
+                    echo excludeButton($question_data['ex_no'], $question_data['id'], '0', 1, 1, $question_data['no']);
                 }
                 echo '</div><p>';
                 $question->set_media(...$question_data['media']);

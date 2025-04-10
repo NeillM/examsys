@@ -26,6 +26,7 @@
  */
 class OnlineHelp
 {
+    public $highlight;
     /**
      * Called when the object is unserialised.
      */
@@ -37,9 +38,8 @@ class OnlineHelp
         $this->db = null;
     }
 
-    public function __construct(private $userObject, private $configObject, private $string, private $notice, $type, private $language, private $db)
+    public function __construct(private $userObject, private $configObject, private $string, private $notice, public $type, private $language, private $db)
     {
-        $this->type         = $type;
         $this->highlight    = null;
     }
 

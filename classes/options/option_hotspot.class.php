@@ -35,6 +35,7 @@ class OptionHOTSPOT extends OptionEdit
      * Is this option blank?
      * @return boolean
      */
+    #[\Override]
     public function is_blank()
     {
         return ($this->correct == '');
@@ -62,6 +63,7 @@ class OptionHOTSPOT extends OptionEdit
      * @param integer $index option number
      * @return boolean
      */
+    #[\Override]
     public function minimum_fields_exist($data, $files, $index)
     {
         return true;
@@ -80,6 +82,7 @@ class OptionHOTSPOT extends OptionEdit
      * Set the option correct answer, override parent to always record
      * @param string $value
      */
+    #[\Override]
     public function set_correct($value)
     {
         $value = param::cleanBadChars($value);

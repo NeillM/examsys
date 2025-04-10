@@ -29,6 +29,7 @@ use testing\unittest\unittestdatabase;
  */
 class PaperPropertiesCanUserEditPaperTest extends unittestdatabase
 {
+    public $currentSession;
     /** @var array Details of a module. */
     protected $testModule;
 

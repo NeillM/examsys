@@ -37,12 +37,14 @@ require_once '../include/load_config.php';
 
 class IE_Local_Load extends IE_Main
 {
+    public $ids;
     public $type = '';
     public $q_ids = [];
     public $p_ids = [];
     public $params;
     public $statuses = [];
 
+    #[\Override]
     public function Load($params)
     {
         global $string;
@@ -828,6 +830,11 @@ class IE_Local_Load extends IE_Main
     public function LoadQuestionKeyword_based($store, $q_row, $o_rows)
     {
         return "Error: Keyword-based questions can't be exported.";
+    }
+
+    public function LoadQuestionArea($store, $q_row, $o_rows)
+    {
+        return "Error: Area questions can't be exported.";
     }
 
     public function LoadQuestionSct($store, $q_row, $o_rows)

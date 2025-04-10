@@ -26,6 +26,7 @@
  */
 class QuestionBank
 {
+    public $yearutils;
     private $bank_types = null;
     private $stats = null;
 

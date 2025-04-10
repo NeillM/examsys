@@ -26,6 +26,7 @@
  */
 class QuestionLABELLING extends QuestionEdit
 {
+    public $correct;
     protected $_fields_required = ['type', 'leadin', 'option_order', 'owner_id', 'status'];
 
     protected $points1 = '';
@@ -48,6 +49,7 @@ class QuestionLABELLING extends QuestionEdit
      * @return boolean Success or failure of the save operation
      * @throws ValidationException
      */
+    #[\Override]
     public function save($clear_checkout = true)
     {
         // Make sure 'correct' value is set for option

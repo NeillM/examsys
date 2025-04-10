@@ -115,6 +115,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
      * @param $leadin
      * @return boolean
      */
+    #[\Override]
     public function clean_leadin($leadin)
     {
         return true;
@@ -125,6 +126,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
      * @param string $text from database
      * @return string
      */
+    #[\Override]
     public function get_text_for_display($text)
     {
         return $text;
@@ -135,6 +137,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
      * @param string $text from database
      * @return string
      */
+    #[\Override]
     public function prepare_text_for_save($text)
     {
         return $text;
@@ -144,6 +147,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
      * Get header data.
      * @return array
      */
+    #[\Override]
     public function get_header_data()
     {
         // Intentionally empty.
@@ -154,6 +158,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
      * Get text editor base path
      * @return string
      */
+    #[\Override]
     public function get_header_path()
     {
         // Intentionally blank as plain path loaded by core.

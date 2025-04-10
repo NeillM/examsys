@@ -27,6 +27,7 @@
 
 class OptionSCT extends OptionEdit
 {
+    #[\Override]
     public function save($option_number = 0)
     {
         if ($this->_question->get_max_experts() == 0) {
@@ -42,6 +43,7 @@ class OptionSCT extends OptionEdit
      * Set the option correct answer
      * @param string $value
      */
+    #[\Override]
     public function set_correct($value)
     {
         if ($value != $this->correct and !in_array('correct', array_keys($this->_question->get_unified_fields()))) {
@@ -53,6 +55,7 @@ class OptionSCT extends OptionEdit
      * Set the option marks for correct answers
      * @param string $value
      */
+    #[\Override]
     public function set_marks_correct($value, $log_change = true)
     {
         $this->marks_correct = $value;

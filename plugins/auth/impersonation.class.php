@@ -29,6 +29,10 @@ require_once 'outline_authentication.class.php';
 
 class impersonation_auth extends outline_authentication
 {
+    /**
+     * @var bool
+     */
+    public $staff_mode;
     private $active = false;
     private $demo = false;
     private $newuserid;
@@ -36,6 +40,7 @@ class impersonation_auth extends outline_authentication
     public $impliments_api_auth_version = 1;
     public $version = 0.9;
 
+    #[\Override]
     public function register_callback_routines()
     {
         $callbackarray[] = [[$this, 'checkwhattodo'], 'preauth', $this->number, $this->name];

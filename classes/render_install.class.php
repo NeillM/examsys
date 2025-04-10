@@ -42,6 +42,7 @@ class render_install extends render
      * @param string $charset ExamSys display charset
      * @param string $language ExamSys display language
      */
+    #[\Override]
     public function render(
         $data,
         $lang,

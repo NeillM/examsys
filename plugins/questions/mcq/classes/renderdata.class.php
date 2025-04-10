@@ -30,6 +30,11 @@ class renderdata extends \questiondata
     use \mpqgetmarks;
 
     /**
+     * @var string
+     */
+    public $other;
+
+    /**
      * Question 'other' option selected state
      * @var boolean
      */

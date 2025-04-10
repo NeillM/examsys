@@ -28,6 +28,11 @@
  */
 class UserObject extends RogoStaticSingleton
 {
+    public $temp_title;
+    public $temp_surname;
+    public $impersonatedfrom;
+    public $impersonate;
+    public $temp_first_names;
     protected static $inst = null;
     protected static $class_name = 'UserObject';
     protected static $dont_construct = true;
@@ -151,6 +156,7 @@ class UserObject extends RogoStaticSingleton
         self::$inst = null;
     }
 
+    #[\Override]
     public function error_handling($context = null)
     {
         return error_handling($this);

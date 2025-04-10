@@ -431,6 +431,7 @@ class Config extends RogoStaticSingleton implements \Stringable
         $this->db = $db;
     }
 
+    #[\Override]
     public function error_handling($context = null)
     {
         //   print "<br>confobj:errorfuncrun<br>";

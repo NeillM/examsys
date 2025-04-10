@@ -33,6 +33,8 @@ class ST_Main
 {
     public $papers;
     public $questions;
+    public $files;
+    public $ownerID;
 }
 
 // class to store exported files

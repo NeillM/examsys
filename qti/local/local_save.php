@@ -34,6 +34,8 @@ function xml2array($xmlObject, $out = [])
 
 class IE_Local_Save extends IE_Main
 {
+    public $qm_row;
+    public $default_status;
     public $q_row = [];
     public $o_rows = [];
     public $o_row = [];
@@ -49,6 +51,7 @@ class IE_Local_Save extends IE_Main
     // bloom
 
     // main save function
+    #[\Override]
     public function Save($params, &$data)
     {
         global $mysqli, $string;

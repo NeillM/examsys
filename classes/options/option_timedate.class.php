@@ -34,6 +34,7 @@ class OptionTIMEDATE extends OptionEdit
      * @param integer $index option number
      * @return boolean
      */
+    #[\Override]
     public function is_blank()
     {
         return ($this->correct == '');

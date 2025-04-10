@@ -137,6 +137,7 @@ class QuestionSCT extends QuestionEdit
      * Get the question leadin
      * @return string
      */
+    #[\Override]
     public function get_leadin()
     {
         if ($this->leadin != '') {
@@ -151,6 +152,7 @@ class QuestionSCT extends QuestionEdit
      * Set the question leadin
      * @param string $value
      */
+    #[\Override]
     public function set_leadin($value)
     {
         $this->leadin =  $this->hypothesis . '~' . $this->new_information;

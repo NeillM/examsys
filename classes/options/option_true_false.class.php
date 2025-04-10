@@ -31,6 +31,7 @@ class OptionTRUE_FALSE extends OptionEdit
      * Is this option blank?
      * @return boolean
      */
+    #[\Override]
     public function is_blank()
     {
         return false;
@@ -42,6 +43,7 @@ class OptionTRUE_FALSE extends OptionEdit
      * @param integer $index option number
      * @return boolean
      */
+    #[\Override]
     public function minimum_fields_exist($data, $files, $index)
     {
         return true;
