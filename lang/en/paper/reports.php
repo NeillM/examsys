@@ -45,3 +45,8 @@ $string['cohort'] = 'Cohort';
 $string['allcandidates'] = 'All candidates';
 $string['top'] = 'Top';
 $string['bottom'] = 'Bottom';
+
+// Checkbox options
+$string['incabsentcandidates'] = 'Include absent candidates';
+$string['studentsonly'] = 'Students only';
+$string['tooltip_studentattempts'] = 'Only include attempts from students (exclude staff attempts)';
