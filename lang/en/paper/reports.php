@@ -59,11 +59,20 @@ $string['externalexaminers'] = 'External Examiners';
 
 // Item analysis section
 $string['itemanalysis'] = 'Item Analysis';
-$string['frequencyanalysis'] = 'Frequency Analysis';
+$string['frequencyanalysis'] = 'Frequency & Discrimination (U-L) Analysis';
 $string['learningobjectiveanalysis'] = 'Learning Objective Analysis';
 
 // Cohort reports section
 $string['cohortreports'] = 'Cohort Reports';
 $string['classtotals'] = 'Class Totals';
-$string['classtotalsexcel2003'] = 'Class Totals (Excel 2003 Format)';
-$string['classtotalscsv'] = 'Class Totals (CSV Format)';
+$string['classtotalsexcel2003'] = 'Class Totals (Excel 2003)';
+$string['classtotalscsv'] = 'Class Totals (CSV)';
+
+// Exports section
+$string['exports'] = 'Exports';
+$string['exportresponsescsvnum'] = 'Export responses as CSV file (raw)';
+$string['exportresponsescsvtext'] = 'Export responses as CSV file (text)';
+$string['exportbooleancsv'] = 'Export boolean responses as CSV file';
+$string['exportmarkscsv'] = 'Export marks as CSV file';
+$string['standardssettingcsv'] = 'Standards Setting summary as CSV file';
+$string['standardssettingfullcsv'] = 'Standards Setting full responses as CSV file';
