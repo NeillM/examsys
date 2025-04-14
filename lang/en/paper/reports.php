@@ -61,3 +61,9 @@ $string['externalexaminers'] = 'External Examiners';
 $string['itemanalysis'] = 'Item Analysis';
 $string['frequencyanalysis'] = 'Frequency Analysis';
 $string['learningobjectiveanalysis'] = 'Learning Objective Analysis';
+
+// Cohort reports section
+$string['cohortreports'] = 'Cohort Reports';
+$string['classtotals'] = 'Class Totals';
+$string['classtotalsexcel2003'] = 'Class Totals (Excel 2003 Format)';
+$string['classtotalscsv'] = 'Class Totals (CSV Format)';
