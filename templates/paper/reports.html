@@ -142,5 +142,18 @@ This template renders the reports page.
             </ul>
         </div>
         {% endif %}
+        
+        {% if data.item_analysis_section is defined %}
+        <div class="reports-section">
+            <h2 class="reports-header">{{ data.item_analysis_section.title }}</h2>
+            <ul class="reports-list">
+                {% for item in data.item_analysis_section.items %}
+                    <li class="reports-item">
+                        <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </div>
