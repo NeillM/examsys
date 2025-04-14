@@ -115,4 +115,20 @@ This template renders the reports page.
             </div>
         </form>
     </div>
+    
+    <!-- Reports Sections -->
+    <div id="reports-sections" class="reports-sections">
+        {% if data.reviews_section is defined %}
+        <div class="reports-section">
+            <h2 class="reports-header">{{ data.reviews_section.title }}</h2>
+            <ul class="reports-list">
+                {% for item in data.reviews_section.items %}
+                    <li class="reports-item">
+                        <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
 </div>
