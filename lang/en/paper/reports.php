@@ -56,3 +56,8 @@ $string['reviews'] = 'Reviews';
 $string['internalpeerreview'] = 'Internal Peer Review';
 $string['sctresponses'] = 'SCT Responses';
 $string['externalexaminers'] = 'External Examiners';
+
+// Item analysis section
+$string['itemanalysis'] = 'Item Analysis';
+$string['frequencyanalysis'] = 'Frequency Analysis';
+$string['learningobjectiveanalysis'] = 'Learning Objective Analysis';
