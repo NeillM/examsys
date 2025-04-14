@@ -103,7 +103,7 @@ class ReportsData
             $this->string
         );
         
-        return [
+        $data = [
             'paperID' => $paperID,
             'module' => $module,
             'folder' => $folder,
@@ -117,8 +117,19 @@ class ReportsData
             'direction_options' => $this->getCohortDirectionOptions(),
             'percentage_options' => $this->getPercentageOptions(),
             'absent_checkbox' => $this->getAbsentCheckboxData(),
-            'students_only_checkbox' => $this->getStudentsOnlyCheckboxData()
+            'students_only_checkbox' => $this->getStudentsOnlyCheckboxData(),
+            'scripts' => ['js/modules/papersidebar.min.js', 'js/modules/reports.min.js']
         ];
+        
+        // Add reviews section data if paper type is appropriate
+        if (in_array($paperType, ['0', '1', '2', '5'])) {
+            $data['reviews_section'] = [
+                'title' => $this->string['reviews'],
+                'items' => $this->getReviewsData($properties)
+            ];
+        }
+        
+        return $data;
     }
 
     /**
@@ -294,6 +305,42 @@ class ReportsData
     }
 
     /**
+     * Get data for the reviews section
+     * 
+     * @param PaperProperties $properties Paper properties
+     * @return array Reviews section data
+     */
+    public function getReviewsData(PaperProperties $properties): array
+    {
+        $reviews = [];
+        
+        // Internal peer review link
+        $reviews[] = [
+            'url' => '../reports/review_comments.php?type=internal&scrOfY=0&',
+            'text' => $this->string['internalpeerreview'],
+            'class' => 'reports'
+        ];
+        
+        // SCT responses link (conditional)
+        if ($properties->q_type_exist('sct')) {
+            $reviews[] = [
+                'url' => '../reports/review_sct_answers.php?type=external&',
+                'text' => $this->string['sctresponses'],
+                'class' => 'reports'
+            ];
+        }
+        
+        // External examiners link
+        $reviews[] = [
+            'url' => '../reports/review_comments.php?type=external&',
+            'text' => $this->string['externalexaminers'],
+            'class' => 'reports'
+        ];
+        
+        return $reviews;
+    }
+
+    /**
      * Calculate date ranges for the report based on paper properties
      *
      * @param PaperProperties $properties Paper properties
@@ -384,6 +431,48 @@ class ReportsData
             'default_end' => $default_end,
             'start_year' => 2001,
             'end_year' => ($date_array['year'] + 1)
+        ];
+    }
+
+    /**
+     * Prepare data for the footer template
+     *
+     * @param string|null $module Module code
+     * @param string|null $folder Folder name
+     * @return array Data for the footer template
+     */
+    public function prepareFooterData($module = null, $folder = null): array
+    {
+        return [
+            'scripts' => ['js/modules/papersidebar.min.js'],
+            'module' => $module,
+            'folder' => $folder
+        ];
+    }
+
+    /**
+     * Prepare data for the dataset template
+     *
+     * @param string $paperType Paper type
+     * @param int $paperID Paper ID
+     * @param string|null $module Module code
+     * @param string|null $folder Folder name
+     * @return array Data for the dataset template
+     */
+    public function prepareDatasetData(
+        string $paperType,
+        int $paperID,
+        $module = null,
+        $folder = null
+    ): array {
+        return [
+            'name' => 'dataset',
+            'attributes' => [
+                'papertype' => $paperType,
+                'paperid' => $paperID,
+                'module' => $module,
+                'folder' => $folder
+            ]
         ];
     }
 }
