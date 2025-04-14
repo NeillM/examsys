@@ -150,6 +150,12 @@ class ReportsData
             'items' => $this->getItemAnalysisData($properties)
         ];
         
+        // Add cohort reports section data
+        $data['cohort_reports_section'] = [
+            'title' => $this->string['cohortreports'],
+            'items' => $this->getCohortReportsData($properties, $paperID)
+        ];
+        
         return $data;
     }
 
@@ -383,6 +389,54 @@ class ReportsData
             $items[] = [
                 'url' => '../reports/cohort_obj_perform.php?',
                 'text' => $this->string['learningobjectiveanalysis'],
+                'class' => 'reports'
+            ];
+        }
+        
+        return $items;
+    }
+
+    /**
+     * Get data for the cohort reports section
+     * 
+     * @param PaperProperties $properties Paper properties
+     * @param int $paperID Paper ID
+     * @return array Cohort reports section data
+     */
+    public function getCohortReportsData(PaperProperties $properties, int $paperID): array
+    {
+        $items = [];
+        
+        // Class totals link
+        $items[] = [
+            'url' => '../reports/class_totals.php?',
+            'text' => $this->string['classtotals'],
+            'class' => 'reports'
+        ];
+        
+        // Excel and CSV export links
+        if ($properties->unmarked_enhancedcalc(1) || $properties->unmarked_textbox(1)) {
+            $items[] = [
+                'url' => '',
+                'text' => $this->string['classtotalsexcel2003'],
+                'class' => 'disabled'
+            ];
+            
+            $items[] = [
+                'url' => '',
+                'text' => $this->string['classtotalscsv'],
+                'class' => 'disabled'
+            ];
+        } else {
+            $items[] = [
+                'url' => '../reports/class_totals_xml.php?',
+                'text' => $this->string['classtotalsexcel2003'],
+                'class' => 'reports'
+            ];
+            
+            $items[] = [
+                'url' => '../reports/class_totals_csv.php?',
+                'text' => $this->string['classtotalscsv'],
                 'class' => 'reports'
             ];
         }
