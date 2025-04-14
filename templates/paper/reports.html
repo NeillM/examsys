@@ -21,6 +21,14 @@ This template renders the reports page.
 @copyright 2025 The University of Nottingham
 #}
 
+<!-- Dataset element with required data attributes for papersidebar.js -->
+<div id="dataset" 
+     data-paperid="{{ data.paperID }}" 
+     data-module="{{ data.module }}" 
+     data-folder="{{ data.folder }}"
+     data-papertype="{{ data.paper_type }}">
+</div>
+
 <div id="content">
     <h1>{{ lang.reports }}</h1>
     
@@ -33,6 +41,10 @@ This template renders the reports page.
                 <p>{{ lang.paperid }}: {{ data.paperID }}</p>
                 <p>{{ lang.papertitle }}: {{ data.paper_title }}</p>
                 <p>{{ lang.papertype }}: {{ data.paper_type }}</p>
+                
+                <!-- Hidden inputs required by papersidebar.js -->
+                <input type="hidden" id="paperID" name="paperID" value="{{ data.paperID }}">
+                <input type="hidden" id="meta_no" name="meta_no" value="{{ data.meta_no|default(1) }}">
                 
                 <div class="form-section">
                     <h2>{{ lang.datefilter }}</h2>
