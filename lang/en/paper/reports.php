@@ -50,3 +50,9 @@ $string['bottom'] = 'Bottom';
 $string['incabsentcandidates'] = 'Include absent candidates';
 $string['studentsonly'] = 'Students only';
 $string['tooltip_studentattempts'] = 'Only include attempts from students (exclude staff attempts)';
+
+// Report sections
+$string['reviews'] = 'Reviews';
+$string['internalpeerreview'] = 'Internal Peer Review';
+$string['sctresponses'] = 'SCT Responses';
+$string['externalexaminers'] = 'External Examiners';
