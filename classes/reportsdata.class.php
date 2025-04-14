@@ -144,6 +144,12 @@ class ReportsData
             ];
         }
         
+        // Add item analysis section data
+        $data['item_analysis_section'] = [
+            'title' => $this->string['itemanalysis'],
+            'items' => $this->getItemAnalysisData($properties)
+        ];
+        
         return $data;
     }
 
@@ -353,6 +359,35 @@ class ReportsData
         ];
         
         return $reviews;
+    }
+
+    /**
+     * Get data for the item analysis section
+     * 
+     * @param PaperProperties $properties Paper properties
+     * @return array Item analysis section data
+     */
+    public function getItemAnalysisData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        if ($properties->get_paper_type() != '5') {
+            $items[] = [
+                'url' => '../reports/frequency_discrimination_analysis.php?',
+                'text' => $this->string['frequencyanalysis'],
+                'class' => 'reports'
+            ];
+        }
+        
+        if (!$properties->unmarked_enhancedcalc()) {
+            $items[] = [
+                'url' => '../reports/cohort_obj_perform.php?',
+                'text' => $this->string['learningobjectiveanalysis'],
+                'class' => 'reports'
+            ];
+        }
+        
+        return $items;
     }
 
     /**
