@@ -57,6 +57,15 @@ $render = new render($configObject);
 // Prepare data for the header template
 $headerData = $reportsData->prepareHeaderData();
 
+// Render the dataset template
+$datasetData = $reportsData->prepareDatasetData(
+    $properties->get_paper_type(),
+    $paperID,
+    $module,
+    $folder
+);
+$render->render($datasetData, $string, 'dataset.html');
+
 // Prepare data for the template
 $templateData = $reportsData->prepareTemplateData(
     $properties,
@@ -70,3 +79,7 @@ $render->render($headerData, $string, 'header.html');
 
 // Render the main content template
 $render->render($templateData, $string, 'paper/reports.html');
+
+// Render the footer template
+$footerData = $reportsData->prepareFooterData($module, $folder);
+$render->render($footerData, $string, 'footer.html');
