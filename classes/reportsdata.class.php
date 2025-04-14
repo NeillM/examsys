@@ -103,6 +103,21 @@ class ReportsData
             $this->string
         );
         
+        // Get metadata fields count
+        $metaNo = 1;
+        $moduleIDs = Paper_utils::get_modules($paperID, $this->db);
+        if (count($moduleIDs) > 0) {
+            $result = $this->db->prepare("SELECT DISTINCT type FROM users_metadata, modules 
+                                         WHERE users_metadata.idMod = modules.id 
+                                         AND modules.moduleid IN ('" . implode("','", $moduleIDs) . "')");
+            $result->execute();
+            $result->bind_result($meta_type);
+            while ($result->fetch()) {
+                $metaNo++;
+            }
+            $result->close();
+        }
+        
         $data = [
             'paperID' => $paperID,
             'module' => $module,
@@ -118,7 +133,7 @@ class ReportsData
             'percentage_options' => $this->getPercentageOptions(),
             'absent_checkbox' => $this->getAbsentCheckboxData(),
             'students_only_checkbox' => $this->getStudentsOnlyCheckboxData(),
-            'scripts' => ['js/modules/papersidebar.min.js', 'js/modules/reports.min.js']
+            'meta_no' => $metaNo,
         ];
         
         // Add reviews section data if paper type is appropriate
@@ -444,7 +459,7 @@ class ReportsData
     public function prepareFooterData($module = null, $folder = null): array
     {
         return [
-            'scripts' => ['js/modules/papersidebar.min.js'],
+            'scripts' => ['/js/reportsinit.min.js'],
             'module' => $module,
             'folder' => $folder
         ];
