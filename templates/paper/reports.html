@@ -172,5 +172,22 @@ This template renders the reports page.
             </ul>
         </div>
         {% endif %}
+        
+        {% if data.exports_section is defined %}
+        <div class="reports-section">
+            <h2 class="reports-header">{{ data.exports_section.title }}</h2>
+            <ul class="reports-list">
+                {% for item in data.exports_section.items %}
+                    <li class="reports-item">
+                        {% if item.class == 'disabled' %}
+                            <span class="disabled-link">{{ item.text }}</span>
+                        {% else %}
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </div>
