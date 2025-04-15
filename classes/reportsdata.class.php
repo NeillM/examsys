@@ -156,6 +156,12 @@ class ReportsData
             'items' => $this->getCohortReportsData($properties, $paperID)
         ];
         
+        // Add exports section data
+        $data['exports_section'] = [
+            'title' => $this->string['exports'],
+            'items' => $this->getExportsData($properties, $paperID)
+        ];
+        
         return $data;
     }
 
@@ -439,6 +445,99 @@ class ReportsData
                 'text' => $this->string['classtotalscsv'],
                 'class' => 'reports'
             ];
+        }
+        
+        return $items;
+    }
+
+    /**
+     * Get data for the exports section
+     * 
+     * @param PaperProperties $properties Paper properties
+     * @param int $paperID Paper ID
+     * @return array Exports section data
+     */
+    public function getExportsData(PaperProperties $properties, int $paperID): array
+    {
+        $items = [];
+        
+        // Export responses as CSV
+        if ($properties->get_paper_type() != '5') {
+            $items[] = [
+                'url' => '../export/assessment_data.php?',
+                'text' => $this->string['exportresponsescsvnum'],
+                'class' => 'reports'
+            ];
+            
+            $items[] = [
+                'url' => '../export/assessment_data.php?mode=text&',
+                'text' => $this->string['exportresponsescsvtext'],
+                'class' => 'reports'
+            ];
+            
+            $items[] = [
+                'url' => '../export/assessment_boolean.php?',
+                'text' => $this->string['exportbooleancsv'],
+                'class' => 'reports'
+            ];
+        }
+        
+        // Export marks as CSV
+        if ($properties->unmarked_enhancedcalc()) {
+            $items[] = [
+                'url' => '',
+                'text' => $this->string['exportmarkscsv'],
+                'class' => 'disabled'
+            ];
+        } else {
+            $items[] = [
+                'url' => '../export/assessment_marks.php?',
+                'text' => $this->string['exportmarkscsv'],
+                'class' => 'reports'
+            ];
+        }
+        
+        // Add standards setting links if appropriate
+        $paperType = $properties->get_paper_type();
+        if (($paperType == '0' || $paperType == '1' || $paperType == '2')) {
+            // Get checklist from modules
+            $moduleIDs = Paper_utils::get_modules($paperID, $this->db);
+            $checklist = '';
+            
+            if (count($moduleIDs) > 0) {
+                $ids = array_keys($moduleIDs);
+                $stmt = $this->db->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $ids) . ')');
+                $stmt->execute();
+                $stmt->bind_result($tmp_checklist);
+                $check = [];
+                
+                while ($stmt->fetch()) {
+                    if ($tmp_checklist != '') {
+                        $tmp = explode(',', $tmp_checklist);
+                        foreach ($tmp as $type) {
+                            $check[] = $type;
+                        }
+                    }
+                }
+                
+                $checklist = implode(',', $check);
+                $stmt->close();
+            }
+            
+            // Add standards setting links if stdset is in the checklist
+            if (mb_strpos($checklist, 'stdset') !== false) {
+                $items[] = [
+                    'url' => '../reports/standards_setting_csv.php?',
+                    'text' => $this->string['standardssettingcsv'],
+                    'class' => 'reports'
+                ];
+                
+                $items[] = [
+                    'url' => '../reports/standards_setting_full_csv.php?',
+                    'text' => $this->string['standardssettingfullcsv'],
+                    'class' => 'reports'
+                ];
+            }
         }
         
         return $items;
