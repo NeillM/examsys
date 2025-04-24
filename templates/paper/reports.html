@@ -44,7 +44,7 @@ This template renders the reports page.
                 
                 <!-- Hidden inputs required by papersidebar.js -->
                 <input type="hidden" id="paperID" name="paperID" value="{{ data.paperID }}">
-                <input type="hidden" id="meta_no" name="meta_no" value="{{ data.meta_no|default(1) }}">
+                <input type="hidden" id="meta_no" name="meta_no" value="{{ data.meta_no }}">
                 
                 <div class="form-section">
                     <h2>{{ lang.datefilter }}</h2>
@@ -94,6 +94,23 @@ This template renders the reports page.
                                 {% endfor %}
                             </select>
                         </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Metadata fields -->
+                    {% if data.meta_fields is defined and data.meta_fields|length > 0 %}
+                    <div class="form-section">
+                        <h2>{{ lang.metadata }}</h2>
+                        {% for field in data.meta_fields %}
+                        <div class="form-row">
+                            <label for="{{ field.id }}">{{ field.label }}</label>
+                            <select name="{{ field.id }}" id="{{ field.id }}">
+                                {% for option in field.options %}
+                                    <option value="{{ option.value }}">{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endfor %}
                     </div>
                     {% endif %}
                     
