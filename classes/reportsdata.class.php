@@ -151,6 +151,11 @@ class ReportsData
             'items' => $this->getExportsData($properties, $paperID)
         ];
         
+        // Add textbox marking section data if paper has textbox questions and is not type 5
+        if ($paperType != '5' && $properties->q_type_exist('textbox')) {
+            $data['textbox_marking_section'] = $this->getTextboxMarkingData($paperID, $properties);
+        }
+
         return $data;
     }
 
@@ -736,6 +741,82 @@ class ReportsData
         return [
             'fields' => $metaFields,
             'count' => count($metaFields) > 0 ? count($metaFields) + 1 : 1
+        ];
+    }
+
+    /**
+     * Get textbox marking section data
+     *
+     * @param int $paperID Paper ID
+     * @param PaperProperties $properties Paper properties
+     * @return array Textbox marking section data
+     */
+    public function getTextboxMarkingData(int $paperID, PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // Primary Mark by Question link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/textbox_select_q.php?action=mark&phase=1&',
+            'text' => $this->string['primarymarkbyquestion']
+        ];
+        
+        // Select Papers for Remarking link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/textbox_remark.php?',
+            'text' => $this->string['selectpapersforremarking']
+        ];
+        
+        // Second Mark by Question link (conditional)
+        $remark_array = textbox_marking_utils::get_remark_users($paperID, $this->db);
+        if (count($remark_array) > 0) {
+            $items[] = [
+                'class' => 'reports',
+                'url' => '../reports/textbox_select_q.php?action=mark&phase=2&',
+                'text' => $this->string['secondmarkbyquestion']
+            ];
+        } else {
+            $items[] = [
+                'class' => 'disabled',
+                'text' => $this->string['secondmarkbyquestion']
+            ];
+        }
+        
+        // Finalise Marks link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/textbox_select_q.php?action=finalise&',
+            'text' => $this->string['finalisemarks']
+        ];
+        
+        return [
+            'title' => $this->string['textboxmarking'],
+            'items' => $items
+        ];
+    }
+
+    /**
+     * Get anomalies section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array Anomalies section data
+     */
+    public function getAnomaliesData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // Anomalies link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/anomalies.php?',
+            'text' => $this->string['anomalies']
+        ];
+        
+        return [
+            'title' => $this->string['misc'],
+            'items' => $items
         ];
     }
 }
