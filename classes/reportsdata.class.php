@@ -155,6 +155,11 @@ class ReportsData
         if ($paperType != '5' && $properties->q_type_exist('textbox')) {
             $data['textbox_marking_section'] = $this->getTextboxMarkingData($paperID, $properties);
         }
+        
+        // Add anomalies section data if anomaly detection is enabled for this paper type
+        if ($properties->anomaly_detection_enabled()) {
+            $data['anomalies_section'] = $this->getAnomaliesData($properties);
+        }
 
         return $data;
     }
