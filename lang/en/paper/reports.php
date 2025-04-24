@@ -80,3 +80,14 @@ $string['standardssettingfullcsv'] = 'Standards Setting full responses as CSV fi
 // Metadata
 $string['metadata'] = 'Metadata';
 $string['all'] = 'All';
+
+// Textbox marking section
+$string['textboxmarking'] = 'Textbox Marking';
+$string['primarymarkbyquestion'] = 'Primary Mark by Question';
+$string['selectpapersforremarking'] = 'Select Papers for Remarking';
+$string['secondmarkbyquestion'] = 'Second Mark by Question';
+$string['finalisemarks'] = 'Finalise Marks';
+
+// Anomalies section
+$string['misc'] = 'Misc';
+$string['anomalies'] = 'Anomalies';
