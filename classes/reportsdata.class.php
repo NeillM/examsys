@@ -103,20 +103,8 @@ class ReportsData
             $this->string
         );
         
-        // Get metadata fields count
-        $metaNo = 1;
-        $moduleIDs = Paper_utils::get_modules($paperID, $this->db);
-        if (count($moduleIDs) > 0) {
-            $result = $this->db->prepare("SELECT DISTINCT type FROM users_metadata, modules 
-                                         WHERE users_metadata.idMod = modules.id 
-                                         AND modules.moduleid IN ('" . implode("','", $moduleIDs) . "')");
-            $result->execute();
-            $result->bind_result($meta_type);
-            while ($result->fetch()) {
-                $metaNo++;
-            }
-            $result->close();
-        }
+        // Get metadata fields
+        $metadata = $this->getMetadataFields($paperID, $properties);
         
         $data = [
             'paperID' => $paperID,
@@ -133,7 +121,8 @@ class ReportsData
             'percentage_options' => $this->getPercentageOptions(),
             'absent_checkbox' => $this->getAbsentCheckboxData(),
             'students_only_checkbox' => $this->getStudentsOnlyCheckboxData(),
-            'meta_no' => $metaNo,
+            'meta_fields' => $metadata['fields'],
+            'meta_no' => $metadata['count'],
         ];
         
         // Add reviews section data if paper type is appropriate
@@ -676,6 +665,77 @@ class ReportsData
                 'module' => $module,
                 'folder' => $folder
             ]
+        ];
+    }
+
+    /**
+     * Get metadata fields for the report form
+     * 
+     * @param int $paperID Paper ID
+     * @param PaperProperties $properties Paper properties
+     * @return array Array of metadata fields and count
+     */
+    public function getMetadataFields(int $paperID, PaperProperties $properties): array
+    {
+        $metadata = [];
+        $metaFields = [];
+        
+        // Get modules for this paper
+        $moduleIDs = Paper_utils::get_modules($paperID, $this->db);
+        
+        if (count($moduleIDs) > 0) {
+            // Get metadata fields from database
+            $stmt = $this->db->prepare("SELECT DISTINCT type, value 
+                                      FROM users_metadata, modules 
+                                      WHERE users_metadata.idMod = modules.id 
+                                      AND modules.moduleid IN ('" . implode("','", $moduleIDs) . "') 
+                                      ORDER BY type, value");
+            $stmt->execute();
+            $stmt->bind_result($meta_type, $meta_value);
+            
+            while ($stmt->fetch()) {
+                $metadata[$meta_type][] = $meta_value;
+            }
+            
+            $stmt->close();
+            
+            // Format metadata fields for the template
+            $metaNo = 1;
+            foreach ($metadata as $meta_type => $value_array) {
+                $paperType = $properties->get_paper_type();
+                if ($paperType != '6' || $properties->get_rubric() == $meta_type) {
+                    $options = [];
+                    
+                    // Add "All" option
+                    $options[] = [
+                        'value' => "$meta_type=%",
+                        'text' => '<' . $this->string['all'] . '>'
+                    ];
+                    
+                    // Add options for each value
+                    foreach ($value_array as $meta_value) {
+                        $options[] = [
+                            'value' => "$meta_type=$meta_value",
+                            'text' => $meta_value
+                        ];
+                    }
+                    
+                    // Add field to the list
+                    $metaFields[] = [
+                        'id' => 'meta' . $metaNo,
+                        'name' => 'meta' . $metaNo,
+                        'label' => $meta_type,
+                        'options' => $options
+                    ];
+                    
+                    $metaNo++;
+                }
+            }
+        }
+        
+        return [
+            'fields' => $metaFields,
+            'count' => count($metaFields) > 0 ? count($metaFields) + 1 : 1
         ];
     }
 }
