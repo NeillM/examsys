@@ -76,3 +76,7 @@ $string['exportbooleancsv'] = 'Export boolean responses as CSV file';
 $string['exportmarkscsv'] = 'Export marks as CSV file';
 $string['standardssettingcsv'] = 'Standards Setting summary as CSV file';
 $string['standardssettingfullcsv'] = 'Standards Setting full responses as CSV file';
+
+// Metadata
+$string['metadata'] = 'Metadata';
+$string['all'] = 'All';
