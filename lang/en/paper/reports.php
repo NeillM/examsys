@@ -99,3 +99,8 @@ $string['xhtml'] = 'XHTML';
 $string['word2003format'] = 'Word 2003 Format';
 $string['rawdataxml'] = 'Raw Data XML';
 $string['rawdatacsv'] = 'Raw Data CSV';
+
+// Survey form elements
+$string['year'] = 'Year';
+$string['anyyear'] = 'Any Year';
+$string['completedatasets'] = 'Complete datasets only';
