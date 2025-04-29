@@ -157,7 +157,7 @@ class ReportsData
         }
         
         // Add anomalies section data if anomaly detection is enabled for this paper type
-        if ($properties->anomaly_detection_enabled()) {
+        if (Anomaly::anomalyDetectionEnabled($properties->get_paper_type())) {
             $data['anomalies_section'] = $this->getAnomaliesData($properties);
         }
 
