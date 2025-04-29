@@ -161,6 +161,13 @@ class ReportsData
             $data['anomalies_section'] = $this->getAnomaliesData($properties);
         }
 
+        // Add survey-specific sections
+        if ($paperType == '3') {
+            $data['survey_quantitative_reports_section'] = $this->getSurveyQuantitativeReportsData($properties);
+            $data['survey_qualitative_analysis_section'] = $this->getSurveyQualitativeAnalysisData($properties);
+            $data['survey_exports_section'] = $this->getSurveyExportsData($properties);
+        }
+
         return $data;
     }
 
@@ -821,6 +828,96 @@ class ReportsData
         
         return [
             'title' => $this->string['misc'],
+            'items' => $items
+        ];
+    }
+
+    /**
+     * Get survey quantitative reports section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array Survey quantitative reports section data
+     */
+    public function getSurveyQuantitativeReportsData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // XHTML link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/quantitative.php?',
+            'text' => $this->string['xhtml']
+        ];
+        
+        // Word 2003 format link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/quantitative_xml.php?',
+            'text' => $this->string['word2003format']
+        ];
+        
+        return [
+            'title' => $this->string['quantitativereports'],
+            'items' => $items
+        ];
+    }
+
+    /**
+     * Get survey qualitative analysis section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array Survey qualitative analysis section data
+     */
+    public function getSurveyQualitativeAnalysisData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // XHTML link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/qualitative.php?',
+            'text' => $this->string['xhtml']
+        ];
+        
+        // Word 2003 format link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../reports/qualitative_xml.php?',
+            'text' => $this->string['word2003format']
+        ];
+        
+        return [
+            'title' => $this->string['qualitativeanalysis'],
+            'items' => $items
+        ];
+    }
+
+    /**
+     * Get survey exports section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array Survey exports section data
+     */
+    public function getSurveyExportsData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // Raw data XML link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../export/survey_xml_data.php?',
+            'text' => $this->string['rawdataxml']
+        ];
+        
+        // Raw data CSV link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../export/survey_csv_data.php?',
+            'text' => $this->string['rawdatacsv']
+        ];
+        
+        return [
+            'title' => $this->string['exports'],
             'items' => $items
         ];
     }
