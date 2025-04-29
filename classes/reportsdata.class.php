@@ -133,23 +133,25 @@ class ReportsData
             ];
         }
         
-        // Add item analysis section data
-        $data['item_analysis_section'] = [
-            'title' => $this->string['itemanalysis'],
-            'items' => $this->getItemAnalysisData($properties)
-        ];
-        
-        // Add cohort reports section data
-        $data['cohort_reports_section'] = [
-            'title' => $this->string['cohortreports'],
-            'items' => $this->getCohortReportsData($properties, $paperID)
-        ];
-        
-        // Add exports section data
-        $data['exports_section'] = [
-            'title' => $this->string['exports'],
-            'items' => $this->getExportsData($properties, $paperID)
-        ];
+        if ($paperType != '3') {
+            // Add item analysis section data
+            $data['item_analysis_section'] = [
+                'title' => $this->string['itemanalysis'],
+                'items' => $this->getItemAnalysisData($properties)
+            ];
+            
+            // Add cohort reports section data
+            $data['cohort_reports_section'] = [
+                'title' => $this->string['cohortreports'],
+                'items' => $this->getCohortReportsData($properties, $paperID)
+            ];
+            
+            // Add exports section data
+            $data['exports_section'] = [
+                'title' => $this->string['exports'],
+                'items' => $this->getExportsData($properties, $paperID)
+            ];
+        }
         
         // Add textbox marking section data if paper has textbox questions and is not type 5
         if ($paperType != '5' && $properties->q_type_exist('textbox')) {
