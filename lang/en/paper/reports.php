@@ -104,3 +104,7 @@ $string['rawdatacsv'] = 'Raw Data CSV';
 $string['year'] = 'Year';
 $string['anyyear'] = 'Any Year';
 $string['completedatasets'] = 'Complete datasets only';
+
+// OSCE reports section
+$string['individualportfoliosheets'] = 'Individual Portfolio Sheets';
+$string['exportratingscsv'] = 'Export Ratings as CSV';
