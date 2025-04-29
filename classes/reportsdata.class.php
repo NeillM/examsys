@@ -168,6 +168,15 @@ class ReportsData
             $data['survey_quantitative_reports_section'] = $this->getSurveyQuantitativeReportsData($properties);
             $data['survey_qualitative_analysis_section'] = $this->getSurveyQualitativeAnalysisData($properties);
             $data['survey_exports_section'] = $this->getSurveyExportsData($properties);
+            
+            // add survey-specific form elements
+            $data['year_options'] = $this->getYearOptions();
+            $data['complete_datasets_checkbox'] = [
+                'id' => 'completerpt',
+                'name' => 'completerpt',
+                'value' => '1',
+                'checked' => false
+            ];
         }
 
         return $data;
@@ -922,5 +931,31 @@ class ReportsData
             'title' => $this->string['exports'],
             'items' => $items
         ];
+    }
+
+    /**
+     * Get year options for survey papers
+     *
+     * @return array Array of year options
+     */
+    public function getYearOptions(): array
+    {
+        $options = [];
+        
+        // Any year option
+        $options[] = [
+            'value' => '%',
+            'text' => $this->string['anyyear']
+        ];
+        
+        // Year 1-5 options
+        for ($i = 1; $i <= 5; $i++) {
+            $options[] = [
+                'value' => $i,
+                'text' => $this->string['year'] . ' ' . $i
+            ];
+        }
+        
+        return $options;
     }
 }
