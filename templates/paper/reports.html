@@ -135,6 +135,29 @@ This template renders the reports page.
                             <span class="tooltip-icon" title="{{ lang.tooltip_studentattempts }}">tooltip</span>
                         </div>
                     </div>
+                    
+                    <!-- Survey-specific form elements -->
+                    {% if data.paper_type == '3' %}
+                    <div class="form-row">
+                        <label for="repyear">{{ lang.year }}</label>
+                        <select name="repyear" id="repyear">
+                            {% for option in data.year_options %}
+                                <option value="{{ option.value }}">{{ option.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-row checkbox-row">
+                        <div class="checkbox-container">
+                            <input type="checkbox" 
+                                   id="{{ data.complete_datasets_checkbox.id }}" 
+                                   name="{{ data.complete_datasets_checkbox.name }}" 
+                                   value="{{ data.complete_datasets_checkbox.value }}"
+                                   {% if data.complete_datasets_checkbox.checked %}checked{% endif %}>
+                            <label for="{{ data.complete_datasets_checkbox.id }}">{{ lang.completedatasets }}</label>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </form>
