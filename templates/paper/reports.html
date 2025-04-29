@@ -235,5 +235,57 @@ This template renders the reports page.
             </ul>
         </div>
         {% endif %}
+        
+        <!--Survey specific reports -->
+        {% if data.survey_quantitative_reports_section is defined %}
+        <div class="reports-section">
+            <h2 class="reports-header">{{ data.survey_quantitative_reports_section.title }}</h2>
+            <ul class="reports-list">
+                {% for item in data.survey_quantitative_reports_section.items %}
+                    <li class="reports-item">
+                        {% if item.class == 'disabled' %}
+                            <span class="disabled-link">{{ item.text }}</span>
+                        {% else %}
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if data.survey_qualitative_analysis_section is defined %}
+        <div class="reports-section">
+            <h2 class="reports-header">{{ data.survey_qualitative_analysis_section.title }}</h2>
+            <ul class="reports-list">
+                {% for item in data.survey_qualitative_analysis_section.items %}
+                    <li class="reports-item">
+                        {% if item.class == 'disabled' %}
+                            <span class="disabled-link">{{ item.text }}</span>
+                        {% else %}
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        {% if data.survey_exports_section is defined %}
+        <div class="reports-section">
+            <h2 class="reports-header">{{ data.survey_exports_section.title }}</h2>
+            <ul class="reports-list">
+                {% for item in data.survey_exports_section.items %}
+                    <li class="reports-item">
+                        {% if item.class == 'disabled' %}
+                            <span class="disabled-link">{{ item.text }}</span>
+                        {% else %}
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
     </div>
 </div>
