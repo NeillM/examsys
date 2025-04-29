@@ -133,7 +133,7 @@ class ReportsData
             ];
         }
         
-        if ($paperType != '3') {
+        if (!in_array($paperType, ['3', '4'])) {
             // Add item analysis section data
             $data['item_analysis_section'] = [
                 'title' => $this->string['itemanalysis'],
@@ -177,6 +177,13 @@ class ReportsData
                 'value' => '1',
                 'checked' => false
             ];
+        }
+        
+        // Add OSCE-specific sections
+        if ($paperType == '4') {
+            $data['osce_cohort_reports_section'] = $this->getOsceCohortReportsData($properties);
+            $data['osce_item_analysis_section'] = $this->getOsceItemAnalysisData($properties);
+            $data['osce_exports_section'] = $this->getOsceExportsData($properties);
         }
 
         return $data;
@@ -957,5 +964,95 @@ class ReportsData
         }
         
         return $options;
+    }
+
+    /**
+     * Get OSCE cohort reports section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array OSCE cohort reports section data
+     */
+    public function getOsceCohortReportsData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // Class totals link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../osce/class_totals.php?',
+            'text' => $this->string['classtotals']
+        ];
+        
+        // Class totals Excel 2003 link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../osce/class_totals_xml.php?',
+            'text' => $this->string['classtotalsexcel2003']
+        ];
+        
+        // Class totals CSV link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../osce/class_totals_csv.php?',
+            'text' => $this->string['classtotalscsv']
+        ];
+        
+        return [
+            'title' => $this->string['cohortreports'],
+            'items' => $items
+        ];
+    }
+    
+    /**
+     * Get OSCE item analysis section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array OSCE item analysis section data
+     */
+    public function getOsceItemAnalysisData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // Frequency analysis link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../osce/frequency_analysis.php?',
+            'text' => $this->string['frequencyanalysis']
+        ];
+        
+        return [
+            'title' => $this->string['itemanalysis'],
+            'items' => $items
+        ];
+    }
+    
+    /**
+     * Get OSCE exports section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array OSCE exports section data
+     */
+    public function getOsceExportsData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        // Individual portfolio sheets link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../osce/portfolio_sheets.php?',
+            'text' => $this->string['individualportfoliosheets']
+        ];
+        
+        // Export ratings CSV link
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../osce/export_ratings.php?',
+            'text' => $this->string['exportratingscsv']
+        ];
+        
+        return [
+            'title' => $this->string['exports'],
+            'items' => $items
+        ];
     }
 }
