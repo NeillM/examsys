@@ -159,10 +159,12 @@ $results->bind_result($calendar_year, $paper_ownerID, $property_id, $screens, $p
 $results->store_result();
 $old_calendar_year = 'zzzz';
 $sent_clear_all = false;
+// For unknown reason sometime $configObject->get return null, check and set to default.
+$conf_dateformat = $configObject->get('cfg_long_full_datetime_php') ?? "d/m/Y H:i";
 if ($results->num_rows > 0) {
     while ($results->fetch()) {
-        $display_start_date = date($configObject->get('cfg_long_full_datetime_php'), $start_date);
-        $display_end_date = date($configObject->get('cfg_long_full_datetime_php'), $end_date);
+        $display_start_date = date($conf_dateformat, $start_date);
+        $display_end_date = date($conf_dateformat, $end_date);
         if ($old_calendar_year != $calendar_year) {
             if ($sent_clear_all) {
                 echo '<br clear="left" />';
