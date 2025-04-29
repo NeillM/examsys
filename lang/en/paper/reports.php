@@ -91,3 +91,11 @@ $string['finalisemarks'] = 'Finalise Marks';
 // Anomalies section
 $string['misc'] = 'Misc';
 $string['anomalies'] = 'Anomalies';
+
+// Survey reports section
+$string['quantitativereports'] = 'Quantitative Reports';
+$string['qualitativeanalysis'] = 'Qualitative Analysis';
+$string['xhtml'] = 'XHTML';
+$string['word2003format'] = 'Word 2003 Format';
+$string['rawdataxml'] = 'Raw Data XML';
+$string['rawdatacsv'] = 'Raw Data CSV';
