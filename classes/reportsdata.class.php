@@ -185,6 +185,11 @@ class ReportsData
             $data['osce_item_analysis_section'] = $this->getOsceItemAnalysisData($properties);
             $data['osce_exports_section'] = $this->getOsceExportsData($properties);
         }
+        
+        // Add peer review-specific sections
+        if ($paperType == '6') {
+            $data['peer_review_reports_section'] = $this->getPeerReviewReportsData($properties);
+        }
 
         return $data;
     }
@@ -1052,6 +1057,48 @@ class ReportsData
         
         return [
             'title' => $this->string['exports'],
+            'items' => $items
+        ];
+    }
+
+    /**
+     * Get peer review reports section data
+     *
+     * @param PaperProperties $properties Paper properties
+     * @return array Peer review reports section data
+     */
+    public function getPeerReviewReportsData(PaperProperties $properties): array
+    {
+        $items = [];
+        
+        if ($properties->get_display_question_mark() == '1') {
+            $items[] = [
+                'class' => 'reports',
+                'url' => '../peer_review/summary_report.php?percent=0&',
+                'text' => $this->string['ReviewSummary1']
+            ];
+            
+            $items[] = [
+                'class' => 'reports',
+                'url' => '../peer_review/summary_report.php?percent=1&',
+                'text' => $this->string['ReviewSummary2']
+            ];
+        } else {
+            $items[] = [
+                'class' => 'reports',
+                'url' => '../peer_review/summary_report.php?',
+                'text' => $this->string['ReviewSummary3']
+            ];
+        }
+        
+        $items[] = [
+            'class' => 'reports',
+            'url' => '../peer_review/summary_report_csv.php?',
+            'text' => $this->string['ReviewSummary4']
+        ];
+        
+        return [
+            'title' => $this->string['reports'],
             'items' => $items
         ];
     }
