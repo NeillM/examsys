@@ -108,3 +108,9 @@ $string['completedatasets'] = 'Complete datasets only';
 // OSCE reports section
 $string['individualportfoliosheets'] = 'Individual Portfolio Sheets';
 $string['exportratingscsv'] = 'Export Ratings as CSV';
+
+// Peer review reports section
+$string['ReviewSummary1'] = 'Review Summary (with marks)';
+$string['ReviewSummary2'] = 'Review Summary (with percentages)';
+$string['ReviewSummary3'] = 'Review Summary';
+$string['ReviewSummary4'] = 'Review Summary (CSV)';
