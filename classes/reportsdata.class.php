@@ -126,14 +126,14 @@ class ReportsData
         ];
 
         // Add reviews section data if paper type is appropriate
-        if (in_array($paperType, ['0', '1', '2', '5'])) {
+        if (in_array($paperType, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE, \assessment::TYPE_OFFLINE])) {
             $data['reviews_section'] = [
                 'title' => $this->string['reviews'],
                 'items' => $this->getReviewsData($properties)
             ];
         }
 
-        if (!in_array($paperType, ['3', '4'])) {
+        if (!in_array($paperType, [\assessment::TYPE_SURVEY, \assessment::TYPE_OSCE])) {
             // Add item analysis section data
             $data['item_analysis_section'] = [
                 'title' => $this->string['itemanalysis'],
@@ -154,7 +154,7 @@ class ReportsData
         }
 
         // Add textbox marking section data if paper has textbox questions and is not type 5
-        if ($paperType != '5' && $properties->q_type_exist('textbox')) {
+        if ($paperType != \assessment::TYPE_OFFLINE && $properties->q_type_exist('textbox')) {
             $data['textbox_marking_section'] = $this->getTextboxMarkingData($paperID, $properties);
         }
 
@@ -164,7 +164,7 @@ class ReportsData
         }
 
         // Add survey-specific sections
-        if ($paperType == '3') {
+        if ($paperType == \assessment::TYPE_SURVEY) {
             $data['survey_quantitative_reports_section'] = $this->getSurveyQuantitativeReportsData($properties);
             $data['survey_qualitative_analysis_section'] = $this->getSurveyQualitativeAnalysisData($properties);
             $data['survey_exports_section'] = $this->getSurveyExportsData($properties);
@@ -180,14 +180,14 @@ class ReportsData
         }
 
         // Add OSCE-specific sections
-        if ($paperType == '4') {
+        if ($paperType == \assessment::TYPE_OSCE) {
             $data['osce_cohort_reports_section'] = $this->getOsceCohortReportsData($properties);
             $data['osce_item_analysis_section'] = $this->getOsceItemAnalysisData($properties);
             $data['osce_exports_section'] = $this->getOsceExportsData($properties);
         }
 
         // Add peer review-specific sections
-        if ($paperType == '6') {
+        if ($paperType == \assessment::TYPE_PEERREVIEW) {
             $data['peer_review_reports_section'] = $this->getPeerReviewReportsData($properties);
         }
 
@@ -262,7 +262,7 @@ class ReportsData
      */
     public function getModuleOptions(int $paperID, string $paperType): array
     {
-        if ($paperType == '3') {
+        if ($paperType == \assessment::TYPE_SURVEY) {
             return [];
         }
 
@@ -528,7 +528,7 @@ class ReportsData
 
         // Add standards setting links if appropriate
         $paperType = $properties->get_paper_type();
-        if (($paperType == '0' || $paperType == '1' || $paperType == '2')) {
+        if (($paperType == \assessment::TYPE_FORMATIVE || $paperType == \assessment::TYPE_PROGRESS || $paperType == \assessment::TYPE_SUMMATIVE)) {
             // Get checklist from modules
             $moduleIDs = Paper_utils::get_modules($paperID, $this->db);
             $checklist = '';
@@ -743,7 +743,7 @@ class ReportsData
             $metaNo = 1;
             foreach ($metadata as $meta_type => $value_array) {
                 $paperType = $properties->get_paper_type();
-                if ($paperType != '6' || $properties->get_rubric() == $meta_type) {
+                if ($paperType != \assessment::TYPE_PEERREVIEW || $properties->get_rubric() == $meta_type) {
                     $options = [];
 
                     // Add "All" option
