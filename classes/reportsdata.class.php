@@ -491,7 +491,7 @@ class ReportsData
         $items = [];
 
         // Export responses as CSV
-        if ($properties->get_paper_type() != '5') {
+        if ($properties->get_paper_type() != \assessment::TYPE_OFFLINE) {
             $items[] = [
                 'url' => '../export/assessment_data.php?',
                 'text' => $this->string['exportresponsescsvnum'],
