@@ -70,48 +70,48 @@ This template renders the reports page.
 
                     <!-- modle dropdown -->
                     {% if data.paper_type != '3' %}
-                    <div class="form-row">
-                        <label for="repmodule">{{ lang.module }}</label>
-                        <select name="repmodule" id="repmodule">
-                            {% for option in data.module_options %}
-                                <option value="{{ option.value }}">{{ option.text }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <!-- cohort dropdown -->
-                    <div class="form-row">
-                        <label for="direction">{{ lang.cohort }}</label>
-                        <div class="cohort-container">
-                            <select name="direction" id="direction">
-                                {% for option in data.direction_options %}
-                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
-                                {% endfor %}
-                            </select>
-                            <select name="percent" id="percent">
-                                {% for option in data.percentage_options %}
-                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    {% endif %}
-                    
-                    <!-- Metadata fields -->
-                    {% if data.meta_fields is defined and data.meta_fields|length > 0 %}
-                    <div class="form-section">
-                        <h2>{{ lang.metadata }}</h2>
-                        {% for field in data.meta_fields %}
                         <div class="form-row">
-                            <label for="{{ field.id }}">{{ field.label }}</label>
-                            <select name="{{ field.id }}" id="{{ field.id }}">
-                                {% for option in field.options %}
+                            <label for="repmodule">{{ lang.module }}</label>
+                            <select name="repmodule" id="repmodule">
+                                {% for option in data.module_options %}
                                     <option value="{{ option.value }}">{{ option.text }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        {% endfor %}
-                    </div>
+
+                    <!-- cohort dropdown -->
+                        <div class="form-row">
+                            <label for="direction">{{ lang.cohort }}</label>
+                            <div class="cohort-container">
+                                <select name="direction" id="direction">
+                                    {% for option in data.direction_options %}
+                                        <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select name="percent" id="percent">
+                                    {% for option in data.percentage_options %}
+                                        <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Metadata fields -->
+                    {% if data.meta_fields is defined and data.meta_fields|length > 0 %}
+                        <div class="form-section">
+                            <h2>{{ lang.metadata }}</h2>
+                                {% for field in data.meta_fields %}
+                                    <div class="form-row">
+                                        <label for="{{ field.id }}">{{ field.label }}</label>
+                                        <select name="{{ field.id }}" id="{{ field.id }}">
+                                            {% for option in field.options %}
+                                                <option value="{{ option.value }}">{{ option.text }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endfor %}
+                        </div>
                     {% endif %}
                     
                     <!-- Checkbox options -->
@@ -138,25 +138,24 @@ This template renders the reports page.
                     
                     <!-- Survey-specific form elements -->
                     {% if data.paper_type == '3' %}
-                    <div class="form-row">
-                        <label for="repyear">{{ lang.year }}</label>
-                        <select name="repyear" id="repyear">
-                            {% for option in data.year_options %}
-                                <option value="{{ option.value }}">{{ option.text }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    
-                    <div class="form-row checkbox-row">
-                        <div class="checkbox-container">
-                            <input type="checkbox" 
-                                   id="{{ data.complete_datasets_checkbox.id }}" 
-                                   name="{{ data.complete_datasets_checkbox.name }}" 
-                                   value="{{ data.complete_datasets_checkbox.value }}"
-                                   {% if data.complete_datasets_checkbox.checked %}checked{% endif %}>
-                            <label for="{{ data.complete_datasets_checkbox.id }}">{{ lang.completedatasets }}</label>
+                        <div class="form-row">
+                            <label for="repyear">{{ lang.year }}</label>
+                            <select name="repyear" id="repyear">
+                                {% for option in data.year_options %}
+                                    <option value="{{ option.value }}">{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
-                    </div>
+                        <div class="form-row checkbox-row">
+                            <div class="checkbox-container">
+                                <input type="checkbox" 
+                                    id="{{ data.complete_datasets_checkbox.id }}" 
+                                    name="{{ data.complete_datasets_checkbox.name }}" 
+                                    value="{{ data.complete_datasets_checkbox.value }}"
+                                    {% if data.complete_datasets_checkbox.checked %}checked{% endif %}>
+                                <label for="{{ data.complete_datasets_checkbox.id }}">{{ lang.completedatasets }}</label>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -166,219 +165,219 @@ This template renders the reports page.
     <!-- Reports Sections -->
     <div id="reports-sections" class="reports-sections">
         {% if data.reviews_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.reviews_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.reviews_section.items %}
-                    <li class="reports-item">
-                        <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.reviews_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.reviews_section.items %}
+                        <li class="reports-item">
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.item_analysis_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.item_analysis_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.item_analysis_section.items %}
-                    <li class="reports-item">
-                        <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.item_analysis_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.item_analysis_section.items %}
+                        <li class="reports-item">
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.cohort_reports_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.cohort_reports_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.cohort_reports_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.cohort_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.cohort_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.exports_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.exports_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.exports_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.exports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.exports_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.textbox_marking_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.textbox_marking_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.textbox_marking_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.textbox_marking_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.textbox_marking_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.anomalies_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.anomalies_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.anomalies_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.anomalies_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.anomalies_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         <!--Survey specific reports -->
         {% if data.survey_quantitative_reports_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.survey_quantitative_reports_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.survey_quantitative_reports_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.survey_quantitative_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.survey_quantitative_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.survey_qualitative_analysis_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.survey_qualitative_analysis_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.survey_qualitative_analysis_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.survey_qualitative_analysis_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.survey_qualitative_analysis_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.survey_exports_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.survey_exports_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.survey_exports_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.survey_exports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.survey_exports_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         <!--OSCE specific reports -->
         {% if data.osce_cohort_reports_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.osce_cohort_reports_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.osce_cohort_reports_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.osce_cohort_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.osce_cohort_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.osce_item_analysis_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.osce_item_analysis_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.osce_item_analysis_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.osce_item_analysis_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.osce_item_analysis_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         {% if data.osce_exports_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.osce_exports_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.osce_exports_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.osce_exports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.osce_exports_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
         
         <!--Peer Review specific reports -->
         {% if data.peer_review_reports_section is defined %}
-        <div class="reports-section">
-            <h2 class="reports-header">{{ data.peer_review_reports_section.title }}</h2>
-            <ul class="reports-list">
-                {% for item in data.peer_review_reports_section.items %}
-                    <li class="reports-item">
-                        {% if item.class == 'disabled' %}
-                            <span class="disabled-link">{{ item.text }}</span>
-                        {% else %}
-                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.peer_review_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.peer_review_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.class == 'disabled' %}
+                                <span class="disabled-link">{{ item.text }}</span>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
     </div>
 </div>
