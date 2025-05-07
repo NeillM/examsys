@@ -51,6 +51,15 @@ $string['incabsentcandidates'] = 'Include absent candidates';
 $string['studentsonly'] = 'Students only';
 $string['tooltip_studentattempts'] = 'Only include attempts from students (exclude staff attempts)';
 
+// Filter section headings
+$string['reportfilters'] = 'Report Filters';
+$string['datefiltersection'] = 'Date Filter';
+$string['coursefiltersection'] = 'Course Filter';
+$string['modulefiltersection'] = 'Module Filter';
+$string['cohortfiltersection'] = 'Cohort Filter';
+$string['optionssection'] = 'Report Options';
+$string['surveyoptionssection'] = 'Survey Options';
+
 // Report sections
 $string['reviews'] = 'Reviews';
 $string['internalpeerreview'] = 'Internal Peer Review';
@@ -114,3 +123,9 @@ $string['ReviewSummary1'] = 'Review Summary (with marks)';
 $string['ReviewSummary2'] = 'Review Summary (with percentages)';
 $string['ReviewSummary3'] = 'Review Summary';
 $string['ReviewSummary4'] = 'Review Summary (CSV)';
+$string['datefilter'] = 'Date Filter';
+$string['coursefilter'] = 'Course Filter';
+$string['modulefilter'] = 'Module Filter';
+$string['cohortfilter'] = 'Cohort Filter';
+$string['reportoptions'] = 'Report Options';
+$string['surveyoptions'] = 'Survey Options';
