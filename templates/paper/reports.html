@@ -43,8 +43,11 @@ This template renders the reports page.
                 <input type="hidden" id="paperID" name="paperID" value="{{ data.paperID }}">
                 <input type="hidden" id="meta_no" name="meta_no" value="{{ data.meta_no }}">
                 
-                <div class="form-section">
-                    <h2>{{ lang.datefilter }}</h2>
+                <h2>{{ lang.reportfilters }}</h2>
+                
+                <!-- Date filter fieldset -->
+                <fieldset class="form-fieldset">
+                    <legend>{{ lang.datefilter }}</legend>
                     <div class="form-row">
                         <label for="start_date">{{ lang.dates }}</label>
                         <div class="date-range-container">
@@ -54,8 +57,11 @@ This template renders the reports page.
                             <span class="tooltip-icon" title="{{ lang.tooltip_daterange }}">tooltip</span>
                         </div>
                     </div>
-                    
-                    <!-- course dropdown -->
+                </fieldset>
+                
+                <!-- Course filter fieldset -->
+                <fieldset class="form-fieldset">
+                    <legend>{{ lang.coursefilter }}</legend>
                     <div class="form-row">
                         <label for="repcourse">{{ lang.course }}</label>
                         <select name="repcourse" id="repcourse">
@@ -64,9 +70,13 @@ This template renders the reports page.
                             {% endfor %}
                         </select>
                     </div>
+                </fieldset>
 
-                    <!-- modle dropdown -->
-                    {% if data.paper_type != '3' %}
+                <!-- Module and Cohort filters (conditional) -->
+                {% if data.paper_type != '3' %}
+                    <!-- Module filter fieldset -->
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.modulefilter }}</legend>
                         <div class="form-row">
                             <label for="repmodule">{{ lang.module }}</label>
                             <select name="repmodule" id="repmodule">
@@ -75,8 +85,11 @@ This template renders the reports page.
                                 {% endfor %}
                             </select>
                         </div>
+                    </fieldset>
 
-                    <!-- cohort dropdown -->
+                    <!-- Cohort filter fieldset -->
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.cohortfilter }}</legend>
                         <div class="form-row">
                             <label for="direction">{{ lang.cohort }}</label>
                             <div class="cohort-container">
@@ -92,26 +105,29 @@ This template renders the reports page.
                                 </select>
                             </div>
                         </div>
-                    {% endif %}
-                    
-                    <!-- Metadata fields -->
-                    {% if data.meta_fields is defined and data.meta_fields|length > 0 %}
-                        <div class="form-section">
-                            <h2>{{ lang.metadata }}</h2>
-                                {% for field in data.meta_fields %}
-                                    <div class="form-row">
-                                        <label for="{{ field.id }}">{{ field.label }}</label>
-                                        <select name="{{ field.id }}" id="{{ field.id }}">
-                                            {% for option in field.options %}
-                                                <option value="{{ option.value }}">{{ option.text }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                {% endfor %}
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Checkbox options -->
+                    </fieldset>
+                {% endif %}
+                
+                <!-- Metadata fields -->
+                {% if data.meta_fields is defined and data.meta_fields|length > 0 %}
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.metadata }}</legend>
+                        {% for field in data.meta_fields %}
+                            <div class="form-row">
+                                <label for="{{ field.id }}">{{ field.label }}</label>
+                                <select name="{{ field.id }}" id="{{ field.id }}">
+                                    {% for option in field.options %}
+                                        <option value="{{ option.value }}">{{ option.text }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+                {% endif %}
+                
+                <!-- Checkbox options -->
+                <fieldset class="form-fieldset">
+                    <legend>{{ lang.reportoptions }}</legend>
                     <div class="form-row checkbox-row">
                         <div class="checkbox-container">
                             <input type="checkbox" 
@@ -132,9 +148,12 @@ This template renders the reports page.
                             <span class="tooltip-icon" title="{{ lang.tooltip_studentattempts }}">tooltip</span>
                         </div>
                     </div>
-                    
-                    <!-- Survey-specific form elements -->
-                    {% if data.paper_type == '3' %}
+                </fieldset>
+                
+                <!-- Survey-specific form elements -->
+                {% if data.paper_type == '3' %}
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.surveyoptions }}</legend>
                         <div class="form-row">
                             <label for="repyear">{{ lang.year }}</label>
                             <select name="repyear" id="repyear">
@@ -153,8 +172,8 @@ This template renders the reports page.
                                 <label for="{{ data.complete_datasets_checkbox.id }}">{{ lang.completedatasets }}</label>
                             </div>
                         </div>
-                    {% endif %}
-                </div>
+                    </fieldset>
+                {% endif %}
             </div>
         </form>
     </div>
