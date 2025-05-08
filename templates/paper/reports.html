@@ -212,7 +212,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.cohort_reports_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -229,7 +229,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.exports_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -246,7 +246,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.textbox_marking_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -263,7 +263,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.anomalies_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -281,7 +281,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.survey_quantitative_reports_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -298,7 +298,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.survey_qualitative_analysis_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -315,7 +315,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.survey_exports_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -333,7 +333,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.osce_cohort_reports_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -350,7 +350,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.osce_item_analysis_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -367,7 +367,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.osce_exports_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
@@ -385,7 +385,7 @@ This template renders the reports page.
                 <ul class="reports-list">
                     {% for item in data.peer_review_reports_section.items %}
                         <li class="reports-item">
-                            {% if item.class == 'disabled' %}
+                            {% if item.disabled %}
                                 <span class="disabled-link">{{ item.text }}</span>
                             {% else %}
                                 <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
