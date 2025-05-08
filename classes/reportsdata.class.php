@@ -454,13 +454,15 @@ class ReportsData
             $items[] = [
                 'url' => '',
                 'text' => $this->string['classtotalsexcel2003'],
-                'class' => 'disabled'
+                'class' => 'reports',
+                'disabled' => true
             ];
 
             $items[] = [
                 'url' => '',
                 'text' => $this->string['classtotalscsv'],
-                'class' => 'disabled'
+                'class' => 'reports',
+                'disabled' => true
             ];
         } else {
             $items[] = [
@@ -516,7 +518,8 @@ class ReportsData
             $items[] = [
                 'url' => '',
                 'text' => $this->string['exportmarkscsv'],
-                'class' => 'disabled'
+                'class' => 'reports',
+                'disabled' => true
             ];
         } else {
             $items[] = [
@@ -814,8 +817,9 @@ class ReportsData
             ];
         } else {
             $items[] = [
-                'class' => 'disabled',
-                'text' => $this->string['secondmarkbyquestion']
+                'class' => 'reports',
+                'text' => $this->string['secondmarkbyquestion'],
+                'disabled' => true
             ];
         }
 
