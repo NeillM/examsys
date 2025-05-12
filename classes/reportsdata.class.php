@@ -199,7 +199,7 @@ class ReportsData
      *
      * @return array Array of month options
      */
-    public function getMonthOptions(): array
+    protected function getMonthOptions(): array
     {
         $months = [];
         $month_keys = ['january', 'february', 'march', 'april', 'may', 'june',
@@ -221,7 +221,7 @@ class ReportsData
      * @param int $paperID Paper ID
      * @return array Array of course options
      */
-    public function getCourseOptions(int $paperID): array
+    protected function getCourseOptions(int $paperID): array
     {
         $courses = [];
 
@@ -260,7 +260,7 @@ class ReportsData
      * @param string $paperType Paper type
      * @return array Array of module options
      */
-    public function getModuleOptions(int $paperID, string $paperType): array
+    protected function getModuleOptions(int $paperID, string $paperType): array
     {
         if ($paperType == \assessment::TYPE_SURVEY) {
             return [];
@@ -291,7 +291,7 @@ class ReportsData
      *
      * @return array Array of direction options
      */
-    public function getCohortDirectionOptions(): array
+    protected function getCohortDirectionOptions(): array
     {
         return [
             [
@@ -317,7 +317,7 @@ class ReportsData
      *
      * @return array Array of percentage options
      */
-    public function getPercentageOptions(): array
+    protected function getPercentageOptions(): array
     {
         $percentages = [1, 5, 10, 15, 25, 27, 33.3, 50, 100];
         $options = [];
@@ -338,7 +338,7 @@ class ReportsData
      *
      * @return array Data for the absent candidates checkbox
      */
-    public function getAbsentCheckboxData(): array
+    protected function getAbsentCheckboxData(): array
     {
         return [
             'id' => 'absent',
@@ -354,7 +354,7 @@ class ReportsData
      *
      * @return array Data for the students only checkbox
      */
-    public function getStudentsOnlyCheckboxData(): array
+    protected function getStudentsOnlyCheckboxData(): array
     {
         return [
             'id' => 'studentsonly',
@@ -372,7 +372,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Reviews section data
      */
-    public function getReviewsData(PaperProperties $properties): array
+    protected function getReviewsData(PaperProperties $properties): array
     {
         $reviews = [];
 
@@ -408,7 +408,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Item analysis section data
      */
-    public function getItemAnalysisData(PaperProperties $properties): array
+    protected function getItemAnalysisData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -438,7 +438,7 @@ class ReportsData
      * @param int $paperID Paper ID
      * @return array Cohort reports section data
      */
-    public function getCohortReportsData(PaperProperties $properties, int $paperID): array
+    protected function getCohortReportsData(PaperProperties $properties, int $paperID): array
     {
         $items = [];
 
@@ -488,7 +488,7 @@ class ReportsData
      * @param int $paperID Paper ID
      * @return array Exports section data
      */
-    public function getExportsData(PaperProperties $properties, int $paperID): array
+    protected function getExportsData(PaperProperties $properties, int $paperID): array
     {
         $items = [];
 
@@ -718,7 +718,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Array of metadata fields and count
      */
-    public function getMetadataFields(int $paperID, PaperProperties $properties): array
+    protected function getMetadataFields(int $paperID, PaperProperties $properties): array
     {
         $metadata = [];
         $metaFields = [];
@@ -789,7 +789,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Textbox marking section data
      */
-    public function getTextboxMarkingData(int $paperID, PaperProperties $properties): array
+    protected function getTextboxMarkingData(int $paperID, PaperProperties $properties): array
     {
         $items = [];
 
@@ -842,7 +842,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Anomalies section data
      */
-    public function getAnomaliesData(PaperProperties $properties): array
+    protected function getAnomaliesData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -865,7 +865,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Survey quantitative reports section data
      */
-    public function getSurveyQuantitativeReportsData(PaperProperties $properties): array
+    protected function getSurveyQuantitativeReportsData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -895,7 +895,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Survey qualitative analysis section data
      */
-    public function getSurveyQualitativeAnalysisData(PaperProperties $properties): array
+    protected function getSurveyQualitativeAnalysisData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -925,7 +925,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Survey exports section data
      */
-    public function getSurveyExportsData(PaperProperties $properties): array
+    protected function getSurveyExportsData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -954,7 +954,7 @@ class ReportsData
      *
      * @return array Array of year options
      */
-    public function getYearOptions(): array
+    protected function getYearOptions(): array
     {
         $options = [];
 
@@ -981,7 +981,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array OSCE cohort reports section data
      */
-    public function getOsceCohortReportsData(PaperProperties $properties): array
+    protected function getOsceCohortReportsData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -1018,7 +1018,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array OSCE item analysis section data
      */
-    public function getOsceItemAnalysisData(PaperProperties $properties): array
+    protected function getOsceItemAnalysisData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -1041,7 +1041,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array OSCE exports section data
      */
-    public function getOsceExportsData(PaperProperties $properties): array
+    protected function getOsceExportsData(PaperProperties $properties): array
     {
         $items = [];
 
@@ -1071,7 +1071,7 @@ class ReportsData
      * @param PaperProperties $properties Paper properties
      * @return array Peer review reports section data
      */
-    public function getPeerReviewReportsData(PaperProperties $properties): array
+    protected function getPeerReviewReportsData(PaperProperties $properties): array
     {
         $items = [];
 
