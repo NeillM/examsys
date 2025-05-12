@@ -155,19 +155,19 @@ class ReportsData
 
         // Add textbox marking section data if paper has textbox questions and is not type 5
         if ($paperType != \assessment::TYPE_OFFLINE && $properties->q_type_exist('textbox')) {
-            $data['textbox_marking_section'] = $this->getTextboxMarkingData($paperID, $properties);
+            $data['textbox_marking_section'] = $this->getTextboxMarkingData($paperID);
         }
 
         // Add anomalies section data if anomaly detection is enabled for this paper type
         if (Anomaly::anomalyDetectionEnabled($properties->get_paper_type())) {
-            $data['anomalies_section'] = $this->getAnomaliesData($properties);
+            $data['anomalies_section'] = $this->getAnomaliesData();
         }
 
         // Add survey-specific sections
         if ($paperType == \assessment::TYPE_SURVEY) {
-            $data['survey_quantitative_reports_section'] = $this->getSurveyQuantitativeReportsData($properties);
-            $data['survey_qualitative_analysis_section'] = $this->getSurveyQualitativeAnalysisData($properties);
-            $data['survey_exports_section'] = $this->getSurveyExportsData($properties);
+            $data['survey_quantitative_reports_section'] = $this->getSurveyQuantitativeReportsData();
+            $data['survey_qualitative_analysis_section'] = $this->getSurveyQualitativeAnalysisData();
+            $data['survey_exports_section'] = $this->getSurveyExportsData();
 
             // add survey-specific form elements
             $data['year_options'] = $this->getYearOptions();
@@ -181,9 +181,9 @@ class ReportsData
 
         // Add OSCE-specific sections
         if ($paperType == \assessment::TYPE_OSCE) {
-            $data['osce_cohort_reports_section'] = $this->getOsceCohortReportsData($properties);
-            $data['osce_item_analysis_section'] = $this->getOsceItemAnalysisData($properties);
-            $data['osce_exports_section'] = $this->getOsceExportsData($properties);
+            $data['osce_cohort_reports_section'] = $this->getOsceCohortReportsData();
+            $data['osce_item_analysis_section'] = $this->getOsceItemAnalysisData();
+            $data['osce_exports_section'] = $this->getOsceExportsData();
         }
 
         // Add peer review-specific sections
@@ -786,10 +786,9 @@ class ReportsData
      * Get textbox marking section data
      *
      * @param int $paperID Paper ID
-     * @param PaperProperties $properties Paper properties
      * @return array Textbox marking section data
      */
-    protected function getTextboxMarkingData(int $paperID, PaperProperties $properties): array
+    protected function getTextboxMarkingData(int $paperID): array
     {
         $items = [];
 
@@ -839,10 +838,9 @@ class ReportsData
     /**
      * Get anomalies section data
      *
-     * @param PaperProperties $properties Paper properties
      * @return array Anomalies section data
      */
-    protected function getAnomaliesData(PaperProperties $properties): array
+    protected function getAnomaliesData(): array
     {
         $items = [];
 
@@ -862,10 +860,9 @@ class ReportsData
     /**
      * Get survey quantitative reports section data
      *
-     * @param PaperProperties $properties Paper properties
      * @return array Survey quantitative reports section data
      */
-    protected function getSurveyQuantitativeReportsData(PaperProperties $properties): array
+    protected function getSurveyQuantitativeReportsData(): array
     {
         $items = [];
 
@@ -892,10 +889,9 @@ class ReportsData
     /**
      * Get survey qualitative analysis section data
      *
-     * @param PaperProperties $properties Paper properties
      * @return array Survey qualitative analysis section data
      */
-    protected function getSurveyQualitativeAnalysisData(PaperProperties $properties): array
+    protected function getSurveyQualitativeAnalysisData(): array
     {
         $items = [];
 
@@ -922,10 +918,9 @@ class ReportsData
     /**
      * Get survey exports section data
      *
-     * @param PaperProperties $properties Paper properties
      * @return array Survey exports section data
      */
-    protected function getSurveyExportsData(PaperProperties $properties): array
+    protected function getSurveyExportsData(): array
     {
         $items = [];
 
@@ -978,10 +973,9 @@ class ReportsData
     /**
      * Get OSCE cohort reports section data
      *
-     * @param PaperProperties $properties Paper properties
      * @return array OSCE cohort reports section data
      */
-    protected function getOsceCohortReportsData(PaperProperties $properties): array
+    protected function getOsceCohortReportsData(): array
     {
         $items = [];
 
@@ -1015,10 +1009,9 @@ class ReportsData
     /**
      * Get OSCE item analysis section data
      *
-     * @param PaperProperties $properties Paper properties
      * @return array OSCE item analysis section data
      */
-    protected function getOsceItemAnalysisData(PaperProperties $properties): array
+    protected function getOsceItemAnalysisData(): array
     {
         $items = [];
 
@@ -1038,10 +1031,9 @@ class ReportsData
     /**
      * Get OSCE exports section data
      *
-     * @param PaperProperties $properties Paper properties
      * @return array OSCE exports section data
      */
-    protected function getOsceExportsData(PaperProperties $properties): array
+    protected function getOsceExportsData(): array
     {
         $items = [];
 
