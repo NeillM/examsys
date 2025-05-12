@@ -75,8 +75,8 @@ class ReportsData
     public function prepareTemplateData(
         PaperProperties $properties,
         int $paperID,
-        $module = null,
-        $folder = null
+        ?string $module = null,
+        ?string $folder = null
     ): array {
         // Get paper type name
         $paperType = $properties->get_paper_type();
@@ -676,7 +676,7 @@ class ReportsData
      * @param string|null $folder Folder name
      * @return array Data for the footer template
      */
-    public function prepareFooterData($module = null, $folder = null): array
+    public function prepareFooterData(?string $module = null, ?string $folder = null): array
     {
         return [
             'scripts' => ['/js/reportsinit.min.js'],
@@ -697,8 +697,8 @@ class ReportsData
     public function prepareDatasetData(
         string $paperType,
         int $paperID,
-        $module = null,
-        $folder = null
+        ?string $module = null,
+        ?string $folder = null
     ): array {
         return [
             'name' => 'dataset',
