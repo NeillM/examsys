@@ -91,19 +91,20 @@ This template renders the reports page.
                     <fieldset class="form-fieldset">
                         <legend>{{ lang.cohortfilter }}</legend>
                         <div class="form-row">
-                            <label for="direction">{{ lang.cohort }}</label>
-                            <div class="cohort-container">
-                                <select name="direction" id="direction">
-                                    {% for option in data.direction_options %}
-                                        <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
-                                    {% endfor %}
-                                </select>
-                                <select name="percent" id="percent">
-                                    {% for option in data.percentage_options %}
-                                        <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                            <label for="direction">{{ lang.direction }}</label>
+                            <select name="direction" id="direction">
+                                {% for option in data.direction_options %}
+                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label for="percent">{{ lang.percentage }}</label>
+                            <select name="percent" id="percent">
+                                {% for option in data.percentage_options %}
+                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </fieldset>
                 {% endif %}
