@@ -42,6 +42,8 @@ $string['anymodule'] = 'Any Module';
 
 // Cohort filters
 $string['cohort'] = 'Cohort';
+$string['direction'] = 'Direction';
+$string['percentage'] = 'Percentage';
 $string['allcandidates'] = 'All candidates';
 $string['top'] = 'Top';
 $string['bottom'] = 'Bottom';
