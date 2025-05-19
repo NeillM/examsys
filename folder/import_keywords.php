@@ -24,7 +24,6 @@
  */
 
 require '../include/staff_auth.inc';
-ini_set('auto_detect_line_endings', true);
 
 function keywords_from_file($fileName, $userObj, $db)
 {

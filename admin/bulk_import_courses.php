@@ -31,7 +31,6 @@ require '../include/toprightmenu.inc';
 // Instantiate Twig renderer.
 $render = new render($configObject);
 
-ini_set('auto_detect_line_endings', true);
 $lang['title'] = $string['bulkcourseimport'];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css" />

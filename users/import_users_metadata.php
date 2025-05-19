@@ -31,7 +31,7 @@ require_once '../include/errors.php';
 $module = check_var('module', 'GET', true, false, true);
 set_time_limit(0);
 ob_start();
-ini_set('auto_detect_line_endings', true);
+
 // Folder security checks
 $folder = '';
 $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);

@@ -25,8 +25,6 @@
  * @package
  */
 
-ini_set('auto_detect_line_endings', true);
-
 $header = [];
 $needed_cols1 = ['student_id','first names','surname','title','course code','year of course','local email'];
 $needed_cols2 = ['id','forenames','family name','title','course','year of study','email'];

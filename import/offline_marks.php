@@ -27,8 +27,6 @@ require '../include/staff_auth.inc';
 require_once '../include/question_types.php';
 require_once '../include/errors.php';
 
-ini_set('auto_detect_line_endings', true);
-
 $paperID = check_var('paperID', 'GET', true, false, true);
 $moduleID = check_var('module', 'GET', false, false, true);
 $folderID = param::optional('folder', null, param::INT, param::FETCH_GET);
