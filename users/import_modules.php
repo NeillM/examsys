@@ -28,8 +28,6 @@
 require_once '../include/admin_auth.inc';
 require '../include/toprightmenu.inc';
 
-ini_set('auto_detect_line_endings', true);
-
 // Instantiate Twig renderer.
 $render = new render($configObject);
 $lang['title'] = $string['impmodtitle'];

@@ -26,8 +26,6 @@
 require '../include/staff_auth.inc';
 require '../include/errors.php';
 
-ini_set('auto_detect_line_endings', true);
-
 $modID = check_var('module', 'REQUEST', true, false, true);
 if (isset($_POST['submit'])) {
     $session = $_POST['session'];
