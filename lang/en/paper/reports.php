@@ -131,3 +131,10 @@ $string['modulefilter'] = 'Module Filter';
 $string['cohortfilter'] = 'Cohort Filter';
 $string['reportoptions'] = 'Report Options';
 $string['surveyoptions'] = 'Survey Options';
+
+// Disabled link reasons
+$string['unavailable'] = 'unavailable';
+$string['reason_unmarked_questions'] = 'This option is unavailable because there are unmarked questions.';
+$string['reason_unmarked_textbox'] = 'This option is unavailable because there are unmarked textbox questions.';
+$string['reason_unmarked_enhancedcalc'] = 'This option is unavailable because there are unmarked enhanced calculation questions.';
+$string['reason_no_remark_users'] = 'This option is unavailable because no papers have been selected for remarking.';
