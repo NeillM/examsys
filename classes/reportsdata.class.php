@@ -451,18 +451,25 @@ class ReportsData
 
         // Excel and CSV export links
         if ($properties->unmarked_enhancedcalc(1) || $properties->unmarked_textbox(1)) {
+            // Determine the specific reason for disabling
+            $disabledReason = $properties->unmarked_enhancedcalc(1) 
+                ? $this->string['reason_unmarked_enhancedcalc'] 
+                : $this->string['reason_unmarked_textbox'];
+                
             $items[] = [
                 'url' => '',
                 'text' => $this->string['classtotalsexcel2003'],
                 'class' => 'reports',
-                'disabled' => true
+                'disabled' => true,
+                'disabledReason' => $disabledReason
             ];
 
             $items[] = [
                 'url' => '',
                 'text' => $this->string['classtotalscsv'],
                 'class' => 'reports',
-                'disabled' => true
+                'disabled' => true,
+                'disabledReason' => $disabledReason
             ];
         } else {
             $items[] = [
@@ -519,7 +526,8 @@ class ReportsData
                 'url' => '',
                 'text' => $this->string['exportmarkscsv'],
                 'class' => 'reports',
-                'disabled' => true
+                'disabled' => true,
+                'disabledReason' => $this->string['reason_unmarked_enhancedcalc']
             ];
         } else {
             $items[] = [
@@ -818,7 +826,8 @@ class ReportsData
             $items[] = [
                 'class' => 'reports',
                 'text' => $this->string['secondmarkbyquestion'],
-                'disabled' => true
+                'disabled' => true,
+                'disabledReason' => $this->string['reason_no_remark_users']
             ];
         }
 
