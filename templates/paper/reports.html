@@ -19,6 +19,62 @@ This template renders the reports page.
 
 @author Iyud Dissanayake
 @copyright 2025 The University of Nottingham
+
+Required variables:
+data - Object containing report page properties:
+    paperID - ID of the paper
+    module - Module ID
+    folder - Folder ID
+    paper_title - Title of the paper
+    paper_type - Type of the paper
+    start_date_selector - HTML for the start date selector
+    end_date_selector - HTML for the end date selector
+    month_options - Array of month options
+    course_options - Array of course options
+    module_options - Array of module options
+    direction_options - Array of cohort direction options
+    percentage_options - Array of percentage options
+    absent_checkbox - Object with checkbox data for absent candidates
+    students_only_checkbox - Object with checkbox data for students only option
+    meta_fields - Array of metadata fields
+    meta_no - Number of metadata fields
+    
+    Conditional sections (based on paper type):
+    reviews_section - Object with title and items for reviews
+    item_analysis_section - Object with title and items for item analysis
+    cohort_reports_section - Object with title and items for cohort reports
+    exports_section - Object with title and items for exports
+    textbox_marking_section - Object with title and items for textbox marking
+    anomalies_section - Object with title and items for anomalies
+    survey_quantitative_reports_section - Object with title and items for survey quantitative reports
+    survey_qualitative_analysis_section - Object with title and items for survey qualitative analysis
+    osce_cohort_reports_section - Object with title and items for OSCE cohort reports
+    osce_item_analysis_section - Object with title and items for OSCE item analysis
+    osce_exports_section - Object with title and items for OSCE exports
+    peer_review_reports_section - Object with title and items for peer review reports
+    year_options - Array of year options (for survey papers)
+    complete_datasets_checkbox - Object with checkbox data for complete datasets option (for survey papers)
+
+lang - Object containing localized strings:
+    reports - Reports page title
+    reportfilters - Report filters heading
+    datefilter - Date filter legend
+    dates - Dates label
+    to - Text between date selectors
+    tooltip_daterange - Tooltip text for date range
+    coursefilter - Course filter legend
+    course - Course label
+    modulefilter - Module filter legend
+    module - Module label
+    cohortfilter - Cohort filter legend
+    direction - Direction label
+    percentage - Percentage label
+    reportoptions - Report options legend
+    incabsentcandidates - Include absent candidates label
+    studentsonly - Students only label
+    tooltip_studentattempts - Tooltip text for student attempts
+    applyfilter - Apply filter button text
+    resetfilter - Reset filter button text
 #}
 
 <!-- Dataset element with required data attributes for papersidebar.js -->
