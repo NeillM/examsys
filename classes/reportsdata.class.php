@@ -295,11 +295,6 @@ class ReportsData
     {
         return [
             [
-                'value' => 'asc',
-                'text' => $this->string['allcandidates'],
-                'selected' => true
-            ],
-            [
                 'value' => 'desc',
                 'text' => $this->string['top'],
                 'selected' => false
