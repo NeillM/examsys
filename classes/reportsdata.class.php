@@ -22,45 +22,27 @@
  * @copyright Copyright (c) 2025 The University of Nottingham
  * @package
  */
-class ReportsData
+class ReportsData extends AbstractPageData
 {
-    /** @var array Language strings used for the page */
-    private $string;
-
-    /** @var Config The configuration object */
-    private $config;
-
-    /** @var mysqli The database connection */
-    private $db;
 
     /**
-     * Constructor for ReportsData
-     *
-     * @param array $string Array of language strings
+     * Get CSS files for the page
+     * 
+     * @return array Array of CSS file paths
      */
-    public function __construct(array $string)
+    protected function getCssFiles(): array
     {
-        $this->string = $string;
-        $this->config = Config::get_instance();
-        $this->db = $this->config->db;
+        return ['/css/source/reports_form.css'];
     }
-
+    
     /**
-     * Prepare data for the header template
-     *
-     * @return array Data for the header template
+     * Get JavaScript files for the page
+     * 
+     * @return array Array of JavaScript file paths
      */
-    public function prepareHeaderData(): array
+    protected function getScriptFiles(): array
     {
-        return [
-            'css' => ['/css/source/reports_form.css'],
-            'metadata' => [],
-            'mathjax' => $this->config->get_setting('core', 'cfg_mathjax_path'),
-            'three' => $this->config->get_setting('core', 'cfg_three_path'),
-            'editor' => $this->config->get_setting('core', 'cfg_editor_path'),
-            'texteditor' => '',
-            'scripts' => []
-        ];
+        return ['/js/reportsinit.min.js'];
     }
 
     /**
@@ -194,26 +176,7 @@ class ReportsData
         return $data;
     }
 
-    /**
-     * Get month options for date selectors
-     *
-     * @return array Array of month options
-     */
-    protected function getMonthOptions(): array
-    {
-        $months = [];
-        $month_keys = ['january', 'february', 'march', 'april', 'may', 'june',
-                      'july', 'august', 'september', 'october', 'november', 'december'];
 
-        for ($i = 1; $i <= 12; $i++) {
-            $months[] = [
-                'value' => $i,
-                'text' => $this->string[$month_keys[$i - 1]]
-            ];
-        }
-
-        return $months;
-    }
 
     /**
      * Get course options for the report

@@ -22,24 +22,8 @@
  * @copyright Copyright (c) 2025 The University of Nottingham
  * @package
  */
-class CopyPaperData
+class CopyPaperData extends AbstractPageData
 {
-    /** @var Config The configuration object */
-    private $config;
-
-    /** @var mysqli The database connection */
-    private $db;
-
-    /**
-     * Constructor for CopyPaperData
-     *
-     * @param array $string Array of language strings used for the page
-     */
-    public function __construct(private array $string)
-    {
-        $this->config = Config::get_instance();
-        $this->db = $this->config->db;
-    }
 
     /**
      * Get paper types options based on current paper type
@@ -115,26 +99,7 @@ class CopyPaperData
         return $campusobj->get_all_campus_details();
     }
 
-    /**
-     * Get month options for date required dropdown
-     *
-     * @return array Array of month options
-     */
-    public function getMonthOptions(): array
-    {
-        $months = [];
-        $month_keys = ['january', 'february', 'march', 'april', 'may', 'june',
-                      'july', 'august', 'september', 'october', 'november', 'december'];
 
-        for ($i = 1; $i <= 12; $i++) {
-            $months[] = [
-                'value' => $i,
-                'text' => $this->string[$month_keys[$i - 1]]
-            ];
-        }
-
-        return $months;
-    }
 
     /**
      * Get cohort size options
@@ -169,21 +134,23 @@ class CopyPaperData
     }
 
     /**
-     * Prepare data for the header template
-     *
-     * @return array Data for the header template
+     * Get CSS files for the page
+     * 
+     * @return array Array of CSS file paths
      */
-    public function prepareHeaderData(): array
+    protected function getCssFiles(): array
     {
-        return [
-            'css' => ['/css/source/copy_paper.css'],
-            'metadata' => [],
-            'mathjax' => $this->config->get_setting('core', 'cfg_mathjax_path'),
-            'three' => $this->config->get_setting('core', 'cfg_three_path'),
-            'editor' => $this->config->get_setting('core', 'cfg_editor_path'),
-            'texteditor' => '',
-            'scripts' => []
-        ];
+        return ['/css/source/copy_paper.css'];
+    }
+    
+    /**
+     * Get JavaScript files for the page
+     * 
+     * @return array Array of JavaScript file paths
+     */
+    protected function getScriptFiles(): array
+    {
+        return ['/js/copypaperinit.min.js'];
     }
 
     /**
