@@ -498,29 +498,7 @@ class ReportsData extends AbstractPageData
         // Add standards setting links if appropriate
         $paperType = $properties->get_paper_type();
         if (($paperType == \assessment::TYPE_FORMATIVE || $paperType == \assessment::TYPE_PROGRESS || $paperType == \assessment::TYPE_SUMMATIVE)) {
-            // Get checklist from modules
-            $moduleIDs = Paper_utils::get_modules($paperID, $this->db);
-            $checklist = '';
-
-            if (count($moduleIDs) > 0) {
-                $ids = array_keys($moduleIDs);
-                $stmt = $this->db->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $ids) . ')');
-                $stmt->execute();
-                $stmt->bind_result($tmp_checklist);
-                $check = [];
-
-                while ($stmt->fetch()) {
-                    if ($tmp_checklist != '') {
-                        $tmp = explode(',', $tmp_checklist);
-                        foreach ($tmp as $type) {
-                            $check[] = $type;
-                        }
-                    }
-                }
-
-                $checklist = implode(',', $check);
-                $stmt->close();
-            }
+            $checklist = $properties->get_checklist();
 
             // Add standards setting links if stdset is in the checklist
             if (mb_strpos($checklist, 'stdset') !== false) {
