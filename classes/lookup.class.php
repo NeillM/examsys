@@ -166,7 +166,7 @@ class Lookup extends RogoStaticSingleton
     public function error_handling($context = null)
     {
         $context1 = [];
-        $context1 = error_handling(array($this));
+        $context1 = error_handling((array)$this);
         if (isset($context1['config'])) {
             $context1['config'] = 'Settings hidden';
         }
