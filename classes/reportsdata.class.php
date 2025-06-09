@@ -672,10 +672,10 @@ class ReportsData extends AbstractPageData
 
         if (count($moduleIDs) > 0) {
             // Get metadata fields from database
+            $moduleIDKeys = array_keys($moduleIDs);
             $stmt = $this->db->prepare("SELECT DISTINCT type, value 
-                                      FROM users_metadata, modules 
-                                      WHERE users_metadata.idMod = modules.id 
-                                      AND modules.moduleid IN ('" . implode("','", $moduleIDs) . "') 
+                                      FROM users_metadata 
+                                      WHERE idMod IN (" . implode(',', $moduleIDKeys) . ") 
                                       ORDER BY type, value");
             $stmt->execute();
             $stmt->bind_result($meta_type, $meta_value);
