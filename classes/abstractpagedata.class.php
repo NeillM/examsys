@@ -87,14 +87,14 @@ abstract class AbstractPageData
 
     /**
      * Get CSS files for the page
-     * 
+     *
      * @return array Array of CSS file paths
      */
     abstract protected function getCssFiles(): array;
 
     /**
      * Get JavaScript files for the page
-     * 
+     *
      * @return array Array of JavaScript file paths
      */
     abstract protected function getScriptFiles(): array;

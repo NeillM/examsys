@@ -24,7 +24,6 @@
  */
 class CopyPaperData extends AbstractPageData
 {
-
     /**
      * Get paper types options based on current paper type
      *
@@ -135,17 +134,17 @@ class CopyPaperData extends AbstractPageData
 
     /**
      * Get CSS files for the page
-     * 
+     *
      * @return array Array of CSS file paths
      */
     protected function getCssFiles(): array
     {
         return ['/css/source/copy_paper.css'];
     }
-    
+
     /**
      * Get JavaScript files for the page
-     * 
+     *
      * @return array Array of JavaScript file paths
      */
     protected function getScriptFiles(): array

@@ -1942,14 +1942,14 @@ class PaperProperties
     {
         $moduleIDs = $this->get_modules();
         $checklist = '';
-        
+
         if (count($moduleIDs) > 0) {
             $ids = array_keys($moduleIDs);
             $stmt = $this->db->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $ids) . ')');
             $stmt->execute();
             $stmt->bind_result($tmp_checklist);
             $check = [];
-            
+
             while ($stmt->fetch()) {
                 if ($tmp_checklist != '') {
                     $tmp = explode(',', $tmp_checklist);
@@ -1958,11 +1958,11 @@ class PaperProperties
                     }
                 }
             }
-            
+
             $checklist = implode(',', $check);
             $stmt->close();
         }
-        
+
         return $checklist;
     }
 

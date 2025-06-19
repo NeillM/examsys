@@ -24,10 +24,9 @@
  */
 class ReportsData extends AbstractPageData
 {
-
     /**
      * Get CSS files for the page
-     * 
+     *
      * @return array Array of CSS file paths
      */
     protected function getCssFiles(): array
@@ -37,10 +36,10 @@ class ReportsData extends AbstractPageData
             '/css/source/breadcrumb.css'
         ];
     }
-    
+
     /**
      * Get JavaScript files for the page
-     * 
+     *
      * @return array Array of JavaScript file paths
      */
     protected function getScriptFiles(): array
@@ -65,7 +64,7 @@ class ReportsData extends AbstractPageData
     ): array {
         // Get paper type name
         $paperType = $properties->get_paper_type();
-        
+
         // Prepare breadcrumb data
         $breadcrumbData = new BreadcrumbData($this->string);
         $breadcrumb = $breadcrumbData->preparePaperBreadcrumb(
@@ -75,7 +74,7 @@ class ReportsData extends AbstractPageData
             $folder,
             $this->string['reports']
         );
-        
+
         // Calculate date ranges for the report
         $dateRanges = $this->calculateDateRanges($properties);
 
@@ -424,10 +423,10 @@ class ReportsData extends AbstractPageData
         // Excel and CSV export links
         if ($properties->unmarked_enhancedcalc(1) || $properties->unmarked_textbox(1)) {
             // Determine the specific reason for disabling
-            $disabledReason = $properties->unmarked_enhancedcalc(1) 
-                ? $this->string['reason_unmarked_enhancedcalc'] 
+            $disabledReason = $properties->unmarked_enhancedcalc(1)
+                ? $this->string['reason_unmarked_enhancedcalc']
                 : $this->string['reason_unmarked_textbox'];
-                
+
             $items[] = [
                 'url' => '',
                 'text' => $this->string['classtotalsexcel2003'],
@@ -687,10 +686,10 @@ class ReportsData extends AbstractPageData
         if (count($moduleIDs) > 0) {
             // Get metadata fields from database
             $moduleIDKeys = array_keys($moduleIDs);
-            $stmt = $this->db->prepare("SELECT DISTINCT type, value 
+            $stmt = $this->db->prepare('SELECT DISTINCT type, value 
                                       FROM users_metadata 
-                                      WHERE idMod IN (" . implode(',', $moduleIDKeys) . ") 
-                                      ORDER BY type, value");
+                                      WHERE idMod IN (' . implode(',', $moduleIDKeys) . ') 
+                                      ORDER BY type, value');
             $stmt->execute();
             $stmt->bind_result($meta_type, $meta_value);
 
