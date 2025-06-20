@@ -224,19 +224,29 @@ function add_users_from_file($fileName)
             }
         } elseif ($username != '' and stristr('ps_', $username) === false) {
             //update existing student records
+            //We do a manual db update for the user update.
+            //UserUtils::update_user() will not work as it will try to update the roles.
+
+            //Handle initials.
+            $initial = explode(' ', (string) $forname);
+            $initials = '';
+            foreach ($initial as $name) {
+                $initials .= mb_substr($name, 0, 1);
+            }
+            $initials = mb_strtoupper($initials);
 
             if ($password != '') {                    // We are updating the password from the CSV.
                 $salt = UserUtils::get_salt();
                 $encpw_password = \encryp::encpw($salt, $username, $password);
 
-                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, first_names = ?, surname = ?, grade = ?, password = ? WHERE username = ?');
-                $result->bind_param('sssssss', $year, $title, $forname, $surname, $course, $encpw_password, $username);
+                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, initials = ?, first_names = ?, surname = ?, grade = ?, password = ? WHERE username = ?');
+                $result->bind_param('ssssssss', $year, $title, $initials, $forname, $surname, $course, $encpw_password, $username);
                 $result->execute();
                 $result->close();
             } else {
                 // No new password was provided in the CSV.
-                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, first_names = ?, surname = ?, grade = ? WHERE username = ?');
-                $result->bind_param('ssssss', $year, $title, $forname, $surname, $course, $username);
+                $result = $mysqli->prepare('UPDATE users SET yearofstudy = ?, title = ?, initials = ?, first_names = ?, surname = ?, grade = ? WHERE username = ?');
+                $result->bind_param('sssssss', $year, $title, $initials, $forname, $surname, $course, $username);
                 $result->execute();
                 $result->close();
             }
