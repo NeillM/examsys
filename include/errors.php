@@ -48,6 +48,16 @@ function display_error($error_title, $error_description, $headers = true, $stop_
         $logger->record_access_denied(0, $error_title, $error_description);                     // Record attempt in access denied log, userID set to zero.
     }
 
+    // Check if this is an AJAX request and handle accordingly
+    if (defined('AJAX_REQUEST') and AJAX_REQUEST === true) {
+        echo json_encode(['error' => $error_title, 'message' => $error_description]);
+        if ($stop_execution == true) {
+            $mysqli->close();
+            exit;
+        }
+        return;
+    }
+
     if ($headers == false) {
         echo "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>" . $error_title . "</title>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"{$configObject->get('cfg_root_path')}/css/notice.css\" />\n</head>\n<body>\n";
     }
