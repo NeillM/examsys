@@ -112,6 +112,9 @@
          $breadcrumb = [];
 
          // Add home link
+         // Note: All breadcrumb URLs are relative to the application root.
+         // The template rendering code will prepend the base path when needed,
+         // which allows ExamSys to work correctly even when installed in a subdirectory.
          $breadcrumb[$this->string['home']] = '/';
 
          // Add navigation based on context (folder or module)
