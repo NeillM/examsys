@@ -33,7 +33,7 @@ class ReportsData extends AbstractPageData
     {
         return [
             '/css/source/reports_form.css',
-            '/css/source/breadcrumb.css'
+            '/css/source/breadcrumb.css',
         ];
     }
 
