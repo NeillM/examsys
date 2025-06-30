@@ -16,6 +16,7 @@
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once $cfg_web_root . 'lang/' . $language . '/include/months.php';
+require_once $cfg_web_root . 'lang/' . $language . '/include/paper_types.php';
 
 // Page title and headings
 $string['reports'] = 'Reports';
