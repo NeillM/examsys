@@ -113,19 +113,13 @@
 
          // Add home link
          // Note: All breadcrumb URLs are relative to the application root.
-         // The template rendering code will prepend the base path when needed,
-         // which allows ExamSys to work correctly even when installed in a subdirectory.
+         // The render.class will prepend the base path when needed,
          $breadcrumb[$this->string['home']] = '/';
 
          // Add navigation based on context (folder or module)
          if ($folder) {
+             // Add folder navigation links
              $breadcrumb = $this->addFolderLinks($breadcrumb, $folder);
-
-             // Add paper type link for folder navigation
-             $paperType = $properties->get_paper_type();
-             $paperTypeName = Paper_utils::type_to_name($paperType, $this->string);
-             $paperTypeHref = '/paper/type.php?type=' . $paperType . '&folder=' . $folder;
-             $breadcrumb[$paperTypeName] = $paperTypeHref;
          } else {
              // Determine module if not provided
              if (is_null($module)) {
