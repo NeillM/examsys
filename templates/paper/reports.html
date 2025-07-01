@@ -111,7 +111,7 @@ lang - Object containing localized strings:
                             {{ data.start_date_selector|raw }}
                             <span class="date-separator">{{ lang.to }}</span>
                             {{ data.end_date_selector|raw }}
-                            <span class="tooltip-icon" title="{{ lang.tooltip_daterange }}">tooltip</span>
+                            <img src="{{ data.tooltips.date_range.icon }}" class="help_tip" title="{{ data.tooltips.date_range.text }}" alt="Help" />
                         </div>
                     </div>
                 </fieldset>
@@ -203,7 +203,7 @@ lang - Object containing localized strings:
                                    value="{{ data.students_only_checkbox.value }}"
                                    {% if data.students_only_checkbox.checked %}checked{% endif %}>
                             <label for="{{ data.students_only_checkbox.id }}">{{ lang.studentsonly }}</label>
-                            <span class="tooltip-icon" title="{{ lang.tooltip_studentattempts }}">tooltip</span>
+                            <img src="{{ data.tooltips.student_attempts.icon }}" class="help_tip" title="{{ data.tooltips.student_attempts.text }}" alt="Help" />
                         </div>
                     </div>
                 </fieldset>
