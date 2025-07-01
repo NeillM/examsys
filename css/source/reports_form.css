@@ -100,26 +100,27 @@
 /* Checkbox styling */
 .checkbox-row {
     margin-left: 7.5rem;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .checkbox-container {
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
+    margin-right: 1.5rem;
 }
 
 .checkbox-container input[type="checkbox"] {
     margin-right: 0.5rem;
 }
 
-.checkbox-container label {
-    flex: none;
-    width: auto;
-    text-align: left;
-    padding-top: 0;
-    margin-right: 0;
-    font-size: 0.9rem;
-    cursor: pointer;
+/* Tooltip styling */
+.help_tip {
+    cursor: help;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    width: 1rem;
+    height: 1rem;
 }
 
 /* Button styling */
@@ -236,17 +237,4 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-}
-
-/* Tooltip styling */
-.tooltip {
-    display: inline-block;
-    position: relative;
-    margin-left: 0.5rem;
-    cursor: help;
-}
-
-.tooltip img {
-    width: 1rem;
-    height: 1rem;
 }
