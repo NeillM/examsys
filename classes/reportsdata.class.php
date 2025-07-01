@@ -44,7 +44,10 @@ class ReportsData extends AbstractPageData
      */
     protected function getScriptFiles(): array
     {
-        return ['/js/reportsinit.min.js'];
+        return [
+            '/js/reportsinit.min.js', 
+            '/js/modules/system_tooltips.min.js'
+        ];
     }
 
     /**
@@ -100,6 +103,8 @@ class ReportsData extends AbstractPageData
         // Get metadata fields
         $metadata = $this->getMetadataFields($paperID, $properties);
 
+        $tooltips = $this->getTooltipsData();
+
         $data = [
             'paperID' => $paperID,
             'module' => $module,
@@ -118,6 +123,7 @@ class ReportsData extends AbstractPageData
             'students_only_checkbox' => $this->getStudentsOnlyCheckboxData(),
             'meta_fields' => $metadata['fields'],
             'meta_no' => $metadata['count'],
+            'tooltips' => $tooltips,
         ];
 
         // Add reviews section data if paper type is appropriate
@@ -334,6 +340,27 @@ class ReportsData extends AbstractPageData
             'label' => $this->string['studentsonly'],
             'checked' => true,
             'tooltip' => $this->string['tooltip_studentattempts']
+        ];
+    }
+    
+    /**
+     * Get tooltips data for the reports page
+     * 
+     * @return array Array of tooltip data
+     */
+    protected function getTooltipsData(): array
+    {
+        return [
+            'date_range' => [
+                'id' => 'tooltip_daterange',
+                'text' => $this->string['tooltip_daterange'],
+                'icon' => '/artwork/tooltip_icon.gif'
+            ],
+            'student_attempts' => [
+                'id' => 'tooltip_studentattempts',
+                'text' => $this->string['tooltip_studentattempts'],
+                'icon' => '/artwork/tooltip_icon.gif'
+            ]
         ];
     }
 
