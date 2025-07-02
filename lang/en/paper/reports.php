@@ -21,6 +21,7 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/paper_types.php';
 // Page title and headings
 $string['reports'] = 'Reports';
 $string['reportspage'] = 'Reports Page';
+$string['title'] = 'Reports';
 
 // Paper information
 $string['paperid'] = 'Paper ID';
