@@ -45,7 +45,7 @@ class ReportsData extends AbstractPageData
     protected function getScriptFiles(): array
     {
         return [
-            '/js/reportsinit.min.js', 
+            '/js/reportsinit.min.js',
             '/js/modules/system_tooltips.min.js'
         ];
     }
@@ -342,10 +342,10 @@ class ReportsData extends AbstractPageData
             'tooltip' => $this->string['tooltip_studentattempts']
         ];
     }
-    
+
     /**
      * Get tooltips data for the reports page
-     * 
+     *
      * @return array Array of tooltip data
      */
     protected function getTooltipsData(): array
