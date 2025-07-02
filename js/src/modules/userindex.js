@@ -29,12 +29,12 @@ define(['rogoconfig', 'jquery'], function(config, $) {
             if ($('#dataset').attr('data-mode') == 'preview') {
                 paperURL += '&mode=preview';
             }
-
+            
             if ($('#dataset').attr('data-fullscreen')) {
-                var exam = window.open(paperURL,"paper","fullscreen=" + this.fullscreen + ",width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
-                if (window.focus) {
-                    exam.focus();
-                }
+                var exam = window.open(paperURL,"paper","fullscreen=yes,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+                window.focus();
+                location.href = "../students";
+                exam.focus();
             } else {
                 window.location = paperURL;
             }
