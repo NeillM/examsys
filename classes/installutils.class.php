@@ -770,6 +770,7 @@ class InstallUtils
         $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), Config::CSV);
         $configObject->set_setting('paper_mathjax', 1, Config::BOOLEAN);
         $configObject->set_setting('paper_mee', 0, Config::BOOLEAN);
+        $configObject->set_setting('paper_to_students_page_on_paper_close', 0, Config::BOOLEAN);
         $configObject->set_setting('misc_logo_main', 'logo.png', Config::STRING);
         $configObject->set_setting('misc_logo_email', 'alt_logo.png', Config::STRING);
         $configObject->set_setting('api_allow_superuser', 0, Config::BOOLEAN);

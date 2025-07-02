@@ -479,6 +479,8 @@ if ($test_type != '2') {
     $contentdata['displaypreviousattempts'] = false;
 }
 
+$contentdata['to_papers_page'] = $configObject->get_setting('core', 'paper_to_students_page_on_paper_close');
+
 $render->render($contentdata, $string, 'paper/start.html');
 
 // JS utils dataset.

@@ -23,6 +23,7 @@ define(['rogoconfig', 'jquery'], function(config, $) {
         /**
          * Start the paper.
          */
+        var button = document.getElementById('start');
         this.startPaper = function() {
             var paperURL = "../paper/start.php?id=" + $('#dataset').attr('data-id') + "&page=1";
 
@@ -31,10 +32,24 @@ define(['rogoconfig', 'jquery'], function(config, $) {
             }
             
             if ($('#dataset').attr('data-fullscreen')) {
-                var exam = window.open(paperURL,"paper","fullscreen=yes,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
-                window.focus();
-                location.href = "../students";
-                exam.focus();
+                var exam;
+                var to_students_page_on_paper_close
+                if (button.getAttribute('data-to_papers') == '0/') {
+                    to_students_page_on_paper_close = false;
+                } else {
+                    to_students_page_on_paper_close = true;
+                }
+                if (to_students_page_on_paper_close) {
+                    exam = window.open(paperURL,"paper","fullscreen=yes,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+                    window.focus();
+                    location.href = "../students";
+                    exam.focus();
+                } else {
+                    exam = window.open(paperURL,"paper","fullscreen=yes,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+                    if (window.focus) {
+                        exam.focus();
+                    }
+                }
             } else {
                 window.location = paperURL;
             }
