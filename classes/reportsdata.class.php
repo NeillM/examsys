@@ -68,9 +68,9 @@ class ReportsData extends AbstractPageData
         // Get paper type name
         $paperType = $properties->get_paper_type();
 
-        // Prepare breadcrumb data
+        // Prepare breadcrumb data 
         $breadcrumbData = new BreadcrumbData($this->string);
-        $breadcrumb = $breadcrumbData->preparePaperBreadcrumb(
+        $breadcrumbLinks = $breadcrumbData->preparePaperBreadcrumb(
             $paperID,
             $properties,
             $module,
@@ -109,7 +109,7 @@ class ReportsData extends AbstractPageData
             'paperID' => $paperID,
             'module' => $module,
             'folder' => $folder,
-            'breadcrumb' => $breadcrumb,
+            'breadcrumb_links' => $breadcrumbLinks,
             'paper_title' => $properties->get_paper_title(),
             'paper_type' => $paperType,
             'start_date_selector' => $startDateSelector,
