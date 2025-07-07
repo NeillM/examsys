@@ -57,6 +57,9 @@ $render = new render($configObject);
 // Prepare data for the header template
 $headerData = $reportsData->prepareHeaderData();
 
+// Include top-right menu for help page access
+require_once '../include/toprightmenu.inc';
+
 // Render the dataset template
 $datasetData = $reportsData->prepareDatasetData(
     $properties->get_paper_type(),
@@ -76,6 +79,22 @@ $templateData = $reportsData->prepareTemplateData(
 
 // Render the header template
 $render->render($headerData, $string, 'header.html');
+
+// Render the admin navigation template for breadcrumbs
+$links = [];
+foreach ($templateData['breadcrumb_links'] as $label => $url) {
+    if ($url === '') {
+        // This is the current page
+        $links[] = $label;
+    } else {
+        $links[$url] = $label;
+    }
+}
+
+echo $render->render_admin_navigation($links);
+
+// Include top-right menu with link to reports help page
+echo draw_toprightmenu(30); 
 
 // Render the main content template
 $render->render($templateData, $string, 'paper/reports.html');
