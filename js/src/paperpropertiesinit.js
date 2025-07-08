@@ -102,7 +102,17 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
                             alert.notification('missingtotime');
                         } else {
                             // Handle any other errors that are not covered by the specific cases above
-                            alert.plain(data.message || jsxls.lang_string['papererrors']);
+                            var errorText = '';
+                            if (data.error) {
+                                errorText = data.error;
+                            }
+                            if (data.message) {
+                                if (errorText) {
+                                    errorText += ': ';
+                                }
+                                errorText += data.message;
+                            }
+                            alert.plain(errorText || jsxls.lang_string['papererrors']);
                         }
                         return;
                     }
