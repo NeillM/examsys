@@ -59,6 +59,7 @@ class date_utils
      * @param int $start_year     - Start year for the year dropdown (e.g. 2001).
      * @param int $end_year       - End year for the year dropdown (e.g. 2015).
      *
+     * @deprecated Use accessible_timedate_select() instead for better accessibility support.
      * @return string - The HTML of the time/date selector.
      */
     public static function timedate_select($prefix, $imput_date, $split_time, $start_year, $end_year, $string)
@@ -156,6 +157,136 @@ class date_utils
             // Time
             $times = ['000000' => '00:00','003000' => '00:30','010000' => '01:00','013000' => '01:30','020000' => '02:00','023000' => '02:30','030000' => '03:00','033000' => '03:30','040000' => '04:00','043000' => '04:30','050000' => '05:00','053000' => '05:30','060000' => '06:00','063000' => '06:30','070000' => '07:00','073000' => '07:30','080000' => '08:00','083000' => '08:30','090000' => '09:00','093000' => '09:30','100000' => '10:00','103000' => '10:30','110000' => '11:00','113000' => '11:30','120000' => '12:00','123000' => '12:30','130000' => '13:00','133000' => '13:30','140000' => '14:00','143000' => '14:30','150000' => '15:00','153000' => '15:30','160000' => '16:00','163000' => '16:30','170000' => '17:00','173000' => '17:30','180000' => '18:00','183000' => '18:30','190000' => '19:00','193000' => '19:30','200000' => '20:00','203000' => '20:30','210000' => '21:00','213000' => '21:30','220000' => '22:00','223000' => '22:30','230000' => '23:00','233000' => '23:30'];
             $html .= '<select name="' . $prefix . 'time" id="' . $prefix . "time\">\n";
+            foreach ($times as $key => $value) {
+                if ($key == $split_hour . $split_minute . '00') {
+                    $html .= '<option value="' . $key . '" selected>' . $value . "</option>\n";
+                } else {
+                    $html .= '<option value="' . $key . '">' . $value . "</option>\n";
+                }
+            }
+            $html .= '</select>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Creates HTML dropdown menus to select day, month, year and hour (in half hour increments) with accessibility attributes.
+     * This is an accessible version of timedate_select() that includes proper labels for screen readers.
+     *
+     * @param string $prefix      - Prefix string to make the name of the selector.
+     * @param string $input_date  - Default time/date to populate the selector.
+     * @param bool $split_time    - False = one dropdown for hours & minutes, True = two separate dropdowns for hours and minutes.
+     * @param int $start_year     - Start year for the year dropdown (e.g. 2001).
+     * @param int $end_year       - End year for the year dropdown (e.g. 2015).
+     * @param array $string       - Language strings array.
+     * @param string $label_prefix - Prefix for aria-labels (e.g., "Start date" or "End date").
+     *
+     * @return string - The HTML of the accessible time/date selector.
+     */
+    public static function accessible_timedate_select($prefix, $input_date, $split_time, $start_year, $end_year, $string, $label_prefix = '')
+    {
+        $split_year = mb_substr((string) $input_date, 0, 4);
+        $split_month = mb_substr((string) $input_date, 4, 2);
+        $split_day = mb_substr((string) $input_date, 6, 2);
+        $split_hour = mb_substr((string) $input_date, 8, 2);
+        $split_minute = mb_substr((string) $input_date, 10, 2);
+
+        $html = '';
+
+        // Get the appropriate aria labels based on prefix
+        $day_label = isset($string[$label_prefix . '_day']) ? $string[$label_prefix . '_day'] : (isset($string['day']) ? $string['day'] : 'Day');
+        $month_label = isset($string[$label_prefix . '_month']) ? $string[$label_prefix . '_month'] : (isset($string['month']) ? $string['month'] : 'Month');
+        $year_label = isset($string[$label_prefix . '_year']) ? $string[$label_prefix . '_year'] : (isset($string['year']) ? $string['year'] : 'Year');
+        $hour_label = isset($string[$label_prefix . '_hour']) ? $string[$label_prefix . '_hour'] : (isset($string['hour']) ? $string['hour'] : 'Hour');
+        $minute_label = isset($string[$label_prefix . '_minute']) ? $string[$label_prefix . '_minute'] : (isset($string['minute']) ? $string['minute'] : 'Minute');
+        
+        // Day
+        $html .= '<select name="' . $prefix . 'day" id="' . $prefix . 'day" aria-label="' . $day_label . '">\n';
+        for ($i = 1; $i < 32; $i++) {
+            if ($i < 10) {
+                if ($i == $split_day) {
+                    $html .= "<option value=\"0$i\" selected>";
+                } else {
+                    $html .= "<option value=\"0$i\">";
+                }
+            } else {
+                if ($i == $split_day) {
+                    $html .= "<option value=\"$i\" selected>";
+                } else {
+                    $html .= "<option value=\"$i\">";
+                }
+            }
+            if ($i < 10) {
+                $html .= '0';
+            }
+            $html .= "$i</option>\n";
+        }
+        $html .= '</select>';
+
+        // Month
+        $html .= '<select name="' . $prefix . 'month" id="' . $prefix . 'month" aria-label="' . $month_label . '">\n';
+        $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+        for ($i = 0; $i < 12; $i++) {
+            $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
+            if (($split_month - 1) == $i) {
+                if ($i < 9) {
+                    $html .= '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
+                } else {
+                    $html .= '<option value="' . ($i + 1) . "\" selected>$trans_month</option>\n";
+                }
+            } else {
+                if ($i < 9) {
+                    $html .= '<option value="0' . ($i + 1) . "\">$trans_month</option>\n";
+                } else {
+                    $html .= '<option value="' . ($i + 1) . "\">$trans_month</option>\n";
+                }
+            }
+        }
+        $html .= '</select>';
+
+        // Year
+        $html .= '<select name="' . $prefix . 'year" id="' . $prefix . 'year" aria-label="' . $year_label . '">';
+        for ($i = $start_year; $i <= $end_year; $i++) {
+            if ($i == $split_year) {
+                $html .= "<option value=\"$i\" selected>$i</option>\n";
+            } else {
+                $html .= "<option value=\"$i\">$i</option>\n";
+            }
+        }
+        $html .= '</select>';
+
+        if ($split_time) {
+            $html .= '<select name="' . $prefix . 'hour" id="' . $prefix . 'hour" aria-label="' . $hour_label . '">\n';
+            for ($key = 0; $key < 24; $key++) {
+                if ($key < 10) {
+                    $key = '0' . $key;
+                }
+                if ($key == $split_hour) {
+                    $html .= '<option value="' . $key . '" selected>' . $key . "</option>\n";
+                } else {
+                    $html .= '<option value="' . $key . '">' . $key . "</option>\n";
+                }
+            }
+            $html .= '</select>';
+
+            $html .= '<select name="' . $prefix . 'minute" id="' . $prefix . 'minute" aria-label="' . $minute_label . '">\n';
+            for ($key = 0; $key < 60; $key++) {
+                if ($key < 10) {
+                    $key = '0' . $key;
+                }
+                if ($key == $split_minute) {
+                    $html .= '<option value="' . $key . '" selected>' . $key . "</option>\n";
+                } else {
+                    $html .= '<option value="' . $key . '">' . $key . "</option>\n";
+                }
+            }
+            $html .= '</select>';
+        } else {
+            // Time
+            $times = ['000000' => '00:00','003000' => '00:30','010000' => '01:00','013000' => '01:30','020000' => '02:00','023000' => '02:30','030000' => '03:00','033000' => '03:30','040000' => '04:00','043000' => '04:30','050000' => '05:00','053000' => '05:30','060000' => '06:00','063000' => '06:30','070000' => '07:00','073000' => '07:30','080000' => '08:00','083000' => '08:30','090000' => '09:00','093000' => '09:30','100000' => '10:00','103000' => '10:30','110000' => '11:00','113000' => '11:30','120000' => '12:00','123000' => '12:30','130000' => '13:00','133000' => '13:30','140000' => '14:00','143000' => '14:30','150000' => '15:00','153000' => '15:30','160000' => '16:00','163000' => '16:30','170000' => '17:00','173000' => '17:30','180000' => '18:00','183000' => '18:30','190000' => '19:00','193000' => '19:30','200000' => '20:00','203000' => '20:30','210000' => '21:00','213000' => '21:30','220000' => '22:00','223000' => '22:30','230000' => '23:00','233000' => '23:30'];
+            $time_label = isset($string[$label_prefix . '_time']) ? $string[$label_prefix . '_time'] : (isset($string['time']) ? $string['time'] : 'Time');
+            $html .= '<select name="' . $prefix . 'time" id="' . $prefix . 'time" aria-label="' . $time_label . '">\n';
             foreach ($times as $key => $value) {
                 if ($key == $split_hour . $split_minute . '00') {
                     $html .= '<option value="' . $key . '" selected>' . $value . "</option>\n";
