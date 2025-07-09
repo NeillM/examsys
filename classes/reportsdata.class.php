@@ -82,22 +82,24 @@ class ReportsData extends AbstractPageData
         $dateRanges = $this->calculateDateRanges($properties);
 
         // Generate date selectors HTML
-        $startDateSelector = date_utils::timedate_select(
+        $startDateSelector = date_utils::accessible_timedate_select(
             'start_',
             date($dateRanges['default_start']),
             true,
             $dateRanges['start_year'],
             $dateRanges['end_year'],
-            $this->string
+            $this->string,
+            'start_date'
         );
 
-        $endDateSelector = date_utils::timedate_select(
+        $endDateSelector = date_utils::accessible_timedate_select(
             'end_',
             date($dateRanges['default_end']),
             true,
             $dateRanges['start_year'],
             $dateRanges['end_year'],
-            $this->string
+            $this->string,
+            'end_date'
         );
 
         // Get metadata fields
