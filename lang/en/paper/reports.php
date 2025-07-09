@@ -140,3 +140,17 @@ $string['reason_unmarked_questions'] = 'This option is unavailable because there
 $string['reason_unmarked_textbox'] = 'This option is unavailable because there are unmarked textbox questions.';
 $string['reason_unmarked_enhancedcalc'] = 'This option is unavailable because there are unmarked enhanced calculation questions.';
 $string['reason_no_remark_users'] = 'This option is unavailable because no papers have been selected for remarking.';
+
+// Accessibility labels for date selectors
+$string['day'] = 'Day';
+$string['month'] = 'Month';
+$string['start_date_day'] = 'Start date day';
+$string['start_date_month'] = 'Start date month';
+$string['start_date_year'] = 'Start date year';
+$string['start_date_hour'] = 'Start date hour';
+$string['start_date_minute'] = 'Start date minute';
+$string['end_date_day'] = 'End date day';
+$string['end_date_month'] = 'End date month';
+$string['end_date_year'] = 'End date year';
+$string['end_date_hour'] = 'End date hour';
+$string['end_date_minute'] = 'End date minute';
