@@ -192,18 +192,37 @@ if (!$title_unique) {
 
     if ($properties->canEditSecurity()) {
         if (!$properties->isGraded()) {
-            // We should only attempt to fetch date values from the form if a user can edit them.
-            $fyear = check_var('fyear', 'POST', true, false, true);
-            $fmonth = check_var('fmonth', 'POST', true, false, true);
-            $fday = check_var('fday', 'POST', true, false, true);
-            $fhour = check_var('fhour', 'POST', true, false, true);
-            $fminute = check_var('fminute', 'POST', true, false, true);
+            // Check if this is a remote summative paper
+            $remote_summative = param::optional('remote_summative', 0, param::INT, param::FETCH_POST);
+            $is_remote_summative = ($papertype == '2' && $remote_summative == 1);
+            
+            // Date fields are mandatory unless it's a remote summative paper
+            if (!$is_remote_summative) {
+                $fyear = check_var('fyear', 'POST', true, false, true);
+                $fmonth = check_var('fmonth', 'POST', true, false, true);
+                $fday = check_var('fday', 'POST', true, false, true);
+                $fhour = check_var('fhour', 'POST', true, false, true);
+                $fminute = check_var('fminute', 'POST', true, false, true);
 
-            $tyear = check_var('tyear', 'POST', true, false, true);
-            $tmonth = check_var('tmonth', 'POST', true, false, true);
-            $tday = check_var('tday', 'POST', true, false, true);
-            $thour = check_var('thour', 'POST', true, false, true);
-            $tminute = check_var('tminute', 'POST', true, false, true);
+                $tyear = check_var('tyear', 'POST', true, false, true);
+                $tmonth = check_var('tmonth', 'POST', true, false, true);
+                $tday = check_var('tday', 'POST', true, false, true);
+                $thour = check_var('thour', 'POST', true, false, true);
+                $tminute = check_var('tminute', 'POST', true, false, true);
+            } else {
+                // For remote summative papers, dates are optional
+                $fyear = param::optional('fyear', '', param::TEXT, param::FETCH_POST);
+                $fmonth = param::optional('fmonth', '', param::TEXT, param::FETCH_POST);
+                $fday = param::optional('fday', '', param::TEXT, param::FETCH_POST);
+                $fhour = param::optional('fhour', '', param::TEXT, param::FETCH_POST);
+                $fminute = param::optional('fminute', '', param::TEXT, param::FETCH_POST);
+
+                $tyear = param::optional('tyear', '', param::TEXT, param::FETCH_POST);
+                $tmonth = param::optional('tmonth', '', param::TEXT, param::FETCH_POST);
+                $tday = param::optional('tday', '', param::TEXT, param::FETCH_POST);
+                $thour = param::optional('thour', '', param::TEXT, param::FETCH_POST);
+                $tminute = param::optional('tminute', '', param::TEXT, param::FETCH_POST);
+            }
 
             if (isset($fyear) and isset($fmonth) and isset($fday) and isset($fhour) and isset($fminute)) {
                 $null_start_date = false;

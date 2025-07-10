@@ -94,6 +94,23 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
                 data: $('#theform').serialize(),
                 dataType: "json",
                 success: function (data) {
+                    if (data.error) {
+                        // Check if it's a field name and map to appropriate message
+                        if (data.message === 'fyear' || data.message === 'fmonth' || data.message === 'fday' || data.message === 'fhour' || data.message === 'fminute') {
+                            alert.notification('missingfromtime');
+                        } else if (data.message === 'tyear' || data.message === 'tmonth' || data.message === 'tday' || data.message === 'thour' || data.message === 'tminute') {
+                            alert.notification('missingtotime');
+                        } else {
+                            // Handle any other errors that are not covered by the specific cases above
+                            var errorText = data.error;
+                            if (data.message) {
+                                errorText += ': ' + data.message;
+                            }
+                            alert.plain(errorText || jsxls.lang_string['papererrors']);
+                        }
+                        return;
+                    }
+                    
                     if (data == 'SUCCESS') {
                         window.location.href = Config.cfgrootpath  + '/paper/details.php?paperID=' + $('#dataset').attr('data-id');
                     } else if (data == 'DUPLICATE_TITLE') {

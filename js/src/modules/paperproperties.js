@@ -96,7 +96,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
             if ($('#fyear').val() > $('#tyear').val()) {
                 alert.notification('availablefromyear');
                 return false;
-            } else if ($('fyear').val() == $('#tyear').val() && $('#fmonth').val() > $('#tmonth').val()) {
+            } else if ($('#fyear').val() == $('#tyear').val() && $('#fmonth').val() > $('#tmonth').val()) {
                 alert.notification('availablefrommonth');
                 return false;
             } else if ($('#fyear').val() == $('#tyear').val() && $('#fmonth').val() == $('#tmonth').val() && $('#fday').val() > $('#tday').val()) {

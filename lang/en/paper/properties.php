@@ -37,6 +37,7 @@ $string['msg7'] = 'Please enter a name for the Paper.';
 $string['durationnotmet'] = 'The exam availability does not cover its duration.';
 $string['missingfromtime'] = 'The exam availability start time has not been set';
 $string['missingtotime'] = 'The exam availability end time has not been set';
+$string['papererrors'] = 'An error occurred while updating paper properties';
 
 // General tab
 $string['generaltab'] = 'General';
