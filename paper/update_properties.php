@@ -192,11 +192,10 @@ if (!$title_unique) {
 
     if ($properties->canEditSecurity()) {
         if (!$properties->isGraded()) {
-            // Check if this is a remote summative paper
+            // Check if this is a remote summative paper.
             $remote_summative = param::optional('remote_summative', 0, param::INT, param::FETCH_POST);
             $is_remote_summative = ($papertype == '2' && $remote_summative == 1);
-            
-            // Date fields are mandatory unless it's a remote summative paper
+            // Date fields are mandatory unless it's a remote summative paper.
             if (!$is_remote_summative) {
                 $fyear = check_var('fyear', 'POST', true, false, true);
                 $fmonth = check_var('fmonth', 'POST', true, false, true);
