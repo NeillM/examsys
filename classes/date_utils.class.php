@@ -194,12 +194,12 @@ class date_utils
 
         $html = '';
 
-        // Get the appropriate aria labels based on prefix
-        $day_label = isset($string[$label_prefix . '_day']) ? $string[$label_prefix . '_day'] : (isset($string['day']) ? $string['day'] : 'Day');
-        $month_label = isset($string[$label_prefix . '_month']) ? $string[$label_prefix . '_month'] : (isset($string['month']) ? $string['month'] : 'Month');
-        $year_label = isset($string[$label_prefix . '_year']) ? $string[$label_prefix . '_year'] : (isset($string['year']) ? $string['year'] : 'Year');
-        $hour_label = isset($string[$label_prefix . '_hour']) ? $string[$label_prefix . '_hour'] : (isset($string['hour']) ? $string['hour'] : 'Hour');
-        $minute_label = isset($string[$label_prefix . '_minute']) ? $string[$label_prefix . '_minute'] : (isset($string['minute']) ? $string['minute'] : 'Minute');
+        // Get the aria labels based on prefix
+        $day_label = $string[$label_prefix . '_day'];
+        $month_label = $string[$label_prefix . '_month'];
+        $year_label = $string[$label_prefix . '_year'];
+        $hour_label = $string[$label_prefix . '_hour'];
+        $minute_label = $string[$label_prefix . '_minute'];
         
         // Day
         $html .= '<select name="' . $prefix . 'day" id="' . $prefix . 'day" aria-label="' . $day_label . '">\n';
