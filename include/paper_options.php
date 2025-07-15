@@ -97,6 +97,12 @@ if ($reportsItem) {
     $render->render($reportsItem, $string, 'sidebar/menuitem.html');
 }
 
+// Reports Page
+$reportsPageItem = $menuItemData->getReportsPageItem($properties, $paperID, $module, $folder);
+if ($reportsPageItem) {
+    $render->render($reportsPageItem, $string, 'sidebar/menuitem.html');
+}
+
 //Import Offline marks
 if ($properties->get_paper_type() == \assessment::TYPE_OFFLINE) {
     $importOfflineMarksItem = $menuItemData->getImportOfflineMarksItem($paperID, $module, $folder);
