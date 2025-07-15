@@ -991,4 +991,36 @@ class PaperMenuItemData
             'status' => $isComplete ? $this->string['ok'] : "$mappings_complete/$total_questions"
         ];
     }
+
+    /**
+     * Generates menu item data for accessing the standalone reports page.
+     *
+     * @param PaperProperties $properties Paper properties object
+     * @param int $paperID The ID of the paper
+     * @param string $module The module code
+     * @param string $folder The folder name
+     * @return array Menu item data structure with UI properties
+     */
+    public function getReportsPageItem(PaperProperties $properties, int $paperID, string $module, string $folder): array
+    {
+        $paperType = $properties->get_paper_type();
+
+        // Types 0,1,2,5,6 with no items - grey disabled version
+        if (in_array($paperType, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE, \assessment::TYPE_OFFLINE, \assessment::TYPE_PEERREVIEW]) && $properties->get_item_no() == 0) {
+            return [
+                'disabled' => true,
+                'icon' => $this->rootPath . '/artwork/statistics_icon_grey.gif',
+                'text' => $this->string['reportspage']
+            ];
+        }
+
+        // Return active version for all paper types with direct link to reports page
+        return [
+            'classes' => 'reports-page',
+            'icon' => $this->rootPath . '/artwork/statistics_icon.gif',
+            'text' => $this->string['reportspage'],
+            'href' => $this->rootPath . "/paper/reports.php?paperID=$paperID&module=$module&folder=$folder",
+            'action' => 'directUrl'
+        ];
+    }
 }
