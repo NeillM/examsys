@@ -173,7 +173,7 @@ class date_utils
     /**
      * Creates HTML dropdown menus to select day, month, year and hour (in half hour increments) with accessibility attributes.
      * This is an accessible version of timedate_select() that includes proper labels for screen readers.
-     * 
+     *
      * @param string $prefix      - Prefix string to make the name of the selector.
      * @param string $input_date  - Default time/date to populate the selector.
      * @param bool $split_time    - False = one dropdown for hours & minutes, True = two separate dropdowns for hours and minutes.
@@ -208,7 +208,7 @@ class date_utils
         $year_label = $string[$label_prefix . '_year'];
         $hour_label = $string[$label_prefix . '_hour'];
         $minute_label = $string[$label_prefix . '_minute'];
-        
+
         // Day
         $html .= '<select name="' . $prefix . 'day" id="' . $prefix . 'day" aria-label="' . $day_label . '">\n';
         for ($i = 1; $i < 32; $i++) {

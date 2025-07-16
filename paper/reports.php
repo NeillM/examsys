@@ -94,7 +94,7 @@ foreach ($templateData['breadcrumb_links'] as $label => $url) {
 echo $render->render_admin_navigation($links);
 
 // Include top-right menu with link to reports help page
-echo draw_toprightmenu(30); 
+echo draw_toprightmenu(30);
 
 // Render the main content template
 $render->render($templateData, $string, 'paper/reports.html');
