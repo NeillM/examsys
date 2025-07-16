@@ -173,13 +173,21 @@ class date_utils
     /**
      * Creates HTML dropdown menus to select day, month, year and hour (in half hour increments) with accessibility attributes.
      * This is an accessible version of timedate_select() that includes proper labels for screen readers.
-     *
+     * 
      * @param string $prefix      - Prefix string to make the name of the selector.
      * @param string $input_date  - Default time/date to populate the selector.
      * @param bool $split_time    - False = one dropdown for hours & minutes, True = two separate dropdowns for hours and minutes.
      * @param int $start_year     - Start year for the year dropdown (e.g. 2001).
      * @param int $end_year       - End year for the year dropdown (e.g. 2015).
-     * @param array $string       - Language strings array.
+     * @param array $string       - Language strings array. Required strings:
+     *                              - Month names: $string['january'], $string['february'], etc. (all 12 months)
+     *                              - When using $label_prefix (e.g., 'start_date'):
+     *                                - $string[$label_prefix . '_day'] (e.g., 'start_date_day')
+     *                                - $string[$label_prefix . '_month'] (e.g., 'start_date_month')
+     *                                - $string[$label_prefix . '_year'] (e.g., 'start_date_year')
+     *                                - $string[$label_prefix . '_hour'] (when $split_time is true)
+     *                                - $string[$label_prefix . '_minute'] (when $split_time is true)
+     *                                - $string[$label_prefix . '_time'] (when $split_time is false, falls back to 'time' if not found)
      * @param string $label_prefix - Prefix for aria-labels (e.g., "Start date" or "End date").
      *
      * @return string - The HTML of the accessible time/date selector.
