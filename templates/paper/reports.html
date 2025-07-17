@@ -1,0 +1,533 @@
+{# This file is part of ExamSys
+
+    ExamSys is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    ExamSys is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License
+    along with ExamSys.  If not, see <http://www.gnu.org/licenses/>. 
+    #}
+    
+{#
+This template renders the reports page.
+
+@author Iyud Dissanayake
+@copyright 2025 The University of Nottingham
+
+Required variables:
+data - Object containing report page properties:
+    paperID - ID of the paper
+    module - Module ID
+    folder - Folder ID
+    paper_title - Title of the paper
+    paper_type - Type of the paper
+    start_date_selector - HTML for the start date selector
+    end_date_selector - HTML for the end date selector
+    month_options - Array of month options
+    course_options - Array of course options
+    module_options - Array of module options
+    direction_options - Array of cohort direction options
+    percentage_options - Array of percentage options
+    absent_checkbox - Object with checkbox data for absent candidates
+    students_only_checkbox - Object with checkbox data for students only option
+    meta_fields - Array of metadata fields
+    meta_no - Number of metadata fields
+    
+    Conditional sections (based on paper type):
+    reviews_section - Object with title and items for reviews
+    item_analysis_section - Object with title and items for item analysis
+    cohort_reports_section - Object with title and items for cohort reports
+    exports_section - Object with title and items for exports
+    textbox_marking_section - Object with title and items for textbox marking
+    anomalies_section - Object with title and items for anomalies
+    survey_quantitative_reports_section - Object with title and items for survey quantitative reports
+    survey_qualitative_analysis_section - Object with title and items for survey qualitative analysis
+    osce_cohort_reports_section - Object with title and items for OSCE cohort reports
+    osce_item_analysis_section - Object with title and items for OSCE item analysis
+    osce_exports_section - Object with title and items for OSCE exports
+    peer_review_reports_section - Object with title and items for peer review reports
+    year_options - Array of year options (for survey papers)
+    complete_datasets_checkbox - Object with checkbox data for complete datasets option (for survey papers)
+
+lang - Object containing localized strings:
+    reports - Reports page title
+    reportfilters - Report filters heading
+    datefilter - Date filter legend
+    dates - Dates label
+    to - Text between date selectors
+    tooltip_daterange - Tooltip text for date range
+    coursefilter - Course filter legend
+    course - Course label
+    modulefilter - Module filter legend
+    module - Module label
+    cohortfilter - Cohort filter legend
+    direction - Direction label
+    percentage - Percentage label
+    reportoptions - Report options legend
+    incabsentcandidates - Include absent candidates label
+    studentsonly - Students only label
+    tooltip_studentattempts - Tooltip text for student attempts
+    applyfilter - Apply filter button text
+    resetfilter - Reset filter button text
+#}
+
+<!-- Dataset element with required data attributes for papersidebar.js -->
+<div id="dataset" 
+     data-paperid="{{ data.paperID }}" 
+     data-module="{{ data.module }}" 
+     data-folder="{{ data.folder }}"
+     data-papertype="{{ data.paper_type }}">
+</div>
+
+<div id="content">
+    <h1>{{ lang.reports }}</h1>
+    
+    <div id="stats_menu" class="stats_menu">
+        <form name="stats_menu" autocomplete="off">
+            <div class="form-header">
+                <div class="form-bar"></div>
+            </div>
+            <div class="form-content">
+                
+                <!-- Hidden inputs required by papersidebar.js -->
+                <input type="hidden" id="paperID" name="paperID" value="{{ data.paperID }}">
+                <input type="hidden" id="meta_no" name="meta_no" value="{{ data.meta_no }}">
+                
+                <h2>{{ lang.reportfilters }}</h2>
+                
+                <!-- Date filter fieldset -->
+                <fieldset class="form-fieldset">
+                    <legend>{{ lang.datefilter }}</legend>
+                    <div class="form-row">
+                        <label for="start_date">{{ lang.dates }}</label>
+                        <div class="date-range-container">
+                            {{ data.start_date_selector|raw }}
+                            <span class="date-separator">{{ lang.to }}</span>
+                            {{ data.end_date_selector|raw }}
+                            <img src="{{ data.tooltips.date_range.icon }}" class="help_tip" title="{{ data.tooltips.date_range.text }}" alt="Help" />
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <!-- Course filter fieldset -->
+                <fieldset class="form-fieldset">
+                    <legend>{{ lang.coursefilter }}</legend>
+                    <div class="form-row">
+                        <label for="repcourse">{{ lang.course }}</label>
+                        <select name="repcourse" id="repcourse">
+                            {% for option in data.course_options %}
+                                <option value="{{ option.value }}">{{ option.text }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </fieldset>
+
+                <!-- Module and Cohort filters (conditional) -->
+                {% if data.paper_type != '3' %}
+                    <!-- Module filter fieldset -->
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.modulefilter }}</legend>
+                        <div class="form-row">
+                            <label for="repmodule">{{ lang.module }}</label>
+                            <select name="repmodule" id="repmodule">
+                                {% for option in data.module_options %}
+                                    <option value="{{ option.value }}">{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <!-- Cohort filter fieldset -->
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.cohortfilter }}</legend>
+                        <div class="form-row">
+                            <label for="direction">{{ lang.direction }}</label>
+                            <select name="direction" id="direction">
+                                {% for option in data.direction_options %}
+                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <label for="percent">{{ lang.percentage }}</label>
+                            <select name="percent" id="percent">
+                                {% for option in data.percentage_options %}
+                                    <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </fieldset>
+                {% endif %}
+                
+                <!-- Metadata fields -->
+                {% if data.meta_fields is defined and data.meta_fields|length > 0 %}
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.metadata }}</legend>
+                        {% for field in data.meta_fields %}
+                            <div class="form-row">
+                                <label for="{{ field.id }}">{{ field.label }}</label>
+                                <select name="{{ field.id }}" id="{{ field.id }}">
+                                    {% for option in field.options %}
+                                        <option value="{{ option.value }}">{{ option.text }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        {% endfor %}
+                    </fieldset>
+                {% endif %}
+                
+                <!-- Checkbox options -->
+                <fieldset class="form-fieldset">
+                    <legend>{{ lang.reportoptions }}</legend>
+                    <div class="form-row checkbox-row">
+                        <div class="checkbox-container">
+                            <input type="checkbox" 
+                                   id="{{ data.absent_checkbox.id }}" 
+                                   name="{{ data.absent_checkbox.name }}" 
+                                   value="{{ data.absent_checkbox.value }}"
+                                   {% if data.absent_checkbox.checked %}checked{% endif %}>
+                            <label for="{{ data.absent_checkbox.id }}">{{ lang.incabsentcandidates }}</label>
+                        </div>
+                        
+                        <div class="checkbox-container">
+                            <input type="checkbox" 
+                                   id="{{ data.students_only_checkbox.id }}" 
+                                   name="{{ data.students_only_checkbox.name }}" 
+                                   value="{{ data.students_only_checkbox.value }}"
+                                   {% if data.students_only_checkbox.checked %}checked{% endif %}>
+                            <label for="{{ data.students_only_checkbox.id }}">{{ lang.studentsonly }}</label>
+                            <img src="{{ data.tooltips.student_attempts.icon }}" class="help_tip" title="{{ data.tooltips.student_attempts.text }}" alt="Help" />
+                        </div>
+                    </div>
+                </fieldset>
+                
+                <!-- Survey-specific form elements -->
+                {% if data.paper_type == '3' %}
+                    <fieldset class="form-fieldset">
+                        <legend>{{ lang.surveyoptions }}</legend>
+                        <div class="form-row">
+                            <label for="repyear">{{ lang.year }}</label>
+                            <select name="repyear" id="repyear">
+                                {% for option in data.year_options %}
+                                    <option value="{{ option.value }}">{{ option.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-row checkbox-row">
+                            <div class="checkbox-container">
+                                <input type="checkbox" 
+                                    id="{{ data.complete_datasets_checkbox.id }}" 
+                                    name="{{ data.complete_datasets_checkbox.name }}" 
+                                    value="{{ data.complete_datasets_checkbox.value }}"
+                                    {% if data.complete_datasets_checkbox.checked %}checked{% endif %}>
+                                <label for="{{ data.complete_datasets_checkbox.id }}">{{ lang.completedatasets }}</label>
+                            </div>
+                        </div>
+                    </fieldset>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    
+    <!-- Reports Sections -->
+    <div id="reports-sections" class="reports-sections">
+        {% if data.reviews_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.reviews_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.reviews_section.items %}
+                        <li class="reports-item">
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.item_analysis_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.item_analysis_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.item_analysis_section.items %}
+                        <li class="reports-item">
+                            <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.cohort_reports_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.cohort_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.cohort_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.exports_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.exports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.exports_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.textbox_marking_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.textbox_marking_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.textbox_marking_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.anomalies_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.anomalies_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.anomalies_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <!--Survey specific reports -->
+        {% if data.survey_quantitative_reports_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.survey_quantitative_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.survey_quantitative_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.survey_qualitative_analysis_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.survey_qualitative_analysis_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.survey_qualitative_analysis_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.survey_exports_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.survey_exports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.survey_exports_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <!--OSCE specific reports -->
+        {% if data.osce_cohort_reports_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.osce_cohort_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.osce_cohort_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.osce_item_analysis_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.osce_item_analysis_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.osce_item_analysis_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        {% if data.osce_exports_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.osce_exports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.osce_exports_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <!--Peer Review specific reports -->
+        {% if data.peer_review_reports_section is defined %}
+            <div class="reports-section">
+                <h2 class="reports-header">{{ data.peer_review_reports_section.title }}</h2>
+                <ul class="reports-list">
+                    {% for item in data.peer_review_reports_section.items %}
+                        <li class="reports-item">
+                            {% if item.disabled %}
+                                <a href="#" 
+                                   class="reports-link disabled" 
+                                   aria-disabled="true"
+                                   tabindex="0"
+                                   title="{{ item.disabledReason }}"
+                                   onclick="return false;">
+                                    {{ item.text }} <span class="unavailable-text">({{ lang.unavailable }})</span>
+                                </a>
+                            {% else %}
+                                <a href="#" class="{{ item.class }}" data-url="{{ item.url }}">{{ item.text }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</div>

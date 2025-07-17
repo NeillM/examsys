@@ -27,6 +27,7 @@ $string['initialinvitation'] = 'Initial Invitation';
 $string['reminder'] = 'Reminder';
 $string['viewcomments'] = 'View Comments';
 $string['reports'] = 'Reports';
+$string['reportspage'] = 'Reports Page';
 $string['mappedobjectives'] = 'Mapped Objectives';
 $string['importmarks'] = 'Upload Marks';
 $string['standardssetting'] = 'Standards Setting';

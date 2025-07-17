@@ -53,25 +53,7 @@ if (!isset($folder)) {
     $folder = param::optional('folder', '', param::INT, param::FETCH_GET);
 }
 
-$moduleIDs = $properties->get_modules();
-$checklist = '';
-if (count($moduleIDs) > 0) {
-    $moduleIDs = array_keys($moduleIDs);
-    $stmt = $mysqli->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $moduleIDs) . ')');
-    $stmt->execute();
-    $stmt->bind_result($tmp_checklist);
-    $check = [];
-    while ($stmt->fetch()) {
-        if ($tmp_checklist != '') {
-            $tmp = explode(',', (string) $tmp_checklist);
-            foreach ($tmp as $c => $type) {
-                $check[] = $type;
-            }
-        }
-    }
-    $checklist = implode(',', $check);
-    $stmt->close();
-}
+$checklist = $properties->get_checklist();
 ?>
 
 <div id="left-sidebar" class="sidebar">
@@ -113,6 +95,12 @@ if ($emailExternalsItem) {
 $reportsItem = $menuItemData->getReportsItem($properties, $paperID, $module, $folder);
 if ($reportsItem) {
     $render->render($reportsItem, $string, 'sidebar/menuitem.html');
+}
+
+// Reports Page
+$reportsPageItem = $menuItemData->getReportsPageItem($properties, $paperID, $module, $folder);
+if ($reportsPageItem) {
+    $render->render($reportsPageItem, $string, 'sidebar/menuitem.html');
 }
 
 //Import Offline marks

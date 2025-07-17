@@ -1933,6 +1933,39 @@ class PaperProperties
         return $this->modules;
     }
 
+    /**
+     * Get the combined checklist from all modules associated with this paper
+     *
+     * @return string Combined checklist as a comma-separated string
+     */
+    public function get_checklist()
+    {
+        $moduleIDs = $this->get_modules();
+        $checklist = '';
+
+        if (count($moduleIDs) > 0) {
+            $ids = array_keys($moduleIDs);
+            $stmt = $this->db->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $ids) . ')');
+            $stmt->execute();
+            $stmt->bind_result($tmp_checklist);
+            $check = [];
+
+            while ($stmt->fetch()) {
+                if ($tmp_checklist != '') {
+                    $tmp = explode(',', $tmp_checklist);
+                    foreach ($tmp as $type) {
+                        $check[] = $type;
+                    }
+                }
+            }
+
+            $checklist = implode(',', $check);
+            $stmt->close();
+        }
+
+        return $checklist;
+    }
+
     private function load_modules()
     {
         $paperID = $this->get_property_id();

@@ -1,0 +1,240 @@
+/* Reports Page Styles */
+.reports-container {
+    max-width: 62.5rem; 
+    margin: 0 auto;
+}
+
+/* Main content styling */
+#content h1 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+/* Form styling */
+.stats_menu {
+    background-color: #fff;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.form-header {
+    padding: 0;
+    margin: 0;
+}
+
+.form-bar {
+    background-color: #F2B100;
+    height: 0.375rem;
+    width: 100%;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+}
+
+.form-content {
+    padding: 1.5rem;
+}
+
+/* Fieldset styling */
+.form-fieldset {
+    border: none;
+    border-bottom: 0.0625rem solid #eee;
+    margin: 0 0 1.5rem 0;
+    padding: 0 0 1.5rem 0;
+}
+
+.form-fieldset:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.form-fieldset legend {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    padding: 0;
+    color: #333;
+}
+
+/* Form rows */
+.form-row {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+.form-row label {
+    flex: 0 0 7.5rem;
+    color: #333;
+    font-size: 0.9rem;
+    padding-top: 0.5rem;
+    margin-right: 1rem;
+    text-align: right;
+}
+
+/* Form inputs */
+.form-row input[type="text"],
+.form-row select,
+.form-row input[type="date"] {
+    width: 15rem;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+}
+
+.form-row input[type="text"]:focus,
+.form-row select:focus,
+.form-row input[type="date"]:focus {
+    border-color: #316AC5;
+    outline: none;
+    box-shadow: 0 0 0 0.125rem rgba(49, 106, 197, 0.2);
+}
+
+/* Checkbox styling */
+.checkbox-row {
+    margin-left: 7.5rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+/* Tooltip styling */
+.help_tip {
+    cursor: help;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Button styling */
+.form-buttons {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-left: 8.5rem;
+}
+
+.form-buttons input[type="submit"],
+.form-buttons input[type="button"] {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.form-buttons input[type="submit"] {
+    background-color: #316AC5;
+    color: white;
+}
+
+.form-buttons input[type="submit"]:hover {
+    background-color: #2857a4;
+}
+
+.form-buttons input[type="button"] {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.form-buttons input[type="button"]:hover {
+    background-color: #e0e0e0;
+}
+
+.form-buttons input:active {
+    transform: translateY(0.0625rem);
+}
+
+/* Reports sections */
+.reports-sections {
+    margin-top: 2rem;
+}
+
+.reports-section {
+    background-color: #fff;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.reports-header {
+    background-color: #f5f5f5;
+    padding: 1rem 1.5rem;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 0.0625rem solid #eee;
+}
+
+.reports-list {
+    list-style: none;
+    margin: 0;
+    padding: 1rem 1.5rem;
+}
+
+.reports-list li {
+    padding: 0.5rem 0;
+    border-bottom: 0.0625rem solid #f0f0f0;
+}
+
+.reports-list li:last-child {
+    border-bottom: none;
+}
+
+.reports-link {
+    color: #316AC5;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.reports-link:hover {
+    color: #2857a4;
+    text-decoration: underline;
+}
+
+.reports-link.disabled {
+    color: #808080;
+    cursor: not-allowed;
+    text-decoration: none;
+    opacity: 0.7;
+}
+
+.reports-link img {
+    margin-right: 0.5rem;
+}
+
+.unavailable-text {
+    font-size: 0.85em;
+    color: #666;
+    margin-left: 0.5rem;
+}
+
+/* Date range inputs */
+.date-range {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
