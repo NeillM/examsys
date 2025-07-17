@@ -91,12 +91,6 @@ if ($emailExternalsItem) {
     $render->render($emailExternalsItem, $string, 'sidebar/menuitem.html');
 }
 
-// Reports
-$reportsItem = $menuItemData->getReportsItem($properties, $paperID, $module, $folder);
-if ($reportsItem) {
-    $render->render($reportsItem, $string, 'sidebar/menuitem.html');
-}
-
 // Reports Page
 $reportsPageItem = $menuItemData->getReportsPageItem($properties, $paperID, $module, $folder);
 if ($reportsPageItem) {
