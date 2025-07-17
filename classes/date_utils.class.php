@@ -192,7 +192,7 @@ class date_utils
      *
      * @return string - The HTML of the accessible time/date selector.
      */
-    public static function accessible_timedate_select($prefix, $input_date, $split_time, $start_year, $end_year, $string, $label_prefix = '')
+    public static function accessible_timedate_select($prefix, $input_date, $split_time, $start_year, $end_year, $string, $label_prefix)
     {
         $split_year = mb_substr((string) $input_date, 0, 4);
         $split_month = mb_substr((string) $input_date, 4, 2);
