@@ -1952,7 +1952,7 @@ class PaperProperties
 
             while ($stmt->fetch()) {
                 if ($tmp_checklist != '') {
-                    $tmp = explode(',', $tmp_checklist);
+                    $tmp = explode(',', (string) $tmp_checklist);
                     foreach ($tmp as $type) {
                         $check[] = $type;
                     }

@@ -122,14 +122,14 @@ if ($properties->get_paper_type() == \assessment::TYPE_OSCE) {
 // Mapped Objectives Item (exclude peer review type)
 if (
     $properties->get_paper_type() != \assessment::TYPE_PEERREVIEW &&
-    mb_strpos($checklist, 'mapping') !== false
+    mb_strpos((string) $checklist, 'mapping') !== false
 ) {
     $mappedObjectivesItem = $menuItemData->getMappedObjectivesItem($properties, $paperID, $module, $folder);
     $render->render($mappedObjectivesItem, $string, 'sidebar/menuitem.html');
 }
 
 // Add Standard Settings item if applicable
-if ($properties->get_paper_type() != \assessment::TYPE_PEERREVIEW && mb_strpos($checklist, 'stdset') !== false) {
+if ($properties->get_paper_type() != \assessment::TYPE_PEERREVIEW && mb_strpos((string) $checklist, 'stdset') !== false) {
     $standardSettingsItem = $menuItemData->getStandardSettingsItem($paperID, $module, $folder);
     $render->render($standardSettingsItem, $string, 'sidebar/menuitem.html');
 }
@@ -287,7 +287,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
     }
 
     // Internal Peer review
-    if (mb_strpos($checklist, 'peer') !== false) {
+    if (mb_strpos((string) $checklist, 'peer') !== false) {
         if (count($properties->get_internal_reviewers()) == 0) {
             $item = $menuItemData->getUnsetInternalReviewItem(
                 $string['peerreviewes'],
@@ -346,7 +346,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
     }
 
     // External examiners
-    if (mb_strpos($checklist, 'external') !== false) {
+    if (mb_strpos((string) $checklist, 'external') !== false) {
         if (count($properties->get_externals()) == 0) {
             $item = $menuItemData->getUnsetExternalReviewItem(
                 $string['externalreviews'],
@@ -399,7 +399,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
     // Standards Set
     $standard_set = 0;
     $standards_set = 0;
-    if (mb_strpos($checklist, 'stdset') !== false) {
+    if (mb_strpos((string) $checklist, 'stdset') !== false) {
         $stmt = $mysqli->prepare('SELECT COUNT(std_set.id), setterID FROM std_set_questions, std_set WHERE std_set_questions.std_setID = std_set.id AND paperID = ? GROUP BY setterID');
         $stmt->bind_param('i', $paperID);
         $stmt->execute();
@@ -417,7 +417,7 @@ if ($properties->get_paper_type() == \assessment::TYPE_SUMMATIVE) {
     }
 
     // Mapped
-    if (mb_strpos($checklist, 'mapping') !== false) {
+    if (mb_strpos((string) $checklist, 'mapping') !== false) {
         $mappings_complete = 0;
         $tmp_session = $properties->get_calendar_year();
 
