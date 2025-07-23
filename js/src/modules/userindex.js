@@ -33,12 +33,12 @@ define(['rogoconfig', 'jquery'], function(config, $) {
             if ($('#dataset').attr('data-fullscreen')) {
                 var exam;
                 if (button.getAttribute('data-to_papers') == true) {
-                    exam = window.open(paperURL,"paper","fullscreen=yes,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+                    exam = window.open(paperURL,"paper","fullscreen=yes,popup=true,width="+screen.width+",height="+screen.height+",left=0,top=0,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
                     window.focus();
                     location.href = "../students";
                     exam.focus();
                 } else {
-                    exam = window.open(paperURL,"paper","fullscreen=yes,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+                    exam = window.open(paperURL,"paper","fullscreen=yes,popup=true,width="+screen.width+",height="+screen.height+",left=0,top=0,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
                     if (window.focus) {
                         exam.focus();
                     }
