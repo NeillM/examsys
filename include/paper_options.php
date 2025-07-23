@@ -527,7 +527,6 @@ if ($properties->get_question_no() > 0) {
     $string['Page-break per question'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1',
     $string['Page-break per question - hide notes'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1&hidenotes=1']);
 
-  require_once $cfg_web_root . 'include/reports_submenu.inc';
   $render = new render($configObject);
   $lang['papers'] = $string['copyfrompaper'];
   $lang['cancel'] = $string['cancel'];
