@@ -79,10 +79,6 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
                 scope.examClarification();
             });
 
-            $('.stats').click(function() {
-                scope.showAssStatsMenu();
-            });
-
             $('#copypaper').click(function() {
                 scope.showCopyMenu();
             });
@@ -132,7 +128,6 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
         this.go = function(url, evt) {
             var extra_data = '';
             if ($('#dataset').attr('data-papertype') == '3') {
-                $('#stats_menu').hide();
                 var completerpt = 0;
                 if ($('#completerpt').is(':checked')) {
                     completerpt = 1;
@@ -146,7 +141,6 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
                     extra_data += '&meta' + i + '=' +$('#' + revmeta_ref).val();
                 }
 
-                $('#stats_menu').hide();
                 window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_hour').val() + $('#start_minute').val() + "00" + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_hour').val() + $('#end_minute').val() + "00" + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + extra_data + "&module=" + this.module;
             } else {
                 for (var j = 1; j < $('#meta_no').val(); j++) {
@@ -154,7 +148,6 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
                     extra_data += '&meta' + j + '=' + $('#' + meta_ref).val();
                 }
 
-                $('#stats_menu').hide();
                 var absent = '&absent=0';
                 if ($('#absent').is(':checked')) {
                     absent = '&absent=1';
@@ -346,13 +339,6 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
             }
         };
 
-        /**
-         * Display stats menu overlay.
-         */
-        this.showAssStatsMenu = function() {
-            $('#stats_menu').show()
-            $('#stats_menu').find('a, input, select, button').first().focus();
-        };
 
         /**
          * Display copy paper menu.
