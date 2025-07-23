@@ -251,7 +251,7 @@ lang.ok
                     <input class="ok" type="button" value="{{lang.switchpapers}}" name="switch" onclick="window.location='index.php'" />
                     {% endif %}
                     {% if data.oktostart %}
-                    <input type="button" class="ok" value="{{lang.start}}" name="start" id="start" data-to_papers={{data.to_papers_page}}/>
+                    <input type="button" class="ok" value="{{lang.start}}" name="start" id="start" data-to_papers="{{data.to_papers_page}}" />
                     {% else %}
                     <input type="button" class="notok" value="{{lang.start}}" name="start" disabled />
                     {% endif %}

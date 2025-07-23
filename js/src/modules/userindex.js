@@ -30,16 +30,9 @@ define(['rogoconfig', 'jquery'], function(config, $) {
             if ($('#dataset').attr('data-mode') == 'preview') {
                 paperURL += '&mode=preview';
             }
-            
             if ($('#dataset').attr('data-fullscreen')) {
                 var exam;
-                var to_students_page_on_paper_close
-                if (button.getAttribute('data-to_papers') == '0/') {
-                    to_students_page_on_paper_close = false;
-                } else {
-                    to_students_page_on_paper_close = true;
-                }
-                if (to_students_page_on_paper_close) {
+                if (button.getAttribute('data-to_papers') == true) {
                     exam = window.open(paperURL,"paper","fullscreen=yes,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
                     window.focus();
                     location.href = "../students";
