@@ -14,9 +14,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+if ($updater_utils->check_version('7.7.0')) {
+    if (!$updater_utils->has_updated('lancaster/feature/GJLU-212')) {
+        $configObject->set_setting('paper_to_students_page_on_paper_close', false, Config::BOOLEAN);
 
-if (!$updater_utils->has_updated('lancaster/feature/GJLU-212')) {
-    $configObject->set_setting('paper_to_students_page_on_paper_close', false, Config::BOOLEAN);
-
-    $updater_utils->record_update('lancaster/feature/GJLU-212');
+        $updater_utils->record_update('lancaster/feature/GJLU-212');
+    }
 }
