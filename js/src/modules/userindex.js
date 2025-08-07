@@ -23,17 +23,25 @@ define(['rogoconfig', 'jquery'], function(config, $) {
         /**
          * Start the paper.
          */
+        var button = document.getElementById('start');
         this.startPaper = function() {
             var paperURL = "../paper/start.php?id=" + $('#dataset').attr('data-id') + "&page=1";
 
             if ($('#dataset').attr('data-mode') == 'preview') {
                 paperURL += '&mode=preview';
             }
-
             if ($('#dataset').attr('data-fullscreen')) {
-                var exam = window.open(paperURL,"paper","fullscreen=" + this.fullscreen + ",width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
-                if (window.focus) {
+                var exam;
+                if (button.getAttribute('data-to_papers') == true) {
+                    exam = window.open(paperURL,"paper","fullscreen=yes,popup=true,width="+screen.width+",height="+screen.height+",left=0,top=0,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+                    window.focus();
+                    location.href = "../students";
                     exam.focus();
+                } else {
+                    exam = window.open(paperURL,"paper","fullscreen=yes,popup=true,width="+screen.width+",height="+screen.height+",left=0,top=0,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
+                    if (window.focus) {
+                        exam.focus();
+                    }
                 }
             } else {
                 window.location = paperURL;

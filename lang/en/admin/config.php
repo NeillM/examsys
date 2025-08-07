@@ -122,3 +122,4 @@ $string['mailer_secure'] = 'The SMTP secure connection settings - ssl,tls or bla
 $string['mailer'] = 'Mail';
 $string['paper_anomaly_detection'] = 'Enable/Disable anomaly detection in exams';
 $string['paper_anomaly_email'] = 'Paper anomaly report recipetent email addresses (Comma seperated list)';
+$string['paper_to_students_page_on_paper_close'] = 'Land on /students page when paper is closed instead of /paper';
