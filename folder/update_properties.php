@@ -119,11 +119,12 @@ $editProperties->bind_param('i', $folderID);
 $editProperties->execute();
 $editProperties->close();
 
-$editProperties = $mysqli->prepare('INSERT INTO folders_modules_staff VALUES(?, ?)');
-foreach ($module_array as $idMod) {
-    $editProperties->bind_param('ii', $folderID, $idMod);
-    $editProperties->execute();
+if (count($module_array) > 0) {
+    $editProperties = $mysqli->prepare('INSERT INTO folders_modules_staff VALUES(?, ?)');
+    foreach ($module_array as $idMod) {
+        $editProperties->bind_param('ii', $folderID, $idMod);
+        $editProperties->execute();
+    }
+    $editProperties->close();
 }
-$editProperties->close();
-
 echo json_encode('SUCCESS');
