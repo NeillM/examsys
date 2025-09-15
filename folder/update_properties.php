@@ -113,13 +113,13 @@ if (mb_strtolower((string) $new_folder) != mb_strtolower((string) $oldfolder)) {
     $editProperties->close();
 }
 
-if (count($module_array) > 0) {
-    //set the folder staff_modules
-    $editProperties = $mysqli->prepare('DELETE FROM folders_modules_staff WHERE folders_id = ?');
-    $editProperties->bind_param('i', $folderID);
-    $editProperties->execute();
-    $editProperties->close();
+//set the folder staff_modules
+$editProperties = $mysqli->prepare('DELETE FROM folders_modules_staff WHERE folders_id = ?');
+$editProperties->bind_param('i', $folderID);
+$editProperties->execute();
+$editProperties->close();
 
+if (count($module_array) > 0) {
     $editProperties = $mysqli->prepare('INSERT INTO folders_modules_staff VALUES(?, ?)');
     foreach ($module_array as $idMod) {
         $editProperties->bind_param('ii', $folderID, $idMod);
