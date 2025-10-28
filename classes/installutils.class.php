@@ -2092,14 +2092,7 @@ class InstallUtils
         if (is_array($error)) {
             if (self::$cli) {
                 foreach ($error as $errCode => $message) {
-                    $filter = FILTER_SANITIZE_STRING;
-                    $options = [
-                        'options' => [
-                            'default' => null,
-                        ],
-                        'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
-                    ];
-                    cli_utils::prompt($string['errors13'] . "$errCode: " . filter_var($message, $filter, $options));
+                    cli_utils::prompt($string['errors13'] . "$errCode: " . strip_tags($message));
                 }
             } else {
                 $configObject = Config::get_instance();
