@@ -2083,23 +2083,23 @@ class InstallUtils
 
     /**
      * Display errors with a nice message
-     * @param string|array $error error message(s)
-     * @param boolean $fatal is error fatal
+     *
+     * @param string[] $error An array of errors the key being the code for the error, for example 001,
+     *                        and the value being a localised message, for example Could not connect to the database.
+     * @param boolean $fatal true when the error is fatal and installation should be halted
      */
-    public static function displayError($error = '', $fatal = true)
+    public static function displayError(array $error = [], $fatal = true)
     {
         global $string;
-        if (is_array($error)) {
-            if (self::$cli) {
-                foreach ($error as $errCode => $message) {
-                    cli_utils::prompt($string['errors13'] . "$errCode: " . strip_tags($message));
-                }
-            } else {
-                $configObject = Config::get_instance();
-                $render = new render_install($configObject);
-                $data['error'] = $error;
-                $render->render($data, $string, '/install/error.html');
+        if (self::$cli) {
+            foreach ($error as $errCode => $message) {
+                cli_utils::prompt($string['errors13'] . "$errCode: " . strip_tags($message));
             }
+        } else if (!empty($error)) {
+            $configObject = Config::get_instance();
+            $render = new render_install($configObject);
+            $data['error'] = $error;
+            $render->render($data, $string, '/install/error.html');
         }
         if (!self::$cli) {
             if ($fatal) {
