@@ -240,14 +240,6 @@ if ($properties->get_summative_lock() == true) {
 ?>
 <div id="menu2a">
 <?php
-$extra_url = '';
-$module = param::optional('module', null, param::INT, param::FETCH_GET);
-if (!is_null($module)) {
-    $extra_url .= '&module=' . $module;
-}
-if ($extra_url != '') {
-    $extra_url = '?' . $extra_url;
-}
 $newQuestionItem = $menuItemData->getNewQuestionItem();
 $render->render($newQuestionItem, $string, 'sidebar/menuitem.html');
 ?>
