@@ -139,7 +139,7 @@ class CopyPaperData extends AbstractPageData
      */
     protected function getCssFiles(): array
     {
-        return ['/css/source/copy_paper.css'];
+        return ['/css/copy_paper.css'];
     }
 
     /**

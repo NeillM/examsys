@@ -32,8 +32,8 @@ class ReportsData extends AbstractPageData
     protected function getCssFiles(): array
     {
         return [
-            '/css/source/reports_form.css',
-            '/css/source/breadcrumb.css',
+            '/css/reports_form.css',
+            '/css/breadcrumb.css',
         ];
     }
 
