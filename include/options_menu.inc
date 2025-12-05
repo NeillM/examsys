@@ -25,21 +25,34 @@
  * @package
  */
 
+require_once $cfg_web_root . 'classes/generalmenuitemdata.class.php';
+
 ?><div id="left-sidebar" class="sidebar" style="overflow:hidden">
 <?php
 if (!$userObject->has_role('Standards Setter')) {
     ?>
 <div id="general">
     <?php
+    $render = new render($configObject);
+    $menuItemData = new GeneralMenuItemData($string);
+    
     if ($userObject->has_role('SysAdmin')) {
-        echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/admin/index.php"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/admin_icon_16.gif" alt="Admin" />' . $string['admintools'] . '</a></div>';
+        $adminToolsItem = $menuItemData->getAdminToolsItem();
+        $render->render($adminToolsItem, $string, 'sidebar/menuitem.html');
     } elseif ($userObject->has_role('Admin')) {
-        echo '<div class="menuitem"><a href="' . $configObject->get('cfg_root_path') . '/admin/calendar.php?calyear=' . date('Y') . '#' . date('n') . '"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/shortcut_calendar_icon.png" alt="Admin" />' . $string['calendar'] . '</a></div>';
+        $calendarItem = $menuItemData->getCalendarItem();
+        $render->render($calendarItem, $string, 'sidebar/menuitem.html');
     }
+    
+    $createFolderItem = $menuItemData->getCreateFolderItem();
+    $render->render($createFolderItem, $string, 'sidebar/menuitem.html');
+    
+    $personalKeywordsItem = $menuItemData->getPersonalKeywordsItem();
+    $render->render($personalKeywordsItem, $string, 'sidebar/menuitem.html');
+    
+    $searchMenuItem = $menuItemData->getSearchMenuItem();
+    $render->render($searchMenuItem, $string, 'sidebar/menuitem.html');
     ?>
-    <div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/index.php?newfolder=y"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/folder_16.png" alt="New Folder" /><?php echo $string['createfolder'] ?></a></div>
-    <div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /><?php echo $string['mypersonalkeywords'] ?></a></div>
-  <div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search" data-action="openSubMenu" type="button"><a href="#" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></a></div>
 </div>
     <?php
     // -- Display top 10 recent papers ----------------------------------

@@ -35,7 +35,7 @@ data - Object containing menu item properties:
     action - Action identifier for the menu item (optional)
     type - Type of menu item ('button' or 'link') (optional)
 #}
-<div class="{% if data.disabled %}grey {% endif %}{{ data.classes }} menuitem" 
+<div class="{% if data.classes == 'greymenuitem' %}greymenuitem{% else %}{% if data.disabled %}grey {% endif %}{% if data.classes %}{{ data.classes }} {% endif %}menuitem{% endif %}" 
     {% if data.disabled %}aria-disabled="true" {% endif %}
     {% if data.hasPopup %}
     aria-haspopup="{{ data.popupType }}"

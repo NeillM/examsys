@@ -23,20 +23,30 @@
  * @package
  */
 
+require_once $cfg_web_root . 'classes/generalmenuitemdata.class.php';
+
 ?>
 <div id="left-sidebar" style="overflow:visible" class="sidebar">
 <?php
 
 if (!$userObject->has_role('Standards Setter')) {
+    $render = new render($configObject);
+    $menuItemData = new GeneralMenuItemData($string);
     $add_member = false;
     if ($_GET['module'] != '0') {
         if (mb_strpos((string) $module_details['checklist'], 'mapping') !== false) {
             // Curriculum mapping switched on for the module
-            echo '<div class="menuitem"><a href="../mapping/sessions_list.php?module=' . $module . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/module_icon_16.png\" alt=\"modules\" />" . $string['manageobjectives'] . "</a></div>\n";
+            $manageObjectivesItem = $menuItemData->getManageObjectivesItem($module);
+            $render->render($manageObjectivesItem, $string, 'sidebar/menuitem.html');
         }
-        echo "<div class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" alt=\"key\" />" . $string['managekeywords'] . '</a></div>';
-        echo "<div class=\"menuitem\"><a href=\"../module/list_ref_material.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" alt=\"key\" />" . $string['referencematerial'] . '</a></div>';
-        echo '<div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search" data-action="openSubMenu" type="button"><a href="#" id="search"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="Search" />' . $string['search'] . '</a></div>';
+        $manageKeywordsItem = $menuItemData->getManageKeywordsItem($module);
+        $render->render($manageKeywordsItem, $string, 'sidebar/menuitem.html');
+        
+        $referenceMaterialItem = $menuItemData->getReferenceMaterialItem($module);
+        $render->render($referenceMaterialItem, $string, 'sidebar/menuitem.html');
+        
+        $searchMenuItem = $menuItemData->getSearchMenuItem($module);
+        $render->render($searchMenuItem, $string, 'sidebar/menuitem.html');
         // Get members of current team.
         if (!isset($_GET['type']) and $_GET['module'] != '0') {
             $team_members = module_utils::get_staff_members($module, $mysqli);

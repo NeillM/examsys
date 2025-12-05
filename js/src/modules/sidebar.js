@@ -36,12 +36,14 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 
                 // Check if a popup is open
                 var visibleMenu = $('.popup:visible').first();
-                var menuItems = visibleMenu.find('.popupitem');
+                var hasVisiblePopup = visibleMenu.length > 0;
+                var menuItems = hasVisiblePopup ? visibleMenu.find('.popupitem') : $();
                 var currentFocus = $(':focus');
-                var currentIndex = menuItems.index(currentFocus);
+                var isFocusInPopup = hasVisiblePopup && currentFocus.closest('.popup').length > 0;
+                var currentIndex = menuItems.length > 0 ? menuItems.index(currentFocus) : -1;
                 
                 if (e.key === 'Tab') {
-                    if ($('.popup:visible').length){
+                    if (hasVisiblePopup){
                         e.preventDefault();
                         // Constrain tabbing to be within the popupmenu once its open
                         if (e.shiftKey) {
@@ -54,25 +56,45 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             menuItems.eq(nextIndex).focus();
                         }
                     }
-                } else {                    
+                } else {
                     var menuItem = currentFocus.closest('.menuitem');
+                    var popupItem = currentFocus.closest('.popupitem');
+                    
                     switch (e.key) {
                         case 'ArrowDown':
                             e.preventDefault();
-                            nextIndex = currentIndex < 0 ? 0 : 
-                                      currentIndex >= menuItems.length - 1 ? menuItems.length - 1 : currentIndex + 1;
-                            menuItems.eq(nextIndex).focus();
+                            if (hasVisiblePopup && isFocusInPopup) {
+                                // Navigating within popup
+                                nextIndex = currentIndex < 0 ? 0 : 
+                                          currentIndex >= menuItems.length - 1 ? menuItems.length - 1 : currentIndex + 1;
+                                menuItems.eq(nextIndex).focus();
+                            } else if (hasVisiblePopup && !isFocusInPopup) {
+                                // Popup is open but focus is on parent - focus first item
+                                menuItems.first().focus();
+                            } else if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
+                                // Open submenu
+                                scope.handleMenuItemAction(menuItem, e);
+                            }
                             break;
                             
                         case 'ArrowUp':
                             e.preventDefault();
-                            prevIndex = currentIndex <= 0 ? 0 : currentIndex - 1;
-                            menuItems.eq(prevIndex).focus();
+                            if (hasVisiblePopup && isFocusInPopup) {
+                                // Navigating within popup
+                                prevIndex = currentIndex <= 0 ? 0 : currentIndex - 1;
+                                menuItems.eq(prevIndex).focus();
+                            } else if (hasVisiblePopup && !isFocusInPopup) {
+                                // Popup is open but focus is on parent - focus last item
+                                menuItems.last().focus();
+                            }
                             break;
                             
                         case 'Enter':
                             e.preventDefault();
-                            if (menuItem.length) {
+                            if (popupItem.length) {
+                                // User pressed Enter on a popup item - trigger its click handler
+                                popupItem.click();
+                            } else if (menuItem.length) {
                                 scope.handleMenuItemAction(menuItem, e);
                             }
                             break;
@@ -84,12 +106,17 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                             
                         case 'ArrowLeft':
                             e.preventDefault();
-                            scope.hideMenus();
+                            if (hasVisiblePopup) {
+                                scope.hideMenus();
+                            }
                             break;
                         
                         case 'ArrowRight':
                             e.preventDefault();
-                            if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
+                            if (hasVisiblePopup && isFocusInPopup) {
+                                // If focus is in popup, do nothing (or could close popup)
+                                // For now, do nothing
+                            } else if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
                                 scope.handleMenuItemAction(menuItem, e);
                             }
                             break;
