@@ -41,10 +41,8 @@ if (!$userObject->has_role('Standards Setter')) {
         }
         $manageKeywordsItem = $menuItemData->getManageKeywordsItem($module);
         $render->render($manageKeywordsItem, $string, 'sidebar/menuitem.html');
-        
         $referenceMaterialItem = $menuItemData->getReferenceMaterialItem($module);
         $render->render($referenceMaterialItem, $string, 'sidebar/menuitem.html');
-        
         $searchMenuItem = $menuItemData->getSearchMenuItem($module);
         $render->render($searchMenuItem, $string, 'sidebar/menuitem.html');
         // Get members of current team.

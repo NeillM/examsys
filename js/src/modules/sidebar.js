@@ -32,8 +32,8 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             
             // Add keyboard event listener for menu navigation
             $(document).on('keydown', function(e) {
-                if (!$('.sidebar:visible').length) return;
-                
+                if (!$('.sidebar:visible').length) return;          
+                           
                 // Check if a popup is open
                 var visibleMenu = $('.popup:visible').first();
                 var hasVisiblePopup = visibleMenu.length > 0;
@@ -41,6 +41,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 var currentFocus = $(':focus');
                 var isFocusInPopup = hasVisiblePopup && currentFocus.closest('.popup').length > 0;
                 var currentIndex = menuItems.length > 0 ? menuItems.index(currentFocus) : -1;
+
+                // Only handle if focus is within sidebar or sidebar popup
+                var isInSidebar = currentFocus.closest('.sidebar').length > 0 || 
+                                  currentFocus.closest('.popup').length > 0;
+                if (!isInSidebar) return;
                 
                 if (e.key === 'Tab') {
                     if (hasVisiblePopup){
@@ -59,7 +64,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 } else {
                     var menuItem = currentFocus.closest('.menuitem');
                     var popupItem = currentFocus.closest('.popupitem');
-                    
+
                     switch (e.key) {
                         case 'ArrowDown':
                             e.preventDefault();

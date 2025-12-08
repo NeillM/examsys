@@ -30,16 +30,12 @@ require_once $cfg_web_root . 'classes/generalmenuitemdata.class.php';
 <?php
   $folder_ownerID = folder_utils::get_ownerID($folder, $mysqli);
   $isOwner = ($folder_ownerID == $userObject->get_user_ID());
-  
   $render = new render($configObject);
   $menuItemData = new GeneralMenuItemData($string);
-
   $folderPropertiesItem = $menuItemData->getFolderPropertiesItem($isOwner);
   $render->render($folderPropertiesItem, $string, 'sidebar/menuitem.html');
-  
   $makeSubfolderItem = $menuItemData->getMakeSubfolderItem($isOwner, $module, $folder);
   $render->render($makeSubfolderItem, $string, 'sidebar/menuitem.html');
-  
   $deleteFolderItem = $menuItemData->getDeleteFolderItem($isOwner);
   $render->render($deleteFolderItem, $string, 'sidebar/menuitem.html');
 

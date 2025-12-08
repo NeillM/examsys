@@ -35,7 +35,6 @@ if (!$userObject->has_role('Standards Setter')) {
     <?php
     $render = new render($configObject);
     $menuItemData = new GeneralMenuItemData($string);
-    
     if ($userObject->has_role('SysAdmin')) {
         $adminToolsItem = $menuItemData->getAdminToolsItem();
         $render->render($adminToolsItem, $string, 'sidebar/menuitem.html');
@@ -43,13 +42,10 @@ if (!$userObject->has_role('Standards Setter')) {
         $calendarItem = $menuItemData->getCalendarItem();
         $render->render($calendarItem, $string, 'sidebar/menuitem.html');
     }
-    
     $createFolderItem = $menuItemData->getCreateFolderItem();
     $render->render($createFolderItem, $string, 'sidebar/menuitem.html');
-    
     $personalKeywordsItem = $menuItemData->getPersonalKeywordsItem();
     $render->render($personalKeywordsItem, $string, 'sidebar/menuitem.html');
-    
     $searchMenuItem = $menuItemData->getSearchMenuItem();
     $render->render($searchMenuItem, $string, 'sidebar/menuitem.html');
     ?>

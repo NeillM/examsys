@@ -57,7 +57,7 @@ class GeneralMenuItemData
             'hasPopup' => true,
             'popupType' => 'menu',
             'action' => 'openSubMenu',
-            'type' => 'button',
+            'type' => 'link',
             'data_attributes' => [
                 'popupid' => '0',
                 'popuptype' => 'general',
@@ -94,7 +94,6 @@ class GeneralMenuItemData
         if ($module) {
             $url .= '?module=' . $module;
         }
-        
         return [
             'classes' => '',
             'icon' => $this->rootPath . '/artwork/key.png',
@@ -129,7 +128,6 @@ class GeneralMenuItemData
     {
         $year = date('Y');
         $month = date('n');
-        
         return [
             'classes' => '',
             'icon' => $this->rootPath . '/artwork/shortcut_calendar_icon.png',
