@@ -21,7 +21,7 @@
  * This class generates structured data for interactive elements in the sidebar,
  * following the same pattern as PaperMenuItemData.
  *
- * @author Nisha Sarala
+ * @author Nisha Sarala <nisha.sarala@nottingham.ac.uk>
  * @copyright Copyright (c) 2025 The University of Nottingham
  * @package
  */
@@ -43,10 +43,9 @@ class GeneralMenuItemData
     /**
      * Generates menu item data for the Search menu with popup submenu.
      *
-     * @param string|null $module Optional module code for module-specific search
      * @return array Menu item data structure with UI properties
      */
-    public function getSearchMenuItem(?string $module = null): array
+    public function getSearchMenuItem(): array
     {
         return [
             'classes' => 'cascade showmenu',
@@ -85,15 +84,11 @@ class GeneralMenuItemData
     /**
      * Generates menu item data for personal keywords.
      *
-     * @param string|null $module Optional module code for module-specific keywords
      * @return array Menu item data structure with UI properties
      */
-    public function getPersonalKeywordsItem(?string $module = null): array
+    public function getPersonalKeywordsItem(): array
     {
         $url = $this->rootPath . '/folder/list_keywords.php';
-        if ($module) {
-            $url .= '?module=' . $module;
-        }
         return [
             'classes' => '',
             'icon' => $this->rootPath . '/artwork/key.png',
@@ -141,9 +136,10 @@ class GeneralMenuItemData
      * Generates menu item data for folder properties.
      *
      * @param bool $isOwner Whether the current user owns the folder
+     * @param string $folder The folder ID
      * @return array Menu item data structure with UI properties
      */
-    public function getFolderPropertiesItem(bool $isOwner): array
+    public function getFolderPropertiesItem(bool $isOwner, string $folder): array
     {
         if ($isOwner) {
             return [
@@ -151,11 +147,18 @@ class GeneralMenuItemData
                 'icon' => $this->rootPath . '/artwork/properties_icon.gif',
                 'text' => $this->string['folderproperties'],
                 'href' => '#',
-                'action' => 'directUrl'
+                'action' => 'openPopup',
+                'data_attributes' => [
+                    'url' => $this->rootPath . "/folder/properties.php?folder=$folder",
+                    'popuptype' => 'window',
+                    'name' => 'properties',
+                    'features' => 'width=600,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable',
+                    'focus' => true
+                ]
             ];
         } else {
             return [
-                'classes' => 'greymenuitem',
+                'classes' => '',
                 'disabled' => true,
                 'icon' => $this->rootPath . '/artwork/properties_icon_grey.gif',
                 'text' => $this->string['folderproperties']
@@ -183,7 +186,7 @@ class GeneralMenuItemData
             ];
         } else {
             return [
-                'classes' => 'greymenuitem',
+                'classes' => '',
                 'disabled' => true,
                 'icon' => $this->rootPath . '/artwork/folder_16_grey.png',
                 'text' => $this->string['makesubfolder']
@@ -195,9 +198,10 @@ class GeneralMenuItemData
      * Generates menu item data for deleting a folder.
      *
      * @param bool $isOwner Whether the current user owns the folder
+     * @param string $folder The folder ID
      * @return array Menu item data structure with UI properties
      */
-    public function getDeleteFolderItem(bool $isOwner): array
+    public function getDeleteFolderItem(bool $isOwner, string $folder): array
     {
         if ($isOwner) {
             return [
@@ -205,11 +209,18 @@ class GeneralMenuItemData
                 'icon' => $this->rootPath . '/artwork/red_cross.png',
                 'text' => $this->string['deletefolder'],
                 'href' => '#',
-                'action' => 'directUrl'
+                'action' => 'openPopup',
+                'data_attributes' => [
+                    'url' => $this->rootPath . "/delete/check_delete_folder.php?folderID=$folder",
+                    'popuptype' => 'window',
+                    'name' => 'notice',
+                    'features' => 'width=500,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable',
+                    'focus' => true
+                ]
             ];
         } else {
             return [
-                'classes' => 'greymenuitem',
+                'classes' => '',
                 'disabled' => true,
                 'icon' => $this->rootPath . '/artwork/red_cross_grey.png',
                 'text' => $this->string['deletefolder']

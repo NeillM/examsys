@@ -41,6 +41,10 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 var currentFocus = $(':focus');
                 var isFocusInPopup = hasVisiblePopup && currentFocus.closest('.popup').length > 0;
                 var currentIndex = menuItems.length > 0 ? menuItems.index(currentFocus) : -1;
+                // Get sidebar items once for reuse in multiple cases
+                var sidebarItems = $('.sidebar .menuitem').filter(function() {
+                    return $(this).find('button, a').length > 0 && !$(this).attr('aria-disabled');
+                });
 
                 // Only handle if focus is within sidebar or sidebar popup
                 var isInSidebar = currentFocus.closest('.sidebar').length > 0 || 
@@ -64,6 +68,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 } else {
                     var menuItem = currentFocus.closest('.menuitem');
                     var popupItem = currentFocus.closest('.popupitem');
+                    var currentSidebarIndex;
 
                     switch (e.key) {
                         case 'ArrowDown':
@@ -73,12 +78,21 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                                 nextIndex = currentIndex < 0 ? 0 : 
                                           currentIndex >= menuItems.length - 1 ? menuItems.length - 1 : currentIndex + 1;
                                 menuItems.eq(nextIndex).focus();
-                            } else if (hasVisiblePopup && !isFocusInPopup) {
-                                // Popup is open but focus is on parent - focus first item
-                                menuItems.first().focus();
-                            } else if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
-                                // Open submenu
-                                scope.handleMenuItemAction(menuItem, e);
+                            } else {
+                                // Navigate in sidebar menu items
+                                currentSidebarIndex = sidebarItems.index(menuItem);
+                                if (hasVisiblePopup && !isFocusInPopup) {
+                                    // Popup is open but focus is on parent - navigate to next sidebar item
+                                    // This allows navigation past the parent while submenu remains open
+                                    if (currentSidebarIndex >= 0 && currentSidebarIndex < sidebarItems.length - 1) {
+                                        sidebarItems.eq(currentSidebarIndex + 1).find('button, a').first().focus();
+                                    }
+                                } else {
+                                    // Navigate down in sidebar menu items
+                                    if (currentSidebarIndex >= 0 && currentSidebarIndex < sidebarItems.length - 1) {
+                                        sidebarItems.eq(currentSidebarIndex + 1).find('button, a').first().focus();
+                                    }
+                                }
                             }
                             break;
                             
@@ -88,17 +102,29 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                                 // Navigating within popup
                                 prevIndex = currentIndex <= 0 ? 0 : currentIndex - 1;
                                 menuItems.eq(prevIndex).focus();
-                            } else if (hasVisiblePopup && !isFocusInPopup) {
-                                // Popup is open but focus is on parent - focus last item
-                                menuItems.last().focus();
+                            } else {
+                                // Navigate in sidebar menu items
+                                currentSidebarIndex = sidebarItems.index(menuItem);
+                                if (hasVisiblePopup && !isFocusInPopup) {
+                                    // Popup is open but focus is on parent - navigate to previous sidebar item
+                                    // This allows navigation above the parent while submenu remains open
+                                    if (currentSidebarIndex > 0) {
+                                        sidebarItems.eq(currentSidebarIndex - 1).find('button, a').first().focus();
+                                    }
+                                } else {
+                                    // Navigate up in sidebar menu items
+                                    if (currentSidebarIndex > 0) {
+                                        sidebarItems.eq(currentSidebarIndex - 1).find('button, a').first().focus();
+                                    }
+                                }
                             }
                             break;
                             
                         case 'Enter':
                             e.preventDefault();
                             if (popupItem.length) {
-                                // User pressed Enter on a popup item - trigger its click handler
-                                popupItem.click();
+                                // User pressed Enter on a popup item - handle via action type
+                                scope.handleMenuItemAction(popupItem, e);
                             } else if (menuItem.length) {
                                 scope.handleMenuItemAction(menuItem, e);
                             }
@@ -119,9 +145,10 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         case 'ArrowRight':
                             e.preventDefault();
                             if (hasVisiblePopup && isFocusInPopup) {
-                                // If focus is in popup, do nothing (or could close popup)
-                                // For now, do nothing
+                                // Per ARIA treeview: Right arrow on open node moves focus to first child node
+                                menuItems.first().focus();
                             } else if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
+                                // Open submenu - focus will be set to first item in showMenu
                                 scope.handleMenuItemAction(menuItem, e);
                             }
                             break;
@@ -310,7 +337,9 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 
                 // Focus the first menu item after showing the menu
                 var firstItem = $('#' + submenuID + ' .popupitem').first();
-                firstItem.trigger('focus');
+                if (firstItem.length) {
+                    firstItem.focus();
+                }
             } else {
                 scope.hideMenus(e);
             }

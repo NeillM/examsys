@@ -25,8 +25,6 @@
  * @package
  */
 
-require_once $cfg_web_root . 'classes/generalmenuitemdata.class.php';
-
 ?><div id="left-sidebar" class="sidebar" style="overflow:hidden">
 <?php
 if (!$userObject->has_role('Standards Setter')) {

@@ -23,8 +23,6 @@
  * @package
  */
 
-require_once $cfg_web_root . 'classes/generalmenuitemdata.class.php';
-
 ?>
 <div id="left-sidebar" style="overflow:visible" class="sidebar">
 <?php
@@ -43,7 +41,7 @@ if (!$userObject->has_role('Standards Setter')) {
         $render->render($manageKeywordsItem, $string, 'sidebar/menuitem.html');
         $referenceMaterialItem = $menuItemData->getReferenceMaterialItem($module);
         $render->render($referenceMaterialItem, $string, 'sidebar/menuitem.html');
-        $searchMenuItem = $menuItemData->getSearchMenuItem($module);
+        $searchMenuItem = $menuItemData->getSearchMenuItem();
         $render->render($searchMenuItem, $string, 'sidebar/menuitem.html');
         // Get members of current team.
         if (!isset($_GET['type']) and $_GET['module'] != '0') {

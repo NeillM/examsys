@@ -23,8 +23,6 @@
  * @package
  */
 
-require_once $cfg_web_root . 'classes/generalmenuitemdata.class.php';
-
 ?>
 <div id="left-sidebar" class="sidebar">
 <?php
@@ -32,11 +30,11 @@ require_once $cfg_web_root . 'classes/generalmenuitemdata.class.php';
   $isOwner = ($folder_ownerID == $userObject->get_user_ID());
   $render = new render($configObject);
   $menuItemData = new GeneralMenuItemData($string);
-  $folderPropertiesItem = $menuItemData->getFolderPropertiesItem($isOwner);
+  $folderPropertiesItem = $menuItemData->getFolderPropertiesItem($isOwner, $folder);
   $render->render($folderPropertiesItem, $string, 'sidebar/menuitem.html');
   $makeSubfolderItem = $menuItemData->getMakeSubfolderItem($isOwner, $module, $folder);
   $render->render($makeSubfolderItem, $string, 'sidebar/menuitem.html');
-  $deleteFolderItem = $menuItemData->getDeleteFolderItem($isOwner);
+  $deleteFolderItem = $menuItemData->getDeleteFolderItem($isOwner, $folder);
   $render->render($deleteFolderItem, $string, 'sidebar/menuitem.html');
 
   $searchMenuItem = $menuItemData->getSearchMenuItem();
