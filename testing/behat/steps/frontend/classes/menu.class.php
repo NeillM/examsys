@@ -184,4 +184,219 @@ trait menu
             }
         }
     }
+
+    /**
+     * Focus on a menu item.
+     *
+     * @When /^I focus on "([^"]*)" "([^"]*)"$/
+     * @param string $text The text of the menu item
+     * @param string $type The type of menu item (menu_item, popup_item, etc.)
+     * @throws Exception
+     */
+    public function i_focus_on_menu_item($text, $type)
+    {
+        $element = $this->find($type, $text);
+        if (empty($element)) {
+            throw new Exception("Could not find $type with text '$text'");
+        }
+        // Find the focusable element (button or link) within the menu item
+        $focusable = $element->find('css', 'button, a');
+        if ($focusable) {
+            $focusable->focus();
+        } else {
+            $element->focus();
+        }
+        // Wait a moment for focus to be set
+        $this->getSession()->wait(100);
+    }
+
+    /**
+     * Press a keyboard key.
+     *
+     * @When /^I press "([^"]*)" key$/
+     * @param string $key The key to press (ArrowDown, ArrowUp, ArrowLeft, ArrowRight, Enter, Escape)
+     * @throws Exception
+     */
+    public function i_press_key($key)
+    {
+        $keyCodes = [
+            'ArrowDown' => 40,
+            'ArrowUp' => 38,
+            'ArrowLeft' => 37,
+            'ArrowRight' => 39,
+            'Enter' => 13,
+            'Escape' => 27,
+        ];
+
+        if (!isset($keyCodes[$key])) {
+            throw new Exception("Unknown key: $key");
+        }
+
+        $keyCode = $keyCodes[$key];
+        // Use JavaScript to dispatch keyboard event (Mink doesn't support arrow keys or :focus selector)
+        $script = 'var focused = document.activeElement || document.body; '
+            . "var e = new KeyboardEvent('keydown', { "
+            . "key: '$key', code: '$key', keyCode: $keyCode, which: $keyCode, "
+            . 'bubbles: true, cancelable: true }); '
+            . 'focused.dispatchEvent(e);';
+        $this->getSession()->executeScript($script);
+        $this->getSession()->wait(200);
+    }
+
+    /**
+     * Check if popup menu is visible.
+     *
+     * @Then /^the popup menu should be visible$/
+     * @throws Exception
+     */
+    public function popup_menu_should_be_visible()
+    {
+        $this->getSession()->wait(200);
+        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
+        $foundVisible = false;
+        foreach ($popups as $popup) {
+            if ($popup->isVisible()) {
+                $foundVisible = true;
+                break;
+            }
+        }
+        if (!$foundVisible) {
+            throw new Exception('Popup menu is not visible');
+        }
+    }
+
+    /**
+     * Check if popup menu is not visible.
+     *
+     * @Then /^the popup menu should not be visible$/
+     * @throws Exception
+     */
+    public function popup_menu_should_not_be_visible()
+    {
+        $this->getSession()->wait(200);
+        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
+        foreach ($popups as $popup) {
+            if ($popup->isVisible()) {
+                throw new Exception('Popup menu is still visible');
+            }
+        }
+    }
+
+    /**
+     * Check if first popup item has focus.
+     *
+     * @Then /^the first popup item should have focus$/
+     * @throws Exception
+     */
+    public function first_popup_item_should_have_focus()
+    {
+        $this->getSession()->wait(200);
+        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
+        $popup = null;
+        foreach ($popups as $p) {
+            if ($p->isVisible()) {
+                $popup = $p;
+                break;
+            }
+        }
+        if (!$popup) {
+            throw new Exception('Popup menu is not visible');
+        }
+        $firstItem = $popup->find('css', '.popupitem');
+        if (!$firstItem) {
+            throw new Exception('Could not find first popup item');
+        }
+        // Check focus using JavaScript (Mink doesn't support :focus selector)
+        $firstItemXpath = addslashes($firstItem->getXpath());
+        $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$firstItemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+        $hasFocus = $this->getSession()->evaluateScript($script);
+        if (!$hasFocus) {
+            throw new Exception('First popup item does not have focus');
+        }
+    }
+
+    /**
+     * Check if second popup item has focus.
+     *
+     * @Then /^the second popup item should have focus$/
+     * @throws Exception
+     */
+    public function second_popup_item_should_have_focus()
+    {
+        $this->getSession()->wait(200);
+        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
+        $popup = null;
+        foreach ($popups as $p) {
+            if ($p->isVisible()) {
+                $popup = $p;
+                break;
+            }
+        }
+        if (!$popup) {
+            throw new Exception('Popup menu is not visible');
+        }
+        $popupItems = $popup->findAll('css', '.popupitem');
+        if (count($popupItems) < 2) {
+            throw new Exception('Could not find second popup item');
+        }
+        $secondItem = $popupItems[1];
+        // Check focus using JavaScript (Mink doesn't support :focus selector)
+        $secondItemXpath = addslashes($secondItem->getXpath());
+        $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$secondItemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+        $hasFocus = $this->getSession()->evaluateScript($script);
+        if (!$hasFocus) {
+            throw new Exception('Second popup item does not have focus');
+        }
+    }
+
+    /**
+     * Check if a menu item has focus.
+     *
+     * @Then /^"([^"]*)" "([^"]*)" should have focus$/
+     * @param string $text The text of the menu item
+     * @param string $type The type of menu item
+     * @throws Exception
+     */
+    public function menu_item_should_have_focus($text, $type)
+    {
+        $this->getSession()->wait(300);
+        $element = $this->find($type, $text);
+        if (empty($element)) {
+            throw new Exception("Could not find $type with text '$text'");
+        }
+
+        // Check focus using JavaScript (Mink doesn't support :focus selector)
+        $elementXpath = addslashes($element->getXpath());
+        $escapedText = json_encode($text);
+        $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return 'No element has focus';
+    var item = document.evaluate('{$elementXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    if (!item) return 'Could not find element';
+    var itemText = (item.textContent || item.innerText || '').trim().replace(/\\s+/g, ' ');
+    var expectedText = {$escapedText};
+    if (itemText.indexOf(expectedText) === -1) return 'Menu item text mismatch. Expected: ' + expectedText + ', Found: ' + itemText.substring(0, 100);
+    return (focused === item || item.contains(focused)) ? 'success' : 'Element does not have focus';
+})();
+JS;
+        $result = $this->getSession()->evaluateScript($script);
+        if ($result !== 'success') {
+            throw new Exception($result);
+        }
+    }
 }

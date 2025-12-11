@@ -416,6 +416,19 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 }
                 return;
             }
+            
+            // Fallback for popup items without data-action: handle onclick
+            if (menuItem.hasClass('popupitem')) {
+                var onclick = menuItem.attr('onclick');
+                if (onclick) {
+                    var urlMatch = onclick.match(/window\.location\s*=\s*['"]([^'"]+)['"]/);
+                    if (urlMatch && urlMatch[1]) {
+                        window.location = urlMatch[1];
+                    } else if (onclick.indexOf('JavaScript:') === -1) {
+                        try { eval(onclick); } catch (err) { console.warn('Error executing onclick:', err); }
+                    }
+                }
+            }
 
         };
     }
