@@ -99,6 +99,15 @@ echo draw_toprightmenu(30);
 // Render the main content template
 $render->render($templateData, $string, 'paper/reports.html');
 
+// Load the language strings for use in JavaScript.
+$jsdataset = [
+    'name' => 'jsutils',
+    'attributes' => [
+        'xls' => json_encode($string),
+    ],
+];
+$render->render($jsdataset, [], 'dataset.html');
+
 // Render the footer template
 $footerData = $reportsData->prepareFooterData($module, $folder);
 $render->render($footerData, $string, 'footer.html');
