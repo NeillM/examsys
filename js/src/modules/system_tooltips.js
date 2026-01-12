@@ -30,6 +30,10 @@ define(['jquery', 'jqueryui', 'helplauncher'], function($, JQUERYUI, HELPLAUNCHE
         this.init = function () {
             if (typeof $(document).tooltip !== 'undefined') {
                 $(document).tooltip({items: ".help_tip[title]", position: {my: "top+10", at: "center+125"}});
+                $('.help_tip').each(function() {
+                    // Ensure that all tool tips can be tabbed to.
+                    $(this).attr('tabindex', 0);
+                });
             }
             this.addHelpLinks();
         };
