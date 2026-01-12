@@ -37,7 +37,6 @@ define(['jquery', 'lang'], function($, Lang) {
         this.validationStrings = {
             requiredField: Lang.get_string('fieldrequired', 'copy_paper'),
             invalidDuration: Lang.get_string('invalidduration', 'copy_paper'),
-            maxDurationExceededFormatted: Lang.get_string('maxdurationexceededformatted', 'copy_paper'),
             enterPaperName: Lang.get_string('enterpapername', 'copy_paper')
         };
         
@@ -227,9 +226,11 @@ define(['jquery', 'lang'], function($, Lang) {
                     }
                     
                     // Add to field errors using the localized formatted string
-                    var formattedMessage = this.validationStrings.maxDurationExceededFormatted
-                        .replace('%s', formattedMaxDuration)
-                        .replace('%s', formattedUserDuration);
+                    var formattedMessage = Lang.get_string(
+                        'maxdurationexceededformatted',
+                        'copy_paper',
+                        [formattedMaxDuration, formattedUserDuration]
+                    );
                     
                     fieldErrors['duration'] = formattedMessage;
                 }
