@@ -304,7 +304,8 @@ define(['jquery', 'lang'], function($, Lang) {
          */
         this.handleCancel = function() {
             var paperID = $('#dataset').attr('data-paperid');
-            window.location.href = '../paper/details.php?paperID=' + paperID;
+            var moduleID = $('#dataset').attr('data-moduleid');
+            window.location.href = '../paper/details.php?paperID=' + paperID + '&module=' + moduleID;
         };
     };
 });
