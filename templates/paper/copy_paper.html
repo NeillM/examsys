@@ -161,16 +161,16 @@
                 </div>
 
                 <div class="form-row">
-                    <label for="duration"><span class="required-indicator" aria-hidden="true">*</span> {{ lang.duration }}</label>
-                    <div class="field-container">
+                    <fieldset id="duration" class="field-container">
+                        <legend><span class="required-indicator" aria-hidden="true">*</span> {{ lang.duration }}</legend>
                         <div class="duration-inputs">
                             <input type="number" id="duration_hours" name="duration_hours" min="0" max="24" aria-required="true" />
-                            <label class="inline-label">{{ lang.hrs }}</label>
+                            <label for="duration_hours" class="inline-label">{{ lang.hrs }}</label>
                             <input type="number" id="duration_mins" name="duration_mins" min="0" max="59" aria-required="true" />
-                            <label class="inline-label">{{ lang.mins }}</label>
+                            <label for="duration_mins" class="inline-label">{{ lang.mins }}</label>
                         </div>
                         <span id="duration-error" class="error-message"></span>
-                    </div>
+                    </fieldset>
                 </div>
 
                 <div class="form-row">
