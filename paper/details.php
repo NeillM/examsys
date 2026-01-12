@@ -783,7 +783,7 @@ if ($folder) {
     $href = '/folder/index.php?folder=' . $folder;
     $links[$href] = false === mb_strpos($folderName, ';') ? $folderName : mb_substr($folderName, mb_strrpos($folderName, ';') + 1);
 } else {
-    if (is_null($module)) {
+    if (empty($module)) {
         // Get the modules from paper properties
         $modules = Paper_utils::get_modules($paperID, $mysqli);
         $module = key($modules);
