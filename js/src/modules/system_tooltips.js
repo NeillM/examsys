@@ -22,7 +22,7 @@
 // @version 1.0
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
+define(['jquery', 'jqueryui', 'helplauncher'], function($, JQUERYUI, HELPLAUNCHER) {
     return function () {
         /**
          * Initialise tooltips on screen.
