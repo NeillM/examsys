@@ -181,19 +181,22 @@ class CopyPaperData extends AbstractPageData
      * @param string $summative_mgmt Summative management setting
      * @param string $max_duration Maximum duration setting
      * @param array $validation_strings Validation strings for form validation
+     * @param int|null $moduleid The module the paper it part of
      * @return array Data for the dataset template
      */
     public function prepareDatasetData(
         int $paperID,
         string $summative_mgmt,
-        string $max_duration
+        string $max_duration,
+        ?int $moduleid = null
     ): array {
         return [
             'name' => 'dataset',
             'attributes' => [
                 'paperid' => $paperID,
                 'summative-mgmt' => $summative_mgmt,
-                'max-duration' => $max_duration
+                'max-duration' => $max_duration,
+                'moduleid' => $moduleid,
             ]
         ];
     }

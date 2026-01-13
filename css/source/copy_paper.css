@@ -4,12 +4,24 @@
     max-width: 50rem;
 }
 
-.form-row {
+.form-row,
+.form-row fieldset.field-container {
     margin-bottom: 1.5rem;
     display: flex;
     align-items: flex-start;
 }
 
+.form-row fieldset.field-container {
+    border-style: none;
+    flex-direction: row;
+    padding: 0;
+}
+
+.form-row fieldset > legend {
+    float: left;
+}
+
+.form-row fieldset > legend,
 .form-row label {
     flex: 0 0 7.5rem;
     color: #333;

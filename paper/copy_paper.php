@@ -73,7 +73,8 @@ $render->render($templateData, $string, 'paper/copy_paper.html');
 $datasetData = $copyPaperData->prepareDatasetData(
     $paperID,
     $configObject->get_setting('core', 'cfg_summative_mgmt'),
-    $configObject->get_setting('core', 'paper_max_duration')
+    $configObject->get_setting('core', 'paper_max_duration'),
+    $module
 );
 $render->render($datasetData, $string, 'dataset.html');
 
