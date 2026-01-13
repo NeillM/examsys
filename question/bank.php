@@ -126,7 +126,9 @@ $bank_types = $qbank->get_categories($type);
 $stats      = $qbank->get_stats($type);
 
 if (count($stats) == 0) {
-    echo $notice->info_strip($zero_warning, 100) . "\n</div>\n</body>\n</html>";
+    echo $notice->info_strip($zero_warning, 100) . "\n</div>\n";
+    echo '<script src="../js/questionbankinit.min.js"></script>';
+    echo "</body>\n</html>";
     exit;
 }
 
