@@ -42,10 +42,81 @@ trait forms
     public function i_set_field($field, $value)
     {
         $element = $this->find('field', $field);
+
+        if (is_null($element)) {
+            $element = $this->find('fieldset', $field);
+        }
+
         if (is_null($element)) {
             throw new \Exception("The form field $field could not be found");
         }
-        $element->setValue($value);
+
+        $formvalue = $value;
+
+        // We will try to change the human readable value into the value the form will use.
+        switch ($element->getTagName()) {
+            case 'select':
+                $formvalue = $this->getSelectValue($element, $value);
+                break;
+            case 'fieldset':
+                [$element, $formvalue] = $this->getFieldsetValue($element, $value);
+                break;
+        }
+
+        $element->setValue($formvalue);
+    }
+
+    /**
+     * Gets the value needed to set an element in a field set.
+     *
+     * This is most likely going to be used to set the value for a radio button,
+     * which require that they are set by using the value of their value attribute.
+     *
+     * @param NodeElement $element A fieldset element
+     * @param string $value Label for an element in the field set
+     * @return array An array containing the element and the value that it uses
+     */
+    protected function getFieldsetValue(\Behat\Mink\Element\NodeElement $element, $value): array
+    {
+        // First try to find an option that contains the value, for some reason the field selector does not work here.
+        $labelxpath = '//label[contains(normalize-space(.) , "' . $value . '")]';
+        $label = $element->find('xpath', $labelxpath);
+
+        if (is_null($label)) {
+            throw new \Exception("$value could not be found");
+        }
+
+        $id = $label->getAttribute('for');
+
+        $field = $element->find('css', 'input[id=' . $id . ']');
+
+        if ($field) {
+            return [$field, $field->getAttribute('value')];
+        }
+
+        // Failing that assume the value is the raw value for the field already.
+        return [$element, $value];
+    }
+
+    /**
+     * Tried to convert the select value into a raw form value.
+     *
+     * @param NodeElement $element
+     * @param mixed $value
+     * @return mixed
+     */
+    protected function getSelectValue(\Behat\Mink\Element\NodeElement $element, $value)
+    {
+        // First try to find an option that contains the value.
+        $xpath = '//option[contains(normalize-space(.) , "' . $value . '")]';
+        $option = $element->find('xpath', $xpath);
+
+        if ($option) {
+            return $option->getAttribute('value');
+        }
+
+        // Failing that assume the value is the raw value for the field already.
+        return $value;
     }
 
     /**

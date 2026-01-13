@@ -133,7 +133,7 @@ $copyPaperItem = $menuItemData->getCopyPaperItem($paperID, $module, $folder);
 $render->render($copyPaperItem, $string, 'sidebar/menuitem.html');
 
 // Copy from Paper
-$copyFromPaperItem = $menuItemData->getCopyFromPaperItem($properties);
+$copyFromPaperItem = $menuItemData->getCopyFromPaperItem($properties, $paperID, $module, $folder);
 $render->render($copyFromPaperItem, $string, 'sidebar/menuitem.html');
 
 // Delete Paper
@@ -519,20 +519,5 @@ if ($properties->get_question_no() > 0) {
     $string['Page-break per question'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1',
     $string['Page-break per question - hide notes'] => $configObject->get('cfg_root_path') . '/paper/print.php?id=' . $properties->get_crypt_name() . '&break=1&hidenotes=1']);
 
-  $render = new render($configObject);
-  $lang['papers'] = $string['copyfrompaper'];
-  $lang['cancel'] = $string['cancel'];
-  $lang['ok'] = $string['ok'];
-  $lang['paperslinkquestions'] = $string['paperslinkquestions'];
-  $lang['papercopyquestions'] = $string['papercopyquestions'];
-  $lang['copyquestionsblurb'] = $string['copyquestionsblurb'];
-  $dataarray['action'] = '../paper/copy.php';
-  $dataarray['papertype'] = $properties->get_paper_type();
-  $dataarray['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
-  $order = 'property_id';
-  $direction = 'desc';
   $teamid = param::optional('teamID', null, param::INT, param::FETCH_GET);
-  $dataarray['papers'] = PaperUtils::get_available_papers($userObject, $order, $direction, $properties->get_paper_type(), $module);
-  $render->render($dataarray, $lang, 'paper/copy_from_paper_menu.html')
     ?>
-    

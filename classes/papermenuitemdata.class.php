@@ -344,9 +344,12 @@ class PaperMenuItemData
      * Returns a disabled menu item if the paper is summatively locked.
      *
      * @param PaperProperties $properties Paper properties object
+     * @param int $paperID The ID of the paper
+     * @param string|null $module The module code
+     * @param string|null $folder The folder name
      * @return array Menu item data structure with UI properties
      */
-    public function getCopyFromPaperItem(PaperProperties $properties): array
+    public function getCopyFromPaperItem(PaperProperties $properties, $paperID, $module = null, $folder = null): array
     {
         if ($properties->get_summative_lock() == 1) {
             return [
@@ -356,14 +359,21 @@ class PaperMenuItemData
             ];
         }
 
+        $href = $this->rootPath . "/paper/copy_questions.php?paperID=$paperID";
+        if ($module) {
+            $href .= "&module=$module";
+        }
+        if ($folder) {
+            $href .= "&folder=$folder";
+        }
+
         return [
-            'classes' => 'cascade',
+            'classes' => 'copyquestions',
             'id' => 'copyfrompaper',
             'icon' => $this->rootPath . '/artwork/copy_icon.gif',
             'text' => $this->string['copyfrompaper'],
-            'href' => '#',
-            'hasPopup' => true,
-            'popupType' => 'dialog',
+            'href' => $href,
+            'action' => 'directUrl',
         ];
     }
 
