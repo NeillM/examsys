@@ -543,12 +543,12 @@ if (isset($_GET['folder']) and $_GET['folder'] != '') {
 
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 if ($folder != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '<a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
 }
 if ($module != '' and $module != 0) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . $module_code . '</a>';
+    echo '<a href="../module/index.php?module=' . $module . '">' . $module_code . '</a>';
 }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
+  echo '<a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
   echo '<div class="page_title">' . $string['quantitativereport'] . "</div>\n";
   echo "</div>\n";
 

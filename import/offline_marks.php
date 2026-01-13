@@ -278,17 +278,17 @@ echo '<div class="breadcrumb">';
 $modutils = module_utils::get_instance();
 echo '<a href="../index.php">' . $string['home'] . '</a>';
 if ($folderID != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?folder=' . $folderID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
+    echo '<a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
+    echo '<a href="../paper/details.php?folder=' . $folderID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
 } else {
     if (is_null($moduleID)) {
         // Get the modules from paper properties
         $modules = Paper_utils::get_modules($paperID, $mysqli);
         $moduleID = key($modules);
     }
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' .  module_utils::get_moduleid_from_id($moduleID, $mysqli) . '</a>';
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?module=' . $moduleID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
+    echo '<a href="../module/index.php?module=' . $moduleID . '">' .  module_utils::get_moduleid_from_id($moduleID, $mysqli) . '</a>';
+    echo '<a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
+    echo '<a href="../paper/details.php?module=' . $moduleID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
 }
 echo '</div><div class="page_title">' . $string['importmarks'] . '</div>';
 echo '</div>';

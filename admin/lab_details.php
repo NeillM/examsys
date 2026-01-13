@@ -82,7 +82,7 @@ $results->close();
   $results->bind_result($address, $hostname, $low_bandwidth);
   echo "<div class=\"head_title\">\n";
   echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
-  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php">' . $string['administrativetools'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_labs.php">' . $string['computerlabs'] . '</a></div>';
+  echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><a href="./index.php">' . $string['administrativetools'] . '</a><a href="./list_labs.php">' . $string['computerlabs'] . '</a></div>';
   echo "<div class=\"page_title\">$name</div>\n";
   echo "</div>\n";
   echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:440px\"><div><strong>" . $string['ipaddresses'] . ' (' . $results->num_rows . ")</strong></div>\n<div style=\"height:590px; overflow-y:scroll; border: 1px solid #EEEDE5\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";

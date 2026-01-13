@@ -139,7 +139,7 @@ if (!isset($_POST['submit'])) {
     echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
     echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
     if (isset($_REQUEST['module'])  and $_REQUEST['module'] != '') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
+        echo '<a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
     }
     echo '</div><div class="page_title">' . $string['papersearch'] . '</div>';
     echo "</div>\n";
@@ -156,7 +156,7 @@ if (isset($_POST['submit'])) {
     if ($type_problem) {
         echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />';
         if (isset($_REQUEST['module']) and $_REQUEST['module'] != '') {
-            echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
+            echo '<a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
         }
         echo '</div><div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div>';
         echo '<div class="page_title">' . $string['papersearch'] . '</div>';
@@ -227,7 +227,7 @@ if (isset($_POST['submit'])) {
     echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
     echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
     if (isset($_REQUEST['module']) and $_REQUEST['module'] != '') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
+        echo '<a href="../module/index.php?module=' . $_REQUEST['module'] . '">' . module_utils::get_moduleid_from_id($_REQUEST['module'], $mysqli) . '</a>';
     }
     echo '</div><div class="page_title">' . $string['papersearch'] . ' (' . number_format($results->num_rows) . "):&nbsp;<span style=\"font-weight: normal\">'" . $_POST['searchterm'] . "'</span></div>";
     echo "</div>\n";

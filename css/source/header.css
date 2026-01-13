@@ -32,6 +32,22 @@ table.header {
   font-size: 90%;
   cursor: pointer;
 }
+.breadcrumb a:after {
+    background-image: url('../artwork/breadcrumb_arrow.png');
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: 0.25rem 0.4375rem;
+    content: " ";
+    display: inline-block;
+    height: 0.4375rem;
+    margin: auto 0.3rem auto 0.3rem;
+    width: 0.25rem;
+}
+.breadcrumb a:last-child:after {
+    background-image: none;
+    content: ""
+}
 .breadcrumb a:link {
   color: #295AAD;
   text-decoration: none;

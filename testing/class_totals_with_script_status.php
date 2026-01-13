@@ -128,7 +128,7 @@ $stmt->close();
 ?>
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php">Administrative Tools</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../testing/index.php">Testing</a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><a href="../admin/index.php">Administrative Tools</a><a href="../testing/index.php">Testing</a></div>
   <div class="page_title">Summative Exam Check: <span style="font-weight:normal">Status</span></div>
 </div>
 

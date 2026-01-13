@@ -132,7 +132,7 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
 <?php
 if (count($parent_list) > 0) {
     foreach ($parent_list as $parent_id => $parent_name) {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
+        echo '<a href="index.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
     }
 }
 echo "</div>\n";

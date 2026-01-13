@@ -150,12 +150,12 @@ while ($result->fetch()) {
     echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
     echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
     if ($folderID != '') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
+        echo '<a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
     } elseif ($moduleID != '') {
         $modules = explode(',', (string) $moduleID);
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
+        echo '<a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
     }
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
+    echo '<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
     echo '<div class="page_title">' . $string['mappedobjectives'] . "</div>\n</div>\n";
 }
   $result->close();

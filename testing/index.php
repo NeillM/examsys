@@ -60,7 +60,7 @@ echo draw_toprightmenu();
 
   <div class="head_title">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-    <div class="breadcrumb"><a href="../index.php"><?php echo $strings['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $strings['administrativetools'] ?></a></div>
+    <div class="breadcrumb"><a href="../index.php"><?php echo $strings['home'] ?></a><a href="../admin/index.php"><?php echo $strings['administrativetools'] ?></a></div>
     <div class="page_title"><?php echo $strings['testing'] ?></div>
   </div>
 

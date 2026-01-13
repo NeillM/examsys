@@ -41,9 +41,6 @@ lang.pagecount
             <ol>
                 {% for id,item in breadcrumb %}
                 <li class="navigation">
-                    {% if loop.index0 != 0 %}
-                    <img src="{{path}}/artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/>
-                    {% endif %}
                     <a href="{{item}}">{{id}}</a>
                 </li>
                 {% endfor %}

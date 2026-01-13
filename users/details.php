@@ -541,7 +541,7 @@ if (stripos((string) $user_details['roles'], 'Student') !== false) {
 } else {
     echo "<tr><td rowspan=\"6\" width=\"100\" style=\"vertical-align:top; text-align:center; padding-top:6px\"><img src=\"$generic_icon\" width=\"64\" height=\"64\" alt=\"User Folder\"  style=\"background-color:white; padding:5px; border:2px solid #9A6508\" /></td>\n";
 }
-  echo '<td colspan="4" style="vertical-align:top">&nbsp;<a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="search.php">' . $string['usersearch'] . '</a><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />';
+  echo '<td colspan="4" style="vertical-align:top">&nbsp;<a href="../index.php">' . $string['home'] . '</a><a href="search.php">' . $string['usersearch'] . '</a><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />';
 if ($userObject->has_role('SysAdmin')) {
     echo '<input type="button" id="edit" value="' . $string['edit'] . '" style="float:right; width:100px" class="ok" />';
 }
