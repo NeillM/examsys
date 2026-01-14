@@ -3,8 +3,7 @@
     <div class="breadcrumb">
         {% for href, title in links %}
         <a href="{{ path }}{{ href }}">{{ title }}</a>
-        <img src="{{ path }}/artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" />
         {% endfor %}
-        {{ current }}
+        <span aria-current=page>{{ current }}</span>
     </div>
 </div>

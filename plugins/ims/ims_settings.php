@@ -110,7 +110,6 @@ $render = new \html_renderer();
         <div class="breadcrumb">
           <a href="../../index.php"><?php echo $string['home'] ?>
           </a>
-          <img src="../../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-"/>
           <a href="../../admin/index.php"><?php echo $string['administrativetools']; ?>
           </a>
         </div>

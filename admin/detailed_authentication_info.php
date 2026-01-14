@@ -54,7 +54,7 @@ echo draw_toprightmenu();
 <div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./system_info.php"><?php echo $string['System Information'] ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><a href="./index.php"><?php echo $string['administrativetools'] ?></a><a href="./system_info.php"><?php echo $string['System Information'] ?></a></div>
   <div class="page_title"><nobr><?php echo $string['detailed_authentication_information'] ?></nobr></div>
 </div>
 <?php

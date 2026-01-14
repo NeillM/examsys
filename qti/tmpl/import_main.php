@@ -68,9 +68,9 @@ $result = $import_result;
 echo '<div class="breadcrumb">';
 echo '<a href="../index.php">' . $string['home'] . '</a>';
 if ($module != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    echo '<a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
 } elseif ($folder != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    echo '<a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
 }
 echo "</div><div class=\"page_title\">$paper_title</div>";
 echo '</div>';

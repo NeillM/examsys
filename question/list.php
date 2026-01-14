@@ -139,18 +139,18 @@ if ($keyword != '%' and $keyword != '') {
 
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 if (isset($_GET['module'])) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
+    echo '<a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
 
     if ($_GET['type'] == 'type') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">' . $string['questiontype'] . '</a>';
+        echo '<a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">' . $string['questiontype'] . '</a>';
     } elseif ($_GET['type'] == 'bloom') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">' . $string['bloomstaxonomy'] . '</a>';
+        echo '<a href="../question/bank.php?type=bloom&module=' . $_GET['module'] . '">' . $string['bloomstaxonomy'] . '</a>';
     } elseif ($_GET['type'] == 'status') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">' . $string['status'] . '</a>';
+        echo '<a href="../question/bank.php?type=status&module=' . $_GET['module'] . '">' . $string['status'] . '</a>';
     } elseif ($_GET['type'] == 'keyword') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">' . $string['keyword'] . '</a>';
+        echo '<a href="../question/bank.php?type=keyword&module=' . $_GET['module'] . '">' . $string['keyword'] . '</a>';
     } elseif ($_GET['type'] == 'performance') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">' . $string['performance'] . '</a>';
+        echo '<a href="../question/bank.php?type=performance&module=' . $_GET['module'] . '">' . $string['performance'] . '</a>';
     }
 }
   echo '</div><div class="page_title">' . $string['questionbank'] . "&nbsp;<span id=\"q_count\"></span><span style=\"font-weight:normal\">$bank_type</span></div>";

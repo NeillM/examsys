@@ -1,4 +1,20 @@
 .breadcrumb {margin-left:10px; font-size:90%; height:1.6em}
+.breadcrumb a:after {
+    background-image: url('../artwork/breadcrumb_arrow.png');
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: 0.25rem 0.4375rem;
+    content: " ";
+    display: inline-block;
+    height: 0.4375rem;
+    margin: auto 0 auto 0.3rem;
+    width: 0.25rem;
+}
+.breadcrumb a:last-child:after {
+    background-image: none;
+    content: ""
+}
 .breadcrumb a:link {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:visited {color:blue; text-decoration:none; cursor:pointer}
 .breadcrumb a:hover {color:blue; text-decoration:underline; cursor:pointer}

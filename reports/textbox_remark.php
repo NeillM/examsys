@@ -96,11 +96,11 @@ if (isset($_POST['submit'])) {
     echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
     echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
     if (isset($_GET['folder']) and trim((string) $_GET['folder']) != '') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+        echo '<a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+        echo '<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
     }
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a></div>';
+    echo '<a href="../paper/details.php?paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a></div>';
     ?>
   <div class="page_title"><?php echo $string['secondmarkselection'] ?></div>
   <div style="padding-left:42px"><input type="checkbox" name="selectall" id="selectall" /> <strong><?php echo $string['selectall'] ?></strong></div>

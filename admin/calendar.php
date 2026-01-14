@@ -210,10 +210,10 @@ $stmt->close();
     <tr><th>
         <?php
         if (isset($_GET['module'])) {
-            echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
+            echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
         } else {
             if ($userObject->has_role('SysAdmin')) {
-                echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php">' . $string['administrativetools'] . '</a></div>';
+                echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><a href="./index.php">' . $string['administrativetools'] . '</a></div>';
             } else {
                 echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div>';
             }

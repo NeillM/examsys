@@ -58,7 +58,7 @@ $date_range = " AND start_date > {$current_year}0901000000 AND end_date <= " . (
 <div id="content">
 <div class="head_title">
 <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-<div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="summative_feedback.php?calyear=<?php echo $_GET['calyear']; ?>"><?php echo $string['summativeexamfeedback'] ?></a></div>
+<div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><a href="../admin/index.php"><?php echo $string['administrativetools'] ?></a><a href="../statistics/index.php"><?php echo $string['statistics'] ?></a><a href="summative_feedback.php?calyear=<?php echo $_GET['calyear']; ?>"><?php echo $string['summativeexamfeedback'] ?></a></div>
 <div class="page_title"><?php
     echo $string['feedbackstats'] . ': <span style="font-weight:normal">';
 switch ($_GET['type']) {
