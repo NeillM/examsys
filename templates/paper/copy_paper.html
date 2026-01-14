@@ -116,23 +116,25 @@
             </div>
 
             <div class="form-row" id="copytype_selector">
-                <label>{{ lang.copytype }}</label>
-                <div class="radio-group">
-                    <div class="radio-option">
-                        <input type="radio" name="copytype" id="copytype_paperonly" value="paperonly" />
-                        <label for="copytype_paperonly">
-                            <span>{{ lang.paperonly }}</span>
-                            <img src="../artwork/copy_paper_only.png" width="120" height="130" alt="" />
-                        </label>
+                <fieldset class="field-container" id="copytype_selector">
+                    <legend>{{ lang.copytype }}</legend>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="copytype" id="copytype_paperonly" value="paperonly" />
+                            <label for="copytype_paperonly">
+                                <span>{{ lang.paperonly }}</span>
+                                <img src="../artwork/copy_paper_only.png" width="120" height="130" alt="" />
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="copytype" id="copytype_paperquestions" value="paperquestions" checked />
+                            <label for="copytype_paperquestions">
+                                <span>{{ lang.paperandquestions }}</span>
+                                <img src="../artwork/copy_paper_questions.png" width="120" height="130" alt="" />
+                            </label>
+                        </div>
                     </div>
-                    <div class="radio-option">
-                        <input type="radio" name="copytype" id="copytype_paperquestions" value="paperquestions" checked />
-                        <label for="copytype_paperquestions">
-                            <span>{{ lang.paperandquestions }}</span>
-                            <img src="../artwork/copy_paper_questions.png" width="120" height="130" alt="" />
-                        </label>
-                    </div>
-                </div>
+                </fieldset>
             </div>
         </div>
 
