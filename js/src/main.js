@@ -40,7 +40,7 @@ requirejs.config({
     paths: {
         jquery: "node_modules/jquery/dist/jquery.min",
         jqueryvalidate: "js/jquery.validate.min",
-        jqueryui: "js/jquery-ui-1.10.4.min",
+        jqueryui: "node_modules/jquery-ui/dist/jquery-ui.min",
         jquerytablesorter: "js/jquery.tablesorter.min",
         qunit: "node_modules/qunit/qunit/qunit",
         mathjax: "node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML&amp;delayStartupUntil=configured",
