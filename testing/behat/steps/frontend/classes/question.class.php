@@ -121,6 +121,25 @@ trait Question
     }
 
     /**
+     * Check questions are not displayed in paper list.
+     *
+     * @param TableNode $table table of question leadins
+     * @Then /^I should not see questions:$/
+     * @throws \Exception
+     */
+    public function iNotSeeQuestions(TableNode $table): void
+    {
+        $rows = $table->getRows();
+        foreach ($rows as $row) {
+            $question = array_shift($row);
+            $found = $this->find('paper_question_leadin', $question);
+            if (!empty($found)) {
+                throw new \Exception('the question "' . $question . '" could has been found');
+            }
+        }
+    }
+
+    /**
      * Wait for the add question ajax to finish loading on the page
      * @Given I wait for questions to load
      */

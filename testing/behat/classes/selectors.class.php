@@ -99,7 +99,7 @@ class selectors
      */
     protected static $rogoselectors = [
         'menu_item' => <<<XPATH
-//div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]
+//div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]/a
 XPATH
         ,'mainmenuicon' => <<<XPATH
 //img[contains(@id,'toprightmenu_icon')]

@@ -1,4 +1,4 @@
-@paper @javascript @wip
+@paper @javascript
 Feature: Survey Preview
   In order to ensure that my survey papers work well
   As a teacher

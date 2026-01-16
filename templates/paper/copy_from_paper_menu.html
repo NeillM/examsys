@@ -1,51 +1,73 @@
-<div class="popup" style="z-index: 20; font-size: 90%; background-color: white; top: 120px; width: 630px; height: 346px;" id="copy_from_submenu">
-    <form method="post" action="{{data.action}}" autocomplete="off">
+{#
+    This file is part of ExamSys
+
+    ExamSys is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ExamSys is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+    This template renders the footer for the copy questions page
+
+    @author Iyud Dissanayake
+    @copyright 2025 The University of Nottingham
+#}
+<div id="content">
+    <h1>{{lang.papers}}</h1>
+    <form method="post" class="copy-form" action="{{data.action}}" autocomplete="off">
         <input type="hidden" name="paper_type" value="{{data.papertype}}" />
         <input type="hidden" name="currentpid" value="{{data.paperid}}" />
+        <input type="hidden" name="module" value="{{data.module}}" />
+        <input type="hidden" name="folder" value="{{data.folder}}" />
         <input type="hidden" name="copyfrompaper" value="1" />
-        <div id="table1div" style="width:100%">
-            <table cellpadding="1" cellspacing="0" border="0" style="font-size:100%; width:100%" id="table1">
-                <tbody>
-                    <tr>
-                        <td colspan="2" style="background-color:#F2B100; height:5px; padding:0"> </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td colspan="1" style="text-align:right">{{lang.papers}}</td>
-                        <td colspan="1">
-                            <select name="paperID" id="paperID">
-                                {% for id,item in data.papers %}
-                                {%if id != data.paperid %}
-                                <option value="{{id}}">{{item.paper_title}}</option>
-                                {% endif %}
-                                {% endfor %}
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td align="center"><input type="radio" name="copytype" value="paperonly">{{lang.paperslinkquestions}}</td>
-                        <td align="center"><input type="radio" name="copytype" value="paperquestions" checked="">{{lang.papercopyquestions}}</td>
-                    </tr>
-                    <tr>
-                        <td align="center"><img src="../artwork/copy_question_links.png" width="120" height="130"></td>
-                        <td align="center"><img src="../artwork/copy_questions.png" width="120" height="130"></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="text-align:center">{{lang.copyquestionsblurb}}</td>
-                    </tr>
-                    <tr>
-                        <td align="center" colspan="2">
-                            <input type="button" class="cancel" value="{{lang.cancel}}" name="cancel" id="cancel" data-popupid="copy_from_submenu">
-                            <input type="submit" class="ok" value="{{lang.ok}}" name="submit" id="submit_button">
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+        <div class="form-row">{{lang.copyquestionsblurb}}</div>
+
+        <div class="form-row">
+            <label for="paperID">{{lang.source}}</label>
+            <div class="field-container">
+                <select name="paperID" id="paperID">
+                    {% for id,item in data.papers %}
+                    {%if id != data.paperid %}
+                    <option value="{{id}}">{{item.paper_title}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <fieldset class="field-container" id="copytype_selector">
+                <legend>{{ lang.copytype }}</legend>
+                <div class="radio-group">
+                        <div class="radio-option">
+                        <input type="radio" name="copytype" id="copytype-paperonly" value="paperonly">
+                        <label for="copytype-paperonly">
+                            {{lang.paperslinkquestions}}
+                            <img src="../artwork/copy_question_links.png" width="120" height="130">
+                        </label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" name="copytype" id="copytype-paperquestions" value="paperquestions" checked>
+                        <label for="copytype-paperquestions">
+                            {{lang.papercopyquestions}}
+                            <img src="../artwork/copy_questions.png" width="120" height="130">
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="form-buttons">
+            <input type="submit" class="ok" value="{{lang.ok}}">
+            <input type="button" class="cancel" value="{{lang.cancel}}">
         </div>
     </form>
 </div>
