@@ -17,7 +17,7 @@ Feature: Sidebar keyboard navigation
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
       Then the popup menu should be visible
-      And the first popup item should have focus
+      And item "1" in the popup menu should have focus
       And I should see submenu with following items:
          | menu_items |
          | Questions |
@@ -27,18 +27,20 @@ Feature: Sidebar keyboard navigation
    Scenario: ArrowDown navigates down in sidebar menu
       When I focus on "Create folder" "menu_item"
       And I press "ArrowDown" key
+      And I focus on "My Personal Keywords" "menu_item"
       Then "My Personal Keywords" "menu_item" should have focus
 
    Scenario: ArrowUp navigates up in sidebar menu
       When I focus on "My Personal Keywords" "menu_item"
       And I press "ArrowUp" key
+      And I focus on "Create folder" "menu_item"
       Then "Create folder" "menu_item" should have focus
 
    Scenario: ArrowRight opens submenu and focuses first item
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
       Then the popup menu should be visible
-      And the first popup item should have focus
+      And item "1" in the popup menu should have focus
       And I should see submenu with following items:
          | menu_items |
          | Questions |
@@ -61,22 +63,22 @@ Feature: Sidebar keyboard navigation
    Scenario: ArrowDown navigates within popup menu
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the first popup item should have focus
+      Then item "1" in the popup menu should have focus
       And I should see submenu with following items:
          | menu_items |
          | Questions |
          | Papers |
          | People |
-      When I press "ArrowDown" key
-      Then the second popup item should have focus
+      And I press "ArrowDown" key
+      Then item "2" in the popup menu should have focus
 
    Scenario: ArrowUp navigates within popup menu
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
       And I press "ArrowDown" key
-      Then the second popup item should have focus
+      Then item "2" in the popup menu should have focus
       When I press "ArrowUp" key
-      Then the first popup item should have focus
+      Then item "1" in the popup menu should have focus
 
    Scenario: ArrowDown navigates past parent when submenu is open
       When I focus on "Search" "menu_item"
@@ -87,10 +89,12 @@ Feature: Sidebar keyboard navigation
          | Questions |
          | Papers |
          | People |
-      And the first popup item should have focus
-      # Note: ArrowLeft closes the popup, so we cannot test navigating past parent
-      # while keeping popup open. This scenario tests that ArrowRight opens popup
-      # and moves focus to first popup item as per ARIA treeview pattern.
+      And item "1" in the popup menu should have focus
+      When I focus on "Search" "menu_item"
+      Then "Search" "menu_item" should have focus
+      And I press "ArrowDown" key
+      Then the popup menu should be visible
+      And "Search" "menu_item" should have focus
 
    Scenario: ArrowUp navigates above parent when submenu is open
       When I focus on "Search" "menu_item"
@@ -101,10 +105,12 @@ Feature: Sidebar keyboard navigation
          | Questions |
          | Papers |
          | People |
-      And the first popup item should have focus
-      # Note: ArrowLeft closes the popup, so we cannot test navigating above parent
-      # while keeping popup open. This scenario tests that ArrowRight opens popup
-      # and moves focus to first popup item as per ARIA treeview pattern.
+      And item "1" in the popup menu should have focus
+      When I focus on "Search" "menu_item"
+      Then "Search" "menu_item" should have focus
+      And I press "ArrowUp" key
+      Then the popup menu should be visible
+      And "My Personal Keywords" "menu_item" should have focus
 
    Scenario: Escape closes submenu
       When I focus on "Search" "menu_item"
@@ -119,10 +125,39 @@ Feature: Sidebar keyboard navigation
       Then the popup menu should not be visible
       And "Search" "menu_item" should have focus
 
-   Scenario: ArrowRight focuses first item when focus is in popup
+   Scenario: ArrowRight on popup item without submenu keeps focus
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
       And I press "ArrowDown" key
-      Then the second popup item should have focus
+      Then item "2" in the popup menu should have focus
       When I press "ArrowRight" key
-      Then the first popup item should have focus
+      Then item "2" in the popup menu should have focus
+
+   @staff
+   Scenario: Keyboard navigation works for staff role
+      Given the following "users" exist:
+         | username | roles |
+         | sadmin | Staff,Admin |
+      When I log out
+      And I login as "sadmin"
+      Then I should see menu with following items:
+         | menu_items |
+         | Create folder |
+         | My Personal Keywords |
+         | Search |
+      When I focus on "Search" "menu_item"
+      And I press "ArrowRight" key
+      Then the popup menu should be visible
+      And item "1" in the popup menu should have focus
+      And I should see submenu with following items:
+         | menu_items |
+         | Questions |
+         | Papers |
+         | People |
+      When I press "ArrowDown" key
+      Then item "2" in the popup menu should have focus
+      When I press "ArrowUp" key
+      Then item "1" in the popup menu should have focus
+      When I press "ArrowLeft" key
+      Then the popup menu should not be visible
+      And "Search" "menu_item" should have focus

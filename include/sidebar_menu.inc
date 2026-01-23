@@ -26,23 +26,37 @@
 
 $menuNo = 0;
 
-function makeMenu($options)
+/**
+ * Generate a popup menu using templates for better accessibility.
+ *
+ * @param array $options Array of menu options where keys are titles and values are URLs
+ * @param render|null $render Optional render object. If not provided, one will be created.
+ */
+function makeMenu($options, $render = null)
 {
-
     global $menuNo, $configObject;
+
+    // Create render object if not provided
+    if ($render === null) {
+        $render = new render($configObject);
+    }
+
     // Work out the width of the menu
     $longest_string = 0;
     foreach ($options as $title => $url) {
-        if (mb_strlen((string) $title) > $longest_string) {
-            $longest_string = mb_strlen((string) $title);
+        // Handle [BR] separator in title
+        $tmp_parts = explode('[BR]', (string) $title);
+        $display_title = count($tmp_parts) > 1 ? $tmp_parts[1] : $tmp_parts[0];
+        if (mb_strlen($display_title) > $longest_string) {
+            $longest_string = mb_strlen($display_title);
         }
     }
     $width = ($longest_string * 7) + 35;
     if ($width < 60) {
         $width = 60;
-    }  // Set a reasonable minumum width
+    }  // Set a reasonable minimum width
 
-
+    // Prepare data arrays for backward compatibility with scrolling functionality
     $line = 0;
     $myoptions = [];
     $myurls = [];
@@ -63,30 +77,62 @@ function makeMenu($options)
         $line++;
     }
 
+    // Output the data container for scrolling functionality
     echo "<div id='popupmenu$menuNo' data-myOptions='" . json_encode($myoptions) . "' data-myURLs='" . json_encode($myurls) . "'></div>";
-    $line = 0;
+
+    // Start popup container
     echo "<div id=\"popup$menuNo\" class=\"popup\" style=\"width:" . $width . "px; z-index:30\">\n";
+
+    // Add scroll up button if menu has more than 20 items
     if (count($options) > 20) {
         echo '<div data-menuno="' . $menuNo . '" id="' . $menuNo . "_up\" class=\"popupitem scrollup\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_up_off.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
     }
+
+    // Render menu items using template
+    $line = 0;
     foreach ($options as $title => $url) {
         $itemID = $menuNo . '_' . $line;
+
+        // Process title to handle [BR] separator
+        $tmp_parts = explode('[BR]', (string) $title);
+        $display_title = count($tmp_parts) > 1 ? $tmp_parts[1] : $tmp_parts[0];
+
+        // Determine item type and prepare template data
+        $itemData = [
+            'id' => $itemID
+        ];
+
         if (mb_substr((string) $url, 0, 1) == '-') {
-            echo "<div class=\"popupitemline\" id=\"$itemID\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0\" /></div>\n";
+            // Separator
+            $itemData['type'] = 'separator';
         } elseif (mb_substr((string) $url, 0, 1) == '#') {
-            echo "<div class=\"popupitembold\" id=\"$itemID\">" . mb_substr((string) $url, 1) . "</div>\n";
+            // Heading
+            $itemData['type'] = 'heading';
+            $itemData['text'] = mb_substr((string) $url, 1);
         } else {
-            if (mb_stripos((string) $url, 'JavaScript:') === false) {
-                echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"window.location='$url'\">/$title</div>\n";
+            // Link or JavaScript action
+            $itemData['text'] = $display_title;
+            if (mb_stripos((string) $url, 'JavaScript:') !== false) {
+                $itemData['type'] = 'javascript';
+                // For JavaScript actions, store the full JavaScript code in onclick
+                $itemData['href'] = '#';
+                $itemData['onclick'] = htmlspecialchars((string) $url, ENT_QUOTES, 'UTF-8');
             } else {
-                echo "<div class=\"popupitem\" id=\"$itemID\" onclick=\"$url\">/$title</div>\n";
+                $itemData['type'] = 'link';
+                $itemData['href'] = $url;
             }
         }
+
+        // Render using template
+        echo $render->renderString(['data' => $itemData], 'sidebar/popupmenuitem.html');
+
         $line++;
         if ($line > 19) {
             break;
         }
     }
+
+    // Add scroll down button if menu has more than 20 items
     if (count($options) > 20) {
         echo '<div data-menuno="' . $menuNo . '" id="' . $menuNo . "_down\" class=\"popupitem scrolldown\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_down_on.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
     }

@@ -193,7 +193,7 @@ trait menu
      * @param string $type The type of menu item (menu_item, popup_item, etc.)
      * @throws Exception
      */
-    public function i_focus_on_menu_item($text, $type)
+    public function iFocusOnMenuItem($text, $type)
     {
         $element = $this->find($type, $text);
         if (empty($element)) {
@@ -206,8 +206,7 @@ trait menu
         } else {
             $element->focus();
         }
-        // Wait a moment for focus to be set
-        $this->getSession()->wait(100);
+        // Don't wait here - let the step that checks for focus (e.g., itemShouldHaveFocus) wait for it
     }
 
     /**
@@ -217,8 +216,12 @@ trait menu
      * @param string $key The key to press (ArrowDown, ArrowUp, ArrowLeft, ArrowRight, Enter, Escape)
      * @throws Exception
      */
-    public function i_press_key($key)
+    public function iPressKey($key)
     {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
         $keyCodes = [
             'ArrowDown' => 40,
             'ArrowUp' => 38,
@@ -240,7 +243,7 @@ trait menu
             . 'bubbles: true, cancelable: true }); '
             . 'focused.dispatchEvent(e);';
         $this->getSession()->executeScript($script);
-        $this->getSession()->wait(200);
+        // Don't wait here - let the step that checks for the result (e.g., popupMenuShouldBeVisible) wait for it
     }
 
     /**
@@ -249,20 +252,19 @@ trait menu
      * @Then /^the popup menu should be visible$/
      * @throws Exception
      */
-    public function popup_menu_should_be_visible()
+    public function popupMenuShouldBeVisible()
     {
-        $this->getSession()->wait(200);
-        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
-        $foundVisible = false;
-        foreach ($popups as $popup) {
-            if ($popup->isVisible()) {
-                $foundVisible = true;
-                break;
+        // Use spin() to wait for popup menu to appear, rather than fixed wait
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            foreach ($popups as $popup) {
+                if ($popup->isVisible()) {
+                    return true;
+                }
             }
-        }
-        if (!$foundVisible) {
-            throw new Exception('Popup menu is not visible');
-        }
+            return false;
+        });
     }
 
     /**
@@ -271,15 +273,19 @@ trait menu
      * @Then /^the popup menu should not be visible$/
      * @throws Exception
      */
-    public function popup_menu_should_not_be_visible()
+    public function popupMenuShouldNotBeVisible()
     {
-        $this->getSession()->wait(200);
-        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
-        foreach ($popups as $popup) {
-            if ($popup->isVisible()) {
-                throw new Exception('Popup menu is still visible');
+        // Use spin() to wait for popup menu to disappear, rather than fixed wait
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            foreach ($popups as $popup) {
+                if ($popup->isVisible()) {
+                    return false; // Still visible, keep waiting
+                }
             }
-        }
+            return true; // No visible popups found
+        });
     }
 
     /**
@@ -288,38 +294,10 @@ trait menu
      * @Then /^the first popup item should have focus$/
      * @throws Exception
      */
-    public function first_popup_item_should_have_focus()
+    public function firstPopupItemShouldHaveFocus()
     {
-        $this->getSession()->wait(200);
-        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
-        $popup = null;
-        foreach ($popups as $p) {
-            if ($p->isVisible()) {
-                $popup = $p;
-                break;
-            }
-        }
-        if (!$popup) {
-            throw new Exception('Popup menu is not visible');
-        }
-        $firstItem = $popup->find('css', '.popupitem');
-        if (!$firstItem) {
-            throw new Exception('Could not find first popup item');
-        }
-        // Check focus using JavaScript (Mink doesn't support :focus selector)
-        $firstItemXpath = addslashes($firstItem->getXpath());
-        $script = <<<JS
-(function() {
-    var focused = document.activeElement;
-    if (!focused) return false;
-    var item = document.evaluate('{$firstItemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    return item && (focused === item || item.contains(focused));
-})();
-JS;
-        $hasFocus = $this->getSession()->evaluateScript($script);
-        if (!$hasFocus) {
-            throw new Exception('First popup item does not have focus');
-        }
+        // Delegate to the generic method in basic.class.php
+        $this->popupMenuItemByIndexShouldHaveFocus('1');
     }
 
     /**
@@ -328,75 +306,9 @@ JS;
      * @Then /^the second popup item should have focus$/
      * @throws Exception
      */
-    public function second_popup_item_should_have_focus()
+    public function secondPopupItemShouldHaveFocus()
     {
-        $this->getSession()->wait(200);
-        $popups = $this->getSession()->getPage()->findAll('css', '.popup');
-        $popup = null;
-        foreach ($popups as $p) {
-            if ($p->isVisible()) {
-                $popup = $p;
-                break;
-            }
-        }
-        if (!$popup) {
-            throw new Exception('Popup menu is not visible');
-        }
-        $popupItems = $popup->findAll('css', '.popupitem');
-        if (count($popupItems) < 2) {
-            throw new Exception('Could not find second popup item');
-        }
-        $secondItem = $popupItems[1];
-        // Check focus using JavaScript (Mink doesn't support :focus selector)
-        $secondItemXpath = addslashes($secondItem->getXpath());
-        $script = <<<JS
-(function() {
-    var focused = document.activeElement;
-    if (!focused) return false;
-    var item = document.evaluate('{$secondItemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    return item && (focused === item || item.contains(focused));
-})();
-JS;
-        $hasFocus = $this->getSession()->evaluateScript($script);
-        if (!$hasFocus) {
-            throw new Exception('Second popup item does not have focus');
-        }
-    }
-
-    /**
-     * Check if a menu item has focus.
-     *
-     * @Then /^"([^"]*)" "([^"]*)" should have focus$/
-     * @param string $text The text of the menu item
-     * @param string $type The type of menu item
-     * @throws Exception
-     */
-    public function menu_item_should_have_focus($text, $type)
-    {
-        $this->getSession()->wait(300);
-        $element = $this->find($type, $text);
-        if (empty($element)) {
-            throw new Exception("Could not find $type with text '$text'");
-        }
-
-        // Check focus using JavaScript (Mink doesn't support :focus selector)
-        $elementXpath = addslashes($element->getXpath());
-        $escapedText = json_encode($text);
-        $script = <<<JS
-(function() {
-    var focused = document.activeElement;
-    if (!focused) return 'No element has focus';
-    var item = document.evaluate('{$elementXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    if (!item) return 'Could not find element';
-    var itemText = (item.textContent || item.innerText || '').trim().replace(/\\s+/g, ' ');
-    var expectedText = {$escapedText};
-    if (itemText.indexOf(expectedText) === -1) return 'Menu item text mismatch. Expected: ' + expectedText + ', Found: ' + itemText.substring(0, 100);
-    return (focused === item || item.contains(focused)) ? 'success' : 'Element does not have focus';
-})();
-JS;
-        $result = $this->getSession()->evaluateScript($script);
-        if ($result !== 'success') {
-            throw new Exception($result);
-        }
+        // Delegate to the generic method in basic.class.php
+        $this->popupMenuItemByIndexShouldHaveFocus('2');
     }
 }

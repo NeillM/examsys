@@ -708,4 +708,143 @@ JS;
         $select = $this->find('xpath', '//*[@data-colour="' . $colour . '"]');
         $select->click();
     }
+
+    /**
+     * Check if an item has focus.
+     *
+     * @Then /^"([^"]*)" "([^"]*)" should have focus$/
+     * @param string $text The text of the item
+     * @param string $type The type of item
+     * @throws Exception
+     */
+    public function itemShouldHaveFocus($text, $type)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        $element = $this->find($type, $text);
+        if (empty($element)) {
+            throw new Exception("Could not find $type with text '$text'");
+        }
+
+        // Check focus using JavaScript (Mink doesn't support :focus selector)
+        // The xpath uniquely identifies the element we already matched, so no need for additional text validation
+        $elementXpath = addslashes($element->getXpath());
+        $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return 'No element has focus';
+    var item = document.evaluate('{$elementXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    if (!item) return 'Could not find element';
+    return (focused === item || item.contains(focused)) ? 'success' : 'Element does not have focus';
+})();
+JS;
+        // Use spin() to wait for focus to be set, rather than fixed wait
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) use ($script) {
+            $result = $context->getSession()->evaluateScript($script);
+            return $result === 'success';
+        });
+    }
+
+    /**
+     * Check if a popup menu item has focus by text.
+     *
+     * @Then /^the "([^"]*)" popup menu item should have focus$/
+     * @param string $text The text of the popup menu item
+     * @throws Exception
+     */
+    public function popupMenuItemShouldHaveFocus($text)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        // Use spin() to wait for popup to be visible and item to have focus
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) use ($text) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            $popup = null;
+            foreach ($popups as $p) {
+                if ($p->isVisible()) {
+                    $popup = $p;
+                    break;
+                }
+            }
+            if (!$popup) {
+                return false;
+            }
+            $popupItems = $popup->findAll('css', '.popupitem');
+            $foundItem = null;
+            foreach ($popupItems as $item) {
+                $itemText = trim($item->getText());
+                if (stripos($itemText, $text) !== false) {
+                    $foundItem = $item;
+                    break;
+                }
+            }
+            if (!$foundItem) {
+                return false;
+            }
+            // Check focus using JavaScript (Mink doesn't support :focus selector)
+            $itemXpath = addslashes($foundItem->getXpath());
+            $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+            return $context->getSession()->evaluateScript($script);
+        });
+    }
+
+    /**
+     * Check if a popup menu item has focus by index (1-based).
+     *
+     * @Then /^item "([^"]*)" in the popup menu should have focus$/
+     * @param string $index The 1-based index of the popup menu item
+     * @throws Exception
+     */
+    public function popupMenuItemByIndexShouldHaveFocus($index)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        // Use spin() to wait for popup to be visible and item to have focus
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) use ($index) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            $popup = null;
+            foreach ($popups as $p) {
+                if ($p->isVisible()) {
+                    $popup = $p;
+                    break;
+                }
+            }
+            if (!$popup) {
+                return false;
+            }
+            $popupItems = $popup->findAll('css', '.popupitem');
+            $itemIndex = (int) $index - 1; // Convert to 0-based index
+            if ($itemIndex < 0 || $itemIndex >= count($popupItems)) {
+                return false;
+            }
+            $item = $popupItems[$itemIndex];
+            // Check focus using JavaScript (Mink doesn't support :focus selector)
+            $itemXpath = addslashes($item->getXpath());
+            $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+            return $context->getSession()->evaluateScript($script);
+        });
+    }
 }

@@ -29,130 +29,179 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             this.myDownInterval = 0;
             this.lastFocusedTrigger = null;
             var scope = this;
-            
-            // Add keyboard event listener for menu navigation
-            $(document).on('keydown', function(e) {
-                if (!$('.sidebar:visible').length) return;          
-                           
-                // Check if a popup is open
-                var visibleMenu = $('.popup:visible').first();
-                var hasVisiblePopup = visibleMenu.length > 0;
-                var menuItems = hasVisiblePopup ? visibleMenu.find('.popupitem') : $();
+
+            // Add keyboard event listener for menu item navigation
+            $(document).on('keydown', '.menuitem, .menuitem *', function(e) {
+                if (!$('.sidebar:visible').length) return;
+                // Prevent duplicate handlers from processing the same keypress
+                e.stopImmediatePropagation();
+
                 var currentFocus = $(':focus');
-                var isFocusInPopup = hasVisiblePopup && currentFocus.closest('.popup').length > 0;
-                var currentIndex = menuItems.length > 0 ? menuItems.index(currentFocus) : -1;
+                var menuItem = currentFocus.closest('.menuitem');
+                if (!menuItem.length) return;
+                if (menuItem.attr('aria-disabled') === 'true') return;
+
                 // Get sidebar items once for reuse in multiple cases
                 var sidebarItems = $('.sidebar .menuitem').filter(function() {
-                    return $(this).find('button, a').length > 0 && !$(this).attr('aria-disabled');
+                    return !$(this).attr('aria-disabled');
                 });
+                var currentSidebarIndex = sidebarItems.index(menuItem);
 
-                // Only handle if focus is within sidebar or sidebar popup
-                var isInSidebar = currentFocus.closest('.sidebar').length > 0 || 
-                                  currentFocus.closest('.popup').length > 0;
-                if (!isInSidebar) return;
-                
-                if (e.key === 'Tab') {
-                    if (hasVisiblePopup){
+                switch (e.key) {
+                    case 'ArrowDown':
                         e.preventDefault();
-                        // Constrain tabbing to be within the popupmenu once its open
-                        if (e.shiftKey) {
-                            // Shift+Tab - go backwards
-                            var prevIndex = currentIndex <= 0 ? menuItems.length - 1 : currentIndex - 1;
-                            menuItems.eq(prevIndex).focus(); 
-                        } else {
-                            // Tab - go forwards
-                            var nextIndex = currentIndex >= menuItems.length - 1 ? 0 : currentIndex + 1;
-                            menuItems.eq(nextIndex).focus();
+                        if (currentSidebarIndex >= 0 && currentSidebarIndex < sidebarItems.length - 1) {
+                            sidebarItems.eq(currentSidebarIndex + 1).find('button, a').first().focus();
                         }
-                    }
-                } else {
-                    var menuItem = currentFocus.closest('.menuitem');
-                    var popupItem = currentFocus.closest('.popupitem');
-                    var currentSidebarIndex;
+                        break;
 
-                    switch (e.key) {
-                        case 'ArrowDown':
-                            e.preventDefault();
-                            if (hasVisiblePopup && isFocusInPopup) {
-                                // Navigating within popup
-                                nextIndex = currentIndex < 0 ? 0 : 
-                                          currentIndex >= menuItems.length - 1 ? menuItems.length - 1 : currentIndex + 1;
-                                menuItems.eq(nextIndex).focus();
-                            } else {
-                                // Navigate in sidebar menu items
-                                currentSidebarIndex = sidebarItems.index(menuItem);
-                                if (hasVisiblePopup && !isFocusInPopup) {
-                                    // Popup is open but focus is on parent - navigate to next sidebar item
-                                    // This allows navigation past the parent while submenu remains open
-                                    if (currentSidebarIndex >= 0 && currentSidebarIndex < sidebarItems.length - 1) {
-                                        sidebarItems.eq(currentSidebarIndex + 1).find('button, a').first().focus();
-                                    }
-                                } else {
-                                    // Navigate down in sidebar menu items
-                                    if (currentSidebarIndex >= 0 && currentSidebarIndex < sidebarItems.length - 1) {
-                                        sidebarItems.eq(currentSidebarIndex + 1).find('button, a').first().focus();
-                                    }
-                                }
-                            }
-                            break;
-                            
-                        case 'ArrowUp':
-                            e.preventDefault();
-                            if (hasVisiblePopup && isFocusInPopup) {
-                                // Navigating within popup
-                                prevIndex = currentIndex <= 0 ? 0 : currentIndex - 1;
-                                menuItems.eq(prevIndex).focus();
-                            } else {
-                                // Navigate in sidebar menu items
-                                currentSidebarIndex = sidebarItems.index(menuItem);
-                                if (hasVisiblePopup && !isFocusInPopup) {
-                                    // Popup is open but focus is on parent - navigate to previous sidebar item
-                                    // This allows navigation above the parent while submenu remains open
-                                    if (currentSidebarIndex > 0) {
-                                        sidebarItems.eq(currentSidebarIndex - 1).find('button, a').first().focus();
-                                    }
-                                } else {
-                                    // Navigate up in sidebar menu items
-                                    if (currentSidebarIndex > 0) {
-                                        sidebarItems.eq(currentSidebarIndex - 1).find('button, a').first().focus();
-                                    }
-                                }
-                            }
-                            break;
-                            
-                        case 'Enter':
-                            e.preventDefault();
-                            if (popupItem.length) {
-                                // User pressed Enter on a popup item - handle via action type
-                                scope.handleMenuItemAction(popupItem, e);
-                            } else if (menuItem.length) {
-                                scope.handleMenuItemAction(menuItem, e);
-                            }
-                            break;
-                            
-                        case 'Escape':
-                            e.preventDefault();
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        if (currentSidebarIndex > 0) {
+                            sidebarItems.eq(currentSidebarIndex - 1).find('button, a').first().focus();
+                        }
+                        break;
+
+                    case 'Enter':
+                        e.preventDefault();
+                        scope.handleMenuItemAction(menuItem, e);
+                        break;
+
+                    case 'Escape':
+                        e.preventDefault();
+                        scope.hideMenus();
+                        break;
+
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        if ($('.popup:visible').length) {
                             scope.hideMenus();
-                            break;
-                            
-                        case 'ArrowLeft':
-                            e.preventDefault();
-                            if (hasVisiblePopup) {
-                                scope.hideMenus();
-                            }
-                            break;
-                        
-                        case 'ArrowRight':
-                            e.preventDefault();
-                            if (hasVisiblePopup && isFocusInPopup) {
-                                // Per ARIA treeview: Right arrow on open node moves focus to first child node
-                                menuItems.first().focus();
-                            } else if (menuItem.length && menuItem.attr('data-action') === 'openSubMenu') {
-                                // Open submenu - focus will be set to first item in showMenu
-                                scope.handleMenuItemAction(menuItem, e);
-                            }
-                            break;
+                        }
+                        break;
+
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        if (menuItem.attr('data-action') === 'openSubMenu') {
+                            scope.handleMenuItemAction(menuItem, e);
+                        }
+                        break;
+                }
+            });
+
+            // Add keyboard event listener specifically for popup menu navigation
+            $(document).on('keydown', '.popup, .popup *', function(e) {
+                if (!$('.sidebar:visible').length) return;
+                // Prevent duplicate handlers from processing the same keypress
+                e.stopImmediatePropagation();
+
+                var currentFocus = $(':focus');
+                var visibleMenu = $('.popup:visible').first();
+                if (!visibleMenu.length) return;
+                if (!currentFocus.closest('.popup').length) return;
+
+                var menuItems = visibleMenu.find('.popupitem');
+                var actionableItems = menuItems.filter(':visible').not('.scrollup, .scrolldown').filter(function() {
+                    return $(this).find('a').length > 0 || $(this).attr('onclick');
+                });
+                if (!actionableItems.length) {
+                    actionableItems = menuItems;
+                }
+                var popupItem = currentFocus.closest('.popupitem');
+                var activeItem = actionableItems.filter('.popupitem-focus');
+                if (!activeItem.length && currentFocus.is('a')) {
+                    activeItem = currentFocus.closest('.popupitem');
+                }
+                var currentIndex = activeItem.length ? actionableItems.index(activeItem) :
+                    (actionableItems.length > 0 ? actionableItems.index(popupItem) : -1);
+                var nextIndex;
+                var prevIndex;
+
+                var findNextIndex = function(startIndex, direction) {
+                    var count = actionableItems.length;
+                    if (!count) return -1;
+                    var idx = startIndex;
+                    if (idx < 0) {
+                        return direction > 0 ? 0 : count - 1;
                     }
+                    return (idx + direction + count) % count;
+                };
+
+                var keyName = e.key || ({37: 'ArrowLeft', 38: 'ArrowUp', 39: 'ArrowRight', 40: 'ArrowDown', 13: 'Enter', 27: 'Escape', 9: 'Tab'}[(e.which || e.keyCode)] || '');
+                if (e.repeat) {
+                    return;
+                }
+
+                var focusPopupItem = function(item) {
+                    actionableItems.removeClass('popupitem-focus');
+                    if (!item || !item.length) {
+                        return;
+                    }
+                    visibleMenu.addClass('popup-keyboard');
+                    item.addClass('popupitem-focus');
+                    var link = item.find('a').first();
+                    if (link.length) {
+                        link.focus();
+                    } else {
+                        item.focus();
+                    }
+                    var newIndex = actionableItems.index(item);
+                    if (newIndex >= 0) {
+                        visibleMenu.data('activeIndex', newIndex);
+                    }
+                };
+
+                if (keyName === 'Tab') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        // Shift+Tab - go backwards
+                        prevIndex = findNextIndex(currentIndex, -1);
+                        focusPopupItem(actionableItems.eq(prevIndex));
+                    } else {
+                        // Tab - go forwards
+                        nextIndex = findNextIndex(currentIndex, 1);
+                        focusPopupItem(actionableItems.eq(nextIndex));
+                    }
+                    return;
+                }
+
+                switch (keyName) {
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        nextIndex = findNextIndex(currentIndex, 1);
+                        focusPopupItem(actionableItems.eq(nextIndex));
+                        break;
+
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        prevIndex = findNextIndex(currentIndex, -1);
+                        focusPopupItem(actionableItems.eq(prevIndex));
+                        break;
+
+                    case 'Enter':
+                        e.preventDefault();
+                        if (popupItem.length) {
+                            scope.handleMenuItemAction(popupItem, e);
+                        }
+                        break;
+
+                    case 'Escape':
+                        e.preventDefault();
+                        scope.hideMenus();
+                        break;
+
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        scope.hideMenus();
+                        break;
+
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        if (popupItem.length && popupItem.attr('data-action') === 'openSubMenu') {
+                            scope.handleMenuItemAction(popupItem, e);
+                        } else if (popupItem.length) {
+                            focusPopupItem(popupItem);
+                        }
+                        break;
                 }
             });
             
@@ -338,7 +387,16 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 // Focus the first menu item after showing the menu
                 var firstItem = $('#' + submenuID + ' .popupitem').first();
                 if (firstItem.length) {
-                    firstItem.focus();
+                    // Reset any stale focus class and set it on the first item
+                    $('#' + submenuID + ' .popupitem').removeClass('popupitem-focus');
+                    firstItem.addClass('popupitem-focus');
+                    $('#' + submenuID).data('activeIndex', 0);
+                    var firstLink = firstItem.find('a').first();
+                    if (firstLink.length) {
+                        firstLink.focus();
+                    } else {
+                        firstItem.focus();
+                    }
                 }
             } else {
                 scope.hideMenus(e);
@@ -365,6 +423,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $(".popup").each(function() {
                 $(this).hide();
             });
+            $(".popup").removeClass('popup-keyboard');
             // Set aria-expanded to false for menu item
             $('[aria-expanded="true"]').attr('aria-expanded', 'false');
             // Restore focus to the triggering menuitem by finding its interactive element (button or a)
@@ -380,7 +439,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
 
         this.handleMenuItemAction = function(menuItem,e) {
             var action = menuItem.attr('data-action');
-            console.log(action);
             if (action) {
                 switch (action) {
                     case 'openSubMenu':
@@ -425,7 +483,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                     if (urlMatch && urlMatch[1]) {
                         window.location = urlMatch[1];
                     } else if (onclick.indexOf('JavaScript:') === -1) {
-                        try { eval(onclick); } catch (err) { console.warn('Error executing onclick:', err); }
+                        try {
+                            eval(onclick);
+                        } catch (err) {
+                            console.warn('Error executing onclick:', err);
+                        }
                     }
                 }
             }
