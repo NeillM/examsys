@@ -29,9 +29,6 @@ $configObject = Config::get_instance();
 
 class outline_lookup
 {
-    public $session;
-    public $request;
-    protected $form;
     protected $settings;
     protected $db;
     protected $calling_object;
@@ -86,16 +83,25 @@ class outline_lookup
         $this->error .= $msg;
     }
 
+    /**
+     * Initialise the lookup plugin.
+     *
+     * The object passed to the function will contain the following properties:
+     *
+     * - db The ExamSys database object
+     * - calling_object A Lookup class instance
+     * - settings The settings array from the config file for the Lookup instance
+     *
+     * {@see Lookup::__construct()}
+     *
+     * @param stdClass $object
+     * @return void
+     */
     public function init($object)
     {
         $this->db = & $object->db;
         $this->calling_object = & $object->calling_object;
-        //    $this->returndata = & $object->returndata;
-        //    $this->retdata = & $this->returndata[$this->number];
-        $this->form = & $object->form;
         $this->settings = & $object->settings;
-        $this->session = & $object->calling_object->session;
-        $this->request = & $object->calling_object->request;
     }
 
     public function error_handling($context = null)
