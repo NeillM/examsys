@@ -18,8 +18,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $) {
+define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, config, $, log) {
     return function() {
+        var MAX_MENU_ITEMS = 20;
         /**
          * Initialise sidebar.
          */
@@ -99,15 +100,21 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 if (!visibleMenu.length) return;
                 if (!currentFocus.closest('.popup').length) return;
 
-                var menuItems = visibleMenu.find('.popupitem');
-                var actionableItems = menuItems.filter(':visible').not('.scrollup, .scrolldown').filter(function() {
-                    return $(this).find('a').length > 0 || $(this).attr('onclick');
-                });
-                if (!actionableItems.length) {
-                    actionableItems = menuItems;
-                }
+                var getActionableItems = function() {
+                    var menuItems = visibleMenu.find('.popupitem');
+                    var actionableItems = menuItems.filter(':visible').not('.scrollup, .scrolldown').filter(function() {
+                        return $(this).find('a').length > 0 || $(this).attr('data-onclick') || $(this).attr('onclick');
+                    });
+                    if (!actionableItems.length) {
+                        actionableItems = menuItems;
+                    }
+                    return actionableItems;
+                };
+                var actionableItems = getActionableItems();
                 var popupItem = currentFocus.closest('.popupitem');
-                var activeItem = actionableItems.filter('.popupitem-focus');
+                var activeItem = actionableItems.filter(function() {
+                    return $(this).is(':focus') || $(this).find('a:focus').length;
+                });
                 if (!activeItem.length && currentFocus.is('a')) {
                     activeItem = currentFocus.closest('.popupitem');
                 }
@@ -115,29 +122,38 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                     (actionableItems.length > 0 ? actionableItems.index(popupItem) : -1);
                 var nextIndex;
                 var prevIndex;
+                var FORWARD = 1;
+                var BACKWARD = -1;
 
+                /**
+                 * Get the next actionable index, wrapping within bounds.
+                 *
+                 * @param {number} startIndex Current index.
+                 * @param {number} direction 1 for forward, -1 for backward.
+                 * @returns {number} The next index to focus.
+                 */
                 var findNextIndex = function(startIndex, direction) {
                     var count = actionableItems.length;
                     if (!count) return -1;
-                    var idx = startIndex;
-                    if (idx < 0) {
-                        return direction > 0 ? 0 : count - 1;
-                    }
-                    return (idx + direction + count) % count;
+                    // Add the count first to avoid negative wrapping when moving backward.
+                    return (startIndex + direction + count) % count;
                 };
 
-                var keyName = e.key || ({37: 'ArrowLeft', 38: 'ArrowUp', 39: 'ArrowRight', 40: 'ArrowDown', 13: 'Enter', 27: 'Escape', 9: 'Tab'}[(e.which || e.keyCode)] || '');
+                var keyName = e.key;
                 if (e.repeat) {
                     return;
                 }
-
+                
+                /**
+                 * Focus a popup menu item and update active index.
+                 *
+                 * @param {jQuery} item The menu item to focus.
+                 * @returns {void}
+                 */
                 var focusPopupItem = function(item) {
-                    actionableItems.removeClass('popupitem-focus');
                     if (!item || !item.length) {
                         return;
                     }
-                    visibleMenu.addClass('popup-keyboard');
-                    item.addClass('popupitem-focus');
                     var link = item.find('a').first();
                     if (link.length) {
                         link.focus();
@@ -154,11 +170,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                     e.preventDefault();
                     if (e.shiftKey) {
                         // Shift+Tab - go backwards
-                        prevIndex = findNextIndex(currentIndex, -1);
+                        prevIndex = findNextIndex(currentIndex, BACKWARD);
                         focusPopupItem(actionableItems.eq(prevIndex));
                     } else {
                         // Tab - go forwards
-                        nextIndex = findNextIndex(currentIndex, 1);
+                        nextIndex = findNextIndex(currentIndex, FORWARD);
                         focusPopupItem(actionableItems.eq(nextIndex));
                     }
                     return;
@@ -167,13 +183,33 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 switch (keyName) {
                     case 'ArrowDown':
                         e.preventDefault();
-                        nextIndex = findNextIndex(currentIndex, 1);
+                        if (currentIndex === actionableItems.length - 1) {
+                            var popupId = visibleMenu.attr('id').replace('popup', '');
+                            var options = JSON.parse($("#popupmenu" + popupId).attr('data-myOptions'));
+                            var urls = JSON.parse($("#popupmenu" + popupId).attr('data-myURLs'));
+                            if (scope.scrollOnce(visibleMenu.attr('id'), options, urls, FORWARD)) {
+                                actionableItems = getActionableItems();
+                                focusPopupItem(actionableItems.eq(actionableItems.length - 1));
+                                break;
+                            }
+                        }
+                        nextIndex = findNextIndex(currentIndex, FORWARD);
                         focusPopupItem(actionableItems.eq(nextIndex));
                         break;
 
                     case 'ArrowUp':
                         e.preventDefault();
-                        prevIndex = findNextIndex(currentIndex, -1);
+                        if (currentIndex === 0) {
+                            var popupIdUp = visibleMenu.attr('id').replace('popup', '');
+                            var optionsUp = JSON.parse($("#popupmenu" + popupIdUp).attr('data-myOptions'));
+                            var urlsUp = JSON.parse($("#popupmenu" + popupIdUp).attr('data-myURLs'));
+                            if (scope.scrollOnce(visibleMenu.attr('id'), optionsUp, urlsUp, BACKWARD)) {
+                                actionableItems = getActionableItems();
+                                focusPopupItem(actionableItems.eq(0));
+                                break;
+                            }
+                        }
+                        prevIndex = findNextIndex(currentIndex, BACKWARD);
                         focusPopupItem(actionableItems.eq(prevIndex));
                         break;
 
@@ -240,6 +276,102 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             });
         };
 
+        this.renderPopupMenuItem = function(submenuItemID, text, url) {
+            var item = $('#' + submenuItemID);
+            if (!item.length) {
+                return;
+            }
+
+            var keepFocus = item.is(':focus') || item.find('a:focus').length;
+            item.removeAttr('onclick')
+                .removeAttr('data-onclick')
+                .removeAttr('role');
+
+            if (url.substr(0, 1) === '-') {
+                item.attr('class', 'popupitemline').removeAttr('tabindex');
+                item.html('<hr class="popupitem-separator" />');
+                return;
+            }
+
+            if (url.substr(0, 1) === '#') {
+                item.attr('class', 'popupitembold').removeAttr('tabindex');
+                item.text(url.substr(1));
+                return;
+            }
+
+            item.attr('class', 'popupitem').attr('role', 'menuitem').attr('tabindex', '0');
+
+            var link = $('<a/>', {
+                role: 'menuitem',
+                tabindex: 0
+            }).text(text);
+
+            if (url.indexOf('JavaScript:') !== -1) {
+                item.attr('data-onclick', url);
+                link.attr('href', '#').attr('data-onclick', url);
+            } else {
+                link.attr('href', url);
+            }
+
+            item.empty().append(link);
+
+            if (keepFocus) {
+                var focusTarget = item.find('a').first();
+                if (focusTarget.length) {
+                    focusTarget.focus();
+                } else {
+                    item.focus();
+                }
+            }
+        };
+
+        this.scrollOnce = function(submenuID, arrayID, urlID, direction) {
+            if (arrayID.length <= MAX_MENU_ITEMS) {
+                return false;
+            }
+
+            if (direction > 0) {
+                if (this.scrollLine >= (arrayID.length - MAX_MENU_ITEMS)) {
+                    return false;
+                }
+                this.scrollLine++;
+            } else if (direction < 0) {
+                if (this.scrollLine <= 0) {
+                    return false;
+                }
+                this.scrollLine--;
+            } else {
+                return false;
+            }
+
+            var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
+            if (limit >= arrayID.length) {
+                limit = arrayID.length - 1;
+            }
+
+            var line = 0;
+            for (var i = this.scrollLine; i <= limit; i++) {
+                var submenuItemID = submenuID.substr(5,1) + '_' + line;
+                this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
+                line++;
+            }
+
+            var upID = submenuID.substr(5,1) + '_up';
+            var downID = submenuID.substr(5,1) + '_down';
+            if (this.scrollLine > 0) {
+                $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_on.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
+            } else {
+                $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_off.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
+            }
+            if (this.scrollLine < (arrayID.length - MAX_MENU_ITEMS)) {
+                $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_on.png" width="9" height="5" alt="'+ jsxls.lang_string["down"] + '" />&nbsp;');
+            } else {
+                $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_off.png" width="9" height="5" alt="'+ jsxls.lang_string["down"] + '" />&nbsp;');
+            }
+
+            return true;
+        };
+
         /**
          * Scroll up the menu
          * menus have a hardcoded display number of 20
@@ -251,22 +383,14 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             this.myUpInterval = window.setInterval(function () {
                 if (this.scrollLine > 0) {
                     this.scrollLine--;
-                    var limit = (this.scrollLine + 19);
+                    var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
                     if (limit >= arrayID.length) {
                         limit = arrayID.length-1;
                     }
                     var line = 0;
                     for (var i = this.scrollLine; i <= limit; i++) {
                         var submenuItemID = submenuID.substr(5,1) + '_' + line;
-                        if (urlID[i].substr(0,1) == '-') {
-                            $('#' + submenuItemID).html('<hr nonshade="nonshade" style="height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0" />');
-                            $('#' + submenuItemID).attr('onclick', "window.location=''");
-                        } else if (urlID[i].substr(0,1) == '#') {
-                            $('#' + submenuItemID).html(urlID[i].substr(1));
-                        } else {
-                            $('#' + submenuItemID).html(arrayID[i]);
-                            $('#' + submenuItemID).attr('onclick', "window.location='" + urlID[i] + "'");
-                        }
+                        this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
                         line++;
                     }
                     var downID = submenuID.substr(5,1) + '_down';
@@ -295,28 +419,20 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
          */
         this.scrollDownStart = function(submenuID, arrayID, urlID) {
             this.myDownInterval = window.setInterval(function () {
-            if (this.scrollLine < (arrayID.length-20)) {
+            if (this.scrollLine < (arrayID.length - MAX_MENU_ITEMS)) {
                 if (this.scrollLine == 0) {
                     var upID = submenuID.substr(5,1) + '_up';
                     $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_on.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
                 }
                 this.scrollLine++;
-                var limit = (this.scrollLine + 19);
+                var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
                 if (limit >= arrayID.length) {
                     limit = arrayID.length-1;
                 }
                 var line = 0;
                 for (var i = this.scrollLine; i <= limit; i++) {
                     var submenuItemID = submenuID.substr(5,1) + '_' + line;
-                    if (urlID[i].substr(0,1) == '-') {
-                        $('#' + submenuItemID).html('<hr nonshade="nonshade" style="height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0" />');
-                        $('#' + submenuItemID).attr('onclick', "window.location=''");
-                    } else if (urlID[i].substr(0,1) == '#') {
-                        $('#' + submenuItemID).html(urlID[i].substr(1));
-                    } else {
-                        $('#' + submenuItemID).html(arrayID[i]);
-                        $('#' + submenuItemID).attr('onclick', "window.location='" + urlID[i] + "'");
-                    }
+                    this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
                     line++;
                 }
             } else {
@@ -348,11 +464,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             var scope = this;
             this.scrollLine = 0;
 
-            var limit = (this.scrollLine + 19);
+            var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
             if (limit >= arrayID.length) {
                 limit = arrayID.length-1;
             }
-            if (arrayID.length > 20) {
+            if (arrayID.length > MAX_MENU_ITEMS) {
                 var upID = submenuID.substr(5,1) + '_up';
                 $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_off.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
                 var downID = submenuID.substr(5,1) + '_down';
@@ -361,15 +477,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             var line = 0;
             for (var i = this.scrollLine; i <= limit; i++) {
                 var submenuItemID = submenuID.substr(5,1) + '_' + line;
-                if (urlID[i].substr(0,1) == '-') {
-                    $('#' + submenuItemID).html('<hr nonshade="nonshade" style="height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0" />');
-                    $('#' + submenuItemID).attr('onclick', "window.location=''");
-                } else if (urlID[i].substr(0,1) == '#') {
-                    $('#' + submenuItemID).html(urlID[i].substr(1));
-                } else {
-                    $('#' + submenuItemID).html(arrayID[i]);
-                    $('#' + submenuItemID).attr('onclick', "window.location='" + urlID[i] + "'");
-                }
+                this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
                 line++;
             }
 
@@ -387,9 +495,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                 // Focus the first menu item after showing the menu
                 var firstItem = $('#' + submenuID + ' .popupitem').first();
                 if (firstItem.length) {
-                    // Reset any stale focus class and set it on the first item
-                    $('#' + submenuID + ' .popupitem').removeClass('popupitem-focus');
-                    firstItem.addClass('popupitem-focus');
                     $('#' + submenuID).data('activeIndex', 0);
                     var firstLink = firstItem.find('a').first();
                     if (firstLink.length) {
@@ -423,7 +528,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
             $(".popup").each(function() {
                 $(this).hide();
             });
-            $(".popup").removeClass('popup-keyboard');
             // Set aria-expanded to false for menu item
             $('[aria-expanded="true"]').attr('aria-expanded', 'false');
             // Restore focus to the triggering menuitem by finding its interactive element (button or a)
@@ -469,25 +573,38 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $)
                         break;
                    
                     default:
-                        console.warn('Unknown action type:', action);
+                        log('Unknown action type: ' + action, 'warn');
                         break;
                 }
                 return;
             }
             
-            // Fallback for popup items without data-action: handle onclick
+            // Fallback for popup items without data-action: handle link/data-onclick
             if (menuItem.hasClass('popupitem')) {
-                var onclick = menuItem.attr('onclick');
+                var link = menuItem.find('a').first();
+                var linkHref = link.attr('href');
+                if (linkHref && linkHref !== '#') {
+                    window.location = linkHref;
+                    return;
+                }
+
+                var onclick = menuItem.attr('data-onclick') || link.attr('data-onclick') || menuItem.attr('onclick');
                 if (onclick) {
                     var urlMatch = onclick.match(/window\.location\s*=\s*['"]([^'"]+)['"]/);
                     if (urlMatch && urlMatch[1]) {
                         window.location = urlMatch[1];
-                    } else if (onclick.indexOf('JavaScript:') === -1) {
-                        try {
-                            eval(onclick);
-                        } catch (err) {
-                            console.warn('Error executing onclick:', err);
-                        }
+                        return;
+                    }
+
+                    var javascriptPrefix = 'JavaScript:';
+                    var script = onclick;
+                    if (script.indexOf(javascriptPrefix) === 0) {
+                        script = script.slice(javascriptPrefix.length);
+                    }
+                    try {
+                        eval(script);
+                    } catch (err) {
+                        log('Error executing onclick: ' + err, 'warn');
                     }
                 }
             }

@@ -710,6 +710,67 @@ JS;
     }
 
     /**
+     * Focus on a menu item.
+     *
+     * @When /^I focus on "([^"]*)" "([^"]*)"$/
+     * @param string $text The text of the menu item
+     * @param string $type The type of menu item (menu_item, popup_item, etc.)
+     * @throws Exception
+     */
+    public function iFocusOnMenuItem($text, $type)
+    {
+        $element = $this->find($type, $text);
+        if (empty($element)) {
+            throw new Exception("Could not find $type with text '$text'");
+        }
+        // Find the focusable element (button or link) within the menu item
+        $focusable = $element->find('xpath', './/button|.//a');
+        if ($focusable) {
+            $focusable->focus();
+        } else {
+            $element->focus();
+        }
+        // Wait for focus to be applied using the shared focus check.
+        $this->itemShouldHaveFocus($text, $type);
+    }
+
+    /**
+     * Press a keyboard key.
+     *
+     * @When /^I press "([^"]*)" key$/
+     * @param string $key The key to press (ArrowDown, ArrowUp, ArrowLeft, ArrowRight, Enter, Escape)
+     * @throws Exception
+     */
+    public function iPressKey($key)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        $keyCodes = [
+            'ArrowDown' => 40,
+            'ArrowUp' => 38,
+            'ArrowLeft' => 37,
+            'ArrowRight' => 39,
+            'Enter' => 13,
+            'Escape' => 27,
+        ];
+
+        if (!isset($keyCodes[$key])) {
+            throw new Exception("Unknown key: $key");
+        }
+
+        $keyCode = $keyCodes[$key];
+        // Use JavaScript to dispatch keyboard event
+        $script = 'var focused = document.activeElement || document.body; '
+            . "var e = new KeyboardEvent('keydown', { "
+            . "key: '$key', code: '$key', keyCode: $keyCode, which: $keyCode, "
+            . 'bubbles: true, cancelable: true }); '
+            . 'focused.dispatchEvent(e);';
+        $this->getSession()->executeScript($script);
+    }
+
+    /**
      * Check if an item has focus.
      *
      * @Then /^"([^"]*)" "([^"]*)" should have focus$/
@@ -729,7 +790,6 @@ JS;
         }
 
         // Check focus using JavaScript (Mink doesn't support :focus selector)
-        // The xpath uniquely identifies the element we already matched, so no need for additional text validation
         $elementXpath = addslashes($element->getXpath());
         $script = <<<JS
 (function() {
@@ -740,111 +800,10 @@ JS;
     return (focused === item || item.contains(focused)) ? 'success' : 'Element does not have focus';
 })();
 JS;
-        // Use spin() to wait for focus to be set, rather than fixed wait
-        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        // Wait for focus to be set; spin avoids a fixed sleep.
         $this->spin(function ($context) use ($script) {
             $result = $context->getSession()->evaluateScript($script);
             return $result === 'success';
-        });
-    }
-
-    /**
-     * Check if a popup menu item has focus by text.
-     *
-     * @Then /^the "([^"]*)" popup menu item should have focus$/
-     * @param string $text The text of the popup menu item
-     * @throws Exception
-     */
-    public function popupMenuItemShouldHaveFocus($text)
-    {
-        if (!$this->running_javascript()) {
-            throw new Exception('This step requires JavaScript to be enabled');
-        }
-
-        // Use spin() to wait for popup to be visible and item to have focus
-        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
-        $this->spin(function ($context) use ($text) {
-            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
-            $popup = null;
-            foreach ($popups as $p) {
-                if ($p->isVisible()) {
-                    $popup = $p;
-                    break;
-                }
-            }
-            if (!$popup) {
-                return false;
-            }
-            $popupItems = $popup->findAll('css', '.popupitem');
-            $foundItem = null;
-            foreach ($popupItems as $item) {
-                $itemText = trim($item->getText());
-                if (stripos($itemText, $text) !== false) {
-                    $foundItem = $item;
-                    break;
-                }
-            }
-            if (!$foundItem) {
-                return false;
-            }
-            // Check focus using JavaScript (Mink doesn't support :focus selector)
-            $itemXpath = addslashes($foundItem->getXpath());
-            $script = <<<JS
-(function() {
-    var focused = document.activeElement;
-    if (!focused) return false;
-    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    return item && (focused === item || item.contains(focused));
-})();
-JS;
-            return $context->getSession()->evaluateScript($script);
-        });
-    }
-
-    /**
-     * Check if a popup menu item has focus by index (1-based).
-     *
-     * @Then /^item "([^"]*)" in the popup menu should have focus$/
-     * @param string $index The 1-based index of the popup menu item
-     * @throws Exception
-     */
-    public function popupMenuItemByIndexShouldHaveFocus($index)
-    {
-        if (!$this->running_javascript()) {
-            throw new Exception('This step requires JavaScript to be enabled');
-        }
-
-        // Use spin() to wait for popup to be visible and item to have focus
-        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
-        $this->spin(function ($context) use ($index) {
-            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
-            $popup = null;
-            foreach ($popups as $p) {
-                if ($p->isVisible()) {
-                    $popup = $p;
-                    break;
-                }
-            }
-            if (!$popup) {
-                return false;
-            }
-            $popupItems = $popup->findAll('css', '.popupitem');
-            $itemIndex = (int) $index - 1; // Convert to 0-based index
-            if ($itemIndex < 0 || $itemIndex >= count($popupItems)) {
-                return false;
-            }
-            $item = $popupItems[$itemIndex];
-            // Check focus using JavaScript (Mink doesn't support :focus selector)
-            $itemXpath = addslashes($item->getXpath());
-            $script = <<<JS
-(function() {
-    var focused = document.activeElement;
-    if (!focused) return false;
-    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    return item && (focused === item || item.contains(focused));
-})();
-JS;
-            return $context->getSession()->evaluateScript($script);
         });
     }
 }

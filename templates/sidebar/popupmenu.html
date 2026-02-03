@@ -1,0 +1,46 @@
+{# This file is part of ExamSys
+#
+# ExamSys is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ExamSys is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template renders the popup menu container and contents.
+
+@author Nisha Sarala <nisha.sarala@nottingham.ac.uk>
+@copyright 2026 The University of Nottingham
+
+Required variables:
+data - Object containing:
+    menuNo - Unique menu identifier
+    width - Popup width in pixels
+    optionsJson - JSON encoded menu option labels
+    urlsJson - JSON encoded menu URLs
+    hasScroll - Whether to render scroll controls
+    path - Root path for image assets
+    itemsHtml - Popup menu item HTML
+#}
+<div id="popupmenu{{ data.menuNo }}" data-myOptions='{{ data.optionsJson }}' data-myURLs='{{ data.urlsJson }}'></div>
+<div id="popup{{ data.menuNo }}" class="popup" style="width:{{ data.width }}px; z-index:30">
+    {% if data.hasScroll %}
+        <div data-menuno="{{ data.menuNo }}" id="{{ data.menuNo }}_up" class="popupitem scrollup">
+            <img src="{{ data.path }}/artwork/submenu_up_off.png" width="9" height="5" alt="down" border="0" />&nbsp;
+        </div>
+    {% endif %}
+    {{ data.itemsHtml|raw }}
+    {% if data.hasScroll %}
+        <div data-menuno="{{ data.menuNo }}" id="{{ data.menuNo }}_down" class="popupitem scrolldown">
+            <img src="{{ data.path }}/artwork/submenu_down_on.png" width="9" height="5" alt="down" border="0" />&nbsp;
+        </div>
+    {% endif %}
+</div>

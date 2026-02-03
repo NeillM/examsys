@@ -158,6 +158,13 @@ a.greylink:hover {
   background-color: white;
   border: 1px solid white;
 }
+.popupitem-separator {
+  height: 0.0625rem;
+  margin: 0;
+  border: none;
+  background-color: #C0C0C0;
+  color: #C0C0C0;
+}
 .popupitembold {
   padding-left: 4px;
   font-weight: bold;

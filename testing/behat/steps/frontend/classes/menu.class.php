@@ -91,6 +91,15 @@ trait menu
         if (empty($menuitems)) {
             throw new Exception('The submenu items list is empty');
         }
+        $this->spin(function ($context) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            foreach ($popups as $popup) {
+                if ($popup->isVisible()) {
+                    return true;
+                }
+            }
+            return false;
+        });
         foreach ($menuitems->getHash() as $menuitem) {
             $title = $menuitem['menu_items'];
             $element = $this->find('sub_menu', $title);
@@ -186,67 +195,6 @@ trait menu
     }
 
     /**
-     * Focus on a menu item.
-     *
-     * @When /^I focus on "([^"]*)" "([^"]*)"$/
-     * @param string $text The text of the menu item
-     * @param string $type The type of menu item (menu_item, popup_item, etc.)
-     * @throws Exception
-     */
-    public function iFocusOnMenuItem($text, $type)
-    {
-        $element = $this->find($type, $text);
-        if (empty($element)) {
-            throw new Exception("Could not find $type with text '$text'");
-        }
-        // Find the focusable element (button or link) within the menu item
-        $focusable = $element->find('css', 'button, a');
-        if ($focusable) {
-            $focusable->focus();
-        } else {
-            $element->focus();
-        }
-        // Don't wait here - let the step that checks for focus (e.g., itemShouldHaveFocus) wait for it
-    }
-
-    /**
-     * Press a keyboard key.
-     *
-     * @When /^I press "([^"]*)" key$/
-     * @param string $key The key to press (ArrowDown, ArrowUp, ArrowLeft, ArrowRight, Enter, Escape)
-     * @throws Exception
-     */
-    public function iPressKey($key)
-    {
-        if (!$this->running_javascript()) {
-            throw new Exception('This step requires JavaScript to be enabled');
-        }
-
-        $keyCodes = [
-            'ArrowDown' => 40,
-            'ArrowUp' => 38,
-            'ArrowLeft' => 37,
-            'ArrowRight' => 39,
-            'Enter' => 13,
-            'Escape' => 27,
-        ];
-
-        if (!isset($keyCodes[$key])) {
-            throw new Exception("Unknown key: $key");
-        }
-
-        $keyCode = $keyCodes[$key];
-        // Use JavaScript to dispatch keyboard event (Mink doesn't support arrow keys or :focus selector)
-        $script = 'var focused = document.activeElement || document.body; '
-            . "var e = new KeyboardEvent('keydown', { "
-            . "key: '$key', code: '$key', keyCode: $keyCode, which: $keyCode, "
-            . 'bubbles: true, cancelable: true }); '
-            . 'focused.dispatchEvent(e);';
-        $this->getSession()->executeScript($script);
-        // Don't wait here - let the step that checks for the result (e.g., popupMenuShouldBeVisible) wait for it
-    }
-
-    /**
      * Check if popup menu is visible.
      *
      * @Then /^the popup menu should be visible$/
@@ -268,15 +216,14 @@ trait menu
     }
 
     /**
-     * Check if popup menu is not visible.
+     * Check if no popup menus are visible.
      *
-     * @Then /^the popup menu should not be visible$/
+     * @Then /^no popup menus should be visible$/
      * @throws Exception
      */
     public function popupMenuShouldNotBeVisible()
     {
-        // Use spin() to wait for popup menu to disappear, rather than fixed wait
-        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        // Wait for focus to be set; spin avoids a fixed sleep.
         $this->spin(function ($context) {
             $popups = $context->getSession()->getPage()->findAll('css', '.popup');
             foreach ($popups as $popup) {
@@ -289,26 +236,101 @@ trait menu
     }
 
     /**
-     * Check if first popup item has focus.
+     * Check if a popup menu item has focus by text.
      *
-     * @Then /^the first popup item should have focus$/
+     * @Then /^the "([^"]*)" popup menu item should have focus$/
+     * @param string $text The text of the popup menu item
      * @throws Exception
      */
-    public function firstPopupItemShouldHaveFocus()
+    public function popupMenuItemShouldHaveFocus($text)
     {
-        // Delegate to the generic method in basic.class.php
-        $this->popupMenuItemByIndexShouldHaveFocus('1');
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        // Use spin() to wait for popup to be visible and item to have focus
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) use ($text) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            $popup = null;
+            foreach ($popups as $p) {
+                if ($p->isVisible()) {
+                    $popup = $p;
+                    break;
+                }
+            }
+            if (!$popup) {
+                return false;
+            }
+            $popupItems = $popup->findAll('css', '.popupitem');
+            $foundItem = null;
+            foreach ($popupItems as $item) {
+                $itemText = trim($item->getText());
+                if (stripos($itemText, $text) !== false) {
+                    $foundItem = $item;
+                    break;
+                }
+            }
+            if (!$foundItem) {
+                return false;
+            }
+            // Check focus using JavaScript.
+            $itemXpath = addslashes($foundItem->getXpath());
+            $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+            return $context->getSession()->evaluateScript($script);
+        });
     }
 
     /**
-     * Check if second popup item has focus.
+     * Check if a popup menu item has focus by index (1-based).
      *
-     * @Then /^the second popup item should have focus$/
+     * @Then /^item "([^"]*)" in the popup menu should have focus$/
+     * @param string $index The 1-based index of the popup menu item
      * @throws Exception
      */
-    public function secondPopupItemShouldHaveFocus()
+    public function popupMenuItemByIndexShouldHaveFocus($index)
     {
-        // Delegate to the generic method in basic.class.php
-        $this->popupMenuItemByIndexShouldHaveFocus('2');
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        // Wait for focus to be set; spin avoids a fixed sleep.
+        $this->spin(function ($context) use ($index) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            $popup = null;
+            foreach ($popups as $p) {
+                if ($p->isVisible()) {
+                    $popup = $p;
+                    break;
+                }
+            }
+            if (!$popup) {
+                return false;
+            }
+            $popupItems = $popup->findAll('css', '.popupitem');
+            $itemIndex = (int) $index - 1; // Convert to 0-based index
+            if ($itemIndex < 0 || $itemIndex >= count($popupItems)) {
+                return false;
+            }
+            $item = $popupItems[$itemIndex];
+            // Check focus using JavaScript.
+            $itemXpath = addslashes($item->getXpath());
+            $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+            return $context->getSession()->evaluateScript($script);
+        });
     }
 }

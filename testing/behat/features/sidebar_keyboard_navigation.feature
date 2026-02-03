@@ -16,7 +16,6 @@ Feature: Sidebar keyboard navigation
    Scenario: Focus moves to first item when submenu opens
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the popup menu should be visible
       And item "1" in the popup menu should have focus
       And I should see submenu with following items:
          | menu_items |
@@ -27,19 +26,16 @@ Feature: Sidebar keyboard navigation
    Scenario: ArrowDown navigates down in sidebar menu
       When I focus on "Create folder" "menu_item"
       And I press "ArrowDown" key
-      And I focus on "My Personal Keywords" "menu_item"
       Then "My Personal Keywords" "menu_item" should have focus
 
    Scenario: ArrowUp navigates up in sidebar menu
       When I focus on "My Personal Keywords" "menu_item"
       And I press "ArrowUp" key
-      And I focus on "Create folder" "menu_item"
       Then "Create folder" "menu_item" should have focus
 
    Scenario: ArrowRight opens submenu and focuses first item
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the popup menu should be visible
       And item "1" in the popup menu should have focus
       And I should see submenu with following items:
          | menu_items |
@@ -50,14 +46,13 @@ Feature: Sidebar keyboard navigation
    Scenario: ArrowLeft closes submenu
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the popup menu should be visible
       And I should see submenu with following items:
          | menu_items |
          | Questions |
          | Papers |
          | People |
       When I press "ArrowLeft" key
-      Then the popup menu should not be visible
+      Then no popup menus should be visible
       And "Search" "menu_item" should have focus
 
    Scenario: ArrowDown navigates within popup menu
@@ -83,7 +78,6 @@ Feature: Sidebar keyboard navigation
    Scenario: ArrowDown navigates past parent when submenu is open
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the popup menu should be visible
       And I should see submenu with following items:
          | menu_items |
          | Questions |
@@ -99,7 +93,6 @@ Feature: Sidebar keyboard navigation
    Scenario: ArrowUp navigates above parent when submenu is open
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the popup menu should be visible
       And I should see submenu with following items:
          | menu_items |
          | Questions |
@@ -115,14 +108,13 @@ Feature: Sidebar keyboard navigation
    Scenario: Escape closes submenu
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the popup menu should be visible
       And I should see submenu with following items:
          | menu_items |
          | Questions |
          | Papers |
          | People |
       When I press "Escape" key
-      Then the popup menu should not be visible
+      Then no popup menus should be visible
       And "Search" "menu_item" should have focus
 
    Scenario: ArrowRight on popup item without submenu keeps focus
@@ -137,7 +129,7 @@ Feature: Sidebar keyboard navigation
    Scenario: Keyboard navigation works for staff role
       Given the following "users" exist:
          | username | roles |
-         | sadmin | Staff,Admin |
+         | sadmin | Staff |
       When I log out
       And I login as "sadmin"
       Then I should see menu with following items:
@@ -147,7 +139,6 @@ Feature: Sidebar keyboard navigation
          | Search |
       When I focus on "Search" "menu_item"
       And I press "ArrowRight" key
-      Then the popup menu should be visible
       And item "1" in the popup menu should have focus
       And I should see submenu with following items:
          | menu_items |
@@ -159,5 +150,5 @@ Feature: Sidebar keyboard navigation
       When I press "ArrowUp" key
       Then item "1" in the popup menu should have focus
       When I press "ArrowLeft" key
-      Then the popup menu should not be visible
+      Then no popup menus should be visible
       And "Search" "menu_item" should have focus

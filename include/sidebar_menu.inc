@@ -25,6 +25,7 @@
  */
 
 $menuNo = 0;
+const MAX_MENU_ITEMS = 20;
 
 /**
  * Generate a popup menu using templates for better accessibility.
@@ -32,7 +33,7 @@ $menuNo = 0;
  * @param array $options Array of menu options where keys are titles and values are URLs
  * @param render|null $render Optional render object. If not provided, one will be created.
  */
-function makeMenu($options, $render = null)
+function makeMenu($options, ?render $render = null)
 {
     global $menuNo, $configObject;
 
@@ -44,11 +45,8 @@ function makeMenu($options, $render = null)
     // Work out the width of the menu
     $longest_string = 0;
     foreach ($options as $title => $url) {
-        // Handle [BR] separator in title
-        $tmp_parts = explode('[BR]', (string) $title);
-        $display_title = count($tmp_parts) > 1 ? $tmp_parts[1] : $tmp_parts[0];
-        if (mb_strlen($display_title) > $longest_string) {
-            $longest_string = mb_strlen($display_title);
+        if (mb_strlen((string) $title) > $longest_string) {
+            $longest_string = mb_strlen((string) $title);
         }
     }
     $width = ($longest_string * 7) + 35;
@@ -77,18 +75,10 @@ function makeMenu($options, $render = null)
         $line++;
     }
 
-    // Output the data container for scrolling functionality
-    echo "<div id='popupmenu$menuNo' data-myOptions='" . json_encode($myoptions) . "' data-myURLs='" . json_encode($myurls) . "'></div>";
-
-    // Start popup container
-    echo "<div id=\"popup$menuNo\" class=\"popup\" style=\"width:" . $width . "px; z-index:30\">\n";
-
-    // Add scroll up button if menu has more than 20 items
-    if (count($options) > 20) {
-        echo '<div data-menuno="' . $menuNo . '" id="' . $menuNo . "_up\" class=\"popupitem scrollup\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_up_off.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
-    }
+    $hasScroll = count($options) > MAX_MENU_ITEMS;
 
     // Render menu items using template
+    $menuItemsHtml = '';
     $line = 0;
     foreach ($options as $title => $url) {
         $itemID = $menuNo . '_' . $line;
@@ -124,19 +114,23 @@ function makeMenu($options, $render = null)
         }
 
         // Render using template
-        echo $render->renderString(['data' => $itemData], 'sidebar/popupmenuitem.html');
+        $menuItemsHtml .= $render->renderString(['data' => $itemData], 'sidebar/popupmenuitem.html');
 
         $line++;
-        if ($line > 19) {
+        if ($line >= MAX_MENU_ITEMS) {
             break;
         }
     }
 
-    // Add scroll down button if menu has more than 20 items
-    if (count($options) > 20) {
-        echo '<div data-menuno="' . $menuNo . '" id="' . $menuNo . "_down\" class=\"popupitem scrolldown\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_down_on.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
-    }
-
-    echo "</div>\n";
+    $popupData = [
+        'menuNo' => $menuNo,
+        'width' => $width,
+        'optionsJson' => json_encode($myoptions),
+        'urlsJson' => json_encode($myurls),
+        'hasScroll' => $hasScroll,
+        'path' => $configObject->get('cfg_root_path'),
+        'itemsHtml' => $menuItemsHtml,
+    ];
+    echo $render->renderString(['data' => $popupData], 'sidebar/popupmenu.html');
     $menuNo++;
 }
