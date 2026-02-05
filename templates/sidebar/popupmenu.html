@@ -31,7 +31,7 @@ data - Object containing:
     itemsHtml - Popup menu item HTML
 #}
 <div id="popupmenu{{ data.menuNo }}" data-myOptions='{{ data.optionsJson }}' data-myURLs='{{ data.urlsJson }}'></div>
-<div id="popup{{ data.menuNo }}" class="popup" style="width:{{ data.width }}px; z-index:30">
+<div id="popup{{ data.menuNo }}" class="popup">
     {% if data.hasScroll %}
         <div data-menuno="{{ data.menuNo }}" id="{{ data.menuNo }}_up" class="popupitem scrollup">
             <img src="{{ data.path }}/artwork/submenu_up_off.png" width="9" height="5" alt="down" border="0" />&nbsp;

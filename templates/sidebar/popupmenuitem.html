@@ -36,7 +36,7 @@ data - Object containing popup menu item properties:
 {% elseif data.type == 'heading' %}
 <div class="popupitembold" id="{{ data.id }}">{{ data.text }}</div>
 {% else %}
-<div class="popupitem{% if data.classes %} {{ data.classes }}{% endif %}" id="{{ data.id }}" role="menuitem">
+<div class="popupitem" id="{{ data.id }}" role="menuitem">
     <a href="{{ data.href }}" role="menuitem"{% if data.onclick %} data-onclick="{{ data.onclick }}"{% endif %}>{{ data.text }}</a>
 </div>
 {% endif %}

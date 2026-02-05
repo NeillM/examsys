@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, config, $, log) {
+define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, config, $, log) {
     return function() {
         var MAX_MENU_ITEMS = 20;
         /**
@@ -34,13 +34,14 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, con
             // Add keyboard event listener for menu item navigation
             $(document).on('keydown', '.menuitem, .menuitem *', function(e) {
                 if (!$('.sidebar:visible').length) return;
-                // Prevent duplicate handlers from processing the same keypress
-                e.stopImmediatePropagation();
 
                 var currentFocus = $(':focus');
                 var menuItem = currentFocus.closest('.menuitem');
                 if (!menuItem.length) return;
                 if (menuItem.attr('aria-disabled') === 'true') return;
+
+                // Prevent duplicate handlers from processing the same keypress
+                e.stopImmediatePropagation();
 
                 // Get sidebar items once for reuse in multiple cases
                 var sidebarItems = $('.sidebar .menuitem').filter(function() {
@@ -92,13 +93,14 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, con
             // Add keyboard event listener specifically for popup menu navigation
             $(document).on('keydown', '.popup, .popup *', function(e) {
                 if (!$('.sidebar:visible').length) return;
-                // Prevent duplicate handlers from processing the same keypress
-                e.stopImmediatePropagation();
 
                 var currentFocus = $(':focus');
                 var visibleMenu = $('.popup:visible').first();
                 if (!visibleMenu.length) return;
                 if (!currentFocus.closest('.popup').length) return;
+
+                // Prevent duplicate handlers from processing the same keypress
+                e.stopImmediatePropagation();
 
                 var getActionableItems = function() {
                     var menuItems = visibleMenu.find('.popupitem');
@@ -276,6 +278,14 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, con
             });
         };
 
+        /**
+         * Render a popup menu item with the appropriate markup and behavior.
+         *
+         * @param string submenuItemID DOM id of the popup menu item.
+         * @param string text Menu item label text.
+         * @param string url Menu item URL or special marker.
+         * @returns void
+         */
         this.renderPopupMenuItem = function(submenuItemID, text, url) {
             var item = $('#' + submenuItemID);
             if (!item.length) {
@@ -299,7 +309,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, con
                 return;
             }
 
-            item.attr('class', 'popupitem').attr('role', 'menuitem').attr('tabindex', '0');
+            item.attr('class', 'popupitem');
 
             var link = $('<a/>', {
                 role: 'menuitem',
@@ -325,6 +335,15 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, con
             }
         };
 
+        /**
+         * Scroll menu by one step and re-render visible items.
+         *
+         * @param string submenuID The popup menu DOM id.
+         * @param Array arrayID Menu item labels.
+         * @param Array urlID Menu item URLs/actions.
+         * @param number direction 1 to scroll down, -1 to scroll up.
+         * @returns boolean True when scroll occurs, otherwise false.
+         */
         this.scrollOnce = function(submenuID, arrayID, urlID, direction) {
             if (arrayID.length <= MAX_MENU_ITEMS) {
                 return false;
@@ -488,9 +507,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui', 'log'], function(jsxls, con
                 
                 // Set aria-expanded to true 
                 $('#' + callingID).attr('aria-expanded', 'true');
-                
-                // Make all menu items focusable first
-                $('#' + submenuID + ' .popupitem').attr('tabindex', '0');
                 
                 // Focus the first menu item after showing the menu
                 var firstItem = $('#' + submenuID + ' .popupitem').first();
