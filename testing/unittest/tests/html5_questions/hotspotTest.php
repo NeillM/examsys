@@ -361,6 +361,18 @@ class html5hotspottest extends UnitTest
     }
 
     /**
+     * PTests that if we get an unanswered layer that is saved in an old format.
+     */
+    public function test_mark_partial_unaswered_oldstyle()
+    {
+        $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~|Deer~16776960~ellipse~384,335,51b,3c3~0~';
+        $answer = '1,250,81|0,false,false';
+        $expected = '1,250,81|u';
+        $result = hotspot_helper::get_instance()->mark($answer, $correct);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
      * Letter answered layers with all correct
      */
     public function testMarkCorrectLetters()

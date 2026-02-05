@@ -147,6 +147,10 @@ class hotspot_helper extends RogoStaticSingleton
         if ($parts[0] != 'u' and count($parts) === 3) {
             array_shift($parts);
         }
+        if ($parts[0] === 'false' && $parts[1] === 'false') {
+            // This is an old way of representing that a part of the question was not answered by the user.
+            return 'u';
+        }
         return implode(self::ANSWER_SEPARATOR, $parts);
     }
 
