@@ -107,6 +107,8 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                     var actionableItems = menuItems.filter(':visible').not('.scrollup, .scrolldown').filter(function() {
                         return $(this).find('a').length > 0 || $(this).attr('data-onclick') || $(this).attr('onclick');
                     });
+                    // If nothing actionable is visible (e.g., separators/headings),
+                    // fall back to all items to keep keyboard/scroll navigation working.
                     if (!actionableItems.length) {
                         actionableItems = menuItems;
                     }
@@ -114,14 +116,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                 };
                 var actionableItems = getActionableItems();
                 var popupItem = currentFocus.closest('.popupitem');
-                var activeItem = actionableItems.filter(function() {
-                    return $(this).is(':focus') || $(this).find('a:focus').length;
-                });
-                if (!activeItem.length && currentFocus.is('a')) {
-                    activeItem = currentFocus.closest('.popupitem');
-                }
-                var currentIndex = activeItem.length ? actionableItems.index(activeItem) :
-                    (actionableItems.length > 0 ? actionableItems.index(popupItem) : -1);
+                var currentIndex = actionableItems.length > 0 ? actionableItems.index(popupItem) : -1;
                 var nextIndex;
                 var prevIndex;
                 var FORWARD = 1;
