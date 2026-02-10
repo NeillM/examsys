@@ -20,14 +20,10 @@
 //
 define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, config, $, log) {
     return function() {
-        var MAX_MENU_ITEMS = 20;
         /**
          * Initialise sidebar.
          */
         this.init = function() {
-            this.scrollLine = 0;
-            this.myUpInterval = 0;
-            this.myDownInterval = 0;
             this.lastFocusedTrigger = null;
             var scope = this;
 
@@ -40,14 +36,18 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                 if (!menuItem.length) return;
                 if (menuItem.attr('aria-disabled') === 'true') return;
 
-                // Prevent duplicate handlers from processing the same keypress
-                e.stopImmediatePropagation();
-
                 // Get sidebar items once for reuse in multiple cases
                 var sidebarItems = $('.sidebar .menuitem').filter(function() {
                     return !$(this).attr('aria-disabled');
                 });
                 var currentSidebarIndex = sidebarItems.index(menuItem);
+                var handledKeys = ['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'ArrowLeft', 'ArrowRight'];
+                if (handledKeys.indexOf(e.key) === -1) {
+                    return;
+                }
+
+                // Prevent duplicate handlers from processing the same handled keypress
+                e.stopImmediatePropagation();
 
                 switch (e.key) {
                     case 'ArrowDown':
@@ -99,16 +99,13 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                 if (!visibleMenu.length) return;
                 if (!currentFocus.closest('.popup').length) return;
 
-                // Prevent duplicate handlers from processing the same keypress
-                e.stopImmediatePropagation();
-
                 var getActionableItems = function() {
                     var menuItems = visibleMenu.find('.popupitem');
-                    var actionableItems = menuItems.filter(':visible').not('.scrollup, .scrolldown').filter(function() {
+                    var actionableItems = menuItems.filter(':visible').filter(function() {
                         return $(this).find('a').length > 0 || $(this).attr('data-onclick') || $(this).attr('onclick');
                     });
                     // If nothing actionable is visible (e.g., separators/headings),
-                    // fall back to all items to keep keyboard/scroll navigation working.
+                    // fall back to all items to keep keyboard navigation working.
                     if (!actionableItems.length) {
                         actionableItems = menuItems;
                     }
@@ -132,12 +129,27 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                 var findNextIndex = function(startIndex, direction) {
                     var count = actionableItems.length;
                     if (!count) return -1;
+                    if (startIndex === -1) {
+                        return direction === BACKWARD ? count - 1 : 0;
+                    }
                     // Add the count first to avoid negative wrapping when moving backward.
                     return (startIndex + direction + count) % count;
                 };
 
                 var keyName = e.key;
                 if (e.repeat) {
+                    return;
+                }
+
+                var handledPopupKeys = ['Tab', 'ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'ArrowLeft', 'ArrowRight'];
+                if (handledPopupKeys.indexOf(keyName) === -1) {
+                    return;
+                }
+
+                // Prevent duplicate handlers from processing the same handled keypress
+                e.stopImmediatePropagation();
+
+                if (!actionableItems.length) {
                     return;
                 }
                 
@@ -180,32 +192,12 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                 switch (keyName) {
                     case 'ArrowDown':
                         e.preventDefault();
-                        if (currentIndex === actionableItems.length - 1) {
-                            var popupId = visibleMenu.attr('id').replace('popup', '');
-                            var options = JSON.parse($("#popupmenu" + popupId).attr('data-myOptions'));
-                            var urls = JSON.parse($("#popupmenu" + popupId).attr('data-myURLs'));
-                            if (scope.scrollOnce(visibleMenu.attr('id'), options, urls, FORWARD)) {
-                                actionableItems = getActionableItems();
-                                focusPopupItem(actionableItems.eq(actionableItems.length - 1));
-                                break;
-                            }
-                        }
                         nextIndex = findNextIndex(currentIndex, FORWARD);
                         focusPopupItem(actionableItems.eq(nextIndex));
                         break;
 
                     case 'ArrowUp':
                         e.preventDefault();
-                        if (currentIndex === 0) {
-                            var popupIdUp = visibleMenu.attr('id').replace('popup', '');
-                            var optionsUp = JSON.parse($("#popupmenu" + popupIdUp).attr('data-myOptions'));
-                            var urlsUp = JSON.parse($("#popupmenu" + popupIdUp).attr('data-myURLs'));
-                            if (scope.scrollOnce(visibleMenu.attr('id'), optionsUp, urlsUp, BACKWARD)) {
-                                actionableItems = getActionableItems();
-                                focusPopupItem(actionableItems.eq(0));
-                                break;
-                            }
-                        }
                         prevIndex = findNextIndex(currentIndex, BACKWARD);
                         focusPopupItem(actionableItems.eq(prevIndex));
                         break;
@@ -243,28 +235,6 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                 scope.handleMenuItemAction($(this), e);
             });
             
-            $('.scrollup').mouseover(function() {
-                var id = $(this).attr('data-menuno');
-                var options = JSON.parse($("#popupmenu" + id).attr('data-myOptions'));
-                var urls = JSON.parse($("#popupmenu" + id).attr('data-myURLs'));
-                scope.scrollUpStart('popup' + id, options, urls);
-            });
-
-            $('.scrollup').mouseout(function() {
-                scope.scrollUpEnd();
-            });
-
-            $('.scrolldown').mouseover(function() {
-                var id = $(this).attr('data-menuno');
-                var options = JSON.parse($("#popupmenu" + id).attr('data-myOptions'));
-                var urls = JSON.parse($("#popupmenu" + id).attr('data-myURLs'));
-                scope.scrollDownStart('popup' + id, options, urls);
-            });
-
-            $('.scrolldown').mouseout(function() {
-                scope.scrollDownEnd();
-            });
-
             $('.popup').mouseleave(function(e) {
                 // FF/IE trigger mouseleave incorrectly on dropdown use so ignore.
                 if (e.target.tagName !== 'SELECT') {
@@ -274,226 +244,14 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
         };
 
         /**
-         * Render a popup menu item with the appropriate markup and behavior.
-         *
-         * @param string submenuItemID DOM id of the popup menu item.
-         * @param string text Menu item label text.
-         * @param string url Menu item URL or special marker.
-         * @returns void
-         */
-        this.renderPopupMenuItem = function(submenuItemID, text, url) {
-            var item = $('#' + submenuItemID);
-            if (!item.length) {
-                return;
-            }
-
-            var keepFocus = item.is(':focus') || item.find('a:focus').length;
-            item.removeAttr('onclick')
-                .removeAttr('data-onclick')
-                .removeAttr('role');
-
-            if (url.substr(0, 1) === '-') {
-                item.attr('class', 'popupitemline').removeAttr('tabindex');
-                item.html('<hr class="popupitem-separator" />');
-                return;
-            }
-
-            if (url.substr(0, 1) === '#') {
-                item.attr('class', 'popupitembold').removeAttr('tabindex');
-                item.text(url.substr(1));
-                return;
-            }
-
-            item.attr('class', 'popupitem');
-
-            var link = $('<a/>', {
-                role: 'menuitem',
-                tabindex: 0
-            }).text(text);
-
-            if (url.indexOf('JavaScript:') !== -1) {
-                item.attr('data-onclick', url);
-                link.attr('href', '#').attr('data-onclick', url);
-            } else {
-                link.attr('href', url);
-            }
-
-            item.empty().append(link);
-
-            if (keepFocus) {
-                var focusTarget = item.find('a').first();
-                if (focusTarget.length) {
-                    focusTarget.focus();
-                } else {
-                    item.focus();
-                }
-            }
-        };
-
-        /**
-         * Scroll menu by one step and re-render visible items.
-         *
-         * @param string submenuID The popup menu DOM id.
-         * @param Array arrayID Menu item labels.
-         * @param Array urlID Menu item URLs/actions.
-         * @param number direction 1 to scroll down, -1 to scroll up.
-         * @returns boolean True when scroll occurs, otherwise false.
-         */
-        this.scrollOnce = function(submenuID, arrayID, urlID, direction) {
-            if (arrayID.length <= MAX_MENU_ITEMS) {
-                return false;
-            }
-
-            if (direction > 0) {
-                if (this.scrollLine >= (arrayID.length - MAX_MENU_ITEMS)) {
-                    return false;
-                }
-                this.scrollLine++;
-            } else if (direction < 0) {
-                if (this.scrollLine <= 0) {
-                    return false;
-                }
-                this.scrollLine--;
-            } else {
-                return false;
-            }
-
-            var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
-            if (limit >= arrayID.length) {
-                limit = arrayID.length - 1;
-            }
-
-            var line = 0;
-            for (var i = this.scrollLine; i <= limit; i++) {
-                var submenuItemID = submenuID.substr(5,1) + '_' + line;
-                this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
-                line++;
-            }
-
-            var upID = submenuID.substr(5,1) + '_up';
-            var downID = submenuID.substr(5,1) + '_down';
-            if (this.scrollLine > 0) {
-                $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_on.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
-            } else {
-                $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_off.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
-            }
-            if (this.scrollLine < (arrayID.length - MAX_MENU_ITEMS)) {
-                $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_on.png" width="9" height="5" alt="'+ jsxls.lang_string["down"] + '" />&nbsp;');
-            } else {
-                $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_off.png" width="9" height="5" alt="'+ jsxls.lang_string["down"] + '" />&nbsp;');
-            }
-
-            return true;
-        };
-
-        /**
-         * Scroll up the menu
-         * menus have a hardcoded display number of 20
-         * @param integer submenuID submenu id
-         * @param array arrayID array of submenu items
-         * @param array urlID array of submenu urls
-         */
-        this.scrollUpStart = function (submenuID, arrayID, urlID) {
-            this.myUpInterval = window.setInterval(function () {
-                if (this.scrollLine > 0) {
-                    this.scrollLine--;
-                    var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
-                    if (limit >= arrayID.length) {
-                        limit = arrayID.length-1;
-                    }
-                    var line = 0;
-                    for (var i = this.scrollLine; i <= limit; i++) {
-                        var submenuItemID = submenuID.substr(5,1) + '_' + line;
-                        this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
-                        line++;
-                    }
-                    var downID = submenuID.substr(5,1) + '_down';
-                    $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_on.png" width="9" height="5" alt="'+ jsxls.lang_string["down"] + '" />&nbsp;');
-                } else {
-                    var upID = submenuID.substr(5,1) + '_up';
-                    $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_off.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
-                    clearInterval(this.myDownInterval);
-                }
-            }.bind(this),50);
-        };
-
-        /**
-         * Stop scrolling up.
-         */
-        this.scrollUpEnd = function() {
-            clearInterval(this.myUpInterval);
-        };
-
-        /**
-         * Scroll down the menu
-         * menus have a hardcoded display number of 20
-         * @param integer submenuID submenu id
-         * @param array arrayID array of submenu items
-         * @param array urlID array of submenu urls
-         */
-        this.scrollDownStart = function(submenuID, arrayID, urlID) {
-            this.myDownInterval = window.setInterval(function () {
-            if (this.scrollLine < (arrayID.length - MAX_MENU_ITEMS)) {
-                if (this.scrollLine == 0) {
-                    var upID = submenuID.substr(5,1) + '_up';
-                    $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_on.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
-                }
-                this.scrollLine++;
-                var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
-                if (limit >= arrayID.length) {
-                    limit = arrayID.length-1;
-                }
-                var line = 0;
-                for (var i = this.scrollLine; i <= limit; i++) {
-                    var submenuItemID = submenuID.substr(5,1) + '_' + line;
-                    this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
-                    line++;
-                }
-            } else {
-                var downID = submenuID.substr(5,1) + '_down';
-                $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_off.png" width="9" height="5" alt="'+ jsxls.lang_string["down"] + '" />&nbsp;');
-                clearInterval(this.myDownInterval);
-            }
-            }.bind(this),50);
-        };
-
-        /**
-         * Stop scrolling down.
-         */
-        this.scrollDownEnd = function() {
-            clearInterval(this.myDownInterval);
-        };
-
-        /**
          * Display menu overlay.
          * @param integer submenuID submenu id
-         * @param integer menuID menu id
          * @param integer callingID id of calling item
-         * @param array arrayID array of item ids
-         * @param array urlID array of item urls
          * @param object e event
          * @returns bool
          */
-        this.showMenu = function(submenuID, menuID, callingID, arrayID, urlID, e) {
+        this.showMenu = function(submenuID, callingID, e) {
             var scope = this;
-            this.scrollLine = 0;
-
-            var limit = (this.scrollLine + (MAX_MENU_ITEMS - 1));
-            if (limit >= arrayID.length) {
-                limit = arrayID.length-1;
-            }
-            if (arrayID.length > MAX_MENU_ITEMS) {
-                var upID = submenuID.substr(5,1) + '_up';
-                $('#' + upID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_up_off.png" width="9" height="5" alt="'+ jsxls.lang_string["up"] + '" />&nbsp;');
-                var downID = submenuID.substr(5,1) + '_down';
-                $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_on.png" width="9" height="5" alt="'+ jsxls.lang_string["down"] + '" />&nbsp;');
-            }
-            var line = 0;
-            for (var i = this.scrollLine; i <= limit; i++) {
-                var submenuItemID = submenuID.substr(5,1) + '_' + line;
-                this.renderPopupMenuItem(submenuItemID, arrayID[i], urlID[i]);
-                line++;
-            }
 
             if (!e) e = window.event;
             if ($('#' + submenuID).css('display') != 'block') {
@@ -557,13 +315,10 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
             if (action) {
                 switch (action) {
                     case 'openSubMenu':
-                        var options = JSON.parse($("#popupmenu" + menuItem.attr('data-popupid')).attr('data-myOptions'));
-                        var urls = JSON.parse($("#popupmenu" + menuItem.attr('data-popupid')).attr('data-myURLs'));
                         var id = 'popup' + menuItem.attr('data-popupid');
-                        var type = menuItem.attr('data-popuptype');
                         var name = menuItem.attr('data-popupname');
                         this.lastFocusedTrigger = menuItem.closest('.menuitem');  // Store the parent menuitem
-                        this.showMenu(id, type, name, options, urls, e);
+                        this.showMenu(id, name, e);
                         break;
 
                     case 'directUrl':

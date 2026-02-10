@@ -25,7 +25,6 @@
  */
 
 $menuNo = 0;
-const MAX_MENU_ITEMS = 20;
 
 /**
  * Generate a popup menu using templates for better accessibility.
@@ -53,29 +52,6 @@ function makeMenu($options, ?render $render = null)
     if ($width < 60) {
         $width = 60;
     }  // Set a reasonable minimum width
-
-    // Prepare data arrays for backward compatibility with scrolling functionality
-    $line = 0;
-    $myoptions = [];
-    $myurls = [];
-    foreach ($options as $title => $url) {
-        $tmp_parts = explode('[BR]', (string) $title);
-        if (count($tmp_parts) > 1) {
-            $title = $tmp_parts[1];
-        } else {
-            $title = $tmp_parts[0];
-        }
-        $myoptions[] = $title;
-        $line++;
-    }
-
-    $line = 0;
-    foreach ($options as $title => $url) {
-        $myurls[] = $url;
-        $line++;
-    }
-
-    $hasScroll = count($options) > MAX_MENU_ITEMS;
 
     // Render menu items using template
     $menuItemsHtml = '';
@@ -117,17 +93,11 @@ function makeMenu($options, ?render $render = null)
         $menuItemsHtml .= $render->renderString(['data' => $itemData], 'sidebar/popupmenuitem.html');
 
         $line++;
-        if ($line >= MAX_MENU_ITEMS) {
-            break;
-        }
     }
 
     $popupData = [
         'menuNo' => $menuNo,
         'width' => $width,
-        'optionsJson' => json_encode($myoptions),
-        'urlsJson' => json_encode($myurls),
-        'hasScroll' => $hasScroll,
         'path' => $configObject->get('cfg_root_path'),
         'itemsHtml' => $menuItemsHtml,
     ];

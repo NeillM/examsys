@@ -100,7 +100,7 @@ class selectors
      */
     protected static $rogoselectors = [
         'menu_item' => <<<XPATH
-//div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]/a
+//div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]/*[name()="a" or name()="button"]
 XPATH
         ,'mainmenuicon' => <<<XPATH
 //img[contains(@id,'toprightmenu_icon')]
@@ -148,7 +148,7 @@ XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' popupitem ') and contains(normalize-space(.) , %locator%)]      
 XPATH
         ,'popup_menu_item' => <<<XPATH
-//div[contains(concat(' ', normalize-space(@class), ' '), ' popupitem ') and contains(normalize-space(.) , %locator%)]
+//div[contains(concat(' ', normalize-space(@class), ' '), ' popupitem ') and contains(normalize-space(.) , %locator%)]/*[name()="a" or name()="button"]
 XPATH
         ,'content_section' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' subsect_title ')]/nobr
