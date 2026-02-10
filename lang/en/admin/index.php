@@ -49,3 +49,4 @@ $string['externalsystems'] = 'External Systems';
 $string['admin'] = 'Admin';
 $string['audit'] = 'Access Audit';
 $string['anomaly'] = 'Anomaly Detection';
+$string['component'] = 'Component Library';

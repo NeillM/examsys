@@ -1,0 +1,42 @@
+{# This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template renders the header of the component preview iframe.
+
+@author Neill Magill <neill.magill@nottingham.ac.uk>
+@copyright 2026 The University of Nottingham
+
+Required data variables:
+
+* additionalcss - an array containing paths to the CSS stylesheets used to display the component.
+* additionaljs - an array containing paths to the JavaScript used to render the component.
+
+Required language strings:
+
+* title
+#}
+<html>
+    <head>
+        <title>{{lang.title}}</title>
+        {% for css in additionalcss %}
+            <link rel="stylesheet" type="text/css" href="{{path}}{{css}}"/>
+        {% endfor %}
+        {% for js in additionaljs %}
+            <script src="{{path}}{{js}}"></script>
+        {% endfor %}
+    </head>
+    <body>

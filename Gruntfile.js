@@ -60,6 +60,9 @@ module.exports = function(grunt) {
       authjs: {
         src: ['plugins/auth/**/js/src/*.js']
       },
+      componentjs: {
+        src: ['component/**/js/src/*.js']
+      },
     },
     uglify: {
       options: {
@@ -120,6 +123,15 @@ module.exports = function(grunt) {
           rename: buildName
         }]
       },
+      componentjs: {
+        files: [{
+          expand: true,
+          cwd: 'component/',
+          src: '**/js/src/*.js',
+          dest: 'component/',
+          rename: buildName
+        }]
+      },
     },
     cssmin: {
       options: {
@@ -133,6 +145,12 @@ module.exports = function(grunt) {
           dest: 'css',
           ext: '.css'
         }]
+      },
+      component: {
+        sourceMap: true,
+        files: {
+          'component/css/component.css': ['component/**/css/src/*.css']
+        }
       },
     },
     sprite: {
@@ -154,12 +172,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-spritesmith');
 
   // Register tasks.
-  grunt.registerTask('css', ['cssmin:standard']);
+  grunt.registerTask('css', ['cssmin:standard', 'cssmin:component']);
   grunt.registerTask('admin', ['eslint:admin', 'uglify:admin']);
   grunt.registerTask('corejs', ['sprite:html5canvas', 'eslint:corejs', 'uglify:corejs']);
   grunt.registerTask('questionsjs', ['eslint:questionsjs', 'uglify:questionsjs']);
   grunt.registerTask('ltijs', ['eslint:ltijs', 'uglify:ltijs']);
   grunt.registerTask('toolsjs', ['eslint:toolsjs', 'uglify:toolsjs']);
   grunt.registerTask('authjs', ['eslint:authjs', 'uglify:authjs']);
-  grunt.registerTask('default', ['admin', 'css', 'corejs', 'questionsjs', 'ltijs', 'toolsjs', 'authjs']);
+  grunt.registerTask('componentjs', ['eslint:componentjs', 'uglify:componentjs']);
+  grunt.registerTask('default', ['admin', 'css', 'corejs', 'questionsjs', 'ltijs', 'toolsjs', 'authjs', 'componentjs']);
 }

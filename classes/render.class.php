@@ -21,6 +21,8 @@
  * @copyright Copyright (c) 2015 onwards The University of Nottingham
  */
 
+use component\Component;
+
 /**
  * Render helper class.
  * Interfaces with /vender/twig.
@@ -46,6 +48,12 @@ class render
         } else {
             $loader = new \Twig\Loader\FilesystemLoader($templatedir);
         }
+
+        // Handle component templates.
+        foreach (\component\Register::getTemplateList() as $namespace => $path) {
+            $loader->addPath($path, $namespace);
+        }
+
         $this->twig = new \Twig\Environment($loader, [
             'cache' => false
         ]);
@@ -94,6 +102,29 @@ class render
             'additionalcss' => $additionalcss,
             'language' => $language,
         ];
+        echo $this->twig->render($template, $data);
+    }
+
+    /**
+     * Renders a component.
+     *
+     * If no template is passed the components default template is used.
+     *
+     * @param Component $component
+     * @param string|null $template
+     * @return void
+     */
+    public function renderComponent(Component $component, ?string $template = null): void
+    {
+        if ($template === null) {
+            $template = $component->defaultTemplate();
+        }
+
+        $data = [
+            'data' => $component->getData($this),
+            'lang' => $component->getStrings(),
+        ];
+
         echo $this->twig->render($template, $data);
     }
 

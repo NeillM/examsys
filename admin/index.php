@@ -144,6 +144,8 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {  // Enable summa
   $menudata['plugins']       = ['./plugins/list_plugins.php', 'plugins.svg'];
   $menudata['config']        = ['config.php', 'config.png'];
   $menudata['externalsystems']        = ['external/list_extsys.php', 'sync.png'];
+$menudata['component']        = ['../component/library.php', 'yellow_folder.png'];
+
 if ($configObject->get('cfg_setting_icons_order')) {
     foreach ($configObject->get('cfg_setting_icons_order') as $iconkey) {
         if (($iconkey == 'summativescheduling' && !$configObject->get_setting('core', 'cfg_summative_mgmt')) || empty($menudata[$iconkey])) {

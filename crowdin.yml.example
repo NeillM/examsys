@@ -36,5 +36,9 @@
  {
   "source" : "/plugins/questions/**/lang/en/*",
   "translation" : "/plugins/questions/**/lang/%two_letters_code%/%original_file_name%"
+ },
+ {
+  "source" : "/component/**/lang/en/*",
+  "translation" : "/component/**/lang/%two_letters_code%/%original_file_name%"
  }
 ]
