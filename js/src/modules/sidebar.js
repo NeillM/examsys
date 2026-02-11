@@ -41,16 +41,11 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                     return !$(this).attr('aria-disabled');
                 });
                 var currentSidebarIndex = sidebarItems.index(menuItem);
-                var handledKeys = ['ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'ArrowLeft', 'ArrowRight'];
-                if (handledKeys.indexOf(e.key) === -1) {
-                    return;
-                }
-
-                // Prevent duplicate handlers from processing the same handled keypress
-                e.stopImmediatePropagation();
+                var handled = false;
 
                 switch (e.key) {
                     case 'ArrowDown':
+                        handled = true;
                         e.preventDefault();
                         if (currentSidebarIndex >= 0 && currentSidebarIndex < sidebarItems.length - 1) {
                             sidebarItems.eq(currentSidebarIndex + 1).find('button, a').first().focus();
@@ -58,6 +53,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                         break;
 
                     case 'ArrowUp':
+                        handled = true;
                         e.preventDefault();
                         if (currentSidebarIndex > 0) {
                             sidebarItems.eq(currentSidebarIndex - 1).find('button, a').first().focus();
@@ -65,16 +61,19 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                         break;
 
                     case 'Enter':
+                        handled = true;
                         e.preventDefault();
                         scope.handleMenuItemAction(menuItem, e);
                         break;
 
                     case 'Escape':
+                        handled = true;
                         e.preventDefault();
                         scope.hideMenus();
                         break;
 
                     case 'ArrowLeft':
+                        handled = true;
                         e.preventDefault();
                         if ($('.popup:visible').length) {
                             scope.hideMenus();
@@ -82,11 +81,15 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                         break;
 
                     case 'ArrowRight':
+                        handled = true;
                         e.preventDefault();
                         if (menuItem.attr('data-action') === 'openSubMenu') {
                             scope.handleMenuItemAction(menuItem, e);
                         }
                         break;
+                }
+                if (handled) {
+                    e.stopImmediatePropagation();
                 }
             });
 
@@ -141,18 +144,17 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                     return;
                 }
 
-                var handledPopupKeys = ['Tab', 'ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'ArrowLeft', 'ArrowRight'];
-                if (handledPopupKeys.indexOf(keyName) === -1) {
-                    return;
-                }
-
-                // Prevent duplicate handlers from processing the same handled keypress
-                e.stopImmediatePropagation();
-
                 if (!actionableItems.length) {
                     return;
                 }
-                
+
+                var handled = false;
+
+                // If nothing is focused, don't change focus for Tab/Up/Down.
+                if (currentIndex === -1 && (keyName === 'Tab' || keyName === 'ArrowDown' || keyName === 'ArrowUp')) {
+                    return;
+                }
+
                 /**
                  * Focus a popup menu item and update active index.
                  *
@@ -176,6 +178,7 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                 };
 
                 if (keyName === 'Tab') {
+                    handled = true;
                     e.preventDefault();
                     if (e.shiftKey) {
                         // Shift+Tab - go backwards
@@ -186,23 +189,29 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                         nextIndex = findNextIndex(currentIndex, FORWARD);
                         focusPopupItem(actionableItems.eq(nextIndex));
                     }
+                    if (handled) {
+                        e.stopImmediatePropagation();
+                    }
                     return;
                 }
 
                 switch (keyName) {
                     case 'ArrowDown':
+                        handled = true;
                         e.preventDefault();
                         nextIndex = findNextIndex(currentIndex, FORWARD);
                         focusPopupItem(actionableItems.eq(nextIndex));
                         break;
 
                     case 'ArrowUp':
+                        handled = true;
                         e.preventDefault();
                         prevIndex = findNextIndex(currentIndex, BACKWARD);
                         focusPopupItem(actionableItems.eq(prevIndex));
                         break;
 
                     case 'Enter':
+                        handled = true;
                         e.preventDefault();
                         if (popupItem.length) {
                             scope.handleMenuItemAction(popupItem, e);
@@ -210,16 +219,19 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                         break;
 
                     case 'Escape':
+                        handled = true;
                         e.preventDefault();
                         scope.hideMenus();
                         break;
 
                     case 'ArrowLeft':
+                        handled = true;
                         e.preventDefault();
                         scope.hideMenus();
                         break;
 
                     case 'ArrowRight':
+                        handled = true;
                         e.preventDefault();
                         if (popupItem.length && popupItem.attr('data-action') === 'openSubMenu') {
                             scope.handleMenuItemAction(popupItem, e);
@@ -227,6 +239,9 @@ define(['jsxls', 'rogoconfig', 'jquery', 'log', 'jqueryui'], function(jsxls, con
                             focusPopupItem(popupItem);
                         }
                         break;
+                }
+                if (handled) {
+                    e.stopImmediatePropagation();
                 }
             });
             
