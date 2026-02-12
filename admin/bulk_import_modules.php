@@ -48,47 +48,47 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <body>
 <?php
-  require '../include/admin_module_options.inc';
-  echo draw_toprightmenu();
-?>
-<?php
-  $breadcrumb = new \component\breadcrumb\Breadcrumb();
-  $breadcrumb->addBreadcrumb($string['home'], '../index.php');
-  $breadcrumb->addBreadcrumb($string['admintools'], 'index.php');
-  $breadcrumb->addBreadcrumb($string['modules'], 'list_modules.php');
-  $breadcrumb->addCurrentPage($string['bulkmoduleimport']);
 
-  $lang = \component\Helper::combineLang($lang, $breadcrumb);
+require '../include/admin_module_options.inc';
+echo draw_toprightmenu();
 
-  $render->render_admin_content($breadcrumb->getData($render), $lang);
-  $data['onclick'] = "window.location='list_modules.php'";
-  if (isset($_POST['submit'])) {
-      $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
-      $tmpfile = $userObject->get_user_ID() . '_module_create.csv';
-      try {
-          \csv\csv_handler::move_upload_to_temp($_FILES['csvfile'], $configObject->get('cfg_tmpdir') . $tmpfile);
-          try {
-              $csv = new \csv\csv_handler($tmpfile);
-              $import = new \import\import_modules($csv);
-              $import->execute();
-              $data['exists'] = $import->get_exists();
-              $data['added'] = $import->get_added();
-              $data['failed'] = $import->get_failed();
-          } catch (\csv\csv_load_exception $e) {
-              $data['failed'] = [$e->getMessage()];
-          }
-          $csv->delete_temp_file();
-      } catch (\csv\csv_load_exception $e) {
-          $data['failed'] = [$e->getMessage()];
-      }
-      $render->render($data, $string, 'admin/upload_complete.html');
-  } else {
-      $data['formaction'] = $_SERVER['PHP_SELF'];
-      $data['required'] = \import\import_modules::REQUIRED;
-      $data['optional'] = \import\import_modules::OPTIONAL;
-      $render->render($data, $string, 'admin/upload.html');
-  }
-  $js = [
-      '/js/bulkimportinit.min.js',
-  ];
-  $render->render_admin_footer($js);
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['admintools'], 'index.php');
+$breadcrumb->addBreadcrumb($string['modules'], 'list_modules.php');
+$breadcrumb->addCurrentPage($string['bulkmoduleimport']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
+$render->render_admin_content($breadcrumb->getData($render), $lang);
+$data['onclick'] = "window.location='list_modules.php'";
+if (isset($_POST['submit'])) {
+    $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
+    $tmpfile = $userObject->get_user_ID() . '_module_create.csv';
+    try {
+        \csv\csv_handler::move_upload_to_temp($_FILES['csvfile'], $configObject->get('cfg_tmpdir') . $tmpfile);
+        try {
+            $csv = new \csv\csv_handler($tmpfile);
+            $import = new \import\import_modules($csv);
+            $import->execute();
+            $data['exists'] = $import->get_exists();
+            $data['added'] = $import->get_added();
+            $data['failed'] = $import->get_failed();
+        } catch (\csv\csv_load_exception $e) {
+            $data['failed'] = [$e->getMessage()];
+        }
+        $csv->delete_temp_file();
+    } catch (\csv\csv_load_exception $e) {
+        $data['failed'] = [$e->getMessage()];
+    }
+    $render->render($data, $string, 'admin/upload_complete.html');
+} else {
+    $data['formaction'] = $_SERVER['PHP_SELF'];
+    $data['required'] = \import\import_modules::REQUIRED;
+    $data['optional'] = \import\import_modules::OPTIONAL;
+    $render->render($data, $string, 'admin/upload.html');
+}
+$js = [
+    '/js/bulkimportinit.min.js',
+];
+$render->render_admin_footer($js);
