@@ -50,11 +50,19 @@ $header = [['class' => 'col10', 'style' => 'width:15%', 'value' => $string['user
 ['class' => 'col', 'style' => 'width:10%', 'value' => $string['type']],
 ['class' => 'col', 'style' => 'width:10%', 'value' => $string['expires']]];
 $additionaljs = '<script type="text/javascript" src="js/oauthinit.min.js"></script>';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php'];
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addCurrentPage($string['oauthkeys']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('list_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options_list.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 $render->render_admin_list($oauth, $header);
 $js = [
     '/admin/oauth/js/oauthinit.min.js',

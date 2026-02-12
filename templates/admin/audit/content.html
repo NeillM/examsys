@@ -37,15 +37,7 @@ lang.pagecount
 <div id="content">
     <header class="head_title">
         <div><img src="{{path}}/artwork/toprightmenu.gif" id="toprightmenu_icon" alt="" /></div>
-        <nav class="breadcrumb" aria-label="{{lang.breadcrumb}}">
-            <ol>
-                {% for id,item in breadcrumb %}
-                <li class="navigation">
-                    <a href="{{item}}">{{id}}</a>
-                </li>
-                {% endfor %}
-            </ol>
-        </nav>
+        {{ include('@breadcrumb/breadcrumb.html', {'data': breadcrumb, 'lang': lang}, with_context = false) }}
         <h1 class="page_title">
             {% if total %}
                 {{lang.titlefromto | format(from, to, total)}}

@@ -38,13 +38,19 @@ $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css"
         <style type="text/css">
           .dialog_table {background-color:#F1F5FB; border: 1px solid #95AEC8; margin-top:40px; margin-left:auto; margin-right:auto}
           .field {text-align:right; padding-right:6px; width:120px}
-        </style>';
+        </style>'
+    . \component\Helper::getCSSString();
 
-$breadcrumb = [$string['home'] => '../index.php'];
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addCurrentPage($string['createnewuser']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 include '../include/user_search_options.php';
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 echo '<body>';
 echo draw_toprightmenu();
 $submit = (bool) param::optional('submit', null, param::TEXT, param::FETCH_POST);

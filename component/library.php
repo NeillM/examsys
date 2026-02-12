@@ -55,28 +55,31 @@ $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/componentlibrary.css"/>'
     . \component\Helper::getCSSString();
 
-$breadcrumb = [
-    $string['home'] => '../index.php',
-    $string['administrativetools'] => '../admin/index.php',
-    $string['component'] => 'library.php',
-];
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../admin/index.php');
 
 $lang = [];
 // Set the page title, and add any additional breadcrumbs.
 if ($component) {
     $lang['title'] = sprintf($string['title'], "{$collection}\\{$component}");
-    $breadcrumb[$collection] = "library.php?collection={$collection}";
-    $breadcrumb[$component] = "library.php?collection={$collection}&component={$component}";
+    $breadcrumb->addBreadcrumb($string['component'], 'library.php');
+    $breadcrumb->addBreadcrumb($collection, "library.php?collection={$collection}");
+    $breadcrumb->addCurrentPage($component);
 } else if ($collection) {
     $lang['title'] = sprintf($string['title'], $collection);
-    $breadcrumb[$collection] = "library.php?collection={$collection}";
+    $breadcrumb->addBreadcrumb($string['component'], 'library.php');
+    $breadcrumb->addCurrentPage($collection);
 } else {
+    $breadcrumb->addCurrentPage($string['component']);
     $lang['title'] = $string['component'];
 }
 
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $renderer->render_admin_header($lang, $additionaljs, $addtionalcss);
 $renderer->render_admin_options('', '', $string, $toprightmenu, 'admin/options_empty.html');
-$renderer->render_admin_content($breadcrumb, $lang);
+$renderer->render_admin_content($breadcrumb->getData($renderer), $lang);
 
 if ($component) {
     $data = [

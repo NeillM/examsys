@@ -32,8 +32,9 @@ require '../include/toprightmenu.inc';
 $render = new render($configObject);
 $lang['title'] = $string['bulkmoduleimport'];
 $additionaljs = '';
+$componetcss = \component\Helper::getCSSString();
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
-                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
+                $componetcss
                 <style type=\"text/css\">
                     p {margin:0; padding:0}
                     h1 {font-size:120%; font-weight:bold}
@@ -51,13 +52,15 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
   echo draw_toprightmenu();
 ?>
 <?php
-  $breadcrumb = [
-    $string['home'] => '/',
-    $string['admintools'] => '/admin/index.php',
-    $string['modules'] => '/admin/list_modules.php',
-    $string['bulkmoduleimport'] => '/users/bulk_import_modules.php',
-  ];
-  $render->render_admin_content($breadcrumb, $lang);
+  $breadcrumb = new \component\breadcrumb\Breadcrumb();
+  $breadcrumb->addBreadcrumb($string['home'], '../index.php');
+  $breadcrumb->addBreadcrumb($string['admintools'], 'index.php');
+  $breadcrumb->addBreadcrumb($string['modules'], 'list_modules.php');
+  $breadcrumb->addCurrentPage($string['bulkmoduleimport']);
+
+  $lang = \component\Helper::combineLang($lang, $breadcrumb);
+
+  $render->render_admin_content($breadcrumb->getData($render), $lang);
   $data['onclick'] = "window.location='list_modules.php'";
   if (isset($_POST['submit'])) {
       $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');

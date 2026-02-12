@@ -124,6 +124,7 @@ if (isset($_POST['submit'])) {
         'css' => [
             '/css/header.css',
             '/css/textbox_finalise_marks.css',
+            \component\Helper::getCSSPath(),
         ],
     ];
     $headerdata['mathjax'] = false;
@@ -132,25 +133,26 @@ if (isset($_POST['submit'])) {
     }
     $render->render($headerdata, $lang, 'header.html');
 
+    $breadcrumb = new \component\breadcrumb\Breadcrumb();
+    $breadcrumb->addBreadcrumb($string['home'], '../index.php');
 
-    $breadcrumb[$string['home']] = '../index.php';
     if (isset($_GET['folder']) and trim((string) $_GET['folder']) != '') {
         $link = '../folder/index.php?folder=' . $_GET['folder'];
         $name = folder_utils::get_folder_name($_GET['folder'], $mysqli);
-        $breadcrumb[$name] = $link;
+        $breadcrumb->addBreadcrumb($name, $link);
     } elseif (isset($_GET['module']) and $_GET['module'] != '') {
         $link = '../module/index.php?module=' . $_GET['module'];
         $name = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
-        $breadcrumb[$name] = $link;
+        $breadcrumb->addBreadcrumb($name, $link);
     }
     $link = '../paper/details.php?paperID=' . $paperID;
     $name = $propertyObj->get_paper_title();
-    $breadcrumb[$name] = $link;
+    $breadcrumb->addBreadcrumb($name, $link);
     require '../include/toprightmenu.inc';
 
     $toprightmenu = draw_toprightmenu();
     $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/no_sidebar.html');
-    $render->render_admin_content($breadcrumb, $lang);
+    $render->render_admin_content($breadcrumb->getData($render), $lang);
 
     echo '<form action="' . $_SERVER['PHP_SELF'] . '?paperID=' . $paperID . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&repcourse=' . $_GET['repcourse'] . "\" method=\"post\" autocomplete=\"off\">\n";
 

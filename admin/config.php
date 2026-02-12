@@ -76,11 +76,19 @@ if (isset($_POST['submit'])) {
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $additionaljs = '';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/config.css"/>';
-$breadcrumb = [$string['home'] => '../index.php', $string['administrativetools'] => 'index.php'];
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/config.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], 'index.php');
+$breadcrumb->addCurrentPage($string['title']);
+
+$string = \component\Helper::combineLang($string, $breadcrumb);
+
 $render->render_admin_header($string, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/options_empty.html');
-$render->render_admin_content($breadcrumb, $string);
+$render->render_admin_content($breadcrumb->getData($render), $string);
 $data['action'] = Url::fromGlobals();
 $render->render($data, $string, 'admin/config/config_header.html');
 $displayconfigs = [];

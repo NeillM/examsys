@@ -52,11 +52,19 @@ $lang['link'] = $string['addpluginlink'];
 $header = [['class' => 'col10', 'style' => 'width:80%', 'value' => $string['plugins']],
 ['class' => 'col', 'style' => 'width:20%', 'value' => $string['enabled']]];
 $additionaljs = '';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php'];
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addCurrentPage($string['rogoplugins']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('../../plugins/index.php', 'plugins.svg', $lang, $toprightmenu, 'admin/options_link.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 $render->render_admin_list($pluginstatus, $header);
 $js = [
     '/admin/plugins/js/pluginsinit.min.js',

@@ -49,18 +49,22 @@ $lang = [
     'title' => $string['systeminformation'],
 ];
 $additionaljs = '';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/system_info.css"/>';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/system_info.css"/>'
+    . \component\Helper::getCSSString();
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
 require '../include/toprightmenu.inc';
 $toprightmenu = draw_toprightmenu();
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/no_sidebar.html');
 
-$breadcrumb = [
-    $string['home'] => '../index.php',
-    $string['administrativetools'] => 'index.php',
-];
-$render->render_admin_content($breadcrumb, $lang);
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], 'index.php');
+$breadcrumb->addCurrentPage($string['systeminformation']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 
 // Get information about important database tables.
 $sub_result = $mysqli->prepare('SELECT COUNT(id) FROM log_late');   // Query to get an accurate figure for log_late.

@@ -33,16 +33,21 @@ $toprightmenu = draw_toprightmenu(744);
 $lang['title'] = $string['summativeexamstats'];
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/statistics.css"/>
-<link rel="stylesheet" type="text/css" href="../../css/tabs.css"/>';
-$breadcrumb = [
-    $string['home'] => '../index.php',
-    $string['administrativetools'] => '../admin/index.php',
-    $string['statistics'] => 'index.php',
-];
+<link rel="stylesheet" type="text/css" href="../../css/tabs.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../admin/index.php');
+$breadcrumb->addBreadcrumb($string['statistics'], 'index.php');
+$breadcrumb->addCurrentPage($string['summativeexamstats']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $lang['title'] .= ': ' . $current_year . '/' . (mb_substr((string) $current_year, 2, 2) + 1);
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/no_sidebar.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 $total_paper_no = 0;
 $total_paper_unused = 0;
 $total_student_no = 0;

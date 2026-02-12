@@ -41,12 +41,19 @@ $lang['delete'] = $string['deleteextsys'];
 $header = [['class' => 'col10', 'style' => 'width:50%', 'value' => $string['name']],
     ['class' => 'col10', 'style' => 'width:50%', 'value' => $string['type']]];
 $additionaljs = '';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
-    $string['extsys'] => 'list_extsys.php',];
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addCurrentPage($string['extsys']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_extsys.php', 'sync_16.png', $lang, $toprightmenu, 'admin/options_list.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 $render->render_admin_list($ext, $header);
 $js = [
     '/admin/external/js/extsysinit.min.js'
