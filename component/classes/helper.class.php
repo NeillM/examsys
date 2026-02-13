@@ -53,6 +53,24 @@ class Helper
     }
 
     /**
+     * Merges JavaScript from components with an existing array of JavaScript.
+     *
+     * @param array $existingjs The array of scripts that are currently defined
+     * @param array $componentjs The scripts for the component
+     * @return array Array of scripts with no duplicates
+     */
+    public static function combineJS(array $existingjs, array ...$componentjs): array
+    {
+        $output = $existingjs;
+
+        foreach ($componentjs as $js) {
+            $output = array_merge($existingjs, $js);
+        }
+
+        return array_unique($output);
+    }
+
+    /**
      * Gets the html that can be used to include the stylesheet in a page.
      *
      * @return string

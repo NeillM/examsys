@@ -35,7 +35,13 @@ $renderer = new render($configObject);
 $class = Register::getComponentClassName($collection, $component);
 $example = $class::getExample();
 
-$headerjs = $example->getJavascriptForHead();
+$headerjs = Helper::combineJS(
+    [
+        '/js/require.js',
+        '/js/main.min.js',
+    ],
+    $example->getJavascriptForHead()
+);
 $footerjs = $example->getJavascriptForFooter();
 $css = [
     Helper::getCSSPath(true),

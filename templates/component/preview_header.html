@@ -29,12 +29,15 @@ Required language strings:
 
 * title
 #}
-<html>
+<!DOCTYPE html>
+<html lang="{{language}}">
     <head>
+        <meta http-equiv="content-type" content="text/html;charset={{charset}}"/>
         <title>{{lang.title}}</title>
         {% for css in additionalcss %}
             <link rel="stylesheet" type="text/css" href="{{path}}{{css}}"/>
         {% endfor %}
+        <script id="rogoconfig" data-lang="{{language}}>" data-root="{{path}}"></script>
         {% for js in additionaljs %}
             <script src="{{path}}{{js}}"></script>
         {% endfor %}
