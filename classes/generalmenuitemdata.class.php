@@ -23,7 +23,7 @@
  *
  * @author Nisha Sarala <nisha.sarala@nottingham.ac.uk>
  * @copyright Copyright (c) 2025 The University of Nottingham
- * @package
+ * @package core
  */
 class GeneralMenuItemData
 {
