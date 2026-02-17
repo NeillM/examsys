@@ -91,6 +91,15 @@ trait menu
         if (empty($menuitems)) {
             throw new Exception('The submenu items list is empty');
         }
+        $this->spin(function ($context) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            foreach ($popups as $popup) {
+                if ($popup->isVisible()) {
+                    return true;
+                }
+            }
+            return false;
+        });
         foreach ($menuitems->getHash() as $menuitem) {
             $title = $menuitem['menu_items'];
             $element = $this->find('sub_menu', $title);
@@ -183,5 +192,145 @@ trait menu
                 throw new Exception("$item in sub menu could not be found");
             }
         }
+    }
+
+    /**
+     * Check if popup menu is visible.
+     *
+     * @Then /^the popup menu should be visible$/
+     * @throws Exception
+     */
+    public function popupMenuShouldBeVisible()
+    {
+        // Use spin() to wait for popup menu to appear, rather than fixed wait
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            foreach ($popups as $popup) {
+                if ($popup->isVisible()) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    /**
+     * Check if no popup menus are visible.
+     *
+     * @Then /^no popup menus should be visible$/
+     * @throws Exception
+     */
+    public function popupMenuShouldNotBeVisible()
+    {
+        // Wait for focus to be set; spin avoids a fixed sleep.
+        $this->spin(function ($context) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            foreach ($popups as $popup) {
+                if ($popup->isVisible()) {
+                    return false; // Still visible, keep waiting
+                }
+            }
+            return true; // No visible popups found
+        });
+    }
+
+    /**
+     * Check if a popup menu item has focus by text.
+     *
+     * @Then /^the "([^"]*)" popup menu item should have focus$/
+     * @param string $text The text of the popup menu item
+     * @throws Exception
+     */
+    public function popupMenuItemShouldHaveFocus($text)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        // Use spin() to wait for popup to be visible and item to have focus
+        // This makes tests faster by waiting only until the condition is met, up to a maximum timeout
+        $this->spin(function ($context) use ($text) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            $popup = null;
+            foreach ($popups as $p) {
+                if ($p->isVisible()) {
+                    $popup = $p;
+                    break;
+                }
+            }
+            if (!$popup) {
+                return false;
+            }
+            $popupItems = $popup->findAll('css', '.popupitem');
+            $foundItem = null;
+            foreach ($popupItems as $item) {
+                $itemText = trim($item->getText());
+                if (stripos($itemText, $text) !== false) {
+                    $foundItem = $item;
+                    break;
+                }
+            }
+            if (!$foundItem) {
+                return false;
+            }
+            // Check focus using JavaScript.
+            $itemXpath = addslashes($foundItem->getXpath());
+            $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+            return $context->getSession()->evaluateScript($script);
+        });
+    }
+
+    /**
+     * Check if a popup menu item has focus by index (1-based).
+     *
+     * @Then /^item "([^"]*)" in the popup menu should have focus$/
+     * @param string $index The 1-based index of the popup menu item
+     * @throws Exception
+     */
+    public function popupMenuItemByIndexShouldHaveFocus($index)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        // Wait for focus to be set; spin avoids a fixed sleep.
+        $this->spin(function ($context) use ($index) {
+            $popups = $context->getSession()->getPage()->findAll('css', '.popup');
+            $popup = null;
+            foreach ($popups as $p) {
+                if ($p->isVisible()) {
+                    $popup = $p;
+                    break;
+                }
+            }
+            if (!$popup) {
+                return false;
+            }
+            $popupItems = $popup->findAll('css', '.popupitem');
+            $itemIndex = (int) $index - 1; // Convert to 0-based index
+            if ($itemIndex < 0 || $itemIndex >= count($popupItems)) {
+                return false;
+            }
+            $item = $popupItems[$itemIndex];
+            // Check focus using JavaScript.
+            $itemXpath = addslashes($item->getXpath());
+            $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return false;
+    var item = document.evaluate('{$itemXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return item && (focused === item || item.contains(focused));
+})();
+JS;
+            return $context->getSession()->evaluateScript($script);
+        });
     }
 }

@@ -708,4 +708,102 @@ JS;
         $select = $this->find('xpath', '//*[@data-colour="' . $colour . '"]');
         $select->click();
     }
+
+    /**
+     * Focus on a menu item.
+     *
+     * @When /^I focus on "([^"]*)" "([^"]*)"$/
+     * @param string $text The text of the menu item
+     * @param string $type The type of menu item (menu_item, popup_item, etc.)
+     * @throws Exception
+     */
+    public function iFocusOnMenuItem($text, $type)
+    {
+        $element = $this->find($type, $text);
+        if (empty($element)) {
+            throw new Exception("Could not find $type with text '$text'");
+        }
+        // Find the focusable element (button or link) within the menu item
+        $focusable = $element->find('xpath', './/button|.//a');
+        if ($focusable) {
+            $focusable->focus();
+        } else {
+            $element->focus();
+        }
+        // Wait for focus to be applied using the shared focus check.
+        $this->itemShouldHaveFocus($text, $type);
+    }
+
+    /**
+     * Press a keyboard key.
+     *
+     * @When /^I press "([^"]*)" key$/
+     * @param string $key The key to press (ArrowDown, ArrowUp, ArrowLeft, ArrowRight, Enter, Escape)
+     * @throws Exception
+     */
+    public function iPressKey($key)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        $keyCodes = [
+            'ArrowDown' => 40,
+            'ArrowUp' => 38,
+            'ArrowLeft' => 37,
+            'ArrowRight' => 39,
+            'Enter' => 13,
+            'Escape' => 27,
+        ];
+
+        if (!isset($keyCodes[$key])) {
+            throw new Exception("Unknown key: $key");
+        }
+
+        $keyCode = $keyCodes[$key];
+        // Use JavaScript to dispatch keyboard event
+        $script = 'var focused = document.activeElement || document.body; '
+            . "var e = new KeyboardEvent('keydown', { "
+            . "key: '$key', code: '$key', keyCode: $keyCode, which: $keyCode, "
+            . 'bubbles: true, cancelable: true }); '
+            . 'focused.dispatchEvent(e);';
+        $this->getSession()->executeScript($script);
+    }
+
+    /**
+     * Check if an item has focus.
+     *
+     * @Then /^"([^"]*)" "([^"]*)" should have focus$/
+     * @param string $text The text of the item
+     * @param string $type The type of item
+     * @throws Exception
+     */
+    public function itemShouldHaveFocus($text, $type)
+    {
+        if (!$this->running_javascript()) {
+            throw new Exception('This step requires JavaScript to be enabled');
+        }
+
+        $element = $this->find($type, $text);
+        if (empty($element)) {
+            throw new Exception("Could not find $type with text '$text'");
+        }
+
+        // Check focus using JavaScript (Mink doesn't support :focus selector)
+        $elementXpath = addslashes($element->getXpath());
+        $script = <<<JS
+(function() {
+    var focused = document.activeElement;
+    if (!focused) return 'No element has focus';
+    var item = document.evaluate('{$elementXpath}', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    if (!item) return 'Could not find element';
+    return (focused === item || item.contains(focused)) ? 'success' : 'Element does not have focus';
+})();
+JS;
+        // Wait for focus to be set; spin avoids a fixed sleep.
+        $this->spin(function ($context) use ($script) {
+            $result = $context->getSession()->evaluateScript($script);
+            return $result === 'success';
+        });
+    }
 }

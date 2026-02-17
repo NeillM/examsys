@@ -82,7 +82,9 @@ class QuestionBank
                 $this->load_stats($type);
                 $keywords = $this->get_keywords();
                 if (count($keywords) == 0) {    // Stop we have no keywords.
-                    echo $this->notice->info_strip($this->string['nokeywords'], 100) . "</div>\n</body>\n</html>\n";
+                    echo $this->notice->info_strip($this->string['nokeywords'], 100) . "</div>\n";
+                    echo '<script src="../js/questionbankinit.min.js"></script>';
+                    echo "</body>\n</html>\n";
                     exit;
                 }
                 foreach ($keywords as $keywordID => $keyword) {

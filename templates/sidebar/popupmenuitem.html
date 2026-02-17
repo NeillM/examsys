@@ -1,0 +1,43 @@
+{# This file is part of ExamSys
+#
+# ExamSys is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ExamSys is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with ExamSys.  If not, see <http://www.gnu.org/licenses/>. 
+#}
+
+{#
+This template renders a single popup menu item for the sidebar popup menus.
+It uses proper links for accessibility and keyboard navigation.
+
+@author Nisha Sarala <nisha.sarala@nottingham.ac.uk>
+@copyright 2026 The University of Nottingham
+
+Required variables:
+data - Object containing popup menu item properties:
+    id - Unique identifier for the popup item
+    text - Display text for the popup item
+    href - URL for the popup item link (or JavaScript action)
+    onclick - JavaScript action string (optional, for JavaScript items)
+    type - Type of popup item ('link', 'separator', 'heading', or 'javascript')
+#}
+{% if data.type == 'separator' %}
+<div class="popupitemline" id="{{ data.id }}">
+    <hr class="popupitem-separator" />
+</div>
+{% elseif data.type == 'heading' %}
+<div class="popupitembold" id="{{ data.id }}">{{ data.text }}</div>
+{% else %}
+<div class="popupitem" id="{{ data.id }}" role="menuitem">
+    <a href="{{ data.href }}" role="menuitem"{% if data.onclick %} data-onclick="{{ data.onclick }}"{% endif %}>{{ data.text }}</a>
+</div>
+{% endif %}
+
