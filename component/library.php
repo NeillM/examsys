@@ -52,7 +52,7 @@ $renderer = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 
 $additionaljs = '';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/componentlibrary.css"/>'
+$additionalcss = '<link rel="stylesheet" type="text/css" href="/css/componentlibrary.css"/>'
     . \component\Helper::getCSSString();
 
 $breadcrumb = new \component\breadcrumb\Breadcrumb();
@@ -77,7 +77,7 @@ if ($component) {
 
 $lang = \component\Helper::combineLang($lang, $breadcrumb);
 
-$renderer->render_admin_header($lang, $additionaljs, $addtionalcss);
+$renderer->render_admin_header($lang, $additionaljs, $additionalcss);
 $renderer->render_admin_options('', '', $string, $toprightmenu, 'admin/options_empty.html');
 $renderer->render_admin_content($breadcrumb->getData($renderer), $lang);
 
