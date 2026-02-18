@@ -123,6 +123,7 @@ class render
         $data = [
             'data' => $component->getData($this),
             'lang' => $component->getStrings(),
+            'path' => $this->config->get('cfg_root_path'),
         ];
 
         echo $this->twig->render($template, $data);

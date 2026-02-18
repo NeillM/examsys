@@ -194,6 +194,6 @@ $renderer->render($data, $string, 'someothertemplate.html');
 
 The line to include the template to render the component:
 ```html
-{{ include('@foo/bar.html', {'data': data.foo, 'lang': lang}, with_context = false) }}
+{{ include('@foo/bar.html', {'data': data.foo, 'lang': lang, 'path': path}, with_context = false) }}
 ```
 This will ensure that the template has it's data and language strings available.
