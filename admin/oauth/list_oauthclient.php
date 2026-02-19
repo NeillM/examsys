@@ -47,12 +47,20 @@ $header = [['class' => 'col10', 'style' => 'width:20%', 'value' => $string['user
 ['class' => 'col', 'style' => 'width:20%', 'value' => $string['secret']],
 ['class' => 'col', 'style' => 'width:20%', 'value' => $string['uri']]];
 $additionaljs = '';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
- $string['oauthkeys'] => 'list_oauth.php'];
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addBreadcrumb($string['oauthkeys'], 'list_oauth.php');
+$breadcrumb->addCurrentPage($string['oauthclients']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 $render->render_admin_list($clients, $header);
 $js = [
     '/admin/oauth/js/oauthclientsinit.min.js',

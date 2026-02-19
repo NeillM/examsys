@@ -1,0 +1,50 @@
+{# This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template renders WAI compliant breadcrumbs.
+
+@author Neill Magill <neill.magill@nottingham.ac.uk>
+@copyright 2026 The University of Nottingham
+
+Required data variables:
+
+breadcrumbs - An array with the following keys:
+    current - A boolean
+    description - The display name of the breadcrumb
+    url - The url for the breadcrumb
+
+Required language strings:
+
+breadcrumb
+#}
+<nav aria-label="{{lang.breadcrumb}}" class="component-breadcrumb">
+    <ol>
+        {% for breadcrumb in data.breadcrumbs %}
+            <li>
+                {% if breadcrumb.url %}
+                    <a href="{{breadcrumb.url}}"{% if breadcrumb.current %} aria-current="page"{% endif %}>
+                        {{breadcrumb.description}}
+                    </a>
+                {% else %}
+                    <span{% if breadcrumb.current %} aria-current="page"{% endif %}>
+                        {{breadcrumb.description}}
+                    </span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+</nav>

@@ -79,11 +79,21 @@ $addtionalcss = '<style type="text/css">
             color: #800000;
             border: 2px solid #800000;
           }
-        </style>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['computerlabs'] => '../list_labs.php', $string['campuses'] => 'list_campuses.php' ];
+        </style>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addBreadcrumb($string['computerlabs'], '../list_labs.php');
+$breadcrumb->addBreadcrumb($string['campuses'], 'list_campuses.php');
+$breadcrumb->addCurrentPage($string['editcampus']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang, $toprightmenu);
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 
 ?>
 

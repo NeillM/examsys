@@ -43,36 +43,36 @@ require '../include/sysadmin_auth.inc';
 
 <body>
 <?php
-  require '../include/toprightmenu.inc';
+require '../include/toprightmenu.inc';
 
-    echo draw_toprightmenu();
+echo draw_toprightmenu();
 
-  // How many guest accounts are reserved
-  $results = $mysqli->query('SELECT id FROM temp_users');
-  $temp_account_no = $results->num_rows;
-  $results->close();
+// How many guest accounts are reserved
+$results = $mysqli->query('SELECT id FROM temp_users');
+$temp_account_no = $results->num_rows;
+$results->close();
 
-  // How many system errors are there
-  $results = $mysqli->query('SELECT id FROM sys_errors WHERE fixed IS NULL');
-  $sys_error_no = $results->num_rows;
-  $results->close();
+// How many system errors are there
+$results = $mysqli->query('SELECT id FROM sys_errors WHERE fixed IS NULL');
+$sys_error_no = $results->num_rows;
+$results->close();
 
-  // How many system errors are there
-  $results = $mysqli->query('SELECT id FROM save_fail_log');
-  $save_fail_log_no = $results->num_rows;
-  $results->close();
+// How many system errors are there
+$results = $mysqli->query('SELECT id FROM save_fail_log');
+$save_fail_log_no = $results->num_rows;
+$results->close();
 
-  // How many announcements are there
-  $results = $mysqli->query('SELECT id FROM announcements WHERE startdate <= NOW() AND enddate >= NOW() AND deleted IS NULL');
-  $announcement_no = $results->num_rows;
-  $results->close();
+// How many announcements are there
+$results = $mysqli->query('SELECT id FROM announcements WHERE startdate <= NOW() AND enddate >= NOW() AND deleted IS NULL');
+$announcement_no = $results->num_rows;
+$results->close();
 
-  // How many papers need scheduling
-  $results = $mysqli->query('SELECT property_id FROM (properties, scheduling) WHERE (start_date IS NULL AND end_date IS NULL) AND properties.property_id = scheduling.paperID AND deleted IS NULL');
-  $scheduling_no = $results->num_rows;
-  $results->close();
+// How many papers need scheduling
+$results = $mysqli->query('SELECT property_id FROM (properties, scheduling) WHERE (start_date IS NULL AND end_date IS NULL) AND properties.property_id = scheduling.paperID AND deleted IS NULL');
+$scheduling_no = $results->num_rows;
+$results->close();
 
-  $mysqli->close();
+$mysqli->close();
 ?>
 <div id="content">
 
@@ -103,47 +103,49 @@ if ($scheduling_no > 0) {
     $string['summativescheduling'] .= ' <span class="corners"><span class="num">' . $scheduling_no . '</span></span>';
 }
 
-  $summative_year =  date('Y');
+$summative_year =  date('Y');
 if (date('n') < 7) {
     $summative_year--;
 }
 
-  $menudata = [];
-  $menudata['audit']                = ['./audit/list_audit.php', 'audit.png'];
-  $menudata['anomaly']              = ['./anomaly/settings.php', 'anomaly.png'];
-  $menudata['academicsessions']     = ['academic_sessions.php', 'sessions.png'];
-  $menudata['authentication']       = ['./oauth/list_oauth.php', 'auth.png'];
-  $menudata['bug']                  = ['https://examsys.atlassian.net', 'bug.png'];
-  $menudata['calendar']             = ['calendar.php#week' . date('W'), 'calendar_icon.png'];
-  $menudata['clearguestaccounts']   = ['clear_guest_users.php', 'clear_guest_users.png'];
-  $menudata['clearorphanmedia']     = ['orphan_media.php', 'remove_orphan_icon.png'];
-  $menudata['cleartraining']        = ['clear_training_module.php', 'training.png'];
-  $menudata['computerlabs']         = ['list_labs.php', 'computer_lab_48.png'];
-  $menudata['courses']              = ['list_courses.php', 'courses_icon.png'];
-  $menudata['deniedlogwarnings']    = ['view_access_denied.php', 'access_denied.png'];
-  $menudata['ebelgridtemplates']    = ['list_ebel_grids.php', 'grid_48.png'];
-  $menudata['faculties']            = ['list_faculties.php', 'faculty.png'];
-  $menudata['imslti']               = ['../LTI/lti_keys_list.php', 'lti_key_48.png'];
+$menudata = [];
+$menudata['audit']                = ['./audit/list_audit.php', 'audit.png'];
+$menudata['anomaly']              = ['./anomaly/settings.php', 'anomaly.png'];
+$menudata['academicsessions']     = ['academic_sessions.php', 'sessions.png'];
+$menudata['authentication']       = ['./oauth/list_oauth.php', 'auth.png'];
+$menudata['bug']                  = ['https://examsys.atlassian.net', 'bug.png'];
+$menudata['calendar']             = ['calendar.php#week' . date('W'), 'calendar_icon.png'];
+$menudata['clearguestaccounts']   = ['clear_guest_users.php', 'clear_guest_users.png'];
+$menudata['clearorphanmedia']     = ['orphan_media.php', 'remove_orphan_icon.png'];
+$menudata['cleartraining']        = ['clear_training_module.php', 'training.png'];
+$menudata['computerlabs']         = ['list_labs.php', 'computer_lab_48.png'];
+$menudata['courses']              = ['list_courses.php', 'courses_icon.png'];
+$menudata['deniedlogwarnings']    = ['view_access_denied.php', 'access_denied.png'];
+$menudata['ebelgridtemplates']    = ['list_ebel_grids.php', 'grid_48.png'];
+$menudata['faculties']            = ['list_faculties.php', 'faculty.png'];
+$menudata['imslti']               = ['../LTI/lti_keys_list.php', 'lti_key_48.png'];
 if ($configObject->get_setting('core', 'cfg_ims_enabled')) {
     $menudata['imssettings']          = ['../plugins/ims/ims_settings.php', 'ims_logo.png'];
 }
-  $menudata['modules']              = ['list_modules.php', 'modules_icon.png'];
-  $menudata['announcments']         = ['list_announcements.php', 'news_48.png'];
-  $menudata['phpinfo']              = ['phpinfo.php', 'php.png'];
-  $menudata['questionstatuses']     = ['list_statuses.php', 'status_icon.png'];
-  $menudata['savefailattempts']     = ['list_save_fails.php', 'save_fail_48.png'];
-  $menudata['schools']              = ['list_schools.php', 'school_icon.png'];
-  $menudata['statistics']           = ['../statistics/index.php', 'statistics.png'];
+$menudata['modules']              = ['list_modules.php', 'modules_icon.png'];
+$menudata['announcments']         = ['list_announcements.php', 'news_48.png'];
+$menudata['phpinfo']              = ['phpinfo.php', 'php.png'];
+$menudata['questionstatuses']     = ['list_statuses.php', 'status_icon.png'];
+$menudata['savefailattempts']     = ['list_save_fails.php', 'save_fail_48.png'];
+$menudata['schools']              = ['list_schools.php', 'school_icon.png'];
+$menudata['statistics']           = ['../statistics/index.php', 'statistics.png'];
 if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
       $menudata['summativescheduling'] = ['summative_scheduling.php', 'summative_scheduling.png'];
 }
-  $menudata['systemerrors']         = ['sys_error_list.php', 'system_errors.png'];
-  $menudata['systeminformation']    = ['system_info.php', 'information.png'];
-  $menudata['testing']              = ['../testing/', 'crash_test.png'];
-  $menudata['usermanagement']       = ['../users/search.php', 'user_accounts_icon.png'];
-  $menudata['plugins']       = ['./plugins/list_plugins.php', 'plugins.svg'];
-  $menudata['config']        = ['config.php', 'config.png'];
-  $menudata['externalsystems']        = ['external/list_extsys.php', 'sync.png'];
+$menudata['systemerrors']         = ['sys_error_list.php', 'system_errors.png'];
+$menudata['systeminformation']    = ['system_info.php', 'information.png'];
+$menudata['testing']              = ['../testing/', 'crash_test.png'];
+$menudata['usermanagement']       = ['../users/search.php', 'user_accounts_icon.png'];
+$menudata['plugins']       = ['./plugins/list_plugins.php', 'plugins.svg'];
+$menudata['config']        = ['config.php', 'config.png'];
+$menudata['externalsystems']        = ['external/list_extsys.php', 'sync.png'];
+$menudata['component']        = ['../component/library.php', 'yellow_folder.png'];
+
 if ($configObject->get('cfg_setting_icons_order')) {
     foreach ($configObject->get('cfg_setting_icons_order') as $iconkey) {
         if (($iconkey == 'summativescheduling' && !$configObject->get_setting('core', 'cfg_summative_mgmt')) || empty($menudata[$iconkey])) {

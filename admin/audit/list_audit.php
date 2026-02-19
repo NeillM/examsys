@@ -35,8 +35,16 @@ $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $additionaljs = '';
 $addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
-<link rel="stylesheet" type="text/css" href="../../css/audit_list.css"/>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php'];
+<link rel="stylesheet" type="text/css" href="../../css/audit_list.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addCurrentPage($string['title']);
+
+$string = \component\Helper::combineLang($string, $breadcrumb);
+
 $render->render_admin_header($string, $additionaljs, $addtionalcss);
 $render->render_admin_options('settings.php', 'admin_icon_16.gif', $string, $toprightmenu, 'admin/options_link.html');
 // Create pages.
@@ -51,7 +59,7 @@ if (isset($audit['pages'])) {
         }
     }
 }
-$render->render_admin_content($breadcrumb, $string, 'admin/audit/content.html', $audit);
+$render->render_admin_content($breadcrumb->getData($render), $string, 'admin/audit/content.html', $audit);
 $render->render($audit, $string, 'admin/audit/list.html');
 $js = [
     '/admin/audit/js/auditinit.min.js',

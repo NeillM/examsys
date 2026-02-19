@@ -1,0 +1,44 @@
+nav.component-breadcrumb {
+    margin-left: 10px;
+    font-size: 90%;
+}
+
+nav.component-breadcrumb ol {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+}
+
+nav.component-breadcrumb li {
+    display: inline;
+}
+
+nav.component-breadcrumb li + li::before {
+    background-image: url('../../artwork/breadcrumb_arrow.png');
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: 0.25rem 0.4375rem;
+    content: "";
+    display: inline-block;
+    height: 0.4375rem;
+    margin: auto 0 auto 0.3rem;
+    width: 0.25rem;
+}
+
+nav.component-breadcrumb [aria-current="page"] {
+    text-decoration: none;
+}
+
+nav.component-breadcrumb a:link {
+    color: #316ac5;
+    text-decoration: none;
+}
+nav.component-breadcrumb a:visited {
+    color: #316ac5;
+    text-decoration: none;
+}
+nav.component-breadcrumb a:hover {
+    color: #316ac5;
+    text-decoration: underline;
+}

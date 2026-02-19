@@ -52,12 +52,21 @@ $addtionalcss = '<style type="text/css">
             color: #800000;
             border: 2px solid #800000;
           }
-        </style>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['listextsys'] => 'list_extsys.php'];
+        </style>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addBreadcrumb($string['listextsys'], 'list_extsys.php');
+$breadcrumb->addCurrentPage($string['addextsys']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_extsys.php', 'sync_16.png', $lang, $toprightmenu, 'admin/options_list.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 ?>
 
 <br />

@@ -84,11 +84,20 @@ $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['editplugins'];
 $additionaljs = '';
-$addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/config.css"/>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['rogoplugins'] => '../plugins/list_plugins.php'];
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/config.css"/>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addBreadcrumb($string['rogoplugins'], 'list_plugins.php');
+$breadcrumb->addCurrentPage($string['editplugins']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 
 ?>
 

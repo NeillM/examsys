@@ -69,14 +69,12 @@ $toprightmenu = draw_toprightmenu();
 $additionaljs = <<<JS
   <script src="/js/ltiusersinit.min.js"></script>
 JS;
+$componentcss = \component\Helper::getCSSString();
 $additionalcss = <<<CSS
   <link rel="stylesheet" type="text/css" href="../css/list.css"/>
+  $componentcss
 CSS;
-$breadcrumb = [
-  $string['home'] => '../../index.php',
-  $string['administrativetools'] => '../admin/index.php',
-  $string['ltikeys'] => 'lti_keys_list.php'
-];
+
 $lang = [
   'title' => sprintf($string['ltiusersearch'], $lti_details['name']),
   'unlink' => $string['deletelink'],
@@ -85,6 +83,15 @@ $lang = [
   'searchinternalid' => $string['searchinternalid'],
   'searchexternalid' => $string['searchexternalid'],
 ];
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../admin/index.php');
+$breadcrumb->addBreadcrumb($string['ltikeys'], 'lti_keys_list.php');
+$breadcrumb->addCurrentPage($lang['title']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $menuimages = [
   'unlink_dimmed' => 'red_cross_grey.png',
   'unlink' => 'red_cross.png',
@@ -97,6 +104,6 @@ $menuscripts = [
 
 $render->render_admin_header($lang, $additionaljs, $additionalcss);
 $render->render_admin_options($menuscripts, $menuimages, $lang, $toprightmenu, 'lti/user_search_menu.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 $render->render($results, $string, 'lti/search_users.html');
 $render->render_admin_footer();

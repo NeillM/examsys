@@ -135,12 +135,22 @@ $addtionalcss = '<style type="text/css">
             color: #800000;
             border: 2px solid #800000;
           }
-        </style>';
-$breadcrumb = [$string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['oauthkeys'] => 'list_oauth.php' , $string['listoauthclient'] => 'list_oauthclient.php'];
+        </style>'
+    . \component\Helper::getCSSString();
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../../index.php');
+$breadcrumb->addBreadcrumb($string['administrativetools'], '../index.php');
+$breadcrumb->addBreadcrumb($string['oauthkeys'], 'list_oauth.php');
+$breadcrumb->addBreadcrumb($string['listoauthclient'], 'list_oauthclient.php');
+$breadcrumb->addCurrentPage($string['addoauthclient']);
+
+$lang = \component\Helper::combineLang($lang, $breadcrumb);
+
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_content($breadcrumb->getData($render), $lang);
 ?>
 
 <br />
