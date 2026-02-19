@@ -1,0 +1,53 @@
+{# This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template renders a select.
+
+@author Neill Magill <neill.magill@nottingham.ac.uk>
+@copyright 2026 The University of Nottingham
+
+Intended component: \component\form\Select
+#}
+<div class="component-form-input">
+    <span class="form-label">
+        <label for="{{data.id}}">{{data.label}}</label>
+        {% if data.description %}
+            <span id="{{data.id}}-description" class="form-help">
+                {{data.description}}
+            </span>
+        {% endif %}
+    </span>
+    <span>
+        <select
+            id="{{data.id}}"
+            name="{{data.name}}"
+            {% if data.classes %}class="{% for class in data.classes %}{{class}} {% endfor %}"{% endif %}
+            {% for attribute, value in data.attributes %}
+                {% if value %}
+                    {{attribute}}="{{value}}"
+                {% else %}
+                    {{attribute}}
+                {% endif %}
+            {% endfor %}
+            {% if data.description %}aria-describedby="{{data.id}}-description"{% endif %}
+        >
+            {% for value, label in data.options %}
+                <option value="{{value}}"{% if data.value == value %} selected{% endif %}>{{label}}</option>
+            {% endfor %}
+        </select>
+    </span>
+</div>

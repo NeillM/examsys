@@ -1,0 +1,27 @@
+/**
+ * General styling for the form.
+ */
+
+.component-form {
+    padding: 1.5rem;
+}
+
+.component-form-button-area {
+    display: flex;
+    gap: 0.5rem;
+    flex-flow: row nowrap;
+    justify-content: flex-end;
+    min-width: fit-content;
+    padding: 0.313rem 1.5rem;
+}
+
+@media (min-width: 25rem) {
+    .component-form-button-area.floating {
+        background-color: #FFFFFF;
+        border-top: #828790 solid thin;
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        right: 0;
+    }
+}

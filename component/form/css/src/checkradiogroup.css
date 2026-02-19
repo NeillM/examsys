@@ -1,0 +1,22 @@
+/**
+ * General styling for checkbox and radio button groups.
+ */
+
+fieldset.component-form-input.checkbox-group,
+fieldset.component-form-input.radio-group {
+    align-items: flex-start;
+    border: 0;
+    display: flex;
+    flex-flow: row wrap;
+    padding: 0;
+}
+
+fieldset.component-form-input.checkbox-group > legend,
+fieldset.component-form-input.radio-group > legend {
+    float: left;
+}
+
+fieldset.component-form-input.checkbox-group > .fieldset-elements > .component-form-input > :first-child,
+fieldset.component-form-input.radio-group > .fieldset-elements > .component-form-input > :first-child {
+    width: auto;
+}

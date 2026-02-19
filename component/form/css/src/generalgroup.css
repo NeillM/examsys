@@ -1,0 +1,24 @@
+/**
+ * Styles for the general group fieldset.
+ */
+
+.component-form .general-group {
+    border: 0.0625rem solid #eeeeee;
+    margin: 0 0 1.5rem 0;
+    padding: 0 0.5rem 0 0;
+}
+
+.component-form fieldset.general-group>legend {
+    background-color: #eeeeee;
+    border-bottom: 0.063rem solid #e2e4e7;
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding: 0.313rem;
+    width: 100%;
+}
+
+.component-form fieldset.general-group>.fieldset-elements {
+    margin-left: 0.313rem;
+}
