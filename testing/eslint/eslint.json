@@ -1,7 +1,11 @@
 {
   "env": {
     "browser": true,
-    "jquery": true
+    "jquery": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2022
   },
   "globals": {
     // All intended global variables in ExamSys should be listed here.

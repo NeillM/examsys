@@ -76,7 +76,9 @@ class Bar implements \component\Component {
     #[\Override]
     public function getJavascriptForFooter(): array
     {
-        return [];
+        return [
+            '/component/foo/js/bar.min.js',
+        ];
     }
 
     #[\Override]
@@ -142,6 +144,15 @@ JavaScript should be written in this directory. During ExamSys builds the files 
 (with source maps) into the `js` directory.
 
 The minimised versions of the files should be served by pages.
+
+We have a helper method to combine the JS from components into the CSS list used in templates:
+
+```php
+$js = [
+    '/js/classtotalsinit.min.js',
+];
+$js = \component\Helper::combineJS($js, $bar->getJavascriptForFooter());
+```
 
 ### lang/en
 
