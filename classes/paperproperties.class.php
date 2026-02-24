@@ -3712,23 +3712,19 @@ class PaperProperties
      */
     public function isNegativelyMarked(): bool
     {
-        $neg_marking = false;
-
-        $sql = 'SELECT marks_incorrect
+        $sql = 'SELECT 1
                 FROM papers, questions, options
-                WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?';
+                WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?
+                    AND marks_incorrect < 0
+                LIMIT 1';
         $result = $this->db->prepare($sql);
         $result->bind_param('i', $this->property_id);
         $result->execute();
         $result->bind_result($marks_incorrect);
-
-        while ($result->fetch()) {
-            if ($marks_incorrect < 0) {
-                $neg_marking = true;
-            }
-        }
+        $result->fetch();
         $result->close();
 
-        return $neg_marking;
+        // The value of marks_incorrect will be null if no results are returned.
+        return $marks_incorrect !== null;
     }
 }
