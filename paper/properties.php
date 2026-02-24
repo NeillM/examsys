@@ -356,17 +356,7 @@ function getSchools($staff_modules, $db)
 $option_no = 1;
 
 // Work out if any negative marking is used
-$neg_marking = false;
-$result = $mysqli->prepare('SELECT marks_incorrect FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?');
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($marks_incorrect);
-while ($result->fetch()) {
-    if ($marks_incorrect < 0) {
-        $neg_marking = true;
-    }
-}
-$result->close();
+$neg_marking = $properties->isNegativelyMarked();
 
 // Load textual feedback
 $textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);

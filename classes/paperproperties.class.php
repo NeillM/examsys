@@ -3704,4 +3704,31 @@ class PaperProperties
 
         return false;
     }
+
+    /**
+     * Tests if a paper contains questions that are negatively marked.
+     *
+     * @return bool
+     */
+    public function isNegativelyMarked(): bool
+    {
+        $neg_marking = false;
+
+        $sql = 'SELECT marks_incorrect
+                FROM papers, questions, options
+                WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?';
+        $result = $this->db->prepare($sql);
+        $result->bind_param('i', $this->property_id);
+        $result->execute();
+        $result->bind_result($marks_incorrect);
+
+        while ($result->fetch()) {
+            if ($marks_incorrect < 0) {
+                $neg_marking = true;
+            }
+        }
+        $result->close();
+
+        return $neg_marking;
+    }
 }
