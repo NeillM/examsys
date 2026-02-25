@@ -1905,8 +1905,20 @@ $render->render($dataset, [], 'dataset.html');
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+
+// Output the footer.
+$scripts = \component\Helper::combineJS(
+    [
+        '/js/paperpropertiesinit.min.js',
+    ],
+    $breadcrumb->getJavascriptForFooter(),
+);
+$render->render(
+    [
+        'scripts' => $scripts,
+    ],
+    $string,
+    'footer.html'
+);
+
 $mysqli->close();
-?>
-<script src='../js/paperpropertiesinit.min.js'></script>
-</body>
-</html>
