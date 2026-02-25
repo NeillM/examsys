@@ -96,7 +96,6 @@ class BreadcrumbData
         $paperTypeName = Paper_utils::type_to_name($paperType, $this->string);
         $paperTypeHref = $this->path . '/paper/type.php?module=' . $module . '&type=' . $paperType;
         $this->breadcrumb->addBreadcrumb($paperTypeName, $paperTypeHref);
-
     }
 
     /**

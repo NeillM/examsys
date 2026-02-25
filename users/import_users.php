@@ -42,8 +42,8 @@ $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css"
                 <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
                 <style type="text/css">
                     label.error {display:block; color:#f00}
-                </style>' .
-    \component\Helper::getCSSString();
+                </style>'
+    . \component\Helper::getCSSString();
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
     <?php

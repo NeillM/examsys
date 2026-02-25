@@ -42,8 +42,8 @@ $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css"
                     .existing {color:#808080}
                     .added {color:black}
                     .failed {color:#C00000}
-                </style>' .
-    \component\Helper::getCSSString();
+                </style>'
+    . \component\Helper::getCSSString();
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <body>
