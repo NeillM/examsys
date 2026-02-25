@@ -384,28 +384,25 @@ if (!$properties->canEditSecurity()) {
     $sum_disabled = '';
 }
 
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('ExamSys: ' . $string['propertiestitle']); ?></title>
+// Output the html header.
+$render->render(
+    [
+        'css' => [
+                '/css/header.css',
+                '/css/properties.css',
+                '/css/warnings.css',
+                \component\Helper::getCSSPath(),
+        ],
+        'js' => [],
+        'texteditor' => $texteditorplugin->get_header_file(),
+    ],
+    [
+        'title' => $string['propertiestitle']
+    ],
+    'header.html'
+);
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-  <link rel="stylesheet" type="text/css" href="../css/header.css"/>
-  <link rel="stylesheet" type="text/css" href="../css/properties.css"/>
-  <link rel="stylesheet" type="text/css" href="../css/warnings.css"/>
-  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
-  <script src='../js/require.js'></script>
-  <script src='../js/main.min.js'></script>
-<?php
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::PROPERTIES);
-  echo \component\Helper::getCSSString();
 ?>
-</head>
-<body>
 <div id="content">
 <?php
 require '../include/toprightmenu.inc';
