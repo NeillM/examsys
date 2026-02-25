@@ -158,6 +158,10 @@ if ($studentCohortItem) {
     $render->render($studentCohortItem, $string, 'sidebar/menuitem.html');
 }
 
+// Paper changes.
+$changesItem = $menuItemData->getChangesItem($paperID, $module, $folder);
+$render->render($changesItem, $string, 'sidebar/menuitem.html');
+
 echo "</div>\n";
 ?>
 
