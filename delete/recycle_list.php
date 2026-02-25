@@ -87,8 +87,6 @@ if (isset($_GET['folder'])) {
 $recycleObj = new RecycleBin();
 $recycle_bin = $recycleObj->get_recyclebin_contents();
 
-$mysqli->close();
-
 $sortby = 'name';
 if (isset($_GET['sortby'])) {
     $sortby = $_GET['sortby'];
@@ -158,6 +156,7 @@ $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $render->render($dataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/recycleinit.min.js"></script>
 </body>

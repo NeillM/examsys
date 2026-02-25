@@ -334,7 +334,6 @@ if (count($reference_materials) > 0) {
     ];
     $render->render($refdata, $string, 'paper/refmaterial.html');
 }
-$mysqli->close();
 
 echo '</div>';
 
@@ -355,6 +354,7 @@ $dataset['name'] = 'paper';
 $dataset['attributes']['refcount'] = count($reference_materials);
 $render->render($dataset, [], 'dataset.html');
 $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$mysqli->close();
 ?>
 <input type="hidden" name="refpane" id="refpane" value="<?php echo $refpane; ?>" />
 <script src='../js/reviewinit.min.js'></script>

@@ -184,7 +184,6 @@ if ($results->num_rows > 0) {
     }
     $results->close();
 }
-$mysqli->close();
 ?>
 </div>
 <?php
@@ -198,6 +197,7 @@ $render->render($jsdataset, [], 'dataset.html');
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

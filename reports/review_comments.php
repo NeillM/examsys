@@ -801,7 +801,6 @@ if ($old_q_type == 'info') {
     $question_no--;
 }
   displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $old_q_media_alt, $old_q_media_num, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $reviewer_data, $type, $string, $language);
-  $mysqli->close();
 ?>
 </table>
 <input type="hidden" name="scrOfY" id="scrOfY" value="0" /><br />
@@ -830,6 +829,7 @@ if (isset($_GET['folder'])) {
   $miscdataset['attributes']['rootpath'] = $cfg_root_path;
   $render->render($miscdataset, [], 'dataset.html');
   $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+  $mysqli->close();
 ?>
 <script src="../js/reviewcommentsinit.min.js"></script>
 </body>

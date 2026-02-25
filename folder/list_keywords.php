@@ -103,7 +103,6 @@ if (isset($_GET['module']) and $_GET['module'] != '') {
 foreach ($keyword_list as $keywordID => $keyword) {
     echo "<tr class=\"qline\" id=\"link_$keywordID\" data-keywordid=\"$keywordID\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";
 }
-$mysqli->close();
 ?>
 </table>
 </div>
@@ -114,6 +113,7 @@ $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $module;
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/keywordlistinit.min.js"></script>
 </body>

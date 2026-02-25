@@ -48,8 +48,6 @@ $properties->save();
 // Record the deletion.
 $logger = new Logger($mysqli);
 $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', '', 'Paper Deleted');
-
-$mysqli->close();
 ?>
 <!DOCTYPE html>
 <html>
@@ -83,6 +81,7 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $_POST['module'];
 $miscdataset['attributes']['folder'] = $_POST['folder'];
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/deletepaperinit.min.js"></script>
 </body>

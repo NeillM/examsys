@@ -250,7 +250,6 @@ if ($search and ($searchterm != '' and ($qtype != '%' or $owner != ''))) {
     }
     $result->close();
 }
-  $mysqli->close();
 ?>
 </form>
 </table>
@@ -260,6 +259,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 
 <script src="../../js/addquestionslistinit.min.js"></script>

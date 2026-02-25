@@ -392,7 +392,6 @@ if (isset($_GET['std_setID'])) {
     echo '<input type="hidden" name="std_setID" value="' . $_GET['std_setID'] . '" />';
 }
 echo "<input type=\"hidden\" name=\"method\" value=\"Modified Angoff\" />\n";
-$mysqli->close();
 ?>
 <div align="center">
 <input type="checkbox" name="alterpassmark" value="1" checked /> <?php echo $string['updatepassmark'] ?><br />
@@ -407,6 +406,7 @@ $mysqli->close();
   $miscdataset['attributes']['language'] = $language;
   $render->render($miscdataset, [], 'dataset.html');
   $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+  $mysqli->close();
 ?>
 <script src="../js/stdsetgroupinit.min.js"></script>
 </body>

@@ -161,7 +161,6 @@ if (isset($_GET['searchstring'])) {
         echo "</div>\n";
     }
 }
-  $mysqli->close();
 ?>
       </div>
   </div>
@@ -171,6 +170,7 @@ if (isset($_GET['searchstring'])) {
   $jsdataset['name'] = 'jsutils';
   $jsdataset['attributes']['xls'] = json_encode($string);
   $render->render($jsdataset, [], 'dataset.html');
+  $mysqli->close();
 ?>
   <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </body>

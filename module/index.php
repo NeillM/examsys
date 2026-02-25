@@ -183,8 +183,6 @@ if (!$userObject->has_role('Standards Setter')) {
         echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/user_metadata_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['addmetadata'] . '</a><br /><span class="grey">' . sprintf($string['extradataaboutstudents'], $module_details['moduleid']) . "</span></div></div>\n";
     }
 }
-
-$mysqli->close();
 ?>
 </div>
 <?php
@@ -201,6 +199,7 @@ $render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'jsutils';
 $miscdataset['attributes']['xls'] = json_encode($string);
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

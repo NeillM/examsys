@@ -526,8 +526,6 @@ if (isset($state['banksave']) and $state['banksave'] == 'true') {
 } else {
     echo '<input class="chk" type="checkbox" id="banksave" name="banksave" value="1" />&nbsp;' . $string['savebank'];
 }
-  $mysqli->close();
-
 ?>
 </td><td colspan="2"></td></tr>
 </table>
@@ -548,7 +546,7 @@ $miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $miscdataset['attributes']['method'] = $_GET['method'];
 $render->render($miscdataset, [], 'dataset.html');
 $render->render(['rootpath' => $cfg_root_path], html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-
+$mysqli->close();
 ?>
 <script src="../js/stdsetreviewinit.min.js"></script>
 </body>

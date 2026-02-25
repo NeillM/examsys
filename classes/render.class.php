@@ -44,7 +44,18 @@ class render
     public function __construct(protected $config, $templatedir = null)
     {
         if (is_null($templatedir)) {
-            $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');
+            // Include the main template directory.
+            $paths = [
+                dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'
+            ];
+
+            // Include the paths for the configured text editor.
+            $paths = array_merge(
+                $paths,
+                \plugins\plugins_texteditor::get_editor()->get_render_paths()
+            );
+
+            $loader = new \Twig\Loader\FilesystemLoader($paths);
         } else {
             $loader = new \Twig\Loader\FilesystemLoader($templatedir);
         }

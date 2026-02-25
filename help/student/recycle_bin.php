@@ -82,8 +82,6 @@ if ($result->num_rows == 0) {
     }
     echo "</table>\n";
 }
-
-  $mysqli->close();
 ?>
   </div>
 </div>
@@ -93,6 +91,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </body>

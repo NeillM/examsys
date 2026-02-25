@@ -196,8 +196,6 @@ for ($i = 0; $i < $q_no; $i++) {
     }
     $old_screen = $paper_details[$i]['screen'];
 }
-
-  $mysqli->close();
 ?>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td style="text-align:center" colspan="2"><input id="ok" type="button" name="submit" value="<?php echo $string['ok']; ?>" class="ok" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close()" /></td></tr>
@@ -212,5 +210,6 @@ $jsmiscdataset['name'] = 'dataset';
 $jsmiscdataset['attributes']['elementid'] = $elementid;
 $jsmiscdataset['attributes']['iconid'] = $iconid;
 $render->render($jsmiscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 </html>

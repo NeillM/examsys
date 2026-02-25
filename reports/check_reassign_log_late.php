@@ -146,7 +146,6 @@ if ($propertyObj->is_live()) {
   echo "<div style=\"text-align:center\">\n";
   echo '<input type="submit" name="submit" id="accept" value="' . $string['accept'] . '" class="ok" />&nbsp;<input type="submit" name="submit" id="reject" value="' . $string['reject'] . '" class="ok" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" name="cancel" value="' . $string['Cancel'] . '" class="cancel" /></div>';
   echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /><input type=\"hidden\" name=\"paperID\" value=\"$paperID\" /><input type=\"hidden\" name=\"metadataID\" value=\"$metadataID\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . '" />';
-  $mysqli->close();
     ?>
 <input type="hidden" name="button_pressed" id="button_pressed" value="" />
 </form>
@@ -157,6 +156,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src='../js/loglateassignmentinit.min.js'></script>
 </body>

@@ -338,7 +338,6 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                                     $x++;
                                 endwhile;
                                 $stmt->close();
-                                $mysqli->close();
                             }
                             ?>
                         </tbody>
@@ -375,6 +374,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
             $jsdataset['name'] = 'jsutils';
             $jsdataset['attributes']['xls'] = json_encode($string);
             $render->render($jsdataset, [], 'dataset.html');
+            $mysqli->close();
             ?>
         <script src="../js/usersearchinit.min.js"></script>
     </body>

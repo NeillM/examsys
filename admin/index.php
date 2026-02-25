@@ -72,7 +72,6 @@ $results = $mysqli->query('SELECT property_id FROM (properties, scheduling) WHER
 $scheduling_no = $results->num_rows;
 $results->close();
 
-$mysqli->close();
 ?>
 <div id="content">
 
@@ -173,6 +172,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/adminindexinit.min.js"></script>
 </body>

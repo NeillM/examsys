@@ -220,7 +220,6 @@ while ($result->fetch()) {
         }
         echo "</td></tr>\n</table>";
     }
-    $mysqli->close();
     ?>
 </table>
 </div>
@@ -232,6 +231,7 @@ $miscdataset['attributes']['paper'] = $paperID;
 $miscdataset['attributes']['folder'] = $folderID;
 $miscdataset['attributes']['module'] = $moduleID;
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

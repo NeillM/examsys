@@ -98,7 +98,6 @@ $result->store_result();
             echo "<tr data-session=\"$session\" data-syncprevious=\"$syncprev\" data-externalid=\"$externalid\" class=\"$class\" id=\"$id\"><td>$moduleid</td><td>$fullname</td><td>$schoolcode $school</td><td>$tmp_active</td></tr>\n";
         }
         $result->close();
-        $mysqli->close();
         ?>
         </tbody>
     </table>
@@ -109,6 +108,7 @@ $render = new render($configObject);
 $miscdataset['name'] = 'jsutils';
 $miscdataset['attributes']['xls'] = json_encode($string);
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/moduleadmininit.min.js"></script>
 </body>

@@ -210,8 +210,6 @@ if ($paper_utils->count_unassigned_papers($userObject->get_user_ID(), $mysqli) o
     $url = './module/index.php?module=0';
     echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"./artwork/red_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\">" . $string['unassigned'] . '</a><br /><span class="grey">' . $string['unassignedmsg'] . "</span></div></div>\n";
 }
-
-  $mysqli->close();
 ?>
 </div>
 </form>
@@ -226,6 +224,7 @@ $render->render($jsdataset, [], 'dataset.html');
 $jsmiscdataset['name'] = 'dataset';
 $jsmiscdataset['attributes']['duplicate'] = $duplicate_folder;
 $render->render($jsmiscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="js/staffindexinit.min.js"></script>
 </body>
