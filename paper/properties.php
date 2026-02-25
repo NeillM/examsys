@@ -402,12 +402,11 @@ $render->render(
     'header.html'
 );
 
+require '../include/toprightmenu.inc';
+echo draw_toprightmenu();
 ?>
 <div id="content">
 <?php
-require '../include/toprightmenu.inc';
-
-echo draw_toprightmenu();
 // initial link of breadcrumb
 $breadcrumb = new \component\breadcrumb\Breadcrumb();
 $breadcrumb->addBreadcrumb($string['home'], '../index.php');
