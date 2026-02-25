@@ -48,166 +48,165 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <div id="content" class="content">
 <?php
-  $breadcrumb = new \component\breadcrumb\Breadcrumb();
-  $breadcrumb->addBreadcrumb($string['home'], '../index.php');
-  $breadcrumb->addBreadcrumb($string['admintools'], '../admin/index.php');
-  $breadcrumb->addBreadcrumb($string['usermanagement'], '../users/search.php');
-  $breadcrumb->addCurrentPage($string['importmodules']);
-  echo $render->render_admin_navigation($breadcrumb->getData($render));
-  $file_problem = false;
-  echo '<br /><br />';
-  if (isset($_POST['submit'])) {
-      if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-          if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv')) {
-              echo uploadError($_FILES['csvfile']['error']);
-              exit;
-          } else {
-                ?>
-        <table class="dialog_border" style="width:600px">
-        <tr>
-        <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules'] ?></td>
-        </tr>
-        <tr>
-        <td class="dialog_body">
-
-              <?php
-                // Get a list of modules held by ExamSys.
-                $module_list = [];
-                $result = $mysqli->prepare('SELECT DISTINCT id, moduleid FROM modules');
-                $result->execute();
-                $result->bind_result($idMod, $moduleid);
-                while ($result->fetch()) {
-                    $module_list[$moduleid] = $idMod;
-                }
-                $result->close();
-
-                $modulesAdded = 0;
-                $missing_users = [];
-                $unknow_ModuleID = [];
-                $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
-
-                // Build an array of unique student names.
-                $students = [];
-                foreach ($lines as $separate_line) {
-                    if (trim($separate_line) != '') {
-                        $fields = explode(',', $separate_line);
-
-                        $sid = trim($fields[0]);
-                        $session = trim($fields[2]);
-                        // Modules will be added later.
-
-                        $students[$sid]['sid'] = $sid;
-                        $students[$sid]['session'] = $session;
-                        $students[$sid]['modules'] = [];
-                    }
-                }
-
-                // Query the modules for each student
-                foreach ($students as $student) {
-                    $student_databaseID = UserUtils::studentid_exists($student['sid'], $mysqli);
-
-                    if ($student_databaseID !== false) {
-                        $students[$student['sid']]['dbID'] = $student_databaseID;
-
-                        $result = $mysqli->prepare('SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND  userID = ? AND calendar_year = ?');
-                        $result->bind_param('is', $student_databaseID, $student['session']);
-                        $result->execute();
-                        $result->store_result();
-                        $result->bind_result($moduleid, $attempt);
-                        while ($result->fetch()) {
-                            if (isset($module_list[$moduleid])) {
-                                $students[$student['sid']]['modules'][$moduleid][] = $attempt;
-                            }
-                        }
-                        $result->close();
-                    }
-                }
-
-                foreach ($lines as $separate_line) {
-                    $fields = explode(',', $separate_line);
-                    if (!stristr($fields[0], 'ID') and !stristr($fields[0], 'Student ID')) {
-                        $sid = trim($fields[0]);
-                        $module = trim($fields[1]);
-                        $session = trim($fields[2]);
-                        if (isset($fields[3])) {
-                            $attempt = trim($fields[3]);
-                        } else {
-                            $attempt = 1;
-                        }
-
-                        if (isset($module_list[$module])) {
-                            $require_insert = true;
-                            if (isset($students[$sid]['modules'][$module])) {
-                                foreach ($students[$sid]['modules'][$module] as $individual_attempt) {
-                                    if ($individual_attempt == $attempt) {
-                                        $require_insert = false;
-                                    }
-                                }
-                            }
-                            if ($require_insert) {
-                                if (isset($students[$sid]['dbID'])) {
-                                    $success = UserUtils::add_student_to_module($students[$sid]['dbID'], $module_list[$module], $attempt, $session, $mysqli);
-                                    if ($success) {
-                                        $modulesAdded++;
-                                    }
-                                } else {
-                                    $missing_users[$sid]['module'][] = $module;
-                                }
-                            }
-                        } else {
-                            $unknow_ModuleID[] = $module;
-                        }
-                    }
-                }
-          }
-          unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
-
-          echo "<table>\n";
-            echo '<tr><td>' . $string['enrolementsperformed'] . "</td><td>$modulesAdded</td></tr>\n";
-          echo '<tr><td>' . $string['missingusers'] . '</td><td><div>' . count($missing_users) . "<div>\n";
-          if (count($missing_users) > 0) {
-              echo '<ul>';
-          }
-          foreach ($missing_users as $sid => $module) {
-              echo "<li>$sid<br />";
-              foreach ($module['module'] as $moduleid) {
-                  echo "$moduleid<br />";
-              }
-              echo '</li>';
-          }
-          if (count($missing_users) > 0) {
-              echo '</ul>';
-          }
-            echo "</td></tr>\n";
-
-          echo '<tr><td>' . $string['missingmodules'] . '</td><td><div>' . count($unknow_ModuleID) . "</div>\n<ul>";
-          if (count($unknow_ModuleID) > 0) {
-              echo '<ul>';
-          }
-          foreach ($unknow_ModuleID as $moduleID) {
-              echo "<li>$moduleID</li>";
-          }
-          if (count($unknow_ModuleID) > 0) {
-              echo '</ul>';
-          }
-            echo "</td></tr>\n";
-            echo "</table>\n";
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['admintools'], '../admin/index.php');
+$breadcrumb->addBreadcrumb($string['usermanagement'], '../users/search.php');
+$breadcrumb->addCurrentPage($string['importmodules']);
+echo $render->render_admin_navigation($breadcrumb->getData($render));
+$file_problem = false;
+echo '<br /><br />';
+if (isset($_POST['submit'])) {
+    if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
+        if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv')) {
+            echo uploadError($_FILES['csvfile']['error']);
+            exit;
+        } else {
             ?>
-      </div>
-      </td>
-      </tr>
-      </table>
-      </div>
-      </td></tr>
-      </table>
-          <?php
-            $mysqli->close();
-            exit();
-      } else {
-          $file_problem = true;
-      }
-  }
-    ?>
+            <table class="dialog_border" style="width:600px">
+            <tr>
+            <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules'] ?></td>
+            </tr>
+            <tr>
+            <td class="dialog_body">
+            <?php
+            // Get a list of modules held by ExamSys.
+            $module_list = [];
+            $result = $mysqli->prepare('SELECT DISTINCT id, moduleid FROM modules');
+            $result->execute();
+            $result->bind_result($idMod, $moduleid);
+            while ($result->fetch()) {
+                $module_list[$moduleid] = $idMod;
+            }
+            $result->close();
+
+            $modulesAdded = 0;
+            $missing_users = [];
+            $unknow_ModuleID = [];
+            $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
+
+            // Build an array of unique student names.
+            $students = [];
+            foreach ($lines as $separate_line) {
+                if (trim($separate_line) != '') {
+                    $fields = explode(',', $separate_line);
+
+                    $sid = trim($fields[0]);
+                    $session = trim($fields[2]);
+                    // Modules will be added later.
+
+                    $students[$sid]['sid'] = $sid;
+                    $students[$sid]['session'] = $session;
+                    $students[$sid]['modules'] = [];
+                }
+            }
+
+            // Query the modules for each student
+            foreach ($students as $student) {
+                $student_databaseID = UserUtils::studentid_exists($student['sid'], $mysqli);
+
+                if ($student_databaseID !== false) {
+                    $students[$student['sid']]['dbID'] = $student_databaseID;
+
+                    $result = $mysqli->prepare('SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND  userID = ? AND calendar_year = ?');
+                    $result->bind_param('is', $student_databaseID, $student['session']);
+                    $result->execute();
+                    $result->store_result();
+                    $result->bind_result($moduleid, $attempt);
+                    while ($result->fetch()) {
+                        if (isset($module_list[$moduleid])) {
+                            $students[$student['sid']]['modules'][$moduleid][] = $attempt;
+                        }
+                    }
+                    $result->close();
+                }
+            }
+
+            foreach ($lines as $separate_line) {
+                $fields = explode(',', $separate_line);
+                if (!stristr($fields[0], 'ID') and !stristr($fields[0], 'Student ID')) {
+                    $sid = trim($fields[0]);
+                    $module = trim($fields[1]);
+                    $session = trim($fields[2]);
+                    if (isset($fields[3])) {
+                        $attempt = trim($fields[3]);
+                    } else {
+                        $attempt = 1;
+                    }
+
+                    if (isset($module_list[$module])) {
+                        $require_insert = true;
+                        if (isset($students[$sid]['modules'][$module])) {
+                            foreach ($students[$sid]['modules'][$module] as $individual_attempt) {
+                                if ($individual_attempt == $attempt) {
+                                    $require_insert = false;
+                                }
+                            }
+                        }
+                        if ($require_insert) {
+                            if (isset($students[$sid]['dbID'])) {
+                                $success = UserUtils::add_student_to_module($students[$sid]['dbID'], $module_list[$module], $attempt, $session, $mysqli);
+                                if ($success) {
+                                    $modulesAdded++;
+                                }
+                            } else {
+                                $missing_users[$sid]['module'][] = $module;
+                            }
+                        }
+                    } else {
+                        $unknow_ModuleID[] = $module;
+                    }
+                }
+            }
+        }
+        unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
+
+        echo "<table>\n";
+        echo '<tr><td>' . $string['enrolementsperformed'] . "</td><td>$modulesAdded</td></tr>\n";
+        echo '<tr><td>' . $string['missingusers'] . '</td><td><div>' . count($missing_users) . "<div>\n";
+        if (count($missing_users) > 0) {
+            echo '<ul>';
+        }
+        foreach ($missing_users as $sid => $module) {
+            echo "<li>$sid<br />";
+            foreach ($module['module'] as $moduleid) {
+                echo "$moduleid<br />";
+            }
+            echo '</li>';
+        }
+        if (count($missing_users) > 0) {
+            echo '</ul>';
+        }
+        echo "</td></tr>\n";
+
+        echo '<tr><td>' . $string['missingmodules'] . '</td><td><div>' . count($unknow_ModuleID) . "</div>\n<ul>";
+        if (count($unknow_ModuleID) > 0) {
+            echo '<ul>';
+        }
+        foreach ($unknow_ModuleID as $moduleID) {
+            echo "<li>$moduleID</li>";
+        }
+        if (count($unknow_ModuleID) > 0) {
+            echo '</ul>';
+        }
+        echo "</td></tr>\n";
+        echo "</table>\n";
+        ?>
+        </div>
+        </td>
+        </tr>
+        </table>
+        </div>
+        </td></tr>
+        </table>
+        <?php
+        $mysqli->close();
+        exit();
+    } else {
+        $file_problem = true;
+    }
+}
+?>
 <table style="width:730px" class="dialog_border">
 <tr>
   <td style="width:56px; background-color:white"><img src="../artwork/modules_import.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importmodules']; ?></td>
