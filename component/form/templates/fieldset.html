@@ -15,24 +15,22 @@ along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 #}
 
 {#
-This template page that displays component previews
+This template renders a fieldset.
 
 @author Neill Magill <neill.magill@nottingham.ac.uk>
 @copyright 2026 The University of Nottingham
 
-Required data variables:
-
-* collection - The name of the collection
-* component - The name of the component
-
-Required language strings:
-
-* description
+Intended component: \component\form\Fieldset
 #}
-<p>{{data.description}}</p>
-<iframe
-    class="example-component"
-    src="preview_component.php?collection={{data.collection}}&component={{data.component}}"
-    title="{{data.description}}"
+<fieldset
+    id="{{data.id|escape('html_attr')}}"
+    class="component-form-input{% if data.classes %}{% for class in data.classes %} {{class|escape('html_attr')}}{% endfor %}{% endif %}"
 >
-</iframe>
+    <legend>{{data.label}}</legend>
+    {% if data.description %}<div class="form-help">{{data.description}}</div>{% endif %}
+    <div class="fieldset-elements {{data.orientation|escape('html_attr')}}">
+        {% for option in data.options %}
+            {{ include(option.template, {'data': option, 'lang': lang}, with_context = false) }}
+        {% endfor %}
+    </div>
+</fieldset>

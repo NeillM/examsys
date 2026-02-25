@@ -31,7 +31,7 @@ Required language strings:
 
 breadcrumb
 #}
-<nav aria-label="{{lang.breadcrumb}}" class="component-breadcrumb">
+<nav aria-label="{{lang.breadcrumb|escape('html_attr')}}" class="component-breadcrumb">
     <ol>
         {% for breadcrumb in data.breadcrumbs %}
             <li>

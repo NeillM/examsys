@@ -1,0 +1,29 @@
+/**
+ * General styling that applies to all fieldsets.
+ */
+
+fieldset.component-form-input {
+    display: block;
+}
+
+.component-form-input>:first-child {
+    padding-right: 0.313rem;
+    width: 10rem;
+}
+
+.component-form fieldset>.fieldset-elements {
+    display: flex;
+}
+
+.component-form fieldset>.fieldset-elements.horizontal {
+    flex-flow: row wrap;
+    gap: 1rem;
+}
+
+.component-form fieldset>.fieldset-elements.horizontal .component-form-input>:first-child {
+    width: auto;
+}
+
+.component-form fieldset>.fieldset-elements.vertical {
+    flex-flow: column;
+}

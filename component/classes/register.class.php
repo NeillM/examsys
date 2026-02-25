@@ -35,6 +35,7 @@ class Register
      */
     protected static array $collections = [
         'breadcrumb',
+        'form',
         'tabs',
     ];
 

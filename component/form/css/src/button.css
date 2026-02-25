@@ -1,0 +1,33 @@
+/**
+ * General styling for button fields.
+ */
+
+input.component-form-button[type="button"],
+input.component-form-button[type="submit"],
+input.component-form-button[type="reset"] {
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+input.component-form-button[type="submit"] {
+    background-color: #316ac5;
+    color: #ffffff;
+}
+
+input.component-form-button[type="submit"]:hover {
+    background-color: #2857a4;
+}
+
+input.component-form-button[type="button"],
+input.component-form-button[type="reset"] {
+    background-color: #f0f0f0;
+    color: #333333;
+}
+
+input.component-form-button[type="button"]:hover,
+input.component-form-button[type="reset"]:hover {
+    background-color: #e0e0e0;
+}

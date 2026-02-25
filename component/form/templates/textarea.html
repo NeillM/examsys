@@ -1,0 +1,49 @@
+{# This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template renders a textarea.
+
+@author Neill Magill <neill.magill@nottingham.ac.uk>
+@copyright 2026 The University of Nottingham
+
+Intended component: \component\form\TextArea
+#}
+<div class="component-form-input">
+    <span class="form-label">
+        <label for="{{data.id|escape('html_attr')}}">{{data.label}}</label>
+        {% if data.description %}
+            <span id="{{data.id|escape('html_attr')}}-description" class="form-help">
+                {{data.description}}
+            </span>
+        {% endif %}
+    </span>
+    <span>
+        <textarea
+                id="{{data.id|escape('html_attr')}}"
+                name="{{data.name|escape('html_attr')}}"
+                {% if data.classes %}class="{% for class in data.classes %}{{class|escape('html_attr')}} {% endfor %}"{% endif %}
+                {% for attribute, value in data.attributes %}
+                    {% if value %}
+                        {{attribute}}="{{value|escape('html_attr')}}"
+                    {% else %}
+                        {{attribute}}
+                    {% endif %}
+                {% endfor %}
+                {% if data.description %}aria-describedby="{{data.id|escape('html_attr')}}-description"{% endif %}
+        >{{data.value}}</textarea>
+    </span>
+</div>

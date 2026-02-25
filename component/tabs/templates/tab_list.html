@@ -22,12 +22,12 @@ This template renders a tab.
 
 Intended component: \component\tabs\TabList
 #}
-{{ include('@tabs/tab_list_start.html', {'data': data, 'lang': lang}, with_context = false) }}
+{{ include('@tabs/tab_list_start.html', {'data': data, 'lang': lang, 'path': path}, with_context = false) }}
 
 {% for tab in data.tabs %}
-    {{ include('@tabs/tab_panel_start.html', {'data': tab, 'lang': lang}, with_context = false) }}
+    {{ include('@tabs/tab_panel_start.html', {'data': tab, 'lang': lang, 'path': path}, with_context = false) }}
     {{tab.content|raw}}
-    {{ include('@tabs/tab_panel_end.html', {'data': tab, 'lang': lang}, with_context = false) }}
+    {{ include('@tabs/tab_panel_end.html', {'data': tab, 'lang': lang, 'path': path}, with_context = false) }}
 {% endfor %}
 
-{{ include('@tabs/tab_list_end.html', {'data': data, 'lang': lang}, with_context = false) }}
+{{ include('@tabs/tab_list_end.html', {'data': data, 'lang': lang, 'path': path}, with_context = false) }}

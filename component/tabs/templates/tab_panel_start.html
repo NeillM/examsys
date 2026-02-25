@@ -23,8 +23,8 @@ This template renders opens a tab panel.
 Intended component: \component\tabs\Tab
 #}
 <div
-    id="tabpanel-{{data.id}}"
+    id="tabpanel-{{data.id|escape('html_attr')}}"
     role="tabpanel"
     tabindex="0"
-    aria-labelledby="{{data.id}}"
+    aria-labelledby="{{data.id|escape('html_attr')}}"
 >

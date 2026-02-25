@@ -1,0 +1,43 @@
+/**
+ * General styling for fields.
+ */
+
+.component-form-input {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.313rem;
+    margin-bottom: 0.313rem;
+}
+
+.component-form-input [disabled],
+.component-form-input [readonly] {
+    color: #575757;
+}
+
+.component-form-input .form-help:before {
+    /* The css will be located in the /component/css/component.css file, the path is relative to that. */
+    background-image: url('../../artwork/tooltip_icon.gif');
+    background-repeat: no-repeat;
+    content: '';
+    display: inline-block;
+    height: 0.875rem;
+    width: 0.875rem;
+}
+
+.component-form-input .form-label {
+    display: flex;
+    flex-flow: column;
+}
+
+.component-form-input .form-element:first-child {
+    text-align: right;
+}
+
+.component-form-input .form-help {
+    color: #575757;
+    font-size: 0.9em;
+}
+
+.component-form-input>.form-help {
+    margin-bottom: 0.626rem;
+}
