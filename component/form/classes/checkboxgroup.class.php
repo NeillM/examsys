@@ -66,7 +66,7 @@ class CheckboxGroup extends Fieldset
      * @param string $description The localised help text for the option (optional)
      * @return void
      */
-    public function adOption(string $value, string $label, string $description = '', bool $disabled = false): void
+    public function addOption(string $value, string $label, string $description = '', bool $disabled = false): void
     {
         $option = new Checkbox(
             id: $this->id . '-' . $value,
@@ -88,9 +88,9 @@ class CheckboxGroup extends Fieldset
             label: 'Checkbox group',
             default: 'opt3',
         );
-        $example->adOption('opt1', 'Option 1', disabled: true);
-        $example->adOption('opt2', 'Option 2', 'Option 2 has some additional description');
-        $example->adOption('opt3', 'Option 3');
+        $example->addOption('opt1', 'Option 1', disabled: true);
+        $example->addOption('opt2', 'Option 2', 'Option 2 has some additional description');
+        $example->addOption('opt3', 'Option 3');
         return $example;
     }
 }

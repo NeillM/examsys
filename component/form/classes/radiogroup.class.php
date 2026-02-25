@@ -67,7 +67,7 @@ class RadioGroup extends Fieldset
      * @param string $description The localised help text for the option (optional)
      * @return void
      */
-    public function adOption(string $value, string $label, string $description = '', bool $disabled = false): void
+    public function addOption(string $value, string $label, string $description = '', bool $disabled = false): void
     {
         $option = new Radio(
             id: $this->id . '-' . $value,
@@ -91,9 +91,9 @@ class RadioGroup extends Fieldset
             default: 'opt3',
             orientation: Fieldset::ORIENTATION_HORIZONTAL,
         );
-        $example->adOption('opt1', 'Option 1');
-        $example->adOption('opt2', 'Option 2', 'Option 2 has some additional description');
-        $example->adOption('opt3', 'Option 3', disabled: true);
+        $example->addOption('opt1', 'Option 1');
+        $example->addOption('opt2', 'Option 2', 'Option 2 has some additional description');
+        $example->addOption('opt3', 'Option 3', disabled: true);
         return $example;
     }
 }
