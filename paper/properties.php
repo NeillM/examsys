@@ -402,6 +402,7 @@ if (!$properties->canEditSecurity()) {
 <?php
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::PROPERTIES);
+  echo \component\Helper::getCSSString();
 ?>
 </head>
 <body>
@@ -411,19 +412,21 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu();
 // initial link of breadcrumb
-$links = ['/' => $string['home']];
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
 
 if ($folder) {
     // links of parent folders
     $folderName = folder_utils::get_folder_name($folder, $mysqli);
     foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
         $href = '/folder/index.php?folder=' . $parentId;
-        $links[$href] = $parentName;
+        $breadcrumb->addBreadcrumb($parentName, $href);
     }
 
     // link of current folder
     $href = '/folder/index.php?folder=' . $folder;
-    $links[$href] = !str_contains($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+    $foldername = !str_contains($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+    $breadcrumb->addBreadcrumb($foldername, $href);
 } else {
     if (is_null($module)) {
         // Get the modules from paper properties
@@ -432,21 +435,26 @@ if ($folder) {
     }
     // link to module
     $href = '/module/index.php?module=' . $module ;
-    $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
+    $breadcrumb->addBreadcrumb(
+        module_utils::get_moduleid_from_id($module, $mysqli),
+        $href
+    );
 
-    // link to module
+    // link to paper type for module.
     $href = '/paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
-    $links[$href] = Paper_utils::type_to_name($properties->get_paper_type(), $string);
+    $breadcrumb->addBreadcrumb(
+        Paper_utils::type_to_name($properties->get_paper_type(), $string),
+        $href
+    );
 }
 
 // link of current paper
 $href = '/paper/details.php?paperID=' . $paperID;
-$links[$href] = $properties->get_paper_title();
-$href = '/paper/properties.php?paperID=' . $paperID . '&caller=details&module=' . $module . '&folder=' . $folder;
-$links[$href] = $string['propertiestitle'];
+$breadcrumb->addBreadcrumb($properties->get_paper_title(), $href);
+$breadcrumb->addCurrentPage($string['propertiestitle']);
 
 // breadcrumb
-echo $render->render_admin_navigation($links);
+echo $render->render_admin_navigation($breadcrumb->getData($render));
 ?>
 </div>
 <form id="theform" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">

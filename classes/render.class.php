@@ -255,12 +255,10 @@ class render
     public function render_admin_navigation(array $links)
     {
         $path = $this->config->get('cfg_root_path');
-        $current = count($links) > 0 ? array_pop($links) : '';
 
         $data = [
             'path' => $path,
             'links' => $links,
-            'current' => $current,
         ];
 
         return $this->twig->render('admin/navigation.html', $data);

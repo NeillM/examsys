@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
+use component\breadcrumb\Breadcrumb;
+
 /**
  * Utility class for generating breadcrumb navigation data.
  * This class provides methods to create breadcrumb data for different types of pages.
@@ -31,6 +33,12 @@ class BreadcrumbData
     /** @var mysqli Database connection */
     protected $db;
 
+    /** @var Breadcrumb The breadcrumb to be output. */
+    protected Breadcrumb $breadcrumb;
+
+    /** @var string The root path of ExamSys */
+    protected string $path;
+
     /**
      * Constructor
      *
@@ -38,8 +46,11 @@ class BreadcrumbData
      */
     public function __construct(array $string)
     {
+        $config = Config::get_instance();
         $this->string = $string;
-        $this->db = Config::get_instance()->db;
+        $this->db = $config->db;
+        $this->breadcrumb = new Breadcrumb();
+        $this->path = $config->get('cfg_root_path');
     }
 
     /**
@@ -47,26 +58,24 @@ class BreadcrumbData
      *
      * @param array $breadcrumb The breadcrumb array to modify
      * @param string $folder Folder ID
-     * @return array Modified breadcrumb array
+     * @return void Modified breadcrumb array
      */
-    protected function addFolderLinks(array $breadcrumb, string $folder): array
+    protected function addFolderLinks(array $breadcrumb, string $folder): void
     {
         // Get folder name
         $folderName = folder_utils::get_folder_name($folder, $this->db);
 
         // Add parent folder links
         foreach (folder_utils::get_parent_list($folderName, UserObject::get_instance(), $this->db) as $parentId => $parentName) {
-            $href = '/folder/index.php?folder=' . $parentId;
-            $breadcrumb[$parentName] = $href;
+            $href = $this->path . '/folder/index.php?folder=' . $parentId;
+            $this->breadcrumb->addBreadcrumb($parentName, $href);
         }
 
         // Add current folder link
-        $href = '/folder/index.php?folder=' . $folder;
+        $href = $this->path . '/folder/index.php?folder=' . $folder;
         $currentFolderName = false === mb_strpos($folderName, ';') ?
             $folderName : mb_substr($folderName, mb_strrpos($folderName, ';') + 1);
-        $breadcrumb[$currentFolderName] = $href;
-
-        return $breadcrumb;
+        $this->breadcrumb->addBreadcrumb($currentFolderName, $href);
     }
 
     /**
@@ -75,21 +84,19 @@ class BreadcrumbData
      * @param array $breadcrumb The breadcrumb array to modify
      * @param string $module Module code
      * @param string $paperType Paper type
-     * @return array Modified breadcrumb array
      */
-    protected function addModuleAndPaperTypeLinks(array $breadcrumb, string $module, string $paperType): array
+    protected function addModuleAndPaperTypeLinks(array $breadcrumb, string $module, string $paperType): void
     {
         // Add module link
         $moduleId = module_utils::get_moduleid_from_id($module, $this->db);
-        $moduleHref = '/module/index.php?module=' . $module;
-        $breadcrumb[$moduleId] = $moduleHref;
+        $moduleHref = $this->path . '/module/index.php?module=' . $module;
+        $this->breadcrumb->addBreadcrumb($moduleId, $moduleHref);
 
         // Add paper type link
         $paperTypeName = Paper_utils::type_to_name($paperType, $this->string);
-        $paperTypeHref = '/paper/type.php?module=' . $module . '&type=' . $paperType;
-        $breadcrumb[$paperTypeName] = $paperTypeHref;
+        $paperTypeHref = $this->path . '/paper/type.php?module=' . $module . '&type=' . $paperType;
+        $this->breadcrumb->addBreadcrumb($paperTypeName, $paperTypeHref);
 
-        return $breadcrumb;
     }
 
     /**
@@ -100,7 +107,7 @@ class BreadcrumbData
      * @param string|null $module Module code
      * @param string|null $folder Folder name
      * @param string|null $currentPage Current page name (from language strings)
-     * @return array Breadcrumb data
+     * @return Breadcrumb Breadcrumb data
      */
     public function preparePaperBreadcrumb(
         int $paperID,
@@ -108,12 +115,13 @@ class BreadcrumbData
         ?string $module = null,
         ?string $folder = null,
         ?string $currentPage = null
-    ): array {
+    ): Breadcrumb {
         $breadcrumb = [];
 
         // Add home link
         // Note: All breadcrumb URLs are relative to the application root.
         // The render.class will prepend the base path when needed,
+        $this->breadcrumb->addBreadcrumb($this->string['home'], $this->path . '/intex.php');
         $breadcrumb[$this->string['home']] = '/';
 
         // Add navigation based on context (folder or module)
@@ -135,7 +143,7 @@ class BreadcrumbData
 
         // Add paper details link
         $paperTitle = $properties->get_paper_title();
-        $paperHref = '/paper/details.php?paperID=' . $paperID;
+        $paperHref = $this->path . '/paper/details.php?paperID=' . $paperID;
 
         // Only include necessary parameters in URLs as per application standards
         if ($module) {
@@ -145,13 +153,15 @@ class BreadcrumbData
             $paperHref .= '&folder=' . $folder;
         }
 
+        $this->breadcrumb->addBreadcrumb($paperTitle, $paperHref);
         $breadcrumb[$paperTitle] = $paperHref;
 
         // Add current page if provided
         if ($currentPage) {
+            $this->breadcrumb->addCurrentPage($currentPage);
             $breadcrumb[$currentPage] = '';
         }
 
-        return $breadcrumb;
+        return $this->breadcrumb;
     }
 }
