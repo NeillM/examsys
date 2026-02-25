@@ -23,9 +23,9 @@ This template renders the start of a form.
 Intended component: \component\form\Form
 #}
 <form
-        action="{{data.action}}"
-        method="{{data.method}}"
-        class="component-form{% for class in data.classes %} {{class}}{% endfor %}"
+        action="{{data.action|escape('html_attr')}}"
+        method="{{data.method|escape('html_attr')}}"
+        class="component-form{% for class in data.classes %} {{class|escape('html_attr')}}{% endfor %}"
         autocomplete="{%if data.autocomplete %}on{% else %}off{% endif %}"
-        {% if data.encode %}encode="{{data.encode}}"{% endif %}
+        {% if data.encode %}encode="{{data.encode|escape('html_attr')}}"{% endif %}
 >

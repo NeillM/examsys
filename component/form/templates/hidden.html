@@ -22,4 +22,9 @@ This template renders a hidden field.
 
 Intended component: \component\form\Hidden
 #}
-<input type="hidden" id="{{data.id}}" name="{{data.name}}" value="{{data.value}}">
+<input
+    type="hidden"
+    id="{{data.id|escape('html_attr')}}"
+    name="{{data.name|escape('html_attr')}}"
+    value="{{data.value|escape('html_attr')}}"
+>

@@ -23,8 +23,8 @@ This template renders a button type input.
 Intended component: \component\form\Button
 #}
 <input
-    type="{{data.type}}"
-    name="{{data.name}}"
-    value="{{data.value}}"
-    class="component-form-button {% for class in data.classes %} {{class}}{% endfor %}"
+    type="{{data.type|escape('html_attr')}}"
+    name="{{data.name|escape('html_attr')}}"
+    value="{{data.value|escape('html_attr')}}"
+    class="component-form-button {% for class in data.classes %} {{class|escape('html_attr')}}{% endfor %}"
 >

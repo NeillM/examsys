@@ -23,12 +23,12 @@ This template renders a fieldset.
 Intended component: \component\form\Fieldset
 #}
 <fieldset
-    id="{{data.id}}"
-    class="component-form-input{% if data.classes %}{% for class in data.classes %} {{class}}{% endfor %}{% endif %}"
+    id="{{data.id|escape('html_attr')}}"
+    class="component-form-input{% if data.classes %}{% for class in data.classes %} {{class|escape('html_attr')}}{% endfor %}{% endif %}"
 >
     <legend>{{data.label}}</legend>
     {% if data.description %}<div class="form-help">{{data.description}}</div>{% endif %}
-    <div class="fieldset-elements {{data.orientation}}">
+    <div class="fieldset-elements {{data.orientation|escape('html_attr')}}">
         {% for option in data.options %}
             {{ include(option.template, {'data': option, 'lang': lang}, with_context = false) }}
         {% endfor %}

@@ -24,29 +24,29 @@ Intended component: \component\form\Select
 #}
 <div class="component-form-input">
     <span class="form-label">
-        <label for="{{data.id}}">{{data.label}}</label>
+        <label for="{{data.id|escape('html_attr')}}">{{data.label}}</label>
         {% if data.description %}
-            <span id="{{data.id}}-description" class="form-help">
+            <span id="{{data.id|escape('html_attr')}}-description" class="form-help">
                 {{data.description}}
             </span>
         {% endif %}
     </span>
     <span>
         <select
-            id="{{data.id}}"
-            name="{{data.name}}"
-            {% if data.classes %}class="{% for class in data.classes %}{{class}} {% endfor %}"{% endif %}
+            id="{{data.id|escape('html_attr')}}"
+            name="{{data.name|escape('html_attr')}}"
+            {% if data.classes %}class="{% for class in data.classes %}{{class|escape('html_attr')}} {% endfor %}"{% endif %}
             {% for attribute, value in data.attributes %}
                 {% if value %}
-                    {{attribute}}="{{value}}"
+                    {{attribute}}="{{value|escape('html_attr')}}"
                 {% else %}
                     {{attribute}}
                 {% endif %}
             {% endfor %}
-            {% if data.description %}aria-describedby="{{data.id}}-description"{% endif %}
+            {% if data.description %}aria-describedby="{{data.id|escape('html_attr')}}-description"{% endif %}
         >
             {% for value, label in data.options %}
-                <option value="{{value}}"{% if data.value == value %} selected{% endif %}>{{label}}</option>
+                <option value="{{value|escape('html_attr')}}"{% if data.value == value %} selected{% endif %}>{{label}}</option>
             {% endfor %}
         </select>
     </span>

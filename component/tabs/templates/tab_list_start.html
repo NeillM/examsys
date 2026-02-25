@@ -24,12 +24,12 @@ This template renders start of a tab list.
 
 Intended component: \component\tabs\TabList
 #}
-<div class="component-tabs" data-orientation="{{data.orientation}}">
+<div class="component-tabs" data-orientation="{{data.orientation|escape('html_attr')}}">
     <div class="tab-area">
         <div
                 role="tablist"
-                aria-label="{{data.name}}"
-                aria-orientation="{{data.orientation}}"
+                aria-label="{{data.name|escape('html_attr')}}"
+                aria-orientation="{{data.orientation|escape('html_attr')}}"
         >
             {% for tab in data.tabs %}
             {{ include('@tabs/tab.html', {'data': tab, 'lang': lang}, with_context = false) }}

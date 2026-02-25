@@ -23,11 +23,11 @@ This template renders a tab.
 Intended component: \component\tabs\Tab
 #}
 <button
-    id="{{data.id}}"
+    id="{{data.id|escape('html_attr')}}"
     type="button"
     role="tab"
-    aria-selected="{{data.selected}}"
-    aria-controls="tabpanel-{{data.id}}"
+    aria-selected="{{data.selected|escape('html_attr')}}"
+    aria-controls="tabpanel-{{data.id|escape('html_attr')}}"
 >
     <span class="focus">{{data.name}}</span>
 </button>

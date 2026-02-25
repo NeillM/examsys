@@ -24,28 +24,28 @@ Intended component: \component\form\Input
 #}
 <div class="component-form-input">
     <span class="form-label">
-        <label for="{{data.id}}">{{data.label}}</label>
+        <label for="{{data.id|escape('html_attr')}}">{{data.label}}</label>
         {% if data.description %}
-            <span id="{{data.id}}-description" class="form-help">
+            <span id="{{data.id|escape('html_attr')}}-description" class="form-help">
                 {{data.description}}
             </span>
         {% endif %}
     </span>
     <span class="form-element">
         <input
-            type="{{data.type}}"
-            id="{{data.id}}"
-            name="{{data.name}}"
-            {% if data.value != '' %}value="{{data.value}}"{% endif %}
-            {% if data.classes %}class="{% for class in data.classes %}{{class}} {% endfor %}"{% endif %}
+            type="{{data.type|escape('html_attr')}}"
+            id="{{data.id|escape('html_attr')}}"
+            name="{{data.name|escape('html_attr')}}"
+            {% if data.value != '' %}value="{{data.value|escape('html_attr')}}"{% endif %}
+            {% if data.classes %}class="{% for class in data.classes %}{{class|escape('html_attr')}} {% endfor %}"{% endif %}
             {% for attribute, value in data.attributes %}
                 {% if value != '' %}
-                    {{attribute}}="{{value}}"
+                    {{attribute}}="{{value|escape('html_attr')}}"
                 {% else %}
                     {{attribute}}
                 {% endif %}
             {% endfor %}
-            {% if data.description %}aria-describedby="{{data.id}}-description"{% endif %}
+            {% if data.description %}aria-describedby="{{data.id|escape('html_attr')}}-description"{% endif %}
         >
         <span class="validity"></span>
     </span>
