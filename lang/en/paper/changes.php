@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
-require $cfg_web_root . 'lang/' . $language . '/include/paper_types.php';
+require __DIR__ . '/properties.php';
 
 $string['author'] = 'Author';
 $string['changes'] = 'Changes';
