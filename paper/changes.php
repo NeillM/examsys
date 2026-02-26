@@ -133,7 +133,6 @@ echo $render->render_admin_navigation($breadcrumb->getData($render));
 ?>
 <h1><?php echo $string['changesheading'] ?></h1>
 <div id="content">
-<table cellspacing="0" cellpadding="2" border="0" style="width:100%">
 <?php
 $modules = module_utils::get_module_list_by_id($mysqli);
 
@@ -160,7 +159,11 @@ $results->close();
 
 $folders = folder_utils::get_all_folders($mysqli);
 
-echo '<tr><th>' . $string['part'] . '</th><th>' . $string['old'] . '</th><th>' . $string['new'] . '</th><th>' . $string['date'] . '</th><th>' . $string['author'] . '</th></tr>';
+$table = new \component\table\Table(
+    headings: [$string['part'], $string['old'], $string['new'], $string['date'], $string['author']],
+    highlight: false,
+);
+
 // Changes retrieved at beginning of file
 $rows = count($changes);
 for ($i = 0; $i < $rows; $i++) {
@@ -240,10 +243,17 @@ for ($i = 0; $i < $rows; $i++) {
     if (isset($string[$part])) {
         $part = $string[$part];
     }
-    echo '<tr><td>' . ucfirst((string) $part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_very_short_datetime_php'), $changes[$i]['date']) . '</td><td>' . $changes[$i]['title'] . ' ' . $changes[$i]['surname'] . "</td><tr>\n";
+
+    $table->addRow([
+        ucfirst((string) $part),
+        $old,
+        $new,
+        date($configObject->get('cfg_very_short_datetime_php'), $changes[$i]['date']),
+        $changes[$i]['title'] . ', ' . $changes[$i]['surname'],
+    ]);
 }
+$render->renderComponent($table);
 ?>
-</table>
 </div>
 <?php
 
@@ -253,6 +263,7 @@ $scripts = Helper::combineJS(
         '/js/paperpropertiesinit.min.js',
     ],
     $breadcrumb->getJavascriptForFooter(),
+    $table->getJavascriptForFooter(),
 );
 $render->render(
     [
