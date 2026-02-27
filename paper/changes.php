@@ -38,17 +38,6 @@ $folder = param::optional('folder', null, param::INT, param::FETCH_GET);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-// Build up a list of all past reviewers and labs for the 'changes' tab
-$changed_reviewers = [];
-$changed_labs = [];
-
-$logger = new Logger($mysqli);
-
-$formatter = new PaperChangesFormatter($string);
-
-// Get the changes to be used later
-$changes = $logger->get_changes('Paper', $paperID, $formatter->getLoggerCallbacks());
-
 $render = new render($configObject);
 
 // Output the html header.
@@ -102,15 +91,15 @@ $table = new \component\table\Table(
     highlight: false,
 );
 
-// Changes retrieved at beginning of file
-$rows = count($changes);
-for ($i = 0; $i < $rows; $i++) {
-    $part = $changes[$i]['part'];
+$formatter = new PaperChangesFormatter($string);
 
-    $old = $changes[$i]['old'];
-    $new = $changes[$i]['new'];
+$logger = new Logger($mysqli);
+$changes = $logger->get_changes('Paper', $paperID, $formatter->getLoggerCallbacks());
 
-    [$old, $new] = $formatter->format($part, $old, $new);
+foreach ($changes as $change) {
+    $part = $change['part'];
+
+    [$old, $new] = $formatter->format($part, $change['old'], $change['new']);
 
     if (isset($string[$part])) {
         $part = $string[$part];
@@ -120,8 +109,8 @@ for ($i = 0; $i < $rows; $i++) {
         ucfirst((string) $part),
         $old,
         $new,
-        date($configObject->get('cfg_very_short_datetime_php'), $changes[$i]['date']),
-        $changes[$i]['title'] . ' ' . $changes[$i]['surname'],
+        date($configObject->get('cfg_very_short_datetime_php'), $change['date']),
+        $change['title'] . ' ' . $change['surname'],
     ]);
 }
 $render->renderComponent($table);
