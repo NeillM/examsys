@@ -71,18 +71,6 @@ $breadcrumb = $breadcrumbData->preparePaperBreadcrumb(
 );
 echo $render->render_admin_navigation($breadcrumb->getData($render));
 
-$render->render(
-    [
-        'heading' => $string['changesheading'],
-        'class' => 'changes',
-    ],
-    [],
-    'paper/properties_heading.html',
-);
-
-?>
-<div id="content">
-<?php
 $modules = module_utils::get_module_list_by_id($mysqli);
 
 $table = new \component\table\Table(
@@ -113,10 +101,19 @@ foreach ($changes as $change) {
         $change['title'] . ' ' . $change['surname'],
     ]);
 }
-$render->renderComponent($table);
-?>
-</div>
-<?php
+
+$render->render(
+    data: [
+        'changes' => $table->getData($render),
+        'header' => [
+            'heading' => $string['changesheading'],
+            'class' => 'changes',
+        ],
+        'paperurl' => 'details.php?paperID=' . $paperID . '&module=' . $module . '&folder=' . $folder,
+    ],
+    lang: Helper::combineLang($string, $table),
+    template: 'paper/changes.html',
+);
 
 // Output the footer.
 $scripts = Helper::combineJS(

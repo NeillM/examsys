@@ -30,6 +30,7 @@ $string['new'] = 'New';
 $string['old'] = 'Old';
 $string['part'] = 'Part';
 $string['retired'] = 'Retired';
+$string['returntopaper'] = 'Close';
 $string['startdate'] = 'Start Date';
 $string['title'] = 'Paper changes';
 $string['unknown'] = 'Unknown';
