@@ -39,7 +39,11 @@ Intended component: \component\table\Table
         {% for row in data.rows %}
             <tr>
                 {% for column in row %}
-                    <td>{{column}}</td>
+                    {% if data.escape %}
+                        <td>{{column}}</td>
+                    {% else %}
+                        <td>{{column|raw}}</td>
+                    {% endif %}
                 {% endfor %}
             </tr>
         {% endfor %}

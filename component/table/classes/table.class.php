@@ -40,6 +40,9 @@ class Table implements Component
      * @param array $headings The localised names of the columns.
      * @param string $caption The caption for the table (optional)
      * @param array $classes The classes for the table (optional)
+     * @param bool $escape Flags if the body cells should be escaped (default: true)
+     *                     If you do not escape the content you are responsible for ensuring it is appropriately
+     *                     escaped before adding it to the table.
      * @param bool $highlight Flags if we should highlight the row a user is hovering over (default: true)
      * @param string $id The id of the table (optional)
      */
@@ -47,6 +50,7 @@ class Table implements Component
         protected array $headings,
         protected string $caption = '',
         protected array $classes = [],
+        protected bool $escape = true,
         protected bool $highlight = true,
         protected string $id = '',
     ) {
@@ -85,6 +89,7 @@ class Table implements Component
         return [
             'caption' => $this->caption,
             'classes' => $this->classes,
+            'escape' => $this->escape,
             'headings' => $this->headings,
             'highlight' => $this->highlight,
             'id' => $this->id,

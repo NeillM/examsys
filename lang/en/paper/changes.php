@@ -18,15 +18,18 @@
 require __DIR__ . '/properties.php';
 
 $string['author'] = 'Author';
+$string['borderline'] = 'Borderline Method';
 $string['changes'] = 'Changes';
 $string['changesheading'] = 'List of changes to the current paper.';
 $string['date'] = 'Date';
 $string['enddate'] = 'End Date';
 $string['externalreviewdeadline'] = 'External Review Deadline';
 $string['internalreviewdeadline'] = 'Internal Review Deadline';
+$string['na'] = 'N/A';
 $string['new'] = 'New';
 $string['old'] = 'Old';
 $string['part'] = 'Part';
 $string['retired'] = 'Retired';
 $string['startdate'] = 'Start Date';
 $string['title'] = 'Paper changes';
+$string['unknown'] = 'Unknown';

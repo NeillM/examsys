@@ -101,3 +101,29 @@ extarea, input[type=text], select, textarea, input[type=password] {
     height: 500px;
     margin: 0 2%;
 }
+
+.color-change {
+    border: 0.063rem solid #C0C0C0;
+    height: 0.938rem;
+    width: 3.125rem;
+}
+
+.properties-tab-header {
+    align-items: center;
+    background-color: #c2d5f3;
+    background-position-x: 0.625rem;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: 2.125rem 2.125rem;
+    display: flex;
+    font-size: 110%;
+    margin: 0;
+    min-height: 3.063rem;
+    padding: 0 0 0 3.375rem;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.properties-tab-header.changes {
+    background-image: url('../artwork/version_icon.png');
+}

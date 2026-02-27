@@ -135,6 +135,30 @@ class folder_utils
     }
 
     /**
+     * Gets the names of a set of folders.
+     *
+     * @param array $ids The database ids of the folders we want to get names for (they must not be user entered values)
+     * @return array
+     */
+    public static function getFolderNames(array $ids): array
+    {
+        $folders = [];
+
+        $in = implode(',', $ids);
+
+        $sql = "SELECT id, name FROM folders WHERE id IN ($in)";
+        $result = Config::get_instance()->db->prepare($sql);
+        $result->execute();
+        $result->bind_result($id, $name);
+        while ($result->fetch()) {
+            $folders[$id] = $name;
+        }
+        $result->close();
+
+        return $folders;
+    }
+
+    /**
      * Returns a the userID of a folder.
      *
      * @param string $folderID - ID of the folder.
