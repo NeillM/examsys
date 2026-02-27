@@ -50,7 +50,7 @@ class BreadcrumbData
         $this->string = $string;
         $this->db = $config->db;
         $this->breadcrumb = new Breadcrumb();
-        $this->path = $config->get('cfg_root_path');
+        $this->path = (string) $config->get('cfg_root_path');
     }
 
     /**
