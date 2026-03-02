@@ -120,7 +120,7 @@ class BreadcrumbData
         // Add home link
         // Note: All breadcrumb URLs are relative to the application root.
         // The render.class will prepend the base path when needed,
-        $this->breadcrumb->addBreadcrumb($this->string['home'], $this->path . '/intex.php');
+        $this->breadcrumb->addBreadcrumb($this->string['home'], $this->path . '/index.php');
         $breadcrumb[$this->string['home']] = '/';
 
         // Add navigation based on context (folder or module)
