@@ -191,49 +191,15 @@ echo draw_toprightmenu();
 ?>
 <div id="content">
 <?php
-// initial link of breadcrumb
-$breadcrumb = new \component\breadcrumb\Breadcrumb();
-$breadcrumb->addBreadcrumb($string['home'], '../index.php');
-
-if ($folder) {
-    // links of parent folders
-    $folderName = folder_utils::get_folder_name($folder, $mysqli);
-    foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
-        $href = '/folder/index.php?folder=' . $parentId;
-        $breadcrumb->addBreadcrumb($parentName, $href);
-    }
-
-    // link of current folder
-    $href = '/folder/index.php?folder=' . $folder;
-    $foldername = !str_contains($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
-    $breadcrumb->addBreadcrumb($foldername, $href);
-} else {
-    if (is_null($module)) {
-        // Get the modules from paper properties
-        $modules = Paper_utils::get_modules($paperID, $mysqli);
-        $module = key($modules);
-    }
-    // link to module
-    $href = '/module/index.php?module=' . $module ;
-    $breadcrumb->addBreadcrumb(
-        module_utils::get_moduleid_from_id($module, $mysqli),
-        $href
-    );
-
-    // link to paper type for module.
-    $href = '/paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
-    $breadcrumb->addBreadcrumb(
-        Paper_utils::type_to_name($properties->get_paper_type(), $string),
-        $href
-    );
-}
-
-// link of current paper
-$href = '/paper/details.php?paperID=' . $paperID;
-$breadcrumb->addBreadcrumb($properties->get_paper_title(), $href);
-$breadcrumb->addCurrentPage($string['propertiestitle']);
-
-// breadcrumb
+// Output the breadcrumbs.
+$breadcrumbData = new BreadcrumbData($string);
+$breadcrumb = $breadcrumbData->preparePaperBreadcrumb(
+    $paperID,
+    $properties,
+    $module,
+    $folder,
+    $string['propertiestitle'],
+);
 echo $render->render_admin_navigation($breadcrumb->getData($render));
 ?>
 </div>
