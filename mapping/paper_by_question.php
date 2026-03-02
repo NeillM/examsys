@@ -279,7 +279,6 @@ if ($folderID != '') {
             echo "<tr><td colspan=\"5\" style=\"height:3px\"></td></tr>\n";
         }
     }
-    $mysqli->close();
     ?>
 </table>
 </div>
@@ -291,6 +290,7 @@ $miscdataset['attributes']['paper'] = $paperID;
 $miscdataset['attributes']['folder'] = $folderID;
 $miscdataset['attributes']['module'] = $moduleID;
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

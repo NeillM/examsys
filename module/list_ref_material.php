@@ -110,7 +110,6 @@ foreach ($reference_materials as $id => $details) {
     echo "<tr id=\"$id\" class=\"l\"><td class=\"icon\">" . $details['title'] . '</td><td>' . $details['modules'] . "</td></tr>\n";
 }
 
-$mysqli->close();
 ?>
 </tbody>
 </table>
@@ -122,6 +121,7 @@ $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['module'] =  $modID;
 $render->render($dataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

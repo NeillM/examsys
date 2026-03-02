@@ -393,8 +393,6 @@ if (isset($_GET['submit'])) {
     if ($hits == 0) {
         echo $notice->info_strip($string['noquestionsfound'], 100);
     }
-
-    $mysqli->close();
 }
 ?>
 </div>
@@ -403,6 +401,7 @@ $render = new render($configObject);
 $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $render->render($dataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/questionsearchinit.min.js"></script>
 </body>

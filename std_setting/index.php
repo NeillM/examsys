@@ -150,7 +150,6 @@ echo draw_toprightmenu(97);
 <div id="content">
 <?php
 echo $reviews_html;
-$mysqli->close();
 ?>
 </tbody>
 </table>
@@ -162,6 +161,7 @@ $dataset['attributes']['paperid'] = $paperID;
 $dataset['attributes']['module'] = $module;
 $dataset['attributes']['folder'] = $folder;
 $render->render($dataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src='../js/stdsetinit.min.js'></script>
 </body>

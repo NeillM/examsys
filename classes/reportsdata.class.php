@@ -34,6 +34,7 @@ class ReportsData extends AbstractPageData
         return [
             '/css/reports_form.css',
             '/css/breadcrumb.css',
+            \component\Helper::getCSSPath(),
         ];
     }
 
@@ -111,7 +112,7 @@ class ReportsData extends AbstractPageData
             'paperID' => $paperID,
             'module' => $module,
             'folder' => $folder,
-            'breadcrumb_links' => $breadcrumbLinks,
+            'breadcrumb' => $breadcrumbLinks,
             'paper_title' => $properties->get_paper_title(),
             'paper_type' => $paperType,
             'start_date_selector' => $startDateSelector,

@@ -182,7 +182,6 @@ echo draw_toprightmenu(243);
                 }
                 $result->close();
 
-                $mysqli->close();
                 ?>
                 <tr>
                     <td colspan="9" style="text-align:center">
@@ -199,6 +198,7 @@ $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src='../js/clearguestusersinit.min.js'></script>
 </body>

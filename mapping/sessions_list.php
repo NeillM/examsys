@@ -118,8 +118,6 @@ if (!empty($objsBySession) and isset($objsBySession[$module])) {
         $id++;
     }
 }
-
-  $mysqli->close();
 ?>
 </table>
 </div>
@@ -139,6 +137,7 @@ $render->render($miscdataset, [], 'dataset.html');
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 </body>
 </html>

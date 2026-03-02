@@ -91,8 +91,6 @@ $result = $mysqli->prepare("UPDATE properties SET folder = '' WHERE folder = ?")
 $result->bind_param('i', $_POST['folderID']);
 $result->execute();
 $result->close();
-
-$mysqli->close();
 ?>
 <!DOCTYPE html>
 <html>
@@ -132,6 +130,7 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['parent'] = $parent;
 $miscdataset['attributes']['parentid'] = $parentID;
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/deletefolderinit.min.js"></script>
 </body>

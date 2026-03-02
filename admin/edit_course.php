@@ -118,9 +118,6 @@ $result->close();
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input type="button" class="cancel" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" /></p>
   </form>
   </div>
-<?php
-$mysqli->close();
-?>
 </div>
 <?php
 // JS utils dataset.
@@ -131,6 +128,7 @@ $render->render($jsdataset, [], 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['posturl'] = 'do_edit_course.php';
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/courseinit.min.js"></script>
 </body>

@@ -1,3 +1,40 @@
+{# This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+{#
+This template renders page headings.
+
+@author Neill Magill <neill.magill@nottingham.ac.uk>
+@copyright 2016 The University of Nottingham
+
+Required data variables:
+
+* css - Array of paths to css files required byy the page (relative to the root of ExamSys)
+* editor - The text editor configured for use (optional)
+* mathjax - boolean Flags if MathJax is enabled (optional)
+* metadata - an array with two keys (optional)
+** id - the value of http-equiv
+** value - the value of content
+* scripts - Array of paths to JavaScript files required by the page (relative to the root of ExamSys)
+* texteditor - The output of a texteditor plugins get_header_file() method (optional)
+* three - boolean Flags if Three is enabled (optional)
+
+Required language strings:
+
+* title - The title of the page
+#}
 <!DOCTYPE html>
 <html lang="{{language}}">
     <head>

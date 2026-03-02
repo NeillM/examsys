@@ -44,7 +44,18 @@ class render
     public function __construct(protected $config, $templatedir = null)
     {
         if (is_null($templatedir)) {
-            $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');
+            // Include the main template directory.
+            $paths = [
+                dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'
+            ];
+
+            // Include the paths for the configured text editor.
+            $paths = array_merge(
+                $paths,
+                \plugins\plugins_texteditor::get_editor()->get_render_paths()
+            );
+
+            $loader = new \Twig\Loader\FilesystemLoader($paths);
         } else {
             $loader = new \Twig\Loader\FilesystemLoader($templatedir);
         }
@@ -255,12 +266,10 @@ class render
     public function render_admin_navigation(array $links)
     {
         $path = $this->config->get('cfg_root_path');
-        $current = count($links) > 0 ? array_pop($links) : '';
 
         $data = [
             'path' => $path,
             'links' => $links,
-            'current' => $current,
         ];
 
         return $this->twig->render('admin/navigation.html', $data);

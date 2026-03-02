@@ -1,9 +1,4 @@
 <div class="head_title">
     <div><img src="{{ path }}/artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-    <div class="breadcrumb">
-        {% for href, title in links %}
-        <a href="{{ path }}{{ href }}">{{ title }}</a>
-        {% endfor %}
-        <span aria-current=page>{{ current }}</span>
-    </div>
+    {{ include('@breadcrumb/breadcrumb.html', {'data': links, 'lang': lang, 'path': path}, with_context = false) }}
 </div>

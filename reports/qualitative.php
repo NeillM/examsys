@@ -183,7 +183,6 @@ if ($comment_flag == 0) {
 } else {
     echo '<div class="comments">' . sprintf($string['comments'], $occurrence_comments) . "</div>\n";
 }
-  $mysqli->close();
 ?>
 </div>
 <?php
@@ -192,6 +191,7 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render = new render($configObject);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/qualitativeinit.min.js"></script>
 </body>

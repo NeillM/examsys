@@ -210,6 +210,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
         <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
         <link rel="stylesheet" type="text/css" href="../css/list.css" />
         <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+        <?php echo \component\Helper::getCSSString(); ?>
         <style type="text/css">
             a {color:black}
             .coltitle {background-color:#F1F5FB; color:black}
@@ -337,7 +338,6 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                                     $x++;
                                 endwhile;
                                 $stmt->close();
-                                $mysqli->close();
                             }
                             ?>
                         </tbody>
@@ -374,6 +374,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
             $jsdataset['name'] = 'jsutils';
             $jsdataset['attributes']['xls'] = json_encode($string);
             $render->render($jsdataset, [], 'dataset.html');
+            $mysqli->close();
             ?>
         <script src="../js/usersearchinit.min.js"></script>
     </body>

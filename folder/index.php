@@ -268,7 +268,6 @@ if ($results->num_rows > 0) {
     $results->close();
 }
 
-$mysqli->close();
 ?>
 </form>
 
@@ -283,6 +282,7 @@ $miscdataset = [
   'attributes' => ['xls' => json_encode($string)],
 ];
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/folderinit.min.js"></script>
 </body>

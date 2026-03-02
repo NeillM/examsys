@@ -300,7 +300,12 @@ abstract class plugins_texteditor extends \plugins\plugins
     public static function get_editor()
     {
         $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-        $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+        if (!empty($texteditorplugin_name)) {
+            $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+        } else {
+            // The text editor plugins are not currently configured, so we need to fall back to the plain text editor.
+            $texteditorpluginns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
+        }
         return new $texteditorpluginns();
     }
 

@@ -301,7 +301,6 @@ if (isset($_POST) and count($_POST) > 0) {
     ?>
   </form>
     <?php
-    $mysqli->close();
 
     // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
@@ -318,6 +317,7 @@ if (isset($_POST) and count($_POST) > 0) {
     $miscdataset['attributes']['retry'] = $configObject->get_setting('core', 'paper_autosave_retrylimit');
     $miscdataset['attributes']['backoff'] = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
     $render->render($miscdataset, [], 'dataset.html');
+    $mysqli->close();
     ?>
 
 </body>

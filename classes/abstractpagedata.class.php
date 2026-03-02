@@ -75,7 +75,7 @@ abstract class AbstractPageData
     public function prepareHeaderData(): array
     {
         return [
-            'css' => $this->getCssFiles(),
+            'css' => $this->getCssFiles() + [\component\Helper::getCSSPath()],
             'metadata' => [],
             'mathjax' => $this->config->get_setting('core', 'cfg_mathjax_path'),
             'three' => $this->config->get_setting('core', 'cfg_three_path'),

@@ -439,8 +439,6 @@ if (!isset($_POST['submit'])) {
 
     echo "<body class='complete'><p>" . sprintf($string['success'], $properties->get_paper_title()) . "</p>\n";
     echo '<p><input type="button" value="' . $string['close'] . '" class="cancel" id="close" /><input type="button" value="' . $string['gotopaper'] . "\" class=\"ok\" id=\"gotopaper\"data-paperid='$property_id' /></p>\n";
-
-    $mysqli->close();
 }
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
@@ -449,6 +447,7 @@ $render->render($miscdataset, [], 'dataset.html');// JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/questionlinkinit.min.js"></script>
 </body>

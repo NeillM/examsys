@@ -42,7 +42,8 @@ $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css"
                     .existing {color:#808080}
                     .added {color:black}
                     .failed {color:#C00000}
-                </style>';
+                </style>'
+    . \component\Helper::getCSSString();
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <body>
@@ -52,13 +53,15 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <div id="content" class="content">
 <?php
-  echo $render->render_admin_navigation([
-    '/' => $string['home'],
-    '/admin/index.php' => $string['admintools'],
-    '/admin/list_courses.php' => $string['courses'],
-    '/users/bulk_import_courses.php' => $string['bulkcourseimport'],
-  ]);
-    ?>
+
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
+$breadcrumb->addBreadcrumb($string['admintools'], '../admin/index.php');
+$breadcrumb->addBreadcrumb($string['courses'], '../admin/list_courses.ph');
+$breadcrumb->addCurrentPage($string['bulkcourseimport']);
+echo $render->render_admin_navigation($breadcrumb->getData($render));
+
+?>
 <br />
 <br />
 <?php

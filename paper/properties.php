@@ -356,17 +356,7 @@ function getSchools($staff_modules, $db)
 $option_no = 1;
 
 // Work out if any negative marking is used
-$neg_marking = false;
-$result = $mysqli->prepare('SELECT marks_incorrect FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ?');
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($marks_incorrect);
-while ($result->fetch()) {
-    if ($marks_incorrect < 0) {
-        $neg_marking = true;
-    }
-}
-$result->close();
+$neg_marking = $properties->isNegativelyMarked();
 
 // Load textual feedback
 $textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
@@ -394,46 +384,45 @@ if (!$properties->canEditSecurity()) {
     $sum_disabled = '';
 }
 
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('ExamSys: ' . $string['propertiestitle']); ?></title>
+// Output the html header.
+$render->render(
+    [
+        'css' => [
+                '/css/header.css',
+                '/css/properties.css',
+                '/css/warnings.css',
+                \component\Helper::getCSSPath(),
+        ],
+        'js' => [],
+        'texteditor' => $texteditorplugin->get_header_file(),
+    ],
+    [
+        'title' => $string['propertiestitle']
+    ],
+    'header.html'
+);
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-  <link rel="stylesheet" type="text/css" href="../css/header.css"/>
-  <link rel="stylesheet" type="text/css" href="../css/properties.css"/>
-  <link rel="stylesheet" type="text/css" href="../css/warnings.css"/>
-  <script id="rogoconfig" data-lang="<?php echo \LangUtils::getLang($cfg_web_root); ?>" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
-  <script src='../js/require.js'></script>
-  <script src='../js/main.min.js'></script>
-<?php
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::PROPERTIES);
+require '../include/toprightmenu.inc';
+echo draw_toprightmenu();
 ?>
-</head>
-<body>
 <div id="content">
 <?php
-require '../include/toprightmenu.inc';
-
-echo draw_toprightmenu();
 // initial link of breadcrumb
-$links = ['/' => $string['home']];
+$breadcrumb = new \component\breadcrumb\Breadcrumb();
+$breadcrumb->addBreadcrumb($string['home'], '../index.php');
 
 if ($folder) {
     // links of parent folders
     $folderName = folder_utils::get_folder_name($folder, $mysqli);
     foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
         $href = '/folder/index.php?folder=' . $parentId;
-        $links[$href] = $parentName;
+        $breadcrumb->addBreadcrumb($parentName, $href);
     }
 
     // link of current folder
     $href = '/folder/index.php?folder=' . $folder;
-    $links[$href] = !str_contains($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+    $foldername = !str_contains($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+    $breadcrumb->addBreadcrumb($foldername, $href);
 } else {
     if (is_null($module)) {
         // Get the modules from paper properties
@@ -442,21 +431,26 @@ if ($folder) {
     }
     // link to module
     $href = '/module/index.php?module=' . $module ;
-    $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
+    $breadcrumb->addBreadcrumb(
+        module_utils::get_moduleid_from_id($module, $mysqli),
+        $href
+    );
 
-    // link to module
+    // link to paper type for module.
     $href = '/paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
-    $links[$href] = Paper_utils::type_to_name($properties->get_paper_type(), $string);
+    $breadcrumb->addBreadcrumb(
+        Paper_utils::type_to_name($properties->get_paper_type(), $string),
+        $href
+    );
 }
 
 // link of current paper
 $href = '/paper/details.php?paperID=' . $paperID;
-$links[$href] = $properties->get_paper_title();
-$href = '/paper/properties.php?paperID=' . $paperID . '&caller=details&module=' . $module . '&folder=' . $folder;
-$links[$href] = $string['propertiestitle'];
+$breadcrumb->addBreadcrumb($properties->get_paper_title(), $href);
+$breadcrumb->addCurrentPage($string['propertiestitle']);
 
 // breadcrumb
-echo $render->render_admin_navigation($links);
+echo $render->render_admin_navigation($breadcrumb->getData($render));
 ?>
 </div>
 <form id="theform" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
@@ -1911,8 +1905,20 @@ $render->render($dataset, [], 'dataset.html');
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, [], 'dataset.html');
+
+// Output the footer.
+$scripts = \component\Helper::combineJS(
+    [
+        '/js/paperpropertiesinit.min.js',
+    ],
+    $breadcrumb->getJavascriptForFooter(),
+);
+$render->render(
+    [
+        'scripts' => $scripts,
+    ],
+    $string,
+    'footer.html'
+);
+
 $mysqli->close();
-?>
-<script src='../js/paperpropertiesinit.min.js'></script>
-</body>
-</html>

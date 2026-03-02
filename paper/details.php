@@ -408,6 +408,7 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_leadin_popup.css" />
+<?php echo \component\Helper::getCSSString() ?>
   <!--[if lt IE 8]>
   <style type="text/css">
     td.ie-fullwidth {
@@ -769,19 +770,21 @@ if ($properties->get_deleted() != '') {
   $exam_announcements = $exam_announcementObj->get_announcements();
 
   // initial link of breadcrumb
-  $links = ['/' => $string['home']];
+  $breadcrumb = new \component\breadcrumb\Breadcrumb();
+  $breadcrumb->addBreadcrumb($string['home'], '../index.php');
 
 if ($folder) {
     // links of parent folders
     $folderName = folder_utils::get_folder_name($folder, $mysqli);
     foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
         $href = '/folder/index.php?folder=' . $parentId;
-        $links[$href] = $parentName;
+        $breadcrumb->addBreadcrumb($parentName, $href);
     }
 
     // link of current folder
     $href = '/folder/index.php?folder=' . $folder;
-    $links[$href] = false === mb_strpos($folderName, ';') ? $folderName : mb_substr($folderName, mb_strrpos($folderName, ';') + 1);
+    $foldername = !str_contains($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+    $breadcrumb->addBreadcrumb($foldername, $href);
 } else {
     if (empty($module)) {
         // Get the modules from paper properties
@@ -790,19 +793,18 @@ if ($folder) {
     }
     // link to module
     $href = '/module/index.php?module=' . $module ;
-    $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
+    $breadcrumb->addBreadcrumb(module_utils::get_moduleid_from_id($module, $mysqli), $href);
 
     // link to module
     $href = '/paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
-    $links[$href] = Paper_utils::type_to_name($properties->get_paper_type(), $string);
+    $breadcrumb->addBreadcrumb(Paper_utils::type_to_name($properties->get_paper_type(), $string), $href);
 }
 
   // link of current paper
-  $href = '/paper/details.php?paperID=' . $paperID;
-  $links[$href] = $properties->get_paper_title();
+  $breadcrumb->addCurrentPage($properties->get_paper_title());
 
   // breadcrumb
-  echo $render->render_admin_navigation($links);
+  echo $render->render_admin_navigation($breadcrumb->getData($render));
 
   $title_class = 'page_title';
 if ($properties->get_retired() != '') {

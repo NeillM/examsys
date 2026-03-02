@@ -175,8 +175,8 @@ capture_log_data(
 if ($user_total == 0) {
     // No one has taken the paper yet.
     render_notattempted($paper_title, $mysqli, $string);
-    $mysqli->close();
     render_footer($paperID, $startdate, $enddate, $language, $cfg_root_path, $string, $render, $students_only);
+    $mysqli->close();
     exit;
 } elseif ($user_total == 1) {
     $cohort_percent = 100; // Moved here for header display

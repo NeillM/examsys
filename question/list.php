@@ -380,8 +380,6 @@ foreach ($table_order as $display => $col_width) {
     if (isset($_GET['ordering'])) {
         $stateutil->setState('ordering', $_GET['ordering'], $_SERVER['PHP_SELF']);
     }
-
-    $mysqli->close();
     ?>
 </tbody>
 </table>
@@ -395,6 +393,7 @@ $miscdataset = [
   'attributes' => ['xls' => json_encode($string)],
 ];
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/questionlistinit.min.js"></script>
 </body>

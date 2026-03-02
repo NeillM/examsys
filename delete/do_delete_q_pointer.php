@@ -86,10 +86,10 @@ if ($_POST['paperID'] != '') {
         display_error($string['updateerror'], $string['showerror']);
     }
 }
-$mysqli->close();
 
 $render = new render($configObject);
 $lang['title'] = $string['questiondeleted'];
 $lang['success'] = $string['msg'];
 $data = [];
 $render->render($data, $lang, 'admin/do_delete.html');
+$mysqli->close();

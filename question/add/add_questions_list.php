@@ -242,7 +242,6 @@ if (isset($_GET['sortby'])) {
         echo "</td><td><input type=\"checkbox\" id='q$q_id' name=\"$q_id\" value=\"$q_id\" /></td><td class=\"prev viewq\" id=\"prev$q_id\" data-qid='$q_id'>$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . '</nobr></td><td>' . $display_date . '</td><td>' . $status_name . "</td></tr>\n";
     }
     $result->close();
-    $mysqli->close();
     ?>
 </tbody>
 </table>
@@ -254,6 +253,7 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $jsdataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $render->render($jsdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../../js/addquestionsinit.min.js"></script>
 </body>

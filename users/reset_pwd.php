@@ -41,7 +41,6 @@ $success = UserUtils::update_password($username, $new_password, $userid, $mysqli
 if (!$success) {
     display_error($string['resetfailed'], $string['failuremsg'], true, true, true);
 }
-$mysqli->close();
 $render = new render($configObject);
 $headerdata = [
   'css' => [
@@ -63,3 +62,4 @@ $data['dispwd'] = $display_password;
 $render->render($headerdata, $string, 'header.html');
 $render->render($data, $lang, 'users/password.html');
 $render->render_admin_footer();
+$mysqli->close();

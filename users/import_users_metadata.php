@@ -215,7 +215,6 @@ if ($file_problem) {
 </table>
 
 <?php
-  $mysqli->close();
 ob_end_flush();
 $render = new render($configObject);
 $jsdataset['name'] = 'dataset';
@@ -231,6 +230,7 @@ $miscdataset = [
     'attributes' => ['xls' => json_encode($string)],
   ];
 $render->render($miscdataset, [], 'dataset.html');
+$mysqli->close();
 ?>
 <script src="../js/usersmetadatainit.min.js"></script>
 </body>

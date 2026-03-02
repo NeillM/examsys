@@ -42,7 +42,8 @@ $addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css"
                 <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
                 <style type="text/css">
                     label.error {display:block; color:#f00}
-                </style>';
+                </style>'
+    . \component\Helper::getCSSString();
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
     <?php
@@ -58,12 +59,12 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
     ?>
     <div id="content" class="content">
         <?php
-        echo $render->render_admin_navigation([
-            '/' => $string['home'],
-            '/admin/index.php' => $string['admintools'],
-            '/users/search.php' => $string['usermanagement'],
-            '/users/import_users.php' => $string['importusers'],
-        ]);
+        $breadcrumb = new \component\breadcrumb\Breadcrumb();
+        $breadcrumb->addBreadcrumb($string['home'], '../index.php');
+        $breadcrumb->addBreadcrumb($string['admintools'], '../admin/index.php');
+        $breadcrumb->addBreadcrumb($string['usermanagement'], '../users/search.php');
+        $breadcrumb->addCurrentPage($string['importusers']);
+        echo $render->render_admin_navigation($breadcrumb->getData($render));
         ?>
         <?php
         $file_problem = false;

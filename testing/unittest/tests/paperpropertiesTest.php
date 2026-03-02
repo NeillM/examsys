@@ -853,4 +853,23 @@ class PaperPropertiesTest extends unittestdatabase
         $this->assertEquals('20211004113205', $properties->getRogoFormatStartDate());
         $this->assertEquals('20211005113205', $properties->getRogoFormatEndDate());
     }
+
+    /**
+     * Tests if we correctly detect negative marking in papers.
+     */
+    public function testIsNegativelyMarked(): void
+    {
+        // Contains a negatively marked SCT question.
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, []);
+        $this->assertTrue($properties->isNegativelyMarked());
+    }
+
+    /**
+     * Tests if we correctly detect the absence of negative marking in papers.
+     */
+    public function testIsNegativelyMarkedNoNegativeQuestions(): void
+    {
+        $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, []);
+        $this->assertFalse($properties->isNegativelyMarked());
+    }
 }
