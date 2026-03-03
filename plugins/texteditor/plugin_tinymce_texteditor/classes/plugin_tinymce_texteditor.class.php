@@ -17,6 +17,8 @@
 
 namespace plugins\texteditor\plugin_tinymce_texteditor;
 
+use component\form\StaticHtml;
+use component\form\TextArea;
 use plugins\plugins_texteditor;
 
 /**
@@ -95,6 +97,35 @@ class plugin_tinymce_texteditor extends plugins_texteditor
             'content' => $content,
             'style' => $styleoverwrite];
         $render->render($tinmymcedata, null, 'tinymce_admin_textarea.html');
+    }
+
+
+    #[\Override]
+    public function getTextareaComponent(
+        string $id,
+        string $label,
+        string $content,
+        string $type,
+        array $classes = []
+    ): array {
+        $classes[] = $this->get_type($type);
+
+        return [
+            new TextArea(
+                id: $id,
+                name: $id,
+                label: $label,
+                classes: $classes,
+                value: $content,
+            ),
+            new StaticHtml("'
+                <script>
+                    requirejs(['editor'], function (Editor) {
+                        Editor.init('textarea#{$id}');
+                    });
+                </script>
+            '"),
+        ];
     }
 
     /**

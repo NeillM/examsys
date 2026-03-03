@@ -17,6 +17,10 @@
 
 namespace plugins\texteditor\plugin_plain_texteditor;
 
+use component\form\StaticHtml;
+use component\form\StaticTemplate;
+use component\form\TextArea;
+
 /**
  * Text editor plugin helper file
  *
@@ -95,6 +99,51 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
         $data['content'] = $content;
         $data['style'] = $styleoverwrite;
         $render->render($data, $this->get_strings(), 'plain_admin_textarea.html');
+    }
+
+    #[\Override]
+    public function getTextareaComponent(
+        string $id,
+        string $label,
+        string $content,
+        string $type,
+        array $classes = []
+    ): array {
+        $classes[] = 'plaintextarea';
+        $name = $id;
+
+        $return = [];
+
+        $editormathjax = $this->get_type($type) === 'mathjax';
+
+        if ($editormathjax) {
+            // The MathJax preview code inserts a q before the id.
+            $id = 'q' . $id;
+
+            // Add Mathjax instructions for the plugin.
+            $string = $this->get_strings();
+            $instructions = "<p>{$string['mathjaxinstructions']}</p>";
+            $return[] = new StaticHtml($instructions);
+        }
+
+        $return[] = new TextArea(
+            id: $id,
+            name: $name,
+            label: $label,
+            classes: $classes,
+            value: $content,
+        );
+
+        if ($editormathjax) {
+            // Add the MathJax preview area.
+            $return[] = new StaticTemplate(
+                data: ['id' => $name],
+                template: 'plain_mathjax_preview.html',
+                strings: $string,
+            );
+        }
+
+        return $return;
     }
 
     /**
