@@ -77,6 +77,7 @@ class RadioGroup extends Fieldset
             disabled: $disabled,
             description: $description,
             required: $this->required,
+            selected: $value == $this->value,
         );
         $this->options[] = $option;
     }
