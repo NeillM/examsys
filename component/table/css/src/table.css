@@ -1,0 +1,49 @@
+/*
+ * Basic styles for ExamSys tables.
+ */
+
+.component-table {
+    background-color: #ffffff;
+    border: 0;
+    border-collapse: collapse;
+    width: 100%;
+    padding: 0;
+}
+
+.component-table caption {
+    background-color: #eef4ff;
+    caption-side: bottom;
+    color: #575757;
+    font-size: 80%;
+}
+
+.component-table td,
+.component-table th,
+.component-table tr {
+    border: 0;
+    border-collapse: collapse;
+    padding: 0;
+}
+
+.component-table thead {
+    background-color: #eef4ff;
+    color: #000000;
+    text-align: left;
+}
+
+.component-table thead th {
+    border-bottom: 0.188rem solid #ffffff;
+    padding-right: 0.938rem;
+}
+
+.component-table tbody {
+    color: #000000;
+}
+
+.component-table tbody td {
+    padding-left: 0.313rem;
+}
+
+.component-table tbody.highlight tr:hover {
+    background-color: #ffe7a2;
+}

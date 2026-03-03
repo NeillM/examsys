@@ -325,7 +325,7 @@ trait basic
      *
      * Asserts that a table exists with specified values.
      * The table header needs to have the number of the column to which the values belong,
-     * all the other text is optional, normaly using 'Column' for easier understanding:
+     * all the other text is optional, normally using 'Column' for easier understanding:
      *
      *      | Column 1 | Column 2 | Column 4 |
      *      | Value A  | Value B  | Value D  |
@@ -337,12 +337,12 @@ trait basic
         $rows = $table->getRows();
         $headers = array_shift($rows);
         $max = count($headers); //number of columns in table
-        foreach ($rows as $row) {
+        foreach ($rows as $rowkey => $row) {
             for ($i = 1; $i <= $max; $i++) {
                 $text = array_shift($row);
-                $foundRows = $this->get_table_row($text, $i, "table[@id='maindata']");
+                $foundRows = $this->get_table_row($text, $i, 'table');
                 if (!$foundRows) {
-                    throw new Exception('the table row could not been found');
+                    throw new Exception("the table cell in row '$rowkey', column '$i' did not have a value of '$text'");
                 }
             }
         }

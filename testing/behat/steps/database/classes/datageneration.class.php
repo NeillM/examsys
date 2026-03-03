@@ -72,6 +72,7 @@ trait datageneration
         'reviewers' => ['papers', 'core', 'addReviewer', null],
         'schedule' => ['papers', 'core', 'schedule', null],
         'anomaly' => ['anomaly', 'core', 'createAnomaly', 'preProcessAnomaly'],
+        'paper change logs' => ['changelog', 'core', 'createPaperLog', 'preProcessPaperLog'],
     ];
 
     /**
@@ -1021,6 +1022,40 @@ trait datageneration
         }
         unset($row['user']);
         unset($row['paper']);
+        return $row;
+    }
+
+    /**
+     * Ensures that the log is ready for the data generator.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessPaperLog(array $row): array
+    {
+        if (empty($row['paper'])) {
+            throw new data_error('paper must be provided');
+        }
+
+        if (empty($row['user'])) {
+            throw new data_error('user must be provided');
+        }
+
+        if (empty($row['date'])) {
+            throw new data_error('date must be provided');
+        }
+
+        // Ensure that the date is in the correct format.
+        $timestamp = new \DateTime($row['date']);
+        $row['date'] = $timestamp->format('Y-m-d H:i:s');
+
+        // Get the database id for the user and paper.
+        $row['userid'] = UserUtils::username_exists($row['user'], state::get_db());
+        $row['paperid'] = PaperUtils::getPaperId($row['paper']);
+
+        unset($row['user']);
+        unset($row['paper']);
+
         return $row;
     }
 

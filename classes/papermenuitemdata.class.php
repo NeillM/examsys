@@ -170,6 +170,26 @@ class PaperMenuItemData
     }
 
     /**
+     * Generates menu item data for editing paper properties.
+     *
+     * @param int $paperID The ID of the paper
+     * @param string $module The module code
+     * @param string $folder The folder name
+     * @return array Menu item data structure with UI properties
+     */
+    public function getChangesItem(int $paperID, string $module, string $folder): array
+    {
+        return [
+            'classes' => 'changes',
+            'icon' => $this->rootPath . '/artwork/version_icon.png',
+            'text' => $this->string['paperchanges'],
+            'href' => $this->rootPath
+                . "/paper/changes.php?paperID=$paperID&caller=details&module=$module&folder=$folder",
+            'action' => 'directUrl'
+        ];
+    }
+
+    /**
      * Generates menu item data for emailing externals.
      *
      * @param PaperProperties $properties Paper properties object containing paper settings

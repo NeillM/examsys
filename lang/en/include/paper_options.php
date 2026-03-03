@@ -161,3 +161,5 @@ $string['ok'] = 'Ok';
 $string['skull'] = 'skull';
 $string['misc'] = 'Miscellaneous';
 $string['anomalies'] = 'Paper Anomalies';
+
+$string['paperchanges'] = 'Paper Changes';
