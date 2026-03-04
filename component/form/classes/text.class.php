@@ -48,6 +48,7 @@ class Text extends Input
      * @param string|null $pattern The pattern the input must meet (optional)
      * @param bool|null $spellcheck If spell checking is enabled (default: no value)
      * @param int $size The size of the input (default: 20)
+     * @param bool $disabled Flags the text element as disabled for when the input has no effect (default: false)
      */
     public function __construct(
         string $id,
@@ -65,6 +66,7 @@ class Text extends Input
         ?string $pattern = null,
         ?bool $spellcheck = null,
         int $size = 20,
+        bool $disabled = false,
     ) {
         parent::__construct(
             type:'text',
@@ -101,6 +103,9 @@ class Text extends Input
         }
         if ($readonly) {
             $this->setAttribute('readonly');
+        }
+        if ($disabled) {
+            $this->setAttribute('disabled');
         }
     }
 

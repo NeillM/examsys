@@ -48,6 +48,7 @@ class Email extends Text
      * @param bool $multiple Allow multiple e-mail addresses to be entered.
      * @param string|null $pattern The pattern the input must meet (optional)
      * @param int $size The size of the input (default: 20)
+     * @param bool $disabled Flags the text element as disabled for when the input has no effect (default: false)
      */
     public function __construct(
         string $id,
@@ -65,6 +66,7 @@ class Email extends Text
         bool $multiple = false,
         ?string $pattern = null,
         int $size = 20,
+        bool $disabled = false,
     ) {
         parent::__construct(
             id: $id,
@@ -80,7 +82,8 @@ class Email extends Text
             maxLength: $maxLength,
             minLength: $minLength,
             pattern: $pattern,
-            size: $size
+            size: $size,
+            disabled: $disabled,
         );
 
         $this->type = 'email';

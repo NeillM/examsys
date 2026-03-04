@@ -47,6 +47,7 @@ class Telephone extends Text
      * @param int|null $minLength The minimum number of characters that mat be entered (optional)
      * @param string|null $pattern The pattern the input must meet (optional)
      * @param int $size The size of the input (default: 20)
+     * @param bool $disabled Flags the text element as disabled for when the input has no effect (default: false)
      */
     public function __construct(
         string $id,
@@ -63,6 +64,7 @@ class Telephone extends Text
         ?int $minLength = null,
         ?string $pattern = null,
         int $size = 20,
+        bool $disabled = false,
     ) {
         parent::__construct(
             id: $id,
@@ -77,7 +79,8 @@ class Telephone extends Text
             maxLength: $maxLength,
             minLength: $minLength,
             pattern: $pattern,
-            size: $size
+            size: $size,
+            disabled: $disabled,
         );
 
         $this->type = 'tel';
