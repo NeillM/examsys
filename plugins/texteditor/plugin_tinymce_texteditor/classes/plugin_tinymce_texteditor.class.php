@@ -118,13 +118,13 @@ class plugin_tinymce_texteditor extends plugins_texteditor
                 classes: $classes,
                 value: $content,
             ),
-            new StaticHtml("'
+            new StaticHtml("
                 <script>
                     requirejs(['editor'], function (Editor) {
                         Editor.init('textarea#{$id}');
                     });
                 </script>
-            '"),
+            "),
         ];
     }
 
