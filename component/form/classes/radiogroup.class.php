@@ -52,7 +52,7 @@ class RadioGroup extends Fieldset
             id: $id,
             name: $name,
             label: $label,
-            classes: ['radio-group'] + $classes,
+            classes: array_merge(['radio-group'], $classes),
             description: $description,
             default: $default,
             orientation: $orientation,

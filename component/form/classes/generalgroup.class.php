@@ -49,7 +49,7 @@ class GeneralGroup extends Fieldset
             id: $id,
             name: $name,
             label: $label,
-            classes: ['general-group'] + $classes,
+            classes: array_merge(['general-group'], $classes),
             description: $description,
             orientation: $orientation,
         );

@@ -51,7 +51,7 @@ class CheckboxGroup extends Fieldset
             id: $id,
             name: $name,
             label: $label,
-            classes: ['checkbox-group'] + $classes,
+            classes: array_merge(['checkbox-group'], $classes),
             description: $description,
             default: $default,
             orientation: $orientation,
