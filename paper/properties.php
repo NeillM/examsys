@@ -61,7 +61,7 @@ if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {
 }
 
 if (!isset($staff_modules)) {
-    $staff_modules = get_staff_modules($userObject->get_user_ID(), $mysqli, $userObject);
+    $staff_modules = $userObject->get_staff_modules();
 }
 
 function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$changed_labs, $db)
