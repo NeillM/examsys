@@ -63,7 +63,7 @@ class Number extends Text
         bool $required = false,
         int|float $max = 0,
         ?int $maxLength = null,
-        int|float|null $min = 0,
+        int|float|null $min = null,
         ?int $minLength = null,
         int|float $step = 0,
         bool $disabled = false,
@@ -89,7 +89,7 @@ class Number extends Text
         if ($max) {
             $this->setAttribute('max', $max);
         }
-        if ($min) {
+        if (isset($min)) {
             $this->setAttribute('min', $min);
         }
         if ($step) {
