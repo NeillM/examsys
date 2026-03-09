@@ -1,0 +1,21 @@
+/**
+ * General styling for checkbox opt groups.
+ */
+fieldset.component-form-input.checkbox-opt-group .fieldset-group:first-child {
+    margin-top: 0;
+}
+
+fieldset.component-form-input.checkbox-opt-group .fieldset-group {
+    margin-bottom: 0.313rem;
+    margin-top: 0.313rem;
+}
+
+fieldset.component-form-input.checkbox-opt-group .fieldset-group:last-child {
+    margin-bottom: 0;
+}
+
+fieldset.component-form-input.checkbox-opt-group .fieldset-group-label {
+    color: #1f497d;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 0.313rem;
+}

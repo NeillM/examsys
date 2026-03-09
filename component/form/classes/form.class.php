@@ -238,6 +238,7 @@ class Form implements Component
         // Demo each of the Fieldsets.
         $form->addElement(RadioGroup::getExample());
         $form->addElement(CheckboxGroup::getExample());
+        $form->addElement(CheckboxOptGroup::getExample());
         $form->addElement(GeneralGroup::getExample());
 
         // Change of tabs.
