@@ -19,6 +19,14 @@
     width: 100%;
 }
 
+.component-form fieldset.general-group:has(>.form-help)>legend {
+    margin-bottom: 0.313rem;
+}
+
+.component-form fieldset.general-group>.form-help {
+    margin-bottom: 1rem;
+}
+
 .component-form fieldset.general-group>.fieldset-elements {
     margin-left: 0.313rem;
 }
