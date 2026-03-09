@@ -44,6 +44,6 @@ Intended component: \component\form\TextArea
                     {% endif %}
                 {% endfor %}
                 {% if data.description %}aria-describedby="{{data.id|escape('html_attr')}}-description"{% endif %}
-        >{{data.value}}</textarea>
+        >{{data.value|raw}}</textarea>
     </span>
 </div>
