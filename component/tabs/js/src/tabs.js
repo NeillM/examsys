@@ -59,10 +59,17 @@ class TabHandler {
         this.tabs = Array.from(this.tabList.querySelectorAll(TabHandler.SELECTORS.tab));
         this.panels = [];
 
+        // Store a tab that has been marked as selected.
+        let selectedTab;
+
         for (const tab of this.tabs) {
             const panel = document.getElementById(tab.getAttribute('aria-controls'));
 
             tab.tabIndex = -1;
+            if (tab.ariaSelected === 'true') {
+                // This tab was marked as selected.
+                selectedTab = tab;
+            }
             tab.setAttribute('aria-selected', 'false');
             this.panels.push(panel);
 
@@ -75,7 +82,8 @@ class TabHandler {
             this.lastTab = tab;
         }
 
-        this.setSelectedTab(this.firstTab, false);
+        // If no tab was marked as being selected we will make the first one selected.
+        this.setSelectedTab(selectedTab ?? this.firstTab, false);
     }
 
     /**
