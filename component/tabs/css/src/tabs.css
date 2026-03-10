@@ -101,6 +101,7 @@
 
 .component-tabs [role="tabpanel"] {
     border: 0.125rem solid #1e3c7b;
+    box-sizing: border-box;
     min-height: 10rem;
     overflow: auto;
     padding: 0.313rem;
