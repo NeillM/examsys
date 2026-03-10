@@ -9,6 +9,7 @@ input.component-form-button[type="reset"] {
     border: none;
     border-radius: 0.25rem;
     font-size: 0.9rem;
+    margin: 0;
     padding: 0.5rem 1rem;
     transition: background-color 0.2s, transform 0.1s;
 }

@@ -320,7 +320,8 @@ class Form implements Component
             // Cancel button.
             new Button(
                 name: 'cancel',
-                value: $cancel
+                value: $cancel,
+                classes: ['cancel'],
             ),
         ];
     }

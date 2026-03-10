@@ -65,6 +65,7 @@ class Button extends FormElement
         return array_merge(
             parent::getData($renderer),
             [
+                'classes' => $this->classes,
                 'type' => $this->type,
             ]
         );
