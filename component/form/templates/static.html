@@ -29,5 +29,7 @@ Intended components:
 {% if data.component %}
     {{ include(data.componenttemplate, {'data': data.component, 'lang': lang, 'path': path}, with_context = false) }}
 {% else %}
-    {{data.value|raw}}
+    <div class="component-form-static">
+        {{data.value|raw}}
+    </div>
 {% endif %}
