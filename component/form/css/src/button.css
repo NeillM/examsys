@@ -5,6 +5,7 @@
 input.component-form-button[type="button"],
 input.component-form-button[type="submit"],
 input.component-form-button[type="reset"] {
+    background-image: none;
     border: none;
     border-radius: 0.25rem;
     font-size: 0.9rem;
