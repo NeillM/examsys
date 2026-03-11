@@ -23,6 +23,7 @@ This template renders the start of a form.
 Intended component: \component\form\Form
 #}
 <form
+        {% if data.id %}id="{{data.id}}"{% endif %}
         action="{{data.action|escape('html_attr')}}"
         method="{{data.method|escape('html_attr')}}"
         class="component-form{% for class in data.classes %} {{class|escape('html_attr')}}{% endfor %}"

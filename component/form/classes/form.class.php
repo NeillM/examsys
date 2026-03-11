@@ -59,6 +59,7 @@ class Form implements Component
      * @param string|null $target Where the response will be displayed (for example: _top)
      * @param string|null $encode The encoding used to send the form (default: null)
      * @param bool $floatingbuttons Flags if the forms buttons should always be visible (default: false)
+     * @param string $id An id for the form (optional)
      */
     public function __construct(
         protected string $action,
@@ -67,6 +68,7 @@ class Form implements Component
         protected ?string $target = null,
         protected ?string $encode = null,
         protected bool $floatingbuttons = false,
+        protected string $id = '',
     ) {
         // Intentionally blank.
     }
@@ -125,6 +127,7 @@ class Form implements Component
             'elements' => $elements,
             'encode' => $this->encode,
             'floatingbuttons' => $this->floatingbuttons,
+            'id' => $this->id,
             'method' => $this->method,
             'target' => $this->target,
         ];
