@@ -9,6 +9,7 @@ fieldset.component-form-input.radio-group {
     display: flex;
     flex-flow: row wrap;
     padding: 0;
+    margin: 0 0 0.313rem 0;
 }
 
 fieldset.component-form-input.checkbox-group > legend,

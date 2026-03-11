@@ -46,6 +46,7 @@ class Password extends Text
      * @param bool $currentpassword Flags if this is for entering a new password (default: false)
      * @param string|null $pattern The pattern the input must meet (optional)
      * @param int $size The size of the input (default: 20)
+     * @param bool $disabled Flags the text element as disabled for when the input has no effect (default: false)
      */
     public function __construct(
         string $id,
@@ -61,6 +62,7 @@ class Password extends Text
         bool $newpassword = false,
         ?string $pattern = null,
         int $size = 20,
+        bool $disabled = false,
     ) {
         parent::__construct(
             id: $id,
@@ -73,7 +75,8 @@ class Password extends Text
             maxLength: $maxLength,
             minLength: $minLength,
             pattern: $pattern,
-            size: $size
+            size: $size,
+            disabled: $disabled,
         );
 
         $this->type = 'password';

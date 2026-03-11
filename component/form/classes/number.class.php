@@ -48,6 +48,7 @@ class Number extends Text
      * @param int|float|null $min The minimum value that will be accepted (optional)
      * @param int|null $minLength The minimum number of characters that mat be entered (optional)
      * @param int|float $step The step from the minimum that may be entered (optional)
+     * @param bool $disabled Flags the text element as disabled for when the input has no effect (default: false)
      */
     public function __construct(
         string $id,
@@ -62,9 +63,10 @@ class Number extends Text
         bool $required = false,
         int|float $max = 0,
         ?int $maxLength = null,
-        int|float|null $min = 0,
+        int|float|null $min = null,
         ?int $minLength = null,
         int|float $step = 0,
+        bool $disabled = false,
     ) {
         parent::__construct(
             id: $id,
@@ -79,6 +81,7 @@ class Number extends Text
             required: $required,
             maxLength: $maxLength,
             minLength: $minLength,
+            disabled: $disabled,
         );
 
         $this->type = 'number';
@@ -86,7 +89,7 @@ class Number extends Text
         if ($max) {
             $this->setAttribute('max', $max);
         }
-        if ($min) {
+        if (isset($min)) {
             $this->setAttribute('min', $min);
         }
         if ($step) {

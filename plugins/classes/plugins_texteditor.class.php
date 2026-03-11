@@ -23,6 +23,8 @@
 
 namespace plugins;
 
+use component\form\StaticHtml;
+
 /**
  * Abstract mapping class.
  *
@@ -144,8 +146,37 @@ abstract class plugins_texteditor extends \plugins\plugins
      * @param string $content
      * @param string $type
      * @param string $styleoverwrite overwrite base styling
+     *
+     * @deprecated since 7.7.0 Use {@see self::getTextareaComponent()} instead.
      */
     abstract public function get_textarea($name, $id, $content, $type, $styleoverwrite = '');
+
+    /**
+     * Get text editor forms component for a textarea.
+     *
+     * Each text editor plugin should override this method.
+     *
+     * @since ExamSys 7.7.0
+     * @param string $id The unique id of the text area.
+     * @param string $label The label for the text area.
+     * @param string $content The existing content of the text area.
+     * @param string $type
+     * @param array $classes add additional classes to the text area to style it
+     * @return \component\form\FormElement[] An array of form elements used to output the text editor.
+     */
+    public function getTextareaComponent(
+        string $id,
+        string $label,
+        string $content,
+        string $type,
+        array $classes = []
+    ): array {
+        $message = 'Please override getTextareaComponent() in the ' . $this->get_name() . ' text plugin.';
+        trigger_error($message, \E_USER_DEPRECATED);
+        return [
+            new StaticHtml("<p>{$message}</p>"),
+        ];
+    }
 
     /**
      * Leadin clean function check

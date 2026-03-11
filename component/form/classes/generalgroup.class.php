@@ -49,7 +49,7 @@ class GeneralGroup extends Fieldset
             id: $id,
             name: $name,
             label: $label,
-            classes: ['general-group'] + $classes,
+            classes: array_merge(['general-group'], $classes),
             description: $description,
             orientation: $orientation,
         );
@@ -61,7 +61,7 @@ class GeneralGroup extends Fieldset
      * @param FormElement $option
      * @return void
      */
-    public function adOption(FormElement $option): void
+    public function addOption(FormElement $option): void
     {
         $this->options[] = $option;
     }
@@ -74,8 +74,8 @@ class GeneralGroup extends Fieldset
             name: 'general-fieldset',
             label: 'Fieldset',
         );
-        $example->adOption(Text::getExample());
-        $example->adOption(Select::getExample());
+        $example->addOption(Text::getExample());
+        $example->addOption(Select::getExample());
         return $example;
     }
 }

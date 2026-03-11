@@ -48,6 +48,7 @@ class Url extends Text
      * @param string|null $pattern The pattern the input must meet (default: ^https://.*)
      * @param bool|null $spellcheck If spell checking is enabled (default: no value)
      * @param int $size The size of the input (default: 20)
+     * @param bool $disabled Flags the text element as disabled for when the input has no effect (default: false)
      */
     public function __construct(
         string $id,
@@ -65,6 +66,7 @@ class Url extends Text
         ?string $pattern = '^https://.*',
         ?bool $spellcheck = null,
         int $size = 20,
+        bool $disabled = false,
     ) {
         parent::__construct(
             id: $id,
@@ -81,7 +83,8 @@ class Url extends Text
             minLength: $minLength,
             pattern: $pattern,
             spellcheck: $spellcheck,
-            size: $size
+            size: $size,
+            disabled: $disabled,
         );
 
         $this->type = 'url';

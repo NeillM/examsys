@@ -17,6 +17,7 @@
 
 namespace component\form;
 
+use component\Helper;
 use render;
 
 /**
@@ -90,5 +91,34 @@ abstract class Fieldset extends FormElement
                 'orientation' => $this->orientation,
             ]
         );
+    }
+
+    #[\Override]
+    public function getJavascriptForHead(): array
+    {
+        // Include JavaScript for all child elements.
+        $js = [];
+        foreach ($this->options as $element) {
+            $js[] = $element->getJavascriptForHead();
+        }
+        return Helper::combineJS([], ...$js);
+    }
+
+    #[\Override]
+    public function getJavascriptForFooter(): array
+    {
+        // Include JavaScript for all child elements.
+        $js = [];
+        foreach ($this->options as $element) {
+            $js[] = $element->getJavascriptForFooter();
+        }
+        return Helper::combineJS([], ...$js);
+    }
+
+    #[\Override]
+    public function getStrings(): array
+    {
+        // Include the strings for all the child elements.
+        return Helper::combineLang([], ...$this->options);
     }
 }

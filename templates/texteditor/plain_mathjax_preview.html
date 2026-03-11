@@ -1,0 +1,43 @@
+{#This file is part of ExamSys
+
+ExamSys is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+ExamSys is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
+#}
+{#
+This template is for the preview area of the text editor when mathjax is enabled.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2018 onwards The University of Nottingham
+
+Required variables:
+
+data.editormathjax - flag to indicate if mathjax editor in use
+data.id - identifier
+
+Required localised text -
+lang.previewmathjax - preview
+
+#}
+<p id="MathPreview{{data.id}}-label">{{lang.previewmathjax}}</p>
+<div id="MathPreview{{data.id}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px" aria-labelledby="MathPreview{{data.id}}-label"></div>
+<div id="MathBuffer{{data.id}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+<script>
+    requirejs(['mathjaxpreview'], function(MathJaxPreview) {
+        var Preview = new MathJaxPreview('{{data.id}}');
+        Preview.Init();
+        $("#q{{data.id}}").on('keyup', function (e) {
+            Preview.Update();
+            e.preventDefault();
+        });
+    });
+</script>

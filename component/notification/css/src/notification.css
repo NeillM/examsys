@@ -1,0 +1,40 @@
+/**
+ * Classes for the notification component.
+ */
+
+.component-notification {
+    border-bottom: 0.063rem solid #828282;
+    border-top: 0.063rem solid #828282;
+    box-sizing: border-box;
+    color: #000000;
+    line-height: 2rem;
+    margin: 0.626rem 0;
+    padding: 0.125rem 0.25rem;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.component-notification.image {
+    background-position-x: 0.25rem;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: 2rem 2rem;
+    min-height: 2rem;
+    padding: 0.125rem 0.25rem 0.125rem 2.5rem;
+}
+
+.component-notification.notice {
+    background-color: #E0E0E0;
+}
+
+.component-notification.warning {
+    background-color: #FFEC82;
+    border-top-color: #E1BB3B;
+    border-bottom-color: #E1BB3B;
+}
+
+.component-notification.problem {
+    background-color: #FF9090;
+    border-top-color: #CD0001;
+    border-bottom-color: #CD0001;
+}
