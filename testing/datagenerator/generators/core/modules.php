@@ -83,11 +83,11 @@ class modules extends generator
         $moduleid = module_utils::get_idMod($moduleid, $this->db);
 
         if (empty($userid) or empty($moduleid)) {
-            throw new data_error("Create new module team failed with wrong parameter $modulename | $username ");
+            throw new data_error("Create new module team failed with wrong parameter $moduleid | $username ");
         }
         $result = \UserUtils::add_staff_to_module($userid, $moduleid, $this->db);
         if (empty($result)) {
-            throw new data_error("Create new module team failed with parameter $modulename | $username ");
+            throw new data_error("Create new module team failed with parameter $moduleid | $username ");
         }
     }
 
