@@ -79,7 +79,7 @@ class CheckboxOptGroup extends Fieldset
         string $label,
     ): void {
         if (isset($this->groups[$id])) {
-            throw new \coding_exception("optgroup '$id' already has a exists");
+            throw new \coding_exception("optgroup '$id' already exists");
         }
 
         $this->groups[$id] = $label;
