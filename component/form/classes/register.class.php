@@ -35,6 +35,7 @@ class Register implements ComponentRegister
     protected static $components = [
         'Checkbox',
         'CheckboxGroup',
+        'CheckboxOptGroup',
         'Color',
         'Button',
         'Date',

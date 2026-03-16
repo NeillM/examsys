@@ -195,7 +195,7 @@ class PaperChangesFormatter
             return;
         }
 
-        $in = implode(',', $this->changed_labs);
+        $in = implode(',', array_keys($this->changed_labs));
         $sql = "SELECT id, name FROM labs WHERE id IN($in)";
         $result = $this->config->db->prepare($sql);
         $result->execute();
