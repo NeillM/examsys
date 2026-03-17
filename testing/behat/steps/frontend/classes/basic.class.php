@@ -167,7 +167,7 @@ trait basic
     /**
      * Sets focus to the names popup window.
      *
-     * @And I focus :name popup
+     * @When I focus :name popup
      * @param string $name
      * @return void
      */
@@ -190,7 +190,7 @@ trait basic
     /**
      * Sets the focus to the main ExamSys screen away from any popups.
      *
-     * @And I focus main window
+     * @When I focus main window
      */
     public function i_focus_main_window()
     {
@@ -231,7 +231,7 @@ trait basic
     /**
      * Tests that only the main window is open.
      *
-     * @And only main window should be open
+     * @Then only main window should be open
      * @throws Exception
      */
     public function only_main_window()
@@ -249,7 +249,7 @@ trait basic
     /**
      * Checks a popup was not found.
      *
-     * @And I should not see popup page with title :title
+     * @Then I should not see popup page with title :title
      * @param string $title
      */
     public function i_should_not_see_popup($title)
@@ -395,7 +395,7 @@ trait basic
     /**
      * Waits for the ExamSys page in the focused window to load.
      *
-     * @And I wait for page to load
+     * @When I wait for page to load
      * @return void
      */
     public function i_wait_for_page_to_load()
