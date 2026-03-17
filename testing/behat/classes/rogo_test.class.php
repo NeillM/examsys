@@ -26,6 +26,8 @@ use testing\datagenerator\loader;
 use coding_exception;
 use Exception;
 use Config;
+use WebDriver\Exception\JavaScriptError;
+use WebDriver\Exception\NoSuchWindow;
 
 /**
  * All ExamSys behat test definitions should extend this class if they wish to do browser based tests.
@@ -322,7 +324,8 @@ class rogo_test extends MinkContext
      */
     public function waitForPendingJs()
     {
-        return static::waitForPendingJsInSession($this->getSession());
+        $session = $this->getSession();
+        return static::waitForPendingJsInSession($session) and static::waitForRunningJsInSession($session);
     }
 
     /**
@@ -341,18 +344,22 @@ class rogo_test extends MinkContext
         // if the page & JSs don't finish loading properly.
         for ($i = 0; $i < self::getExtendedTimeout() * 10; $i++) {
             try {
-                $jscode = trim((string) preg_replace('/\s+/', ' ', '
+                $js = <<<JS
                     return (function() {
                         if (document.readyState !== "complete") {
                             return "incomplete";
                         }
                         return "";
-                    })()'));
+                    })()
+                JS;
+                $jscode = trim((string) preg_replace('/\s+/', ' ', $js));
                 $pending = self::evaluateScriptInSession($session, $jscode);
-            } catch (Exception) {
+            } catch (NoSuchWindow) {
                 // We catch an exception here, in case we just closed the window we were interacting with.
                 // No javascript is running if there is no window right?
                 $pending = '';
+            } catch (JavaScriptError $e) {
+                throw new \coding_exception('JavaScript in waitForPendingJsInSession failed: ' . $e->getMessage());
             }
 
             // If there are no pending JS we stop waiting.
@@ -372,6 +379,68 @@ class rogo_test extends MinkContext
              . self::getExtendedTimeout()
              . ' seconds. There is a Javascript error or the code is extremely slow (' . $pending
              . '). If you are using a slow machine, consider setting increasetimeout in behat config.'
+        );
+    }
+
+    /**
+     * Waits for all the JS to finish.
+     *
+     * @param   Session $session The Mink Session where JS can be run
+     * @return  bool Whether any JS is still pending completion.
+     */
+    public static function waitForRunningJsInSession(Session $session)
+    {
+        if (!self::runningJavascriptInSession($session)) {
+            // JS is not available therefore there is nothing to wait for.
+            return false;
+        }
+
+        // We don't use rogo_test::spin() here as we don't want to end up with an exception
+        // if the page & JSs don't finish loading properly.
+        for ($i = 0; $i < self::getExtendedTimeout() * 10; $i++) {
+            try {
+                $js = <<<JAVASCRIPT
+                    return (function() {
+                        if (typeof ROGO !== 'object' || typeof ROGO.pendingJS === 'undefined') {
+                            return '';
+                        }
+
+                        let returnvalue = '';
+
+                        if (ROGO.pendingJS.isJSRunning()) {
+                            returnvalue = ROGO.pendingJS.listRunningJS();
+                        }
+
+                        return returnvalue;
+                    })()
+                JAVASCRIPT;
+                $jscode = trim((string) preg_replace('/\s+/', ' ', $js));
+                $pending = self::evaluateScriptInSession($session, $jscode);
+            } catch (NoSuchWindow) {
+                // We catch an exception here, in case we just closed the window we were interacting with.
+                // No javascript is running if there is no window right?
+                $pending = '';
+            } catch (JavaScriptError $e) {
+                throw new \coding_exception('JavaScript in waitForRunningJsInSession failed: ' . $e->getMessage() . "\n\n" . $jscode);
+            }
+
+            // If there are no pending JS we stop waiting.
+            if ($pending === '') {
+                return true;
+            }
+
+            // 0.1 seconds.
+            usleep(100000);
+        }
+
+        // Timeout waiting for JS to complete.
+        // It is unlikely that JavaScript code of a page or an AJAX request needs more than
+        // getExtendedTimeout() seconds to be loaded.
+        throw new \Exception(
+            'Javascript code and/or AJAX requests are still running after '
+            . self::getExtendedTimeout()
+            . ' seconds. There is a Javascript error or the code is extremely slow (' . $pending
+            . '). If you are using a slow machine, consider setting increasetimeout in behat config.'
         );
     }
 
