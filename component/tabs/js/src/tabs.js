@@ -202,7 +202,10 @@ class TabHandler {
     }
 }
 
-requirejs(['log'], function (Log) {
+requirejs(['log', 'js_running'], function (Log, JSRunning) {
+    const name = 'component:tabs:load';
+    JSRunning.start(name);
+
     Log('Loading Tab JS', 'info');
 
     // Find all the tab areas.
@@ -212,4 +215,6 @@ requirejs(['log'], function (Log) {
     });
 
     Log('Tabs loaded', 'info');
+
+    JSRunning.done(name);
 });
