@@ -106,7 +106,8 @@ class plugin_tinymce_texteditor extends plugins_texteditor
         string $label,
         string $content,
         string $type,
-        array $classes = []
+        array $classes = [],
+        bool $disabled = false,
     ): array {
         $classes[] = $this->get_type($type);
 
@@ -117,11 +118,18 @@ class plugin_tinymce_texteditor extends plugins_texteditor
                 label: $label,
                 classes: $classes,
                 value: $content,
+                disabled: $disabled,
             ),
             new StaticHtml("
                 <script>
-                    requirejs(['editor'], function (Editor) {
-                        Editor.init('textarea#{$id}');
+                    requirejs(['editor', 'tinyMCE'], function (Editor, TinyMCE) {
+                        const identifier = 'textarea#{$id}';
+                        let editor = Editor.init(identifier);
+                        const textarea = document.querySelector(identifier);
+                        if (textarea.hasAttribute('disabled')) {
+                            // Make TinyMCE be disabled when the underlying text box is also disabled.
+                            TinyMCE.EditorManager.editors[textarea.getAttribute('id')].setMode('readonly');
+                        }
                     });
                 </script>
             "),

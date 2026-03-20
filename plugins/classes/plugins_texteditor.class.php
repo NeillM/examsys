@@ -162,6 +162,7 @@ abstract class plugins_texteditor extends \plugins\plugins
      * @param string $content The existing content of the text area.
      * @param string $type
      * @param array $classes add additional classes to the text area to style it
+     * @param bool $disabled If the text area is disabled.
      * @return \component\form\FormElement[] An array of form elements used to output the text editor.
      */
     public function getTextareaComponent(
@@ -169,7 +170,8 @@ abstract class plugins_texteditor extends \plugins\plugins
         string $label,
         string $content,
         string $type,
-        array $classes = []
+        array $classes = [],
+        bool $disabled = false,
     ): array {
         $message = 'Please override getTextareaComponent() in the ' . $this->get_name() . ' text plugin.';
         trigger_error($message, \E_USER_DEPRECATED);
