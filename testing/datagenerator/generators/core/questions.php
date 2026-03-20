@@ -32,7 +32,6 @@ use random_utils;
  */
 class questions extends generator
 {
-    public $_mysqli;
     /**
      * Create a new question
      *  Since _fields_required had not been used in question creating process, required fields are hard coded in HTML in webpage....
@@ -201,7 +200,7 @@ class questions extends generator
         } catch (Exception $e) {
             echo 'Error No: ' . $e->getCode() . ' - ' . $e->getMessage() . '<br />';
             echo nl2br($e->getTraceAsString());
-            throw new data_error('MySQL error ' . $this->_mysqli->error . "<br /> Query:<br /> $sqlquery");
+            throw new data_error('MySQL error ' . $this->db->error . "<br /> Query:<br /> $sqlquery");
         }
     }
 
