@@ -76,6 +76,7 @@ if ($studentsonly) {
     $rolesjoin = '';
 }
 
+$studentids = []; // All student ids took the paper.
 if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE])) {
     $time_int = \log::getStartInterval($paper_type);
     // Get how many students took the paper.
@@ -95,6 +96,7 @@ if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRE
     $result->bind_result($tmp_userID);
     while ($result->fetch()) {
         $candidate_no++;
+        $studentids[] = $tmp_userID;
     }
     $result->close();
 }
@@ -117,10 +119,76 @@ if (!isset($_GET['phase'])) {
     $tmp_phase = '&phase=2';
 }
 
-  $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
-if ($candidate_no > 0) {
-    $phase_description .= ': ' . number_format($out_of) . ' ' . $string['candidates'];
+$out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
+
+$textboxquestions = []; // Array of all textbox questions
+$sql = "SELECT GROUP_CONCAT(q_id) 
+        FROM papers pa 
+        JOIN questions qu on pa.question = qu.q_id 
+        WHERE qu.q_type = 'textbox' and pa.paper = ?";
+$result = $mysqli->prepare($sql);
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->bind_result($temptextboxquestions);
+$result->fetch();
+$result->close();
+
+if ( $temptextboxquestions !== ''){
+    $textboxquestions = explode(",", $temptextboxquestions);
 }
+
+$skippedquestion = [];
+if ($candidate_no > 0 && count($textboxquestions) > 0) {
+    // Build student id union SQL
+    ///Below few lines will create SQL like "SELECT 104 AS studentID UNION SELECT 105 UNION SELECT 106"
+    $studentidsql = '';
+    $first = "SELECT " . (int)array_shift($studentids) . " as studentID";
+    $others = array_map(function ($id) {
+        return "SELECT " . (int)$id;
+    }, $studentids);
+    $studentidsql = implode(" UNION ", array_merge([$first], $others));
+
+    //Build textbox question id's union SQL for find skipped student
+    //Below few lines will create SQL like "SELECT 105 AS missing_question UNION SELECT 106"
+    $textboxidsql = '';
+    $first = "SELECT " . (int)array_shift($textboxquestions) . " as missing_question";
+    $others = array_map(function ($id) {
+        return "SELECT " . (int)$id;
+    }, $textboxquestions);
+    $textboxidsql = implode(" UNION ", array_merge([$first], $others));
+
+    // SQL for find number of students and number of their skipped questions.
+    $log = "log$paper_type";
+    $sql = "SELECT 
+        q.missing_question AS questionID,
+        COUNT(s.studentID) AS total_students_missed
+        FROM
+            ($studentidsql) AS s
+                CROSS JOIN
+            ($textboxidsql) AS q
+                LEFT JOIN
+            (SELECT 
+                $log.q_id AS questionID, me.userID AS studentID
+            FROM
+                $log
+            JOIN log_metadata me ON me.id = $log.metadataID
+            WHERE
+                me.paperID = ?) AS a ON s.studentID = a.studentID
+                AND q.missing_question = a.questionID
+        WHERE
+            a.questionID IS NULL
+        GROUP BY q.missing_question
+        ORDER BY q.missing_question";
+    $result = $mysqli->prepare($sql);
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($questionID, $missedcount);
+    while ($result->fetch()) {
+        $skippedquestion[$questionID] = $missedcount;
+    }
+    $result->close();
+    $phase_description .= ': ' . number_format($out_of) . ' ' . $string['candidates'] . " have taken this paper";
+    }
 
   echo "<div id=\"content\">\n";
 
@@ -188,22 +256,28 @@ while ($result->fetch()) {
         }
 
         echo '<tr><td style="text-align:right; vertical-align:top; white-space:nowrap;">';
-        if ($candidates_marked < $out_of) {
-            echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="Warning ' . ($candidate_no - $candidates_marked) . ' marks missing" />';
+
+        $showwarning = isset($skippedquestion[$q_id]) && ($candidates_marked < ($out_of - $skippedquestion[$q_id]));
+        $skippedinfo = isset($skippedquestion[$q_id]) ? $skippedquestion[$q_id] . " " . $string['skipped'] : '';
+        $cellclass = '';
+        $warning = '';
+
+        if ($showwarning) {
+            $missingMarks = $candidate_no - $candidates_marked - $skippedquestion[$q_id];
+            $warning = " " . $missingMarks . " " . $string['missingmark'];
+            echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="' . $warning . '"/>';
+            $cellclass = ' style="background-color:#FFDDDD"';
         }
         echo $question_no . '.</td>';
-        if ($candidates_marked < $out_of) {
-            echo '<td style="background-color:#FFDDDD">';
-        } else {
-            echo '<td>';
-        }
+        echo '<td' . $cellclass . '>';
+
         if ($_GET['action'] == 'finalise') {
             echo '<a href="textbox_finalise_marks.php';
         } else {
             echo '<a href="textbox_marking.php';
         }
         echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&studentsonly=$studentsonly&folder=" . $_GET['folder'];
-        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a></td></tr>\n";
+        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a></td><td>$skippedinfo</td><td>$warning</td></tr>\n";
     }
     $question_no++;
 }
