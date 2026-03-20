@@ -94,6 +94,11 @@ class questions extends generator
         } else {
             $qdata['deleted'] = null;
         }
+        if ($qdata['locked']) {
+            // Allow us to use relative lock dates.
+            $lockedon = new \DateTime($qdata['locked']);
+            $qdata['locked'] = $lockedon->format('Y-m-d H:i:s');
+        }
         $sqlquery = '
             INSERT INTO questions (
                 q_type, theme, scenario, scenario_plain, leadin, leadin_plain, notes,
