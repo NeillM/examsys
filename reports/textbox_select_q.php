@@ -133,8 +133,8 @@ $result->bind_result($temptextboxquestions);
 $result->fetch();
 $result->close();
 
-if ( $temptextboxquestions !== ''){
-    $textboxquestions = explode(",", $temptextboxquestions);
+if ($temptextboxquestions !== '') {
+    $textboxquestions = explode(',', $temptextboxquestions);
 }
 
 $skippedquestion = [];
@@ -142,20 +142,20 @@ if ($candidate_no > 0 && count($textboxquestions) > 0) {
     // Build student id union SQL
     ///Below few lines will create SQL like "SELECT 104 AS studentID UNION SELECT 105 UNION SELECT 106"
     $studentidsql = '';
-    $first = "SELECT " . (int)array_shift($studentids) . " as studentID";
+    $first = 'SELECT ' . (int)array_shift($studentids) . ' as studentID';
     $others = array_map(function ($id) {
-        return "SELECT " . (int)$id;
+        return 'SELECT ' . (int)$id;
     }, $studentids);
-    $studentidsql = implode(" UNION ", array_merge([$first], $others));
+    $studentidsql = implode(' UNION ', array_merge([$first], $others));
 
     //Build textbox question id's union SQL for find skipped student
     //Below few lines will create SQL like "SELECT 105 AS missing_question UNION SELECT 106"
     $textboxidsql = '';
-    $first = "SELECT " . (int)array_shift($textboxquestions) . " as missing_question";
+    $first = 'SELECT ' . (int)array_shift($textboxquestions) . ' as missing_question';
     $others = array_map(function ($id) {
-        return "SELECT " . (int)$id;
+        return 'SELECT ' . (int)$id;
     }, $textboxquestions);
-    $textboxidsql = implode(" UNION ", array_merge([$first], $others));
+    $textboxidsql = implode(' UNION ', array_merge([$first], $others));
 
     // SQL for find number of students and number of their skipped questions.
     $log = "log$paper_type";
@@ -187,8 +187,8 @@ if ($candidate_no > 0 && count($textboxquestions) > 0) {
         $skippedquestion[$questionID] = $missedcount;
     }
     $result->close();
-    $phase_description .= ': ' . number_format($out_of) . ' ' . $string['candidates'] . " have taken this paper";
-    }
+    $phase_description .= ': ' . number_format($out_of) . ' ' . $string['candidates'] . ' have taken this paper';
+}
 
   echo "<div id=\"content\">\n";
 
@@ -258,13 +258,13 @@ while ($result->fetch()) {
         echo '<tr><td style="text-align:right; vertical-align:top; white-space:nowrap;">';
 
         $showwarning = isset($skippedquestion[$q_id]) && ($candidates_marked < ($out_of - $skippedquestion[$q_id]));
-        $skippedinfo = isset($skippedquestion[$q_id]) ? $skippedquestion[$q_id] . " " . $string['skipped'] : '';
+        $skippedinfo = isset($skippedquestion[$q_id]) ? $skippedquestion[$q_id] . ' ' . $string['skipped'] : '';
         $cellclass = '';
         $warning = '';
 
         if ($showwarning) {
             $missingMarks = $candidate_no - $candidates_marked - $skippedquestion[$q_id];
-            $warning = " " . $missingMarks . " " . $string['missingmark'];
+            $warning = ' ' . $missingMarks . ' ' . $string['missingmark'];
             echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="' . $warning . '"/>';
             $cellclass = ' style="background-color:#FFDDDD"';
         }
