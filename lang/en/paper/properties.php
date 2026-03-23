@@ -21,11 +21,7 @@ require '../lang/' . $language . '/include/paper_types.php';
 $string['propertiestitle'] = 'Properties';
 $string['edittitle'] = 'Edit';
 $string['warning'] = 'Warning paper name already used by another assessment!';
-$string['availablefromyear'] = 'The available from year is greater than the available to year - this is illogical!';
-$string['availablefrommonth'] = 'The available from month is greater than the available to month - this is illogical!';
-$string['availablefromday'] = 'The available from day is greater than the available to day - this is illogical!';
-$string['availablefromhour'] = 'The available from hour is greater than the available to hour - this is illogical!';
-$string['availablefromminute'] = 'The available from minute is greater than the available to minute - this is illogical!';
+$string['availableerror'] = 'The paper must have an available from date and time that is lower than the available until date and time';
 $string['msg1'] = 'There are no modules selected. Papers must be assigned to at least one module.';
 $string['msg2'] = 'Summative paper start and end dates must be on the same day (\'Access Rights\' tab).';
 $string['msg3'] = 'You must specify a duration for Summative exams.\nThis should be normal duration excluding any extra time for dyslexic students.';
@@ -43,7 +39,7 @@ $string['papererrors'] = 'An error occurred while updating paper properties';
 $string['generaltab'] = 'General';
 $string['generalheading'] = 'Paper name, marking and display options';
 $string['paperdetails'] = 'Paper Details';
-$string['onlyonexamday'] = '(only on exam day)';
+$string['onlyonexamday'] = 'only on exam day';
 $string['url'] = 'URL';
 $string['name'] = 'Name';
 $string['type'] = 'Type';
@@ -74,22 +70,24 @@ $string['overallclass3'] = 'Fail | Borderline fail | Borderline pass | Pass | Go
 $string['overallclass4'] = 'Clear FAIL | BORDERLINE | Clear PASS | Honours PASS';
 $string['overallclass5'] = 'Pass | Fail';
 $string['passmark'] = 'Pass Mark';
+$string['percentage'] = 'Percent (whole number)';
 $string['distinction'] = 'Distinction';
 $string['method'] = 'Method';
 $string['noadjustment'] = 'No Adjustment';
 $string['calculatrrandommark'] = 'Calculate Random Mark';
-$string['stdset'] = 'Std Set';
+$string['stdset'] = 'Standard Setting';
+$string['selectedstdset'] = 'Selected standard set';
 $string['borderlinemethod'] = 'Borderline Method';
 $string['ticks_crosses'] = 'Ticks/Crosses';
 $string['question_marks'] = 'Question Marks';
-$string['hideallfeedback'] = 'Hide all feedback if<br />unanswered';
+$string['hideallfeedback'] = 'Hide all feedback if unanswered';
 $string['correctanswerhighlight'] = 'Correct Answer Highlight';
 $string['textfeedback'] = 'Text Feedback';
 $string['photos'] = 'Photos';
 $string['ifavailable'] = 'if available';
 $string['review'] = 'Review';
 $string['allpeerspergroup'] = 'All peers per group';
-$string['singlereview'] = 'Single Review';
+$string['singlereview'] = 'Single review';
 $string['numberfrom'] = 'Number from';
 $string['groupdetails'] = 'Group Details';
 $string['tooltip_random'] = 'ExamSys will calculate the number of marks a student would get answering all questions randomly. Percentages are then scaled accordingly.';
@@ -107,28 +105,36 @@ $string['password'] = 'Password';
 $string['timezone'] = 'Time Zone';
 $string['modules'] = 'Modules';
 $string['duration'] = 'Duration';
-$string['hrs'] = 'hrs';
-$string['mins'] = 'mins';
+$string['hrs'] = 'Hours';
+$string['hrs_info'] = 'Whole number (0 - 12)';
+$string['mins'] = 'Minutes';
+$string['mins_info'] = 'Whole number (0 - 59)';
+$string['time'] = 'Time';
 $string['availablefrom'] = 'Available from';
+$string['availableuntil'] = 'Available until';
 $string['to'] = 'to';
 $string['restricttolabs'] = 'Restrict to Labs';
 $string['restricttometadata'] = 'Restrict to Metadata';
 $string['na'] = 'N/A';
 $string['tooltip_password'] = 'This will put an extra password on the paper in addition to students logging into ExamSys with their own personal password. This password can be given out to students within the computer lab.';
 $string['donotchangewarning'] = 'This paper is locked. It is recommended you only make changes if no students have attempted this paper';
-$string['minavailability'] = '*The minimum valid availability due to student accomodations is %s minutes.';
+$string['minavailability'] = 'The minimum valid availability due to student accomodations is %s minutes.';
 
 // Safe Exam Browser tab
 $string['sebtab'] = 'Safe Exam Browser';
 $string['seb_keys_heading'] = 'Safe Exam Browser';
+$string['seb_keys'] = 'Safe Exam Browser Keys';
 $string['seb_keys_title'] = 'If this paper is to be run in the Safe Exam Browser environment, please paste a list of permitted Config Keys below, one per line. Students without the correct SEB configuration/key will be denied access.';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Reviewers';
 $string['reviewersheading'] = 'Set internal/external reviewers and deadlines.';
+$string['internalreview'] = 'Internal Review';
 $string['internalreviewers'] = 'Internal Reviewers';
+$string['externalreview'] = 'External Review';
 $string['externalexaminers'] = 'External Examiners';
 $string['deadline'] = 'Deadline:';
+$string['sct_review'] = 'Script Concordance Test (SCT) review url';
 
 // Exam Rubric tab
 $string['rubrictab'] = 'Exam Rubric';
@@ -149,7 +155,7 @@ $string['nomaterials'] = 'There are no reference materials available for the mod
 
 // Feedback tab
 $string['feedbackheading'] = 'Feedback available to students and external examiners';
-$string['feedbackwarning'] = '<strong>Note:</strong> This will release questions including the correct answers and marks to students.';
+$string['feedbackwarning'] = 'Note: This will release questions including the correct answers and marks to students.';
 $string['on'] = 'On';
 $string['off'] = 'Off';
 $string['objectivesreport'] = 'Objectives-based Feedback (Students)';
@@ -158,9 +164,12 @@ $string['externalexaminerfeedback'] = 'Class Totals (External Examiners)';
 $string['externalwarning'] = 'When on externals will be able to access Class Totals report for paper.';
 $string['cohortperformancefeedback'] = 'Cohort Performance Report (Students)';
 $string['textualfeedback'] = 'Textual Feedback';
+$string['textualfeedbackboundary'] = 'Boundary %s';
 $string['above'] = 'Above';
 $string['message'] = 'Message';
 $string['answerscreensettings'] = 'Answer Screen Settings';
+$string['feedbackreport'] = 'Feedback Report';
+$string['feedbackurl'] = 'Feedback URL';
 
 // Changes tab
 $string['changes'] = 'Changes';

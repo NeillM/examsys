@@ -79,6 +79,28 @@ define(['jquery', 'jqueryui'], function($) {
             highlight = 'fminute';
           }
           break;
+        case 'fdate':
+          $("#tdate").val($("#fdate").val());
+          highlight = 'tdate';
+          break;
+        case 'tdate':
+          $("#fdate").val($("#tdate").val());
+          highlight = 'fdate';
+          break;
+        case 'ftime':
+          if ($("#ftime").val() > $("#ttime").val()) {
+            // The from time should not be higher than the to time.
+            $("#ttime").val($("#ftime").val());
+            highlight = 'ttime';
+          }
+          break;
+        case 'ttime':
+          if ($("#ftime").val() > $("#ttime").val()) {
+            // The from time should not be higher than the to time.
+            $("#ftime").val($("#ttime").val());
+            highlight = 'ftime';
+          }
+          break;
       }
       if (highlight != '') {
         $('#' + highlight).effect("highlight", {}, 1500);

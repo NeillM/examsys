@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
+define(['jsxls', 'alert', 'helplauncher', 'jquery', 'jqueryui'], function(JsXls, ALERT, HELPLAUNCHER, $) {
     return function () {
         /**
          * Get the paper metadata.
@@ -26,28 +26,32 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
         this.getMeta = function() {
             var scope = this;
             var mod_codes = '';
-            var module_no = $('#module_no').val();
 
-            for (var i = 0; i < module_no; i++) {
-                if ($('#mod' + i).is(':checked')) {
-                    if (mod_codes == '') {
-                        mod_codes = $('#mod' + i).val();
-                    } else {
-                        mod_codes += ',' + $('#mod' + i).val();
-                    }
+            // Generate a comma separated list of modules that are associated with the paper.
+            $("input[name='mod[]']:checked").each(function(index, checkbox) {
+                if (mod_codes == '') {
+                    mod_codes = $(checkbox).val();
+                } else {
+                    mod_codes += ',' + $(checkbox).val();
                 }
-            }
+            });
 
             // Load metadata.
-            $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=' + this.paperid + '&session=' + $('#session').val(), function() {
+            $('#metadata_security>.fieldset-elements').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=' + this.paperid + '&session=' + $('#session').val(), function() {
                     $('#meta_dropdown_no').attr('data-loaded', 1);
                     scope.enablesubmit();
                 }
             );
             // Load reference list.
-            $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=' + this.paperid, function() {
+            $('#reference_list>.fieldset-elements').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=' + this.paperid, function() {
                     $('#reference_no').attr('data-loaded', 1);
                     scope.enablesubmit();
+
+                    // Ensure that any help links are made active.
+                    $('#reference_list>.fieldset-elements .refmaterials').click(function (e) {
+                        e.preventDefault();
+                        HELPLAUNCHER.launchHelp(296, 'staff');
+                    });
                 }
             );
         };
@@ -57,94 +61,53 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
          */
         this.enablesubmit = function() {
             if ($('#meta_dropdown_no').attr('data-loaded') == 1 && $('#reference_no').attr('data-loaded') == 1) {
-                $('#submitpropeties').prop('disabled', false);
+                $("input[name='submit']").prop('disabled', false);
             }
-        };
-
-        /**
-         * Properties window tab selection actions.
-         * @param integer sectionID section id
-         * @param integer tabID tab id
-         */
-        this.buttonclick = function(sectionID, tabID) {
-            $('#general').hide();
-            $('#security').hide();
-            $('#seb').hide();
-            $('#reviewers').hide();
-            $('#feedback').hide();
-            $('#rubric').hide();
-            $('#prologue').hide();
-            $('#postscript').hide();
-            $('#reference').hide();
-            $('#changes').hide();
-
-            $('#' + sectionID).show();
-
-            $('.tab').each(function() {
-                $(this).removeClass('tabon');
-            });
-            $('.tabon').each(function() {
-                $(this).removeClass('tabon');
-                $(this).addClass('tab');
-            });
-            $('#' + tabID).removeClass('tab');
-            $('#' + tabID).addClass('tabon');
         };
 
         this.checkForm = function() {
             var alert = new ALERT();
-            if ($('#fyear').val() > $('#tyear').val()) {
-                alert.notification('availablefromyear');
-                return false;
-            } else if ($('#fyear').val() == $('#tyear').val() && $('#fmonth').val() > $('#tmonth').val()) {
-                alert.notification('availablefrommonth');
-                return false;
-            } else if ($('#fyear').val() == $('#tyear').val() && $('#fmonth').val() == $('#tmonth').val() && $('#fday').val() > $('#tday').val()) {
-                alert.notification('availablefromday');
-                return false;
-            } else if ($('#fyear').val() == $('#tyear').val() && $('#fmonth').val() == $('#tmonth').val() && $('#fday').val() == $('#tday').val() && $('#fhour').val() > $('#thour').val()) {
-                alert.notification('availablefromhour');
-                return false;
-            } else if ($('#fyear').val() == $('#tyear').val() && $('#fmonth').val() == $('#tmonth').val() && $('#fday').val() == $('#tday').val() && $('#fhour').val() == $('#thour').val() && $('#fminute').val() > $('#tminute').val()) {
-                alert.notification('availablefromminute');
+
+            // Get the availability dates.
+            const fdatetime = Date.parse($('#fdate').val() + ' ' + $('#ftime').val());
+            const tdatetime = Date.parse($('#tdate').val() + ' ' + $('#ttime').val());
+
+            if (fdatetime > tdatetime) {
+                alert.notification('availableerror');
                 return false;
             }
 
-            var module_no = $('#module_no').val();
-            var moduleList = '';
-            for (var i = 0; i < module_no; i++) {
-                var objectID = 'mod' + i;
-                if ($('#' + objectID).is(':checked')) {
-                    if (moduleList == '') {
-                        moduleList = $('#' + objectID).val();
-                    } else {
-                        moduleList += ',' + $('#' + objectID).val();
-                    }
+            // Require at least one module the user can access is associated with the paper.
+            if ($("input[name='mod[]']:checked").length === 0) {
+                if ($('#paper_type').val() == '4') {
+                    // OSCE stations have a different message when no modules are selected.
+                    alert.notification('msg5');
+                } else {
+                    alert.notification('msg1');
                 }
-            }
-            if (moduleList == '') {
-                alert.notification('msg1');
                 return false;
             }
 
             if ($('#paper_type').val() == '2' && $('#remote_summative').is(':checked') == 0) {
-                if ($('#fday').val() != $('#tday').val() || $('#fmonth').val() != $('#tmonth').val() || $('#fyear').val() != $('#tyear').val()) {
+                if ($('#fdate').val() != $('#tdate').val()) {
                     alert.notification('msg2');
                     return false;
                 }
-                if ($('#exam_duration_hours').val() == 'NULL' || $('#exam_duration_mins').val() == 'NULL') {
+
+                if ($('#exam_duration_hours').val() === '' || $('#exam_duration_mins').val() === '') {
+                    // Part of the duration is not set.
                     alert.notification('msg3');
                     return false;
                 }
 
                 // Check from time has been set.
-                if (!$('#fhour').is(':disabled') && $('#fhour').val() === '' || !$('#fminute').is(':disabled') && $('#fminute').val() === '') {
+                if (!$('#ftime').is(':disabled') && $('#ftime').val() === '') {
                     alert.notification('missingfromtime');
                     return false;
                 }
 
                 // Check to time has been set.
-                if (!$('#thour').is(':disabled') && $('#thour').val() === '' || !$('#tminute').is(':disabled') && $('#tminute').val() === '') {
+                if (!$('#ttime').is(':disabled') && $('#ttime').val() === '') {
                     alert.notification('missingtotime');
                     return false;
                 }
@@ -156,105 +119,42 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
             }
 
             if ($('#paper_type').val() == '2') {
-                // Calculate the minimum hour and minutes based on student accomodations.
-                var minavilability = $('#dataset').attr('data-minavail');
-                var monthsdiff = parseInt($('#tmonth').val()) - parseInt($('#fmonth').val());
-                // Only do the check if exam is in the same month.
-                if (monthsdiff == 0) {
-                    var daysdiff = parseInt($('#tday').val()) - parseInt($('#fday').val());
-                    // Only do check if exam is within a day.
-                    if (daysdiff <= 1) {
-                        var daysdiffhour = daysdiff * 24;
-                        if (minavilability > 60) {
-                            var minavilability_hour = Math.floor(minavilability / 60);
-                            var minavilability_min = minavilability % 60;
-                        } else {
-                            minavilability_hour = 0;
-                            minavilability_min = minavilability;
-                        }
-                        // Map minimum hour and minute to 'to hour / to minute'
-                        var calculated_min_thours = parseInt($('#fhour').val()) + parseInt(minavilability_hour);
-                        var calculated_min_tminutes = parseInt($('#fminute').val()) + parseInt(minavilability_min);
-                        if (calculated_min_tminutes > 60) {
-                            calculated_min_thours += 1;
-                            calculated_min_tminutes -= 60;
-                        }
-                        // Check that availability meets the duration requirement.
-                        var durationnotmet = false;
-                        if (parseInt($('#thour').val() + daysdiffhour) < calculated_min_thours) {
-                            durationnotmet = true;
-                        }
-                        if (parseInt($('#thour').val() + daysdiffhour) === calculated_min_thours && parseInt($('#tminute').val()) < calculated_min_tminutes) {
-                            durationnotmet = true;
-                        }
-                        if (durationnotmet) {
-                            alert.notification('durationnotmet');
-                            return false;
-                        }
+                // Calculate the minimum hour and minutes based on student accommodations.
+
+                // The minimum availability is stored in minutes.
+                let minavilability = $('#dataset').attr('data-minavail');
+
+                // Difference in the availability dates in seconds.
+                const availability = (tdatetime - fdatetime) / 1000;
+
+                // Only do check if exam is within a day.
+                if (availability <= 86400) {
+                    if ((availability / 60) < minavilability) {
+                        alert.notification('durationnotmet');
+                        return false;
                     }
                 }
             }
 
             if ($('#paper_type').val() == '4') {
-                module_no = $('#module_no').val();
-
-                moduleList = '';
-                for (var l = 0; l < module_no; l++) {
-                    var osceobjectID = 'mod' + l;
-                    if ($('#' + osceobjectID).is(':checked')) {
-                        if (moduleList == '') {
-                            moduleList = $('#' + osceobjectID).val();
-                        } else {
-                            moduleList += ',' + $('#' + osceobjectID).val();
-                        }
-                    }
-                }
-                if (moduleList == '') {
-                    alert.notification('msg5');
-                    return false;
-                }
-
+                // OSCE Stations require a session is set.
                 if ($('#session').val() == '') {
                     alert.notification('msg4');
                     return false;
                 }
             }
 
-            var external_set = false;
-            for (var j = 0; j < $('#examiner_no').val(); j++) {
-                var examobjectID = 'examiner' + j;
-                if ($('#' + examobjectID).is(':checked')) {
-                    external_set = true;
-                }
-            }
-            if (external_set == true) {
-                if ($('#ext_tmonth').val() == '') {
-                    alert.notification('msg6');
-                    return false;
-                } else if ($('#ext_tday').val() == '') {
-                    alert.notification('msg6');
-                    return false;
-                } else if ($('#ext_tyear').val() == '') {
+            // There must be a deadline when an external examiner is set.
+            if ($("input[name='examiner[]']:checked").length > 0) {
+                if ($('#externaldeadline').val() == '') {
                     alert.notification('msg6');
                     return false;
                 }
             }
 
-            var internal_set = false;
-            for (var k = 0; k < $('#internal_no').val(); k++) {
-                var internalobjectID = 'internal' + k;
-                if ($('#' + internalobjectID).is(':checked')) {
-                    internal_set = true;
-                }
-            }
-            if (internal_set == true) {
-                if ($('#int_tmonth').val() == '') {
-                    alert.notification('msg6a');
-                    return false;
-                } else if ($('#int_tday').val() == '') {
-                    alert.notification('msg6a');
-                    return false;
-                } else if ($('#int_tyear').val() == '') {
+            // The must be a deadline when internal reviewers are set.
+            if ($("input[name='internal[]']:checked").length > 0) {
+                if ($('#internaldeadline').val() == '') {
                     alert.notification('msg6a');
                     return false;
                 }
@@ -267,11 +167,9 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
          */
         this.changeType = function() {
             if ($('#paper_type').val() == '0') {
-                $('#feedback_on').show();
-                $('#feedback_off').hide();
+                $('#answer-screen').show();
             } else {
-                $('#feedback_on').hide();
-                $('#feedback_off').show();
+                $('#answer-screen').hide();
             }
         };
 
@@ -287,9 +185,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(JsXls, ALERT, $) {
                 dataType: "json",
                 success: function (data) {
                     if (data[0] == 'SUCCESS') {
-                        $('#minavail').html(JsXls.lang_string['minavailability'].replace('%s', data[1]));
-                        $('#minavail').css('display','block');
-                        $('#minavailflag').css('display','contents');
+                        $('#paper-end>.form-help').html(JsXls.lang_string['minavailability'].replace('%s', data[1]));
                     }
                 },
                 error: function (xhr, textStatus) {

@@ -17,6 +17,7 @@
 
 namespace testing\datagenerator;
 
+use DateTime;
 use module_utils;
 use yearutils;
 use UserUtils;
@@ -31,6 +32,9 @@ use UserUtils;
  */
 class modules extends generator
 {
+    /** @var int The number of reference material items that have been created. */
+    protected static int $created_reference_material = 0;
+
     /**
      * Create a new module
      *
@@ -149,5 +153,65 @@ class modules extends generator
         $query->bind_param('iss', $moduleid, $new_keyword, $type);
         $query->execute();
         $query->close();
+    }
+
+    /**
+     * Creates reference material
+     *
+     * Optional parameters:
+     * - title: string The name of the reference material
+     * - contents: string The main text of the reference material
+     * - width: integer (200 - 800 in increments of 50)
+     * - created: The time at which the reference material was created.
+     * - deleted: The time at which the reference material was deleted.
+     *
+     * @param int|int[] $modules Either a module id, or array of moduleids that the reference material is attached to.
+     * @param array $parameters
+     * @return array
+     */
+    public function createReferenceMaterial(int|array $modules, array $parameters = []): array
+    {
+        if (is_int($modules)) {
+            $modules = [$modules];
+        }
+        if (empty($modules)) {
+            throw new data_error('At least 1 module id must be provided');
+        }
+
+        $defaults = [
+            'title' => 'Reference ' . self::$created_reference_material++,
+            'contents' => '<p>Sample reference material</p>',
+            'width' => 400,
+            'created' => 'now',
+            'deleted' => null,
+        ];
+        $settings = $this->set_defaults_and_clean($defaults, $parameters);
+
+        $creationdate = new DateTime($settings['created']);
+        $settings['created'] = $creationdate->format('Y-m-d H:i:s');
+
+        if ($settings['deleted']) {
+            $deleteddate = new DateTime($settings['deleted']);
+            $settings['deleted'] = $deleteddate->format('Y-m-d H:i:s');
+        } else {
+            $settings['deleted'] = null;
+        }
+
+        // Create the reference material.
+        $result = $this->db->prepare('INSERT INTO reference_material VALUES (NULL, ?, ?, ?, ?, ?)');
+        $result->bind_param('sssss', $settings['title'], $settings['content'], $settings['width'], $settings['created'], $settings['deleted']);
+        $result->execute();
+        $settings['id'] = $this->db->insert_id;
+        $result->close();
+
+        // Attach the reference material to modules.
+        $result = $this->db->prepare('INSERT INTO reference_modules VALUES (NULL, ?, ?)');
+        $result->bind_param('ii', $settings['id'], $module);
+        foreach ($modules as $module) {
+            $result->execute();
+        }
+        $result->close();
+
+        return $settings;
     }
 }

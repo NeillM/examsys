@@ -19,6 +19,9 @@ namespace testing\behat\steps\frontend;
 
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ExpectationException;
+use DateTime;
+use testing\behat\LocaleFormat;
 
 /**
  * Step definitions for interacting with web forms.
@@ -31,24 +34,96 @@ use Behat\Mink\Element\NodeElement;
 trait forms
 {
     /**
-     * Fill in a form field.
+     * Gets a field element.
      *
-     * @Given /^I set the field "([^"]*)" to "([^"]*)"$/
+     * When there are multiple fields using the same name on a page we use >
+     * to separate the names of fieldssets that contain the field we are looking for.
      *
-     * @param string $field The name, id or label of the field
-     * @param string $value The value the field should be set to
-     * @throws \Exception
+     * For example: Available from > Date
+     * would be for the Date field inside the Available from fieldset.
+     *
+     * @param string $anme The name or fieldset path of the field
+     * @return NodeElement
      */
-    public function i_set_field($field, $value)
+    protected function getField(string $name): nodeElement
     {
-        $element = $this->find('field', $field);
+        $path = explode('>', $name);
+
+        // This is the name field we want to field.
+        $field = trim(array_pop($path));
+
+        $fieldsetcount = count($path);
+
+        if ($fieldsetcount === 0) {
+            // There were no fieldsets defined.
+            $element = $this->find('field', $field);
+
+            if (is_null($element)) {
+                $element = $this->find('fieldset', $field);
+            }
+
+            if (is_null($element)) {
+                $message = "Could not find '$name'";
+                throw new ExpectationException($message, $this->getSession());
+            }
+
+            return $element;
+        }
+
+        // Get the first element of the path.
+        $fieldsetname = trim(array_shift($path));
+        $fieldset = $this->find('fieldset', $fieldsetname);
+
+        if (is_null($fieldset)) {
+            // The first fieldset could not be found.
+            $missing = $fieldsetname;
+            $message = "Could not find '$missing' in '$name'";
+            throw new ExpectationException($message, $this->getSession());
+        }
+
+        foreach ($path as $key => $partname) {
+            // We are looking for nested fieldsets
+            $fieldset = $fieldset->find('named', ['fieldset', trim($partname)]);
+
+            if (is_null($fieldset)) {
+                // The fieldset could not be found.
+                $missing = trim($partname);
+                $message = "Could not find '$missing' in '$name'";
+                throw new ExpectationException($message, $this->getSession());
+            }
+        }
+
+        $element = $fieldset->find('named', ['field', $field]);
 
         if (is_null($element)) {
-            $element = $this->find('fieldset', $field);
+            $element = $fieldset->find('named', ['fieldset', $field]);
         }
 
         if (is_null($element)) {
-            throw new \Exception("The form field $field could not be found");
+            $message = "Could not find '$name'";
+            throw new ExpectationException($message, $this->getSession());
+        }
+
+        return $element;
+    }
+
+    /**
+     * Gets a form field.
+     *
+     * Returns an array made up of two values:
+     * - NodeElement: The element that we are trying to find
+     * - mixed: The actual form value
+     *
+     * @param string $field The name of a form field.
+     * @param string $value The value of a field we want to translate to it's value
+     * @return array
+     */
+    protected function getFieldAndValue($field, $value, bool $set = false): array
+    {
+        $element = $this->getField($field);
+
+        if (is_null($element)) {
+            throw new \Exception("The form field '$field' could not be found");
         }
 
         $formvalue = $value;
@@ -61,9 +136,128 @@ trait forms
             case 'fieldset':
                 [$element, $formvalue] = $this->getFieldsetValue($element, $value);
                 break;
+            case 'input':
+                switch ($element->getAttribute('type')) {
+                    case 'checkbox':
+                        // Get the value the form will send, this is the value we need to set the form to be.
+                        $elementvalue = $element->getAttribute('value');
+
+                        // The value matches the one we that the form will send, we want to treat that as checked.
+                        $match = $elementvalue === $value;
+
+                        // The value parses as a boolean from a form, so we would want to treat it as checked.
+                        $boolean = \param::clean($value, \param::BOOLEAN);
+
+                        // The value should be null if the checkbox is unchecked.
+                        $formvalue = ($match or $boolean) ? $elementvalue : null;
+                        break;
+                    case 'date':
+                        // We want to allow relative date formats.
+                        $date = new DateTime($value);
+
+                        // When setting a date we need to input it using the format of the locale
+                        // retrieval is always in the yyyy-mm-dd format.
+                        if ($set) {
+                            $locale = $this->getBrowserLocale();
+                            $formvalue = $date->format(LocaleFormat::getFormat($locale, LocaleFormat::FORMAT_DATE));
+                        } else {
+                            $formvalue = $date->format('Y-m-d');
+                        }
+                        break;
+                    case 'time':
+                        // We want to allow relative time formats.
+                        $date = new DateTime($value);
+
+                        // When setting a time we need to input it using the format of the locale
+                        // retrieval is always in the 24 hour clock format.
+                        if ($set) {
+                            $locale = $this->getBrowserLocale();
+                            $formvalue = $date->format(LocaleFormat::getFormat($locale, LocaleFormat::FORMAT_TIME));
+                        } else {
+                            $formvalue = $date->format('H:i');
+                        }
+                        break;
+                }
+                break;
         }
 
+        return [$element, $formvalue];
+    }
+
+    /**
+     * Fill in a form field.
+     *
+     * @Given /^I set the field "([^"]*)" to "([^"]*)"$/
+     *
+     * @param string $field The name, id or label of the field
+     * @param string $value The value the field should be set to
+     * @throws \Exception
+     */
+    public function i_set_field($field, $value)
+    {
+        /** @var NodeElement $element */
+        [$element, $formvalue] = $this->getFieldAndValue($field, $value, true);
+
         $element->setValue($formvalue);
+    }
+
+    /**
+     * Tests that a single field is set to a value.
+     *
+     * @Then /^I should see the field "([^"]*)" is "([^"]*)"$/
+     *
+     * @param string $field The name, id or label of the field
+     * @param string $value The value the field should be set to
+     */
+    public function iSeeField($field, $value): void
+    {
+        [$element, $formvalue] = $this->getFieldAndValue($field, $value);
+
+        $actualvalue = $element->getValue();
+
+        if ($actualvalue !== $formvalue) {
+            throw new \Exception("'$field' has a value of '$actualvalue', rather then the expected '$formvalue'");
+        }
+    }
+
+    /**
+     * Tests that a single field is not in the form.
+     *
+     * @Then /^I should not see the field "([^"]*)"$/
+     *
+     * @param string $field The name, id or label of the field
+     */
+    public function iNotSeeField($field): void
+    {
+        try {
+            $this->getField($field);
+            throw new \Exception("'$field' was found in the form.");
+        } catch (\Exception) {
+            // We could not find the field.
+        }
+    }
+
+    /**
+     * Tests that a single field cannot be modified.
+     *
+     * @Then /^I cannot change "([^"]*)" field$/
+     *
+     * @param string $field The name, id or label of the field
+     */
+    public function iCannotEditField($field): void
+    {
+        $element = $this->getField($field);
+
+        if (!$element->isVisible()) {
+            throw new \Exception("'$field' is not visible");
+        }
+
+        $enabled = !$element->hasAttribute('disabled');
+        $writable = !$element->hasAttribute('readonly');
+
+        if ($enabled && $writable) {
+            throw new \Exception("'$field' may be changed");
+        }
     }
 
     /**
@@ -135,6 +329,58 @@ trait forms
     {
         foreach ($fields->getHash() as $row) {
             $this->i_set_field($row['field'], $row['value']);
+        }
+    }
+
+    /**
+     * Checks that multiple fields in a form have an expected value.
+     *
+     * Requires the following values:
+     * - field
+     * - value
+     *
+     * @When /^I should see the following fields:$/
+     *
+     * @param TableNode $fields
+     */
+    public function iSeeFields(TableNode $fields)
+    {
+        foreach ($fields->getHash() as $row) {
+            $this->iSeeField($row['field'], $row['value']);
+        }
+    }
+
+    /**
+     * Checks that multiple fields are not present in the form.
+     *
+     * Requires the following values:
+     * - field
+     *
+     * @When /^I should not see the following fields:$/
+     *
+     * @param TableNode $fields
+     */
+    public function iNotSeeFields(TableNode $fields)
+    {
+        foreach ($fields->getHash() as $row) {
+            $this->iNotSeeField($row['field']);
+        }
+    }
+
+    /**
+     * Checks that multiple fields in a form cannot be edited
+     *
+     * Requires the following values:
+     * - field
+     *
+     * @When /^I cannot change fields:$/
+     *
+     * @param TableNode $fields
+     */
+    public function iCannotEditFields(TableNode $fields)
+    {
+        foreach ($fields->getHash() as $row) {
+            $this->iCannotEditField($row['field']);
         }
     }
 

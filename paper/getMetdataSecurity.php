@@ -23,23 +23,25 @@
  * @package
  */
 
+use component\form\Hidden;
+use component\form\Select;
+
 require '../include/staff_student_auth.inc';
 require '../include/errors.php';
 $paperID = check_var('paperID', 'GET', true, false, true);
-?>
-<table cellpadding="0" cellspacing="3" border="0" style="width:100%">
-<?php
+$year = param::optional('session', '', param::INT);
+$modules = param::optional('modules', '', param::TEXT);
+
+// We need to sanitise the modules to prevent SQL injection attacks.
+$module_list = explode(',', (string) $modules);
+$sanitised_modules = param::clean_array($module_list, param::INT);
+$modules = implode(',', $sanitised_modules);
+
+$renderer = new Render($configObject);
+
 // Get the current metadata settings for the paper
-$current_settings = [];
-$stmt = $mysqli->prepare('SELECT name, value FROM paper_metadata_security WHERE paperID = ?');
-$stmt->bind_param('i', $paperID);
-$stmt->execute();
-$stmt->store_result();
-$stmt->bind_result($type, $value);
-while ($stmt->fetch()) {
-    $current_settings[$type] = $value;
-}
-$stmt->close();
+$paper_utils = new PaperUtils();
+$current_settings = $paper_utils->get_security_metadata($paperID, $mysqli);
 $old_type = '';
 $meta_no = 0;
 if ($_GET['session'] != '') {
@@ -49,32 +51,39 @@ if ($_GET['session'] != '') {
 }
 
 // Get the dropdown list values
-if ($_GET['modules'] != '') {
-    $stmt = $mysqli->prepare('SELECT DISTINCT type, value FROM users_metadata, modules WHERE modules.id = users_metadata.idMod AND modules.id IN (' . $_GET['modules'] . ") $sql_session GROUP BY value, type ORDER BY type, value");
+if ($modules != '') {
+    $stmt = $mysqli->prepare('SELECT DISTINCT type, value FROM users_metadata, modules WHERE modules.id = users_metadata.idMod AND modules.id IN (' . $modules . ") $sql_session GROUP BY value, type ORDER BY type, value");
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($type, $value);
+    $metadata = [];
     while ($stmt->fetch()) {
-        if ($old_type != $type) {
-            if ($old_type != '') {
-                echo '</select></td></tr>';
-            }
-            echo "<tr><td>$type</td><td><input type=\"hidden\" name=\"meta_type$meta_no\" value=\"$type\" /><select name=\"meta_value$meta_no\">\n<option value=\"\">&lt;any&gt;</option>";
-            $meta_no++;
-        }
-        if (isset($current_settings[$type]) and $current_settings[$type] == $value) {
-            echo "<option value=\"$value\" selected>$value</option>\n";
-        } else {
-            echo "<option value=\"$value\">$value</option>\n";
-        }
-        $old_type = $type;
+        $metadata[$type][$value] = $value;
     }
-    if ($old_type != '') {
-        echo '</select></td></tr>';
-    }
-
     $stmt->close();
+
+    foreach ($metadata as $type => $options) {
+        $hidden = new Hidden(
+            id: 'meta_type' . $meta_no,
+            name: 'meta_type' . $meta_no,
+            value: $type,
+        );
+        $select = new Select(
+            id: 'meta_value' . $meta_no,
+            name: 'meta_value' . $meta_no,
+            label: $type,
+            options: ['' => '<any>'] + $options,
+            default: $current_settings[$type] ?? '',
+        );
+        $renderer->renderComponent($hidden);
+        $renderer->renderComponent($select);
+        $meta_no++;
+    }
 }
 
-$mysqli->close();
-echo "</table>\n<input type=\"hidden\" id=\"meta_dropdown_no\" name=\"meta_dropdown_no\" value=\"$meta_no\" data-loaded='0'/>";
+$metacount = new Hidden(
+    id: 'meta_dropdown_no',
+    name: 'meta_dropdown_no',
+    value: $meta_no,
+);
+$renderer->renderComponent($metacount);

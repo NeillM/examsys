@@ -35,6 +35,9 @@ class Lab
     private $it_support;
     private $plagiarism;
 
+    /** @var int The number of PCs in the lab. */
+    private int $numberofpcs = 0;
+
     /**
      * @return string $id
      */
@@ -161,5 +164,26 @@ class Lab
     public function set_plagiarism($plagiarism)
     {
         $this->plagiarism = $plagiarism;
+    }
+
+    /**
+     * Gets the number of PCs in a lab.
+     *
+     * @return int
+     */
+    public function getNumberOfPC(): int
+    {
+        return $this->numberofpcs;
+    }
+
+    /**
+     * Sets the number of PCs in a lab.
+     *
+     * @param int $number
+     * @return void
+     */
+    public function setNumberOfPC(int $number): void
+    {
+        $this->numberofpcs = $number;
     }
 }

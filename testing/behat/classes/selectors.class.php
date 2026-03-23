@@ -189,7 +189,9 @@ XPATH
 //td[contains(@id, 'source')]//a[contains(normalize-space(.) , %locator%)]
 XPATH
         ,'tab' => <<<XPATH
-//td[contains(@class, 'tabon') or contains(@class, 'taboff') and contains(normalize-space(.) , %locator%)]  
+(//td[contains(@class, 'tabon') or contains(@class, 'taboff') and contains(normalize-space(.) , %locator%)])
+|
+(//*[@role='tab' and contains(normalize-space(.) , %locator%)])
 XPATH
         ,'configarea' => <<<XPATH
 //div[@class='configarea' and contains(text(), %locator%)]  

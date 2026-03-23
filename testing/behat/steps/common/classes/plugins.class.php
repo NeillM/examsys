@@ -17,18 +17,38 @@
 
 namespace testing\behat\steps\common;
 
+use Exception;
+use plugin_manager;
+use testing\behat\helpers\database\state;
+
 /**
- * This trait is a convnient way to get all the common steps in one use statement.
+ * Steps for manipulating the plugins in ExamSys
  *
- * This trait should use all of the other traits in the common namespace. No steps should be included in it.
- *
- * @copyright Copyright (c) 2016 The University of Nottingham
+ * @copyright Copyright (c) 2026 The University of Nottingham
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @package testing
  * @subpackage behat
  */
-trait include_common
+trait plugins
 {
-    use plugins;
-    use transforms;
+    /**
+     * Enables a plugin.
+     *
+     * @Given the :plugin plugin is enabled
+     *
+     * @param string $plugin The name of the plugin
+     * @return void
+     */
+    public function thePluginIsEnabled(string $plugin): void
+    {
+        $pluginslist = plugin_manager::listplugins();
+        if (!isset($pluginslist[$plugin])) {
+            throw new Exception("'$plugin' is not a valid plugin");
+        }
+        $pluginns = $pluginslist[$plugin];
+
+        /** @var \plugins\plugins $plugin */
+        $plugin = new $pluginns(state::get_db());
+        $plugin->enable_plugin();
+    }
 }

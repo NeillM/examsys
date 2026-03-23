@@ -159,6 +159,47 @@ class folder_utils
     }
 
     /**
+     * Gets the list of folders the user may access.
+     *
+     * @param int $userid The database id of the user
+     * @param array $staff_modules The modules the user is in a staff team for.
+     * @param int|null $folder_id The id of a folder that is already selection.
+     * @return array
+     */
+    public static function getUsersFolderNames(int $userid, array $staff_modules, ?int $folder_id = null): array
+    {
+        $folders = [];
+
+        $additional = '';
+
+        if (count($staff_modules) > 0) {
+            $additional = ' OR idMod IN (' . implode(',', $staff_modules) . ')';
+        }
+
+        if ($folder_id) {
+            $additional .= ' OR id=' . $folder_id;
+        }
+
+        $sql = "SELECT DISTINCT id, name 
+                FROM folders 
+                    LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id
+                WHERE (ownerID = ? $additional) AND deleted IS NULL 
+                ORDER BY name";
+        $result = Config::get_instance()->db->prepare($sql);
+        $result->bind_param('i', $userid);
+        $result->execute();
+        $result->bind_result($id, $name);
+
+        while ($result->fetch()) {
+            $folders[$id] = $name;
+        }
+
+        $result->close();
+
+        return $folders;
+    }
+
+    /**
      * Returns a the userID of a folder.
      *
      * @param string $folderID - ID of the folder.

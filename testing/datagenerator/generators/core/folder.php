@@ -77,4 +77,31 @@ class folder extends generator
         $query->close();
         return $settings;
     }
+
+    /**
+     * Attach a module to a folder
+     *
+     * Required parameters:
+     * - folder: The database id of a folder.
+     * - module: The database id of a module.
+     *
+     * @param array $parameters
+     * @return void
+     * @throws data_error
+     */
+    public function addTeamToFolder(array $parameters): void
+    {
+        if (empty($parameters['folder'])) {
+            throw new data_error('id of a folder must be provided');
+        }
+        if (empty($parameters['module'])) {
+            throw new data_error('id of a module must be provided');
+        }
+        $query = $this->db->prepare('INSERT INTO folders_modules_staff VALUES (?, ?)');
+        $query->bind_param('ii', $parameters['folder'], $parameters['module']);
+        if (!$query->execute()) {
+            throw new data_error('Could not link folder (id: ' . $parameters['folder'] . ') to module (id: ' . $parameters['module'] . ')');
+        }
+        $query->close();
+    }
 }

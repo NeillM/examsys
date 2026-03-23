@@ -115,6 +115,42 @@ extarea, input[type=text], select, textarea, input[type=password] {
     padding: 0.313rem 1rem;
 }
 
+.properties-textbox {
+    height: 14.375rem;
+    width: 100%;
+}
+
+.properties-prologue-textbox {
+    height: 33.563rem;
+    width: 100%;
+}
+
+.labs>.fieldset-elements.vertical,
+.modules>.fieldset-elements.vertical,
+.reviewers>.fieldset-elements.vertical {
+    border: 0.063rem solid #828790;
+    height: fit-content;
+    min-height: 10rem;
+    max-height: 29.25rem;
+    overflow-y: auto;
+    min-width: 21.875rem;
+}
+
+.highlight-checked .component-form-input:has(>.form-element>:checked) {
+    background-color: #ffbd69;
+}
+
+.labs .campus .fieldset-group-label {
+    align-items: center;
+    background-image: url('../artwork/new_lab_16.png');
+    background-position-x: 0.313rem;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    display: flex;
+    min-height: 1.626rem;
+    padding: 0 0 0 1.626rem;
+}
+
 .properties-tab-header {
     align-items: center;
     background-color: #c2d5f3;
@@ -134,4 +170,94 @@ extarea, input[type=text], select, textarea, input[type=password] {
 
 .properties-tab-header.changes {
     background-image: url('../artwork/version_icon.png');
+}
+
+.properties-tab-header.feedback {
+    background-image: url('../artwork/feedback_heading_icon.png');
+}
+
+.properties-tab-header.general {
+    background-image: url('../artwork/general_heading_icon.png');
+}
+
+.properties-tab-header.postscript {
+    background-image: url('../artwork/postscript_heading_icon.png');
+}
+
+.properties-tab-header.prologue {
+    background-image: url('../artwork/prologue_heading_icon.png');
+}
+
+.properties-tab-header.reference-material {
+    background-image: url('../artwork/toggle_log.png');
+}
+
+.properties-tab-header.reviewers {
+    background-image: url('../artwork/reviewers_heading_icon.png');
+}
+
+.properties-tab-header.rubric {
+    background-image: url('../artwork/rubric_heading_icon.png');
+}
+
+.properties-tab-header.seb {
+    background-image: url('../artwork/safe_exam_browser.png');
+}
+
+.properties-tab-header.security {
+    background-image: url('../artwork/security_heading_icon.png');
+}
+
+.locked-image {
+    background-image: url('../artwork/paper_locked_padlock.png');
+}
+
+fieldset.component-form-input.general-group.feedback>.fieldset-elements {
+    background-repeat: no-repeat;
+    background-size: 3rem 3rem;
+    box-sizing: border-box;
+    min-height: 3rem;
+    padding: 0 0 0 3.625rem;
+    vertical-align: middle;
+}
+
+.objectives-report>.fieldset-elements {
+    background-image: url('../artwork/feedback_release_icon.png');
+}
+
+.questions-report>.fieldset-elements {
+    background-image: url('../artwork/question_release_icon.png');
+}
+
+.cohort-performance>.fieldset-elements {
+    background-image: url('../artwork/cohort_performance_icon.png');
+}
+
+.external-examiner>.fieldset-elements {
+    background-image: url('../artwork/external_examiner_icon.png');
+}
+
+fieldset.component-form-input.hidden {
+    display: none;
+}
+
+fieldset.component-form-input.general-group.feedback-boundary {
+    align-items: flex-start;
+    border: 0;
+    display: flex;
+    flex-flow: row wrap;
+    padding: 0;
+    margin: 0 0 0.313rem 0;
+}
+
+fieldset.component-form-input.general-group.feedback-boundary > legend {
+    background-color: inherit;
+    border-bottom: 0 solid #e2e4e7;
+    color: #000000;
+    float: left;
+    font-size: 0.8rem;
+    font-weight: normal;
+    margin-bottom: 0;
+    padding: 0 0.313rem 0 0;
+    width: 10rem;
 }

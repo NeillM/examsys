@@ -20,12 +20,14 @@ namespace testing\behat\steps\database;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Tester\Exception\PendingException;
+use FacultyUtils;
 use getID3;
 use media_handler;
 use module_utils;
 use PaperUtils;
 use questiondata;
 use rogo_directory;
+use SchoolUtils;
 use StudentNotes;
 use testing\behat\helpers\database\state;
 use testing\datagenerator\Anomaly;
@@ -46,33 +48,43 @@ trait datageneration
      * Maps the types that can be passed to exist to a data generator.
      *
      * The values should be an array where:
-     * the first value is the name of the data generator,
-     * the second value should be the data generator's component,
-     * the third value is the function that should be called to create the data.
-     * the forth value is the pre process function run before the data generation
+     * - the first value is the name of the data generator,
+     * - the second value should be the data generator's component,
+     * - the third value is the function that should be called to create the data.
+     * - the forth value is the pre process function run before the data generation
+     * - the fifth value is a flag to say if the create function accepts a single array only.
+     *                  When true you probably need to have a pre-processing method defined to
+     *                  ensure that the values passed to it are correct.
      *
      * @var array
      */
     protected $datagenerator_map = [
-        'users' => ['users', 'core', 'create_user', null],
-        'papers' => ['papers', 'core', 'create_paper', 'preProcessPaper'],
-        'questions' => ['questions', 'core', 'create_question', 'preProcessQuestion'],
-        'modules' => ['modules', 'core', 'create_module', null],
-        'academic year' => ['academic_year', 'core', 'create_academic_year', null],
-        'module team members' => ['modules', 'core', 'create_module_team', null],
-        'config' => ['config', 'core', 'change_setting', null],
-        'campuses' => ['labs', 'core', 'create_campus', null],
-        'labs' => ['labs', 'core', 'create_lab', null],
-        'exam pcs' => ['labs', 'core', 'create_exam_pc', 'preProcessPC'],
-        'module keywords' => ['modules', 'core', 'createModuleKeywords', null],
-        'module enrolment' => ['modules', 'core', 'create_enrolment', 'preProcessmoduleEnrolment'],
-        'paper note' => ['users', 'core', 'addPaperNote', 'preProcessPaperNote'],
-        'access audit' => ['audit', 'core', 'create', null],
-        'courses' => ['course', 'core', 'create_course', null],
-        'reviewers' => ['papers', 'core', 'addReviewer', null],
-        'schedule' => ['papers', 'core', 'schedule', null],
-        'anomaly' => ['anomaly', 'core', 'createAnomaly', 'preProcessAnomaly'],
-        'paper change logs' => ['changelog', 'core', 'createPaperLog', 'preProcessPaperLog'],
+        'users' => ['users', 'core', 'create_user', null, true],
+        'papers' => ['papers', 'core', 'create_paper', 'preProcessPaper', true],
+        'questions' => ['questions', 'core', 'create_question', 'preProcessQuestion', true],
+        'modules' => ['modules', 'core', 'create_module', 'preProcessModule', true],
+        'academic year' => ['academic_year', 'core', 'create_academic_year', null, true],
+        'module team members' => ['modules', 'core', 'create_module_team', null, true],
+        'config' => ['config', 'core', 'change_setting', null, true],
+        'campuses' => ['labs', 'core', 'create_campus', null, true],
+        'labs' => ['labs', 'core', 'create_lab', null, true],
+        'exam pcs' => ['labs', 'core', 'create_exam_pc', 'preProcessPC', true],
+        'module keywords' => ['modules', 'core', 'createModuleKeywords', null, true],
+        'module enrolment' => ['modules', 'core', 'create_enrolment', 'preProcessmoduleEnrolment', true],
+        'paper note' => ['users', 'core', 'addPaperNote', 'preProcessPaperNote', true],
+        'access audit' => ['audit', 'core', 'create', null, true],
+        'courses' => ['course', 'core', 'create_course', null, true],
+        'reviewers' => ['papers', 'core', 'addReviewer', null, true],
+        'schedule' => ['papers', 'core', 'schedule', null, true],
+        'anomaly' => ['anomaly', 'core', 'createAnomaly', 'preProcessAnomaly', true],
+        'paper change logs' => ['changelog', 'core', 'createPaperLog', 'preProcessPaperLog', true],
+        'folders' => ['folder', 'core', 'create_folder', 'preProcessFolder', true],
+        'schools' => ['school', 'core', 'create_school', 'preProcessSchool', true],
+        'school admins' => ['school', 'core', 'addSchoolAdmin', 'preProcessSchoolAdmin', true],
+        'faculties' => ['faculty', 'core', 'create_faculty', null, true],
+        'gradebooks' => ['gradebook', 'core', 'create_paper', 'preProcessGradebook', true],
+        'user metadata' => ['users', 'core', 'create_metadata', 'preProcessMetadata', false],
+        'reference material' => ['modules', 'core', 'createReferenceMaterial', 'preProcessReferenceMaterial', false],
     ];
 
     /**
@@ -1105,6 +1117,146 @@ trait datageneration
     }
 
     /**
+     * Convert user fields values into those needed by the data generator.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessFolder(array $row): array
+    {
+        if (!isset($row['owner'])) {
+            throw new data_error('The owners username must be passed by an owner field');
+        }
+        $row['ownerID'] = UserUtils::username_exists($row['owner'], state::get_db());
+
+        if (!empty($row['parent'])) {
+            $folders = \folder_utils::get_all_folders(state::get_db());
+            $folder = array_search($row['parent'], $folders);
+            if ($folder === false) {
+                throw new data_error("Could not create folder as '{$row['parent']}' is not a valid parent folder name");
+            }
+            $row['parent'] = $folder;
+        } elseif (isset($row['parent'])) {
+            // We do not want to pass an empty value.
+            unset($row['parent']);
+        }
+
+        return $row;
+    }
+
+    /**
+     * Converts the faculty code into a database id.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessSchool(array $row): array
+    {
+        if (!isset($row['faculty'])) {
+            throw new data_error('A faculty code passed by a faculty field is required');
+        }
+        $row['facultyID'] = FacultyUtils::get_facultyid_by_code($row['faculty'], state::get_db());
+        unset($row['faculty']);
+        return $row;
+    }
+
+    /**
+     * Converts the school admin data into the format required by the data generator.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessSchoolAdmin(array $row): array
+    {
+        if (!isset($row['school'])) {
+            throw new data_error('A school code passed by a school field is required');
+        }
+        $row['school'] = SchoolUtils::get_schoolid_by_code($row['school'], state::get_db());
+        return $row;
+    }
+
+    /**
+     * Converts the module data into the format required by the data generator.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessModule(array $row): array
+    {
+        if (isset($row['school'])) {
+            $row['schoolID'] = SchoolUtils::get_schoolid_by_code($row['school'], state::get_db());
+            unset($row['school']);
+        }
+
+        return $row;
+    }
+
+    /**
+     * Converts the grade book data into the format required by the data generator.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessGradebook(array $row): array
+    {
+        if (!isset($row['user'])) {
+            throw new data_error('A username passed by a user field is required');
+        }
+        if (!isset($row['paper'])) {
+            throw new data_error('A paper title passed by a paper field is required');
+        }
+
+        $row['userid'] = UserUtils::username_exists($row['user'], state::get_db());
+        $row['paperid'] = PaperUtils::getPaperId($row['paper']);
+
+        unset($row['user'], $row['paper']);
+
+        return $row;
+    }
+
+    /**
+     * Converts the row from behat into a form that can be processed by the data generation method.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessMetadata(array $row): array
+    {
+        if (!isset($row['username'])) {
+            throw new data_error('A username passed by a username field is required');
+        }
+        if (empty($row['modulecode'])) {
+            throw new data_error('modulecode must be provided');
+        }
+
+        $userid = UserUtils::username_exists($row['username'], state::get_db());
+        $moduleid = module_utils::get_idMod($row['modulecode'], state::get_db());
+        return [$userid, $moduleid, $row];
+    }
+
+    /**
+     * Gets the reference material ready for creation in the data generator.
+     *
+     * @param array $row
+     * @return array
+     */
+    protected function preProcessReferenceMaterial(array $row): array
+    {
+        if (!isset($row['modules'])) {
+            throw new data_error('Required field modules is missing');
+        }
+
+        $modulecodes = explode(',', $row['modules']);
+        $modules = [];
+
+        foreach ($modulecodes as $modulecode) {
+            $modules[] = module_utils::get_idMod(trim($modulecode), state::get_db());
+        }
+
+        return [$modules, $row];
+    }
+
+    /**
      * Adds records to the database using an appropriate data generator.
      *
      * @Given /^the following "([^"]*)" exist:$/
@@ -1131,14 +1283,26 @@ trait datageneration
         }
         // Get the preprocess function.
         $preprocess = $this->datagenerator_map[$type][3];
+        $simpledate = $this->datagenerator_map[$type][4];
         // Convert the data into a form that the data generator can use.
         foreach ($data->getHash() as $row) {
             // Preprocess each row.
             if (!is_null($preprocess)) {
                 $row = $this->$preprocess($row);
             }
+
+            if ($simpledate) {
+                // We are passing a single array into the data generation method.
+                $arguments = [$row];
+            } else {
+                // The row should either have:
+                // 1. The required number of arguments in the correct order.
+                // 2. Have named arguments, including an entry for each required argument.
+                $arguments = $row;
+            }
+
             // Pass each row into the generator.
-            $datagenerator->$createmethod($row);
+            call_user_func_array([$datagenerator, $createmethod], $arguments);
         }
     }
 }

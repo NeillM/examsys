@@ -64,15 +64,23 @@ class CheckboxGroup extends Fieldset
      * @param string $value The value to be sent when the option is selected
      * @param string $label The localised label for the option
      * @param string $description The localised help text for the option (optional)
+     * @param bool $disabled Flag if the checkbox is disabled.
+     * @param bool $checked Flag if the checkbox is checked.
      * @return void
      */
-    public function addOption(string $value, string $label, string $description = '', bool $disabled = false): void
-    {
+    public function addOption(
+        string $value,
+        string $label,
+        string $description = '',
+        bool $disabled = false,
+        bool $checked = false,
+    ): void {
         $option = new Checkbox(
             id: $this->id . '-' . $value,
             name: $this->name,
             label: $label,
             value: $value,
+            checked: $checked,
             disabled: $disabled,
             description: $description,
         );

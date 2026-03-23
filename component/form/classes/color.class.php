@@ -71,6 +71,7 @@ class Color extends Input
         }
         if ($readonly) {
             $this->setAttribute('readonly');
+            $this->setAttribute('disabled');
         }
     }
 

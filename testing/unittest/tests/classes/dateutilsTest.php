@@ -185,6 +185,54 @@ class DateUtilsTest extends unittest
     }
 
     /**
+     * Tests that we get the correct date time information from modern form selectors.
+     *
+     * @param string $date The date from a date input
+     * @param string $time The time from a time input
+     * @param string $timezone The timezone
+     * @param string $expectedstring The expected string using the format: Y-m-d H:i:s
+     * @param int $expectedtimestamp The expected Unix timestamp
+     * @dataProvider dataGetDateTimeFromForm
+     * @group dateutils
+     */
+    public function testGetDateTimeFromForm(
+        string $date,
+        string $time,
+        string $timezone,
+        string $expectedstring,
+        int $expectedtimestamp
+    ): void {
+        $date = date_utils::getDateTimeFromForm(
+            date: $date,
+            time: $time,
+            timezone: $timezone,
+        );
+        $this->assertEquals(
+            $expectedstring,
+            $date->format('Y-m-d H:i:s')
+        );
+        $this->assertEquals(
+            $expectedtimestamp,
+            $date->getTimestamp()
+        );
+    }
+
+    /**
+     * Data used to test getDateTimeFromForm
+     *
+     * @return array
+     */
+    public function dataGetDateTimeFromForm(): array
+    {
+        return [
+            'london' => ['2016-01-25', '09:00', 'Europe/London', '2016-01-25 09:00:00', 1453712400],
+            'Kuwait' => ['2016-01-25', '09:00', 'Asia/Kuwait', '2016-01-25 09:00:00', 1453701600],
+            'Honolulu' => ['2016-01-25', '09:00', 'Pacific/Honolulu', '2016-01-25 09:00:00', 1453748400],
+            'leapyear' => ['2017-02-29', '09:00', 'Europe/London', '2017-03-01 09:00:00', 1488358800],
+        ];
+    }
+
+    /**
      * Tests that dates are converted to the correct timestamp.
      *
      * @dataProvider dataRogoToTimestamp

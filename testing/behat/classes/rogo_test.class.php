@@ -317,6 +317,29 @@ class rogo_test extends MinkContext
     }
 
     /**
+     * Gets the locale of the current browser.
+     *
+     * It should be used when the locale will make a difference to what we need to do
+     * to make a step work correctly.
+     *
+     * If a browser does not support JavaScript a fake locale of 'no-javascript' will be returned.
+     * I expect this will only happen if the Goutte driver is used. I think in this driver the
+     * actions we need to do will also have a specific form (i.e. the formats of dates in inputs look
+     * as though they will be the same as the input)
+     *
+     * @return string
+     */
+    protected function getBrowserLocale(): string
+    {
+        $session = $this->getSession();
+        if (!self::runningJavascriptInSession($session)) {
+            // Making an assumption of the locale of non-JavaScript based drivers.
+            return 'no-javascript';
+        }
+        return $session->evaluateScript('return navigator.language || navigator.userLanguage;');
+    }
+
+    /**
      * Waits for all the JS to be loaded.
      * Wait for JS copied from https://github.com/moodle/moodle/blob/master/lib/behat/classes/behat_session_trait.php
      *

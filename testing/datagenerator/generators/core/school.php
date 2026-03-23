@@ -18,6 +18,7 @@
 namespace testing\datagenerator;
 
 use SchoolUtils;
+use UserUtils;
 
 /**
  * Generates ExamSys school.
@@ -57,5 +58,30 @@ class school extends generator
         }
         $settings['id'] = $schoolid;
         return $settings;
+    }
+
+    /**
+     * Adds a new admin to the school.
+     *
+     * Required parameters:
+     * - username: The username of the user
+     * - school: The database id of the school
+     *
+     * @param array $parameters
+     * @return void
+     */
+    public function addSchoolAdmin(array $parameters): void
+    {
+        $schoolid = $parameters['school'];
+        $username = $parameters['username'];
+        $userid = UserUtils::username_exists($username, $this->db);
+
+        $result = $this->db->prepare('INSERT INTO admin_access VALUES (NULL, ?, ?)');
+        $result->bind_param('ii', $userid, $schoolid);
+        $result->execute();
+        if ($result->affected_rows < 1) {
+            throw new data_error('could not add user as school admin. Error: ' . $result->error);
+        }
+        $result->close();
     }
 }
