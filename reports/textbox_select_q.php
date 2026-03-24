@@ -76,7 +76,7 @@ if ($studentsonly) {
     $rolesjoin = '';
 }
 
-$studentids = []; // All student ids took the paper.
+$studentids = []; // Every student id took the paper.
 if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE])) {
     $time_int = \log::getStartInterval($paper_type);
     // Get how many students took the paper.
@@ -124,8 +124,8 @@ $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) 
 $textboxquestions = []; // Array of all textbox questions
 $sql = "SELECT GROUP_CONCAT(q_id) 
         FROM papers pa 
-        JOIN questions qu on pa.question = qu.q_id 
-        WHERE qu.q_type = 'textbox' and pa.paper = ?";
+        JOIN questions qu ON pa.question = qu.q_id 
+        WHERE qu.q_type = 'textbox' AND pa.paper = ?";
 $result = $mysqli->prepare($sql);
 $result->bind_param('i', $paperID);
 $result->execute();
@@ -157,7 +157,7 @@ if ($candidate_no > 0 && count($textboxquestions) > 0) {
     }, $textboxquestions);
     $textboxidsql = implode(' UNION ', array_merge([$first], $others));
 
-    // SQL for find number of students and number of their skipped questions.
+    // SQL to identify students and counts of their unvisited pages containing textbox questions
     $log = "log$paper_type";
     $sql = "SELECT 
         q.missing_question AS questionID,
