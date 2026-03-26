@@ -164,7 +164,7 @@ if ($candidate_no > 0 && count($textboxquestions) > 0) {
         SELECT q.q_id, COUNT(*)
         FROM papers p
         JOIN questions q on p.question = q.q_id
-        LEFT JOIN log_metadata lm ON lm.paperID = p.paper ## all question whatever having a log
+        LEFT JOIN log_metadata lm ON lm.paperID = p.paper
         JOIN users u ON u.id = lm.userID    
         $rolesjoin
         LEFT JOIN $log l ON l.metadataID = lm.id AND l.q_id = q.q_id
@@ -175,9 +175,8 @@ if ($candidate_no > 0 && count($textboxquestions) > 0) {
         GROUP BY q.q_id";
     }
 
-    var_dump($sql);
     $result = $mysqli->prepare($sql);
-    $result->bind_param('i', $paperID);
+    $result->bind_param('iss', $paperID,$startdate, $enddate);
     $result->execute();
     $result->bind_result($questionID, $missedcount);
     while ($result->fetch()) {
