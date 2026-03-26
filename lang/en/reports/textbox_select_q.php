@@ -21,5 +21,5 @@ $string['secondmarking'] = 'Second Marking';
 $string['finalisemarks'] = 'Finalise Marks';
 $string['candidates'] = 'candidates';
 $string['msg'] = 'Select the question you wish to mark from the list below.';
-$string['missingmark'] = 'Question(s) awaiting for marking';
-$string['skipped'] = 'Student(s) skipped the question screen.';
+$string['missingmark'] = 'Unmarked question(s):';
+$string['skipped'] = 'Student(s) skipping screen:';
