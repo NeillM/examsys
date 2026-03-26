@@ -76,7 +76,7 @@ if ($studentsonly) {
     $rolesjoin = '';
 }
 
-$studentids = []; // Every student id took the paper.
+
 if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE])) {
     $time_int = \log::getStartInterval($paper_type);
     // Get how many students took the paper.
@@ -96,7 +96,6 @@ if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRE
     $result->bind_result($tmp_userID);
     while ($result->fetch()) {
         $candidate_no++;
-        $studentids[] = $tmp_userID;
     }
     $result->close();
 }
@@ -139,46 +138,44 @@ if ($temptextboxquestions !== '') {
 
 $skippedquestion = [];
 if ($candidate_no > 0 && count($textboxquestions) > 0) {
-    // Build student id union SQL
-    ///Below few lines will create SQL like "SELECT 104 AS studentID UNION SELECT 105 UNION SELECT 106"
-    $studentidsql = '';
-    $first = 'SELECT ' . (int)array_shift($studentids) . ' as studentID';
-    $others = array_map(function ($id) {
-        return 'SELECT ' . (int)$id;
-    }, $studentids);
-    $studentidsql = implode(' UNION ', array_merge([$first], $others));
-
-    //Build textbox question id's union SQL for find skipped student
-    //Below few lines will create SQL like "SELECT 105 AS missing_question UNION SELECT 106"
-    $textboxidsql = '';
-    $first = 'SELECT ' . (int)array_shift($textboxquestions) . ' as missing_question';
-    $others = array_map(function ($id) {
-        return 'SELECT ' . (int)$id;
-    }, $textboxquestions);
-    $textboxidsql = implode(' UNION ', array_merge([$first], $others));
-
     // SQL to identify students and counts of their unvisited pages containing textbox questions
-    $log = "log$paper_type";
-    $sql = "SELECT 
-        q.missing_question AS questionID,
-        COUNT(s.studentID) AS total_students_missed
-        FROM
-            ($studentidsql) AS s
-                CROSS JOIN
-            ($textboxidsql) AS q
-                LEFT JOIN
-            (SELECT 
-                $log.q_id AS questionID, me.userID AS studentID
-            FROM
-                $log
-            JOIN log_metadata me ON me.id = $log.metadataID
-            WHERE
-                me.paperID = ?) AS a ON s.studentID = a.studentID
-                AND q.missing_question = a.questionID
+    if(($paper_type == \assessment::TYPE_FORMATIVE) or ($paper_type == \assessment::TYPE_PROGRESS)){
+        $sql = "
+        WITH all_logs AS (
+        SELECT * FROM log0
+        UNION ALL
+        SELECT * FROM log1)
+        SELECT q.q_id, COUNT(*)
+        FROM papers p
+        JOIN questions q on p.question = q.q_id AND p.paper = ?
+        LEFT JOIN log_metadata lm ON lm.paperID = p.paper
+        JOIN users u ON u.id = lm.userID
+        $rolesjoin
+        LEFT JOIN all_logs l 
+        ON l.metadataID = lm.id AND l.q_id = q.q_id
+        WHERE 
+        q.q_type = 'textbox'
+        AND l.id IS NULL
+        AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?
+        GROUP BY q.q_id";
+    } else {
+        $log = "log$paper_type";
+        $sql = "
+        SELECT q.q_id, COUNT(*)
+        FROM papers p
+        JOIN questions q on p.question = q.q_id
+        LEFT JOIN log_metadata lm ON lm.paperID = p.paper ## all question whatever having a log
+        JOIN users u ON u.id = lm.userID    
+        $rolesjoin
+        LEFT JOIN $log l ON l.metadataID = lm.id AND l.q_id = q.q_id
         WHERE
-            a.questionID IS NULL
-        GROUP BY q.missing_question
-        ORDER BY q.missing_question";
+            p.paper = ? AND q.q_type = 'textbox'
+        AND l.id IS NULL
+        AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?
+        GROUP BY q.q_id";
+    }
+
+    var_dump($sql);
     $result = $mysqli->prepare($sql);
     $result->bind_param('i', $paperID);
     $result->execute();
