@@ -254,14 +254,14 @@ while ($result->fetch()) {
         echo '<tr><td style="text-align:right; vertical-align:top; white-space:nowrap;">';
 
         $showwarning = isset($skippedquestion[$q_id]) && ($candidates_marked < ($out_of - $skippedquestion[$q_id]));
-        $skippedinfo = isset($skippedquestion[$q_id]) ? $skippedquestion[$q_id] . ' ' . $string['skipped'] : '';
+        $skippedinfo = isset($skippedquestion[$q_id]) ? $string['skipped'] . $skippedquestion[$q_id] : '';
         $cellclass = '';
         $warning = '';
 
         if ($showwarning) {
             $missingMarks = $candidate_no - $candidates_marked - $skippedquestion[$q_id];
-            $warning = ' ' . $missingMarks . ' ' . $string['missingmark'];
-            echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="' . $warning . '"/>';
+            $warning = ' ' . $string['missingmark'] . $missingMarks;
+            echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" />';
             $cellclass = ' style="background-color:#FFDDDD"';
         }
         echo $question_no . '.</td>';
