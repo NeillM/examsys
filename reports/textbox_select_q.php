@@ -273,7 +273,7 @@ while ($result->fetch()) {
             echo '<a href="textbox_marking.php';
         }
         echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&studentsonly=$studentsonly&folder=" . $_GET['folder'];
-        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a></td><td>$skippedinfo</td><td>$warning</td></tr>\n";
+        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a> <span style='background-color: white;'>$skippedinfo $warning</span></td></tr>\n";
     }
     $question_no++;
 }
