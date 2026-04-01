@@ -29,8 +29,8 @@ $cosign_cfg['CosignCookieExpireTime'] = 3600 * 24;
 // Debug log file path
 $cosign_cfg['CosignFilterLog'] = '/tmp/cosign-filter.log';
 
-// Enable debug log (boolean)
-$cosign_cfg['CosignFilterDebug'] = true;
+// Enable debug log (0,1,2)
+$cosign_cfg['CosignFilterDebug'] = 1;
 
 // Version of Cosign protocol
 $cosign_cfg['CosignProtocolVersion'] = 3;

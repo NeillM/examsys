@@ -1,3 +1,2 @@
-<Files valid>
-ForceType application/x-httpd-php
-</Files>
+RewriteEngine On
+RewriteRule valid valid.php

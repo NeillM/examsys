@@ -17,6 +17,7 @@
 /config/integration
 /config/selenium.inc.php
 /config/settings.xml
+/config/cosign.inc.php
 
 # /email_templates/
 /email_templates/*.txt

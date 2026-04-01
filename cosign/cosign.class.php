@@ -1,5 +1,4 @@
 <?php
-
 //  Copyright (C) 2010 CVT FIT Brno University of Technology
 //  All Rights Reserved. See LICENSE below.
 //  Petr Lampa <lampa@fit.vutbr.cz>
@@ -33,19 +32,17 @@ Czech Republic
  */
 
 /*
- *
  * Modified by Simon Atack to stick it into an Object for use in ExamSys
- *
  */
-
 class cosign
 {
     public $parent;
-    public $settings;
     private $cosign_log;
+    private $cosign_cfg;
 
-    public function __construct(private $cosign_cfg, &$parent)
+    public function __construct(public $settings, &$parent)
     {
+        $this->cosign_cfg = $this->settings['cosign_cfg'];
         if (!is_null($parent)) {
             $this->parent = $parent;
         }
@@ -61,6 +58,11 @@ class cosign
         }
         if (!is_resource($this->cosign_log)) {
             $this->cosign_log = @fopen($this->cosign_cfg['CosignFilterLog'], 'a');
+        }
+        if ($this->cosign_cfg['CosignFilterDebug'] > 1) {
+            $backtrace = debug_backtrace();
+            $str .= "\n#0 cosign_debug() called at [{$backtrace[0]['file']}:{$backtrace[0]['line']}]";
+            $str .= "\n#1 cosign_auth() called at [{$backtrace[1]['file']}:{$backtrace[1]['line']}]";
         }
         @fwrite($this->cosign_log, date('Y-m-d H:i:s ') . $str . "\n");
     }
@@ -79,6 +81,10 @@ class cosign
         $service = 'CosignFilter';
 
         $service_cookie = 'cosign-' . $this->cosign_cfg['CosignService'];
+
+        // PHP swaps full stops for underscores in cookie names. Compensate.
+        $service_cookie_php = str_replace('.','_',$service_cookie);
+
         $rekey_service = false;
         $dest = '';
         // Cosign v3 validation service
@@ -97,7 +103,7 @@ class cosign
             ) {
                 $this->cosign_debug('CosignValid: Invalid validation request');
                 ob_end_flush();
-                header('503 Service Temporarily Unavailable');
+                header('HTTP/1.0 503 Service Temporarily Unavailable');
                 echo 'Invalid validation request';
                 exit();
             }
@@ -117,10 +123,11 @@ class cosign
                 exit();
             }
             $this->cosign_debug("CosignValid: Service cookie $service_cookie_val dest $dest");
-        } else {     // check if cookie is present in the request
+        } else {
+            // check if cookie is present in the request
             if (!isset($_COOKIE[$service_cookie])) {
                         $this->cosign_debug(print_r($_COOKIE, true));
-                        $this->cosign_debug("$service: Service cookie not present, redirecting to login");
+                        $this->cosign_debug("$service: Service cookie $service_cookie missing in request, redirecting to login");
                         $this->cosign_set_cookie_and_redirect();
             } else {
                 // PHP always URL decodes cookie values, + is changed to space
@@ -212,8 +219,8 @@ class cosign
                     $this->cosign_debug("$service: IP address changed from {$cf['i']} to {$_SERVER['REMOTE_ADDR']}, user {$cf['p']}");
                     // falout to cosign netcheck
                 } elseif (
-                            !empty($this->cosign_cfg['CosignRequireFactor']) &&
-                            !$this->cosign_check_factors($cf['f'])
+                    !empty($this->cosign_cfg['CosignRequireFactor']) &&
+                    !$this->cosign_check_factors($cf['f'])
                 ) {
                     // falout to cosign netcheck
                 } else {
@@ -243,6 +250,7 @@ class cosign
 
         // no valid service cookie file and service cookie set
         $context = stream_context_create(['ssl' => ['local_cert' => $this->cosign_cfg['CosignCryptoLocalCert'], 'capture_peer_cert' => true, 'capture_peer_chain' => true]]);
+        stream_context_set_option($context, 'ssl', 'peer_name', $this->cosign_cfg['CosignHostname']);
         if (isset($this->cosign_cfg['CosignCryptoVerifyPeer'])) {
             stream_context_set_option($context, 'ssl', 'verify_peer', $this->cosign_cfg['CosignCryptoVerifyPeer']);
         }
@@ -256,13 +264,16 @@ class cosign
             stream_context_set_option($context, 'ssl', 'capath', $this->cosign_cfg['CosignCryptoCAPath']);
         }
         if (($dns = dns_get_record($this->cosign_cfg['CosignHostname'], DNS_A | DNS_AAAA)) === false) {
-            $this->cosign_debug("$service: Cosign server {$this->cosign_cfg['CosignHostname']} not found");
-            return false;
+            // PHP-7.x/FreeBSD fails if only A record exists
+            if (($dns = dns_get_record($this->cosign_cfg['CosignHostname'], DNS_A)) === false) {
+                $this->cosign_debug("$service: Cosign server {$this->cosign_cfg['CosignHostname']} not found");
+                return false;
+            }
         }
         $servers = count($dns);
         for ($i = 0; $i < $servers; $i++) {
             $this->cosign_debug("$service: Connecting to cosign server {$dns[$i]['ip']}");
-            if (($sock = @stream_socket_client('tcp://' . ($dns[$i]['type'] == 'A' ? $dns[$i]['ip'] : '[' . $dns[$i]['ip'] . ']') . ':' . $this->cosign_cfg['CosignPort'], $errno, $errstr, $this->settings['SOCKET_TIMEOUT'], STREAM_CLIENT_CONNECT, $context)) === false) {
+            if (($sock = @stream_socket_client('tcp://' . ($dns[$i]['type'] == 'A' ? $dns[$i]['ip'] : '[' . $dns[$i]['ip'] . ']') . ':' . $this->cosign_cfg['CosignPort'], $errno, $errstr, $this->cosign_cfg['CosignSocketTimeout'], STREAM_CLIENT_CONNECT, $context)) === false) {
                 $this->cosign_debug("$service: Cosign connect {$dns[$i]['ip']} failed - $errstr ($errno)");
                 if ($i < $servers - 1) {
                     continue;
@@ -280,6 +291,9 @@ class cosign
                     continue;
                 }
                 return false;
+            } else {
+                // response ok
+                break;
             }
         }
         $code = explode(' ', $response);
@@ -335,7 +349,7 @@ class cosign
             return false;
         }
 
-        if (!@stream_socket_enable_crypto($sock, true, STREAM_CRYPTO_METHOD_SSLv3_CLIENT)) {
+        if (!@stream_socket_enable_crypto($sock, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
             $last_err = error_get_last();
             $this->cosign_debug("$service: stream_socket_enable_crypto error {$last_err['message']}");
             fclose($sock);
@@ -356,7 +370,7 @@ class cosign
         }
         if ($proto <= 1) {
             stream_set_blocking($sock, true);
-            stream_set_timeout($sock, $this->settings['SOCKET_TIMEOUT']);
+            stream_set_timeout($sock, $this->cosign_cfg['CosignSocketTimeout']);
         }
 
         // check peer certificate
@@ -388,7 +402,7 @@ class cosign
         } else {
             $cmd = 'CHECK';
         }
-        $this->cosign_debug("$service: Sending $cmd request");
+        $this->cosign_debug("$service: Sending $cmd $service_cookie_file");
         fwrite($sock, "$cmd " . $service_cookie_file . "\r\n");
         $response = trim(stream_get_line($sock, 1024, "\r\n"));
         $this->cosign_debug("$service: Server response: $response");
@@ -624,7 +638,8 @@ class cosign
             // check POST request expiration
         } elseif (
             strcasecmp((string) $_SERVER['REQUEST_METHOD'], 'post') == 0 &&
-            isset($this->cosign_cfg['CosignPostErrorRedirect']) and !isset($_POST['cosignlogin'])
+            isset($this->cosign_cfg['CosignPostErrorRedirect']) and
+            !isset($_POST['cosignlogin'])
         ) {
             $this->cosign_debug('CosignFilter: Cookie not valid and POST request');
             $url = $this->cosign_cfg['CosignPostErrorRedirect'];
