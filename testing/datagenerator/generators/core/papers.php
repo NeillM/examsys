@@ -36,8 +36,8 @@ class papers extends generator
      * @var array default paper properties
      */
     private $default_paper_properties = [
-        'paper_prologue' => null, 'paper_postscript' => null, 'bgcolor' => 'white',
-        'fgcolor' => 'black', 'themecolor' => '#316AC5', 'labelcolor' => '#C00000',
+        'paper_prologue' => null, 'paper_postscript' => null, 'bgcolor' => '#FFFFFF',
+        'fgcolor' => '#000000', 'themecolor' => '#316AC5', 'labelcolor' => '#C00000',
         'fullscreen' => '1', 'marking' => '1', 'bidirectional' => '1',
         'pass_mark' => 40, 'distinction_mark' => 70, 'folder' => null,
         'rubric' => null, 'calculator' => 1, 'random_mark' => 0.0, 'total_mark' => 0,

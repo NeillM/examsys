@@ -395,6 +395,24 @@ class date_utils
     }
 
     /**
+     * Converts the output of a date and time form field into a DateTime object.
+     *
+     * @param string $date
+     * @param string $time
+     * @param string $timezone
+     * @return DateTime
+     *
+     * @throws DateInvalidTimeZoneException
+     * @throws DateMalformedStringException
+     */
+    public static function getDateTimeFromForm(string $date, string $time, string $timezone): DateTime
+    {
+        $target_timezone = new DateTimeZone($timezone);
+        $datetime = new DateTime("$date $time", $target_timezone);
+        return $datetime;
+    }
+
+    /**
      * Converts a time/date from 20140301103059 into a UTC timestamp.
      *
      * @param string $original - The date that needs to be convered.

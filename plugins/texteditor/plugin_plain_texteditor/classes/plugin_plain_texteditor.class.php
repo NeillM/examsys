@@ -107,7 +107,8 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
         string $label,
         string $content,
         string $type,
-        array $classes = []
+        array $classes = [],
+        bool $disabled = false,
     ): array {
         $classes[] = 'plaintextarea';
         $name = $id;
@@ -132,6 +133,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
             label: $label,
             classes: $classes,
             value: $content,
+            disabled: $disabled,
         );
 
         if ($editormathjax) {

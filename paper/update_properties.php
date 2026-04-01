@@ -38,55 +38,6 @@ define('MARK_NO_ADJUSTMENT', '0');
 define('MARK_RANDOM', '1');
 define('MARK_STD_SET', '2');
 
-/**
- * Check if year provided is a leap year.
- * @param integer $year the year
- * @return bool
- */
-function is_leap($year)
-{
-    if ((modulo($year, 4) == 0 and modulo($year, 100) != 0) or modulo($year, 400) == 0) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * Leap year check helper function
- * @param integer $n the year
- * @param float|int $b divisor
- * @return float|int
- */
-function modulo($n, $b)
-{
-    return $n - $b * floor($n / $b);
-}
-
-/**
- * Fix the date of the day if a leap year.
- * @param string $leap the year
- * @param string $month the month
- * @param string $day the day
- * @return string
- */
-function fix_leapyear_day($year, $month, $day)
-{
-    if (!empty($year)) {
-        $leap = is_leap($year);
-        if ($leap == true and $month == '02' and ($day == '30' or $day == '31')) {
-            $day = '29';
-        }
-        if ($leap == false and $month == '02' and ($day == '29' or $day == '30' or $day == '31')) {
-            $day = '28';
-        }
-    }
-    if (($month == '04' or $month == '06' or $month == '09' or $month == '11') and $day == '31') {
-        $day = '30';
-    }
-    return $day;
-}
-
 $paperID = check_var('paperID', 'POST', true, false, true);
 
 $exam_duration_hours = param::optional('exam_duration_hours', 0, param::INT, param::FETCH_POST);
@@ -114,11 +65,12 @@ $modules_array = $properties->get_modules();
 
 $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array), $mysqli);  // See if question-based feedback is enabled on all modules.
 
-if (isset($_POST['paper_title'])) {
-    if ($old_paper_title == $_POST['paper_title']) {
+$paper_title = param::optional('paper_title', null, param::TEXT);
+if ($paper_title !== null) {
+    if ($old_paper_title == $paper_title) {
         $title_unique = true;
     } else {
-        $title_unique = Paper_utils::is_paper_title_unique($_POST['paper_title'], $mysqli);
+        $title_unique = Paper_utils::is_paper_title_unique($paper_title, $mysqli);
     }
 } else {
     $title_unique = true;
@@ -128,15 +80,23 @@ if (!$title_unique) {
     echo json_encode('DUPLICATE_TITLE');
     exit();
 } else {
-    if (isset($_POST['paper_title'])) {  // Check is set, could be disabled.
-        $properties->set_paper_title($_POST['paper_title']);
-    }
-    if (isset($_POST['paper_type']) and ($papertype == '0' or $papertype == '1')) {
-        $properties->set_paper_type($_POST['paper_type']);
+    if ($paper_title !== null) {  // Check is set, could be disabled.
+        $properties->set_paper_title($paper_title);
     }
 
-    if (isset($_POST['bidirectional'])) {
-        $properties->set_bidirectional($_POST['bidirectional']);
+    // Save the paper type if it is one that can be switched.
+    $paper_type = param::optional('paper_type', $papertype, param::INT, param::FETCH_POST);
+    $switchable_types = [
+        assessment::TYPE_FORMATIVE,
+        assessment::TYPE_PROGRESS,
+    ];
+    if (in_array($papertype, $switchable_types) and in_array($paper_type, $switchable_types)) {
+        $properties->set_paper_type($paper_type);
+    }
+
+    $bidirectional = param::optional('bidirectional', null, param::INT, param::FETCH_POST);
+    if ($bidirectional !== null) {
+        $properties->set_bidirectional($bidirectional);
     }
 
     // External system details;
@@ -149,44 +109,33 @@ if (!$title_unique) {
         $properties->set_externalsys($extsys);
     }
 
-    if ($papertype == '6') {
-        if (isset($_POST['display_photos'])) {
-            $properties->set_display_correct_answer(1);
-        } else {
-            $properties->set_display_correct_answer(0);
-        }
+    if ($papertype == assessment::TYPE_PEERREVIEW) {
+        $properties->set_display_correct_answer(
+            (int) param::optional('display_photos', false, param::BOOLEAN, param::FETCH_POST)
+        );
     } else {
-        if (isset($_POST['display_correct_answer'])) {
-            $properties->set_display_correct_answer(1);
-        } else {
-            $properties->set_display_correct_answer(0);
-        }
+        $properties->set_display_correct_answer(
+            (int) param::optional('display_correct_answer', false, param::BOOLEAN, param::FETCH_POST)
+        );
     }
-    if (isset($_POST['display_students_response'])) {
-        $properties->set_display_students_response(1);
+    $properties->set_display_students_response(
+        (int) param::optional('display_students_response', false, param::BOOLEAN, param::FETCH_POST)
+    );
+    if ($papertype == assessment::TYPE_PEERREVIEW) {
+        $properties->set_display_question_mark(
+            (int) param::optional('review', false, param::BOOLEAN, param::FETCH_POST)
+        );
     } else {
-        $properties->set_display_students_response(0);
+        $properties->set_display_question_mark(
+            (int) param::optional('display_question_mark', false, param::BOOLEAN, param::FETCH_POST)
+        );
     }
-    if ($papertype == '6') {
-        $properties->set_display_question_mark($_POST['review']);
-    } else {
-        if (isset($_POST['display_question_mark'])) {
-            $properties->set_display_question_mark(1);
-        } else {
-            $properties->set_display_question_mark(0);
-        }
-    }
-    if (isset($_POST['display_feedback'])) {
-        $properties->set_display_feedback(1);
-    } else {
-        $properties->set_display_feedback(0);
-    }
-
-    if (isset($_POST['hide_if_unanswered'])) {
-        $properties->set_hide_if_unanswered('1');
-    } else {
-        $properties->set_hide_if_unanswered('0');
-    }
+    $properties->set_display_feedback(
+        (int) param::optional('display_feedback', false, param::BOOLEAN, param::FETCH_POST)
+    );
+    $properties->set_hide_if_unanswered(
+        (int) param::optional('hide_if_unanswered', false, param::BOOLEAN, param::FETCH_POST)
+    );
 
     $timezone = param::optional('timezone', $properties->get_timezone(), param::TEXT, param::FETCH_POST);
 
@@ -197,63 +146,44 @@ if (!$title_unique) {
             $is_remote_summative = ($papertype == '2' && $remote_summative == 1);
             // Date fields are mandatory unless it's a remote summative paper.
             if (!$is_remote_summative) {
-                $fyear = check_var('fyear', 'POST', true, false, true);
-                $fmonth = check_var('fmonth', 'POST', true, false, true);
-                $fday = check_var('fday', 'POST', true, false, true);
-                $fhour = check_var('fhour', 'POST', true, false, true);
-                $fminute = check_var('fminute', 'POST', true, false, true);
+                $fdate = check_var('fdate', 'POST', true, false, true, param::TEXT);
+                $ftime = check_var('ftime', 'POST', true, false, true, param::TEXT);
 
-                $tyear = check_var('tyear', 'POST', true, false, true);
-                $tmonth = check_var('tmonth', 'POST', true, false, true);
-                $tday = check_var('tday', 'POST', true, false, true);
-                $thour = check_var('thour', 'POST', true, false, true);
-                $tminute = check_var('tminute', 'POST', true, false, true);
+                $tdate = check_var('tdate', 'POST', true, false, true, param::TEXT);
+                $ttime = check_var('ttime', 'POST', true, false, true, param::TEXT);
             } else {
                 // For remote summative papers, dates are optional
-                $fyear = param::optional('fyear', '', param::TEXT, param::FETCH_POST);
-                $fmonth = param::optional('fmonth', '', param::TEXT, param::FETCH_POST);
-                $fday = param::optional('fday', '', param::TEXT, param::FETCH_POST);
-                $fhour = param::optional('fhour', '', param::TEXT, param::FETCH_POST);
-                $fminute = param::optional('fminute', '', param::TEXT, param::FETCH_POST);
+                $fdate = param::optional('fdate', '', param::TEXT, param::FETCH_POST);
+                $ftime = param::optional('ftime', '', param::TEXT, param::FETCH_POST);
 
-                $tyear = param::optional('tyear', '', param::TEXT, param::FETCH_POST);
-                $tmonth = param::optional('tmonth', '', param::TEXT, param::FETCH_POST);
-                $tday = param::optional('tday', '', param::TEXT, param::FETCH_POST);
-                $thour = param::optional('thour', '', param::TEXT, param::FETCH_POST);
-                $tminute = param::optional('tminute', '', param::TEXT, param::FETCH_POST);
+                $tdate = param::optional('tdate', '', param::TEXT, param::FETCH_POST);
+                $ttime = param::optional('ttime', '', param::TEXT, param::FETCH_POST);
             }
 
-            if (isset($fyear) and isset($fmonth) and isset($fday) and isset($fhour) and isset($fminute)) {
-                $null_start_date = false;
-                if ($fyear == '' and $fmonth == '' and $fday == '' and $fhour == '' and $fminute == '') {
-                    $null_start_date = true;
-                    $tmp_start_date = null;
-                } else {
-                    $fday = fix_leapyear_day($fyear, $fmonth, $fday);
-                    $start_date = date_utils::getDateTimeFromSelection($fyear, $fmonth, $fday, $fhour, $fminute, $timezone);
-                    $properties->set_start_date($start_date->getTimestamp());
-                    $properties->setRogoFormatStartDate();
-                }
+            $null_start_date = false;
+            if ($fdate == '' and $ftime == '') {
+                $null_start_date = true;
+                $tmp_start_date = null;
+            } else {
+                $start_date = date_utils::getDateTimeFromForm($fdate, $ftime, $timezone);
+                $properties->set_start_date($start_date->getTimestamp());
+                $properties->setRogoFormatStartDate();
             }
 
-            if (isset($tyear) and isset($tmonth) and isset($tday) and isset($thour) and isset($tminute)) {
-                $null_end_date = false;
-                if ($tyear == '' and $tmonth == '' and $tday == '' and $thour == '' and $tminute == '') {
-                    $null_end_date = true;
-                    $tmp_end_date = null;
-                } else {
-                    $tday = fix_leapyear_day($tyear, $tmonth, $tday);
-                    $end_date = date_utils::getDateTimeFromSelection($tyear, $tmonth, $tday, $thour, $tminute, $timezone);
-                    $properties->set_end_date($end_date->getTimestamp());
-                    $properties->setRogoFormatEndDate();
-                }
+            $null_end_date = false;
+            if ($tdate == '' and $ttime == '') {
+                $null_end_date = true;
+                $tmp_end_date = null;
+            } else {
+                $end_date = date_utils::getDateTimeFromForm($tdate, $ttime, $timezone);
+                $properties->set_end_date($end_date->getTimestamp());
+                $properties->setRogoFormatEndDate();
             }
             $properties->set_timezone($timezone);
 
-            if (isset($_POST['calendar_year'])) {
-                $calendar_year = ($_POST['calendar_year'] == '') ? null : $_POST['calendar_year'];
-                $properties->set_calendar_year($calendar_year);
-            }
+            $calendar_year = param::optional('calendar_year', null, param::INT, param::FETCH_POST);
+            $calendar_year = ($calendar_year == '') ? null : $calendar_year;
+            $properties->set_calendar_year($calendar_year);
 
             // Set exam duration (in minutes).
             $exam_duration = $exam_duration_hours * 60;
@@ -264,19 +194,11 @@ if (!$title_unique) {
             }
         }
 
-        $lab_string = '';
-        for ($i = 0; $i < $_POST['lab_no']; $i++) {
-            if (isset($_POST["lab$i"])) {
-                if ($lab_string == '') {
-                    $lab_string = $_POST["lab$i"];
-                } else {
-                    $lab_string .= ',' . $_POST["lab$i"];
-                }
-            }
-        }
+        $labs = param::optional('lab', [], param::INT, param::FETCH_POST);
+        $lab_string = implode(',', $labs);
         $properties->set_labs($lab_string);
 
-        if ($papertype == '2') {
+        if ($papertype == assessment::TYPE_SUMMATIVE) {
             $remote = check_var('remote_summative', 'POST', false, false, true);
             if (is_null($remote)) {
                 $remote = 0;
@@ -285,114 +207,100 @@ if (!$title_unique) {
         }
     }
 
-    $_POST['ext_tday'] = fix_leapyear_day($ext_tyear, $_POST['ext_tmonth'], $_POST['ext_tday']);
-
-    if (empty($ext_tyear) or $_POST['ext_tmonth'] == '' or $_POST['ext_tday'] == '') {
+    $external_deadline = param::optional('externaldeadline', null, param::TEXT, param::FETCH_POST);
+    if (empty($external_deadline)) {
         $properties->set_external_review_deadline(null);
     } else {
-        $tmp_date = new DateTime($ext_tyear . '-' . $_POST['ext_tmonth'] . '-' . $_POST['ext_tday']);
-        $properties->set_external_review_deadline($tmp_date->format('Y-m-d'));
-        unset($tmp_date);
+        $properties->set_external_review_deadline($external_deadline);
     }
 
-    $_POST['int_tday'] = fix_leapyear_day($int_tyear, $_POST['int_tmonth'], $_POST['int_tday']);
-
-    if (empty($int_tyear) or $_POST['int_tmonth'] == '' or $_POST['int_tday'] == '') {
+    $internal_deadline = param::optional('internaldeadline', null, param::TEXT, param::FETCH_POST);
+    if (empty($internal_deadline)) {
         $properties->set_internal_review_deadline(null);
     } else {
-        $tmp_date = new DateTime($int_tyear . '-' . $_POST['int_tmonth'] . '-' . $_POST['int_tday']);
-        $properties->set_internal_review_deadline($tmp_date->format('Y-m-d'));
+        $properties->set_internal_review_deadline($internal_deadline);
     }
 
-    $paper_modules = [];
-    $first_module_id = '';
+    $paper_modules = param::optional('mod', [], param::INT, param::FETCH_POST);
+    $first_module_id = $paper_modules[0] ?? '';
 
-    for ($i = 0; $i < $_POST['module_no']; $i++) {
-        if (isset($_POST['mod' . $i])) {
-            if (count($paper_modules) == 0) {
-                $paper_modules[$_POST['mod' . $i]] = $_POST['mod' . $i];
-                $first_module_idMod = $_POST['mod' . $i];
-                $first_module_id = $_POST['mod' . $i];
-            } else {
-                $paper_modules[$_POST['mod' . $i]] = $_POST['mod' . $i];
-            }
-        }
+    $new_externals = param::optional('examiner', [], param::INT, param::FETCH_POST);
+
+    $new_internals = param::optional('internal', [], param::INT, param::FETCH_POST);
+
+    if (!$locked) {
+        $paper_prologue = param::optional('paper_prologue', '', param::RAW, param::FETCH_POST);
+        $properties->set_paper_prologue(clearMSOtags($texteditorplugin->prepare_text_for_save($paper_prologue)));
     }
 
-    $new_externals = [];
-    for ($i = 0; $i < $_POST['examiner_no']; $i++) {
-        if (isset($_POST["examiner$i"])) {
-            $new_externals[] = intval($_POST["examiner$i"]);
-        }
-    }
-
-    $new_internals = [];
-    for ($i = 0; $i < $_POST['internal_no']; $i++) {
-        if (isset($_POST["internal$i"])) {
-            $new_internals[] = intval($_POST["internal$i"]);
-        }
-    }
-
-    $properties->set_paper_prologue(clearMSOtags($texteditorplugin->prepare_text_for_save($_POST['paper_prologue'])));
-
-    if (isset($_POST['osce_marking_guidance'])) {
-        $properties->set_paper_postscript(clearMSOtags($texteditorplugin->prepare_text_for_save($_POST['osce_marking_guidance'])));
+    if ($papertype == assessment::TYPE_OSCE) {
+        $postscript = param::optional('osce_marking_guidance', '', param::RAW, param::FETCH_POST);
     } else {
-        $properties->set_paper_postscript(clearMSOtags($texteditorplugin->prepare_text_for_save($_POST['paper_postscript'])));
-    }
-
-    if ($papertype == '6') {
-        $properties->set_rubric($_POST['type']);      // Reuse the 'rubric' field to store which field in the metadata to use for groups.
-    } else {
-        $properties->set_rubric(clearMSOtags($texteditorplugin->prepare_text_for_save($_POST['rubric_text'])));
-    }
-
-    if (!$properties->isGraded()) {
-        if (!isset($_POST['marking']) and $papertype == 4) {
-            // Do nothing, the marking method is locked.
-        } elseif (!isset($_POST['marking']) or $_POST['marking'] == '') {
-            $properties->set_marking(MARK_NO_ADJUSTMENT);
-        } elseif ($_POST['marking'] == MARK_STD_SET) {
-            $properties->set_marking($_POST['std_set']);
-        } else {
-            $properties->set_marking($_POST['marking']);
-        }
-        $tmp_pass_mark = $_POST['pass_mark'] ?? 0;
-        if ($tmp_pass_mark == '') {
-            $tmp_pass_mark = 40;
-        }
-        $properties->set_pass_mark($tmp_pass_mark);
-
-        $tmp_distinction_mark = (isset($_POST['distinction_mark']) and $_POST['distinction_mark'] != '') ? $_POST['distinction_mark'] : 70;
-        $properties->set_distinction_mark($tmp_distinction_mark);
-    }
-
-    if ($properties->get_summative_lock() === false or $userObject->has_role('SysAdmin')) {
-        $tmp_calculator = $_POST['calculator'] ?? 0;
-        $properties->set_calculator($tmp_calculator);
-    }
-
-    if (isset($_POST['sound_demo'])) {
-        $properties->set_sound_demo(1);
-    } else {
-        $properties->set_sound_demo(0);
+        $postscript = param::optional('paper_postscript', '', param::RAW, param::FETCH_POST);
     }
 
     if (!$locked) {
-        $password = trim((string) $_POST['password']);
+        $properties->set_paper_postscript(clearMSOtags($texteditorplugin->prepare_text_for_save($postscript)));
+    }
+
+    if ($papertype == assessment::TYPE_PEERREVIEW) {
+        // Reuse the 'rubric' field to store which field in the metadata to use for groups.
+        $rubric = param::optional('type', '', param::TEXT, param::FETCH_POST);
+    } else {
+        $rubric_text = param::optional('rubric_text', '', param::RAW, param::FETCH_POST);
+        $rubric = clearMSOtags($texteditorplugin->prepare_text_for_save($rubric_text));
+    }
+
+    if (!$locked) {
+        $properties->set_rubric($rubric);
+    }
+
+    if (!$properties->isGraded()) {
+        $marking = param::optional('marking', null, param::INT, param::FETCH_POST);
+        if (!isset($marking) and $papertype == assessment::TYPE_OSCE) {
+            // Do nothing, the marking method is locked.
+        } elseif (empty($marking)) {
+            $properties->set_marking(MARK_NO_ADJUSTMENT);
+        } elseif ($marking == MARK_STD_SET) {
+            $standard_setting = param::optional('std_set', null, param::TEXT, param::FETCH_POST);
+            $properties->set_marking($standard_setting);
+        } else {
+            $properties->set_marking($marking);
+        }
+
+        $properties->set_pass_mark(
+            param::optional('pass_mark', 0, param::INT, param::FETCH_POST) ?: 40
+        );
+
+        $properties->set_distinction_mark(
+            param::optional('distinction_mark', 0, param::INT, param::FETCH_POST) ?: 70
+        );
+    }
+
+    if (!$locked) {
+        $tmp_calculator = param::optional('calculator', 0, param::INT, param::FETCH_POST);
+        $properties->set_calculator($tmp_calculator);
+
+        $properties->set_sound_demo(
+            (int) param::optional('sound_demo', false, param::BOOLEAN, param::FETCH_POST)
+        );
+
+        $password = trim((string) param::optional('password', '', param::TEXT, param::FETCH_POST));
         if ($password != $properties->get_decrypted_password()) {
             $properties->set_password($password);
         }
-        $properties->set_fullscreen($_POST['fullscreen']);
+        $properties->set_fullscreen(
+            (int) param::optional('fullscreen', false, param::BOOLEAN, param::FETCH_POST)
+        );
+
+        $properties->set_bgcolor(param::optional('background', '', param::TEXT, param::FETCH_POST));
+        $properties->set_fgcolor(param::optional('foreground', '', param::TEXT, param::FETCH_POST));
+        $properties->set_themecolor(param::optional('themecolor', '', param::TEXT, param::FETCH_POST));
+        $properties->set_labelcolor(param::optional('labelcolor', '', param::TEXT, param::FETCH_POST));
     }
+    $properties->set_folder(param::optional('folderID', 0, param::INT, param::FETCH_POST) ?: '');
 
-    $properties->set_bgcolor($_POST['background']);
-    $properties->set_fgcolor($_POST['foreground']);
-    $properties->set_themecolor($_POST['themecolor']);
-    $properties->set_labelcolor($_POST['labelcolor']);
-    $properties->set_folder($_POST['folderID']);
-
-    if ($papertype == '2' and $old_marking != $properties->get_marking()) {
+    if ($papertype == assessment::TYPE_SUMMATIVE and $old_marking != $properties->get_marking()) {
         $properties->set_recache_marks(1);
     }
 
@@ -403,7 +311,8 @@ if (!$title_unique) {
         $old_modules = $properties->get_modules(true);
 
         if (!$locked or $userObject->has_role(['SysAdmin'])) {
-            Paper_utils::update_modules($paper_modules, $paperID, $mysqli, $userObject);
+            // This method expects the database ids of the modules to be the array keys.
+            Paper_utils::update_modules(array_flip($paper_modules), $paperID, $mysqli, $userObject);
         }
 
         $paper_modules = $properties->get_modules(true);
@@ -423,10 +332,7 @@ if (!$title_unique) {
 
     // Update Safe Exam Browser settings if enabled.
     if ($configObject->get_setting('core', 'paper_seb_enabled') and $papersettings->settingsCategoryEnabled('seb')) {
-        $seb = check_var('seb_enabled', 'POST', false, false, true);
-        if (is_null($seb)) {
-            $seb = 0;
-        }
+        $seb = (int) param::optional('seb_enabled', false, param::BOOLEAN, param::FETCH_POST);
         $properties->updateSetting('seb_enabled', $seb, $paperID);
         if ($papersettings->verifyValue(\Config::BOOLEAN, $seb)) {
             $seb_keys = param::optional('seb_keys_text', '', param::RAW, param::FETCH_POST);
@@ -478,96 +384,34 @@ if (!$title_unique) {
             }
         }
     }
-    // Release objectives-based feedback
-    if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] != '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '0') {
-        $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
 
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Objectives-based Feedback', '', 'feedback');
-    } elseif (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] == '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '1') {
-        $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'objectives')");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
 
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Objectives-based Feedback', 'feedback');
+    $feedback = new Feedback($properties, $logger);
+    if ($feedback->objectiveFeedbackPossible()) {
+        $objectives_report = param::optional('objectives_report', false, param::BOOLEAN);
+        $feedback->setObjectiveFeedback($objectives_report, $userObject->get_user_ID());
+    }
+    if ($feedback->questionFeedbackPossible()) {
+        $questions_report = param::optional('questions_report', false, param::BOOLEAN);
+        $feedback->setQuestionFeedback($questions_report, $userObject->get_user_ID());
+    }
+    if ($feedback->cohortPerformanceFeedbackPossible()) {
+        $cohort_performance = param::optional('cohort_performance', false, param::BOOLEAN);
+        $feedback->setCohortPerformanceFeedback($cohort_performance, $userObject->get_user_ID());
+    }
+    if ($feedback->externalExaminerFeedbackPossible()) {
+        $external_examiner = param::optional('external_examiner', false, param::BOOLEAN);
+        $feedback->setExternalExaminerFeedback($external_examiner, $userObject->get_user_ID());
     }
 
-    // Release question-based feedback
-    if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] != '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '0') {
-        $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
-
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Question-based Feedback', '', 'feedback');
-
-        // Include check to $q_feedback_enabled to see if question-based feedback
-        // is switched on at the module level.
-    } elseif ($q_feedback_enabled and isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
-        $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
-
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
-    }
-
-    // Release cohort performance feedback
-    if (isset($_POST['old_cohort_performance']) and $_POST['old_cohort_performance'] != '' and isset($_POST['cohort_performance']) and $_POST['cohort_performance'] == '0') {
-        $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'cohort_performance'");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
-
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Cohort Performance Feedback', '', 'feedback');
-    } elseif (isset($_POST['old_cohort_performance']) and $_POST['old_cohort_performance'] == '' and isset($_POST['cohort_performance']) and $_POST['cohort_performance'] == '1') {
-        $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'cohort_performance')");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
-
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Cohort Performance Feedback', 'feedback');
-    }
-
-    // Release external examiner feedback
-    if (isset($_POST['old_external_examiner']) and $_POST['old_external_examiner'] != '' and isset($_POST['external_examiner']) and $_POST['external_examiner'] == '0') {
-        $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'external_examiner'");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
-
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'External Examiner Feedback', '', 'feedback');
-    } elseif (isset($_POST['old_external_examiner']) and $_POST['old_external_examiner'] == '' and isset($_POST['external_examiner']) and $_POST['external_examiner'] == '1') {
-        $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'external_examiner')");
-        $editProperties->bind_param('i', $paperID);
-        $editProperties->execute();
-        $editProperties->close();
-
-        $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'External Examiner Feedback', 'feedback');
-    }
-
-    if ($papertype != '2' and $papertype != '4') {    // Update textual feedback if not a summative paper or OSCE station.
+    if (!in_array($papertype, [assessment::TYPE_SUMMATIVE, assessment::TYPE_OSCE])) {
+        // Update textual feedback if not a summative paper or OSCE station.
         // Get old settings
         $old_textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
-        for ($i = 1; $i < 10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             if (!isset($old_textual_feedback[$i]['msg'])) {
                 $old_textual_feedback[$i]['msg'] = '';
                 $old_textual_feedback[$i]['boundary'] = '';
-            }
-        }
-
-        // Get new settings
-        $textual_feedback = [];
-        for ($i = 1; $i < 10; $i++) {
-            if (isset($_POST["feedback_msg$i"]) and trim((string) $_POST["feedback_msg$i"]) != '') {
-                $textual_feedback[$i]['msg'] = $_POST["feedback_msg$i"];
-                $textual_feedback[$i]['boundary'] = $_POST["feedback_value$i"];
-            } else {
-                $textual_feedback[$i]['msg'] = '';
-                $textual_feedback[$i]['boundary'] = '';
             }
         }
 
@@ -576,19 +420,33 @@ if (!$title_unique) {
         $editProperties->execute();
         $editProperties->close();
 
-        for ($i = 1; $i < 10; $i++) {
-            $editProperties = $mysqli->prepare('INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)');
-            if (isset($_POST["feedback_msg$i"]) and trim((string) $_POST["feedback_msg$i"]) != '') {
-                $editProperties->bind_param('iis', $paperID, $_POST["feedback_value$i"], $_POST["feedback_msg$i"]);
-                $editProperties->execute();
-            }
-            $editProperties->close();
+        $editProperties = $mysqli->prepare('INSERT INTO paper_feedback VALUES (NULL, ?, ?, ?)');
+        $editProperties->bind_param('iis', $paperID, $boundary, $message);
 
-            if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
+        // Get new settings
+        for ($i = 1; $i <= 10; $i++) {
+            $message = trim((string) param::optional("feedback_msg$i", '', param::TEXT, param::FETCH_POST));
+            if ($message) {
+                $boundary = param::optional("feedback_value$i", 0, param::INT, param::FETCH_POST);
+                $editProperties->execute();
+            } else {
+                $boundary = '';
+            }
+
+            if ($old_textual_feedback[$i]['msg'] != $message or $old_textual_feedback[$i]['boundary'] != $boundary) {
                 // log a change
-                $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
+                $logger->track_change(
+                    'Paper',
+                    $paperID,
+                    $userObject->get_user_ID(),
+                    $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'],
+                    $boundary . '%&nbsp;' . $message,
+                    'textualfeedback'
+                );
             }
         }
+
+        $editProperties->close();
     }
 
     // Get the current (old) metadata security settings from the database.
@@ -609,9 +467,10 @@ if (!$title_unique) {
 
     // Loop around the POST fields to get the new metadata security settings.
     $new_meta = '';
-    for ($i = 0; $i < $_POST['meta_dropdown_no']; $i++) {
-        $meta_type = $_POST['meta_type' . $i];
-        $meta_value = $_POST['meta_value' . $i];
+    $meta_item_count = param::optional('meta_dropdown_no', 0, param::INT, param::FETCH_POST);
+    for ($i = 0; $i < $meta_item_count; $i++) {
+        $meta_type = param::optional('meta_type' . $i, '', param::TEXT, param::FETCH_POST);
+        $meta_value = param::optional('meta_value' . $i, '', param::TEXT, param::FETCH_POST);
 
         if ($meta_value != '') {
             if ($new_meta == '') {
@@ -631,17 +490,19 @@ if (!$title_unique) {
         $editProperties->execute();
         $editProperties->close();
 
-        for ($i = 0; $i < $_POST['meta_dropdown_no']; $i++) {
-            $meta_type = $_POST['meta_type' . $i];
-            $meta_value = $_POST['meta_value' . $i];
+        $editProperties = $mysqli->prepare('INSERT INTO paper_metadata_security VALUES (NULL, ?, ?, ?)');
+        $editProperties->bind_param('iss', $paperID, $meta_type, $meta_value);
+
+        for ($i = 0; $i < $meta_item_count; $i++) {
+            $meta_type = param::optional('meta_type' . $i, '', param::TEXT, param::FETCH_POST);
+            $meta_value = param::optional('meta_value' . $i, '', param::TEXT, param::FETCH_POST);
 
             if ($meta_value != '') {
-                $editProperties = $mysqli->prepare('INSERT INTO paper_metadata_security VALUES (NULL, ?, ?, ?)');
-                $editProperties->bind_param('iss', $paperID, $meta_type, $meta_value);
                 $editProperties->execute();
-                $editProperties->close();
             }
         }
+
+        $editProperties->close();
     }
 
     // Get existing Reference Materials
@@ -657,16 +518,20 @@ if (!$title_unique) {
     $result->close();
 
     $new_refs = [];
-    for ($i = 0; $i < $_POST['reference_no']; $i++) {
-        if (isset($_POST["ref$i"])) {
-            $new_refs[$_POST["ref$i"]] = $_POST["ref$i"];
+    $reference_count = param::optional('reference_no', 0, param::INT, param::FETCH_POST);
+    for ($i = 0; $i < $reference_count; $i++) {
+        $reference = param::optional("ref$i", 0, param::INT, param::FETCH_POST);
+        if ($reference) {
+            $new_refs[$reference] = $reference;
         }
     }
 
     foreach ($new_refs as $new_ref) {
         if (isset($existing_refs[$new_ref])) {
+            // The reference material is already linked to the paper.
             unset($existing_refs[$new_ref]);
         } else {
+            // A new reference material is being linked to the paper.
             $editProperties = $mysqli->prepare('INSERT INTO reference_papers VALUES (NULL, ?, ?)');
             $editProperties->bind_param('ii', $paperID, $new_ref);
             $editProperties->execute();
@@ -676,6 +541,7 @@ if (!$title_unique) {
         }
     }
     foreach ($existing_refs as $existing_ref) {
+        // These reference materials are no longer linked to the paper.
         $editProperties = $mysqli->prepare('DELETE FROM reference_papers WHERE paperID = ? AND refID = ?');
         $editProperties->bind_param('ii', $paperID, $existing_ref);
         $editProperties->execute();

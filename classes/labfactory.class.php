@@ -44,6 +44,51 @@ class LabFactory
     }
 
     /**
+     * Gets all the Labs configured in ExamSys
+     *
+     * They are ordered by Campus and Lab name.
+     *
+     * They include the following details:
+     * - lab id
+     * - lab name
+     * - campus name
+     * - The count of PCs in the lab
+     *
+     * All other values will not be set.
+     *
+     * @return Lab[]
+     */
+    public function getAllLabs(): array
+    {
+        $sql = <<< SQL
+            SELECT labs.id, labs.name, campus.name, COUNT(client_identifiers.id)
+            FROM labs, client_identifiers, campus
+            WHERE labs.id = client_identifiers.lab AND labs.campus = campus.id
+            GROUP BY client_identifiers.lab
+            ORDER BY campus.name, labs.name
+        SQL;
+
+        $result = $this->db->prepare($sql);
+        $result->execute();
+        $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
+
+        $labs = [];
+
+        while ($result->fetch()) {
+            $lab = new Lab();
+            $lab->set_id($lab_id);
+            $lab->set_name($lab_name);
+            $lab->set_campus($lab_campus);
+            $lab->setNumberOfPC($computer_no);
+
+            $labs[] = $lab;
+        }
+        $result->close();
+
+        return $labs;
+    }
+
+    /**
      * @param int $address - IP address of a machine in the required lab
      * @return Lab         - Lab object for specified IP address or false if not found
      */

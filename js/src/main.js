@@ -19,6 +19,10 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 
+// Create a global JavaScript object for when we want to be able to access things in behat.
+// eslint-disable-next-line no-global-assign
+ROGO = {};
+
 /**
  * Gets the base path needed for RequireJS
  *
@@ -226,6 +230,7 @@ requirejs.config({
         micromodal: "node_modules/micromodal/dist/micromodal.min",
         rogomodal: "js/modules/rogomodal.min",
 		anomaly: "js/modules/anomaly.min",
+        js_running: "js/modules/js_running.min",
     },
     shim: {
         // Mathjax configration.

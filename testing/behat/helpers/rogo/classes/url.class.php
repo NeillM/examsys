@@ -79,7 +79,7 @@ class Url
      */
     public static function properties(int $paperid): string
     {
-        return '/paper/properties.php?caller=detail&module=&folder=&paperID=' . $paperid;
+        return '/paper/properties.php?caller=details&module=&folder=&paperID=' . $paperid;
     }
 
     /**

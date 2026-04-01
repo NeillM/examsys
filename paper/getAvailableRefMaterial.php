@@ -23,9 +23,21 @@
  * @package
  */
 
+use component\form\Hidden;
+
 require '../include/staff_auth.inc';
 require '../include/errors.php';
 require '../lang/' . $language . '/paper/properties.php';
+
+$modules = param::optional('modules', '', param::TEXT);
+
+// We need to sanitise the modules to prevent SQL injection attacks.
+$module_list = explode(',', (string) $modules);
+$sanitised_modules = param::clean_array($module_list, param::INT);
+$modules = implode(',', $sanitised_modules);
+
+$renderer = new Render($configObject);
+
 $ref_line = 0;
 // Get the current metadata settings for the paper
 $current_settings = [];
@@ -39,26 +51,44 @@ while ($stmt->fetch()) {
 }
 $stmt->close();
 // Get the dropdown list values
-if ($_GET['modules'] != '') {
-    $stmt = $mysqli->prepare('SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod = modules.id AND modules.id IN (' . $_GET['modules'] . ') GROUP BY reference_material.id');
+if ($modules != '') {
+    $sql = <<<SQL
+        SELECT DISTINCT title, reference_material.id
+        FROM reference_material, reference_modules, modules
+        WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL
+            AND reference_modules.idMod = modules.id AND modules.id IN ({$modules})
+        GROUP BY reference_material.id
+    SQL;
+
+    $stmt = $mysqli->prepare($sql);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($title, $refID);
-    $ref_line = $stmt->num_rows();
-    if ($ref_line > 0) {
+    $ref_line = 0;
+
+    if ($stmt->num_rows() > 0) {
         while ($stmt->fetch()) {
-            if (isset($current_settings[$refID])) {
-                echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" checked=\"checked\" /> $title<br />";
-            } else {
-                echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" /> $title<br />";
-            }
+            $checkbox = new \component\form\Checkbox(
+                id: 'ref' . $ref_line,
+                name: 'ref' . $ref_line,
+                label: $title,
+                value: $refID,
+                checked: isset($current_settings[$refID]),
+            );
+            $renderer->renderComponent($checkbox);
+
             $ref_line++;
         }
     } else {
-        echo $string['nomaterials'];
+        $text = new \component\form\StaticHtml($string['nomaterials']);
+        $renderer->renderComponent($text);
     }
     $stmt->close();
 }
 
-$mysqli->close();
-echo "\n<input type=\"hidden\" id=\"reference_no\" name=\"reference_no\" value=\"$ref_line\" data-loaded='0'/>";
+$metacount = new Hidden(
+    id: 'reference_no',
+    name: 'reference_no',
+    value: $ref_line,
+);
+$renderer->renderComponent($metacount);

@@ -25,6 +25,28 @@
  * @package
  */
 
+use component\form\Checkbox;
+use component\form\CheckboxGroup;
+use component\form\CheckboxOptGroup;
+use component\form\Color;
+use component\form\Date;
+use component\form\Fieldset;
+use component\form\Form;
+use component\form\GeneralGroup;
+use component\form\Hidden;
+use component\form\Number;
+use component\form\RadioGroup;
+use component\form\Select;
+use component\form\StaticComponent;
+use component\form\StaticTemplate;
+use component\form\Text;
+use component\form\TextArea;
+use component\form\Time;
+use component\form\Url;
+use component\notification\Notification;
+use component\tabs\Tab;
+use component\tabs\TabList;
+
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
@@ -39,6 +61,8 @@ define('MARK_STD_SET', '2');
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 $module = param::optional('module', null, param::INT, param::FETCH_GET);
 $folder = param::optional('folder', null, param::INT, param::FETCH_GET);
+$noadd = param::optional('noadd', '', param::ALPHA, param::FETCH_GET);
+$caller = param::optional('caller', '', param::ALPHA, param::FETCH_GET);
 $render = new render($configObject);
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 
@@ -54,87 +78,12 @@ $q_feedback_enabled = Paper_utils::q_feedback_enabled(array_keys($modules_array)
 
 if ($properties->get_summative_lock() and !$userObject->has_role('SysAdmin')) {
     $locked = true;
-    $disabled = ' disabled';
 } else {
     $locked = false;
-    $disabled = '';
 }
 
 if (!isset($staff_modules)) {
     $staff_modules = $userObject->get_staff_modules();
-}
-
-function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$changed_labs, $db)
-{
-    if ($cfg_summative_mgmt and $paper_type == '2' and !$userObject->has_role(['Admin', 'SysAdmin'])) {
-        $r1class = 'r1disabled';
-        $r2class = 'r2disabled';
-        $disabled = ' disabled';
-        $html = '<div id="labs_list" style="height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%">';
-    } elseif ($paper_type == '4') {
-        $r1class = 'r1disabled';
-        $r2class = 'r2disabled';
-        $disabled = ' disabled';
-        $html = '<div id="labs_list" style="height:278px; overflow-y:scroll;border:1px solid #808080; color:#808080; font-size:90%">';
-    } else {
-        $r1class = 'r1';
-        $r2class = 'r2';
-        $disabled = '';
-        $html = '<div id="labs_list" style="height:278px; overflow-y:scroll;border:1px solid #828790; font-size:90%">';
-    }
-
-    $current_labs = explode(',', (string) $labs);
-
-    $result = $db->prepare('SELECT labs.id, labs.name, campus.name, COUNT(client_identifiers.id) FROM labs, client_identifiers, campus
-    WHERE labs.id = client_identifiers.lab AND labs.campus = campus.id GROUP BY client_identifiers.lab ORDER BY campus.name, labs.name');
-    $result->execute();
-    $result->bind_result($lab_id, $lab_name, $lab_campus, $computer_no);
-    $lab_no = 0;
-    $old_campus = '';
-    while ($result->fetch()) {
-        if ($old_campus != $lab_campus) {
-            //$html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
-            $html .= "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" /> $lab_campus</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
-        }
-        $match = false;
-        foreach ($current_labs as $individual_lab) {
-            if ($lab_id == $individual_lab) {
-                $match = true;
-            }
-        }
-        if ($match) {
-            $html .= "<div class=\"$r2class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled class=\"toggle\" data-toggleid=\"lab" . $lab_no . "\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\" checked><label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
-        } else {
-            $html .= "<div class=\"$r1class\" id=\"divlab$lab_no\"><input type=\"checkbox\"$disabled class=\"toggle\" data-toggleid=\"lab" . $lab_no . "\" name=\"lab$lab_no\" id=\"lab$lab_no\" value=\"$lab_id\"><label for=\"lab$lab_no\">$lab_name</label> <span style=\"color:#808080\">($computer_no)</span></div>\n";
-        }
-        $lab_no++;
-        $old_campus = $lab_campus;
-
-        if (isset($changed_labs[$lab_id])) {
-            $changed_labs[$lab_id] = $lab_name;
-        }
-    }
-    $result->close();
-    $html .= "<input type=\"hidden\" name=\"lab_no\" value=\"$lab_no\" /></div>";
-
-    return $html;
-}
-
-function getSchools($staff_modules, $db)
-{
-    $schools = [];
-
-    $staff_modules_list = implode("','", $staff_modules);
-
-    $result = $db->prepare("SELECT DISTINCT schools.id FROM schools, modules WHERE modules.schoolid = schools.id AND modules.moduleid IN ('$staff_modules_list')");
-    $result->execute();
-    $result->bind_result($schoolID);
-    while ($result->fetch()) {
-        $schools[] = $schoolID;
-    }
-    $result->close();
-
-    return $schools;
 }
 
 $option_no = 1;
@@ -162,11 +111,7 @@ if (!is_null($properties->get_end_date())) {
     $end_date = '';
 }
 
-if (!$properties->canEditSecurity()) {
-    $sum_disabled = ' disabled';
-} else {
-    $sum_disabled = '';
-}
+$sum_disabled = !$properties->canEditSecurity();
 
 // Output the html header.
 $render->render(
@@ -201,1337 +146,1338 @@ $breadcrumb = $breadcrumbData->preparePaperBreadcrumb(
     $string['propertiestitle'],
 );
 echo $render->render_admin_navigation($breadcrumb->getData($render));
-?>
-</div>
-<form id="theform" name="edit_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
-<?php
-  require '../tools/colour_picker/colour_picker.inc';
-?>
-<table border="0" cellpadding="0" cellspacing="5" style="width:100%; font-size:90%">
-<tr><td valign="top" style="background-color:white; border:1px solid #828790; width:120px">
 
-<table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:140px">
-<?php
-if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
-    echo '<tr><td id="tab1" class="tab" data-name="general">' . $string['generaltab'] . "</td></tr>\n";
-    echo '<tr><td id="tab2" class="tabon" data-name="security">' . $string['securitytab'] . "</td></tr>\n";
-} else {
-    echo '<tr><td id="tab1" class="tabon" data-name="general">' . $string['generaltab'] . "</td></tr>\n";
-    echo '<tr><td id="tab2" class="tab" data-name="security">' . $string['securitytab'] . "</td></tr>\n";
-}
+// Get the paper settings.
 $papersettings = new PaperSettings($paperID, $properties->get_paper_type());
-if ($configObject->get_setting('core', 'paper_seb_enabled') and $papersettings->settingsCategoryEnabled('seb')) {
-    echo '<tr><td id="tab3" class="tab" data-name="seb">' . $string['sebtab'] . '</td></tr>';
-} else {
-    echo '<tr><td id="tab3" style="display:none">' . $string['sebtab'] . '</td></tr>';
+
+$secure_browser_enabled = ($configObject->get_setting('core', 'paper_seb_enabled') and $papersettings->settingsCategoryEnabled('seb'));
+$reviews_enabled = !in_array($properties->get_paper_type(), [assessment::TYPE_SURVEY, assessment::TYPE_PEERREVIEW]);
+
+$rubric_enabled = !in_array($properties->get_paper_type(), [
+    assessment::TYPE_SURVEY,
+    assessment::TYPE_OSCE,
+    assessment::TYPE_OFFLINE,
+    assessment::TYPE_PEERREVIEW,
+]);
+
+$prologue_postscript_enabled = !in_array($properties->get_paper_type(), [assessment::TYPE_OSCE, assessment::TYPE_OFFLINE]);
+
+$reference_material_enabled = !in_array($properties->get_paper_type(), [
+    assessment::TYPE_OSCE,
+    assessment::TYPE_OFFLINE,
+    assessment::TYPE_PEERREVIEW,
+]);
+
+$is_sysadmin = $userObject->has_role('SysAdmin');
+
+$is_admin = $userObject->has_role(['SysAdmin', 'Admin']);
+
+$is_graded = $properties->isGraded();
+
+$general_tab = new Tab(
+    id: 'general-tab',
+    name: $string['generaltab'],
+);
+$security_tab = new Tab(
+    id: 'security-tab',
+    name: $string['securitytab'],
+);
+
+if ($noadd === 'y') {
+    $security_tab->setSelected();
 }
-if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '6') {
-    echo '<tr><td id="tab4" class="tab" data-name="feedback">' . $string['feedback'] . '</td></tr>';
-    echo '<tr><td id="tab5" class="tab" data-name="reviewers">' . $string['reviewerstab'] . '</td></tr>';
-} else {
-    echo '<tr><td id="tab4" style="display:none">' . $string['feedback'] . '</td></tr>';
-    echo '<tr><td id="tab5" style="display:none">' . $string['reviewerstab'] . '</td></tr>';
+
+$tabs = [
+    $general_tab,
+    $security_tab,
+];
+
+if ($secure_browser_enabled) {
+    $secure_browser_tab = new Tab(
+        id: 'seb-tab',
+        name: $string['sebtab'],
+    );
+    $tabs[] = $secure_browser_tab;
 }
-if ($properties->get_paper_type() != '3' and $properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
-    echo '<tr><td id="tab6" class="tab" data-name="rubric">' . $string['rubrictab'] . '</td></tr>';
-} else {
-    echo '<tr><td id="tab6" style="display:none">' . $string['rubrictab'] . '</td></tr>';
+
+if ($reviews_enabled) {
+    $feedback_tab = new Tab(
+        id: 'feedback-tab',
+        name: $string['feedback'],
+    );
+    $tabs[] = $feedback_tab;
+
+    $reviewers_tab = new Tab(
+        id: 'reviewers-tab',
+        name: $string['reviewerstab'],
+    );
+    $tabs[] = $reviewers_tab;
 }
-if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5') {
-    echo '<tr><td id="tab7" class="tab" data-name="prologue">' . $string['prologuetab'] . '</td></tr>';
-    echo '<tr><td id="tab8" class="tab" data-name="postscript">' . $string['postscripttab'] . '</td></tr>';
-} else {
-    echo '<tr><td id="tab7" style="display:none">' . $string['prologuetab'] . '</td></tr>';
-    echo '<tr><td id="tab8" style="display:none">' . $string['postscripttab'] . '</td></tr>';
+
+if ($rubric_enabled) {
+    $rubric_tab = new Tab(
+        id: 'rubric-tab',
+        name: $string['rubrictab'],
+    );
+    $tabs[] = $rubric_tab;
 }
-if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5' and $properties->get_paper_type() != '6') {
-    echo '<tr><td id="tab9" class="tab" data-name="reference">' . $string['referencematerial'] . '</td></tr>';
-} else {
-    echo '<tr><td id="tab9" style="display:none">' . $string['referencematerial'] . '</td></tr>';
+
+if ($prologue_postscript_enabled) {
+    $prologue_tab = new Tab(
+        id: 'prologue-tab',
+        name: $string['prologuetab'],
+    );
+    $tabs[] = $prologue_tab;
+
+    $postscript_tab = new Tab(
+        id: 'postscript-tab',
+        name: $string['postscripttab'],
+    );
+    $tabs[] = $postscript_tab;
 }
-?>
-</table>
 
-</td>
+if ($reference_material_enabled) {
+    $reference_material_tab = new Tab(
+        id: 'reference-material-tab',
+        name: $string['referencematerial'],
+    );
+    $tabs[] = $reference_material_tab;
+}
 
-<td style="background-color:white; border:1px solid #828790; vertical-align:top">
+$tablist = new TabList(
+    id: 'properties-tabs',
+    name: '',
+    tabs: $tabs,
+    orientation: TabList::ORIENTATION_VERTICAL,
+);
 
-<table id="general" class="tabsection" style="<?php if (isset($_GET['noadd']) and $_GET['noadd'] == 'y') {
-    echo 'display:none';
-                                              } ?>">
-<tr><td class="tabtitle" colspan="2"><img src="../artwork/general_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['generalheading']; ?></td></tr>
-<td style="text-align:left; vertical-align:top" colspan="2">
-   <?php
-     echo "<table class=\"cellpad2\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n";
-     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-     echo '<tr><td colspan="4" class="headbar">&nbsp;' . $string['paperdetails'] . "</td></tr>\n";
-     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+$form = new Form(
+    action: $_SERVER['PHP_SELF'],
+    method: Form::METHOD_POST,
+    autocomplete: false,
+    id: 'theform',
+);
 
-     echo '<tr><td align="right" valign="top">' . $string['url'] . '&nbsp;</td><td colspan="3">';
-    switch ($properties->get_paper_type()) {
-        case '2':
-            echo '<a href="' . $configObject->get('cfg_root_path') . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '</a> ' . $string['onlyonexamday'];
-            break;
-        case '4':
-            echo '<a href="' . $configObject->get('cfg_root_path') . '/osce/" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/osce/</a> ' . $string['onlyonexamday'];
-            break;
-        case '5':
-            echo $string['na'];
-            break;
-        case '6':
-            echo '<a href="' . $configObject->get('cfg_root_path') . '/peer_review/form.php?id=' . urlencode((string) $properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/peer_review/form.php?id=' . urlencode((string) $properties->get_crypt_name()) . '</a>';
-            break;
-        default:
-            echo '<a href="' . $configObject->get('cfg_root_path') . '/paper/user_index.php?id=' . urlencode((string) $properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/paper/user_index.php?id=' . urlencode((string) $properties->get_crypt_name()) . '</a>';
+$form->addElement(new Hidden('paperID', 'paperID', $paperID));
+$form->addElement(new Hidden('noadd', 'noadd', $noadd));
+$form->addElement(new Hidden('caller', 'caller', $caller));
+
+$form->addElement(new StaticComponent($tablist, '@tabs/tab_list_start.html'));
+
+// Add the general tab.
+$form->addElement(new StaticComponent($general_tab, '@tabs/tab_panel_start.html'));
+$form->addElement(new StaticTemplate(
+    data: [
+        'heading' => $string['generalheading'],
+        'class' => 'general',
+    ],
+    template: 'paper/properties_heading.html',
+));
+
+$paper_details = new GeneralGroup(
+    id: 'paper-details',
+    name: 'paper-details',
+    label: $string['paperdetails'],
+);
+
+// Add the url that students use to view the paper.
+$exam_day_only = in_array($properties->get_paper_type(), [assessment::TYPE_SUMMATIVE, assessment::TYPE_OSCE]);
+if ($exam_day_only) {
+    $url_desc = $string['onlyonexamday'];
+} else {
+    $url_desc = '';
+}
+$paper_details->addOption(new Url(
+    id: 'paper-url',
+    name: 'paper-url',
+    label: $string['url'],
+    value: $properties->getPaperUrl() ?: $string['na'],
+    description: $url_desc,
+    readonly: true,
+    pattern: '',
+    size: 75,
+));
+
+// Add the paper title field.
+$paper_details->addOption(new Text(
+    id: 'papertitle',
+    name: 'paper_title',
+    label: $string['name'],
+    value: $properties->get_paper_title(),
+    readonly: $locked,
+    required: true,
+    maxLength: 200,
+    size: 75,
+));
+
+// Add the paper type selector.
+if (in_array($properties->get_paper_type(), [assessment::TYPE_FORMATIVE, assessment::TYPE_PROGRESS])) {
+    $options = [
+        '0' => $string['formative self-assessment'],
+        '1' => $string['progress test'],
+    ];
+} else {
+    $tmp_types = ['formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review'];
+    $options = [
+        $properties->get_paper_type() => $string[$tmp_types[$properties->get_paper_type()]],
+    ];
+}
+
+$paper_details->addOption(new Select(
+    id: 'paper_type',
+    name: 'paper_type',
+    label: $string['type'],
+    options: $options,
+    default: $properties->get_paper_type(),
+));
+
+// Add the folder selector.
+$paper_details->addOption(new Select(
+    id: 'folderID',
+    name: 'folderID',
+    label: $string['folder'],
+    options: array_merge(
+        [''],
+        folder_utils::getUsersFolderNames(
+            $userObject->get_user_ID(),
+            array_keys($staff_modules ?? []),
+            (int) $properties->get_folder(),
+        ),
+    ),
+    default: (int) $properties->get_folder(),
+));
+
+// External system details.
+$external = new \external_systems();
+$external_systems = $external->get_all_externalsystems();
+
+$external_options = [];
+foreach ($external_systems as $system) {
+    $external_options[$system] = $system;
+}
+
+$paper_details->addOption(new Select(
+    id: 'externalsys',
+    name: 'externalsys',
+    label: $string['externalsys'],
+    options: array_merge(
+        [''],
+        $external_options,
+    ),
+    default: $properties->get_externalsys() ?? '',
+    disabled: !$is_sysadmin || $is_graded,
+));
+
+$paper_details->addOption(new Text(
+    id: 'externalid',
+    name: 'externalid',
+    label: $string['externalid'],
+    value: (string) $properties->get_externalid(),
+    readonly: !$is_sysadmin || $is_graded,
+    maxLength: 255,
+    size: 30,
+));
+
+$form->addElement($paper_details);
+
+$can_edit_display_options = $properties->get_paper_type() == assessment::TYPE_OSCE;
+
+if ($properties->get_paper_type() == assessment::TYPE_OSCE) {
+    // In OSCEs the display settings are present in the form, but not displayed.
+    $display_options_classes = ['hidden'];
+} else {
+    $display_options_classes = [];
+}
+
+$display_options = new GeneralGroup(
+    id: 'display-options',
+    name: 'display-options',
+    label: $string['displayoptions'],
+    classes: $display_options_classes,
+);
+
+$display_options->addOption(new Select(
+    id: 'fullscreen',
+    name: 'fullscreen',
+    label: $string['display'],
+    options: [
+        $string['windowed'],
+        $string['fullscreen'],
+    ],
+    default: $properties->get_fullscreen(),
+    disabled: $locked,
+));
+
+$display_options->addOption(new Select(
+    id: 'bidirectional',
+    name: 'bidirectional',
+    label: $string['navigation'],
+    options: [
+        $string['unidirectional'],
+        $string['bidirectional'],
+    ],
+    default: $properties->get_bidirectional(),
+    disabled: $locked,
+));
+
+// Colour selectors.
+$display_options->addOption(new Color(
+    id: 'background',
+    name: 'background',
+    label: $string['background'],
+    value: $properties->get_bgcolor(),
+    readonly: $locked,
+));
+$display_options->addOption(new Color(
+    id: 'foreground',
+    name: 'foreground',
+    label: $string['foreground'],
+    value: $properties->get_fgcolor(),
+    readonly: $locked,
+));
+$display_options->addOption(new Color(
+    id: 'themecolor',
+    name: 'themecolor',
+    label: $string['theme'],
+    value: $properties->get_themecolor(),
+    readonly: $locked,
+));
+$display_options->addOption(new Color(
+    id: 'labelcolor',
+    name: 'labelcolor',
+    label: $string['labelsnotes'],
+    value: $properties->get_labelcolor(),
+    readonly: $locked,
+));
+
+if ($properties->get_paper_type() == assessment::TYPE_PEERREVIEW) {
+    $audio = new CheckboxGroup(
+        id: 'display_photos',
+        name: 'display_photos',
+        label: $string['photos'],
+    );
+    $audio->addOption(
+        value: '1',
+        label: $string['ifavailable'],
+        checked: $properties->get_display_correct_answer()
+    );
+    $display_options->addOption($audio);
+} else {
+    $calculator = new CheckboxGroup(
+        id: 'calculator',
+        name: 'calculator',
+        label: $string['calculator'],
+    );
+    $calculator->addOption(
+        value: '1',
+        label: $string['displaycalculator'],
+        description: $string['tooltip_calculator'],
+        disabled: $locked,
+        checked: $properties->get_calculator(),
+    );
+    $display_options->addOption($calculator);
+
+    $audio = new CheckboxGroup(
+        id: 'sound_demo',
+        name: 'sound_demo',
+        label: $string['audio'],
+    );
+    $audio->addOption(
+        value: '1',
+        label: $string['demosoundclip'],
+        description: $string['tooltip_audio'],
+        disabled: $locked,
+        checked: $properties->get_sound_demo(),
+    );
+    $display_options->addOption($audio);
+}
+
+$form->addElement($display_options);
+
+$marking_options = new GeneralGroup(
+    id: 'marking-options',
+    name: 'marking-options',
+    label: $string['marking'],
+);
+
+if ($is_graded) {
+    // Output a warning.
+    $marking_options->addOption(new StaticComponent(new Notification(
+        message: $string['paperpublishedwarning'],
+        classes: ['locked-image'],
+        image: true,
+        type: Notification::TYPE_WARNING,
+    )));
+}
+
+$percentage_options = [];
+for ($i = 0; $i <= 100; $i++) {
+    $percentage_options["$i"] = "$i%";
+}
+
+if ($properties->get_paper_type() == assessment::TYPE_OSCE) {
+    $osce_started = $properties->get_osce_started_status($paperID, $mysqli);
+
+    $marking_values = [
+        '102' => $string['na'],
+        '101' => $string['borderlinemethod'],
+    ] + $percentage_options;
+
+    $marking_options->addOption(new Select(
+        id: 'pass_mark',
+        name: 'pass_mark',
+        label: $string['passmark'],
+        options: $marking_values,
+        default: $properties->get_pass_mark(),
+        disabled: $is_graded,
+    ));
+
+    $classification_options = [
+        '5' => $string['na'],
+        '7' => $string['overallclass5'],
+        '3' => $string['overallclass2'],
+        '4' => $string['overallclass3'],
+        '6' => $string['overallclass4'],
+    ];
+    $marking_options->addOption(new Select(
+        id: 'marking',
+        name: 'marking',
+        label: $string['overallclassification'],
+        options: $classification_options,
+        default: $properties->get_marking(),
+        description: $string['tooltip_osceclassification'],
+        disabled: $osce_started || $is_graded,
+    ));
+
+    // Add the postscript
+    $postscript_components = $texteditorplugin->getTextareaComponent(
+        id: 'osce_marking_guidance',
+        label: $string['markingguidance'],
+        content: $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_paper_postscript()), ENT_NOQUOTES),
+        type: plugins\plugins_texteditor::TYPE_STANDARD,
+        classes: ['properties-textbox'],
+    );
+    foreach ($postscript_components as $component) {
+        $marking_options->addOption($component);
     }
-     echo "</td></tr>\n";
-     echo '<tr><td align="right" valign="top">' . $string['name'] . '&nbsp;</td><td colspan="3">';
+} elseif ($properties->get_paper_type() == assessment::TYPE_PEERREVIEW) {
+    $marking_options->addOption(new Select(
+        id: 'type',
+        name: 'type',
+        label: $string['groupdetails'],
+        options: array_merge(
+            ['' => ''],
+            $properties->getUserMetadataTypes(),
+        ),
+        default: (string) $properties->get_rubric(),
+    ));
 
-     echo '<input id="papertitle" type="text" size="75" maxlength="200" value="' . $properties->get_paper_title() . "\" name=\"paper_title\"$disabled required />";
+    $marking_options->addOption(new Select(
+        id: 'marking',
+        name: 'marking',
+        label: $string['numberfrom'],
+        options: [0, 1],
+        default: $properties->get_marking(),
+    ));
 
-     echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\"></td></tr>\n";
-    ?>
-    <tr><td align="right" valign="top"><?php echo $string['type']; ?>&nbsp;</td><td>
-   <?php
-    if ($properties->get_paper_type() == '0') {
-        echo '<select id="paper_type" name="paper_type">';
-        echo '<option value="0" selected="selected" />' . $string['formative self-assessment'] . "</option>\n";
-        echo '<option value="1" />' . $string['progress test'] . "</option>\n";
-    } elseif ($properties->get_paper_type() == '1') {
-        echo '<select id="paper_type" name="paper_type">';
-        echo '<option value="0" />' . $string['formative self-assessment'] . "</option>\n";
-        echo '<option value="1" selected="selected" />' . $string['progress test'] . "</option>\n";
-    } else {
-        echo '<select id="paper_type" name="paper_type">';
-        $tmp_types = ['formative self-assessment', 'progress test', 'summative exam', 'survey', 'osce station', 'offline paper', 'peer review'];
-        echo '<option value="' . $properties->get_paper_type() . '" selected="selected" />' . $string[$tmp_types[$properties->get_paper_type()]] . "</option>\n";
+    $review = new RadioGroup(
+        id: 'review',
+        name: 'review',
+        label: $string['review'],
+        default: $properties->get_display_question_mark(),
+    );
+    $review->addOption(
+        value: '1',
+        label: $string['allpeerspergroup'],
+    );
+    $review->addOption(
+        value: '0',
+        label: $string['singlereview'],
+    );
+    $marking_options->addOption($review);
+} elseif ($properties->get_paper_type() != assessment::TYPE_SURVEY) {
+    $marking_options->addOption(new Number(
+        id: 'pass_mark',
+        name: 'pass_mark',
+        label: $string['passmark'],
+        value: $properties->get_pass_mark(),
+        description: $string['percentage'],
+        readonly: $is_graded,
+        max: 100,
+        min: 1,
+        step: 1,
+    ));
+
+    $has_disticntion = in_array($properties->get_paper_type(), [
+        assessment::TYPE_FORMATIVE,
+        assessment::TYPE_PROGRESS,
+        assessment::TYPE_SUMMATIVE,
+    ]);
+
+    if ($has_disticntion) {
+        $marking_options->addOption(new Number(
+            id: 'distinction_mark',
+            name: 'distinction_mark',
+            label: $string['distinction'],
+            value: $properties->get_distinction_mark(),
+            description: $string['percentage'],
+            readonly: $is_graded,
+            max: 100,
+            min: 1,
+            step: 1,
+        ));
     }
 
-    echo '<td align="right" valign="top">' . $string['folder'] . "&nbsp;</td><td valign=\"top\">\n<select style=\"width:210px\" name=\"folderID\">\n";
-    echo '<option value=""></option>';
-    $additional = '';
+    $marking = new RadioGroup(
+        id: 'marking',
+        name: 'marking',
+        label: $string['method'],
+        default: mb_substr((string) $properties->get_marking(), 0, 1),
+    );
+    $marking->addOption(
+        value: MARK_NO_ADJUSTMENT,
+        label: $string['noadjustment'],
+        disabled: $is_graded,
+    );
+    $marking->addOption(
+        value: MARK_RANDOM,
+        label: $string['calculatrrandommark'],
+        description: $string['tooltip_random'],
+        disabled: $is_graded || $neg_marking,
+    );
+    $standardsetting = new StandardSetting($mysqli);
+    $std_setting_options = $standardsetting->getStdSettingWithName($paperID);
+    $has_standard_setting = !empty($std_setting_options);
+    $marking->addOption(
+        value: MARK_STD_SET,
+        label: $string['stdset'],
+        disabled: $is_graded || !$has_standard_setting,
+    );
+    $marking_options->addOption($marking);
 
-    if (is_array($staff_modules) and count($staff_modules) > 0) {
-        $additional = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ')';
+    if ($has_standard_setting) {
+        $options = [];
+        foreach ($std_setting_options as $option) {
+            $key = MARK_STD_SET . ',' . $option['std_setID'];
+            $label = "{$option['title']} {$option['surname']}, {$option['initials']} - {$option['display_date']}";
+            $options[$key] = $label;
+        }
+
+        $marking_options->addOption(new Select(
+            id: 'std_set',
+            name: 'std_set',
+            label: $string['selectedstdset'],
+            options: $options,
+            default: $properties->get_marking(),
+            disabled: $is_graded,
+        ));
     }
+}
 
-    if ($properties->get_folder() != '') {
-        $additional .= ' OR id=' . $properties->get_folder();
-    }
+$form->addElement($marking_options);
 
-    $folder_details = $mysqli->prepare("SELECT DISTINCT id, name FROM folders LEFT JOIN folders_modules_staff ON folders.id = folders_modules_staff.folders_id WHERE (ownerID = ? $additional) AND deleted IS NULL ORDER BY name");
-    $folder_details->bind_param('i', $userObject->get_user_ID());
-    $folder_details->execute();
-    $folder_details->bind_result($folder_id, $folder_name);
-    while ($folder_details->fetch()) {
-        $path_parts = mb_substr_count((string) $folder_name, ';');
-        $folder_array = explode(';', (string) $folder_name);
-        $display_name = str_repeat('&nbsp;', $path_parts * 4) . $folder_array[$path_parts];
-        if ($properties->get_folder() == $folder_id) {
-            echo '<option value="' . $folder_id . '" selected>' . $display_name . '</option>';
-        } else {
-            echo '<option value="' . $folder_id . '">' . $display_name . '</option>';
-        }
-    }
-    $folder_details->close();
+$general_settings = $properties->getSettingsComponents('general');
+foreach ($general_settings as $setting) {
+    $form->addElement($setting);
+}
 
-    // External system details.
-    $external = new \external_systems();
-    $extsys = $external->get_all_externalsystems();
-    echo "</select>\n</td></tr>\n";
-    if ($userObject->has_role('SysAdmin')) {
-        // Sys admins can edit.
-        echo '<tr><td align="right" valign="top">' . $string['externalsys'] . '</td><td><select name="externalsys">';
-        echo "<option value=\"\"></option>\n";
-        foreach ($extsys as $i => $s) {
-            if ($s == $properties->get_externalsys()) {
-                $selected = 'selected';
-            } else {
-                $selected = '';
-            }
-            echo "<option value=\"$s\" $selected>$s</option>\n";
-        }
-        echo '</select></td></tr>';
-        echo '<tr><td align="right" valign="top">' . $string['externalid'] . '</td><td><input type="text" size="30" maxlength="255" name="externalid" value="' . $properties->get_externalid() . '"></td></tr>';
-    } else {
-        // Non sys admins can only view.
-        echo '<tr><td>' . $string['externalid'] . '</td><td>' . $properties->get_externalid() . '</td></tr>';
-        echo '<tr><td>' . $string['externalsys'] . '</td><td>' . $properties->get_externalsys() . '</td></tr>';
-    }
-    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-    if ($properties->get_paper_type() == '4') {
-        echo '<input type="hidden" name="background" value="' . $properties->get_bgcolor() . '" />';
-        echo '<input type="hidden" name="foreground" value="' . $properties->get_fgcolor() . '" />';
-        echo '<input type="hidden" name="themecolor" value="' . $properties->get_themecolor() . '" />';
-        echo '<input type="hidden" name="labelcolor" value="' . $properties->get_labelcolor() . '" />';
-        echo '<input type="hidden" name="fullscreen" value="' . $properties->get_fullscreen() . '" />';
-    } else {
-        echo '<tr><td colspan="4" class="headbar">&nbsp;' . $string['displayoptions'] . "</td></tr>\n";
-        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-        if ($properties->get_fullscreen() == 0) {
-            echo '<tr><td align="right">' . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\"$disabled>\n<option value=\"0\" selected>" . $string['windowed'] . '</option><option value="1">' . $string['fullscreen'] . "</option>\n</select></td>";
-        } else {
-            echo '<tr><td align="right">' . $string['display'] . "&nbsp;</td><td><select name=\"fullscreen\"$disabled>\n<option value=\"0\">" . $string['windowed'] . '</option><option value="1" selected>' . $string['fullscreen'] . "</option>\n</select></td>";
-        }
-        if ($properties->get_bidirectional() == 1) {
-            echo '<td align="right">' . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\"$disabled><option value=\"0\">" . $string['unidirectional'] . '</option><option value="1"selected>' . $string['bidirectional'] . "</option></select></td></tr>\n";
-        } else {
-            echo '<td align="right">' . $string['navigation'] . "&nbsp;</td><td><select name=\"bidirectional\"$disabled><option value=\"0\" selected>" . $string['unidirectional'] . '</option><option value="1">' . $string['bidirectional'] . "</option></select></td></tr>\n";
-        }
+$form->addElement(new StaticComponent($general_tab, '@tabs/tab_panel_end.html'));
 
-        echo "<tr>\n";
-        echo '<td align="right">' . $string['background'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="background" id="span_background" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_bgcolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="background" name="background" value="' . $properties->get_bgcolor() . '" /></td>';
-        echo '<td align="right">' . $string['foreground'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="foreground" id="span_foreground" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_fgcolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="foreground" name="foreground" value="' . $properties->get_fgcolor() . '" /></td>';
-        echo "</tr>\n";
+// Add the security tab.
+$form->addElement(new StaticComponent($security_tab, '@tabs/tab_panel_start.html'));
+$form->addElement(new StaticTemplate(
+    data: [
+        'heading' => $string['securityheading'],
+        'class' => 'security',
+    ],
+    template: 'paper/properties_heading.html',
+));
 
-        echo "<tr>\n";
-        echo '<td align="right">' . $string['theme'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="themecolor" id="span_themecolor" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_themecolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="themecolor" name="themecolor" value="' . $properties->get_themecolor() . '" /></td>';
-        echo '<td align="right">' . $string['labelsnotes'] . '&nbsp;</td><td><div class="showpicker" data-pickertype="labelcolor" id="span_labelcolor" style="border:1px solid #C5C5C5; width:20px; background-color:' . $properties->get_labelcolor() . '">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type="hidden" id="labelcolor" name="labelcolor" value="' . $properties->get_labelcolor() . '" /></td>';
-        echo "</tr>\n";
-
-        if ($properties->get_paper_type() == '6') {
-            echo '<tr><td align="right">' . $string['photos'] . '&nbsp;</td><td colspan="3">';
-            if ($properties->get_display_correct_answer() == '1') {
-                echo '<input type="checkbox" name="display_photos" value="1" checked />';
-            } else {
-                echo '<input type="checkbox" name="display_photos" value="1" />';
-            }
-            echo $string['ifavailable'] . "</td></tr>\n";
-        } else {
-            if ($properties->get_calculator() == 1) {
-                $checked = ' checked="checked"';
-            } else {
-                $checked = '';
-            }
-            echo '<tr><td align="right">' . $string['calculator'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"calculator\" name=\"calculator\"$checked$disabled /><label for=\"calculator\">" . $string['displaycalculator'] . '</label> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_calculator'] . '" /></td>';
-
-            if ($properties->get_sound_demo() == 1) {
-                $checked = ' checked="checked"';
-            } else {
-                $checked = '';
-            }
-            echo '<td align="right">' . $string['audio'] . "&nbsp;</td><td><input type=\"checkbox\" value=\"1\" id=\"sound_demo\" name=\"sound_demo\"$checked$disabled /><label for=\"sound_demo\">" . $string['demosoundclip'] . '</label> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_audio'] . "\" /></td></tr>\n";
-        }
-
-        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-    }
-    if ($properties->get_paper_type() != '3') {
-        echo '<tr><td colspan="4" class="headbar">&nbsp;' . $string['marking'] . "</td></tr>\n";
-    }
-
-    $published = '';
-    if ($properties->isGraded()) {
-        $sum_disabled = ' disabled';
-        $published = ' disabled';
-        echo '<tr><td style="padding-right:0"><div class="yellowwarn"><img src="../artwork/paper_locked_padlock.png" width="32" height="32" alt="Published" /></div></td><td colspan="3" style="vertical-align:middle; padding-left:0"><div class="yellowwarn">' . $string['paperpublishedwarning'] . "</div></td></tr>\n";
-    }
-    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-    if ($properties->get_paper_type() == '4') {    // OSCE Stations
-        echo '<tr><td align="right" valign="top">' . $string['passmark'] . "&nbsp;</td><td valign=\"top\">\n<select name=\"pass_mark\" id=\"pass_mark\" $published>\n";
-        if ($properties->get_pass_mark() == 102) {
-            echo '<option value="102">N/A</option>';
-        } else {
-            echo '<option value="102" selected>N/A</option>';
-        }
-        if ($properties->get_pass_mark() == 101) {
-            echo '<option value="101" selected>' . $string['borderlinemethod'] . '</option>';
-        } else {
-            echo '<option value="101">' . $string['borderlinemethod'] . '</option>';
-        }
-        for ($i = 0; $i <= 100; $i++) {
-            if ($i == $properties->get_pass_mark()) {
-                echo "<option value=\"$i\" selected>$i%</option>\n";
-            } else {
-                echo "<option value=\"$i\">$i%</option>\n";
-            }
-        }
-        echo '</select></td></tr>';
-
-        $oscestarted = $properties->get_osce_started_status($paperID, $mysqli);
-        if ($oscestarted) {
-            echo '<tr><td align="right" valign="top"><nobr>' . $string['overallclassification'] . ':</nobr>&nbsp;</td><td valign="top" colspan="3">';
-            ?>
-            <?php if ($properties->get_marking() == '5') {
-                echo 'N/A';
-            } ?>
-            <?php if ($properties->get_marking() == '7') {
-                echo $string['overallclass5'];
-            } ?>
-            <?php if ($properties->get_marking() == '3') {
-                echo $string['overallclass2'];
-            } ?>
-            <?php if ($properties->get_marking() == '4') {
-                echo $string['overallclass3'];
-            } ?>
-            <?php if ($properties->get_marking() == '6') {
-                echo $string['overallclass4'];
-            } ?>
-
-            <?php
-        } else {
-            echo '<tr><td align="right" valign="top"><nobr>' . $string['overallclassification'] . "</nobr>&nbsp;</td><td valign=\"top\" colspan=\"3\"><select name=\"marking\" $published>";
-            ?>
-          <option value="5"<?php if ($properties->get_marking() == '5') {
-                echo ' selected';
-                           } ?> />N/A</option>
-          <option value="7"<?php if ($properties->get_marking() == '7') {
-                echo ' selected';
-                           } ?> /><?php echo $string['overallclass5']; ?></option>
-          <option value="3"<?php if ($properties->get_marking() == '3') {
-                echo ' selected';
-                           } ?> /><?php echo $string['overallclass2']; ?></option>
-          <option value="4"<?php if ($properties->get_marking() == '4') {
-                echo ' selected';
-                           } ?> /><?php echo $string['overallclass3']; ?></option>
-          <option value="6"<?php if ($properties->get_marking() == '6') {
-                echo ' selected';
-                           } ?> /><?php echo $string['overallclass4']; ?></option>
-          </select>
-            <?php
-        }
-        echo '<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_osceclassification'] . '" />';
-        echo '</td></tr>';
-        echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-        echo '<tr><td colspan="4">' . $string['markingguidance'] . "</td></tr>\n";
-        echo '<tr><td colspan="4" style="padding: 0">';
-        $texteditorplugin->get_textarea('osce_marking_guidance', 'osce_marking_guidance', $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_paper_postscript()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:230px;');
-        echo '</td></tr>';
-    } elseif ($properties->get_paper_type() == '6') {  // Peer Review
-        $review = $properties->get_display_question_mark();
-
-        echo '<tr><td align="right">' . $string['groupdetails'] . "&nbsp;</td><td><select name=\"type\">\n";
-        echo "<option value=\"\" selected>&nbsp;</option>\n";
-
-            $modules_array = $properties->get_modules();
-
-        $field_details = $mysqli->prepare('SELECT DISTINCT type FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN (' . implode(',', array_keys($modules_array)) . ') ORDER BY type');
-        $field_details->execute();
-        $field_details->bind_result($type);
-        while ($field_details->fetch()) {
-            if ($properties->get_rubric() == $type) {
-                echo "<option value=\"$type\" selected>$type</option>\n";
-            } else {
-                echo "<option value=\"$type\">$type</option>\n";
-            }
-        }
-        $field_details->close();
-        echo "</select>\n</td>\n";
-        echo '<td align="right">' . $string['numberfrom'] . "</td><td><select name=\"marking\">\n";
-        if ($properties->get_marking() == '1') {
-            echo "<option value=\"0\">0</option>\n<option value=\"1\" selected>1</option>\n";
-        } else {
-            echo "<option value=\"0\" selected>0</option>\n<option value=\"1\">1</option>\n";
-        }
-        echo "</select>\n</td></tr>\n";
-        echo '<tr><td align="right">' . $string['review']  . '</td><td>';
-        if ($review == '1') {
-            echo '<input type="radio" name="review" value="1" checked="checked" />';
-        } else {
-            echo '<input type="radio" name="review" value="1" />';
-        }
-        echo $string['allpeerspergroup'] . '<br />';
-        if ($review == '0') {
-            echo '<input type="radio" name="review" value="0" checked="checked" />';
-        } else {
-            echo '<input type="radio" name="review" value="0" />';
-        }
-        echo $string['singlereview'] . '</td></tr>';
-    } elseif ($properties->get_paper_type() != '3') {
-        echo '<tr><td align="right" valign="top">' . $string['passmark'] . "&nbsp;</td><td valign=\"top\"><select name=\"pass_mark\" id=\"pass_mark\" $published>";
-        for ($i = 0; $i <= 100; $i++) {
-            if ($i == $properties->get_pass_mark()) {
-                echo "<option value=\"$i\" selected>$i%</option>\n";
-            } else {
-                echo "<option value=\"$i\">$i%</option>\n";
-            }
-        }
-        echo '</select></td><td rowspan="2" style="text-align:right" valign="top">' . $string['method'] . '&nbsp;</td><td rowspan="2">';
-        ?>
-       <input type="radio" id="marking1" name="marking" value="<?php echo MARK_NO_ADJUSTMENT ?>"<?php if ($properties->get_marking() == MARK_NO_ADJUSTMENT) {
-            echo ' checked';
-                                                               } ?> <?php echo $published ?>/><?php echo $string['noadjustment'] ?><br />
-       <input type="radio" id="marking2" name="marking" value="<?php echo MARK_RANDOM ?>"<?php
-        if ($properties->get_marking() == MARK_RANDOM) {
-            echo ' checked ';
-        }
-        if ($neg_marking) {
-            echo ' disabled';
-        } else {
-            echo ' ' . $published;
-        }
-        if ($neg_marking) {
-            echo '><span style="color:#808080">' . $string['calculatrrandommark'] . '</span>&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
-        } else {
-            echo '>' . $string['calculatrrandommark'] . '&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
-        }
-
-        // Look for any Standard Setting reviews for the paper.
-        $std_set_array = [];
-        $i = 0;
-
-        $std_set_details = $mysqli->prepare("SELECT std_set.id, title, surname, initials, setterID, DATE_FORMAT(std_set,'%d/%m/%y %H:%i') AS display_date, group_review FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set DESC");
-        $std_set_details->bind_param('i', $paperID);
-        $std_set_details->execute();
-        $std_set_details->bind_result($std_setID, $std_set_title, $std_set_surname, $std_set_initials, $std_set_reviewer, $std_set_display_date, $group_review);
-        while ($std_set_details->fetch()) {
-            $std_set_array[$i] = ['std_setID' => $std_setID, 'title' => $std_set_title, 'surname' => $std_set_surname, 'initials' => $std_set_initials, 'reviewer' => $std_set_reviewer, 'display_date' => $std_set_display_date, 'group_review' => $group_review];
-            $i++;
-        }
-        $std_set_details->close();
-
-        if (count($std_set_array) > 0) {
-            echo '<input type="radio" id="marking3" name="marking" value="' . MARK_STD_SET . '"';
-            if (mb_substr((string) $properties->get_marking(), 0, 1) == MARK_STD_SET) {
-                echo ' checked';
-            }
-            echo " $published/>";
-            echo $string['stdset'] . ' <select name="std_set" ' . $published . '>';
-            foreach ($std_set_array as $std_set_line) {
-                $std_set_title = $std_set_line['title'];
-                $std_set_surname = $std_set_line['surname'];
-                $std_set_initials = $std_set_line['initials'];
-                $std_set_reviewer = $std_set_line['reviewer'];
-                $std_setID = $std_set_line['std_setID'];
-                $std_set_display_date = $std_set_line['display_date'];
-
-                if ($properties->get_marking() == MARK_STD_SET . ",$std_setID") {
-                    echo '<option value="' . MARK_STD_SET . ",$std_setID\" selected>$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
-                } else {
-                    echo '<option value="' . MARK_STD_SET . ",$std_setID\">$std_set_title $std_set_surname, $std_set_initials - $std_set_display_date</option>";
-                }
-            }
-            echo "</select>\n";
-        } else {
-            echo '<input type="radio" id="marking3" name="marking" value="' . MARK_STD_SET . '" disabled />';
-            echo '<span style="color:#808080">' . $string['stdset'] . '</span>';
-        }
-    }
-    if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') {
-        echo '<tr><td align="right" valign="top">' . $string['distinction'] . "</td><td><select name=\"distinction_mark\" $published>";
-        echo "<option value=\"127\" selected>N/A</option>\n";    // N/A = 127 which should be impossible to ever get.
-        for ($i = 0; $i <= 100; $i++) {
-            if ($i == $properties->get_distinction_mark()) {
-                echo "<option value=\"$i\" selected>$i%</option>\n";
-            } else {
-                echo "<option value=\"$i\">$i%</option>\n";
-            }
-        }
-        echo "</select></td></tr>\n";
-    } else {
-        echo "<tr><td></td><td></td></tr>\n";
-    }
-    ?>
-   </table>
-</td>
-</tr>
-<?php
-$properties->renderSettings('general');
-?>
-</table>
-
-<table id="prologue" class="tabsection" style="display: none">
-<tr><td class="tabtitle"><img src="../artwork/prologue_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['prologueheading']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('paper_prologue', 'paper_prologue', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_prologue() ?? ''), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
-<?php
-$properties->renderSettings('prologue');
-?>
-</table>
-
-<table id="postscript" class="tabsection" style="display: none">
-<tr><td class="tabtitle"><img src="../artwork/postscript_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['postscriptheading']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('paper_postscript', 'paper_postscript', $texteditorplugin->get_text_for_display(htmlspecialchars($properties->get_paper_postscript() ?? ''), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
-<?php
-$properties->renderSettings('postscript');
-?>
-</table>
-
-<table id="security" class="tabsection" style="display: none">
-<tr><td class="tabtitle"><img src="../artwork/security_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['securityheading']; ?></td></tr>
-<?php
 if ($properties->get_summative_lock() and $userObject->has_role(['SysAdmin'])) {
-    ?>
-<tr>
-  <td>
-    <div class="yellowwarn">
-      <img src="../artwork/paper_locked_padlock.png" width="32" height="32" alt="Locked" /><span style="vertical-align:top; padding-left:10px"><?php echo $string['donotchangewarning']; ?></span>
-    </div>
-  </td>
-</tr>
-    <?php
-}
-?>
-<tr>
-<td style="text-align:center; vertical-align:top">
-<?php
-    echo "<table cellpadding=\"0\" cellspacing=\"3\" border=\"0\" style=\"width:100%; padding-bottom:10px\">\n";
-    echo '<tr><td align="right">' . $string['session'] . "</td><td><select name=\"calendar_year\" id=\"session\" class='meta' \"$sum_disabled>\n";
-    $yearutils = new yearutils($mysqli);
-    echo $yearutils->get_calendar_year_dropdown_options($properties->get_paper_type(), $properties->get_calendar_year(), $string);
-    echo '</select></td>';
-
-if ($properties->get_paper_type() == '4') {
-    echo '<td></td><td><input type="hidden" size="20" name="password" value="' . $properties->get_decrypted_password() . "\" /></td></tr>\n";
-} else {
-    echo '<td align="right">' . $string['password'] . '</td><td><input type="text" size="20" name="password" value="' . $properties->get_decrypted_password() . "\"$disabled /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_password'] . "\" /></td></tr>\n";
+    // Output a warning.
+    $marking_options->addOption(new StaticComponent(new Notification(
+        message: $string['donotchangewarning'],
+        classes: ['locked-image'],
+        image: true,
+        type: Notification::TYPE_WARNING,
+    )));
 }
 
-    echo '<tr><td align="right">' . $string['timezone'] .  "</td><td><select name=\"timezone\"$sum_disabled style=\"width:270px\">";
-foreach ($timezone_array as $individual_zone => $display_zone) {
-    if ($properties->get_timezone() == $individual_zone) {
-        echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
-    } else {
-        echo "<option value=\"$individual_zone\">$display_zone</option>";
-    }
-}
-    echo '</select></td>';
+// Academic year selector.
+$yearutils = new yearutils($mysqli);
+$form->addElement($yearutils->getCalendarYearOptionsComponent(
+    id: 'session',
+    name: 'calendar_year',
+    label: $string['session'],
+    paper_type: $properties->get_paper_type(),
+    calendar_year: (string) $properties->get_calendar_year(),
+    na: $string['na'],
+    classes: ['meta'],
+    disabled: $sum_disabled || $is_graded,
+));
 
-        $exam_duration = $properties->get_exam_duration();
+$form->addElement(new Text(
+    id: 'password',
+    name: 'password',
+    label: $string['password'],
+    value: (string) $properties->get_decrypted_password(),
+    description: $string['tooltip_password'],
+    readonly: $locked,
+    size: 20,
+    disabled: $properties->get_paper_type() == assessment::TYPE_OSCE,
+));
+
+$duration = new GeneralGroup(
+    id: 'duration',
+    name: 'duration',
+    label: $string['duration'],
+    orientation: GeneralGroup::ORIENTATION_HORIZONTAL,
+);
+
+$exam_duration = $properties->get_exam_duration();
 if ($exam_duration == null) {
-    $duration_hours = 'NULL';
-    $duration_mins = 'NULL';
+    $duration_hours = '';
+    $duration_mins = '';
 } else {
     $duration_hours = (int)floor($exam_duration / 60);
     $duration_mins = (int)$exam_duration - ($duration_hours * 60);
 }
-        echo '<td align="right">' . $string['duration'] . "</td><td><select id=\"exam_duration_hours\" name=\"exam_duration_hours\"$sum_disabled>";
-if ($duration_hours == 'NULL') {
-    echo '<option value="NULL" selected>N/A</option>';
-} else {
-    echo '<option value="NULL">N/A</option>';
-}
+
+$hours = ['NULL' => $string['na']];
 for ($i = 0; $i <= 12; $i++) {
-    if ($i === $duration_hours) {
-                echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-                echo "<option value=\"$i\">$i</option>\n";
-    }
+    $hours[$i] = $i;
 }
-    echo '</select> ' . $string['hrs'] . " <select id=\"exam_duration_mins\" name=\"exam_duration_mins\"$sum_disabled>";
-if ($duration_mins == 'NULL') {
-    echo '<option value="NULL" selected>N/A</option>';
-} else {
-    echo '<option value="NULL">N/A</option>';
-}
+$duration->addOption(new Number(
+    id: 'exam_duration_hours',
+    name: 'exam_duration_hours',
+    label: $string['hrs'],
+    value: $duration_hours,
+    description: $string['hrs_info'],
+    readonly: $sum_disabled || $is_graded || $locked,
+    max: 12,
+    min: 0,
+    step: 1,
+));
+
+$minutes = ['NULL' => $string['na']];
 for ($i = 0; $i < 60; $i++) {
-    if ($i === $duration_mins) {
-                echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-                echo "<option value=\"$i\">$i</option>\n";
-    }
+    $minutes[$i] = $i;
 }
-        echo '</select> ' . $string['mins'] . "</td></tr>\n";
-    echo '<tr><td align="right" valign="top">' . $string['availablefrom'] . '</td><td>';
+$duration->addOption(new Number(
+    id: 'exam_duration_mins',
+    name: 'exam_duration_mins',
+    label: $string['mins'],
+    value: $duration_mins,
+    description: $string['mins_info'],
+    readonly: $sum_disabled || $is_graded || $locked,
+    max: 59,
+    min: 0,
+    step: 1,
+));
 
-    // Split the start date if available
-if (isset($start_date) and $start_date != '') {
-    $split_year = $start_date->format('Y');
-    $split_month = $start_date->format('m');
-    $split_day = $start_date->format('d');
-    $split_hour = $start_date->format('H');
-    $split_minute = $start_date->format('i');
+$form->addElement($duration);
+
+$form->addElement(new Select(
+    id: 'timezone',
+    name: 'timezone',
+    label: $string['timezone'],
+    options: $timezone_array,
+    default: $properties->get_timezone(),
+    disabled: $sum_disabled || $is_graded || $locked,
+));
+
+$mindate = '2002-01-01';
+$maxdate = new DateTime('last day of December +20 years');
+
+$paper_start = new GeneralGroup(
+    id: 'paper-start',
+    name: 'paper-start',
+    label: $string['availablefrom'],
+    orientation: GeneralGroup::ORIENTATION_HORIZONTAL,
+);
+
+$paper_start->addOption(new Date(
+    id: 'fdate',
+    name: 'fdate',
+    label: $string['date'],
+    value: ($start_date == '') ? $start_date : $start_date->format('Y-m-d'),
+    classes: ['datecopy'],
+    max: $maxdate->format('Y-m-d'),
+    min: $mindate,
+    readonly: $sum_disabled || $is_graded,
+));
+
+$paper_start->addOption(new Time(
+    id: 'ftime',
+    name: 'ftime',
+    label: $string['time'],
+    value: ($start_date == '') ? $start_date : $start_date->format('H:i'),
+    classes: ['datecopy'],
+    readonly: $sum_disabled || $is_graded,
+));
+
+$form->addElement($paper_start);
+
+if ($properties->get_paper_type() == assessment::TYPE_SUMMATIVE and !is_null($exam_duration)) {
+    $enddesc = sprintf($string['minavailability'], $minavailability);
 } else {
-    $split_year = $split_month = $split_day = $split_hour = $split_minute = 0;
+    $enddesc = '';
 }
 
-    // Available from Day
-    echo "<select name=\"fday\" id=\"fday\" class=\"datecopy\"$sum_disabled>\n";
-if ($start_date == '') {
-    echo '<option value=""></option>';
-}
-for ($i = 1; $i < 32; $i++) {
-    if ($i < 10) {
-        if ($i == $split_day) {
-            echo "<option value=\"0$i\" selected>";
-        } else {
-            echo "<option value=\"0$i\">";
-        }
-    } else {
-        if ($i == $split_day) {
-            echo "<option value=\"$i\" selected>";
-        } else {
-            echo "<option value=\"$i\">";
-        }
-    }
-    if ($i < 10) {
-        echo '0';
-    }
-        echo "$i</option>\n";
-}
-    echo '</select>';
-   // Available from Month
-    $months = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-    echo "<select name=\"fmonth\" id=\"fmonth\" class=\"datecopy\"$sum_disabled>\n";
-if ($start_date == '') {
-    echo '<option value=""></option>';
-}
-for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
-    if (($split_month - 1) == $i) {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\" selected>$trans_month</option>\n";
-        }
-    } else {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\">$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\">$trans_month</option>\n";
-        }
-    }
-}
-    echo '</select>';
-    // Available from Year
-    echo "<select name=\"fyear\" id=\"fyear\" class=\"datecopy\"$sum_disabled>\n";
-if ($start_date == '') {
-    echo '<option value=""></option>';
-}
-$startfyear = date('Y');
-if ($split_year !== 0 and $split_year < $startfyear) {
-    $startfyear = $split_year;
-}
-echo '<optgroup>';
-for ($i = $startfyear; $i < ($startfyear + 21); $i++) {
-    if ($i == $split_year) {
-        echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-        echo "<option value=\"$i\">$i</option>\n";
-    }
-}
-echo '</optgroup><optgroup>';
-$diffyears = $startfyear - 2002;
-if ($diffyears > 0) {
-    for ($i = 2002; $i < (2002 + $diffyears); $i++) {
-        echo "<option value=\"$i\">$i</option>\n";
-    }
-}
-echo '</optgroup>';
-echo "</select><select id=\"fhour\" name=\"fhour\" $sum_disabled>\n";
-// Available from Hour
-if ($start_date == '') {
-    echo '<option value=""></option>';
-}
-for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
-    if ($tmp_hour < 10) {
-              $display_hour = '0' . $tmp_hour;
-    } else {
-                      $display_hour = $tmp_hour;
-    }
-    if ($display_hour == $split_hour and $start_date != '') {
-        echo '<option value="' . $display_hour . '" selected>' . $display_hour . "</option>\n";
-    } else {
-        echo '<option value="' . $display_hour . '">' . $display_hour . "</option>\n";
-    }
-}
-echo '</select>';
+$paper_end = new GeneralGroup(
+    id: 'paper-end',
+    name: 'paper-end',
+    label: $string['availableuntil'],
+    description: $enddesc,
+    orientation: GeneralGroup::ORIENTATION_HORIZONTAL,
+);
 
-echo "</select><select id=\"fminute\" name=\"fminute\" $sum_disabled>\n";
-// Available from Minute
-if ($start_date == '') {
-    echo '<option value=""></option>';
-}
-for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
-    if ($tmp_minute < 10) {
-        $display_minute = '0' . $tmp_minute;
-    } else {
-        $display_minute = $tmp_minute;
-    }
-    if ($display_minute == $split_minute and $start_date != '') {
-        echo '<option value="' . $display_minute . '" selected>' . $display_minute . "</option>\n";
-    } else {
-        echo '<option value="' . $display_minute . '">' . $display_minute . "</option>\n";
-    }
-}
-echo "</select>\n</td>\n";
+$paper_end->addOption(new Date(
+    id: 'tdate',
+    name: 'tdate',
+    label: $string['date'],
+    value: ($end_date == '') ? $end_date : $end_date->format('Y-m-d'),
+    classes: ['datecopy'],
+    max: $maxdate->format('Y-m-d'),
+    min: $mindate,
+    readonly: $sum_disabled || $is_graded,
+));
 
-    // Split the end date if available
-if (isset($end_date) and $end_date != '') {
-    $split_year = $end_date->format('Y');
-    $split_month = $end_date->format('m');
-    $split_day = $end_date->format('d');
-    $split_hour = $end_date->format('H');
-    $split_minute = $end_date->format('i');
-} else {
-    $split_year = $split_month = $split_day = $split_hour = $split_minute = 0;
+$paper_end->addOption(new Time(
+    id: 'ttime',
+    name: 'ttime',
+    label: $string['time'],
+    value: ($end_date == '') ? $end_date : $end_date->format('H:i'),
+    classes: ['datecopy'],
+    readonly: $sum_disabled || $is_graded,
+));
+
+$form->addElement($paper_end);
+
+$security_settings = $properties->getSettingsComponents('security');
+foreach ($security_settings as $setting) {
+    $form->addElement($setting);
 }
 
-echo '<td align="right">' . $string['to'] . '&nbsp;</td><td>';
+// Module selection list.
+$modules = new CheckboxOptGroup(
+    id: 'modules_list',
+    name: 'mod[]',
+    label: $string['modules'],
+    classes: ['modules', 'highlight-checked'],
+);
 
-// Available from Day
-echo "<select name=\"tday\" id=\"tday\" class=\"datecopy\"$sum_disabled>\n";
-if ($end_date == '') {
-    echo '<option value=""></option>';
-}
-for ($i = 1; $i < 32; $i++) {
-    if ($i < 10) {
-        if ($i == $split_day) {
-            echo "<option value=\"0$i\" selected>";
-        } else {
-            echo "<option value=\"0$i\">";
-        }
-    } else {
-        if ($i == $split_day) {
-            echo "<option value=\"$i\" selected>";
-        } else {
-            echo "<option value=\"$i\">";
-        }
-    }
-    if ($i < 10) {
-        echo '0';
-    }
-        echo "$i</option>\n";
-}
-echo '</select>';
-
-// Available to Month
-echo "<select name=\"tmonth\" id=\"tmonth\" class=\"datecopy\"$sum_disabled>\n";
-if ($end_date == '') {
-    echo '<option value=""></option>';
-}
-for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
-    if (($split_month - 1) == $i) {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\" selected>$trans_month</option>\n";
-        }
-    } else {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\">$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\">$trans_month</option>\n";
-        }
-    }
-}
-echo '</select>';
-// Available to Year
-echo "<select name=\"tyear\" id=\"tyear\" class=\"datecopy\"$sum_disabled>\n";
-if ($end_date == '') {
-    echo '<option value=""></option>';
-}
-$starttyear = date('Y');
-if ($split_year !== 0 and $split_year < $starttyear) {
-    $starttyear = $split_year;
-}
-echo '<optgroup>';
-for ($i = $starttyear; $i < ($starttyear + 21); $i++) {
-    if ($i == $split_year) {
-        echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-        echo "<option value=\"$i\">$i</option>\n";
-    }
-}
-echo '</optgroup><optgroup>';
-$diffyears = $starttyear - 2002;
-if ($diffyears > 0) {
-    for ($i = 2002; $i < (2002 + $diffyears); $i++) {
-        echo "<option value=\"$i\">$i</option>\n";
-    }
-}
-echo '</optgroup>';
-echo "</select><select id=\"thour\" name=\"thour\" $sum_disabled>\n";
-// Available from Hour
-if ($start_date == '') {
-    echo '<option value=""></option>';
-}
-for ($tmp_hour = 0; $tmp_hour <= 23; $tmp_hour++) {
-    if ($tmp_hour < 10) {
-        $display_hour = '0' . $tmp_hour;
-    } else {
-        $display_hour = $tmp_hour;
-    }
-    if ($display_hour == $split_hour and $start_date != '') {
-        echo '<option value="' . $display_hour . '" selected>' . $display_hour . "</option>\n";
-    } else {
-        echo '<option value="' . $display_hour . '">' . $display_hour . "</option>\n";
-    }
-}
-echo '</select>';
-
-echo "</select><select id=\"tminute\" name=\"tminute\" $sum_disabled>\n";
-// Available from Minute
-if ($start_date == '') {
-    echo '<option value=""></option>';
-}
-for ($tmp_minute = 0; $tmp_minute <= 59; $tmp_minute++) {
-    if ($tmp_minute < 10) {
-        $display_minute = '0' . $tmp_minute;
-    } else {
-        $display_minute = $tmp_minute;
-    }
-    if ($display_minute == $split_minute and $start_date != '') {
-        echo '<option value="' . $display_minute . '" selected>' . $display_minute . "</option>\n";
-    } else {
-        echo '<option value="' . $display_minute . '">' . $display_minute . "</option>\n";
-    }
-}
-echo '</select>';
-if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
-    echo '<span id="minavailflag">*</span>';
-}
-echo "\n</td></tr>\n</table>\n";
-if ($properties->get_paper_type() == '2' and !is_null($exam_duration)) {
-    echo '<div id="minavail">';
-    echo sprintf($string['minavailability'], $minavailability);
-    echo '</div>';
-}
-$properties->renderSettings('security');
-echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\">\n";
-echo '<tr><td class="headbar" style="padding:2px; width:400px">&nbsp;' . $string['modules'] . '</td><td class="headbar" style="padding:2px">&nbsp;' . $string['restricttolabs'] . '</td></tr>';
-echo '<tr><td rowspan="3" style="vertical-align:top">';
-
-echo '<div id="modules_list" style="display:block; width:400px; height:420px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
-
+// Gets the list of modules attached to the paper.
 $modules_array = $properties->get_modules();
 
-$total_modules = array_merge($staff_modules, $modules_array);
+// Get a list of modules the user can access.
+$module_list = $userObject->get_staff_accessable_modules();
 
-$module_sql = implode("','", $total_modules);
-if ($module_sql != '') {
-    $module_sql = "'$module_sql'";
-}
-
-$module_no = 0;
-if ($module_sql != '') {
-    $module_array = $userObject->get_staff_accessable_modules();
-    $old_school = '';
-    $old_schoolcode = '';
-    foreach ($module_array as $module) {
-        if (is_null($module['schoolcode'])) {
-            if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
-                echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
-            }
-        } else {
-            if ($module['schoolcode'] != $old_schoolcode) {
-                echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $module['schoolcode'] . ' ' . $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
-            }
-        }
-        $match = false;
-        foreach ($modules_array as $separate_module) {
-            if ($separate_module == $module['id']) {
-                $match = true;
-            }
-        }
-        if ($match == true) {
-            if (in_array($module['id'], $staff_modules) or $userObject->has_role('SysAdmin')) {
-                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked $disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
-            } else {
-                echo "<div class=\"r2 mod\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['idMod'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
-            }
-        } else {
-            echo "<div class=\"r1 mod\" id=\"divmod$module_no\"><input type=\"checkbox\"  class=\"toggle meta\" data-toggleid=\"mod" . $module_no . "\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\"$disabled><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr((string) $module['fullname'], 0, 60) . "</label></div>\n";
-        }
-        $module_no++;
-        $old_school = $module['school'];
+$old_schoolcode = '';
+foreach ($module_list as $module) {
+    if ($old_schoolcode !== $module['schoolcode']) {
+        // Update the old code.
         $old_schoolcode = $module['schoolcode'];
+        $code = $module['schoolcode'] ?? '';
+        $name = $code ? "{$code} {$module['school']}" : $module['school'];
+        $modules->addGroup($code, $name);
     }
-}
-    echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
-    echo "</td>\n";
-
-    echo '<td>' . output_labs($properties->get_labs(), $configObject->get_setting('core', 'cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $changed_labs, $mysqli) . "</td></tr>\n";
-
-?>
-  <tr><td class="headbar" style="padding:2px" colspan="2">&nbsp;<?php echo $string['restricttometadata']; ?></td></tr>
-  <tr><td style="vertical-align:top; height:110px" colspan="2"><div style="height:111px; overflow-y:scroll;border:1px solid #828790; font-size:90%" id="metadata_security"></div></td></tr>
-  </table>
-
-  </td></tr>
-</table>
-
-<table id="seb" class="tabsection" style="display: none">
-<?php
-  $seb_metadata = Paper_utils::get_metadata($mysqli, $paperID, 'seb_hash');
-  $seb_keys = $seb_metadata['seb_hash'] ?? [];
-?>
-  <tr><td class="tabtitle"><img src="../artwork/safe_exam_browser.png" alt="Icon" align="middle" /><?php echo $string['seb_keys_heading']; ?></td></tr>
-  <tr><td>
-    <?php $properties->renderSettings('seb'); ?>
-  </td></tr>
-  <tr><td style="padding: 5px 0; text-align: center;"><?php echo $string['seb_keys_title'] ?></td></tr>
-  <tr><td>
-    <textarea id="seb_keys_text" name="seb_keys_text" class="sebkeys"><?php echo htmlspecialchars(implode("\n", $seb_keys)); ?></textarea>
-  </td></tr>
-</table>
-
-<table id="rubric" class="tabsection" style="display: none">
-  <tr><td class="tabtitle"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
-  <tr><td><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_rubric()), ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD, 'width:100%; height:537px'); ?></td></tr>
-<?php
-$properties->renderSettings('rubric');
-?>
-</table>
-
-<table id="feedback" class="tabsection" style="display: none">
-  <tr><td class="tabtitle" colspan="2"><img src="../artwork/feedback_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['feedbackheading']; ?></td></tr>
-
-<?php
-echo '<tr><td colspan="2" valign="top">';
-
-echo "<table class=\"cellpad6\" style=\"margin:15px\">\n";
-
-$feedback_reports = ['objectives' => '', 'questions' => '', 'cohort_performance' => '', 'external_examiner' => ''];
-
-$feedback_details = $mysqli->prepare('SELECT idfeedback_release, type FROM feedback_release WHERE paper_id = ?');
-$feedback_details->bind_param('i', $paperID);
-$feedback_details->execute();
-$feedback_details->bind_result($idfeedback_release, $type);
-$feedback_details->store_result();
-while ($feedback_details->fetch()) {
-    $feedback_reports[$type] = 1;
-}
-$feedback_details->close();
-
-if (in_array($properties->get_paper_type(), ['0', '1', '2', '4', '5'])) {
-    echo '<tr><td><img src="../artwork/feedback_release_icon.png" width="48" height="48" />';
-    echo '<td><input type="hidden" name="old_objectives_report" value="' . $feedback_reports['objectives'] . '" />';
-    if ($feedback_reports['objectives'] === '') {
-        echo '<input type="radio" name="objectives_report" value="1" />' . $string['on'] . '</td><td><input type="radio" name="objectives_report" value="0" checked="checked" />' . $string['off'] . '</td>';
-    } else {
-        echo '<input type="radio" name="objectives_report" value="1" checked="checked" />' . $string['on'] . '</td><td><input type="radio" name="objectives_report" value="0" />' . $string['off'] . '</td>';
-    }
-    echo '<td>' . $string['objectivesreport'] . '<br /><a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/objectives_feedback.php?id=' . $properties->get_crypt_name() . '" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/objectives_feedback.php?id=' . $properties->get_crypt_name() . "</a></td></tr>\n";
-}
-if ($q_feedback_enabled and in_array($properties->get_paper_type(), ['1', '2', '4', '5'])) {
-    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-    echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
-    // Question-based Feedback
-    echo '<td><input type="hidden" name="old_questions_report" value="' . $feedback_reports['questions'] . '" />';
-    if ($feedback_reports['questions'] === '') {
-        echo '<input type="radio" name="questions_report" value="1" />' . $string['on'] . '</td><td><input type="radio" name="questions_report" value="0" checked="checked" />' . $string['off'] . '</td>';
-    } else {
-        echo '<input type="radio" name="questions_report" value="1" checked="checked" />' . $string['on'] . '</td><td><input type="radio" name="questions_report" value="0" />' . $string['off'] . '</td>';
-    }
-    echo '<td>' . $string['questionfeedback'] . '<br />';
-    if ($properties->get_paper_type() == '2') {
-        echo '<span style="color:#C00000">' . $string['feedbackwarning'] . '</span></br />';
-    }
-    echo '<a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/question_feedback.php?id=' . $properties->get_crypt_name() . '" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/question_feedback.php?id=' . $properties->get_crypt_name() . "</a></td></tr>\n";
+    $selected = isset($modules_array[$module['idMod']]);
+    $modules->addOption(
+        group: $code,
+        value: $module['idMod'],
+        label: $module['id'] . ': ' . mb_substr((string) $module['fullname'], 0, 60),
+        disabled: $locked && !$is_sysadmin,
+        checked: $selected,
+    );
 }
 
-if (in_array($properties->get_paper_type(), ['2', '4', '5'])) {
-    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-    echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
-    // Cohort performance-based Feedback
-    echo '<td><input type="hidden" name="old_cohort_performance" value="' . $feedback_reports['cohort_performance'] . '" />';
-    if ($feedback_reports['cohort_performance'] === '') {
-        echo '<input type="radio" name="cohort_performance" value="1" />' . $string['on'] . '</td><td><input type="radio" name="cohort_performance" value="0" checked="checked" />' . $string['off'] . '</td>';
-    } else {
-        echo '<input type="radio" name="cohort_performance" value="1" checked="checked" />' . $string['on'] . '</td><td><input type="radio" name="cohort_performance" value="0" />' . $string['off'] . '</td>';
-    }
-    echo '<td>' . $string['cohortperformancefeedback'] . '<br /><a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/students/performance_summary.php" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/students/performance_summary.php</a></td></tr>\n";
-}
+$form->addElement($modules);
 
-if (in_array($properties->get_paper_type(), ['1', '2'])) {
-    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-    echo '<tr><td><img src="../artwork/external_examiner_icon.png" width="48" height="48" />';
-    // External Examiner Feedback
-    echo '<td><input type="hidden" name="old_external_examiner" value="' . $feedback_reports['external_examiner'] . '" />';
-    if ($feedback_reports['external_examiner'] === '') {
-        echo '<input type="radio" name="external_examiner" value="1" />' . $string['on'] . '</td><td><input type="radio" name="external_examiner" value="0" checked="checked" />' . $string['off'] . '</td>';
-    } else {
-        echo '<input type="radio" name="external_examiner" value="1" checked="checked" />' . $string['on'] . '</td><td><input type="radio" name="external_examiner" value="0" />' . $string['off'] . '</td>';
-    }
-    echo '<td>' . $string['externalexaminerfeedback'] . '<br /><span style="color:#808080">' . $string['externalwarning'] . '</span><br /><a href="https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/" target="_blank">https://' . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . "/reviews/</a></td></tr>\n";
-}
+// Lab list.
 
-echo "</table>\n";
+// Labs are not relevant to OSCE papers.
+if ($properties->get_paper_type() != assessment::TYPE_OSCE) {
+    // SysAdmins can usually edit labs.
+    $is_sysadmin = $userObject->has_role(['Admin', 'SysAdmin']);
 
-if ($properties->get_paper_type() == '0') {
-    echo '<table cellpadding="3" cellspacing="0" border="0" id="feedback_on" style="width:100%">';
-} else {
-    echo '<table cellpadding="0" cellspacing="0" border="0" id="feedback_on" style="width:100%; display:none">';
-}
-if ($properties->get_paper_type() != '4') {
-    echo '<tr><td colspan="4" class="headbar">&nbsp;';
-    echo $string['answerscreensettings'];
-    echo '</td></tr>
-          <tr><td colspan="4">&nbsp;</td></tr>
-          <tr><td style="width:33%"><input type="checkbox" name="display_students_response" value="1"';
-    if ($properties->get_display_students_response() == '1') {
-        echo ' checked';
-    }
-    echo ' />';
-    echo $string['ticks_crosses'];
-    echo '</td><td style="width:33%"><input type="checkbox" name="display_question_mark" value="1"';
-    if ($properties->get_display_question_mark() == '1') {
-            echo ' checked';
-    }
-    echo ' />';
-    echo $string['question_marks'];
-    echo '</td><td rowspan="2" style="width:33%; text-indent:-24px; padding-left:24px"><input type="checkbox" name="hide_if_unanswered" value="1"';
-    if ($properties->get_hide_if_unanswered() == '1') {
-        echo ' checked';
-    }
-    echo ' />';
-    echo $string['hideallfeedback'];
-    echo '</td></tr>
-           <tr><td><input type="checkbox" name="display_correct_answer" value="1"';
-    if ($properties->get_display_correct_answer() == '1') {
-        echo ' checked';
-    }
-    echo ' />';
-    echo $string['correctanswerhighlight'] ;
-    echo '</td><td><input type="checkbox" name="display_feedback" value="1"';
-    if ($properties->get_display_feedback() == '1') {
-        echo ' checked';
-    }
-    echo ' />';
-    echo $string['textfeedback'] ;
-    echo '</td></tr>';
-}
-echo "</table>\n";
+    // When summative management is enabled only SysAdmins can modify the labs on summative papers.
+    $is_summative = $properties->get_paper_type() == assessment::TYPE_SUMMATIVE;
+    $summative_management = $configObject->get_setting('core', 'cfg_summative_mgmt');
 
-echo "</td></tr>\n";
-echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    $can_modify =  $is_sysadmin || ($is_summative && !$summative_management);
 
-if (!in_array($properties->get_paper_type(), ['2', '4'])) {
-    echo '<tr><td colspan="2" class="headbar">&nbsp;' . $string['textualfeedback'] . "</td></tr>\n";
-    echo '<tr><td style="text-align:center">' . $string['above'] . '</td><td style="text-align:center">' . $string['message'] . "</td></tr>\n";
-    for ($i = 1; $i <= 10; $i++) {
-        echo "<tr><td><select name=\"feedback_value$i\"><option value=\"\"></option>";
-        for ($percent = 0; $percent <= 100; $percent++) {
-            if (isset($textual_feedback[$i]['boundary']) and  $textual_feedback[$i]['boundary'] == $percent) {
-                echo "<option value=\"$percent\" selected>$percent%</option>";
-            } else {
-                echo "<option value=\"$percent\">$percent%</option>";
-            }
+    $labs = new CheckboxOptGroup(
+        id: 'labs_list',
+        name: 'lab[]',
+        label: $string['restricttolabs'],
+        classes: ['labs', 'highlight-checked'],
+        groupclasses: ['campus'],
+    );
+
+    $lab_factory = new LabFactory($mysqli);
+    $lab_list = $lab_factory->getAllLabs();
+
+    $current_labs = explode(',', (string) $properties->get_labs());
+
+    $campus_count = 0;
+    $old_campus = '';
+    foreach ($lab_list as $lab) {
+        $campus = $lab->get_campus();
+
+        if ($old_campus != $campus) {
+            $campus_count++;
+            $old_campus = $campus;
+            $labid = "lab-{$campus_count}";
+            $labs->addGroup(
+                id: $labid,
+                label: $lab->get_campus(),
+            );
         }
-        $msg = '';
-        if (isset($textual_feedback[$i]['msg'])) {
-            $msg = $textual_feedback[$i]['msg'];
-        }
-        echo "</select></td><td><textarea name=\"feedback_msg$i\" cols=\"60\" rows=\"1\" style=\"width:620px; height:18px;\">$msg</textarea></td></tr>\n";
+
+        $labs->addOption(
+            group: $labid,
+            value: $lab->get_id(),
+            label: $lab->get_name() . ' (' . $lab->getNumberOfPC() . ')',
+            disabled: $sum_disabled,
+            checked: in_array($lab->get_id(), $current_labs),
+        );
     }
-}
-$properties->renderSettings('feedback');
-?>
-</table>
 
-<table id="reviewers" class="tabsection" style="display: none">
-<tr><td class="tabtitle" colspan="2"><img src="../artwork/reviewers_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['reviewersheading']; ?></td></tr>
-<tr>
-<td align="center" colspan="2">
-<table cellpadding="1" cellspacing="2" border="0">
-<tr><td colspan="3">&nbsp;<?php
-  $result = $mysqli->prepare("SELECT COUNT(q_id) AS sct_no FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = 'sct'");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($sct_no);
-  $result->fetch();
-  $result->close();
-if ($sct_no > 0) {
-    echo '<a href="' . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode((string) $properties->get_crypt_name()) . '" target="_blank">' . NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path') . '/reviews/sct_review.php?id=' . urlencode((string) $properties->get_crypt_name()) . '</a>';
+    $form->addElement($labs);
 }
 
-?></td></tr>
-<tr><td class="headbar">&nbsp;<?php echo $string['internalreviewers']; ?></td><td>&nbsp;&nbsp;</td><td class="headbar">&nbsp;<?php echo $string['externalexaminers']; ?></td></tr>
-<tr><td><?php echo $string['deadline']; ?>&nbsp;
-<?php
-    // Split the end date
-if ($properties->get_internal_review_deadline() == '') {
-    $split_year = 0;
-    $split_month = 0;
-    $split_day = 0;
-} else {
-    $internal_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_internal_review_deadline(), $local_time);
-    $internal_review_deadline->setTimezone($local_time);
+// Metadata restrictions.
+$metadata = new GeneralGroup(
+    id: 'metadata_security',
+    name: 'metadata_security',
+    label: $string['restricttometadata'],
+    classes: ['metadata'],
+);
+$form->addElement($metadata);
 
-    $split_year = $internal_review_deadline->format('Y');
-    $split_month = $internal_review_deadline->format('m');
-    $split_day = $internal_review_deadline->format('d');
+$form->addElement(new StaticComponent($security_tab, '@tabs/tab_panel_end.html'));
+
+if ($secure_browser_enabled) {
+    // Add the secure exam browser tab.
+    $form->addElement(new StaticComponent($secure_browser_tab, '@tabs/tab_panel_start.html'));
+    $form->addElement(new StaticTemplate(
+        data: [
+            'heading' => $string['seb_keys_heading'],
+            'class' => 'seb',
+        ],
+        template: 'paper/properties_heading.html',
+    ));
+
+    $seb_settings = $properties->getSettingsComponents('seb');
+    foreach ($seb_settings as $setting) {
+        $form->addElement($setting);
+    }
+
+    $seb_metadata = Paper_utils::get_metadata($mysqli, $paperID, 'seb_hash');
+    $seb_keys = $seb_metadata['seb_hash'] ?? [];
+
+    $form->addElement(new TextArea(
+        id: 'seb_keys_text',
+        name: 'seb_keys_text',
+        label: $string['seb_keys'],
+        classes: ['sebkeys'],
+        value: implode("\n", $seb_keys),
+        description: $string['seb_keys_title'],
+    ));
+
+    $form->addElement(new StaticComponent($secure_browser_tab, '@tabs/tab_panel_end.html'));
 }
 
-// Available to Day
-echo "<select id=\"int_tday\" name=\"int_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-for ($i = 1; $i < 32; $i++) {
-    if ($i < 10) {
-        if ($i == $split_day) {
-            echo "<option value=\"0$i\" selected>";
+if ($reviews_enabled) {
+    // Add the feedback tab.
+    $form->addElement(new StaticComponent($feedback_tab, '@tabs/tab_panel_start.html'));
+    $form->addElement(new StaticTemplate(
+        data: [
+            'heading' => $string['feedbackheading'],
+            'class' => 'feedback',
+        ],
+        template: 'paper/properties_heading.html',
+    ));
+
+    $feedback = new Feedback($properties);
+
+    if ($feedback->objectiveFeedbackPossible()) {
+        $objective_group = new GeneralGroup(
+            id: 'objectives-group',
+            name: 'objectives-group',
+            label: $string['objectivesreport'],
+            classes: ['feedback', 'objectives-report'],
+        );
+
+        $objective_feedback = new RadioGroup(
+            id: 'objectives_report',
+            name: 'objectives_report',
+            label: $string['feedbackreport'],
+            default: (int) $feedback->hasObjectiveFeedback(),
+            orientation: Fieldset::ORIENTATION_HORIZONTAL,
+        );
+        $objective_feedback->addOption('1', $string['on']);
+        $objective_feedback->addOption('0', $string['off']);
+        $objective_group->addOption($objective_feedback);
+
+        $objective_group->addOption(new Url(
+            id: 'objectives_report_url',
+            name: 'objectives_report_url',
+            label: $string['feedbackurl'],
+            value: $feedback->getObjectiveFeedbackUrl(),
+            readonly: true,
+            size: 75,
+        ));
+
+        $form->addElement($objective_group);
+    }
+
+    if ($feedback->questionFeedbackPossible()) {
+        if ($properties->get_paper_type() == assessment::TYPE_SUMMATIVE) {
+            $description = $string['feedbackwarning'];
         } else {
-            echo "<option value=\"0$i\">";
+            $description = '';
         }
-    } else {
-        if ($i == $split_day) {
-            echo "<option value=\"$i\" selected>";
+
+        $question_group = new GeneralGroup(
+            id: 'questions-group',
+            name: 'questions-group',
+            label: $string['questionfeedback'],
+            classes: ['feedback', 'questions-report'],
+            description: $description,
+        );
+
+        $question_feedback = new RadioGroup(
+            id: 'questions_report',
+            name: 'questions_report',
+            label: $string['feedbackreport'],
+            default: (int) $feedback->hasQuestionFeedback(),
+            orientation: Fieldset::ORIENTATION_HORIZONTAL,
+        );
+        $question_feedback->addOption('1', $string['on']);
+        $question_feedback->addOption('0', $string['off']);
+        $question_group->addOption($question_feedback);
+
+        $question_group->addOption(new Url(
+            id: 'questions_report_url',
+            name: 'questions_report_url',
+            label: $string['feedbackurl'],
+            value: $feedback->getQuestionFeedbackUrl(),
+            readonly: true,
+            size: 75,
+        ));
+
+        $form->addElement($question_group);
+    }
+
+    if ($feedback->cohortPerformanceFeedbackPossible()) {
+        $cohort_group = new GeneralGroup(
+            id: 'cohort-group',
+            name: 'cohort-group',
+            label: $string['cohortperformancefeedback'],
+            classes: ['feedback', 'cohort-performance'],
+        );
+
+        $cohort_feedback = new RadioGroup(
+            id: 'cohort_performance',
+            name: 'cohort_performance',
+            label: $string['feedbackreport'],
+            default: (int) $feedback->hasCohortPerformanceFeedback(),
+            orientation: Fieldset::ORIENTATION_HORIZONTAL,
+        );
+        $cohort_feedback->addOption('1', $string['on']);
+        $cohort_feedback->addOption('0', $string['off']);
+        $cohort_group->addOption($cohort_feedback);
+
+        $cohort_group->addOption(new Url(
+            id: 'cohort_report_url',
+            name: 'cohort_report_url',
+            label: $string['feedbackurl'],
+            value: $feedback->getCohortPerformanceFeedbackUrl(),
+            readonly: true,
+            size: 75,
+        ));
+
+        $form->addElement($cohort_group);
+    }
+
+    if ($feedback->externalExaminerFeedbackPossible()) {
+        $external_group = new GeneralGroup(
+            id: 'external-group',
+            name: 'external-group',
+            label: $string['externalexaminerfeedback'],
+            classes: ['feedback', 'external-examiner'],
+            description: $string['externalwarning'],
+        );
+
+        $external_feedback = new RadioGroup(
+            id: 'external_examiner',
+            name: 'external_examiner',
+            label: $string['feedbackreport'],
+            default: (int) $feedback->hasExternalExaminerFeedback(),
+            orientation: Fieldset::ORIENTATION_HORIZONTAL,
+        );
+        $external_feedback->addOption('1', $string['on']);
+        $external_feedback->addOption('0', $string['off']);
+        $external_group->addOption($external_feedback);
+
+        $external_group->addOption(new Url(
+            id: 'external_report_url',
+            name: 'external_report_url',
+            label: $string['feedbackurl'],
+            value: $feedback->getExternalExaminerFeedbackUrl(),
+            readonly: true,
+            size: 75,
+        ));
+
+        $form->addElement($external_group);
+    }
+
+    if ($properties->get_paper_type() != assessment::TYPE_OSCE) {
+        if ($properties->get_paper_type() != assessment::TYPE_FORMATIVE) {
+            // The settings are present byt not displayed.
+            $answer_screen_classes = ['hidden'];
         } else {
-            echo "<option value=\"$i\">";
+            $answer_screen_classes = [];
         }
+
+        $answer_screen = new GeneralGroup(
+            id: 'answer-screen',
+            name: 'answer-screen',
+            label: $string['answerscreensettings'],
+            classes: $answer_screen_classes,
+            orientation: Fieldset::ORIENTATION_HORIZONTAL,
+        );
+        $answer_screen->addOption(new Checkbox(
+            id: 'display_students_response',
+            name: 'display_students_response',
+            label: $string['ticks_crosses'],
+            value: '1',
+            checked: $properties->get_display_students_response(),
+        ));
+        $answer_screen->addOption(new Checkbox(
+            id: 'display_question_mark',
+            name: 'display_question_mark',
+            label: $string['question_marks'],
+            value: '1',
+            checked: $properties->get_display_question_mark(),
+        ));
+        $answer_screen->addOption(new Checkbox(
+            id: 'hide_if_unanswered',
+            name: 'hide_if_unanswered',
+            label: $string['hideallfeedback'],
+            value: '1',
+            checked: $properties->get_hide_if_unanswered(),
+        ));
+        $answer_screen->addOption(new Checkbox(
+            id: 'display_correct_answer',
+            name: 'display_correct_answer',
+            label: $string['correctanswerhighlight'],
+            value: '1',
+            checked: $properties->get_display_correct_answer(),
+        ));
+        $answer_screen->addOption(new Checkbox(
+            id: 'display_feedback',
+            name: 'display_feedback',
+            label: $string['textfeedback'],
+            value: '1',
+            checked: $properties->get_display_feedback(),
+        ));
+        $form->addElement($answer_screen);
     }
-    if ($i < 10) {
-        echo '0';
-    }
-        echo "$i</option>\n";
-}
-echo "</select>\n";
-// Available to Month
-echo "<select id=\"int_tmonth\" name=\"int_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
-    if (($split_month - 1) == $i) {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\" selected>$trans_month</option>\n";
+
+    // Paper level text feedback.
+    $has_textfeedback = !in_array($properties->get_paper_type(), [
+        assessment::TYPE_SUMMATIVE,
+        assessment::TYPE_OSCE
+    ]);
+
+    if ($has_textfeedback) {
+        $text_feedback = new GeneralGroup(
+            id: 'textual-feedback',
+            name: 'textual-feedback',
+            label: $string['textualfeedback'],
+        );
+
+        for ($i = 1; $i <= 10; $i++) {
+            $boundary = new GeneralGroup(
+                id: 'textual-feedback-boundary-' . $i,
+                name: 'textual-feedback-boundary-' . $i,
+                label: sprintf($string['textualfeedbackboundary'], $i),
+                classes: ['feedback-boundary'],
+                orientation: Fieldset::ORIENTATION_HORIZONTAL,
+            );
+
+            $boundary->addOption(new Number(
+                id: 'feedback_value' . $i,
+                name: 'feedback_value' . $i,
+                label: $string['above'],
+                value: $textual_feedback[$i]['boundary'] ?? '',
+                description: $string['percentage'],
+                max: 100,
+                min: 0,
+                step: 1,
+            ));
+            $boundary->addOption(new TextArea(
+                id: 'feedback_msg' . $i,
+                name: 'feedback_msg' . $i,
+                label: $string['message'],
+                cols: 60,
+                value: $textual_feedback[$i]['msg'] ?? '',
+                rows: 1,
+            ));
+
+            $text_feedback->addOption($boundary);
         }
-    } else {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\">$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\">$trans_month</option>\n";
-        }
-    }
-}
-echo "</select>\n";
-// Available to Year
-echo "<select id=\"int_tyear\" name=\"int_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-if ($split_year < date('Y') and $split_year > 1999) {
-    $start_year = $split_year;
-} else {
-    $start_year = date('Y');
-}
-for ($i = $start_year; $i < (date('Y') + 2); $i++) {
-    if ($i == $split_year) {
-        echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-        echo "<option value=\"$i\">$i</option>\n";
-    }
-}
-?>
-</td><td></td>
-<td><?php echo $string['deadline']; ?>&nbsp;
-<?php
-    // Split the end date
-if ($properties->get_external_review_deadline() == '') {
-    $split_year = 0;
-    $split_month = 0;
-    $split_day = 0;
-} else {
-    $external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_external_review_deadline(), $local_time);
-    $external_review_deadline->setTimezone($local_time);
 
-    $split_year = $external_review_deadline->format('Y');
-    $split_month = $external_review_deadline->format('m');
-    $split_day = $external_review_deadline->format('d');
-}
+        $form->addElement($text_feedback);
+    }
 
-// Available to Day
-echo "<select id=\"ext_tday\" name=\"ext_tday\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-for ($i = 1; $i < 32; $i++) {
-    if ($i < 10) {
-        if ($i == $split_day) {
-            echo "<option value=\"0$i\" selected>";
-        } else {
-            echo "<option value=\"0$i\">";
-        }
-    } else {
-        if ($i == $split_day) {
-            echo "<option value=\"$i\" selected>";
-        } else {
-            echo "<option value=\"$i\">";
-        }
+    $feedback_settings = $properties->getSettingsComponents('feedback');
+    foreach ($feedback_settings as $setting) {
+        $form->addElement($setting);
     }
-    if ($i < 10) {
-        echo '0';
-    }
-    echo "$i</option>\n";
-}
-echo "</select>\n";
-// Available to Month
-echo "<select id=\"ext_tmonth\" name=\"ext_tmonth\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-for ($i = 0; $i < 12; $i++) {
-    $trans_month = mb_substr((string) $string[$months[$i]], 0, 3, 'UTF-8');
-    if (($split_month - 1) == $i) {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\" selected>$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\" selected>$trans_month</option>\n";
-        }
-    } else {
-        if ($i < 9) {
-            echo '<option value="0' . ($i + 1) . "\">$trans_month</option>\n";
-        } else {
-            echo '<option value="' . ($i + 1) . "\">$trans_month</option>\n";
-        }
-    }
-}
-echo "</select>\n";
-// Available to Year
-echo "<select id=\"ext_tyear\" name=\"ext_tyear\">\n<option value=\"\">" . $string['na'] . "</option>\n";
-if ($split_year < date('Y') and $split_year > 1999) {
-    $start_year = $split_year;
-} else {
-    $start_year = date('Y');
-}
-for ($i = $start_year; $i < (date('Y') + 2); $i++) {
-    if ($i == $split_year) {
-        echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-        echo "<option value=\"$i\">$i</option>\n";
-    }
-}
-?>
-</td></tr>
-<?php
-echo '<tr><td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
 
-// Get all users for teams within the schools of the current user
-// Also get all admin users for those schools
-$school_sql = '';
-$admin_school_sql = '';
-$schools = getSchools($staff_modules, $mysqli);
+    $form->addElement(new StaticComponent($feedback_tab, '@tabs/tab_panel_end.html'));
 
-if (count($schools) > 0) {
-    $schools_list = implode(',', $schools);
-    if ($userObject->has_role('SysAdmin')) {
-        $school_sql = 'AND user_deleted IS NULL';
-    } else {
-        $school_sql = "AND schoolid IN ($schools_list) AND user_deleted IS NULL";
+    // Add the reviewers tab.
+    $form->addElement(new StaticComponent($reviewers_tab, '@tabs/tab_panel_start.html'));
+    $form->addElement(new StaticTemplate(
+        data: [
+            'heading' => $string['reviewersheading'],
+            'class' => 'reviewers',
+        ],
+        template: 'paper/properties_heading.html',
+    ));
+
+    if ($properties->hasQuestionsOfType('sct')) {
+        // Display a link to the SCT review page for the paper.
+        // Standard users are not able to view it.
+        $sct_url = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path')
+            . '/reviews/sct_review.php?id=' . urlencode((string) $properties->get_crypt_name());
+        $form->addElement(new Url(
+            id: 'sct-review-url',
+            name: 'sct-review-url',
+            label: $string['sct_review'],
+            value: $sct_url,
+            readonly: true,
+            size: 75,
+        ));
     }
-    $admin_school_sql = <<< SQL
-UNION SELECT DISTINCT users.id, title, initials, surname, first_names
-FROM users, admin_access
-WHERE users.id = admin_access.userID AND admin_access.schools_id IN ($schools_list)
-AND user_deleted IS NULL
-SQL;
+
+    // The internal review settings.
+    $internal_review = new GeneralGroup(
+        id: 'internalreview',
+        name: 'internalreview',
+        label: $string['internalreview'],
+    );
+
+    $internal_review->addOption(new Date(
+        id: 'internaldeadline',
+        name: 'internaldeadline',
+        label: $string['deadline'],
+        value: (string) $properties->get_internal_review_deadline(),
+    ));
+
+    $internal = new CheckboxGroup(
+        id: 'internal',
+        name: 'internal[]',
+        label: $string['internalreviewers'],
+        classes: ['reviewers', 'highlight-checked'],
+    );
+
+    $internal_reviewers = $properties->getInternalReviewerList();
+    foreach ($internal_reviewers as $reviewer) {
+        $internal->addOption(
+            value: $reviewer['id'],
+            label: $reviewer['name'],
+            disabled: $locked && !$is_admin,
+            checked: $reviewer['selected'],
+        );
+    }
+
+    $internal_review->addOption($internal);
+
+    $form->addElement($internal_review);
+
+    // The External review settings.
+    $external_review = new GeneralGroup(
+        id: 'externalreview',
+        name: 'externalreview',
+        label: $string['externalreview'],
+    );
+
+    $external_review->addOption(new Date(
+        id: 'externaldeadline',
+        name: 'externaldeadline',
+        label: $string['deadline'],
+        value: (string) $properties->get_external_review_deadline(),
+    ));
+
+    $external = new CheckboxGroup(
+        id: 'examiner',
+        name: 'examiner[]',
+        label: $string['externalexaminers'],
+        classes: ['reviewers', 'highlight-checked'],
+    );
+
+    $externals_examiners = $properties->getExternalExaminerList();
+    foreach ($externals_examiners as $reviewer) {
+        $external->addOption(
+            value: $reviewer['id'],
+            label: $reviewer['name'],
+            disabled: $locked && !$is_admin,
+            checked: $reviewer['selected'],
+        );
+    }
+
+    $external_review->addOption($external);
+
+    $form->addElement($external_review);
+
+    $reviewers_settings = $properties->getSettingsComponents('reviewers');
+    foreach ($reviewers_settings as $setting) {
+        $form->addElement($setting);
+    }
+
+    $form->addElement(new StaticComponent($reviewers_tab, '@tabs/tab_panel_end.html'));
 }
 
-// Make sure that current reviewers always appear on the list
-$current_internals = $properties->get_internal_reviewers();
-$current_internals_sql = '';
-if (count($properties->get_internal_reviewers()) > 0) {
-    $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', array_keys($current_internals)) . ') AND user_deleted IS NULL';
-}
-// Add internal reviewers to list.
-$internal_reviwers = "
-UNION SELECT DISTINCT 
-    users.id, title, initials, surname, first_names 
-FROM 
-    users, user_roles ur, roles r  
-WHERE
-    ur.roleid = r.id
-    AND r.name = 'Internal Reviewer'
-    AND users.id = ur.userid
-    AND user_deleted IS NULL
-";
+if ($rubric_enabled) {
+    // Add the rubric tab.
+    $form->addElement(new StaticComponent($rubric_tab, '@tabs/tab_panel_start.html'));
+    $form->addElement(new StaticTemplate(
+        data: [
+            'heading' => $string['rubricheading'],
+            'class' => 'rubric',
+        ],
+        template: 'paper/properties_heading.html',
+    ));
 
-// Dynamically choose tables and join based on role.
-if ($userObject->has_role('SysAdmin')) {
-    $tables = 'users, modules_staff, user_roles ur, roles r';
-    $join = 'users.id = modules_staff.memberID AND ur.roleid = r.id AND users.id = ur.userid';
-} else {
-    $tables = 'users, modules_staff, modules, user_roles ur, roles r';
-    $join = 'users.id = modules_staff.memberID AND modules.id = modules_staff.idMod AND ur.roleid = r.id AND users.id = ur.userid';
-}
-
-$query = "
-SELECT DISTINCT 
-    users.id, title, initials, surname, first_names 
-FROM 
-    $tables 
-WHERE 
-    r.name != 'left'
-    AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers 
-ORDER BY 
-    surname, initials
-";
-$internal_details = $mysqli->prepare($query);
-$internal_details->execute();
-$internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
-$internal_no = 0;
-while ($internal_details->fetch()) {
-    $match = false;
-    foreach ($current_internals as $reviewerID => $reviewer_name) {
-        if ($internal_id == $reviewerID) {
-            $match = true;
-        }
+    // Add the rubric text editor.
+    $postscript_components = $texteditorplugin->getTextareaComponent(
+        id: 'rubric_text',
+        label: $string['rubricheading'],
+        content: $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_rubric()), ENT_NOQUOTES),
+        type: plugins\plugins_texteditor::TYPE_STANDARD,
+        classes: ['properties-prologue-textbox'],
+        disabled: $locked,
+    );
+    foreach ($postscript_components as $component) {
+        $form->addElement($component);
     }
-    if ($match) {
-        echo "<div class=\"r2\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\" checked><label for=\"internal$internal_no\">" . ucwords(mb_strtolower((string) $internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
-    } else {
-        echo "<div class=\"r1\" id=\"divinternal$internal_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"internal" . $internal_no . "\" name=\"internal$internal_no\" id=\"internal$internal_no\" value=\"$internal_id\"><label for=\"internal$internal_no\">" . ucwords(mb_strtolower((string) $internal_surname)) . "<span style=\"color:#808080\">, $internal_first_names. $internal_title</span></label></div>\n";
+
+    $rubric_settings = $properties->getSettingsComponents('rubric');
+    foreach ($rubric_settings as $setting) {
+        $form->addElement($setting);
     }
-    $internal_no++;
-}
-$internal_details->close();
-echo "<input type=\"hidden\" id=\"internal_no\" name=\"internal_no\" value=\"$internal_no\" /></div></td><td></td>";
 
-echo '<td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
-$current_externals = $properties->get_externals();
-$sql = "
-SELECT DISTINCT 
-    users.id, title, initials, surname, first_names 
-FROM 
-    users, user_roles ur, roles r  
-WHERE
-    ur.roleid = r.id
-    AND r.name = 'External Examiner'
-    AND users.id = ur.userid
-    AND grade != 'left' AND user_deleted IS NULL 
-ORDER BY 
-    surname, initials
-";
-$external_details = $mysqli->prepare($sql);
-$external_details->execute();
-$external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
-$examiner_no = 0;
-while ($external_details->fetch()) {
-    $match = false;
-    foreach ($current_externals as $reviewerID => $reviewer_name) {
-        if ($external_id == $reviewerID) {
-            $match = true;
-        }
+    $form->addElement(new StaticComponent($rubric_tab, '@tabs/tab_panel_end.html'));
+}
+
+if ($prologue_postscript_enabled) {
+    // Add the prologue tab.
+    $form->addElement(new StaticComponent($prologue_tab, '@tabs/tab_panel_start.html'));
+    $form->addElement(new StaticTemplate(
+        data: [
+            'heading' => $string['prologueheading'],
+            'class' => 'prologue',
+        ],
+        template: 'paper/properties_heading.html',
+    ));
+
+    // Add the prologue text editor.
+    $postscript_components = $texteditorplugin->getTextareaComponent(
+        id: 'paper_prologue',
+        label: $string['prologueheading'],
+        content: $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_paper_prologue()), ENT_NOQUOTES),
+        type: plugins\plugins_texteditor::TYPE_STANDARD,
+        classes: ['properties-prologue-textbox'],
+        disabled: $locked,
+    );
+    foreach ($postscript_components as $component) {
+        $form->addElement($component);
     }
-    if ($match) {
-        echo "<div class=\"r2\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\" checked><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower((string) $external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
-    } else {
-        echo "<div class=\"r1\" id=\"divexaminer$examiner_no\"><input type=\"checkbox\" class=\"toggle\" data-toggleid=\"examiner" . $examiner_no . "\" name=\"examiner$examiner_no\" id=\"examiner$examiner_no\" value=\"$external_id\"><label for=\"examiner$examiner_no\">" . ucwords(mb_strtolower((string) $external_surname)) . "<span style=\"color:#808080\">, $external_first_names. $external_title</span></label></div>\n";
+
+    $prologue_settings = $properties->getSettingsComponents('prologue');
+    foreach ($prologue_settings as $setting) {
+        $form->addElement($setting);
     }
-    $examiner_no++;
-}
-$external_details->close();
-echo "<input type=\"hidden\" name=\"examiner_no\" id=\"examiner_no\" value=\"$examiner_no\" /></div></td>\n</tr>\n";
-?>
-</table>
-</td>
-</tr>
-<?php
-$properties->renderSettings('reviwers');
-?>
-</table>
 
-<table id="reference" class="tabsection" style="display: none">
-<tr><td class="tabtitle" colspan="2"><img src="../artwork/toggle_log.png" alt="Icon" align="middle" /><?php echo $string['referenceheading'] ?></td></tr>
-<tr><td style="vertical-align:top"><div id="reference_list" style="padding: 5px"></div></td></tr>
-<?php
-$properties->renderSettings('reference');
-?>
-</table>
+    $form->addElement(new StaticComponent($prologue_tab, '@tabs/tab_panel_end.html'));
 
-</td>
-</tr>
-<tr><td colspan="2" align="right"><input type="submit" class="ok" id="submitpropeties" name="Submit" value="<?php echo $string['ok']; ?>" disabled="disabled"/><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" /></td></tr>
-</table>
+    // Add the postscript tab.
+    $form->addElement(new StaticComponent($postscript_tab, '@tabs/tab_panel_start.html'));
+    $form->addElement(new StaticTemplate(
+        data: [
+            'heading' => $string['postscriptheading'],
+            'class' => 'postscript',
+        ],
+        template: 'paper/properties_heading.html',
+    ));
 
-<input type="hidden" id="noadd" name="noadd" value="<?php
-if (isset($_GET['noadd'])) {
-    echo $_GET['noadd'];
+    // Add the postscript text editor.
+    $postscript_components = $texteditorplugin->getTextareaComponent(
+        id: 'paper_postscript',
+        label: $string['postscriptheading'],
+        content: $texteditorplugin->get_text_for_display(htmlspecialchars((string) $properties->get_paper_postscript()), ENT_NOQUOTES),
+        type: plugins\plugins_texteditor::TYPE_STANDARD,
+        classes: ['properties-prologue-textbox'],
+        disabled: $locked,
+    );
+    foreach ($postscript_components as $component) {
+        $form->addElement($component);
+    }
+
+    $postscript_settings = $properties->getSettingsComponents('postscript');
+    foreach ($postscript_settings as $setting) {
+        $form->addElement($setting);
+    }
+
+    $form->addElement(new StaticComponent($postscript_tab, '@tabs/tab_panel_end.html'));
 }
-?>" />
-<input type="hidden" name="caller" value="<?php
-if (isset($_GET['caller'])) {
-    echo $_GET['caller'];
+
+if ($reference_material_enabled) {
+    // Add the reference material tab.
+    $form->addElement(new StaticComponent($reference_material_tab, '@tabs/tab_panel_start.html'));
+    $form->addElement(new StaticTemplate(
+        data: [
+            'heading' => $string['referenceheading'],
+            'class' => 'reference-material',
+        ],
+        template: 'paper/properties_heading.html',
+    ));
+
+    // Metadata restrictions.
+    $reference = new GeneralGroup(
+        id: 'reference_list',
+        name: 'reference_list',
+        label: $string['referencematerial'],
+        classes: ['reference'],
+    );
+    $form->addElement($reference);
+
+    $reference_settings = $properties->getSettingsComponents('reference');
+    foreach ($reference_settings as $setting) {
+        $form->addElement($setting);
+    }
+
+    $form->addElement(new StaticComponent($reference_material_tab, '@tabs/tab_panel_end.html'));
 }
-?>" />
-</form>
-<?php
+
+$form->addElement(new StaticComponent($tablist, '@tabs/tab_list_end.html'));
+
+$form->setStandardButtons($string['ok'], $string['cancel']);
+
+$render->renderComponent($form);
+
 $dataset['name'] = 'dataset';
 $dataset['attributes']['rootpath'] = $cfg_root_path;
 $dataset['attributes']['type'] = $properties->get_paper_type();
 $dataset['attributes']['id'] = $paperID;
 $dataset['attributes']['minavail'] = $minavailability;
-$dataset['attributes']['summativemanagment'] = ($sum_disabled === '');
+$dataset['attributes']['summativemanagment'] = $sum_disabled;
 $render->render($dataset, [], 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
@@ -1544,6 +1490,8 @@ $scripts = \component\Helper::combineJS(
         '/js/paperpropertiesinit.min.js',
     ],
     $breadcrumb->getJavascriptForFooter(),
+    $form->getJavascriptForFooter(),
+    $tablist->getJavascriptForFooter(),
 );
 $render->render(
     [

@@ -15,6 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
+use component\form\Checkbox;
+use component\form\FormElement;
+
 /**
  * Paper settings accessor methods
  * Used by PaperProperties to access settings
@@ -187,6 +190,7 @@ class PaperSettings
     /**
      * Render paper settings by category
      * @param string $category the setting category
+     * @deprectaed Since ExamSys 7.7.0 use {@see self::getSettingsComponents()} instead.
      */
     public function renderSettings(string $category = ''): void
     {
@@ -208,6 +212,60 @@ class PaperSettings
             }
         }
         $render->render($data, $strings, 'admin/paper/settings.html');
+    }
+
+    /**
+     * Get the components for the settings by category.
+     *
+     * @param string $category
+     * @return FormElement[]
+     */
+    public function getSettingsComponents(string $category = ''): array
+    {
+        $langpack = new langpack();
+        $strings = $langpack->get_all_strings($this->langcomponent);
+
+        $components = [];
+        foreach ($this->settings as $id => $setting) {
+            if ($category !== '' && $setting['category'] != $category) {
+                // This is not a setting in the requested category.
+                continue;
+            }
+
+            $type = ucwords((string) $setting['type']);
+            $value = $setting['value'] ?? '';
+            $function = "get{$type}Component";
+            if (method_exists($this, $function)) {
+                $components[] = $this->$function($id, $value, $strings);
+            } else {
+                $message = $setting['type'] . ' is not a supported setting type. Implement PaperSettings::' . $function;
+                throw new \coding_exception($message);
+            }
+        }
+
+        return $components;
+    }
+
+    /**
+     * Gets the component for a boolean setting.
+     *
+     * Used by {@see self::getSettingsComponents()}
+     *
+     * @param string $id The identifier for the setting.
+     * @param string $value  The value of the setting
+     * @param array $strings Language strings.
+     * @return Checkbox
+     */
+    protected function getBooleanComponent(string $id, string $value, array $strings): Checkbox
+    {
+        return new Checkbox(
+            id: $id,
+            name: $id,
+            label: $strings[$id],
+            value: '1',
+            checked: (bool)$value,
+            description: $strings[$id . '_tip'] ?? '',
+        );
     }
 
     /**

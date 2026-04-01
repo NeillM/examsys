@@ -216,4 +216,51 @@ class StandardSetting
             self::copy_std_set_ratings_copied($old_std_id, $new_std_id, $qid_lookup);
         }
     }
+
+    /**
+     * Gets all the standard settings for a paper including the name of the user who created them.
+     *
+     * @param int $paperID The database id of the paper.
+     * @return array
+     */
+    public function getStdSettingWithName(int $paperID): array
+    {
+        $config = Config::get_instance();
+        $dateformat = $config->get('cfg_short_date_time');
+
+        $sql = "SELECT std_set.id, title, surname, initials, setterID,
+                    DATE_FORMAT(std_set, '{$dateformat}') AS display_date, group_review 
+                FROM std_set, users 
+                WHERE std_set.setterID = users.id AND paperID = ? 
+                ORDER BY std_set DESC";
+
+        $std_set_details = $this->db->prepare($sql);
+        $std_set_details->bind_param('i', $paperID);
+        $std_set_details->execute();
+        $std_set_details->bind_result(
+            $std_setID,
+            $std_set_title,
+            $std_set_surname,
+            $std_set_initials,
+            $std_set_reviewer,
+            $std_set_display_date,
+            $group_review,
+        );
+
+        $std_set_array = [];
+        while ($std_set_details->fetch()) {
+            $std_set_array[] = [
+                'std_setID' => $std_setID,
+                'title' => $std_set_title,
+                'surname' => $std_set_surname,
+                'initials' => $std_set_initials,
+                'reviewer' => $std_set_reviewer,
+                'display_date' => $std_set_display_date,
+                'group_review' => $group_review,
+            ];
+        }
+        $std_set_details->close();
+
+        return $std_set_array;
+    }
 }

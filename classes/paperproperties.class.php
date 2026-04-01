@@ -461,6 +461,7 @@ class PaperProperties
         $params['external_review_deadline'] = ['s', $this->external_review_deadline];
         $params['internal_review_deadline'] = ['s', $this->internal_review_deadline];
         $params['recache_marks'] = ['i', $this->recache_marks];
+        $params['folder'] = ['s', $this->folder];
 
         // Set update parameters.
         if ($this->summative_lock and !$userObject->has_role('SysAdmin')) {  // For SysAdmin drop through to bottom if
@@ -485,7 +486,6 @@ class PaperProperties
             $params['bidirectional'] = ['s', $this->bidirectional];
             $params['pass_mark'] = ['i', $this->pass_mark];
             $params['distinction_mark'] = ['i', $this->distinction_mark];
-            $params['folder'] = ['s',$this->folder];
             $params['rubric'] = ['s',$this->rubric];
             $params['calculator'] = ['i',$this->calculator];
             $params['hide_if_unanswered'] = ['s',$this->hide_if_unanswered];
@@ -502,7 +502,6 @@ class PaperProperties
             $params['labelcolor'] = ['s', $this->labelcolor];
             $params['fullscreen'] = ['s', $this->fullscreen];
             $params['bidirectional'] = ['s', $this->bidirectional];
-            $params['folder'] = ['s', $this->folder];
             $params['labs'] = ['s', $this->labs];
             $params['rubric'] = ['s', $this->rubric];
             $params['calculator'] = ['i', $this->calculator];
@@ -1115,7 +1114,7 @@ class PaperProperties
      */
     public function get_bgcolor()
     {
-        return $this->bgcolor;
+        return ($this->bgcolor === 'white') ? '#FFFFFF' : $this->bgcolor;
     }
 
     /**
@@ -1137,7 +1136,7 @@ class PaperProperties
      */
     public function get_fgcolor()
     {
-        return $this->fgcolor;
+        return ($this->fgcolor === 'black') ? '#000000' : $this->fgcolor;
     }
 
     /**
@@ -1460,6 +1459,47 @@ class PaperProperties
     }
 
     /**
+     * Gets the list of possible Eternal Examiners for the paper.
+     *
+     * @return array
+     */
+    public function getExternalExaminerList(): array
+    {
+        $current_externals = $this->get_externals();
+        $sql = <<<SQL
+            SELECT DISTINCT
+                users.id, title, initials, surname, first_names
+            FROM
+                users, user_roles ur, roles r
+            WHERE
+                ur.roleid = r.id
+                AND r.name = 'External Examiner'
+                AND users.id = ur.userid
+                AND grade != 'left' AND user_deleted IS NULL 
+            ORDER BY
+                surname, initials
+        SQL;
+
+        $external_details = $this->db->prepare($sql);
+        $external_details->execute();
+        $external_details->bind_result($external_id, $external_title, $external_initials, $external_surname, $external_first_names);
+
+        $users = [];
+        while ($external_details->fetch()) {
+            // This code used to try to force capitalisation on the first word of names, but this broke names like
+            // O'Conner by changing them to O'conner.
+            $users[] = [
+                'id' => $external_id,
+                'name' => "$external_surname, $external_first_names. $external_title",
+                'selected' => isset($current_externals[$external_id]),
+            ];
+        }
+        $external_details->close();
+
+        return $users;
+    }
+
+    /**
      * @param string $externals
      */
     public function set_externals($externals)
@@ -1729,6 +1769,129 @@ class PaperProperties
     }
 
     /**
+     * Gets the list of people that the current user may set as the internal reviewers for the paper.
+     *
+     * It gets all the users in the:
+     * - the same school(s) as the user
+     * - in admin teams for the users schools
+     * - anyone who is assigned as an internal reviewer on the paper
+     * - anyone with the role of internal reviewer
+     *
+     * Site admins count as being part of every school.
+     *
+     * Each entry in the list has three keys:
+     * - id: The internal database id of the user.
+     * - name: The name of the user.
+     * - selected: Flags if the user is an internal reviewer for the paper.
+     *
+     * @return array
+     */
+    public function getInternalReviewerList(): array
+    {
+        /* @var UserObject $current_user */
+        $current_user = UserObject::get_instance();
+        $is_sysadmin = $current_user->has_role('SysAdmin');
+        $modules = implode("','", $current_user->get_staff_modules());
+
+        // Get all users for teams within the schools of the current user
+        // Also get all admin users for those schools
+        $school_sql = '';
+        $admin_school_sql = '';
+
+        if (!$is_sysadmin && $modules === '') {
+            // If the user is in no modules they should only see users who are selected.
+            $school_sql = 'AND schoolid = -1';
+        } elseif (!$is_sysadmin) {
+            $schools = <<<SQL
+                SELECT DISTINCT schools.id
+                FROM schools, modules
+                WHERE modules.schoolid = schools.id AND modules.moduleid IN ('{$modules}')
+            SQL;
+
+            // Get all the users from teams in all schools that the user is part of.
+            $school_sql = "AND schoolid IN ({$schools})";
+
+            // This gets the list of school admins.
+            $admin_restrict = "AND admin_access.schools_id IN ({$schools})";
+        } else {
+            // Admins should see all school admins.
+            $admin_restrict = '';
+        }
+
+        $admin_school_sql = <<<SQL
+            UNION SELECT DISTINCT users.id, title, initials, surname, first_names
+            FROM users, admin_access
+            WHERE users.id = admin_access.userID {$admin_restrict}
+            AND user_deleted IS NULL
+        SQL;
+
+        // Make sure that current reviewers always appear on the list
+        $current_internals = $this->get_internal_reviewers();
+        $current_internals_sql = '';
+        if (count($current_internals) > 0) {
+            $internal_ids = implode(',', array_keys($current_internals));
+
+            $current_internals_sql = <<<SQL
+                UNION
+                    SELECT DISTINCT id, title, initials, surname, first_names
+                    FROM users
+                    WHERE id IN ({$internal_ids}) AND user_deleted IS NULL
+            SQL;
+        }
+
+        // Add internal reviewers to list.
+        $internal_reviwers = <<<SQL
+            UNION SELECT DISTINCT
+                users.id, title, initials, surname, first_names
+            FROM 
+                users, user_roles ur, roles r  
+            WHERE
+                ur.roleid = r.id
+                AND r.name = 'Internal Reviewer'
+                AND users.id = ur.userid
+                AND user_deleted IS NULL
+        SQL;
+
+        // Dynamically choose tables and join based on role.
+        if ($is_sysadmin) {
+            $tables = 'users, modules_staff, user_roles ur, roles r';
+            $join = 'users.id = modules_staff.memberID AND ur.roleid = r.id AND users.id = ur.userid';
+        } else {
+            $tables = 'users, modules_staff, modules, user_roles ur, roles r';
+            $join = 'users.id = modules_staff.memberID AND modules.id = modules_staff.idMod AND ur.roleid = r.id AND users.id = ur.userid';
+        }
+
+        $query = <<<SQL
+            SELECT DISTINCT
+                users.id, title, initials, surname, first_names
+            FROM
+                $tables
+            WHERE
+                r.name != 'left' AND user_deleted IS NULL
+                AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers
+            ORDER BY
+                surname, initials
+        SQL;
+        $internal_details = $this->db->prepare($query);
+        $internal_details->execute();
+        $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
+
+        $users = [];
+        while ($internal_details->fetch()) {
+            // This code used to try to force capitalization on the first word of names, but this broke names like
+            // O'Conner by changing them to O'conner.
+            $users[] = [
+                'id' => $internal_id,
+                'name' => "$internal_surname, $internal_first_names. $internal_title",
+                'selected' => isset($current_internals[$internal_id]),
+            ];
+        }
+        $internal_details->close();
+
+        return $users;
+    }
+
+    /**
      * @param string $internal_reviewers
      */
     public function set_internal_reviewers($internal_reviewers)
@@ -1922,7 +2085,10 @@ class PaperProperties
     }
 
     /**
-     * @return string $externals
+     * Gets the list of modules the paper is attached to.
+     *
+     * @param bool $force_recache Flags if we should reload the modules (default: false)
+     * @return array
      */
     public function get_modules($force_recache = false)
     {
@@ -2262,7 +2428,7 @@ class PaperProperties
 
     /**
      * Get papers external id
-     * @return string
+     * @return string|null
      */
     public function get_externalid()
     {
@@ -3279,10 +3445,25 @@ class PaperProperties
      * Render paper settings by category
      * This is a wrapper funrion to PaperSettings->renderSettings
      * @param string $category the setting category
+     *
+     * @deprecated Since ExamSys 7.7.0 use {@see self::getSettingsComponents()} instead.
      */
     public function renderSettings(string $category = ''): void
     {
         $this->papersettings->renderSettings($category);
+    }
+
+    /**
+     * Get the components for the paper settings.
+     *
+     * This function is a wrapper for {@link PaperSettings::getSettingsComponents()}
+     *
+     * @param string $category
+     * @return \component\form\FormElement[]
+     */
+    public function getSettingsComponents(string $category = ''): array
+    {
+        return $this->papersettings->getSettingsComponents($category);
     }
 
     /**
@@ -3726,5 +3907,76 @@ class PaperProperties
 
         // The value of marks_incorrect will be null if no results are returned.
         return $marks_incorrect !== null;
+    }
+
+    /**
+     * Gets the url for the paper.
+     *
+     * @return string
+     */
+    public function getPaperUrl(): string
+    {
+        $root_path = NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'] . $this->configObject->get('cfg_root_path');
+
+        return match ($this->get_paper_type()) {
+            (string) assessment::TYPE_SUMMATIVE => $root_path,
+            (string) assessment::TYPE_OSCE => $root_path . '/osce/',
+            (string) assessment::TYPE_OFFLINE => '',
+            (string) assessment::TYPE_PEERREVIEW => $root_path . '/peer_review/form.php?id=' . urlencode((string) $this->get_crypt_name()),
+            default => $root_path . '/paper/user_index.php?id=' . urlencode((string) $this->get_crypt_name()),
+        };
+    }
+
+    /**
+     * Gets a list of metadata types associated with the modules the paper is associated with.
+     *
+     * @return array
+     */
+    public function getUserMetadataTypes(): array
+    {
+        $in = implode(',', array_keys($this->get_modules()));
+
+        $sql = <<<SQL
+            SELECT DISTINCT type 
+            FROM users_metadata, modules 
+            WHERE users_metadata.idMod = modules.id AND modules.id IN ({$in}) 
+            ORDER BY type
+        SQL;
+
+        $field_details = $this->configObject->db->prepare($sql);
+        $field_details->execute();
+        $field_details->bind_result($type);
+
+        $metadata = [];
+        while ($field_details->fetch()) {
+            $metadata[$type] = $type;
+        }
+
+        $field_details->close();
+
+        return $metadata;
+    }
+
+    /**
+     * Tests if the paper has questions of a specific type.
+     *
+     * @return bool
+     */
+    public function hasQuestionsOfType(string $type): bool
+    {
+        $sql = <<<SQL
+            SELECT 1 
+            FROM (papers, questions)
+            WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type = ?
+            LIMIT 1
+        SQL;
+        $result = $this->db->prepare($sql);
+        $result->bind_param('is', $this->property_id, $type);
+        $result->execute();
+        $result->bind_result($sct_no);
+        $result->fetch();
+        $result->close();
+
+        return $sct_no !== null;
     }
 }

@@ -316,3 +316,123 @@ config:
     setting: 'paper_anomaly_detection'
     value: '{"progress":0,"summative":0}'
     type: 'assoc'
+  -
+    component: 'core'
+    setting: 'lti_ssl_verifyhost'
+    value: '2'
+    type: 'integer'
+  -
+    component: 'core'
+    setting: 'lti_ssl_verifypeer'
+    value: '1'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'mailer_auth'
+    value: '1'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'mailer_debug'
+    value: '0'
+    type: 'integer'
+  -
+    component: 'core'
+    setting: 'mailer_host'
+    value: 'mail'
+    type: 'string'
+  -
+    component: 'core'
+    setting: 'mailer_password'
+    value: ''
+    type: 'string'
+  -
+    component: 'core'
+    setting: 'mailer_port'
+    value: '1025'
+    type: 'string'
+  -
+    component: 'core'
+    setting: 'mailer_secure'
+    value: ''
+    type: 'string'
+  -
+    component: 'core'
+    setting: 'mailer_username'
+    value: ''
+    type: 'string'
+  -
+    component: 'core'
+    setting: 'paper_anomaly_email'
+    value: '["anomaly@example.com"]'
+    type: 'email'
+  -
+    component: 'core'
+    setting: 'paper_breaktime_mins'
+    value: '0'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'paper_hide_repeat_scenario'
+    value: '0'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'paper_mee'
+    value: '0'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'paper_pause_exam'
+    value: '1'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'paper_seb_enabled'
+    value: '1'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'paper_textbox_editor_default'
+    value: 'plain'
+    type: 'editor'
+  -
+    component: 'core'
+    setting: 'paper_threejs'
+    value: '1'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'paper_to_students_page_on_paper_close'
+    value: '0'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'rpt_fd_show_wordlist'
+    value: '1'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'rpt_letters_for_extmatch'
+    value: '0'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'rpt_letters_for_hotspots'
+    value: '0'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'stdset_copy_std_setting'
+    value: '0'
+    type: 'boolean'
+  -
+    component: 'core'
+    setting: 'summative_issuelink'
+    value: ''
+    type: 'url'
+  -
+    component: 'core'
+    setting: 'summative_issuelink2'
+    value: ''
+    type: 'url'

@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with ExamSys.  If not, see <http://www.gnu.org/licenses/>.
 
+use component\form\Select;
+
 /**
  * Utility class for academic years supported by system.
  *
@@ -124,6 +126,8 @@ class yearutils
      * @param array $string - language sting array
      * @param string $yeartype - supported year search type.
      * @return string - options list
+     *
+     * @deprectated Since ExamSys 7.7.0 use {@see getCalendarYearOptionsComponent()} instead.
      */
     public function get_calendar_year_dropdown_options($paper_type, $calendar_year, $string, $yeartype = self::ALL)
     {
@@ -142,6 +146,54 @@ class yearutils
             $list .= '>' . $academic . "</option>\n";
         }
         return $list;
+    }
+
+    /**
+     * Gets a component that allows the selection of an academic year in a form.
+     *
+     * @param string $id The unique id of the select
+     * @param string $name The name of the select
+     * @param string $label The label of the select
+     * @param int $paper_type The paper type the selector is for.
+     * @param string $calendar_year The current setting for the selector.
+     * @param string $na The string for the no year selected option.
+     * @param array $classes Extra classes to add to the selector (optional)
+     * @param string $description Help details for the selector (optional)
+     * @param bool $disabled Flags if the select is disabled (default: false)
+     * @param bool $required Flags if the select is required (default: false)
+     * @param string $yeartype Which type of year should be in the selector {@see self::get_supported_years()}
+     * @return Select
+     */
+    public function getCalendarYearOptionsComponent(
+        string $id,
+        string $name,
+        string $label,
+        int $paper_type,
+        string $calendar_year,
+        string $na,
+        array $classes = [],
+        string $description = '',
+        bool $disabled = false,
+        bool $required = false,
+        string $yeartype = self::ALL,
+    ): Select {
+        $options = [];
+
+        if (!in_array($paper_type, [assessment::TYPE_SUMMATIVE, assessment::TYPE_OSCE])) {
+            $options[''] = $na;
+        }
+
+        return new Select(
+            id: $id,
+            name: $name,
+            label: $label,
+            options: $options + $this->get_supported_years($yeartype),
+            classes: $classes,
+            default: $calendar_year,
+            description: $description,
+            disabled: $disabled,
+            required: $required,
+        );
     }
 
     /**

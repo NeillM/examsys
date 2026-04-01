@@ -35,7 +35,7 @@ class folder extends generator
      *
      * @param array parameters
      *  string parameters[ownerID]
-     * options are (name, colour, deleted)
+     * options are (name, colour, deleted, parent)
      * @return array
      * @throws data_error If passed parameter is invalid
      */
@@ -45,13 +45,28 @@ class folder extends generator
             throw new data_error('ownerID must be provided');
         }
         $folderscreated = ++self::$folderscreated;
-        $defaults = ['name' => 'Folder ' . $folderscreated, 'colour' => 'yellow', 'deleted' => false, 'ownerid' => $parameters['ownerID']];
+        $defaults = [
+            'name' => 'Folder ' . $folderscreated,
+            'colour' => 'yellow',
+            'deleted' => false,
+            'ownerid' => $parameters['ownerID'],
+            'parent' => null,
+        ];
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $now = date('Y-m-d H:i:s');
         if ($settings['deleted']) {
             $settings['deleted'] = $now;
         } else {
             $settings['deleted'] = null;
+        }
+        if ($settings['parent']) {
+            // Get the parent folders name.
+            $parent_name = \folder_utils::get_folder_name($settings['parent'], $this->db);
+            if ($parent_name === null) {
+                throw new data_error('parent folder not found');
+            }
+            // The folder structure is stored in its name.
+            $settings['name'] = $parent_name . ';' . $settings['name'];
         }
         $query = $this->db->prepare('INSERT INTO folders VALUES (NULL, ?, ?, ?, ?, ?)');
         $query->bind_param('issss', $parameters['ownerID'], $settings['name'], $now, $settings['colour'], $settings['deleted']);
@@ -61,5 +76,32 @@ class folder extends generator
         $settings['id'] = $query->insert_id;
         $query->close();
         return $settings;
+    }
+
+    /**
+     * Attach a module to a folder
+     *
+     * Required parameters:
+     * - folder: The database id of a folder.
+     * - module: The database id of a module.
+     *
+     * @param array $parameters
+     * @return void
+     * @throws data_error
+     */
+    public function addTeamToFolder(array $parameters): void
+    {
+        if (empty($parameters['folder'])) {
+            throw new data_error('id of a folder must be provided');
+        }
+        if (empty($parameters['module'])) {
+            throw new data_error('id of a module must be provided');
+        }
+        $query = $this->db->prepare('INSERT INTO folders_modules_staff VALUES (?, ?)');
+        $query->bind_param('ii', $parameters['folder'], $parameters['module']);
+        if (!$query->execute()) {
+            throw new data_error('Could not link folder (id: ' . $parameters['folder'] . ') to module (id: ' . $parameters['module'] . ')');
+        }
+        $query->close();
     }
 }

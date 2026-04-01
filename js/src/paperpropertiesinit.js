@@ -18,22 +18,17 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 'alert', 'helplauncher', 'jsxls', 'jquery', 'jqueryui'], function (Config, PROP, PICKER, DATECOPY, FORM, ALERT, HELPLAUNCHER, jsxls, $) {
+requirejs(['rogoconfig', 'paperproperties', 'datecopy', 'form', 'alert', 'jsxls', 'js_running', 'jquery', 'jqueryui'], function (Config, PROP, DATECOPY, FORM, ALERT, jsxls, JSRUNNING, $) {
     var properties = new PROP();
-
-    var picker = new PICKER();
-    picker.init();
-
-    $('.refmaterials').click(function () {
-        HELPLAUNCHER.launchHelp(296, 'staff');
-    });
 
     properties.paperid = $('#dataset').attr('data-id');
     var type = $('#dataset').attr('data-type');
-    var noadd = $('#noadd').val();
 
     var date = new DATECOPY();
-    $('.datecopy').change(function () {
+    // Use on focus otherwise it can cause time to change when you do not want them to,
+    // for example when using change() if the start time is 09:00 and in the end time you type 17:00
+    // when you press the 1 key the start time is changed to 1 am.
+    $('.datecopy').focusout(function () {
         var datecheck = false;
         if ($('#remote_summative').is(':checked')) {
             if (type == 5) {
@@ -54,15 +49,6 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
     var form = new FORM();
     form.init();
 
-    $('body').click(function () {
-        picker.hidePicker();
-    });
-
-    if (noadd == 'y') {
-        // If 'noadd' is passed through on the URL open up the security tab automatically.
-        properties.buttonclick('security','tab2');
-    }
-
     $('.toggle').click(function () {
         form.toggle($(this).attr('data-toggleid'));
     });
@@ -71,23 +57,25 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
         properties.changeType();
     });
 
-    $('.meta').click(function () {
+    // The year selector.
+    $('#session').click(function () {
         properties.getMeta();
     });
 
-    $("td[id^=tab]").click(function() {
-        properties.buttonclick($(this).attr('data-name'), $(this).attr('id'));
-    });
-
-    $('.showpicker').click(function (e) {
-        e.stopPropagation();
-        picker.showPicker($(this).attr('data-pickertype'), e);
+    // Module inputs.
+    $("input[name='mod[]']").click(function () {
+        properties.getMeta();
     });
 
     $('#theform').submit(function(e) {
         e.preventDefault();
         if (properties.checkForm()) {
             var alert = new ALERT();
+
+            // Flag that we are making an AJAX call.
+            const scriptname = 'paperpropertiesinit:form:submit';
+            JSRUNNING.start(scriptname);
+
             $.ajax({
                 url: 'update_properties.php',
                 type: "post",
@@ -108,53 +96,50 @@ requirejs(['rogoconfig', 'paperproperties', 'colourpicker', 'datecopy', 'form', 
                             }
                             alert.plain(errorText || jsxls.lang_string['papererrors']);
                         }
+                        JSRUNNING.done(scriptname);
                         return;
                     }
-                    
                     if (data == 'SUCCESS') {
+                        // We do not want to flag the script as not running before we have changed page.
                         window.location.href = Config.cfgrootpath  + '/paper/details.php?paperID=' + $('#dataset').attr('data-id');
                     } else if (data == 'DUPLICATE_TITLE') {
                         $('#papertitle').addClass('errfield');
                         properties.buttonclick('general','tab1');
+                        JSRUNNING.done(scriptname);
                     }
                 },
                 error: function (xhr, textStatus) {
                     alert.plain(textStatus);
+                    JSRUNNING.done(scriptname);
                 },
             });
         }
     });
 
     $('#exam_duration_hours').change(function () {
-        if (type == 2 && $('#exam_duration_hours').val() != 'NULL' && $('#exam_duration_mins').val() != 'NULL') {
+        if (type == 2 && $('#exam_duration_hours').val() !== '' && $('#exam_duration_mins').val() !== '') {
             properties.updateAvailability();
-        } else {
-            $('#minavail').css('display','none');
-            $('#minavailflag').css('display','none');
         }
     });
     $('#exam_duration_mins').change(function () {
-        if (type == 2 && $('#exam_duration_mins').val() != 'NULL' && $('#exam_duration_hours').val() != 'NULL') {
+        if (type == 2 && $('#exam_duration_mins').val() !== '' && $('#exam_duration_hours').val() !== '') {
             properties.updateAvailability();
-        } else {
-            $('#minavail').css('display','none');
-            $('#minavailflag').css('display','none');
         }
     });
 
     // Disable labs if remote summative.
     if ($('#remote_summative').is(':checked')) {
-        $("input[id^=lab]", $("#labs_list")).each(function() {
+        $("input[name=lab]", $("#labs_list")).each(function() {
             $(this).prop("disabled", true);
         });
     }
     $('#remote_summative').click(function () {
         if ($(this).is(':checked')) {
-            $("input[id^=lab]", $("#labs_list")).each(function() {
+            $("input[name=lab]", $("#labs_list")).each(function() {
                 $(this).prop("disabled", true);
             });
         } else {
-            $("input[id^=lab]", $("#labs_list")).each(function() {
+            $("input[name=lab]", $("#labs_list")).each(function() {
                 $(this).prop("disabled", false);
             });
         }
