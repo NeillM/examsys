@@ -136,51 +136,41 @@ if ($temptextboxquestions !== '') {
     $textboxquestions = explode(',', $temptextboxquestions);
 }
 
-$skippedquestion = [];
 if ($candidate_no > 0 && count($textboxquestions) > 0) {
-    // SQL to identify students and counts of their unvisited pages containing textbox questions
-    if(($paper_type == \assessment::TYPE_FORMATIVE) or ($paper_type == \assessment::TYPE_PROGRESS)){
+    $log = ''; // Log table
+    $sql = '';
+    $numberofresponded = [];
+    // SQL for count responses of textbox questions
+    if (($paper_type == \assessment::TYPE_FORMATIVE) or ($paper_type == \assessment::TYPE_PROGRESS)) {
+        $log = 'log';
         $sql = "
-        WITH all_logs AS (
+        WITH $log AS (
         SELECT * FROM log0
         UNION ALL
-        SELECT * FROM log1)
-        SELECT q.q_id, COUNT(*)
-        FROM papers p
-        JOIN questions q on p.question = q.q_id AND p.paper = ?
-        LEFT JOIN log_metadata lm ON lm.paperID = p.paper
-        JOIN users u ON u.id = lm.userID
-        $rolesjoin
-        LEFT JOIN all_logs l 
-        ON l.metadataID = lm.id AND l.q_id = q.q_id
-        WHERE 
-        q.q_type = 'textbox'
-        AND l.id IS NULL
-        AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?
-        GROUP BY q.q_id";
+        SELECT * FROM log1
+        )";
     } else {
         $log = "log$paper_type";
-        $sql = "
-        SELECT q.q_id, COUNT(*)
-        FROM papers p
-        JOIN questions q on p.question = q.q_id
-        LEFT JOIN log_metadata lm ON lm.paperID = p.paper
-        JOIN users u ON u.id = lm.userID    
-        $rolesjoin
-        LEFT JOIN $log l ON l.metadataID = lm.id AND l.q_id = q.q_id
-        WHERE
-            p.paper = ? AND q.q_type = 'textbox'
-        AND l.id IS NULL
-        AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?
-        GROUP BY q.q_id";
     }
 
+    $sql .= "
+    SELECT 
+        q.q_id,
+        count(*)
+        FROM $log
+        JOIN log_metadata lm ON lm.id = $log.metadataID
+        JOIN users u ON u.id = lm.userID
+        $rolesjoin
+        JOIN questions q ON q.q_id = $log.q_id
+        WHERE lm.paperID =? AND q.q_type = 'textbox'
+    AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?
+        GROUP BY q.q_id";
     $result = $mysqli->prepare($sql);
-    $result->bind_param('iss', $paperID,$startdate, $enddate);
+    $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
-    $result->bind_result($questionID, $missedcount);
+    $result->bind_result($questionID, $responded);
     while ($result->fetch()) {
-        $skippedquestion[$questionID] = $missedcount;
+        $numberofresponded[$questionID] = $responded;
     }
     $result->close();
     $phase_description .= ': ' . number_format($out_of) . ' ' . $string['candidates'] . ' have taken this paper';
@@ -253,15 +243,14 @@ while ($result->fetch()) {
 
         echo '<tr><td style="text-align:right; vertical-align:top; white-space:nowrap;">';
 
-        $showwarning = isset($skippedquestion[$q_id]) && ($candidates_marked < ($out_of - $skippedquestion[$q_id]));
-        $skippedinfo = isset($skippedquestion[$q_id]) ? $string['skipped'] . $skippedquestion[$q_id] : '';
         $cellclass = '';
         $warning = '';
-
-        if ($showwarning) {
-            $missingMarks = $candidate_no - $candidates_marked - $skippedquestion[$q_id];
-            $warning = ' ' . $string['missingmark'] . $missingMarks;
-            echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" />';
+        $info = '';
+        if (isset($numberofresponded[$q_id]) && ($numberofresponded[$q_id] > $candidates_marked)) {
+            $showwarning = true;
+            $info = $string['responses'] . $numberofresponded[$q_id] . ',' . $string['marked'] . $candidates_marked;
+            $warning = $string['markingrequired'] ;
+            echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="' . $warning . '"/>';
             $cellclass = ' style="background-color:#FFDDDD"';
         }
         echo $question_no . '.</td>';
@@ -273,7 +262,7 @@ while ($result->fetch()) {
             echo '<a href="textbox_marking.php';
         }
         echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&studentsonly=$studentsonly&folder=" . $_GET['folder'];
-        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a> <span style='background-color: white;'>$skippedinfo $warning</span></td></tr>\n";
+        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a> <span style='background-color: white;'>$info</span></td></tr>\n";
     }
     $question_no++;
 }
