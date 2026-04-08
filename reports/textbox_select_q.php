@@ -120,61 +120,11 @@ if (!isset($_GET['phase'])) {
 
 $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
 
-$textboxquestions = []; // Array of all textbox questions
-$sql = "SELECT GROUP_CONCAT(q_id) 
-        FROM papers pa 
-        JOIN questions qu ON pa.question = qu.q_id 
-        WHERE qu.q_type = 'textbox' AND pa.paper = ?";
-$result = $mysqli->prepare($sql);
-$result->bind_param('i', $paperID);
-$result->execute();
-$result->bind_result($temptextboxquestions);
-$result->fetch();
-$result->close();
-
-if ($temptextboxquestions !== '') {
-    $textboxquestions = explode(',', $temptextboxquestions);
-}
-
-if ($candidate_no > 0 && count($textboxquestions) > 0) {
+if ($candidate_no > 0) {
     $log = ''; // Log table
     $sql = '';
-    $numberofresponded = [];
-    // SQL for count responses of textbox questions
-    if (($paper_type == \assessment::TYPE_FORMATIVE) or ($paper_type == \assessment::TYPE_PROGRESS)) {
-        $log = 'log';
-        $sql = "
-        WITH $log AS (
-        SELECT * FROM log0
-        UNION ALL
-        SELECT * FROM log1
-        )";
-    } else {
-        $log = "log$paper_type";
-    }
-
-    $sql .= "
-    SELECT 
-        q.q_id,
-        count(*)
-        FROM $log
-        JOIN log_metadata lm ON lm.id = $log.metadataID
-        JOIN users u ON u.id = lm.userID
-        $rolesjoin
-        JOIN questions q ON q.q_id = $log.q_id
-        WHERE lm.paperID =? AND q.q_type = 'textbox'
-    AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?
-        GROUP BY q.q_id";
-    $result = $mysqli->prepare($sql);
-    $result->bind_param('iss', $paperID, $startdate, $enddate);
-    $result->execute();
-    $result->bind_result($questionID, $responded);
-    while ($result->fetch()) {
-        $numberofresponded[$questionID] = $responded;
-    }
-    $result->close();
-    $phase_description .= ': ' . number_format($out_of) . ' ' . $string['candidates'] . ' have taken this paper';
-}
+    $numberofresponded = textbox_marking_utils::get_count_textbox_responses($paperID,$paper_type,$startdate, $enddate,$rolesjoin, $time_int, $mysqli);
+    $phase_description .= ': ' . sprintf($string['candidatestakenthispaper'], number_format($out_of), $string['candidates']);
 
   echo "<div id=\"content\">\n";
 
