@@ -46,6 +46,7 @@ $paper = $propertyObj->get_paper_title();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
+  <link rel="stylesheet" type="text/css" href="../css/textbox_select_q.css" />
   <style type="text/css">
     a {color:blue; text-decoration:none; cursor:pointer}
     p {margin-top:0; padding-top:0}
@@ -262,13 +263,14 @@ while ($result->fetch()) {
             echo '<a href="textbox_marking.php';
         }
         echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&studentsonly=$studentsonly&folder=" . $_GET['folder'];
-        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a> <span style='background-color: white;'>$info</span></td></tr>\n";
+        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a><span class='info-text'>$info</span></td></tr>\n";
     }
     $question_no++;
-}
+  }
   $result->close();
   $mysqli->close();
   echo "</table>\n";
+}
 ?>
 </div>
 </body>
