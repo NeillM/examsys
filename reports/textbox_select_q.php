@@ -248,10 +248,10 @@ while ($result->fetch()) {
         $info = '';
         if (isset($numberofresponded[$q_id]) && ($numberofresponded[$q_id] > $candidates_marked)) {
             $showwarning = true;
-            $info = $string['responses'] . $numberofresponded[$q_id] . ',' . $string['marked'] . $candidates_marked;
+            $info = sprintf($string['responses'], $numberofresponded[$q_id]) . ', ' . sprintf($string['marked'], $candidates_marked);
             $warning = $string['markingrequired'] ;
-            echo '<img src="../artwork/small_yellow_warning_icon.gif" class="warning" title="' . $warning . '"/>';
-            $cellclass = ' style="background-color:#FFDDDD"';
+            echo '<span class="warning-icon" title="' . $warning . '"></span>';
+            $cellclass = ' class="warning-cell"';
         }
         echo $question_no . '.</td>';
         echo '<td' . $cellclass . '>';
