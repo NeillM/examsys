@@ -26,7 +26,6 @@
  */
 class textbox_marking_utils
 {
-
     /**
      * Returns an array of textbox question IDs and count of user's responses.
      *
@@ -95,7 +94,7 @@ class textbox_marking_utils
         $result->close();
         return $numberofresponded;
     }
-    
+
     /**
      * Returns an array of user IDs who are down for second marking.
      *
