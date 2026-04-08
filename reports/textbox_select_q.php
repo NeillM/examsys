@@ -82,15 +82,14 @@ if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRE
     $time_int = \log::getStartInterval($paper_type);
     // Get how many students took the paper.
     $sql = "
-    SELECT DISTINCT 
-        lm.userID 
-    FROM 
-        log_metadata lm 
+        SELECT DISTINCT 
+            lm.userID 
+        FROM 
+            log_metadata lm 
         INNER JOIN users u ON lm.userID = u.id
-        $rolesjoin
-    WHERE 
-        lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?
-    ";
+            $rolesjoin
+        WHERE 
+            lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ? AND lm.started <= ?";
     $result = $mysqli->prepare($sql);
     $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
@@ -201,7 +200,7 @@ if (isset($_GET['folder']) and trim((string) $_GET['folder']) != '') {
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $leadin, $q_type);
-while ($result->fetch()) {
+  while ($result->fetch()) {
     if ($q_type == 'textbox') {
         if (($paper_type == '0' or $paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
             // Check how many candidates are marked for this question.
