@@ -26,6 +26,76 @@
  */
 class textbox_marking_utils
 {
+
+    /**
+     * Returns an array of textbox question IDs and count of user's responses.
+     *
+     * @param int $paperID - ID of the paper to be used
+     * @param int$paper_type - Type of paper
+     * @param string $startdate - Start date of the exam
+     * @param string $enddate - End date of the exam
+     * @param string $rolesjoin - Join for roles
+     * @param int $time_int - Start time interval in minutes
+     * @param $db      - Database connection
+     * @return array   - List of question IDs and responses' count.
+     */
+    public static function get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int, $db)
+    {
+
+        $questionID = null;
+        $responded = null;
+        $params = [$paperID, $startdate, $enddate];
+        $param_types = 'iss';
+
+        $numberofresponded = [];
+        // SQL for count responses of textbox questions
+        if (($paper_type == \assessment::TYPE_FORMATIVE) or ($paper_type == \assessment::TYPE_PROGRESS)) {
+            $sql = "
+                WITH valid_metadata AS (
+                    SELECT DISTINCT lm.id
+                    FROM log_metadata lm
+                    JOIN users u ON u.id = lm.userID
+                    $rolesjoin
+                    WHERE lm.paperID = ?
+                    AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ?
+                    AND lm.started <= ?
+                    ),
+                filtered_logs AS (
+                SELECT q_id FROM log0 WHERE EXISTS (SELECT 1 FROM valid_metadata vm WHERE vm.id = metadataID)
+                UNION ALL
+                SELECT q_id FROM log1 WHERE EXISTS (SELECT 1 FROM valid_metadata vm WHERE vm.id = metadataID)
+                )
+                SELECT q.q_id, COUNT(*) 
+                FROM filtered_logs fl
+                INNER JOIN questions q ON q.q_id = fl.q_id AND q.q_type = 'textbox'
+                GROUP BY q.q_id
+            ";
+        } else {
+            $log_table = "log$paper_type";
+            $sql = "
+                SELECT q.q_id, COUNT(*)
+                FROM $log_table l
+                INNER JOIN log_metadata lm ON lm.id = l.metadataID
+                INNER JOIN users u ON u.id = lm.userID
+                $rolesjoin
+                INNER JOIN questions q ON q.q_id = l.q_id
+                WHERE lm.paperID = ?
+                    AND q.q_type = 'textbox'
+                    AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ?
+                    AND lm.started <= ?
+                GROUP BY q.q_id";
+        }
+        $result = $db->prepare($sql);
+        $result->bind_param('iss', $paperID, $startdate, $enddate);
+        $result->execute();
+        $result->bind_result($questionID, $responded);
+        while ($result->fetch()) {
+            $numberofresponded[$questionID] = $responded;
+        }
+        $result->close();
+        return $numberofresponded;
+    }
+    
     /**
      * Returns an array of user IDs who are down for second marking.
      *
