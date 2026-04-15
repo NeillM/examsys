@@ -137,7 +137,7 @@ $phase_description .= ': ' . sprintf($string['candidatestakenthispaper'], number
 if ($candidate_no > 0) {
     $log = ''; // Log table
     $sql = '';
-    $numberofresponded = textbox_marking_utils::get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int, $mysqli);
+    $numberofresponded = textbox_marking_utils::get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int);
     echo "<blockquote>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
 
     $question_no = 1;
