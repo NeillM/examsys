@@ -30,17 +30,16 @@ class textbox_marking_utils
      * Returns an array of textbox question IDs and count of user's responses.
      *
      * @param int $paperID - ID of the paper to be used
-     * @param int$paper_type - Type of paper
+     * @param int $paper_type - Type of paper
      * @param string $startdate - Start date of the exam
      * @param string $enddate - End date of the exam
      * @param string $rolesjoin - Join for roles
      * @param int $time_int - Start time interval in minutes
-     * @param $db      - Database connection
-     * @return array   - List of question IDs and responses' count.
+     * @return array - List of question IDs and responses' count.
      */
-    public static function get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int, $db)
+    public static function get_count_textbox_responses(int $paperID, int $paper_type, string $startdate, string $enddate, string $rolesjoin, int $time_int)
     {
-
+        $db = Config::get_instance()->db;
         $questionID = null;
         $responded = null;
         $params = [$paperID, $startdate, $enddate];
