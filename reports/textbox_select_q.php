@@ -77,7 +77,6 @@ if ($studentsonly) {
     $rolesjoin = '';
 }
 
-
 if (in_array($paper_type, [\assessment::TYPE_FORMATIVE, \assessment::TYPE_PROGRESS, \assessment::TYPE_SUMMATIVE])) {
     $time_int = \log::getStartInterval($paper_type);
     // Get how many students took the paper.
@@ -119,12 +118,7 @@ if (!isset($_GET['phase'])) {
 }
 
 $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
-
-if ($candidate_no > 0) {
-    $log = ''; // Log table
-    $sql = '';
-    $numberofresponded = textbox_marking_utils::get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int, $mysqli);
-    $phase_description .= ': ' . sprintf($string['candidatestakenthispaper'], number_format($out_of), $string['candidates']);
+$phase_description .= ': ' . sprintf($string['candidatestakenthispaper'], number_format($out_of));
     echo "<div id=\"content\">\n";
     echo "<div class=\"head_title\">\n";
     echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
@@ -139,6 +133,11 @@ if ($candidate_no > 0) {
     echo '<div class="page_title">' . $phase_description . '</div>';
     echo "</div>\n";
     echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
+
+if ($candidate_no > 0) {
+    $log = ''; // Log table
+    $sql = '';
+    $numberofresponded = textbox_marking_utils::get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int, $mysqli);
     echo "<blockquote>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
 
     $question_no = 1;
