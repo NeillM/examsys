@@ -48,26 +48,34 @@ class textbox_marking_utils
         $numberofresponded = [];
         // SQL for count responses of textbox questions
         if (($paper_type == \assessment::TYPE_FORMATIVE) or ($paper_type == \assessment::TYPE_PROGRESS)) {
+
             $sql = "
-                WITH valid_metadata AS (
-                    SELECT DISTINCT lm.id
-                    FROM log_metadata lm
-                    JOIN users u ON u.id = lm.userID
-                    $rolesjoin
+                SELECT q_id, COUNT(*)
+                FROM (
+                    SELECT q.q_id, l.id
+                    FROM log1 l
+                    INNER JOIN log_metadata lm ON lm.id = l.metadataID
+                    INNER JOIN users u ON u.id = lm.userID
+                        $rolesjoin
+                    INNER JOIN questions q ON q.q_id = l.q_id
                     WHERE lm.paperID = ?
-                    AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ?
-                    AND lm.started <= ?
-                    ),
-                filtered_logs AS (
-                SELECT q_id FROM log0 WHERE EXISTS (SELECT 1 FROM valid_metadata vm WHERE vm.id = metadataID)
-                UNION ALL
-                SELECT q_id FROM log1 WHERE EXISTS (SELECT 1 FROM valid_metadata vm WHERE vm.id = metadataID)
-                )
-                SELECT q.q_id, COUNT(*) 
-                FROM filtered_logs fl
-                INNER JOIN questions q ON q.q_id = fl.q_id AND q.q_type = 'textbox'
-                GROUP BY q.q_id
-            ";
+                        AND q.q_type = 'textbox'
+                        AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ?
+                        AND lm.started <= ?
+                    UNION
+                    SELECT q.q_id, l.id
+                    FROM log0 l
+                    INNER JOIN log_metadata lm ON lm.id = l.metadataID
+                    INNER JOIN users u ON u.id = lm.userID
+                        $rolesjoin
+                    INNER JOIN questions q ON q.q_id = l.q_id
+                    WHERE lm.paperID = ?
+                      AND q.q_type = 'textbox'
+                      AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ?
+                      AND lm.started <= ?) AS q
+                GROUP BY q_id";
+            $result = $db->prepare($sql);
+            $result->bind_param('ississ', $paperID, $startdate, $enddate, $paperID, $startdate, $enddate);
         } else {
             $log_table = "log$paper_type";
             $sql = "
@@ -82,9 +90,9 @@ class textbox_marking_utils
                     AND DATE_ADD(lm.started, INTERVAL $time_int MINUTE) >= ?
                     AND lm.started <= ?
                 GROUP BY q.q_id";
+            $result = $db->prepare($sql);
+            $result->bind_param('iss', $paperID, $startdate, $enddate);
         }
-        $result = $db->prepare($sql);
-        $result->bind_param('iss', $paperID, $startdate, $enddate);
         $result->execute();
         $result->bind_result($questionID, $responded);
         while ($result->fetch()) {
