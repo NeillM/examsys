@@ -48,7 +48,6 @@ class textbox_marking_utils
         $numberofresponded = [];
         // SQL for count responses of textbox questions
         if (($paper_type == \assessment::TYPE_FORMATIVE) or ($paper_type == \assessment::TYPE_PROGRESS)) {
-
             $sql = "
                 SELECT q_id, COUNT(*)
                 FROM (

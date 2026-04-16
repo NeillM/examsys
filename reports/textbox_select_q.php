@@ -119,20 +119,20 @@ if (!isset($_GET['phase'])) {
 
 $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
 $phase_description .= ': ' . sprintf($string['candidatestakenthispaper'], number_format($out_of));
-    echo "<div id=\"content\">\n";
-    echo "<div class=\"head_title\">\n";
-    echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
-    echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-    if (isset($_GET['folder']) and trim((string) $_GET['folder']) != '') {
-        echo '<a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-    } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-        echo '<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-    } elseif (isset($_GET['repcourse']) and $_GET['repcourse'] != '') {
-        echo '<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
-    }
-    echo '<div class="page_title">' . $phase_description . '</div>';
-    echo "</div>\n";
-    echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
+echo "<div id=\"content\">\n";
+echo "<div class=\"head_title\">\n";
+echo "<img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" />\n";
+echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
+if (isset($_GET['folder']) and trim((string) $_GET['folder']) != '') {
+    echo '<a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
+} elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+} elseif (isset($_GET['repcourse']) and $_GET['repcourse'] != '') {
+    echo '<a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
+}
+echo '<div class="page_title">' . $phase_description . '</div>';
+echo "</div>\n";
+echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
 
 if ($candidate_no > 0) {
     $log = ''; // Log table
