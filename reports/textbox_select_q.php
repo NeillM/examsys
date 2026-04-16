@@ -212,9 +212,9 @@ if ($candidate_no > 0) {
         $question_no++;
     }
     $result->close();
-    $mysqli->close();
     echo "</table>\n";
 }
+$mysqli->close();
 ?>
 </div>
 </body>
