@@ -116,7 +116,6 @@ if (!isset($_GET['phase'])) {
     $phase_description .= $string['secondmarking'];
     $tmp_phase = '&phase=2';
 }
-
 $out_of = (isset($_GET['phase']) and $_GET['phase'] == 2) ? count($second_mark) : $candidate_no;
 $phase_description .= ': ' . sprintf($string['candidatestakenthispaper'], number_format($out_of));
 echo "<div id=\"content\">\n";
@@ -134,37 +133,40 @@ echo '<div class="page_title">' . $phase_description . '</div>';
 echo "</div>\n";
 echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n";
 
-if ($candidate_no > 0) {
-    $log = ''; // Log table
-    $sql = '';
-    $numberofresponded = textbox_marking_utils::get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int);
-    echo "<blockquote>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
+$log = ''; // Log table
+$sql = '';
+$numberofresponded = textbox_marking_utils::get_count_textbox_responses($paperID, $paper_type, $startdate, $enddate, $rolesjoin, $time_int);
+echo "<blockquote>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
 
-    $question_no = 1;
-    $result = $mysqli->prepare("SELECT q_id, leadin_plain, q_type FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY display_pos");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($q_id, $leadin, $q_type);
-    while ($result->fetch()) {
-        if ($q_type == 'textbox') {
-            if (($paper_type == '0' or $paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
-                // Check how many candidates are marked for this question.
-                $candidates_marked = 0;
-                $marked = $mysqli->prepare('SELECT mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND logtype = ? AND phase = ?');
-                $marked->bind_param('iiii', $paperID, $q_id, $paper_type, $_GET['phase']);
-                $marked->execute();
-                $marked->bind_result($mark);
-                while ($marked->fetch()) {
-                    if ($mark !== null) {
-                        $candidates_marked++;
-                    }
+$question_no = 1;
+$result = $mysqli->prepare(
+    "SELECT q_id, leadin_plain, q_type FROM (papers, questions) WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY display_pos"
+);
+$result->bind_param('i', $paperID);
+$result->execute();
+$result->store_result();
+$result->bind_result($q_id, $leadin, $q_type);
+while ($result->fetch()) {
+    if ($q_type == 'textbox') {
+        if (($paper_type == '0' or $paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
+            // Check how many candidates are marked for this question.
+            $candidates_marked = 0;
+            $marked = $mysqli->prepare(
+                'SELECT mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND logtype = ? AND phase = ?'
+            );
+            $marked->bind_param('iiii', $paperID, $q_id, $paper_type, $_GET['phase']);
+            $marked->execute();
+            $marked->bind_result($mark);
+            while ($marked->fetch()) {
+                if ($mark !== null) {
+                    $candidates_marked++;
                 }
-                $marked->close();
-            } elseif ($_GET['action'] == 'finalise') {
-                $candidates_marked = 0;
-                // Check how many candidates are marked for this question.
-                $sql = "
+            }
+            $marked->close();
+        } elseif ($_GET['action'] == 'finalise') {
+            $candidates_marked = 0;
+            // Check how many candidates are marked for this question.
+            $sql = "
                     SELECT 
                         mark 
                     FROM 
@@ -173,47 +175,46 @@ if ($candidate_no > 0) {
                         log$paper_type.metadataID = log_metadata.id AND log_metadata.userID = u.id 
                         AND paperID = ? AND q_id = ?
                     ";
-                $marked = $mysqli->prepare($sql);
-                $marked->bind_param('ii', $paperID, $q_id);
-                $marked->execute();
-                $marked->bind_result($mark);
-                while ($marked->fetch()) {
-                    if ($mark !== null) {
-                        $candidates_marked++;
-                    }
+            $marked = $mysqli->prepare($sql);
+            $marked->bind_param('ii', $paperID, $q_id);
+            $marked->execute();
+            $marked->bind_result($mark);
+            while ($marked->fetch()) {
+                if ($mark !== null) {
+                    $candidates_marked++;
                 }
-                $marked->close();
-            } else {
-                $candidates_marked = $candidate_no;
             }
-            echo '<tr><td style="text-align:right; vertical-align:top; white-space:nowrap;">';
-
-            $cellclass = '';
-            $warning = '';
-            $info = '';
-            if (isset($numberofresponded[$q_id]) && ($numberofresponded[$q_id] > $candidates_marked)) {
-                $showwarning = true;
-                $info = sprintf($string['responses'], $numberofresponded[$q_id]) . ', ' . sprintf($string['marked'], $candidates_marked);
-                $warning = $string['markingrequired'] ;
-                echo '<span class="warning-icon" title="' . $warning . '"></span>';
-                $cellclass = ' class="warning-cell"';
-            }
-            echo $question_no . '.</td>';
-            echo '<td' . $cellclass . '>';
-
-            if ($_GET['action'] == 'finalise') {
-                echo '<a href="textbox_finalise_marks.php';
-            } else {
-                echo '<a href="textbox_marking.php';
-            }
-            echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&studentsonly=$studentsonly&folder=" . $_GET['folder'];
-            echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string) $leadin) . "</a><span class='info-text'>$info</span></td></tr>\n";
+            $marked->close();
+        } else {
+            $candidates_marked = $candidate_no;
         }
-        $question_no++;
+        echo '<tr><td style="text-align:right; vertical-align:top; white-space:nowrap;">';
+
+        $cellclass = '';
+        $warning = '';
+        $info = '';
+        if (isset($numberofresponded[$q_id]) && ($numberofresponded[$q_id] > $candidates_marked)) {
+            $showwarning = true;
+            $info = sprintf($string['responses'], $numberofresponded[$q_id]) . ', ' . sprintf($string['marked'], $candidates_marked);
+            $warning = $string['markingrequired'];
+            echo '<span class="warning-icon" title="' . $warning . '"></span>';
+            $cellclass = ' class="warning-cell"';
+        }
+        echo $question_no . '.</td>';
+        echo '<td' . $cellclass . '>';
+
+        if ($_GET['action'] == 'finalise') {
+            echo '<a href="textbox_finalise_marks.php';
+        } else {
+            echo '<a href="textbox_marking.php';
+        }
+        echo "?q_id=$q_id&qNo=$question_no&paperID=$paperID&startdate=$startdate&enddate=$enddate&studentsonly=$studentsonly&folder=" . $_GET['folder'];
+        echo '&module=' . $_GET['module'] . '&repcourse=' . $_GET['repcourse'] . "$tmp_phase\">" . trim((string)$leadin) . "</a><span class='info-text'>$info</span></td></tr>\n";
     }
-    $result->close();
-    echo "</table>\n";
+    $question_no++;
 }
+$result->close();
+echo "</table>\n";
 $mysqli->close();
 ?>
 </div>
