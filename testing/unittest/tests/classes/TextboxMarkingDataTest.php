@@ -197,7 +197,6 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             '2023-01-31 23:59:59',
             '',
             30,
-            $this->db,
         );
 
         // Assert results
@@ -231,14 +230,14 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
         $meta2 = $loggen->create_metadata([
             'userID' => $this->student2['id'],
             'paperID' => $this->progress_paper['id'],
-            'started' => '2023-02-15 10:00:00',
+            'started' => '2023-02-15 20:00:00',
         ]);
 
         // Create log entries in formative log.
         $loggen->create_formative([
             'metadataID' => $meta2['id'],
             'q_id' => $this->textbox_questions[1]['id'],
-            'started' => '2023-02-15 10:01:00',
+            'started' => '2023-02-15 20:01:00',
         ]);
 
         // Create log entry for staff1
@@ -263,7 +262,6 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             '2023-02-28 23:59:59',
             $rolesjoin,
             30,
-            $this->db,
         );
         // Assert results - only student responses counted (staff1 filtered out)
         $this->assertIsArray($result);
@@ -282,7 +280,6 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             '2023-02-28 23:59:59',
             $rolesjoin,
             30,
-            $this->db,
         );
         $this->assertIsArray($result);
         $expected = [
@@ -291,15 +288,14 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
         ];
         $this->assertEquals($expected, $result);
 
-        // Assert results for all responses after '2023-02-01 00:00:00'.
+        // Assert results for all responses after '2023-02-15 10:01:00' without $time_int.
         $result = textbox_marking_utils::get_count_textbox_responses(
             $this->progress_paper['id'],
             \assessment::TYPE_PROGRESS,
-            '2023-02-01 00:00:00',
+            '2023-02-15 10:01:00',
             '2023-02-28 23:59:59',
             $rolesjoin,
             0,
-            $this->db,
         );
         $this->assertIsArray($result);
         $expected = [
@@ -308,22 +304,37 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
         ];
         $this->assertEquals($expected, $result);
 
-        // Assert results for all responses with $time_int.
+        // Assert results for all responses after '2023-02-15 10:01:00' with $time_int.
         $result = textbox_marking_utils::get_count_textbox_responses(
             $this->progress_paper['id'],
             \assessment::TYPE_PROGRESS,
-            '2023-02-01 00:00:00',
+            '2023-02-15 10:01:00',
             '2023-02-28 23:59:59',
             $rolesjoin,
             2,
-            $this->db,
         );
         $this->assertIsArray($result);
         $expected = [
             $this->textbox_questions[0]['id'] => 2,
             $this->textbox_questions[1]['id'] => 1,
         ];
-        $this->assertEquals($expected, $result); // 1 response, staff1 filtered out
+        $this->assertEquals($expected, $result);
+
+        // Assert results for all responses within time '2023-02-15 20:00:00' to '2023-02-16 12:01:00'.
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->progress_paper['id'],
+            \assessment::TYPE_PROGRESS,
+            '2023-02-15 20:00:00',
+            '2023-02-16 12:01:00',
+            $rolesjoin,
+            0,
+        );
+        $this->assertIsArray($result);
+        $expected = [
+            $this->textbox_questions[0]['id'] => 1,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
     }
 
     /**
