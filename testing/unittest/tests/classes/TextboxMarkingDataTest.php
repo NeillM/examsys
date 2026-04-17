@@ -267,8 +267,11 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
         );
         // Assert results - only student responses counted (staff1 filtered out)
         $this->assertIsArray($result);
-        $this->assertEquals(1, $result[$this->textbox_questions[0]['id']]); // 1 response, staff1 filtered out
-        $this->assertEquals(1, $result[$this->textbox_questions[1]['id']]); // 1 response, staff1 filtered out
+        $expected = [
+            $this->textbox_questions[0]['id'] => 1,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result); // 1 response, staff1 filtered out
 
         // Assert results for all responses including staff1.
         $rolesjoin = '';
