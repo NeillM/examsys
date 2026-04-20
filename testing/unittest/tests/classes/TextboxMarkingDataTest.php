@@ -225,10 +225,13 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             30,
         );
 
-        // Assert results
         $this->assertIsArray($result);
-        $this->assertEquals(2, $result[$this->textbox_questions[0]['id']]); // 2 responses for question 1
-        $this->assertEquals(1, $result[$this->textbox_questions[1]['id']]); // 1 response for question 2
+        // Assert results, data should not contain $meta3 formative_paper2
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
     }
 
     /**
