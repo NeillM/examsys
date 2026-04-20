@@ -418,11 +418,28 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             '2023-03-31 23:59:59',
             '',
             120,
-            $this->db,
         );
 
         // Assert results
         $this->assertIsArray($result);
-        $this->assertEquals(3, $result[$this->textbox_questions[0]['id']]); // 3 student responses
+        $expected = [
+            $this->textbox_questions[0]['id'] => 3,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Test with summative paper within a time frame
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->paper['id'],
+            \assessment::TYPE_SUMMATIVE,
+            '2023-03-15 10:01:00',
+            '2023-03-17 11:59:59',
+            '',
+            0,
+        );
+        $this->assertIsArray($result);
+        $expected = [
+            $this->textbox_questions[0]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
     }
 }
