@@ -392,15 +392,15 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             'started' => '2023-03-15 10:00:00',
         ]);
         // Create meta2 log entries for summative paper (log2)
-        $meta2 = $loggen->create_metadata([
+        $meta4 = $loggen->create_metadata([
             'userID' => $this->student1['id'],
             'paperID' => $this->paper2['id'],
             'started' => '2023-03-15 10:10:00',
         ]);
         $loggen->create_summative([
-            'metadataID' => $meta2['id'],
+            'metadataID' => $meta4['id'],
             'q_id' => $this->textbox_questions[0]['id'],
-            'started' => '2023-03-15 10:01:00',
+            'started' => '2023-03-15 10:11:00',
         ]);
 
         $loggen->create_summative([
