@@ -18,7 +18,7 @@
 /**
  * Testcase for class textbox_marking_utils - database-dependent tests.
  *
- * @author Yijun Xue yijun.xue@nottingham.ac.uk>
+ * @author Yijun Xue <yijun.xue@nottingham.ac.uk>
  * @copyright Copyright (c) 2026 onwards The University of Nottingham
  * @package tests
  * @group textbox
