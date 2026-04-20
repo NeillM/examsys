@@ -36,8 +36,10 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
     protected $module1;
     /** @var array Staff member on the module. */
     protected $staff1;
-    /** @var array A paper used in tests. */
+    /** @var array A summative paper used in tests. */
     protected $paper;
+    /** @var array A summative paper used in tests. */
+    protected $paper2;
     /** @var array A formative paper used in tests. */
     protected $formative_paper;
     /** @var array A formative paper used in tests. */
@@ -135,6 +137,16 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             'startdate' => '2023-03-01 09:00:00',
             'enddate' => '2023-03-31 17:00:00',
         ]);
+        // Summative paper2
+        $this->paper2 = $papergen->create_paper([
+            'papertitle' => 'Summative Test Paper2',
+            'papertype' => \assessment::TYPE_SUMMATIVE,
+            'paperowner' => $this->staff1['username'],
+            'modulename' => [$this->module1['fullname']],
+            'startdate' => '2023-03-01 09:00:00',
+            'enddate' => '2023-03-31 17:00:00',
+        ]);
+
 
         // Add questions to papers
         $questiongen = $this->get_datagenerator('questions', 'core');
@@ -378,6 +390,17 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             'userID' => $this->student1['id'],
             'paperID' => $this->paper['id'],
             'started' => '2023-03-15 10:00:00',
+        ]);
+        // Create meta2 log entries for summative paper (log2)
+        $meta2 = $loggen->create_metadata([
+            'userID' => $this->student1['id'],
+            'paperID' => $this->paper2['id'],
+            'started' => '2023-03-15 10:10:00',
+        ]);
+        $loggen->create_summative([
+            'metadataID' => $meta2['id'],
+            'q_id' => $this->textbox_questions[0]['id'],
+            'started' => '2023-03-15 10:01:00',
         ]);
 
         $loggen->create_summative([
