@@ -40,6 +40,8 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
     protected $paper;
     /** @var array A formative paper used in tests. */
     protected $formative_paper;
+    /** @var array A formative paper used in tests. */
+    protected $formative_paper2;
     /** @var array A progress paper used in tests. */
     protected $progress_paper;
     /** @var array Textbox questions created for tests. */
@@ -97,6 +99,16 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
         // Formative paper
         $this->formative_paper = $papergen->create_paper([
             'papertitle' => 'Formative Test Paper',
+            'papertype' => \assessment::TYPE_FORMATIVE,
+            'paperowner' => $this->staff1['username'],
+            'modulename' => [$this->module1['fullname']],
+            'startdate' => '2023-01-01 09:00:00',
+            'enddate' => '2023-01-31 17:00:00',
+        ]);
+
+        // Formative paper2
+        $this->formative_paper2 = $papergen->create_paper([
+            'papertitle' => 'Formative Test Paper2',
             'papertype' => \assessment::TYPE_FORMATIVE,
             'paperowner' => $this->staff1['username'],
             'modulename' => [$this->module1['fullname']],
@@ -170,6 +182,13 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             'started' => '2023-01-16 11:00:00',
         ]);
 
+        // Create log_metadata for formative_paper2
+        $meta3 = $loggen->create_metadata([
+            'userID' => $this->student3['id'],
+            'paperID' => $this->formative_paper2['id'],
+            'started' => '2023-01-17 12:00:00',
+        ]);
+
         // Create log for log_metadata items
         $loggen->create_formative([
             'metadataID' => $meta1['id'],
@@ -187,6 +206,13 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             'metadataID' => $meta2['id'],
             'q_id' => $this->textbox_questions[0]['id'],
             'started' => '2023-01-16 11:01:00',
+        ]);
+
+        // Create log for log_metadata meta3
+        $loggen->create_formative([
+            'metadataID' => $meta3['id'],
+            'q_id' => $this->textbox_questions[1]['id'],
+            'started' => '2023-01-16 11:02:00',
         ]);
 
         // Test the function
