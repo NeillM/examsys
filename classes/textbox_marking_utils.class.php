@@ -42,8 +42,6 @@ class textbox_marking_utils
         $db = Config::get_instance()->db;
         $questionID = null;
         $responded = null;
-        $params = [$paperID, $startdate, $enddate];
-        $param_types = 'iss';
 
         $numberofresponded = [];
         // SQL for count responses of textbox questions
