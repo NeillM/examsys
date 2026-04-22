@@ -244,6 +244,87 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             $this->textbox_questions[1]['id'] => 1,
         ];
         $this->assertEquals($expected, $result);
+
+        // Boundary test: Should include response at exact date boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->formative_paper['id'],
+            \assessment::TYPE_FORMATIVE,
+            '2023-01-15 10:00:00',
+            '2023-01-17 12:00:00',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should exclude response before startdate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->formative_paper['id'],
+            \assessment::TYPE_FORMATIVE,
+            '2023-01-15 10:00:01',
+            '2023-01-17 12:00:00',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should include response at exact enddate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->formative_paper['id'],
+            \assessment::TYPE_FORMATIVE,
+            '2023-01-01 00:00:00',
+            '2023-01-16 11:00:00',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should exclude response after enddate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->formative_paper['id'],
+            \assessment::TYPE_FORMATIVE,
+            '2023-01-01 00:00:00',
+            '2023-01-16 10:59:59',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 1,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: date range excludes all data (before all responses)
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->formative_paper['id'],
+            \assessment::TYPE_FORMATIVE,
+            '2023-01-01 00:00:00',
+            '2023-01-14 23:59:59',
+            '',
+            0,
+        );
+        $this->assertEmpty($result);
+
+        // Boundary test: date range excludes all data (after all responses)
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->formative_paper['id'],
+            \assessment::TYPE_FORMATIVE,
+            '2023-01-20 00:00:00',
+            '2023-01-31 23:59:59',
+            '',
+            0,
+        );
+        $this->assertEmpty($result);
     }
 
     /**
@@ -376,6 +457,88 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             $this->textbox_questions[1]['id'] => 1,
         ];
         $this->assertEquals($expected, $result);
+
+        // Boundary test: Should include response at exact startdate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->progress_paper['id'],
+            \assessment::TYPE_PROGRESS,
+            '2023-02-15 10:00:00',
+            '2023-02-28 23:59:59',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should exclude response before startdate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->progress_paper['id'],
+            \assessment::TYPE_PROGRESS,
+            '2023-02-15 10:00:01',
+            '2023-02-16 12:00:00',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 1,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should include response at exact datetime boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->progress_paper['id'],
+            \assessment::TYPE_PROGRESS,
+            '2023-02-15 10:00:00',
+            '2023-02-16 12:00:00',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should exclude response after enddate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->progress_paper['id'],
+            \assessment::TYPE_PROGRESS,
+            '2023-02-01 00:00:00',
+            '2023-02-16 11:59:59',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 1,
+            $this->textbox_questions[1]['id'] => 1,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: date range before all progress responses
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->progress_paper['id'],
+            \assessment::TYPE_PROGRESS,
+            '2023-02-01 00:00:00',
+            '2023-02-14 23:59:59',
+            '',
+            0,
+        );
+        $this->assertEmpty($result);
+
+        // Boundary test: date range after all progress responses
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->progress_paper['id'],
+            \assessment::TYPE_PROGRESS,
+            '2023-02-20 00:00:00',
+            '2023-02-28 23:59:59',
+            '',
+            0,
+        );
+        $this->assertEmpty($result);
     }
 
     /**
@@ -391,7 +554,7 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             'paperID' => $this->paper['id'],
             'started' => '2023-03-15 10:00:00',
         ]);
-        // Create meta2 log entries for summative paper (log2)
+        // Create meta4 log entries for summative paper (log2)
         $meta4 = $loggen->create_metadata([
             'userID' => $this->student1['id'],
             'paperID' => $this->paper2['id'],
@@ -464,5 +627,69 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
             $this->textbox_questions[0]['id'] => 1,
         ];
         $this->assertEquals($expected, $result);
+
+        // Boundary test: Should include response at exact datetime boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->paper['id'],
+            \assessment::TYPE_SUMMATIVE,
+            '2023-03-15 10:00:00',
+            '2023-03-17 12:00:00',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 3,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should exclude response before startdate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->paper['id'],
+            \assessment::TYPE_SUMMATIVE,
+            '2023-03-15 10:00:01',
+            '2023-03-31 23:59:59',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: Should exclude response after enddate boundary
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->paper['id'],
+            \assessment::TYPE_SUMMATIVE,
+            '2023-03-01 00:00:00',
+            '2023-03-17 11:59:59',
+            '',
+            0,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+        ];
+        $this->assertEquals($expected, $result);
+
+        // Boundary test: date range before all summative responses
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->paper['id'],
+            \assessment::TYPE_SUMMATIVE,
+            '2023-03-01 00:00:00',
+            '2023-03-14 23:59:59',
+            '',
+            0,
+        );
+        $this->assertEmpty($result);
+
+        // Boundary test: date range after all summative responses
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->paper['id'],
+            \assessment::TYPE_SUMMATIVE,
+            '2023-03-20 00:00:00',
+            '2023-03-31 23:59:59',
+            '',
+            0,
+        );
+        $this->assertEmpty($result);
     }
 }
