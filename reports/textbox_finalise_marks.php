@@ -62,7 +62,7 @@ function load_question_mark($q_id, $db)
 
 function displayMarks($id, $marks, $override, $user_mark)
 {
-    $html = '<select name="override-dropdown' . $id . '" id="override' . $id . '"><option value="NULL"></option>';
+    $html = '<select name="override' . $id . '" id="override' . $id . '" class="override-select"><option value="NULL"></option>';
     $inc = 0.5;
     for ($i = 0.0; $i <= $marks; $i += $inc) { // ensure $i is a double for === below
         $display_i = $i;

@@ -19,79 +19,9 @@
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
 requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
-    var textbox = new TEXTBOX();
+    const textbox = new TEXTBOX();
     // Check select all button if all primary mark radio buttons selected on load.
     textbox.selectall();
-
-    $("input:radio").click(function() {
-        var str = $(this).attr('name');
-        var dropdownID = str.replace('mark', 'override');
-        $("#" + dropdownID).val('NULL').change();
-    });
-
-    // Override selected.
-    $("select").click(function() {
-        var str = $(this).attr('name');
-        var radioID = str.replace('override', 'mark');
-        $('input:radio[name=' + radioID + ']').removeAttr('checked');
-        $(".selectallprimary").prop("checked", false);
-    });
-
-    // Select all primary marks radio buttons.
-    $(".selectallprimary").change(function() {
-        if ($(this).is(':checked')) {
-            $(".primarychk").each(function() {
-                $(this).click(); // Forces removal of override
-            });
-            $(".selectallprimary").prop("checked", true);
-            $(".selectallmatching").prop("checked", false);
-        } else {
-            $(".primarychk").each(function() {
-                $(this).prop("checked", false).change();
-            });
-            $(".selectallprimary").prop("checked", false);
-        }
-    });
-    // Select primary mark where primary and secondary marks agree
-    $(".selectallmatching").change(function() {
-        if ($(this).is(':checked')) {
-            $(".selectallprimary").prop("checked", false);
-            $(".primarychk").each(function() {
-                // Clear existing if selected
-                $(this).prop("checked", false).parent().removeClass('marked');
-                // Check against secondary
-                var primaryVal = $(this).val();
-                var secondaryVal = $('#' + $(this).attr('name') + '-s').val();
-                if (secondaryVal == null || primaryVal == secondaryVal) {
-                    $(this).click();
-                }
-            });
-            $(".selectallmatching").prop("checked", true);
-        } else {
-            $(".primarychk").each(function() {
-                $(this).prop("checked", false).change();
-            });
-            $(".selectallmatching").prop("checked", false);
-            if ($(".selectallprimary").first().prop("checked") == true) {
-                $(".selectallprimary").change();
-            }
-        }
-    });
-    // Check select all button if all primary mark radio buttons selected.
-    $(".primarychk").click(function() {
-        textbox.selectall();
-    });
-    // Uncheck select all/select matching button if a secondary or override mark has been selected.
-    $(".secondarychk").click(function() {
-        $(".selectallprimary").prop("checked", false);
-        $(".selectallmatching").prop("checked", false);
-    });
-    $(".override-dropdown").change(function() {
-        if (this.value != 'NULL') {
-            $(".selectallprimary").prop("checked", false);
-            $(".selectallmatching").prop("checked", false);
-        }
-    });
 
     // Highlight which mark is being used.
     $('td>input[type="radio"]:checked').parent().addClass('marked');
@@ -102,26 +32,134 @@ requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
         }
     });
 
-    $('td>input[type="radio"], td>select, td>input[type="checkbox"]').change(function() {
-        $('td>input[type="radio"]', $(this).parents('tr')).each(function() {
-            if ($(this).prop('checked')) {
-                $(this).parent().addClass('marked');
-            } else {
-                $(this).parent().removeClass('marked');
-            }
-        });
-        $('td>select', $(this).parents('tr')).each(function() {
-            if ($(this).val() && $(this).val() != 'NULL') {
-                $(this).parent().addClass('marked');
-            } else {
-                $(this).parent().removeClass('marked');
-            }
-        });
-        $('.selectallprimary', $(this).parents('tr')).each(function() {
-            if ($(this).prop('checked')) {
-                $(".primary").addClass('marked');
-                $(".override").removeClass('marked');
-            }
-        });
+    /**
+     * Actions to take when the marker selection has changed for a user.
+     *
+     * @param {jQuery} element
+     * @param {String} name
+     */
+    function changeMarkerSelection(element, name) {
+        let dropdownID = name.replace('mark', 'override');
+        $("#" + dropdownID).val('NULL').parent().removeClass('marked');
+
+        let primary =  $('#' + name + '-p');
+        let secondary = $('#' + name + '-s');
+
+        // Remove the existing marking labels.
+        primary.parent().removeClass('marked');
+        secondary.parent().removeClass('marked');
+
+        if (element.prop('checked')) {
+            element.parent().addClass('marked');
+        } else {
+            element.parent().removeClass('marked');
+        }
+    }
+
+    /**
+     * Actions to take when the mark override is set.
+     *
+     * @param {jQuery} element
+     * @param {String} name
+     */
+    function changeMarkOverride(element, name) {
+        // First remove the selector for primary and secondary marking.
+        let radioID = name.replace('override', 'mark');
+
+        let primary =  $('#' + radioID + '-p');
+        let secondary = $('#' + radioID + '-s');
+        primary.prop("checked", false).parent().removeClass('marked');
+        secondary.prop("checked", false).parent().removeClass('marked');
+
+        if (element.val() && element.val() !== 'NULL') {
+            element.parent().addClass('marked');
+            uncheckMassOptions();
+        } else {
+            element.parent().removeClass('marked');
+        }
+    }
+
+    /**
+     * Handles the Select primary marks radio button being changed.
+     */
+    function selectAllPrimaryMarks() {
+        if ($(this).is(':checked')) {
+            $(".primarychk").prop("checked", true);
+            $(".primary").addClass('marked');
+            $(".override").removeClass('marked');
+            $(".secondary").removeClass('marked');
+            $(".selectallprimary").prop("checked", true);
+            $(".selectallmatching").prop("checked", false);
+            $('.override-select').val('NULL');
+        } else {
+            $(".primarychk").prop("checked", false);
+            $(".primary").removeClass('marked');
+            $(".selectallprimary").prop("checked", false);
+        }
+    }
+
+    /**
+     * Handles the Select all matching radio button being changed.
+     */
+    function selectAllMatchingMarks() {
+        if ($(this).is(':checked')) {
+            $(".selectallprimary").prop("checked", false);
+            $('.override').removeClass('marked');
+            $('.override-select').val('NULL');
+
+            $(".primarychk").each(function() {
+                let primary = $(this);
+                let secondary = $('#' + primary.attr('name') + '-s');
+                // Clear existing if selected
+                primary.prop("checked", false).parent().removeClass('marked');
+                secondary.prop("checked", false).parent().removeClass('marked');
+                // Check against secondary
+                let primaryVal = primary.val();
+                let secondaryVal = secondary.val();
+                if (secondaryVal == null || primaryVal === secondaryVal) {
+                    primary.prop("checked", true);
+                    changeMarkerSelection(primary, primary.attr('name'));
+                }
+            });
+            $(".selectallmatching").prop("checked", true);
+        } else {
+            $(".primarychk").each(function() {
+                $(this).prop("checked", false);
+                changeMarkerSelection($(this), $(this).attr('name'));
+            });
+            $(".selectallmatching").prop("checked", false);
+        }
+        textbox.selectall();
+    }
+
+    /**
+     * Unchecks the select boxes for the options that mass change marking options.
+     */
+    function uncheckMassOptions() {
+        $(".selectallprimary").prop("checked", false);
+        $(".selectallmatching").prop("checked", false);
+    }
+
+    /* Add in event handlers. */
+
+    $("input:radio").click(function() {
+        changeMarkerSelection($(this), $(this).attr('name'));
     });
+
+    // Override selected.
+    $("select").change(function() {
+        changeMarkOverride($(this), $(this).attr('name'));
+    });
+
+    // Select all primary marks radio buttons.
+    $(".selectallprimary").change(selectAllPrimaryMarks);
+
+    // Select primary mark where primary and secondary marks agree
+    $(".selectallmatching").change(selectAllMatchingMarks);
+
+    // Check select all button if all primary mark radio buttons selected.
+    $(".primarychk").click(textbox.selectall);
+
+    // Uncheck select all/select matching button if a secondary or override mark has been selected.
+    $(".secondarychk").click(uncheckMassOptions);
 });
