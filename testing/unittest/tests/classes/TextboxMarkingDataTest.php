@@ -642,6 +642,20 @@ class TextboxMarkingDataTest extends \testing\unittest\unittestdatabase
         ];
         $this->assertEquals($expected, $result);
 
+        // Boundary test: Should include response at datetime boundary with time_interval
+        $result = textbox_marking_utils::get_count_textbox_responses(
+            $this->paper['id'],
+            \assessment::TYPE_SUMMATIVE,
+            '2023-03-15 10:02:00',
+            '2023-03-17 12:00:00',
+            '',
+            1,
+        );
+        $expected = [
+            $this->textbox_questions[0]['id'] => 2,
+        ];
+        $this->assertEquals($expected, $result);
+
         // Boundary test: Should exclude response before startdate boundary
         $result = textbox_marking_utils::get_count_textbox_responses(
             $this->paper['id'],
