@@ -1,0 +1,15 @@
+.warning-icon {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-image: url('../artwork/small_yellow_warning_icon.gif');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.warning-cell {
+    background-color: #FFDDDD;
+}
+.info-text {
+    background-color: white;
+    margin: 10px;
+}

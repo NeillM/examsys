@@ -21,3 +21,7 @@ $string['secondmarking'] = 'Second Marking';
 $string['finalisemarks'] = 'Finalise Marks';
 $string['candidates'] = 'candidates';
 $string['msg'] = 'Select the question you wish to mark from the list below.';
+$string['candidatestakenthispaper'] = '%s candidates have taken this paper';
+$string['markingrequired'] = 'Marking required';
+$string['responses'] = 'Responses: %s';
+$string['marked'] = 'Marked: %s';
