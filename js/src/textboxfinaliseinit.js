@@ -89,7 +89,6 @@ requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
             $(".override").removeClass('marked');
             $(".secondary").removeClass('marked');
             $(".selectallprimary").prop("checked", true);
-            $(".selectallmatching").prop("checked", false);
             $('.override-select').val('NULL');
         } else {
             $(".primarychk").prop("checked", false);
@@ -100,35 +99,32 @@ requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
 
     /**
      * Handles the Select all matching radio button being changed.
+     *
+     * @param {Event} event
      */
-    function selectAllMatchingMarks() {
-        if ($(this).is(':checked')) {
-            $(".selectallprimary").prop("checked", false);
-            $('.override').removeClass('marked');
-            $('.override-select').val('NULL');
+    function selectAllMatchingMarks(event) {
+        // Stop the button from submitting the form.
+        event.preventDefault();
 
-            $(".primarychk").each(function() {
-                let primary = $(this);
-                let secondary = $('#' + primary.attr('name') + '-s');
+        $(".primarychk").each(function() {
+            let primary = $(this);
+            let name = primary.attr('name');
+            let secondary = $('#' + name + '-s');
+            let override = $('#' + name.replace('mark', 'override'));
+            // Check against secondary
+            let primaryVal = primary.val();
+            let secondaryVal = secondary.val();
+            if (secondaryVal == null || primaryVal === secondaryVal) {
                 // Clear existing if selected
-                primary.prop("checked", false).parent().removeClass('marked');
                 secondary.prop("checked", false).parent().removeClass('marked');
-                // Check against secondary
-                let primaryVal = primary.val();
-                let secondaryVal = secondary.val();
-                if (secondaryVal == null || primaryVal === secondaryVal) {
-                    primary.prop("checked", true);
-                    changeMarkerSelection(primary, primary.attr('name'));
-                }
-            });
-            $(".selectallmatching").prop("checked", true);
-        } else {
-            $(".primarychk").each(function() {
-                $(this).prop("checked", false);
-                changeMarkerSelection($(this), $(this).attr('name'));
-            });
-            $(".selectallmatching").prop("checked", false);
-        }
+                override.val('NULL').parent().removeClass('marked');
+
+                // Mark the primary option as selected.
+                primary.prop("checked", true);
+                changeMarkerSelection(primary, name);
+            }
+        });
+
         textbox.selectall();
     }
 
@@ -137,7 +133,6 @@ requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
      */
     function uncheckMassOptions() {
         $(".selectallprimary").prop("checked", false);
-        $(".selectallmatching").prop("checked", false);
     }
 
     /* Add in event handlers. */
@@ -155,7 +150,7 @@ requirejs(['textboxfinalise', 'jquery'], function (TEXTBOX, $) {
     $(".selectallprimary").change(selectAllPrimaryMarks);
 
     // Select primary mark where primary and secondary marks agree
-    $(".selectallmatching").change(selectAllMatchingMarks);
+    $(".selectallmatching").click(selectAllMatchingMarks);
 
     // Check select all button if all primary mark radio buttons selected.
     $(".primarychk").click(textbox.selectall);

@@ -157,7 +157,7 @@ if (isset($_POST['submit'])) {
     echo '<form action="' . $_SERVER['PHP_SELF'] . '?paperID=' . $paperID . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder'] . '&repcourse=' . $_GET['repcourse'] . '" method="post" autocomplete="off">' . "\n";
     echo '<table class="header"><tr><th colspan="2"><div class="page_title"><span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">' . $string['first'] . '</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">' . $string['second'] . '</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">' . $string['override'] . '</div></th></tr>';
     echo '<tr><td colspan="4"><img src="../artwork/tooltip_icon.gif" />' . $string['comments'] . '</td></tr>';
-    echo '<tr class="selectboxes-top"><td align="right" colspan="2"><label for="selectallmatching-top">' . $string['selectallmatching'] . '</label>&nbsp;<input type="checkbox" id="selectallmatching-top" class="selectallmatching" value="" /></td><td colspan="3" style="text-align: right"><label for="selectallprimary-top">' . $string['selectallprimary'] . '</label>&nbsp;<input type="checkbox" class="selectallprimary" id="selectallprimary-top" value="" /></td></tr>';
+    echo '<tr class="selectboxes-top"><td align="right" colspan="2"><button id="selectallmatching-top" class="selectallmatching">' . $string['selectallmatching'] . '</button></td><td colspan="3" style="text-align: right"><label for="selectallprimary-top">' . $string['selectallprimary'] . '</label>&nbsp;<input type="checkbox" class="selectallprimary" id="selectallprimary-top" value="" /></td></tr>';
 
     $student_no = 0;
 
@@ -271,7 +271,7 @@ SQL;
     }
     $result->close();
     ?>
-    <tr class="selectboxes-bottom"><td align="right" colspan="2"><label for="selectallmatching"><?php echo $string['selectallmatching'] ?></label>&nbsp;<input type="checkbox" id="selectallmatching" class="selectallmatching" value="" /></td><td colspan="3" style="text-align: right"><label for="selectallprimary"><?php echo $string['selectallprimary'] ?></label>&nbsp;<input type="checkbox" class="selectallprimary" id="selectallprimary" name="selectallprimary" value="" /></td></tr>
+    <tr class="selectboxes-bottom"><td align="right" colspan="2"><button id="selectallmatching" class="selectallmatching"><?php echo $string['selectallmatching'] ?></button></td><td colspan="3" style="text-align: right"><label for="selectallprimary"><?php echo $string['selectallprimary'] ?></label>&nbsp;<input type="checkbox" class="selectallprimary" id="selectallprimary" name="selectallprimary" value="" /></td></tr>
 </table>
 <br />
 <div style="text-align:center">
