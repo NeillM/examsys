@@ -1,0 +1,6 @@
+CosignProtected On
+AuthType Cosign
+Require valid-user
+CosignAllowPublicAccess Off
+RewriteEngine On
+RewriteRule ^/.+$ / [L,R]

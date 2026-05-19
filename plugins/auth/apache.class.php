@@ -41,6 +41,7 @@ class apache_auth extends outline_authentication
         $callbackarray[] = [[$this, 'auth'], 'auth', $this->number, $this->name];
         $callbackarray[] = [[$this, 'failauth'], 'postauthfail', $this->number, $this->name];
         $callbackarray[] = [[$this, 'createnewuserassociation'], 'postauthsuccess', $this->number, $this->name];
+        $callbackarray[] = [[$this, 'loginbutton'], 'displaystdform', $this->number, $this->name];
 
         return $callbackarray;
     }
@@ -49,6 +50,18 @@ class apache_auth extends outline_authentication
     {
         $this->retdata =& $authobj;
         $this->savetodebug('Authing');
+
+        if (
+            isset($this->settings['external_button']) &&
+            isset($this->settings['external_redirect_url']) &&
+            $this->settings['external_button'] === true &&
+            isset($this->request['apachelogin'])
+        ) {
+            // Enabled and login pushed.
+            $this->savetodebug('Redirecting for Apache external authentication');
+            header('Location: ' . $this->settings['external_redirect_url']);
+            exit;
+        }
 
         extract($this->settings);
 
@@ -61,10 +74,19 @@ class apache_auth extends outline_authentication
         $username = $_SERVER[$this->settings['usernamefield']];
 
         $this->savetodebug('Now looking up userid in table from username: ' . $username);
+
+        if ($this->settings['students_only'] == true) {
+            $extra_tables = ', user_roles ur, roles r';
+            $sql_extra = "AND $table.$id_col = ur.userID AND ur.roleID = r.id AND r.name = 'Student' ";
+        } else {
+            $extra_tables = '';
+        }
+
         if (!isset($sql_extra)) {
             $sql_extra = '';
         }
-        $sql = "SELECT $username_col AS username, $id_col AS id FROM $table WHERE $username_col = ? $sql_extra";
+
+        $sql = "SELECT $table.$username_col AS username, $table.$id_col AS id FROM $table $extra_tables WHERE $table.$username_col = ? $sql_extra";
 
         $result = $this->db->prepare($sql);
         $result->bind_param('s', $username);
@@ -125,6 +147,26 @@ class apache_auth extends outline_authentication
         return $postauthfailreturn;
     }
 
+    public function loginbutton($displaystdformobj)
+    {
+        // Duplicate of Cosign button code for using Apache Cosign auth
+        if (isset($this->settings['external_button']) and $this->settings['external_button'] === true) {
+            $this->savetodebug('Login Button for cosign login enabled (Apache version)');
+
+            $this->savetodebug('Adding New Button');
+            $newbutton = new displaystdformobjbutton();
+            $newbutton->type = 'submit';
+            $newbutton->value = $this->settings['external_button_text'] ?? 'External System Login';
+            $newbutton->name = 'apachelogin';
+            $newbutton->class = 'apachelogin';
+            $displaystdformobj->buttons[] = $newbutton;
+
+            $displaystdformobj->disablerequired = true;
+        }
+
+        // Possibility of making button to POST via jquery to the cosign login page with our login data then detect response
+        return $displaystdformobj;
+    }
 
     public function createnewuserassociation($postauthsuccessobj)
     {

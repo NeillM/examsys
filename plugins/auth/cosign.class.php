@@ -44,7 +44,7 @@ class cosign_auth extends outline_authentication
     public function init($object)
     {
         parent::init($object);
-        $this->cosign = new cosign($this->settings['cosign_cfg'], $this);
+        $this->cosign = new cosign($this->settings, $this);
     }
 
     #[\Override]
@@ -101,7 +101,7 @@ class cosign_auth extends outline_authentication
         }
         $this->savetodebug('request string decoded info: ' . var_export($requestmod, true));
 
-        // Run cosing auth if button is enabled and pressed or button always if that mode is enabled or if it receives a query string containing cosign
+        // Run cosign auth if button is enabled and pressed or button always if that mode is enabled or if it receives a query string containing cosign
 
         if ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === true and isset($this->request['cosignlogin'])) or ( ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === false   ) or (!isset($this->settings['cosign_button'])) )     ) or (mb_strpos((string) $_SERVER['QUERY_STRING'], 'cosign') !== false )) {
             // Button is enabled
@@ -144,10 +144,18 @@ class cosign_auth extends outline_authentication
         }
 
         $this->savetodebug('Now looking up userid in table from username');
+        if ($this->settings['students_only'] == true) {
+            $sql_extra = "AND $table.$id_col = ur.userID AND ur.roleID = r.id AND r.name = 'Student' ";
+            $extra_tables = ', user_roles ur, roles r';
+        } else {
+            $extra_tables = '';
+        }
+
         if (!isset($sql_extra)) {
             $sql_extra = '';
         }
-        $sql = "SELECT $username_col AS username, $id_col AS id FROM $table WHERE $username_col = ? $sql_extra";
+
+        $sql = "SELECT $table.$username_col AS username, $table.$id_col AS id FROM $table $extra_tables WHERE $table.$username_col = ? $sql_extra";
 
         $result = $this->db->prepare($sql);
         $result->bind_param('s', $username);
