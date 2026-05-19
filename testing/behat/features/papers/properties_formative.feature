@@ -6,10 +6,18 @@ Feature: Paper properties: Formative
 
   Background:
     Given the "plugin_plain_texteditor" plugin is enabled
+    And the following "faculties" exist:
+      | name | code |
+      | Faculty of Science | SCI |
+    And the following "schools" exist:
+      | code | school | faculty |
+      | UI-ONE | Biosciences | SCI |
+      | UI-TWO | Biosciences | SCI |
     And the following "modules" exist:
-      | moduleid | fullname |
-      | TEST1001 | Test module |
-      | TEST1002 | Another test module |
+      | moduleid | fullname | school |
+      | TEST1001 | Test module | UI-ONE |
+      | TEST1002 | Another test module | UI-TWO |
+      | TEST1003 | Yet another test module | UI-ONE |
     And the following "users" exist:
       | username | roles | first_names | surname | title |
       | teacher | Staff | Florence | Nightingale | Dr |
@@ -22,6 +30,7 @@ Feature: Paper properties: Formative
       | moduleid | username |
       | TEST1001 | teacher |
       | TEST1002 | teacher |
+      | TEST1003 | teacher |
       | TEST1001 | teacher2 |
       | TEST1002 | teacher3 |
     And the following "folders" exist:
