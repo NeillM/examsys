@@ -39,7 +39,7 @@ define(['jquery'], function($) {
                 total++;
                 if (matching) {
                     // We found that the prmary and secondary marker agree.
-                    matchingTotal++
+                    matchingTotal++;
                 }
 
                 if (primary.is(':checked')) {
