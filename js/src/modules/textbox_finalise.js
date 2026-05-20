@@ -24,18 +24,45 @@ define(['jquery'], function($) {
          * Check select all button.
          */
         this.selectall = function () {
-            var total = 0;
-            var count = 0;
+            let total = 0;
+            let count = 0;
+            let matchingTotal = 0;
+            let otherSelected = false;
             $(".primarychk").each(function () {
-                if ($(this).is(':checked')) {
+                let primary = $(this);
+                let name = primary.attr('name');
+                let overrideID = name.replace('mark', 'override');
+                let secondary = $('#' + name + '-s');
+                let override = $('#' + overrideID);
+                let matching = secondary.val() === null || secondary.val() === primary.val();
+
+                total++;
+                if (matching) {
+                    // We found that the prmary and secondary marker agree.
+                    matchingTotal++;
+                }
+
+                if (primary.is(':checked')) {
                     count++;
-                    total++;
-                } else {
-                    total++;
+                    if (!matching) {
+                        // A primary value that does not match the secondary value is selected.
+                        otherSelected = true;
+                    }
+                } else if (secondary.is(':checked')) {
+                    // A secondary value is selected.
+                    otherSelected = true;
+                } else if (override.val() !== 'NULL') {
+                    // An override is selected.
+                    otherSelected = true;
                 }
             });
             if (count === total) {
-                $("#selectallprimary").prop("checked", true);
+                $(".selectallprimary").prop("checked", true);
+            }
+            if (matchingTotal > 0 && !otherSelected && count === matchingTotal) {
+                $(".selectallmatching").prop("checked", true);
+            } else {
+                $(".selectallmatching").prop("checked", false);
             }
         };
     }
