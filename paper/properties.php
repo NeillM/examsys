@@ -875,11 +875,12 @@ $module_list = $userObject->get_staff_accessable_modules();
 
 $old_schoolcode = '';
 foreach ($module_list as $module) {
-    if ($old_schoolcode !== $module['schoolcode']) {
+    if ($old_schoolcode !== $module['schoolid']) {
         // Update the old code.
-        $old_schoolcode = $module['schoolcode'];
-        $code = $module['schoolcode'] ?? '';
-        $name = $code ? "{$code} {$module['school']}" : $module['school'];
+        $old_schoolcode = $module['schoolid'];
+        // We cannot use the school code for the id of the optgroup as schools are not required to have one.
+        $code = "school-{$module['schoolid']}";
+        $name = $module['schoolcode'] ? "{$module['schoolcode']} {$module['school']}" : $module['school'];
         $modules->addGroup($code, $name);
     }
     $selected = isset($modules_array[$module['idMod']]);
