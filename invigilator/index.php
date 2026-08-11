@@ -154,7 +154,6 @@ if (!$lab_object and !$remote) {
                         ob_end_clean();
                         header('Location: ../invigilator/');
                         exit(0);
-
                     } else {
                         $notice = UserNotices::get_instance();
                         $notice->display_notice(
@@ -227,4 +226,3 @@ if (!$lab_object and !$remote) {
 }
 $render->render([], [], 'footer.html');
 ob_end_flush();
-
