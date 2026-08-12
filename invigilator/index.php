@@ -26,6 +26,8 @@
 require_once '../include/invigilator_auth.inc';
 require_once '../include/errors.php';
 
+ob_start();
+
 $invigilation = new Invigilation();
 $examstart = param::optional('start_exam_form', null, param::ALPHA, param::FETCH_POST);
 if (!is_null($examstart)) {
@@ -148,6 +150,10 @@ if (!$lab_object and !$remote) {
                         $invigilator_id = $userObject->get_user_ID();
                         $time = 'PT' . $hour . 'H' . $minute . 'M';
                         $end_datetime = $log_lab_end_time->save($invigilator_id, $time);
+
+                        ob_end_clean();
+                        header('Location: ../invigilator/');
+                        exit(0);
                     } else {
                         $notice = UserNotices::get_instance();
                         $notice->display_notice(
@@ -219,3 +225,4 @@ if (!$lab_object and !$remote) {
     $render->render($miscdataset, [], 'dataset.html');
 }
 $render->render([], [], 'footer.html');
+ob_end_flush();
