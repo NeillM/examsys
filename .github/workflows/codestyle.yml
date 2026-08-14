@@ -1,0 +1,36 @@
+name: codestyle.yml
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - develop
+      - '[0-9]+.[0-9]+.[0-9]+'
+env:
+  codesniffer: 3.12.1
+  php: 8.3
+
+jobs:
+  codestyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ExamSys
+        uses: actions/checkout@v7
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running grunt
+        run: npx grunt
+
+      - name: Run composer
+        run: composer install
+
+      - name: PHP Code Sniffer
+        run: vendor/squizlabs/php_codesniffer/bin/phpcs --standard=testing/codesniffer/Rogo/ruleset.xml -n .
