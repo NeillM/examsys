@@ -34,3 +34,25 @@ jobs:
 
       - name: PHP Code Sniffer
         run: vendor/squizlabs/php_codesniffer/bin/phpcs --standard=testing/codesniffer/Rogo/ruleset.xml -n .
+  rector:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout ExamSys
+        uses: actions/checkout@v7
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running grunt
+        run: npx grunt
+
+      - name: Run composer
+        run: composer install
+
+      - name: Run Rector
+        run: vendor/bin/rector process --dry-run
