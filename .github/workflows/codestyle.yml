@@ -1,4 +1,4 @@
-name: codestyle.yml
+name: Code style checks
 on:
   push:
     branches:
