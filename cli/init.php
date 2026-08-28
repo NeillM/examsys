@@ -112,7 +112,7 @@ try {
     } catch (Exception $e) {
         cli_utils::prompt($e->getMessage());
         umask($oldmask);
-        exit(0);
+        exit(1);
     }
     // Install.
     InstallUtils::checkDirPermissionsPost();
