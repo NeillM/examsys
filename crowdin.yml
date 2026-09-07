@@ -1,6 +1,4 @@
 "project_identifier" : "rogo"
-"api_key" : "<api key>"
-"base_path" : "<base path>"
 "base_url" : "https://api.crowdin.com"
 "preserve_hierarchy": true
 
