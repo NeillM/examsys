@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <company>University of Testing</company>
+    <server>
+        <host>%</host><!-- For development instances only we can allow database connections from any IP address -->
+        <data>/rogodata</data>
+        <temp>/tmp/</temp>
+        <root></root>
+        <site_address>https://web</site_address>
+    </server>
+    <database>
+        <prefix>examsys</prefix>
+        <engine>InnoDB</engine>
+        <help_engine>InnoDB</help_engine>
+    </database>
+    <timedate>
+        <mysqlshortdate>%d/%m/%y</mysqlshortdate>
+        <mysqllongdate>%d/%m/%Y</mysqllongdate>
+        <mysqllongdatetime>%d/%m/%Y %H:%i</mysqllongdatetime>
+        <mysqlshortdatetime>%d/%m/%y %H:%i</mysqlshortdatetime>
+        <phplongdate>d/m/Y</phplongdate>
+        <phpshortdate>d/m/y</phpshortdate>
+        <phplongdatetime>H:i:s</phplongdatetime>
+        <phpshortdatetime>H:i</phpshortdatetime>
+        <phpveryshortdatetime>d/m/y H:i</phpveryshortdatetime>
+        <phplongfulldatetime>d/m/Y H:i</phplongfulldatetime>
+        <timezone>Europe/London</timezone>
+    </timedate>
+    <sysadmin>
+        <username>admin</username>
+        <password>password</password>
+        <title>Dr</title>
+        <forename>Admin</forename>
+        <surname>User</surname>
+        <email>admin@example.com</email>
+    </sysadmin>
+    <authentication>
+        <lti>0</lti>
+        <internaldb>1</internaldb>
+        <ldap>0</ldap>
+        <summativeguestlogin>1</summativeguestlogin>
+        <userimpersonation>1</userimpersonation>
+    </authentication>
+    <ldap>
+        <server></server>
+        <searchdn></searchdn>
+        <username></username>
+        <password></password>
+        <prefix></prefix>
+    </ldap>
+    <supportemail>support@example.com</supportemail>
+    <paperanomalyemail>anomaly@example.com</paperanomalyemail>
+    <contact1>
+        <name>Support</name>
+        <telephone>123456789</telephone>
+    </contact1>
+    <contact2>
+        <name></name>
+        <telephone></telephone>
+    </contact2>
+    <contact3>
+        <name></name>
+        <telephone></telephone>
+    </contact3>
+    <help>1</help>
+    <translations>0</translations>
+    <lookup>
+        <ldap>0</ldap>
+        <xml>0</xml>
+    </lookup>
+    <labsecurity>
+        <type>ipaddress</type>
+    </labsecurity>
+</settings>

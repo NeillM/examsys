@@ -2107,7 +2107,7 @@ class InstallUtils
             }
         }
         if ($fatal) {
-            exit;
+            exit(1);
         }
     }
 
