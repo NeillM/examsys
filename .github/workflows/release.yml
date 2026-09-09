@@ -1,0 +1,94 @@
+name: Build release
+
+on:
+    release:
+      types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      # We will need to bump this when changing the version of PHP ExamSys supports.
+      image: uonlearningtech/examsys-php-apache:8.3-nodebug
+      volumes:
+        - ${{ github.workspace }}:/var/www/html
+
+    steps:
+      - name: Checkout ExamSys
+        uses: actions/checkout@v7
+        with:
+          path: examsys
+
+      # We will build them in an extras directory, which we will clean up after moving the built editors.
+      - name: Checkout equation editor
+        uses: actions/checkout@v7
+        with:
+          repository: examsys/examsys-tinymce-plugin-maths-equation-editor
+          path: extras/maths-equation-editor
+
+      - name: Install dependencies equation editor
+        uses: borales/actions-yarn@v5
+        with:
+          dir: extras/maths-equation-editor
+          cmd: install
+
+      - name: Build equation editor
+        uses: borales/actions-yarn@v5
+        with:
+          dir: extras/maths-equation-editor
+          cmd: build
+
+      - name: Checkout ruby editor
+        uses: actions/checkout@v7
+        with:
+          repository: examsys/examsys-tinymce-plugin-ruby-annotation
+          path: extras/ruby-annotation
+
+      - name: Install dependencies ruby editor
+        uses: borales/actions-yarn@v5
+        with:
+          dir: extras/ruby-annotation
+          cmd: install
+
+      - name: Build ruby editor
+        uses: borales/actions-yarn@v5
+        with:
+          dir: extras/ruby-annotation
+          cmd: build
+
+      - name: Install text editor plugins
+        run: |
+          mv extras/maths-equation-editor/dist/maths-equation-editor examsys/plugins/texteditor/plugin_tinymce_texteditor/js/plugins
+          mv extras/ruby-annotation/dist/ruby-annotation examsys/plugins/texteditor/plugin_tinymce_texteditor/js/plugins
+          rm -rf extras
+
+      - name: Install composer dependencies
+        run: |
+          wget https://getcomposer.org/composer.phar
+          php composer.phar install --no-dev --ignore-platform-reqs
+          rm composer.phar
+        working-directory: ./examsys
+
+      - name: Install npm dependencies
+        run: |
+          npm install --production
+          npm install --production --prefix plugins/texteditor/plugin_tinymce_texteditor
+        working-directory: ./examsys
+
+      - name: Run grunt
+        run: grunt
+        working-directory: ./examsys
+
+      - name: Create ExamSys release files
+        run: |
+          tar -czf examsys-${{ github.ref }}.tar.gz --exclude-from exclude.txt * .htaccess
+          cp examsys-${{ github.ref }}.tar.gz examsys-latest.tar.gz
+        working-directory: ./examsys
+
+      - name: Add files to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release upload "${{ github.ref }}" examsys-${{ github.ref }}.tar.gz
+          gh release upload "latest" examsys-latest.tar.gz
