@@ -66,7 +66,7 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          wget https://getcomposer.org/composer.phar
+          curl -O https://getcomposer.org/composer.phar
           php composer.phar install --no-dev --ignore-platform-reqs
           rm composer.phar
         working-directory: ./examsys
