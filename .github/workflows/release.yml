@@ -82,13 +82,13 @@ jobs:
         working-directory: ./examsys
 
       - name: Create ExamSys release files
-        run: tar -czf examsys-${{ github.ref }}.tar.gz --exclude-from exclude.txt * .htaccess
+        run: tar -czf examsys-${{ github.ref_name }}.tar.gz --exclude-from exclude.txt * .htaccess
         working-directory: ./examsys
 
       - name: Create release
         uses: softprops/action-gh-release@v3
         with:
-          files: examsys-${{ github.ref }}.tar.gz
+          files: examsys-${{ github.ref_name }}.tar.gz
           draft: true
           prerelease: false
           working_directory: ./examsys
