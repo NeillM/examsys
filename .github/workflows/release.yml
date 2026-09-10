@@ -83,7 +83,7 @@ jobs:
 
       - name: Create ExamSys release files
         run: |
-          cp .github/workflows/eclude.txt exclude.txt
+          cp .github/workflows/exclude.txt exclude.txt
           tar -czf examsys-${{ github.ref_name }}.tar.gz --exclude-from exclude.txt * .htaccess
         working-directory: ./examsys
 
