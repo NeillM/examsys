@@ -15,6 +15,9 @@ jobs:
       volumes:
         - ${{ github.workspace }}:/var/www/html
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout ExamSys
         uses: actions/checkout@v7
