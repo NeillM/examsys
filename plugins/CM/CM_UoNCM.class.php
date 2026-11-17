@@ -35,6 +35,9 @@ class CM_UoNCM implements iCMAPI
     private $_mapping_level = self::LEVEL_SESSION;
     private $_moodle_base_url;
 
+    /** @var int The time in seconds that the we will wait for the Curriculum map to respond. */
+    private int $timeout;
+
     /**
      * Return objectives from the University of Nottingham Curriculum Mapping system
      * @param string $moduleID the module code
@@ -52,12 +55,13 @@ class CM_UoNCM implements iCMAPI
             $moduleID = \plugins\plugins_mapping::do_mapping($db, $moduleID);
         }
         $this->_root_url = $configObject->get_setting('core', 'cfg_cmap_url') . '/' . $this->_sess_year . '/index.php/';
+        $this->timeout = $configObject->get_setting('core', 'cfg_cmap_url_timeout') ?? 20;
         $this->_module_id = $moduleID;
         $this->_moodle_base_url = $configObject->get_setting('core', 'cfg_moodle_base_url') . '/local/uonlib/findcourse.php?m=%s&y=%s&nid=%s';
         $url = $this->_root_url . "api/find_json?search={$moduleID}&type=module&where=attrib&attrib=code&output=module_session_obs";
         $req = new restful($db);
         $options = [
-            CURLOPT_TIMEOUT => 20,
+            CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_HTTPHEADER => ['Accept: application/json'],

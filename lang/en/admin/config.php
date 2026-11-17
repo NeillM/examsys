@@ -30,6 +30,7 @@ $string['cfg_lti_allow_staff_module_register'] = 'Allows ExamSys to register sta
 $string['cfg_lti_allow_module_self_reg'] = 'Allows ExamSys to auto add student to module if selfreg is set for module if from LTI launch.';
 $string['cfg_lti_allow_module_create'] = 'Allows ExamSys to create module if it doesnt exist.';
 $string['cfg_cmap_url'] = 'Base URL for curriculum mapping web service.';
+$string['cfg_cmap_url_timeout'] = 'The time in seconds the Curriculum Mapping system has to respond before requests timeout';
 $string['cfg_moodle_base_url'] = 'Base URL for Moodle website.';
 $string['cfg_sms_url'] = 'Base URL of student management system (old style pre plugins).';
 $string['cfg_gradebook_enabled'] = 'Enable/Disable Gradebook functionality';
