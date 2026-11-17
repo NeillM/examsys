@@ -306,7 +306,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
                     $vle->setMappingLevel($map_level);
                     $resp = $vle->getObjectives($thisModuleid, $session, $db);
                     if ($resp == 'error') {
-                        throw new Exception('could_not_retrieve_objectives');
+                        throw new ObjectivesTimeout('could_not_retrieve_objectives');
                     }
                     if ($resp != '') {
                         $objsBySession_cache[$thisModuleid][$session] = $resp;
